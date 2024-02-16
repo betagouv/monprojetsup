@@ -179,7 +179,12 @@ public record OnisepData(
         );
 
         LOGGER.info("Chargement de " + DataSources.ONISEP_PSUP_TO_IDEO_PATH);
-        PsupToOnisepLines lines = Serialisation.fromJsonFile(DataSources.getSourceDataFilePath(DataSources.ONISEP_PSUP_TO_IDEO_PATH), PsupToOnisepLines.class);
+        PsupToOnisepLines lines = Serialisation.fromJsonFile(
+                DataSources.getSourceDataFilePath(
+                        DataSources.ONISEP_PSUP_TO_IDEO_PATH
+                ),
+                PsupToOnisepLines.class
+        );
 
         LOGGER.info("Calcul des filieres");
         FilieresToFormationsOnisep filieres = FilieresToFormationsOnisep.getFilieres(

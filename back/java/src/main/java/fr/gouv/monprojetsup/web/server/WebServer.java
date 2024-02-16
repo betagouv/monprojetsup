@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.web.db.dbimpl.DBMongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
@@ -34,6 +35,10 @@ public class WebServer extends Server {
 
     public static boolean isInitialized() {
         return _db != null;
+    }
+
+    public static void loadConfig() throws IOException {
+        config = WebServerConfig.load();
     }
 
     @Override

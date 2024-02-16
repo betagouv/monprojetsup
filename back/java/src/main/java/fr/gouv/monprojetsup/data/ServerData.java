@@ -25,6 +25,7 @@ import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.tools.Serialisation;
 import fr.gouv.monprojetsup.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.web.server.WebServer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -321,6 +322,9 @@ public class ServerData {
     }
 
     public static void main(String[] args) throws Exception {
+
+        WebServer.loadConfig();
+        
         ServerData.load();
 
         AlgoSuggestions.initialize();

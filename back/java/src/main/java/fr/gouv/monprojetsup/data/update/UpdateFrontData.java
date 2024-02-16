@@ -24,6 +24,7 @@ import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.update.rome.RomeData;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.tools.Serialisation;
+import fr.gouv.monprojetsup.web.server.WebServer;
 import fr.gouv.monprojetsup.web.server.WebServerConfig;
 
 import java.io.IOException;
@@ -228,6 +229,8 @@ public class UpdateFrontData {
     }
 
     public static void main(String[] args) throws IOException {
+
+        WebServer.loadConfig();
 
         LOGGER.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
         PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
