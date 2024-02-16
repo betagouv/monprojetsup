@@ -23,3 +23,4 @@ back/java/data
 run_with_docker.sh
 nlp/config.json
 sandbox/*
+data/*
