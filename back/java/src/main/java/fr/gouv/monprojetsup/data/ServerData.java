@@ -94,10 +94,6 @@ public class ServerData {
 
         LOGGER.info("Loading server data...");
 
-        if(rootDataDir != null) {
-            DataSources.setRootDirectory(rootDataDir.toString());
-        }
-
         loadBackEndData();
 
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
