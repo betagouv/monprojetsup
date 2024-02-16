@@ -1,0 +1,29 @@
+[Unit]
+Description=monprojetsup
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=gimbert
+
+#RootDirectory=/home/gimbert/Code/parcoursup/orientation/java/tmp
+#WorkingDirectory=/home/gimbert/Code/parcoursup/orientation/java/tmp
+Environment="M2_HOME=/usr/local/maven/current"
+
+ExecStart=/home/gimbert/Code/parcoursup/orientation/java/tmp/start_service.sh
+
+Restart=always
+RestartSec=3                       # Restart service after 10 seconds if node service crashes
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=monprojetsup
+
+# Configures the time to wait before service is stopped forcefully.
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+
+
+

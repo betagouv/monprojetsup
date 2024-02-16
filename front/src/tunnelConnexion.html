@@ -1,0 +1,87 @@
+<div
+class="modal fade"
+id="tunnelConnexionModal"
+tabindex="-1"
+aria-labelledby="exampleModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Votre première connexion</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Fermer"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <p>
+        Pour commencer, veuillez renseigner les informations suivantes :
+      </p>
+
+
+      <!-- demander nom et prénom
+      
+
+          
+      demander type de bac
+
+          
+      demander spécialités -->
+
+      <div class="form-group m-2">
+          <span class="input-group-text m-2">
+            <input
+              type="text"
+              class="form-control"
+              id="inputNomTunnelConnexion"
+              aria-describedby="nomHelp"
+              placeholder="Votre nom..."
+            />
+          </span>
+          <span class="input-group-text m-2">
+            <input
+              type="text"
+              class="form-control"
+              id="inputPrenomTunnelConnexion"
+              aria-describedby="prenomHelp"
+              placeholder="Votre prénom..."
+            />
+          </span>
+          <span class="input-group-text m-2">
+            <select class="form-select" id="inputBacTunnelConnexion">
+              <option selected>Choisir votre bac...</option>
+              <option value="S">S</option>
+              <option value="ES">ES</option>
+              <option value="L">L</option>
+              <option value="STMG">STMG</option>
+              <option value="STI2D">STI2D</option>
+              <option value="STL">STL</option>
+              <option value="ST2S">ST2S</option>
+              <option value="STD2A">STD2A</option>
+              <option value="HOTELLERIE">HOTELLERIE</option>
+              <option value="TECHNOLOGIQUE">TECHNOLOGIQUE</option>
+              <option value="PROFESSIONNEL">PROFESSIONNEL</option>
+              <option value="AUTRE">AUTRE</option>
+            </select>
+          </span>
+          <!-- Demander spécialités -->
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-bs-dismiss="modal"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- End TODO -->
