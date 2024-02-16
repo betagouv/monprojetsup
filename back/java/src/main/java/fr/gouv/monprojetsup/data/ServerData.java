@@ -324,7 +324,7 @@ public class ServerData {
     public static void main(String[] args) throws Exception {
 
         WebServer.loadConfig();
-        
+
         ServerData.load();
 
         AlgoSuggestions.initialize();
