@@ -56,7 +56,7 @@ public class DailyUserBehaviourAnalysis {
             boolean onlyENS = true;
             boolean onlyENSTest = true;
 
-            sendReport("stats utilisation MonProjetSup - expe ENS groupe test", config, groups, users, traces, onlyToday, onlyENS, onlyENSTest, anonymize);
+            sendReport("stats utilisation quotidienne MonProjetSup - expe ENS groupe test", config, groups, users, traces, onlyToday, onlyENS, onlyENSTest, anonymize);
 
         }
         {
@@ -66,7 +66,7 @@ public class DailyUserBehaviourAnalysis {
 
             List<User> users = new ArrayList<>(db.getUsers());
 
-            sendReport("stats utilisation MonProjetSup - tous", config, groups, users, traces, onlyToday, false, false, anonymize);
+            sendReport("stats utilisation quotidienne MonProjetSup - tous", config, groups, users, traces, onlyToday, false, false, anonymize);
         }
     }
 

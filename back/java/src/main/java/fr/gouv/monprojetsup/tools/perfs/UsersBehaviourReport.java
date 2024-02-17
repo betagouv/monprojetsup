@@ -92,6 +92,13 @@ public record UsersBehaviourReport(
     public String getMacrosStats() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("Statistiques sur la période ")
+                .append(begin)
+                .append(" - ")
+                .append(end)
+                .append("\n")
+                .append("\n");
+
         sb
                 .append("Lycées: ")
                 .append(groupsBehaviours.values().stream().map(g -> g.lycee).count())
