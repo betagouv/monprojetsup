@@ -23,6 +23,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static jdk.jpackage.internal.IOUtils.copyFile;
+
 @SpringBootApplication
 @EnableMongoRepositories
 @ComponentScan(basePackages = {"fr.gouv.monprojetsup"})
@@ -84,6 +86,8 @@ public class DailyUserBehaviourAnalysis {
                         .toString().replace(":","") + ".json";
 
         Serialisation.toJsonFile(filename, report, true);
+        Path sourceFile = Path.of(filename);
+        copyFile(sourceFile, Path.of("data/" + filename + ".json"));
 
 
         Thread thread = MailSender.send(
@@ -96,7 +100,7 @@ public class DailyUserBehaviourAnalysis {
                 //List.of("hugo.gimbert@gmail.com"),
                 subject,
                 text.replace("\n", "<br/>"),
-                List.of(Path.of(filename))
+                List.of(sourceFile)
         );
         thread.join();
 
