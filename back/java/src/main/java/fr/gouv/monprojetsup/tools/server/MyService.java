@@ -75,12 +75,14 @@ public abstract class MyService<T,U> implements HttpHandler {
         }
         if (e instanceof DBExceptions.UserInputException) {
             String error = e.getMessage();
-            if(e instanceof DBExceptions.InvalidTokenException) {
+            if (e instanceof DBExceptions.InvalidTokenException) {
                 Helpers.LOGGER.warning(error);
                 error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
             }
-            if(!(e instanceof DBExceptions.UserInputException.InvalidPasswordException)
-            && !(e instanceof Authenticator.TokenInvalidException)) {
+            if (!(e instanceof DBExceptions.UserInputException.InvalidPasswordException)
+                    && !(e instanceof Authenticator.TokenInvalidException)
+                    && !(e instanceof DBExceptions.UserInputException.WrongAccessCodeException)
+            ) {
                 Log.logBackError(error);
             }
             //for those we do not include the stacktrace in the message

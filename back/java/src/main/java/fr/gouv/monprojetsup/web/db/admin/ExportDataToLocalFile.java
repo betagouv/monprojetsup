@@ -38,6 +38,7 @@ public class ExportDataToLocalFile {
 
         db.exportTracesToFile("traces.json", false);
         copyFile(Path.of("traces.json"), Path.of("traces_" + LocalDateTime.now() + ".json"));
+        copyFile(Path.of("traces.json"), Path.of("data/traces_" + LocalDateTime.now() + ".json"));
 
         db.exportErrorsToFile("errors.json", false);
         copyFile(Path.of("errors.json"), Path.of("errors_" + LocalDateTime.now() + ".json"));
@@ -49,9 +50,11 @@ public class ExportDataToLocalFile {
 
         db.exportUsersToFile("usersExpeENS.json", true, false);
         db.exportUsersToFile("usersExpeENSAnonymized.json", true, true);
+        copyFile(Path.of("usersExpeENS.json"), Path.of("data/usersExpeENS_" + LocalDateTime.now() + ".json"));
 
         db.exportGroupsToFile("groups.json");
         copyFile(Path.of("groups.json"), Path.of("groups_" + LocalDateTime.now() + ".json"));
+        copyFile(Path.of("groups.json"), Path.of("data/groups_" + LocalDateTime.now() + ".json"));
 
         db.stop();
 
