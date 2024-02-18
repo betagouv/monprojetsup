@@ -89,7 +89,7 @@ public class DBMongo extends DB implements Closeable {
 
 
     @Override
-    public void load(WebServerConfig config) throws IOException, DBExceptions.ModelException {
+    public synchronized void load(WebServerConfig config) throws IOException, DBExceptions.ModelException {
         /* loads the collections GROUPS and LYCEES into the local cache groups */
         groups.loadGroups(groupsDb.findAll());
 
@@ -163,7 +163,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    protected void assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup() throws DBExceptions.ModelException {
+    protected synchronized void assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup() throws DBExceptions.ModelException {
         @NotNull Group demo = findOrCreateDemoGroup();
         List<User> usersThatShouldReceiveAccessToDemo =
                 new ArrayList<>(
@@ -277,7 +277,7 @@ public class DBMongo extends DB implements Closeable {
 
 
     @Override
-    public void acceptUserCreation(@NotNull String login) throws DBExceptions.ModelException {
+    public synchronized void acceptUserCreation(@NotNull String login) throws DBExceptions.ModelException {
         User user = getUser(login);
         setCreationConfirmationNotNeeded(login);
         if (user.isAtLeastTeacher() && user.getLycees().stream().noneMatch(l -> l.contains("HACK"))) {
@@ -353,19 +353,19 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    protected void saveLycee(Lycee lycee) {
+    protected synchronized void saveLycee(Lycee lycee) {
         upsert(LYCEES_COLL_NAME, lycee.getId(), lycee);
         groups.upsert(lycee);
     }
 
     @Override
-    protected void saveGroup(Group group) {
+    protected synchronized void saveGroup(Group group) {
         upsert(GROUPS_COLL_NAME, group.getId(), group);
         groups.upsert(group);
     }
 
     @Override
-    protected void saveUser(User user) {
+    protected synchronized void saveUser(User user) {
         upsert(USERS_COLL_NAME, user.login(), user);
     }
 
@@ -396,7 +396,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public void deleteGroup(@NotNull String gid) {
+    public synchronized void deleteGroup(@NotNull String gid) {
         groups.deleteGroup(gid);
         deleteOne(GROUPS_COLL_NAME, eq(ID, gid));
     }
@@ -433,7 +433,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    protected void forgetUserInGroups(String user) {
+    protected synchronized void forgetUserInGroups(String user) {
         /* remove the user from the groups */
         updateMany(
                 GROUPS_COLL_NAME,
@@ -488,8 +488,9 @@ public class DBMongo extends DB implements Closeable {
         users.forEach(this::saveUser);
     }
 
-    public void reinitTreatmentGroupRegistrationCodes() {
-        groups.getGroups().stream().filter(
+    public synchronized void reinitTreatmentGroupRegistrationCodes() {
+        List<Group> groupsCopy = new ArrayList<>(groups.getGroups());
+        groupsCopy.stream().filter(
                 g -> Objects.equals(g.getExpeENSGroupe(), "T")
         ).forEach(group -> {
             group.resetRegistrationCode();
@@ -618,7 +619,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public void createNewUser(
+    public synchronized void createNewUser(
             @NotNull CreateAccountService.CreateAccountRequest data,
             boolean confirmEmailOnAccountCreation) throws DBExceptions.ModelException, NoSuchAlgorithmException, InvalidKeySpecException, DBExceptions.UserInputException.InvalidPasswordException, DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UserInputException.InvalidGroupTokenException, DBExceptions.UserInputException.UserAlreadyExistsException, DBExceptions.UserInputException.UnauthorizedLoginException {
         final int maxLength = 64;
@@ -689,7 +690,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public Group createNewGroup(@NotNull String lycee, @NotNull String sid) throws DBExceptions.ModelException {
+    public synchronized Group createNewGroup(@NotNull String lycee, @NotNull String sid) throws DBExceptions.ModelException {
         Group group = null;
         Lycee lyc = groups.getLycee(lycee);
         if (lyc != null) {
@@ -701,7 +702,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public void addOrRemoveMember(String groupId, String memberLogin, boolean addMember, @Nullable String groupToken, boolean verifyToken) {
+    public synchronized void addOrRemoveMember(String groupId, String memberLogin, boolean addMember, @Nullable String groupToken, boolean verifyToken) {
 
         try {
             memberLogin = normalizeUser(memberLogin);

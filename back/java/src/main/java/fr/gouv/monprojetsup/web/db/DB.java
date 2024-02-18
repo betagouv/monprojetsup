@@ -440,7 +440,7 @@ public abstract class DB {
     }
 
 
-    protected void init(Set<String> admins) throws DBExceptions.ModelException {
+    protected synchronized void init(Set<String> admins) throws DBExceptions.ModelException {
         setSuperAdminUserTypes(admins);
 
         findOrCreateDemoGroup();
