@@ -57,7 +57,9 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
             String token,
             List<StudentDetails> students,
             Set<String> admins,
-            List<String> moderationList
+            List<String> moderationList,
+
+            String expeENSGroup
     ) {
 
         public GroupDetails sanitize() {
@@ -68,7 +70,8 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
                     token,
                     students.stream().map(s -> s.sanitize()).toList(),
                     admins.stream().map(s -> Sanitizer.sanitize(s)).collect(Collectors.toSet()),
-                    moderationList.stream().map(s -> Sanitizer.sanitize(s)).toList()
+                    moderationList.stream().map(s -> Sanitizer.sanitize(s)).toList(),
+                    Sanitizer.sanitize(expeENSGroup)
                     );
         }
     }

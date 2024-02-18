@@ -14,6 +14,6 @@ public record GroupDTO(
         String adminToken,
         boolean isOpenedForNewMembers,
 
-        String expeENSGroupe
+        String expeENSGroup
 ) {
 }

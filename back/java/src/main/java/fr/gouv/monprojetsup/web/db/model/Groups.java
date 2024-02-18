@@ -448,17 +448,6 @@ public class Groups {
                         );
                 //on inject la donneé groupe ENS pour simplifier le travail côté front
                 config.setExpeENSGroup(group.getExpeENSGroupe());
-            } else {
-                lycees.stream()
-                        .filter(l -> lyceesUser.contains(l.getId()))
-                        .findAny()
-                        .ifPresent(
-                                lyc -> result.openGroups().addAll(
-                                        getOpenGroupsLycee(lyc).stream()
-                                                .map(Group::toDTO)
-                                                .toList()
-                                )
-                        );
             }
             return result;
         }

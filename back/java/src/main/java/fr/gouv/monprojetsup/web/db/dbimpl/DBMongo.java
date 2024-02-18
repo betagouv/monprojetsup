@@ -741,7 +741,8 @@ public class DBMongo extends DB implements Closeable {
                 group.token(),
                 students,
                 group.admins(),
-                group.membersWaiting().stream().toList()
+                group.membersWaiting().stream().toList(),
+                group.getExpeENSGroupe()
         );
     }
 
