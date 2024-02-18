@@ -121,9 +121,6 @@ export function loadGroupDetails(details) {
       <btn href="#" studentLogin='${user.login}' role="button" class="btn link-info selectStudentButton">
       ${user.name}
       </btn></th>
-      <td ${bg_color}>${user.profileComplete}%</td>
-      <td ${bg_color}>${user.likes}</td>
-      <td ${bg_color}>${user.bins}</td>
       <td class="${color}">${user.msg}</td>
     </tr>`);
     }
