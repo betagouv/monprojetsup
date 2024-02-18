@@ -63,7 +63,6 @@ export function loadGroupDetails(details) {
     str2.push("<li>" + admin + "</li>");
   }
   str2.push("</ul>");
-  str1.push(collapsibleContentHtml("Admins", str2.join(""), "admins"));
 
   str1.push("</div>");
 
