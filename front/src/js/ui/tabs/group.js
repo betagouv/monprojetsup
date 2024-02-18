@@ -66,8 +66,6 @@ function loadGroupsInfoStudent(groups) {
     groups[0].waiting.length == 1;
   const oneGroupOpen = groups.length > 0;
 
-  let str = [];
-
   $("#groupsStudentnewGroupDiv").toggle(
     !isAlreadyInAGroup && !isWaitingForAGroup && oneGroupOpen
   );

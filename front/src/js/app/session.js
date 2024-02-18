@@ -171,8 +171,8 @@ export function hideFormations() {
     return (
       infos?.config &&
       infos.config.evalENS &&
-      (infos.config.expeENSGroup === undefined ||
-        infos.config.expeENSGroup !== "T")
+      (infos.config.expeENSGroupe === undefined ||
+        infos.config.expeENSGroupe !== "T")
     );
   } catch (e) {
     return undefined;
@@ -181,14 +181,12 @@ export function hideFormations() {
 
 export function isExpeENS() {
   const infos = getCachedAdminInfos();
-  return infos?.config && infos.config.evalENS;
+  return infos?.config?.evalENS;
 }
 
 export function isExpeENSTest() {
   const infos = getCachedAdminInfos();
-  return (
-    infos?.config && infos.config.evalENS && infos.config.expeENSGroup === "T"
-  );
+  return infos?.config?.evalENS && infos.config.expeENSGroupe === "T";
 }
 
 export function showMinimalStats() {

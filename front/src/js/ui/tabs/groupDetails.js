@@ -50,7 +50,7 @@ export function loadGroupDetails(details) {
   /* Ouverture / fermeture de groupe */
   str1.push(getOpenCloseGroupButtonHtml(details.isOpened, groupId));
   str1.push("</div>");
-  if (details.isOpened && !session.isExpeENSTest()) {
+  if (!session.isExpeENSTest()) {
     str1.push(
       `<div class="alert alert-info">
         Code d'accès au groupe à transmettre aux élèves: ${details.token}</div>`

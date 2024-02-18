@@ -12,6 +12,8 @@ public record GroupDTO(
         Set<String> waiting,
         String registrationToken,
         String adminToken,
-        boolean isOpenedForNewMembers
+        boolean isOpenedForNewMembers,
+
+        String expeENSGroupe
 ) {
 }

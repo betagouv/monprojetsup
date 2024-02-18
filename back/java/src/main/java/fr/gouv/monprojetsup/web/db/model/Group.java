@@ -342,7 +342,8 @@ public final class Group {
                 waiting,
                 registrationToken,
                 adminToken,
-                isOpenedForNewMembers
+                isOpenedForNewMembers,
+                expeENSGroupe
         );
     }
 
