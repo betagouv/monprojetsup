@@ -61,7 +61,7 @@ public class ExportDataToLocalFile {
         SpringApplication.exit(context);
     }
 
-    private static void copyFile(Path originalPath, Path copied) throws IOException {
+    public static void copyFile(Path originalPath, Path copied) throws IOException {
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
 }

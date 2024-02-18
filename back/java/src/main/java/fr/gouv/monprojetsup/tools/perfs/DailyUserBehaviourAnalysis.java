@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static jdk.jpackage.internal.IOUtils.copyFile;
+import static fr.gouv.monprojetsup.web.db.admin.ExportDataToLocalFile.copyFile;
 
 @SpringBootApplication
 @EnableMongoRepositories
@@ -127,7 +127,11 @@ public class DailyUserBehaviourAnalysis {
                 .forEach(login -> usertoGroup.put(login, group)));
 
         if(onlyToday) {
-            LocalDateTime today = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime now = LocalDateTime.now();
+            if(now.getHour() <= 6) {
+                now = now.minusDays(1);
+            }
+            LocalDateTime today = now.withHour(0).withMinute(0).withSecond(0).withNano(0);
             traces.removeIf(e -> LocalDateTime.parse(e.timestamp()).isBefore(today));
         }
 
