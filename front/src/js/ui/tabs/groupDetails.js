@@ -48,7 +48,7 @@ export function loadGroupDetails(details) {
   );
 
   /* Ouverture / fermeture de groupe */
-  str1.push(getOpenCloseGroupButtonHtml(details.isOpened, groupId));
+  //str1.push(getOpenCloseGroupButtonHtml(details.isOpened, groupId));
   str1.push("</div>");
   if (details?.expeENSGroup !== "T") {
     str1.push(
