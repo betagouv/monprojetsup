@@ -45,6 +45,9 @@ $(async function () {
     frontErrorHandler(errObj, true);
   };
 
+  $("#beforePasswordChange").show();
+  $("#afterPasswordChange").hide();
+
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const email = urlParams.get("email");
@@ -72,6 +75,8 @@ $(async function () {
       setNewPassword(email, newPassword, token, (msg) => {
         storeCredentialsAfterSuccesfulAuth(email, newPassword);
         toast("", "Votre nouveau mot de passe a bien été pris en compte.");
+        $("#beforePasswordChange").hide();
+        $("#afterPasswordChange").show();
         sleep(2000).then(() => {
           window.location.replace("https://monprojetsup.fr/index.html");
         });

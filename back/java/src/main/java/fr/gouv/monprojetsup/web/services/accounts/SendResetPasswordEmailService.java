@@ -41,7 +41,7 @@ public class SendResetPasswordEmailService extends MyService<SendResetPasswordEm
             try {
                 @NotNull String confirmationToken = WebServer.db().generateUserEmailResetToken(login);
                 AccountManagementEmails.sendResetPasswordEmail(login, confirmationToken);
-                LOGGER.info("sending reset password email to " + login);
+                LOGGER.info("sending reset password email to " + login +  " token " + confirmationToken);
             } catch (DBExceptions.UnknownUserException e) {
                 LOGGER.info("failed to send reset password email " + e.getMessage());
             }
