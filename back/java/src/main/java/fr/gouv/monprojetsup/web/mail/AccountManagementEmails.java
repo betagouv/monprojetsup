@@ -118,7 +118,7 @@ public class AccountManagementEmails {
 
     public static void sendEmailAddressConfirmedEmail(String user, String msg) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(user);
+        //checkLastEmailWasSentReasonableLungTimeAgo(user);
 
         WebServer.LOGGER.info("sendEmailAddressConfirmedEmail Sending confirmation email to " + user);
         MailSender.send(
