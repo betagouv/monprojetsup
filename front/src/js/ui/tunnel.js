@@ -13,6 +13,9 @@ import * as session from "../app/session";
 import $ from "jquery";
 
 export function openTutoModal(title, content, buttonLabel) {
+  //désactivation sur conseils telling stories
+  return;
+  /*
   const $div = $("#tuto_modal");
 
   if (!buttonLabel) buttonLabel = "C'est parti!";
@@ -27,6 +30,7 @@ export function openTutoModal(title, content, buttonLabel) {
     .empty()
     .append($(`<p class="m-2 p-2 myBleuMarine">${content}</p>`));
   myModal.show();
+  */
 }
 
 export function startPreferencesTunnel() {
