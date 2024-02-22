@@ -58,22 +58,6 @@ public class Groups {
         return answer;
     }
 
-    public synchronized @NotNull Group findGroupWithAccessCode(String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
-        Group group = groups.stream().filter(g -> g.isAccessibleWithToken(code)).findAny().orElse(null);
-        if (group == null) {
-            throw new DBExceptions.UserInputException.WrongAccessCodeException();
-        }
-        return group;
-    }
-
-    public synchronized @NotNull Group findGroupWithAdminAccessCode(String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
-        Group group = groups.stream().filter(g -> g.isAdminAccessibleWithToken(code)).findAny().orElse(null);
-        if (group == null) {
-            throw new DBExceptions.UserInputException.WrongAccessCodeException();
-        }
-        return group;
-    }
-
     public synchronized void acceptUserCreation(String login) {
         groups.forEach(group -> {
             if (group.membersWaiting().contains(login)) {
@@ -86,10 +70,6 @@ public class Groups {
     public synchronized boolean isEvalENS(Set<String> lycees) {
         return lycees.stream().anyMatch(lyceesExpeENS::contains);
     }
-    public boolean isEvalENSTest(Set<String> lycees) {
-        return false;
-    }
-
 
     public synchronized boolean isEvalIndivisible(Set<String> lycees) {
         return lycees.stream().anyMatch(lyceesExpeIndivisible::contains);

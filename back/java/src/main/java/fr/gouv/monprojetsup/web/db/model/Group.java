@@ -29,6 +29,8 @@ public final class Group {
     public static final String MEMBERS_FIELD = "members";
     public static final String WAITING_FIELD = "waiting";
     public static String EXPE_ENS_GROUPE = "expeENSGroupe";
+    public static String REGISTRATION_TOKEN_FIELD = "registrationToken";
+    public static String ADMIN_REGISTRATION_TOKEN_FIELD = "adminToken";
 
     private @NotNull String name;
 
@@ -40,6 +42,7 @@ public final class Group {
     private @NotNull Set<String> admins = new HashSet<>();
     private @NotNull Set<String> members = new HashSet<>();
     private @NotNull Set<String> waiting = new HashSet<>();
+
 
     private @Nullable String registrationToken;
     private @Nullable String adminToken;

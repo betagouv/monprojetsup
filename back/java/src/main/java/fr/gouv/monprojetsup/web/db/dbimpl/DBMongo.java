@@ -642,14 +642,14 @@ public class DBMongo extends DB implements Closeable {
         final @NotNull Group group;
 
         if (data.type() == lyceen) {
-            group = groups.findGroupWithAccessCode(code);
+            group = findGroupWithAccessCode(code);
             final String groupId = group.getId();
             List<Group> changed = groups.addOrRemoveMember(groupId, data.login(), true, null, false);
             saveGroups(changed);
             //no need for email confirmation
             confirmEmailOnAccountCreation = false;
         } else {
-            group = groups.findGroupWithAdminAccessCode(code);
+            group = findGroupWithAdminAccessCode(code);
             final String groupId = group.getId();
             groups.addAdmin(groupId, data.login());
             Group demo = findOrCreateDemoGroup();
@@ -687,6 +687,22 @@ public class DBMongo extends DB implements Closeable {
 
         saveUser(user);
 
+    }
+
+    private Group findGroupWithAccessCode(String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
+        Document group = collection(GROUPS_COLL_NAME).find(eq(Group.REGISTRATION_TOKEN_FIELD, code)).first();
+        if (group == null) {
+            throw new DBExceptions.UserInputException.WrongAccessCodeException();
+        }
+        return new Gson().fromJson(group.toJson(), Group.class);
+    }
+
+    private Group findGroupWithAdminAccessCode(String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
+        Document group = collection(GROUPS_COLL_NAME).find(eq(Group.ADMIN_REGISTRATION_TOKEN_FIELD, code)).first();
+        if (group == null) {
+            throw new DBExceptions.UserInputException.WrongAccessCodeException();
+        }
+        return new Gson().fromJson(group.toJson(), Group.class);
     }
 
     @Override

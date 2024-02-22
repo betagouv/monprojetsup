@@ -82,6 +82,7 @@ public abstract class MyService<T,U> implements HttpHandler {
             if (!(e instanceof DBExceptions.UserInputException.InvalidPasswordException)
                     && !(e instanceof Authenticator.TokenInvalidException)
                     && !(e instanceof DBExceptions.UserInputException.WrongAccessCodeException)
+                    && !(e instanceof DBExceptions.UserInputException.UnauthorizedLoginException)
             ) {
                 Log.logBackError(error);
             }
