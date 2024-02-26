@@ -125,9 +125,7 @@ public class Groups {
         if (id == null || id.isEmpty()) {
             throw new DBExceptions.EmptyGroupIdException();
         }
-        Group group = groups.stream().filter(
-                g -> g.getId().equals(id)
-        ).findAny().orElse(null);
+        Group group = idToGroup.get(id);
         if (group == null) {
             throw new DBExceptions.UnknownGroupException();
         }
@@ -170,7 +168,7 @@ public class Groups {
     public synchronized void addAdmin(String groupId, String login) throws DBExceptions.UnknownGroupException, DBExceptions.EmptyGroupIdException {
         login = normalizeUser(login);
         Group grp = findGroup(groupId);
-        grp.addAdmin(normalizeUser(login));
+        grp.addAdmin(login);
         updateGroupData();
     }
 

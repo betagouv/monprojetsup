@@ -650,8 +650,9 @@ public class DBMongo extends DB implements Closeable {
             confirmEmailOnAccountCreation = false;
         } else {
             group = findGroupWithAdminAccessCode(code);
-            final String groupId = group.getId();
-            groups.addAdmin(groupId, data.login());
+            group.addAdmin(data.login());
+            saveGroup(group);
+
             Group demo = findOrCreateDemoGroup();
             demo.addAdmin(data.login());
             saveGroup(demo);
@@ -661,7 +662,6 @@ public class DBMongo extends DB implements Closeable {
         if (existsUserWithLogin(login)) {
             throw new DBExceptions.UserInputException.UserAlreadyExistsException();
         }
-        saveGroup(group);
 
         Credential cred = Credential.getNewCredential(data.password());
         Profile pf = Profile.getNewProfile(login);
