@@ -20,14 +20,21 @@ public class MailSender {
     }
 
     public static Thread send(EmailConfig config, Collection<String> recipients, String subject, String content) {
-        return send(config, recipients, subject, content, List.of());
+        return send(config, recipients, subject, content, List.of(), true, null);
     }
+
+    public static Thread send(EmailConfig config, Collection<String> recipients, String subject, String content, boolean ccSender, Thread.UncaughtExceptionHandler handler) {
+        return send(config, recipients, subject, content, List.of(), ccSender, handler);
+    }
+
 
     public static Thread send(EmailConfig config,
                               Collection<String> recipients,
                               String subject,
                               String body,
-                              List<Path> attachments) {
+                              List<Path> attachments,
+                              boolean ccSender,
+                              Thread.UncaughtExceptionHandler handler) {
 
 
         Thread thread = new Thread(
@@ -41,12 +48,13 @@ public class MailSender {
                     //end workaround
 
                     try {
-                        doSend( config,  recipients,  subject,  body, attachments);
+                        doSend( config,  recipients,  subject,  body, attachments, ccSender);
                     } catch (MessagingException | UnsupportedEncodingException e) {
                         throw new RuntimeException(e);
                     }
                 }
         );
+        thread.setUncaughtExceptionHandler(handler);
         thread.start();
         return thread;
     }
@@ -56,7 +64,7 @@ public class MailSender {
             EmailConfig config,
             Collection<String> recipients,
             String subject, String content,
-            List<Path> attachments) throws MessagingException, UnsupportedEncodingException {
+            List<Path> attachments, boolean ccSender) throws MessagingException, UnsupportedEncodingException {
 
         if(config == null || Objects.equals(config.user(), "user")) return;
 
@@ -75,7 +83,7 @@ public class MailSender {
                 Message.RecipientType.TO,
                 InternetAddress.parse(adresses)
         );
-        if(!adresses.endsWith("monprojetsup.fr")) {
+        if(ccSender && !adresses.endsWith("monprojetsup.fr")) {
             message.setRecipients(
                     Message.RecipientType.BCC, InternetAddress.parse("support@monprojetsup.fr"));
         }

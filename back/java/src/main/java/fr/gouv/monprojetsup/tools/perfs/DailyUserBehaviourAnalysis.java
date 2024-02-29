@@ -100,7 +100,9 @@ public class DailyUserBehaviourAnalysis {
                 //List.of("hugo.gimbert@gmail.com"),
                 subject,
                 text.replace("\n", "<br/>"),
-                List.of(sourceFile)
+                List.of(sourceFile),
+                true,
+                null
         );
         thread.join();
 

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.tools.expeEns.old;
+package fr.gouv.monprojetsup.tools.expeEns.mailing;
 
 import fr.gouv.monprojetsup.tools.Serialisation;
 import fr.gouv.monprojetsup.tools.csv.CsvTools;

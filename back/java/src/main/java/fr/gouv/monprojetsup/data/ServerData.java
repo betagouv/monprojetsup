@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
 import fr.gouv.monprojetsup.data.model.eds.EDSAnalysis;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
+import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
@@ -333,6 +334,7 @@ public class ServerData {
 
         exportLiensDomainesMetiers();
 
+        exportCentresDinterets();
 
         Serialisation.toJsonFile("thematiques.json", ServerData.onisepData.thematiques().thematiques(), true);
 
@@ -742,6 +744,24 @@ public class ServerData {
 
 
 
+    }
+
+    private static void exportCentresDinterets() throws IOException {
+        Interets interets = onisepData.interets();
+        try(CsvTools csv = new CsvTools("centresInterets.csv",',')) {
+            csv.append(List.of("id", "label"));
+            interets.interets().entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(e -> {
+                        try {
+                            csv.append(e.getKey());
+                            csv.append(e.getValue());
+                            csv.newLine();
+                        } catch (IOException f) {
+                            throw new RuntimeException(f);
+                        }
+                    });
+        }
     }
 
     private static void exportLiensDomainesMetiers() throws IOException {
