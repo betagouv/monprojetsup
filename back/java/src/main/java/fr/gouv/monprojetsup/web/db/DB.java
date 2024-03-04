@@ -2,6 +2,8 @@ package fr.gouv.monprojetsup.web.db;
 
 import fr.gouv.monprojetsup.suggestions.algos.Profile;
 import fr.gouv.monprojetsup.tools.Sanitizer;
+import fr.gouv.monprojetsup.tools.Serialisation;
+import fr.gouv.monprojetsup.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.web.auth.Authenticator;
 import fr.gouv.monprojetsup.web.auth.Credential;
 import fr.gouv.monprojetsup.web.db.model.*;
@@ -619,6 +621,23 @@ public abstract class DB {
     public void exportGroupsToFile(String filename) throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
         getGroups().save(filename);
+    }
+    public void exportGroupsNonENSToFile(String filename) throws IOException {
+        LOGGER.info("Export des groupes vers un fichier local.");
+        List<Group> groups = new ArrayList<>(getGroups().getGroups());
+        groups.removeIf(g -> ! g.getLycee().equals("graves")
+                && !g.getLycee().equals("bremonthier")
+                && !g.getLycee().equals("vaclav")
+                && !g.getLycee().equals("libourne")
+        );
+        Serialisation.toJsonFile(filename, groups, true);
+        List<String> admins = groups.stream().flatMap(g -> g.getAdmins().stream()).toList();
+        try(CsvTools tool = new CsvTools(filename + ".csv", ';')) {
+            for (String admin : admins) {
+                tool.append(admin);
+                tool.newLine();
+            }
+        }
     }
 
     protected abstract void saveGroup(Group group);

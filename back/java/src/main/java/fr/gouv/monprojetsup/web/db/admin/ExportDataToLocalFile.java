@@ -36,6 +36,8 @@ public class ExportDataToLocalFile {
 
         db.load(config);
 
+        db.exportGroupsNonENSToFile("groupsNonENS.json");
+
         db.exportTracesToFile("traces.json", false);
         copyFile(Path.of("traces.json"), Path.of("traces_" + LocalDateTime.now() + ".json"));
         copyFile(Path.of("traces.json"), Path.of("data/traces_" + LocalDateTime.now() + ".json"));

@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService.SuggestionsDTO.Suggestion;
 import fr.gouv.monprojetsup.tools.Serialisation;
-import fr.gouv.monprojetsup.web.db.model.Groups;
 import fr.gouv.monprojetsup.web.db.model.User;
 
 import java.io.IOException;
@@ -19,8 +18,6 @@ public class StressTest {
         System.out.println("Analyzing users");
 
         /* load all users as a list of users from the file "usersExpeENS.json" */
-
-        Groups groups = Serialisation.fromJsonFile("groups.json", Groups.class);
 
         List<User> usersOfInterest
                 = Serialisation.fromJsonFile(
