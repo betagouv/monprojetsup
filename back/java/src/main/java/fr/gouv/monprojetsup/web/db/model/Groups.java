@@ -140,16 +140,10 @@ public class Groups {
     public synchronized List<Group> addOrRemoveMember(
             String groupId,
             String memberLogin,
-            boolean addMember,
-            @Nullable String groupToken,
-            boolean verifyToken
+            boolean addMember
     ) throws DBExceptions.EmptyGroupIdException, DBExceptions.UnknownGroupException, DBExceptions.UserInputException.InvalidGroupTokenException {
         memberLogin = normalizeUser(memberLogin);
         Group g = findGroup(groupId);
-        boolean rightToken = !verifyToken || (groupToken != null && groupToken.equals(g.token()));
-        if(!rightToken) {
-            throw new DBExceptions.UserInputException.InvalidGroupTokenException();
-        }
         if (addMember) {
             String finalMemberLogin = memberLogin;
             List<Group> changedGroups = new ArrayList<>(this.groups.stream().filter(gr -> gr.hasMember(finalMemberLogin)).toList());

@@ -51,7 +51,7 @@ public class DailyUserBehaviourAnalysis {
         {
             List<ServerTrace> traces = db.getTraces();
 
-            List<Group> groups = new ArrayList<>(db.getGroups().getGroups());
+            List<Group> groups = new ArrayList<>(db.getAllGroups());
 
             List<User> users = new ArrayList<>(db.getUsers());
 
@@ -64,7 +64,7 @@ public class DailyUserBehaviourAnalysis {
         {
             List<ServerTrace> traces = db.getTraces();
 
-            List<Group> groups = new ArrayList<>(db.getGroups().getGroups());
+            List<Group> groups = new ArrayList<>(db.getAllGroups());
 
             List<User> users = new ArrayList<>(db.getUsers());
 

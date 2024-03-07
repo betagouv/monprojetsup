@@ -31,9 +31,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.web.db.DBExceptions.*;
 import static fr.gouv.monprojetsup.web.db.DBExceptions.UserInputException.*;
+import static fr.gouv.monprojetsup.web.db.model.Groups.computeMissingGroups;
 import static fr.gouv.monprojetsup.web.db.model.User.*;
 import static fr.gouv.monprojetsup.web.db.model.User.UserTypes.lyceen;
 import static java.lang.System.currentTimeMillis;
@@ -448,13 +450,14 @@ public abstract class DB {
         findOrCreateDemoGroup();
         assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup();
 
-        Groups theGroups = getGroups();
 
-        //create missing groups
-        List<Group> newGroups = theGroups.createMissingGroups();
+
+        List<Group> newGroups = computeMissingGroups(getLycees(), getAllGroups().stream().map(Group::getId).collect(Collectors.toSet()));
+
         newGroups.forEach(this::saveGroup);
 
-        List<Group> allGroups = new ArrayList<>(theGroups.getGroups());
+        List<Group> allGroups = getAllGroups();
+
         //initGroups
         for (Group group : allGroups) {
             boolean changed = group.init();
@@ -464,6 +467,8 @@ public abstract class DB {
         }
 
     }
+
+    public abstract List<Group> getAllGroups();
 
     /**********************************************************************************/
     /**********************************************************************************/
@@ -476,7 +481,7 @@ public abstract class DB {
 
     protected abstract void setSuperAdminUserTypes(Set<String> admins);
 
-    public abstract Groups getGroups();
+    public abstract Groups getGroupsAndLycees();
 
     public abstract Collection<Group> getGroupsOfLycee(String uai);
 
@@ -563,7 +568,7 @@ public abstract class DB {
     public abstract Group createNewGroup(@NotNull String lycee, @NotNull String sid) throws ModelException;
 
 
-    public abstract void addOrRemoveMember(String groupId, String memberLogin, boolean addMember, @Nullable String groupToken, boolean verifyToken);
+    public abstract void addOrRemoveMember(String groupId, String memberLogin, boolean addMember);
 
 
     /**
@@ -600,7 +605,7 @@ public abstract class DB {
 
     protected abstract void addToUserArrayField(String id, String field, Object val);
 
-    public abstract AdminInfosDTO getAdminInfos(String login) throws UnknownUserException;
+    public abstract AdminInfosDTO getAdminInfos(String login) throws UnknownUserException, UnknownGroupException;
 
     protected abstract boolean isEvalIndivisible(Set<String> lycees);
 
@@ -620,11 +625,11 @@ public abstract class DB {
 
     public void exportGroupsToFile(String filename) throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
-        getGroups().save(filename);
+        getGroupsAndLycees().save(filename);
     }
     public void exportGroupsNonENSToFile(String filename) throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
-        List<Group> groups = new ArrayList<>(getGroups().getGroups());
+        List<Group> groups = new ArrayList<>(getGroupsAndLycees().getGroups());
         groups.removeIf(g -> ! g.getLycee().equals("graves")
                 && !g.getLycee().equals("bremonthier")
                 && !g.getLycee().equals("vaclav")
@@ -643,7 +648,7 @@ public abstract class DB {
     protected abstract void saveGroup(Group group);
 
     public void injectFromCsvFile(String filename) {
-        Pair<List<Group>, List<Lycee>> injectes = getGroups().loadGroupsToInjectFromCsvFile(filename);
+        Pair<List<Group>, List<Lycee>> injectes = getGroupsAndLycees().loadGroupsToInjectFromCsvFile(filename);
         LOGGER.info("Updating in db " + injectes.getLeft().size() + " groups and " + injectes.getRight().size() + " lycees");
         injectes.getLeft().forEach(this::saveGroup);
         injectes.getRight().forEach(this::saveLycee);
