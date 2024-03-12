@@ -95,7 +95,12 @@ public class DailyUserBehaviourAnalysis {
                 List.of(
                         "hugo.gimbert@gmail.com",
                         "louis.gleyo@gmail.com",
-                        "sandrine.marcillaud-authier@onisep.fr"
+                        "sandrine.marcillaud-authier@onisep.fr",
+			"clemence.biffaud@gmail.com",
+			"charlottemarielecuit@gmail.com",
+			"maxime.vigier@octo.com",
+			"aurelia.del.zotto@octo.com"
+
                 ),
                 //List.of("hugo.gimbert@gmail.com"),
                 subject,

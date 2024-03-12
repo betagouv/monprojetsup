@@ -31,7 +31,9 @@ public class SendDailyReport {
 
             Thread thread = MailSender.send(
                     config.getEmailConfig(),
-                    List.of("hugo.gimbert@gmail.com","louis.gleyo@gmail.com"),
+                    List.of("hugo.gimbert@gmail.com",
+			    "louis.gleyo@gmail.com"
+			    ),
                     "suivi MonProjetSup",
                     sw.toString().replace("\n", "<br/>")
             );
