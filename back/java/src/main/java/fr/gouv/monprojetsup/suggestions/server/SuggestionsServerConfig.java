@@ -11,14 +11,10 @@ import java.nio.file.Path;
 
 public class SuggestionsServerConfig {
 
-    private static final int DEFAULT_HTTP_PORT = 8001;
     private static final String CONFIG_FILENAME = "suggestionsConfig.json";
 
     @Getter
     private Config suggFilConfig = new Config();
-
-    @Getter
-    private int httpPort = DEFAULT_HTTP_PORT;
 
     @Getter
     private String referenceCasesFilename = "referenceCasesFilename.json";

@@ -92,17 +92,7 @@ public class DailyUserBehaviourAnalysis {
 
         Thread thread = MailSender.send(
                 config.getEmailConfig(),
-                List.of(
-                        "hugo.gimbert@gmail.com",
-                        "louis.gleyo@gmail.com",
-                        "sandrine.marcillaud-authier@onisep.fr",
-			"clemence.biffaud@gmail.com",
-			"charlottemarielecuit@gmail.com",
-			"maxime.vigier@octo.com",
-			"aurelia.del.zotto@octo.com"
-
-                ),
-                //List.of("hugo.gimbert@gmail.com"),
+                config.getDailyEmailTo(),
                 subject,
                 text.replace("\n", "<br/>"),
                 List.of(sourceFile),

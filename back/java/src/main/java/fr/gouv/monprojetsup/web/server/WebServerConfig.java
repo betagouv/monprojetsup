@@ -46,9 +46,9 @@ public final class WebServerConfig {
     @Getter
     private Set<String> admins = new HashSet<>(List.of(DB.DEFAULT_SUPERUSER));
     @Getter
-    private boolean noAuthentificationMode = false;
+    private Set<String> dailyEmailTo = new HashSet<>();
     @Getter
-    private int httpPort = DEFAULT_HTTP_PORT;
+    private boolean noAuthentificationMode = false;
     @Getter
     private boolean verbose = false;
     @Getter
@@ -66,12 +66,9 @@ public final class WebServerConfig {
     @Getter
     private String mongodbProtocol = null;
     @Getter
-    private boolean useMongoDB = false;
-    @Getter
     private String supportEmailAddress = DEFAULT_SUPPORT_ADDRESS;
     @Getter
     private String errorsEmailAddress = DEFAULT_ERRORS_ADDRESS;
-
     @Getter
     private boolean doNotProvideSuggestions = false;
     @Getter
