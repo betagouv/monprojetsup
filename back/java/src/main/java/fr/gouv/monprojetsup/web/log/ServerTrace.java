@@ -30,4 +30,7 @@ public record ServerTrace(String timestamp, String origin, String event, Object 
         return timestamp + " - " + event;
     }
 
+    public boolean isSeeingDetails() {
+        return event != null && event.contains("doOpenDetailsModal");
+    }
 }

@@ -21,21 +21,21 @@ import java.nio.file.StandardCopyOption;
 @SpringBootApplication
 @EnableMongoRepositories
 @ComponentScan(basePackages = {"fr.gouv.monprojetsup"})
-public class ExportTracesAndClearFromDB {
+public class ExportTraces {
     public static void main(String[] args) throws IOException, DBExceptions.ModelException {
         // Replace the placeholder with your Atlas connection string
 
         WebServerConfig config = WebServerConfig.load();
 
         ConfigurableApplicationContext context =
-                new SpringApplicationBuilder(ExportTracesAndClearFromDB.class)
+                new SpringApplicationBuilder(ExportTraces.class)
                         .web(WebApplicationType.NONE)
                         .run(args);
 
         DBMongo db = context.getBean(DBMongo.class);
 
         db.load(config);
-        db.exportTracesToFile("traces.json", true);
+        db.exportTracesToFile("traces.json");
 
         SpringApplication.exit(context);
 

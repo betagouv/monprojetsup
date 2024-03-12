@@ -455,14 +455,11 @@ public class DBMongo extends DB implements Closeable {
     }
 
 
-    public void exportTracesToFile(String s, boolean emptyCollection) throws IOException {
+    public void exportTracesToFile(String s) throws IOException {
         LOGGER.info("Export de straces ver sun fichier local");
         Serialisation.toJsonFile(s, tracesDb.findAll().stream()
                 .sorted(Comparator.comparing(ServerTrace::timestamp))
                 .toList(), true);
-        if(emptyCollection) {
-            clear(TRACES_COLL_NAME);
-        }
     }
 
     @Override

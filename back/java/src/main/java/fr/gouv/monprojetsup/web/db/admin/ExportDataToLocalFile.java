@@ -38,7 +38,7 @@ public class ExportDataToLocalFile {
 
         db.exportGroupsNonENSToFile("groupsNonENS.json");
 
-        db.exportTracesToFile("traces.json", false);
+        db.exportTracesToFile("traces.json");
         copyFile(Path.of("traces.json"), Path.of("traces_" + LocalDateTime.now() + ".json"));
         copyFile(Path.of("traces.json"), Path.of("data/traces_" + LocalDateTime.now() + ".json"));
 
@@ -63,7 +63,7 @@ public class ExportDataToLocalFile {
         SpringApplication.exit(context);
     }
 
-    public static void copyFile(Path originalPath, Path copied) throws IOException {
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+    public static void copyFile(Path src, Path dest) throws IOException {
+        Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
     }
 }

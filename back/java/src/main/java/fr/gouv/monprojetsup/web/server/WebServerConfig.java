@@ -8,6 +8,7 @@ import lombok.Getter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +47,9 @@ public final class WebServerConfig {
     @Getter
     private Set<String> admins = new HashSet<>(List.of(DB.DEFAULT_SUPERUSER));
     @Getter
-    private Set<String> dailyEmailTo = new HashSet<>();
+    private Set<String> dailyEmailRecipients = new HashSet<>();
+    @Getter
+    private Set<String> dailyEmailENSRecipients = new HashSet<>();
     @Getter
     private boolean noAuthentificationMode = false;
     @Getter

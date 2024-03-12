@@ -3,13 +3,13 @@ package fr.gouv.monprojetsup.tools.perfs;
 import fr.gouv.monprojetsup.web.db.model.Group;
 import fr.gouv.monprojetsup.web.log.ServerTrace;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -63,17 +63,10 @@ public record UsersBehaviourReport(
                 behaviours.entrySet().stream()
                         .map(entry -> new GroupBehaviourReport(
                                 entry.getKey().getLycee(),
-                                entry.getKey().getName(),
-                                entry.getValue().stream()
-                                        .collect(Collectors.groupingBy(
-                                                ServerTrace::origin,
-                                                Collectors.mapping(trace -> trace, Collectors.toList())
-                                        ))
-                                        .values().stream()
-                                        .collect(Collectors.toMap(
-                                                tracesForUser -> doAnonymize(anonymize,tracesForUser.get(0).origin()),
-                                                tracesForUser -> UserBehaviourReport.from(tracesForUser)
-                                        ))
+                                Group.lyceeToGroupId(entry.getKey().getLycee(), entry.getKey().getClasse()),
+                                entry.getValue(),
+                                anonymize
+
                         ))
                         .collect(Collectors.toMap(GroupBehaviourReport::groupe, gb -> gb))
         );
@@ -92,18 +85,20 @@ public record UsersBehaviourReport(
     public String getMacrosStats() {
         StringBuilder sb = new StringBuilder();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy à HH:mm");
+
         sb.append("Statistiques sur la période ")
-                .append(begin)
+                .append(LocalDateTime.parse(begin).format(formatter))
                 .append(" - ")
-                .append(end)
+                .append(LocalDateTime.parse(end).format(formatter))
                 .append("\n")
                 .append("\n");
 
         sb
                 .append("Lycées: ")
-                .append(groupsBehaviours.values().stream().map(g -> g.lycee).count())
+                .append(groupsBehaviours.values().stream().map(g -> g.lycee).distinct().count())
                 .append("\n")
-                .append("Classes/groupes: ").append(groupsBehaviours.values().stream().map(g -> g.groupe).count())
+                .append("Classes/groupes: ").append(groupsBehaviours.values().stream().map(g -> g.groupe).distinct().count())
                 .append("\n")
                 .append("Lycéens: ")
                 .append(groupsBehaviours
@@ -120,14 +115,16 @@ public record UsersBehaviourReport(
                 .append("Lycées avec au moins 5 lycéens: ").append(realGroups.stream().map(g -> g.lycee).distinct().count())
                 .append("\n")
                 .append("Classes/groupes avec au moins 5 lycéens: ").append(realGroups.size())
-                .append("\n")
-                .append(realGroups.stream().map(g -> g.groupe)
-                        .collect(
-                                Collectors.joining("\n\t\t", "\t\t", "\n")
-                        )
-                )
-                .append("\n")
-                .append("Traces d'évènements: " + groupsBehaviours.values().stream().mapToLong(
+                .append("\n");
+        if(realGroups.size() < 10) {
+            sb.append(realGroups.stream().map(g -> g.groupe)
+                            .collect(
+                                    Collectors.joining("\n\t\t", "\t\t", "\n")
+                            )
+                    )
+                    .append("\n");
+        }
+        sb                .append("Traces d'évènements: " + groupsBehaviours.values().stream().mapToLong(
                         g -> g.nbTraces())
                         .sum()
                 )
@@ -136,8 +133,12 @@ public record UsersBehaviourReport(
                         + groupsBehaviours.values().stream().mapToLong(b -> b.nbUsersWithNavLongerThan(MIN_NAV_TIME_MINUTES)).sum()
                 )
                 .append("\n")
-                .append("Lycéens ayant vu une ou plusieurs suggestions de filières: "
+                .append("Lycéens ayant vu une ou plusieurs suggestions de formations: "
                         + groupsBehaviours.values().stream().mapToLong(GroupBehaviourReport::nbUsersSeeingFiliereReco).sum()
+                )
+                .append("\n")
+                .append("Lycéens ayant ouvert au moins une fiche: "
+                        + groupsBehaviours.values().stream().mapToLong(GroupBehaviourReport::nbUsersSeeingDetails).sum()
                 )
                 .append("\n")
                 .append("Lycéens ayant visité au moins une url parcoursup: "
@@ -162,6 +163,28 @@ public record UsersBehaviourReport(
             String groupe,
             Map<String, UserBehaviourReport> individualBehaviours
     ) {
+        public GroupBehaviourReport(String lycee, String groupe, List<ServerTrace> value, boolean anonymize) {
+            this(lycee,groupe, new HashMap<>());
+            List<UserBehaviour> behaviours = new ArrayList<>();
+            LocalDateTime last = null;
+            Map<String,Integer> sessionIds = new HashMap<>();
+            Map<String,LocalDateTime> lastTime = new HashMap<>();
+            for (ServerTrace serverTrace : value) {
+                LocalDateTime now = LocalDateTime.parse(serverTrace.timestamp());
+                String origin = doAnonymize(anonymize,serverTrace.origin()) + " - " + sessionIds.computeIfAbsent(serverTrace.origin(), k -> 1);
+                if (lastTime.containsKey(origin)
+                        && now.isAfter(lastTime.get(origin).plusMinutes(20))) {
+                    int newSessionId = sessionIds.get(serverTrace.origin()) + 1;
+                    sessionIds.put(serverTrace.origin(), newSessionId);
+                    lastTime.put(serverTrace.origin(), now);
+                    origin = doAnonymize(anonymize, serverTrace.origin()) + " - " + newSessionId;
+                }
+                val behav = individualBehaviours
+                        .computeIfAbsent(origin, k -> new UserBehaviourReport());
+                behav.behaviour.add(new UserBehaviour(serverTrace));
+            }
+        }
+
         public long nbTraces() {
             return individualBehaviours.values().stream().mapToLong(ub -> ub.behaviour.size()).sum();
         }
@@ -180,12 +203,20 @@ public record UsersBehaviourReport(
         public long nbUsersSeeingOnisepUrl() {
             return individualBehaviours.values().stream().filter(UserBehaviourReport::hasSeenOnisepUrl).count();
         }
+
+        public long nbUsersSeeingDetails() {
+            return individualBehaviours.values().stream().filter(UserBehaviourReport::hasSeenDetails).count();
+        }
     }
 
 
     public record UserBehaviourReport(
             List<UserBehaviour> behaviour
     ) {
+        public UserBehaviourReport() {
+            this(new ArrayList<>());
+        }
+
         long navigationTimeInMinutes() {
             List<LocalDateTime> dates = behaviour.stream()
                     .map(st -> LocalDateTime.parse(st.getTrace().timestamp()))
@@ -212,6 +243,10 @@ public record UsersBehaviourReport(
 
         public static UserBehaviourReport from(List<ServerTrace> traces) {
             return new UserBehaviourReport(traces.stream().map(UserBehaviour::new).toList());
+        }
+
+        public boolean hasSeenDetails() {
+            return behaviour.stream().anyMatch(b -> b.getTrace().isSeeingDetails());
         }
     }
 
