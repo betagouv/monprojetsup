@@ -219,8 +219,10 @@ public record ReferenceCases(
             output.append(List.of(
                     "Nom",
                     "Profil",
-                    "Centres intérêts",
-                    "Formatione et métiers d'intérêt",
+                    "Goûts et compétences",//Intérets
+                    "Centres intérêts",//thematiques
+                    "Idées et Favoris Métiers",//isMetier
+                    "Idées et Favoris Formatione",//isFormation
                     "Corbeille (refus / pas intéressé)",
                     "Suggestions définies par experts",
                     "Suggestions effectuées par l'algorithme",

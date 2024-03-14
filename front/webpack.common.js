@@ -70,10 +70,6 @@ module.exports = {
           to: "img/parcoursup_square.jpg",
         },
         { from: "src/data/data.zip", to: "data/data.zip" },
-        {
-          from: "src/php/front_labri/*.php",
-          to: "php/front_labri/[name][ext]",
-        },
       ],
     }),
   ],
