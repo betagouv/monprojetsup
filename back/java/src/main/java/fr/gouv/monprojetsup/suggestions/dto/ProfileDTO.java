@@ -99,6 +99,13 @@ public record ProfileDTO(
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
+    public static String toExplanations(List<String> list, String sep) {
+        return list.stream()
+                .map(e -> ServerData.getDebugLabel(e))
+                .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
+    }
+
+
     public ProfileDTO cleanupDates() {
         return new ProfileDTO(
                 niveau,

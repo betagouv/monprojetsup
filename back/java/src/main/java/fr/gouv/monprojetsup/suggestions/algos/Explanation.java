@@ -14,6 +14,8 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.ServerData.*;
+
 
 record ExplanationApprentissage (String option) {}
 
@@ -49,9 +51,40 @@ record ExplanationTagShort(List<String> ns) {
     }
 
     public String toExplanation() {
-        return ns().stream().map(
+        return toExplanation(",");
+    }
+    public String toExplanation(String sep) {
+        StringBuilder ssb = new StringBuilder();
+
+        ssb.append(ns().stream()
+                        .filter(s -> isFiliere(s))
+                .sorted().map(
                 ServerData::getDebugLabel
-        ).collect(Collectors.joining(","));
+        ).collect(Collectors.joining(sep,"\t","\n")))
+        ;
+
+        ssb.append(ns().stream()
+                .filter(s -> isMetier(s))
+                .sorted().map(
+                        ServerData::getDebugLabel
+                ).collect(Collectors.joining(sep,"\n\t","\n")))
+        ;
+
+        ssb.append(ns().stream()
+                .filter(s -> isTheme(s))
+                .sorted().map(
+                        ServerData::getDebugLabel
+                ).collect(Collectors.joining(sep,"\n\t","\n")))
+        ;
+
+        ssb.append(ns().stream()
+                .filter(s -> isInteret(s))
+                .sorted().map(
+                        ServerData::getDebugLabel
+                ).collect(Collectors.joining(sep,"\n\t","\n")))
+        ;
+
+        return ssb.toString();
     }
 }
 
@@ -208,12 +241,38 @@ public class Explanation {
         return e;
     }
 
+    public String toHumanReadable() {
+        StringBuilder sb = new StringBuilder();
+        if(geo != null) {
+            geo.forEach(explanationGeo -> {
+                sb.append("préférence géographique:")
+                        .append(" ville=")
+                        .append(explanationGeo.city)
+                        .append(" distance=")
+                        .append(explanationGeo.distance).append("\n");
+            });
+        }
+        if(app != null) sb.append("Apprentissage: ").append(app.option()).append("\n");
+        if(tags != null) {
+            sb.append("Lien avec:\n\n").append(tags.toExplanation("\n\t")).append("\n");
+        }
+        if(dur != null) sb.append("Durée: ").append(dur.option()).append("\n");
+        if(simi != null) sb.append("Similarité: ").append(simi.fl()).append("\n");
+        if(tbac != null) sb.append("Type de bac: ").append(tbac).append("\n");
+        if(bac != null) sb.append("Bac: ").append(bac).append("\n");
+        if(moygen != null) sb.append("Moyenne générale: ").append(moygen).append("\n");
+        if(spec != null) sb.append("Spécialités: ").append(spec).append("\n");
+        if(interets != null) sb.append("Intérêts: ").append(interets).append("\n");
+        if(debug != null) sb.append(debug.expl()).append("\n");
+        return sb.toString();
+    }
+
     public record ExplanationGeo  (int distance, String city, @Nullable String form) {}
 
     public String toExplanation() {
         StringBuilder sb = new StringBuilder();
         if(geo != null) sb.append("geo=").append(geo).append("\n");
-        if(app != null) sb.append("geo=").append(geo).append("\n");
+        if(app != null) sb.append("app=").append(app).append("\n");
         if(tag != null) sb.append("tag=").append(tag.toExplanation()).append("\n");
         if(tags != null) sb.append("tags=").append(tags.toExplanation()).append("\n");
         if(dur != null) sb.append("dur=").append(dur).append("\n");

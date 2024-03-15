@@ -178,6 +178,11 @@ public class ServerData {
         return key.startsWith(Constants.THEME_PREFIX);
     }
 
+    public static boolean isInteret(@NotNull String key) {
+        return key.startsWith(Constants.CENTRE_INTERETS_ONISEP)
+                || key.startsWith(Constants.CENTRE_INTERETS_ROME);
+    }
+
     static void loadBackEndData() throws IOException {
 
         BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class CsvTools implements Closeable {
 
@@ -94,4 +95,8 @@ public class CsvTools implements Closeable {
         writer.append(String.valueOf(b));
         skipNextSeparator = false;
     }
+
+    public void append(Stream<Map.Entry<String, Integer>> entryStream, String s) {
+    }
+
 }

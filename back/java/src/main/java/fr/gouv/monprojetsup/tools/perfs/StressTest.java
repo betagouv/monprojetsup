@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.web.db.model.User;
 import java.io.IOException;
 import java.util.List;
 
+import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.useRemoteUrl;
 import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.callSuggestionsService;
 import static fr.gouv.monprojetsup.web.server.WebServer.LOGGER;
 
@@ -18,6 +19,9 @@ public class StressTest {
         System.out.println("Analyzing users");
 
         /* load all users as a list of users from the file "usersExpeENS.json" */
+
+        //stree test of the remote server
+        useRemoteUrl(true);
 
         List<User> usersOfInterest
                 = Serialisation.fromJsonFile(

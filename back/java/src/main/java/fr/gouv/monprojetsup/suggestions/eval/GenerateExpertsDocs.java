@@ -11,12 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.useRemoteUrl;
+import static fr.gouv.monprojetsup.suggestions.eval.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.eval.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
-public class GenerateResume {
+public class GenerateExpertsDocs {
 
 
     public static void main(String[] args) throws Exception {
+
 
         try {
             ServerData.statistiques = new PsupStatistiques();
@@ -29,8 +32,17 @@ public class GenerateResume {
             server.init();
         }
 
-        ReferenceCases cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
 
+        ReferenceCases cases;
+        try {
+            cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
+        } catch (Exception e) {
+            LOGGER.info("Generating ref profiles");
+            Simulate.main(args);
+            cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
+        }
+
+        cases.toDetails("détails", true);
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(

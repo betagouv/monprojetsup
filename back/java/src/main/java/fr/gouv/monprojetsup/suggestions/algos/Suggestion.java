@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static fr.gouv.monprojetsup.data.Constants.BR;
+import static java.lang.System.lineSeparator;
+
 /**
  * A single suggestion. Including, optionally, the explanations.
  */
@@ -70,14 +73,16 @@ public record Suggestion(
 
     public String humanReadable() {
         StringBuilder sb = new StringBuilder();
-        sb.append(ServerData.getDebugLabel(fl));
+        sb.append("\t" + ServerData.getDebugLabel(fl));
+        sb.append(lineSeparator());
+        sb.append(lineSeparator());
         if(expl != null) {
             for (Explanation e : expl) {
-                if(e.tag != null) {
+                if(e.tag != null || e.debug == null) {
                     continue;
                 }
-                sb.append("\n\t");
-                sb.append(e.toExplanation());
+                sb.append("\n");
+                sb.append(e.toHumanReadable().replace(BR, ""));
             }
         }
         return sb.toString();

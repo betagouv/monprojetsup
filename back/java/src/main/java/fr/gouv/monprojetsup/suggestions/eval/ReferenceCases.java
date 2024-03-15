@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesServi
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService;
 import fr.gouv.monprojetsup.tools.Serialisation;
 import fr.gouv.monprojetsup.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.web.server.WebServer;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,15 +24,16 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ONISEP;
+import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ROME;
+import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.suggestions.dto.ProfileDTO.toExplanationString;
+import static fr.gouv.monprojetsup.suggestions.dto.ProfileDTO.toExplanations;
 import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
@@ -94,14 +96,16 @@ public record ReferenceCases(
             //stores label to explanations
             List<Suggestion> suggestions
     ){
-        public static final String STAR_SEP = "***********************************************\n";
+        public static final String STAR_SEP = "********************************************************************\n";
 
-        public static boolean USE_LOCAL_URL = false;
+        protected static boolean USE_LOCAL_URL = true;
 
         public static final String LOCAL_URL = "http://localhost:8002/";
         public static final String REMOTE_URL = "https://monprojetsup.fr/";
 
-        public static final String URL = USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL;
+        public static void useRemoteUrl(boolean useRemote) {
+            USE_LOCAL_URL = !useRemote;
+        }
 
         public ReferenceCase(String explanationString, ProfileDTO profile) {
             this(explanationString, profile, new ArrayList<>(), new ArrayList<>());
@@ -125,22 +129,20 @@ public record ReferenceCases(
                 fos.write("Profile: " + pf.toExplanationString());
                 fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
                 if(expectations != null && !expectations.isEmpty()) {
-                    fos.write("Expectations:\n" + expectations.stream()
+                    fos.write("Suggestions définies par experts:\n" + expectations.stream()
                             .collect(Collectors.joining("\n\t", "\t", "\n")));
                 } else {
-                    fos.write("Expectations: none\n");
+                    fos.write("Aucune suggestion définie par experts\n");
                 }
                 fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
-                fos.write("Suggestions:\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
+                fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
-                fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
-                fos.write("Details:\n");
-                for (Suggestion entry : suggestions) {
-                    String label = ServerData.getDebugLabel(entry.fl());
-                    fos.write(lineSeparator() + lineSeparator() +  STAR_SEP);
-                    fos.write("***** Reco ****   " + label + "   *********\n");
-                    fos.write(STAR_SEP + lineSeparator() + lineSeparator());
-                    if(includeDetails) {
+                //fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
+                if(includeDetails) {
+                    for (Suggestion entry : suggestions) {
+                        String label = ServerData.getDebugLabel(entry.fl());
+                        fos.write(lineSeparator() + STAR_SEP + lineSeparator());
+                        fos.write("Explications détaillées sur la suggestion:" + lineSeparator());
                         fos.write(entry.humanReadable());
                     }
                 }
@@ -159,6 +161,7 @@ public record ReferenceCases(
 
         ReferenceCases cases = ReferenceCases.loadFromFile("referenceCases.json");
 
+        WebServer.loadConfig();
 
         try {
             ServerData.statistiques = new PsupStatistiques();
@@ -170,6 +173,7 @@ public record ReferenceCases(
             SuggestionServer server = new SuggestionServer();
             server.init();
         }
+
 
         /*
         //uncomment to anonymize the reference cases
@@ -208,6 +212,10 @@ public record ReferenceCases(
                 fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions.stream()
                         .map(e -> ServerData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
+                /*fos.write(lineSeparator() + STAR_SEP);
+                    fos.write("Explication détaillées sur la suggestion:" +  lineSeparator());
+                        fos.write(entry.humanReadable());*/
+
             }
         }
         return fos.toString();
@@ -226,17 +234,31 @@ public record ReferenceCases(
                     "Corbeille (refus / pas intéressé)",
                     "Suggestions définies par experts",
                     "Suggestions effectuées par l'algorithme",
+                    "Sujets de discussion avec le lycéen",
                     "Notes et Remarques")
             );
             int i = 1;
+            Set<String> interets = new HashSet<>(List.of(CENTRE_INTERETS_ROME, CENTRE_INTERETS_ONISEP));
+
             for (ReferenceCase refCase : cases) {
                 String name = "Profil " + i;
                 i++;
                 if (refCase.name() != null && !refCase.name.contains("ProfileDTO")) name = refCase.name();
                 output.append(name);
                 output.append(refCase.pf.toExplanationStringShort(""));
-                output.append(toExplanationString(refCase.pf.scores(), ""));
-                output.append(toExplanationString(refCase.pf.suggApproved(), ""));
+
+                output.append(toExplanations(refCase.pf.scores().keySet().stream()
+                        .filter(e -> isInteret(e)
+                        )
+                        .toList(),""));
+
+                output.append(toExplanations(refCase.pf.scores().keySet().stream()
+                        .filter(e -> isTheme(e)
+                        )
+                        .toList(),""));
+
+                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> isMetier(s.fl())).toList(), ""));
+                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> isFiliere(s.fl())).toList(), ""));
                 output.append(toExplanationString(refCase.pf.suggRejected(), ""));
                 output.append(
                         refCase.expectations == null ? "" :
@@ -246,10 +268,13 @@ public record ReferenceCases(
                                         )
                 );
                 output.append(toExplanationString(refCase.suggestions, ""));
+                output.append("");
+                output.append("");
                 output.newLine();
             }
         }
     }
+
 
     public @Nullable ReferenceCase getSuggestionsAndExplanations(
             ReferenceCase refCase
@@ -350,7 +375,7 @@ public record ReferenceCases(
     public static GetExplanationsAndExamplesService.Response callExplanationsService(
             GetExplanationsAndExamplesService.Request request
     ) throws IOException, InterruptedException {
-        String response = post(URL + "api/1.1/public/explanations", request);
+        String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/explanations", request);
         return new Gson().fromJson(response, GetExplanationsAndExamplesService.Response.class);
     }
 
@@ -358,7 +383,7 @@ public record ReferenceCases(
         return callSuggestionsService(new GetSuggestionsService.Request(pf)).suggestions().suggestions();
     }
     private static GetSuggestionsService.Response callSuggestionsService(GetSuggestionsService.Request pf) throws IOException, InterruptedException {
-        String url = URL + "api/1.1/public/suggestions";
+        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/suggestions";
         String response = post(url, pf);
         return new Gson().fromJson(response, GetSuggestionsService.Response.class);
     }

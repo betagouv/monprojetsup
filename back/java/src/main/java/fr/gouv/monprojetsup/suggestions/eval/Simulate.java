@@ -9,18 +9,22 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.useRemoteUrl;
 
 public class Simulate {
 
     public static final Logger LOGGER = Logger.getLogger(Simulate.class.getName());
     public static final String REF_CASES_WITH_SUGGESTIONS = "refCasesWithSuggestions.json";
 
-    private static Integer RESTRICT_TO_INDEX = 1;
+    private static Integer RESTRICT_TO_INDEX = null;
 
     private static final boolean ONLY_FORMATIONS = true;
 
     public static void main(String[] args) throws Exception {
 
+
+        //we want the server in debug mode, with full explanations
+        useRemoteUrl(false);
 
         LOGGER.info("Loading config...");
         try {

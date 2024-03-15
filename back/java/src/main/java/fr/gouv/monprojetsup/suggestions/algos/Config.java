@@ -31,6 +31,17 @@ public final class Config {
     public static final String BONUS_MOY_GEN = "moygen";
     public static final double NO_MATCH_SCORE = 0.0;
 
+    public static final Map<String,String> BONUS_LABELS = Map.of(
+            BONUS_TAGS,"mots-clés",
+            BONUS_SPECIALITE,"EDS",
+            BONUS_DURATION,"durée",
+            BONUS_SIM,"similarité avec autres favoris",
+            BONUS_MOY_GEN,"moyenne générale",
+            BONUS_TYPE_BAC,"type de bac",
+            BONUS_APPRENTISSAGE,"preférences apprentissage",
+            BONUS_GEO,"préférences géographiques",
+            BONUS_MENTION_BAC,"moyenne au bac"
+            );
 
     /* sspecial wiehg tused to indicate that we use the score has a multiplier rather than addition */
     public static final double SPECIAL_WEIGHT_MULTIPLIER = 0.0000007777777;

@@ -144,7 +144,7 @@ public class AffinityEvaluator {
         List<Explanation> sortedExpl = unsortedExpl.stream().map(e -> e.cg2).toList();
         if (cfg.isVerboseMode() && nonZeroScores != null) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl);
-            expl2.add(Explanation.getDebugExplanation("Score Total: " + totalScoreforFiliere + ".<br/>"));
+            expl2.add(Explanation.getDebugExplanation("Score Total: " + totalScoreforFiliere + BR));
 
             List<Map.Entry<String, Double>> entries = new ArrayList<>(nonZeroScores.entrySet());
             entries.sort(Comparator.comparing(e -> -e.getValue()));
@@ -153,12 +153,12 @@ public class AffinityEvaluator {
                 if(weight == SPECIAL_WEIGHT_MULTIPLIER) {
                     expl2.add(Explanation.getDebugExplanation(
                             e.getKey()
-                                    + " global multiplier "
+                                    + " multiplicateur global "
                                     + getMultiplier(e.getKey(),e.getValue())
                     ));
                 } else {
                     expl2.add(Explanation.getDebugExplanation(
-                            e.getKey()
+                            BONUS_LABELS.getOrDefault(e.getKey(), e.getKey())
                                     + " "
                                     + e.getValue()
                                     + " * "
@@ -521,7 +521,7 @@ public class AffinityEvaluator {
 
     private String getTagSubScoreExplanation(double score, Map<String, Double> subscores) {
 
-        return "Tags scores total: " + score + "=Sum( "
+        return "Mots-clés scores total: " + score + "=Sum( "
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
