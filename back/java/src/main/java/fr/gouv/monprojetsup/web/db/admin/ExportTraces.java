@@ -41,7 +41,4 @@ public class ExportTraces {
 
     }
 
-    private static void copyFile(Path originalPath, Path copied) throws IOException {
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
-    }
 }

@@ -58,48 +58,12 @@ public class Groups {
         return answer;
     }
 
-    public synchronized void acceptUserCreation(String login) {
-        groups.forEach(group -> {
-            if (group.membersWaiting().contains(login)) {
-                group.addMember(login);
-            }
-        });
-        updateGroupData();
-    }
-
-    public synchronized boolean isEvalENS(Set<String> lycees) {
-        return lycees.stream().anyMatch(lyceesExpeENS::contains);
-    }
-
-    public synchronized boolean isEvalIndivisible(Set<String> lycees) {
-        return lycees.stream().anyMatch(lyceesExpeIndivisible::contains);
-    }
-
     /* cached info */
     private final transient Map<String, Group> members = new ConcurrentHashMap<>();
     private final transient Map<String, Group> idToGroup = new ConcurrentHashMap<>();
 
     private final transient Set<String> lyceesExpeENS = new HashSet<>();
     private final transient Set<String> lyceesExpeIndivisible = new HashSet<>();
-
-    public synchronized @Nullable Group getGroup(String login) {
-        return members.get(login);
-    }
-
-    public synchronized Group createNewGroup(@NotNull Lycee lycee, @NotNull String sid) throws DBExceptions.EmptyGroupIdException {
-        if (sid.isEmpty()) {
-            throw new DBExceptions.EmptyGroupIdException();
-        }
-        String gid = Normalizer.normalize(lyceeToGroupId(lycee.getId(), sid).toLowerCase(), Normalizer.Form.NFKD);
-        Group current = groups.stream().filter(g -> gid.equals(g.getId())).findAny().orElse(null);
-        if (current == null) {
-            current = Group.getNewGroup(lycee.getId(), gid);
-            groups.add(current);
-            updateGroupData();
-        }
-        return  current;
-    }
-
 
     @NotNull
     public synchronized Group createNewGroup(@NotNull Lycee lycee, @NotNull Classe classe) {
@@ -113,57 +77,6 @@ public class Groups {
             current.setIsOpenedForNewMembers(true);
         }
         return current;
-    }
-
-    public synchronized void deleteGroup(@NotNull String id) {
-        groups.removeIf(g -> id.equals(g.getId()));
-        updateGroupData();
-    }
-
-    @NotNull
-    public synchronized Group findGroup(String id) throws DBExceptions.EmptyGroupIdException, DBExceptions.UnknownGroupException {
-        if (id == null || id.isEmpty()) {
-            throw new DBExceptions.EmptyGroupIdException();
-        }
-        Group group = idToGroup.get(id);
-        if (group == null) {
-            throw new DBExceptions.UnknownGroupException();
-        }
-        return group;
-    }
-
-    public synchronized void deleteUser(String user) {
-        groups.forEach(g -> g.remove(user));
-        updateGroupData();
-    }
-
-    public synchronized List<Group> addOrRemoveMember(
-            String groupId,
-            String memberLogin,
-            boolean addMember
-    ) throws DBExceptions.EmptyGroupIdException, DBExceptions.UnknownGroupException, DBExceptions.UserInputException.InvalidGroupTokenException {
-        memberLogin = normalizeUser(memberLogin);
-        Group g = findGroup(groupId);
-        if (addMember) {
-            String finalMemberLogin = memberLogin;
-            List<Group> changedGroups = new ArrayList<>(this.groups.stream().filter(gr -> gr.hasMember(finalMemberLogin)).toList());
-            changedGroups.forEach(gr -> gr.members().remove(finalMemberLogin));
-            g.addMember(memberLogin);
-            changedGroups.add(g);
-            updateGroupData();
-            return changedGroups;
-        } else {
-            g.removeMember(memberLogin);
-            updateGroupData();
-            return List.of(g);
-        }
-    }
-
-    public synchronized void addAdmin(String groupId, String login) throws DBExceptions.UnknownGroupException, DBExceptions.EmptyGroupIdException {
-        login = normalizeUser(login);
-        Group grp = findGroup(groupId);
-        grp.addAdmin(login);
-        updateGroupData();
     }
 
     public synchronized void updateGroupData() {
@@ -356,87 +269,6 @@ public class Groups {
         })).filter(Objects::nonNull).toList();
     }
 
-    public synchronized AdminInfosDTO getAdminInfos(
-            String login,
-            User.Role role,
-            User.UserTypes type,
-            User.UserTypes appType,
-            Set<String> lyceesUser,
-            int profileCompleteness,
-            User.UserConfig config
-    ) {
-
-        //on liste les lycées de l'utilisateur
-        List<Lycee> lyceesUserItems =
-                lycees.stream().filter(l ->
-                        role == User.Role.ADMIN
-                                || lyceesUser.contains(l.getId())
-                ).toList();
-
-        AdminInfosDTO result = new AdminInfosDTO(
-                role,
-                type,
-                appType,
-                lyceesUserItems,
-                WebServer.config().isConfirmEmailOnAccountCreation(),
-                profileCompleteness,
-                config
-        );
-
-        List<GroupDTO> groups = this.groups.stream().map(Group::toDTO).toList();
-
-        if (role == User.Role.ADMIN) {
-            result.groups().clear();
-            result.groups().addAll(groups);
-            return result;
-        } else if (role == User.Role.TEACHER) {
-            result.groups().addAll(
-                    groups.stream()
-                            .filter(g -> g.admins().contains(login)).toList()
-            );
-            result.openGroups().addAll(
-                    groups.stream()
-                            .filter(g ->
-                                    !g.admins().contains(login)
-                                            && lyceesUser.contains(g.lycee())
-                            ).toList()
-            );
-            return result;
-        } else {//student only sees the list of admins, if he is in a group
-            Group group = getGroup(login);
-            if (group != null) {
-                //le lycéen est déjà dans un groupe
-                //on renvoie le groupe et l'élève
-                lycees.stream()
-                        .filter(l -> l.getId().equals(group.getLycee()) || l.getName().equals(group.getLycee()))
-                        .findAny()
-                        .ifPresent(
-                                lyc -> lyc.getClasses().stream()
-                                        .filter(c -> c.index().equals(group.getClasse()) || c.name().equals(group.getClasse()))
-                                        .findAny()
-                                        .ifPresent(
-                                                cla -> result.groups().add(miniGroup(lyc, cla, login, group))//au passage le lycéen reçoit le flag ENS
-                                        )
-                        );
-                //on inject la donneé groupe ENS pour simplifier le travail côté front
-                config.setExpeENSGroup(group.getExpeENSGroupe());
-            }
-            return result;
-        }
-    }
-
-    private synchronized Collection<Group> getOpenGroupsLycee(Lycee lycee) {
-        return
-                groups.stream()
-                        .filter(g -> Objects.equals(g.getLycee(), lycee.getName()))
-                        .filter(Group::isOpened)
-                        .map(Group::miniGroup)
-                        .toList();
-    }
-
-    public synchronized Lycee getLycee(String lycee) {
-        return lycees.stream().filter(l -> l.getId().equals(lycee)).findAny().orElse(null);
-    }
 
     public synchronized void loadGroups(List<Group> toList) {
         groups.clear();
@@ -450,16 +282,5 @@ public class Groups {
         updateGroupData();
     }
 
-    public synchronized void upsert(Lycee lycee) {
-        lycees.removeIf(l -> l.getId().equals(lycee.getId()));
-        lycees.add(lycee);
-        updateGroupData();
-    }
-
-    public synchronized void upsert(Group group) {
-        groups.removeIf(g -> g.getId().equals(group.getId()));
-        groups.add(group);
-        updateGroupData();
-    }
 
 }

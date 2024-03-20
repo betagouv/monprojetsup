@@ -54,10 +54,6 @@ public class DBMongo extends DB implements Closeable {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(DBMongo.class.getName());
 
     static final String ID = "id";
-    /**
-     * cached data on groups
-     */
-    protected Groups groups = new Groups();
 
     public DBMongo(
             @Autowired LyceesRepository lyceesDb,

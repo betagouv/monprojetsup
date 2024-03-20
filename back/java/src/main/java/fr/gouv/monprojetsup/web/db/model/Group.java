@@ -28,10 +28,10 @@ public final class Group {
     public static final String ADMINS_FIELD = "admins";
     public static final String MEMBERS_FIELD = "members";
     public static final String WAITING_FIELD = "waiting";
-    public static String EXPE_ENS_GROUPE = "expeENSGroupe";
-    public static String REGISTRATION_TOKEN_FIELD = "registrationToken";
-    public static String ADMIN_REGISTRATION_TOKEN_FIELD = "adminToken";
-    public static String EXPE_ENS_GROUPE_FIELD = "expeENSGroupe";
+    public static final String EXPE_ENS_GROUPE = "expeENSGroupe";
+    public static final String REGISTRATION_TOKEN_FIELD = "registrationToken";
+    public static final String ADMIN_REGISTRATION_TOKEN_FIELD = "adminToken";
+    public static final String EXPE_ENS_GROUPE_FIELD = "expeENSGroupe";
 
     private @NotNull String name;
 
@@ -89,14 +89,6 @@ public final class Group {
     public Group(Lycee lycee, Classe classe, String login, Set<String> admins, boolean contains, boolean contains1, boolean b, String expeENSGroupe) {
         this(lycee, classe, login, admins, contains, contains1, b);
         this.expeENSGroupe = expeENSGroupe;
-    }
-
-    public boolean isAccessibleWithToken(String code) {
-        return registrationToken != null && !registrationToken.isEmpty() && registrationToken.equals(code);
-    }
-
-    public boolean isAdminAccessibleWithToken(String code) {
-        return adminToken != null && !adminToken.isEmpty() && adminToken.equals(code);
     }
 
     private Group(@NotNull String lycee, @NotNull String sid) {
@@ -167,6 +159,10 @@ public final class Group {
         members.remove(normalizeUser(user));
     }
 
+    /**
+     * @param openGroup
+     * @return true if the group was changed
+     */
     public boolean setIsOpenedForNewMembers(boolean openGroup) {
         boolean changed = false;
         if(openGroup && registrationToken == null) {
@@ -254,7 +250,7 @@ public final class Group {
     }
 
     /**
-     * @return true if the group wa schanged by init
+     * @return true if the group was changed by init
      */
     public boolean init() {
 
