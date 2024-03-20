@@ -46,7 +46,7 @@ public class SetGroupMemberService extends MyService<SetGroupMemberService.Reque
 
         Helpers.LOGGER.info(((req.addMember) ? "Adding " : "Removing ") + req.memberlogin + " to group '" + req.groupId + "'");
 
-        WebServer.db().addOrRemoveMember(req.groupId, req.memberlogin, req.addMember, null,false);
+        WebServer.db().addOrRemoveMember(req.groupId, req.memberlogin, req.addMember);
         AdminInfosDTO updateInfos = WebServer.db().getAdminInfos(req.login);
 
         if(req.memberlogin.contains("@") && req.addMember) {

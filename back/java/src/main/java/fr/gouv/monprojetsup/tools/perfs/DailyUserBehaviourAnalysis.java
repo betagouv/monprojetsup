@@ -53,7 +53,7 @@ public class DailyUserBehaviourAnalysis {
             boolean onlyToday = true;
             List<ServerTrace> traces = db.getTraces();
 
-            List<Group> groups = new ArrayList<>(db.getGroups().getGroups());
+            List<Group> groups = new ArrayList<>(db.getAllGroups());
 
             List<User> users = new ArrayList<>(db.getUsers());
 
@@ -79,7 +79,7 @@ public class DailyUserBehaviourAnalysis {
 
             List<ServerTrace> traces = db.getTraces();
 
-            List<Group> groups = new ArrayList<>(db.getGroups().getGroups());
+            List<Group> groups = new ArrayList<>(db.getAllGroups());
 
             List<User> users = new ArrayList<>(db.getUsers());
 
@@ -106,7 +106,7 @@ public class DailyUserBehaviourAnalysis {
                     .withHour(0).withMinute(0).withSecond(0).withNano(0);
             traces.removeIf(e -> LocalDateTime.parse(e.timestamp()).isBefore(start));
 
-            List<Group> groups = new ArrayList<>(db.getGroups().getGroups());
+            List<Group> groups = new ArrayList<>(db.getAllGroups());
 
             List<User> users = new ArrayList<>(db.getUsers());
 

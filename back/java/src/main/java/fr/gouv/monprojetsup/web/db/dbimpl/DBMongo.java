@@ -13,9 +13,11 @@ import fr.gouv.monprojetsup.web.db.model.Groups;
 import fr.gouv.monprojetsup.web.db.model.Lycee;
 import fr.gouv.monprojetsup.web.db.model.User;
 import fr.gouv.monprojetsup.web.dto.AdminInfosDTO;
+import fr.gouv.monprojetsup.web.dto.GroupDTO;
 import fr.gouv.monprojetsup.web.dto.ProfileDTO;
 import fr.gouv.monprojetsup.web.log.ServerError;
 import fr.gouv.monprojetsup.web.log.ServerTrace;
+import fr.gouv.monprojetsup.web.server.WebServer;
 import fr.gouv.monprojetsup.web.server.WebServerConfig;
 import fr.gouv.monprojetsup.web.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.web.services.teacher.GetGroupDetailsService;
@@ -32,19 +34,18 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
-import static fr.gouv.monprojetsup.web.db.model.Group.GROUPS_COLL_NAME;
-import static fr.gouv.monprojetsup.web.db.model.Group.WAITING_FIELD;
+import static fr.gouv.monprojetsup.web.db.model.Group.*;
 import static fr.gouv.monprojetsup.web.db.model.Lycee.*;
 import static fr.gouv.monprojetsup.web.db.model.User.*;
 import static fr.gouv.monprojetsup.web.db.model.User.Role.ADMIN;
 import static fr.gouv.monprojetsup.web.db.model.User.UserTypes.*;
-import static java.util.Arrays.asList;
 
 @SuppressWarnings("SameParameterValue")
 @Service
@@ -88,13 +89,19 @@ public class DBMongo extends DB implements Closeable {
 
 
 
+    private final transient Set<String> lyceesExpeENS = new HashSet<>();
+    private final transient Set<String> lyceesExpeIndivisible = new HashSet<>();
+
     @Override
     public synchronized void load(WebServerConfig config) throws IOException, DBExceptions.ModelException {
-        /* loads the collections GROUPS and LYCEES into the local cache groups */
-        groups.loadGroups(groupsDb.findAll());
 
-        /* same with lycees */
-        groups.loadLycees(lyceesDb.findAll());
+        List<Lycee> lycees = lyceesDb.findAll();
+
+        lyceesExpeENS.clear();
+        lyceesExpeENS.addAll(lycees.stream().filter(Lycee::isExpeENS).map(Lycee::getId).toList());
+
+        lyceesExpeIndivisible.clear();
+        lyceesExpeIndivisible.addAll(lycees.stream().filter(Lycee::isExpeIndivisible).map(Lycee::getId).toList());
 
         init(config.getAdmins());
     }
@@ -105,7 +112,8 @@ public class DBMongo extends DB implements Closeable {
     }
 
 
-    protected void init(Set<String> admins) throws DBExceptions.ModelException {
+    @Override
+    protected synchronized void init(Set<String> admins) throws DBExceptions.ModelException {
 
         removeLyceeeField();
 
@@ -117,7 +125,7 @@ public class DBMongo extends DB implements Closeable {
 
     private void setProfileLoginToUserId() {
         // Define the update pipeline
-        var updatePipeline = asList(
+        var updatePipeline = List.of(
                 new Document("$set", new Document("pf.login", "$id"))
         );
         collection(USERS_COLL_NAME).updateMany(new Document(), updatePipeline);
@@ -146,14 +154,8 @@ public class DBMongo extends DB implements Closeable {
     }
 
     public void setFlagEvalENS() {
-
-        final List<Lycee> allLycees = getLycees();
-        final Set<String> lyceesExpeENS = allLycees
-                .stream().filter(Lycee::isExpeENS)
-                .map(Lycee::getId).collect(Collectors.toSet());
         List<User> users = getUsers();
         users.forEach(user -> {
-            boolean changed = false;
             boolean evalENS = user.getLycees().stream().anyMatch(lyceesExpeENS::contains);
             if(evalENS != user.getConfig().isEvalENS()) {
                 updateUserField(user.login(),CONFIG_EVAL_ENS_FIELD, evalENS);
@@ -180,11 +182,7 @@ public class DBMongo extends DB implements Closeable {
                 );
 
         //Removing this highschool hackers guys
-        List<Group> hackers = groups.getGroups().stream().filter(g -> g.getLycee().contains("HACK")).toList();
-        Set<String> hackersMembers = new HashSet<>();
-        hackersMembers.addAll(hackers.stream().flatMap(g -> g.members().stream()).toList());
-        hackersMembers.addAll(hackers.stream().flatMap(g -> g.admins().stream()).toList());
-        usersThatShouldReceiveAccessToDemo.removeIf(u -> hackersMembers.contains(u.login()));
+        usersThatShouldReceiveAccessToDemo.removeIf(u -> u.getLycees().stream().anyMatch(l -> l.contains("HACK")));
         if (!usersThatShouldReceiveAccessToDemo.isEmpty()) {
             usersThatShouldReceiveAccessToDemo.forEach(user -> demo.addAdmin(user.login()));
             saveGroup(demo);
@@ -285,7 +283,6 @@ public class DBMongo extends DB implements Closeable {
             demo.addAdmin(login);
             saveGroup(demo);
         }
-        groups.acceptUserCreation(login);
         updateMany(GROUPS_COLL_NAME, in(WAITING_FIELD, login), addToSet(Group.MEMBERS_FIELD, login));
         updateMany(GROUPS_COLL_NAME, in(WAITING_FIELD, login), pull(WAITING_FIELD, login));
     }
@@ -355,13 +352,11 @@ public class DBMongo extends DB implements Closeable {
     @Override
     protected synchronized void saveLycee(Lycee lycee) {
         upsert(LYCEES_COLL_NAME, lycee.getId(), lycee);
-        groups.upsert(lycee);
     }
 
     @Override
     protected synchronized void saveGroup(Group group) {
         upsert(GROUPS_COLL_NAME, group.getId(), group);
-        groups.upsert(group);
     }
 
     @Override
@@ -397,7 +392,6 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     public synchronized void deleteGroup(@NotNull String gid) {
-        groups.deleteGroup(gid);
         deleteOne(GROUPS_COLL_NAME, eq(ID, gid));
     }
 
@@ -445,7 +439,11 @@ public class DBMongo extends DB implements Closeable {
                 in(Group.ADMINS_FIELD, user),
                 pull(Group.ADMINS_FIELD, user)
         );
-        groups.deleteUser(user);
+        updateMany(
+                GROUPS_COLL_NAME,
+                in(WAITING_FIELD, user),
+                pull(Group.WAITING_FIELD, user)
+        );
     }
 
 
@@ -476,8 +474,16 @@ public class DBMongo extends DB implements Closeable {
         }
     }
 
+    public List<Lycee> getExpeENSLycees() {
+        return collection(LYCEES_COLL_NAME)
+                .find(eq(EXPE_ENS, true))
+                .map(doc -> new Gson().fromJson(doc.toJson(), Lycee.class))
+                .into(new ArrayList<>());
+    }
+
     public List<User> getExpeENSUsers() {
-        return getUsers().stream().filter(u -> groups.isEvalENS(u.getLycees())).toList();
+        Set<String> lycees = getExpeENSLycees().stream().map(Lycee::getId).collect(Collectors.toSet());
+        return getUsers().stream().filter(u -> u.getLycees().stream().anyMatch(lycees::contains)).toList();
     }
 
     public void saveUsers(List<User> users) {
@@ -486,10 +492,11 @@ public class DBMongo extends DB implements Closeable {
     }
 
     public synchronized void reinitTreatmentGroupRegistrationCodes() {
-        List<Group> groupsCopy = new ArrayList<>(groups.getGroups());
-        groupsCopy.stream().filter(
-                g -> Objects.equals(g.getExpeENSGroupe(), "T")
-        ).forEach(group -> {
+        //get all groups from db whose expeENSGroupe is T
+        List<Group> testGroups = collection(GROUPS_COLL_NAME).find(eq(Group.EXPE_ENS_GROUPE_FIELD, "T"))
+                .map(doc -> new Gson().fromJson(doc.toJson(), Group.class))
+                .into(new ArrayList<>());
+        testGroups.forEach(group -> {
             group.resetRegistrationCode();
             saveGroup(group);
         });
@@ -565,12 +572,38 @@ public class DBMongo extends DB implements Closeable {
         return group;
     }
 
+    protected @NotNull Lycee findLycee(String id) throws DBExceptions.UnknownGroupException {
+        if (id == null || id.isEmpty()) {
+            throw new DBExceptions.UnknownGroupException();
+        }
+        Lycee ly = lyceesDb.findById(id).orElse(null);
+        if (ly == null) {
+            throw new DBExceptions.UnknownGroupException();
+        }
+        return ly;
+    }
+
     @Override
-    public Collection<Group> getGroupsOfLycee(String uai) {
+    public List<Group> getGroupsOfLycee(String uai) {
         return collection(GROUPS_COLL_NAME).find(
                         in(Group.LYCEES_FIELD, uai)
         ).map(document -> new Gson().fromJson(document.toJson(), Group.class)).into(new ArrayList<>());
     }
+
+    @Override
+    public List<Group> getGroupsOfLycee(Collection<String> uai) {
+        return collection(GROUPS_COLL_NAME).find(
+                in(Group.LYCEES_FIELD, uai)
+        ).map(document -> new Gson().fromJson(document.toJson(), Group.class)).into(new ArrayList<>());
+    }
+
+    @Override
+    public List<Group> getGroupsWithAdmin(String login) {
+        return collection(GROUPS_COLL_NAME).find(
+                in(ADMINS_FIELD, login)
+        ).map(document -> new Gson().fromJson(document.toJson(), Group.class)).into(new ArrayList<>());
+    }
+
 
     @Override
     public boolean isAdminOfGroup(String login, String groupId) throws DBExceptions.ModelException {
@@ -636,28 +669,27 @@ public class DBMongo extends DB implements Closeable {
         if (code == null || code.isEmpty()) {
             throw new DBExceptions.UserInputException.WrongAccessCodeException();
         }
-        final @NotNull Group group;
 
-        if (data.type() == lyceen) {
-            group = findGroupWithAccessCode(code);
-            final String groupId = group.getId();
-            List<Group> changed = groups.addOrRemoveMember(groupId, data.login(), true, null, false);
-            saveGroups(changed);
-            //no need for email confirmation
-            confirmEmailOnAccountCreation = false;
-        } else {
-            group = findGroupWithAdminAccessCode(code);
-            group.addAdmin(data.login());
-            saveGroup(group);
-
-            Group demo = findOrCreateDemoGroup();
-            demo.addAdmin(data.login());
-            saveGroup(demo);
-        }
+        final @NotNull Group group = data.type() == lyceen ? findGroupWithAccessCode(code) : findGroupWithAdminAccessCode(code);
 
         String login = normalizeUser(data.login());
+        //remove this user from all groups
         if (existsUserWithLogin(login)) {
             throw new DBExceptions.UserInputException.UserAlreadyExistsException();
+        }
+        forgetUserInGroups(login);
+
+        if (data.type() == lyceen) {
+            group.addMember(login);
+            saveGroup(group);
+            //no need for email confirmation for lyceens
+            confirmEmailOnAccountCreation = false;
+        } else {
+            group.addAdmin(login);
+            saveGroup(group);
+            Group demo = findOrCreateDemoGroup();
+            demo.addAdmin(login);
+            saveGroup(demo);
         }
 
         Credential cred = Credential.getNewCredential(data.password());
@@ -679,8 +711,8 @@ public class DBMongo extends DB implements Closeable {
                 emailToken
         );
 
-        user.setEvalENS(groups.isEvalENS(user.getLycees()));
-        user.setEvalIndivisible(groups.isEvalIndivisible(user.getLycees()));
+        user.setEvalENS(user.getLycees().stream().anyMatch(lyceesExpeENS::contains));
+        user.setEvalIndivisible(user.getLycees().stream().anyMatch(lyceesExpeIndivisible::contains));
 
         saveUser(user);
 
@@ -702,32 +734,42 @@ public class DBMongo extends DB implements Closeable {
         return new Gson().fromJson(group.toJson(), Group.class);
     }
 
+
     @Override
-    public synchronized Group createNewGroup(@NotNull String lycee, @NotNull String sid) throws DBExceptions.ModelException {
-        Group group = null;
-        Lycee lyc = groups.getLycee(lycee);
-        if (lyc != null) {
-            LOGGER.info("Création d'un nouveau groupe %s dans le lycée %s".formatted(sid, lyc));
-            group = groups.createNewGroup(lyc, sid);
+    public synchronized @NotNull Group createNewGroup(@NotNull String lycee, @NotNull String sid) throws DBExceptions.ModelException {
+        final Group group;
+        Lycee lyc = findLycee(lycee);
+        LOGGER.info("Création d'un nouveau groupe %s dans le lycée %s".formatted(sid, lyc));
+        if (sid.isEmpty()) {
+            throw new DBExceptions.EmptyGroupIdException();
         }
-        if (group != null) saveGroup(group);
-        return group;
+        String gid = Normalizer.normalize(lyceeToGroupId(lyc.getId(), sid).toLowerCase(), Normalizer.Form.NFKD);
+        try {
+            findGroup(gid);
+            throw new RuntimeException("Already existing group");
+        } catch (DBExceptions.UnknownGroupException ignored) {
+            group = Group.getNewGroup(lycee, sid);
+            saveGroup(group);
+            return group;
+        }
     }
 
     @Override
-    public synchronized void addOrRemoveMember(String groupId, String memberLogin, boolean addMember, @Nullable String groupToken, boolean verifyToken) {
+    public synchronized void addOrRemoveMember(String groupId, String memberLogin, boolean addMember) {
 
         try {
             memberLogin = normalizeUser(memberLogin);
             User user = getUser(memberLogin);
-            List<Group> changed = groups.addOrRemoveMember(groupId, memberLogin, addMember, groupToken, verifyToken);
+            Group group = findGroup(groupId);
+            forgetUserInGroups(memberLogin);
             if (addMember) {
                 //at this point the token is the right one
+                group.addMember(memberLogin);
                 setCreationConfirmationNotNeeded(user.login());
             }
-            saveGroups(changed);
-        } catch (DBExceptions.UserInputException.InvalidGroupTokenException | DBExceptions.UnknownGroupException |
-                 DBExceptions.EmptyGroupIdException | DBExceptions.UnknownUserException ignored) {
+            saveGroup(group);
+        } catch (DBExceptions.UnknownGroupException |
+                 DBExceptions.UnknownUserException ignored) {
             //nothing to do
         }
     }
@@ -760,7 +802,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public AdminInfosDTO getAdminInfos(String login) throws DBExceptions.UnknownUserException {
+    public AdminInfosDTO getAdminInfos(String login) throws DBExceptions.UnknownUserException, DBExceptions.UnknownGroupException {
         //the precision of the data depends on the privilege
         login = normalizeUser(login);
         User user = getUser(login);
@@ -770,7 +812,7 @@ public class DBMongo extends DB implements Closeable {
         user.getConfig().setEvalENS(isEvalENS(user.getLycees()));
         user.getConfig().setEvalIndivisible(isEvalIndivisible(user.getLycees()));
 
-        AdminInfosDTO result = groups.getAdminInfos(
+        AdminInfosDTO result = getAdminInfos(
                 login,
                 role,
                 user.getUserType(),
@@ -814,6 +856,65 @@ public class DBMongo extends DB implements Closeable {
         return result;
     }
 
+    private AdminInfosDTO getAdminInfos(
+            String login,
+            Role role,
+            UserTypes type, UserTypes appType, Set<String> lyceesUser, int profileCompleteness, UserConfig config) throws DBExceptions.UnknownGroupException {
+        //on liste les lycées de l'utilisateur
+        List<Lycee> lyceesUserItems = new ArrayList<>();
+        if(role == User.Role.ADMIN) {
+            lyceesUserItems.addAll(getLycees());
+        } else {
+            for (String s : lyceesUser) {
+                Lycee lycee = findLycee(s);
+                lyceesUserItems.add(lycee);
+            }
+        }
+
+        AdminInfosDTO result = new AdminInfosDTO(
+                role,
+                type,
+                appType,
+                lyceesUserItems,
+                WebServer.config().isConfirmEmailOnAccountCreation(),
+                profileCompleteness,
+                config
+        );
+
+
+        if (role == User.Role.ADMIN) {
+            result.groups().clear();
+            result.groups().addAll(getAllGroups().stream().map(Group::toDTO).toList());
+            return result;
+        } else if (role == User.Role.TEACHER) {
+            //find groups with admin login
+            result.groups().addAll(getGroupsWithAdmin(login).stream().map(Group::toDTO).toList());
+
+            List<GroupDTO> groupsOfLycee = getGroupsOfLycee(lyceesUser).stream().map(Group::toDTO).toList();
+            result.openGroups().addAll(
+                    groupsOfLycee.stream()
+                            .filter(g -> !g.admins().contains(login))
+                            .toList()
+            );
+            return result;
+        } else {//student only sees the list of admins, if he is in a group
+            Group group = getGroup(login);
+            if (group != null) {
+                result.groups().add(group.miniGroup().toDTO());
+                //on inject la donneé groupe ENS pour simplifier le travail côté front
+                config.setExpeENSGroup(group.getExpeENSGroupe());
+            }
+            return result;
+        }
+    }
+
+
+    private @Nullable Group getGroup(String login) {
+        return collection(GROUPS_COLL_NAME).find(
+                in(Group.MEMBERS_FIELD, login)
+        ).map(document -> new Gson().fromJson(document.toJson(), Group.class)).first();
+    }
+
     @Override
     public void exportUsersToFile(String filename, boolean expeENS, boolean anonymize) throws IOException {
         LOGGER.info("Export des utilisateurs vers un fichier local.");
@@ -823,13 +924,16 @@ public class DBMongo extends DB implements Closeable {
             users.forEach(User::anonymize);
         }
         if(expeENS) {
-            users.removeIf(user -> !groups.isEvalENS(user.getLycees()));
+            users.removeIf(user -> user.getLycees().stream().noneMatch(lyceesExpeENS::contains));
         }
         Serialisation.toJsonFile(filename, users, true);
     }
 
     @Override
-    public Groups getGroups() {
+    public Groups getGroupsAndLycees() {
+        Groups groups = new Groups();
+        groups.loadGroups(groupsDb.findAll());
+        groups.loadLycees(lyceesDb.findAll());
         return groups;
     }
 
@@ -851,56 +955,13 @@ public class DBMongo extends DB implements Closeable {
 
     private boolean isAdminOfLycee(String login, String lycee) {
         String finalLogin = normalizeUser(login);
-        List<Group> groups = getGroupsOfLycee(lycee).stream().toList();
-        return groups.stream().anyMatch(g -> g.hasAdmin(finalLogin));
+        List<Group> groupsOfLycee = getGroupsOfLycee(lycee).stream().toList();
+        return groupsOfLycee.stream().anyMatch(g -> g.hasAdmin(finalLogin));
     }
 
+    public List<Group> getAllGroups() {
+           return groupsDb.findAll();
+    }
 
-    /*
-    @Override
-    public void load(WebServerConfig config) throws IOException, DBExceptions.EmptyGroupIdException, DBExceptions.UnknownGroupException {
-        ConnectionString connectionString
-                = new ConnectionString(
-                config.getMongodbProtocol() + "://"
-                        + config.getMongodbUser() + ":" + config.getMongodbPassword()
-                        + "@"+ config.getMongodbHost()
-        );
-
-        superAdmins.clear();
-        superAdmins.addAll(config.getAdmins());
-
-        // Create a new client and connect to the server
-        mongoClient = MongoClients.create(connectionString);
-        database = mongoClient.getDatabase(config.getMongodbDatabase());
-
-        // Send a ping to confirm a successful connection
-        Bson command = new BsonDocument("ping", new BsonInt64(1));
-        database.runCommand(command);
-        LOGGER.info("Pinged your deployment. You successfully connected to MongoDB!");
-
-
-        LOGGER.info("Pinged accounts db.");
-
-        initDB();
-
-        groups.loadGroups(
-                database.getCollection(GROUPS_COLL_NAME)
-                        .find(new Document())
-                        .into(new ArrayList<>())
-                        .stream()
-                        .map(doc -> new Gson().fromJson(doc.toJson(), Group.class))
-                        .toList()
-        );
-        groups.loadLycees(
-                database.getCollection(LYCEES_COLL_NAME)
-                        .find(new Document())
-                        .into(new ArrayList<>())
-                        .stream()
-                        .map(doc -> new Gson().fromJson(doc.toJson(), Lycee.class))
-                        .toList()
-        );
-
-        init(config.getAdmins());
-    }*/
 
 }

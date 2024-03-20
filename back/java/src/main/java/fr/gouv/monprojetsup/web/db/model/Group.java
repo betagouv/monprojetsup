@@ -31,6 +31,7 @@ public final class Group {
     public static String EXPE_ENS_GROUPE = "expeENSGroupe";
     public static String REGISTRATION_TOKEN_FIELD = "registrationToken";
     public static String ADMIN_REGISTRATION_TOKEN_FIELD = "adminToken";
+    public static String EXPE_ENS_GROUPE_FIELD = "expeENSGroupe";
 
     private @NotNull String name;
 

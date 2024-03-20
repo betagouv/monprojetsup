@@ -16,8 +16,6 @@ public class DataSources {
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
     /* Onisep official data */
     public static final String ONISEP_FICHES_METIERS = "onisep_fiches_metiers/Onisep_Ideo_Fiches_metiers_12092023.json";
-
-    //public static final String ONISEP_PSUP_TO_IDEO_PATH = "onisep_ideo_hotline/export_psup_onisep_ideo1_ideo2_06-12-2022_CompleteOnisep.json";
     public static final String ONISEP_PSUP_TO_IDEO_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26.json";
     public static final String ONISEP_FORMATIONS_WITH_METIER_PATH = "ideo_formations/Onisep_Ideo_Fiches_Formations_12092023.json";
     public static final String ONISEP_FORMATIONS_PATH = "ideo_formations/ideo-formations_initiales_en_france.json";

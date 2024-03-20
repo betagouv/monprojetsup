@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
 import fr.gouv.monprojetsup.data.model.eds.EDSAnalysis;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
+import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
@@ -30,6 +31,7 @@ import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.tools.Serialisation;
 import fr.gouv.monprojetsup.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.web.server.WebServer;
+import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -331,6 +333,8 @@ public class ServerData {
     public static void main(String[] args) throws Exception {
 
         WebServer.loadConfig();
+
+        compareActionsFormations();
 
         ServerData.load();
 
@@ -843,6 +847,106 @@ public class ServerData {
         }
     }
 
+    public static final String ONISEP_ACTIONS_FORMATIONS_PATH = "ideo_actions_formations/ideo-actions_de_formation_initiale-univers_enseignement_superieur.json";
+    public static final String CARTE_JSON_PATH = "psup_actions_formations/psupdata-06-03-2024-11-05-05.json";
+
+    private static void compareActionsFormations() throws IOException {
+        List<ActionFormationOni> actionsOni = Serialisation.fromJsonFile(
+                DataSources.getSourceDataFilePath(ONISEP_ACTIONS_FORMATIONS_PATH),
+                new TypeToken<List<ActionFormationOni>>() {
+                }.getType()
+        );
+
+        JsonCarte carte = Serialisation.fromJsonFile(
+                DataSources.getSourceDataFilePath(CARTE_JSON_PATH),
+                JsonCarte.class
+        );
+
+        PsupToOnisepLines lines = Serialisation.fromJsonFile(
+                DataSources.getSourceDataFilePath(
+                        DataSources.ONISEP_PSUP_TO_IDEO_PATH
+                ),
+                PsupToOnisepLines.class
+        );
+
+        /*
+        Map<String,List<ActionFormationOni>> actionsOniParIdeoParUai = actionsOni.stream()
+                .filter(f -> f.getIdOnisep() != null && !f.getIdOnisep().isEmpty())
+                .collect(Collectors.groupingBy(
+                        ActionFormationOni::getIdOnisep,
+                        Collectors.toList()
+                ));
+
+        Map<String,List<fr.gouv.parcoursup.carte.modele.modele.Formation>>  formationsParUai = carte.formations.values().stream()
+                .collect(Collectors.groupingBy(
+                        fr.gouv.parcoursup.carte.modele.modele.Formation::getGea,
+                        Collectors.toList()
+                ));
+*/
+        try (CsvTools csv = new CsvTools("comparatif_actions_formations_psup_oni.csv", ',')) {
+            //on lit la correspondance de JM
+            csv.append(
+                    List.of(
+                            "CODEFORMATION (gFrCod)",
+                            "LIBELLÉFORMATION (gFrLib)",
+                            "CODESPÉCIALITÉ (gFlCod)",
+                            "LIBELLÉTYPEFORMATION (gFlLib)",
+                            "LIS_ID_ONI2",
+                            "dans_psup_mais_pas_dans_onisep"
+                    )
+            );
+
+            for (PsupToOnisepLines.PsupToOnisepLine line : lines.psupToIdeo2()) {
+                String gFlCodStr = line.G_FL_COD();
+                int gFlCod = Integer.parseInt(gFlCodStr);
+                Set<String> idsIdeo2 =
+                        new HashSet<>(Arrays.stream(line.IDS_IDEO2().split(";"))
+                                .map(String::trim)
+                                .collect(Collectors.toSet()));
+                idsIdeo2.remove("");
+                idsIdeo2.remove(null);
+                if (idsIdeo2.isEmpty()) continue;
+                //on calcule les uai des établissements de ce gFlCod, côté psup
+                Map<String, List<fr.gouv.parcoursup.carte.modele.modele.Formation>> psupUAI = carte.formations.values().stream()
+                        .filter(f -> f.getFl() == gFlCod)
+                        .collect(
+                                Collectors.groupingBy(
+                                        fr.gouv.parcoursup.carte.modele.modele.Formation::getGea
+                                )
+                        );
+                //on calcule les uai des établissements de ce gFlCod, côté onisep
+
+                Map<String, List<ActionFormationOni>> onisepUai = actionsOni.stream()
+                        .filter(f -> idsIdeo2.contains(f.getIdOnisep()))
+                        .collect(Collectors.groupingBy(ActionFormationOni::ens_code_uai));
+
+                psupUAI.keySet().removeAll(onisepUai.keySet());
+                if (psupUAI.isEmpty()) continue;
+
+                csv.append(line.G_FR_COD());
+                csv.append(line.G_FR_LIB());
+                csv.append(gFlCod);
+                csv.append(line.G_FL_LIB());
+                csv.append(line.IDS_IDEO2());
+                csv.append(psupUAI.values().stream()
+                        .map(f -> libelle(f, carte))
+                        .collect(Collectors.joining("\n")));
+                csv.newLine();
+            }
+        }
+
+
+    }
+
+    private static String libelle(List<fr.gouv.parcoursup.carte.modele.modele.Formation> f, JsonCarte carte) {
+        if(f.isEmpty()) return "";
+        return libelle(f.get(0), carte);
+    }
+
+    private static String libelle(fr.gouv.parcoursup.carte.modele.modele.Formation f, JsonCarte carte) {
+        if(f.getGealib() != null) return f.getGealib();
+        return carte.etablissements.get(f.getGea()).getUrl() + "   (UAI:" +f.getGea() + ")";
+    }
     private static void exportCentresDinterets() throws IOException {
         Interets interets = onisepData.interets();
         try(CsvTools csv = new CsvTools("centresInterets.csv",',')) {
