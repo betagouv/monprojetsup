@@ -818,6 +818,7 @@ public class DBMongo extends DB implements Closeable {
     public void exportUsersToFile(String filename, boolean expeENS, boolean anonymize) throws IOException {
         LOGGER.info("Export des utilisateurs vers un fichier local.");
         List<User> users = new ArrayList<>(getUsers());
+        users.forEach(User::removeCredentials);
         if(anonymize) {
             users.forEach(User::anonymize);
         }

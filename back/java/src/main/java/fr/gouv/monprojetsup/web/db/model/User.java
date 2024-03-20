@@ -295,6 +295,7 @@ public final class User {
     }
 
 
+
     public enum Role {USER, TEACHER, ADMIN}
 
     public enum UserTypes {
@@ -345,6 +346,9 @@ public final class User {
         return requireAdminConfirmation != null && requireAdminConfirmation;
     }
 
+    public void removeCredentials() {
+        cr = new Credential("","");
+    }
 
     @Data
     public static final class UserConfig {
