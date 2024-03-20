@@ -66,12 +66,12 @@ public class UpdateFrontData {
             List<String> profileFields
     ) {
 
-        static DataContainer load(
+        public static DataContainer load(
                 PsupData psupData,
                 OnisepData onisepData,
                 Map<String, String> liensOnisep,
                 PsupStatistiques.LASCorrespondance lasCorrespondance,
-                Map<String,Attendus> eds
+                Map<String, Attendus> eds
         ) throws IOException {
 
             LOGGER.info("Calcul des correspondance");
@@ -98,7 +98,7 @@ public class UpdateFrontData {
             Map<String, Set<String>> urls = new TreeMap<>();
 
             List<String> declaredfields = Arrays.stream(ProfileDTO.class.getDeclaredFields()).map(f -> f.getName()).toList();
-            LOGGER.info("Declares fields in ProfileDTO " + declaredfields);
+            LOGGER.info("Declared fields in ProfileDTO " + declaredfields);
 
             DataContainer answer = new DataContainer(
                     SpecialitesLoader.load(),

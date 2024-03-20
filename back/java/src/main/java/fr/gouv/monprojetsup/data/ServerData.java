@@ -1,10 +1,12 @@
 package fr.gouv.monprojetsup.data;
 
+import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
 import fr.gouv.monprojetsup.data.model.eds.EDSAnalysis;
+import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
@@ -22,6 +24,7 @@ import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.update.onisep.formations.Formations;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
+import fr.gouv.monprojetsup.data.update.rome.RomeData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.tools.Serialisation;
@@ -42,8 +45,10 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
+import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.ServerData.onisepData;
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.*;
+import static fr.gouv.monprojetsup.tools.Serialisation.fromZippedJson;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
@@ -167,7 +172,7 @@ public class ServerData {
 
 
     public static boolean isFiliere(@NotNull String key) {
-        return key.startsWith(Constants.FILIERE_PREFIX)
+        return key.startsWith(FILIERE_PREFIX)
                 || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
     }
     public static boolean isMetier(@NotNull String key) {
@@ -330,6 +335,8 @@ public class ServerData {
         ServerData.load();
 
         AlgoSuggestions.initialize();
+
+        exportFrontDatasToCsvForDescriptifsImprovements();
 
         Serialisation.toJsonFile("relatedToHealth.json",
         AlgoSuggestions.getRelatedToHealth()
@@ -592,9 +599,9 @@ public class ServerData {
         List<OnisepUrl> urls =
                 lines.entrySet().stream()
                         .map(e -> new OnisepUrl(
-                                Constants.FILIERE_PREFIX + e.getKey(),
-                                ServerData.getLabel(Constants.FILIERE_PREFIX + e.getKey()),
-                                ServerData.statistiques.liensOnisep.get(Constants.FILIERE_PREFIX + e.getKey()),
+                                FILIERE_PREFIX + e.getKey(),
+                                ServerData.getLabel(FILIERE_PREFIX + e.getKey()),
+                                ServerData.statistiques.liensOnisep.get(FILIERE_PREFIX + e.getKey()),
                                 e.getValue()
                         ))
                         .sorted(Comparator.comparingInt(o -> Integer.parseInt(o.flCod.substring(2))))
@@ -749,6 +756,91 @@ public class ServerData {
 
 
 
+    }
+
+    private static void exportFrontDatasToCsvForDescriptifsImprovements() throws IOException {
+
+        WebServer.loadConfig();
+
+        LOGGER.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
+        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
+        data.removeFormations();
+        data.removeSmallPopulations();
+
+        LOGGER.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
+        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
+        psupData.cleanup();
+
+        LOGGER.info("Chargement des données ROME");
+        RomeData romeData = RomeData.load();
+
+        LOGGER.info("Chargement des données Onisep");
+        final OnisepData onisepData = OnisepData.fromFiles();
+
+        LOGGER.info("Insertion des données ROME dans les données Onisep");
+        onisepData.insertRomeData(romeData.centresInterest()); //before updateLabels
+
+        LOGGER.info("Maj des données Onisep (noms des filières et urls)");
+        data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
+
+        LOGGER.info("Ajout des liens metiers");
+        Map<String, String> urls = new HashMap<>(data.liensOnisep);
+        onisepData.metiers().metiers().forEach((s, metier) -> {
+            //onisep.fr/http/redirections/metier/slug/[identifiant]
+        });
+
+        Map<String, Attendus> eds = ServerData.getEDSSimple(
+                psupData,
+                data,
+                SpecialitesLoader.load(),
+                false
+        );
+        UpdateFrontData.DataContainer data2 = UpdateFrontData.DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds);
+
+
+
+        try (CsvTools csv = new CsvTools("resumesDescriptifsFormations.csv", ',')) {
+            csv.append(List.of("code filière (glcod)", "intitulé web", "code type formation", "intitule type formation",
+                    "url onisep",
+                    "url psup",
+                    "resume"));
+            List<Integer> keys =
+                    edgesKeys.edges().keySet().stream().filter(s -> s.startsWith(FILIERE_PREFIX))
+                    .mapToInt(s -> Integer.parseInt(s.substring(2)))
+                    .sorted()
+                    .boxed()
+                    .toList();
+
+            for (Integer flCod : keys) {
+                if (!ServerData.backPsupData.filActives().contains(flCod)) {
+                    continue;
+                }
+                String flStr = gFlCodToFrontId(flCod);
+                if(flCod >= LAS_CONSTANT) continue;
+                String label2 = data.labels.getOrDefault(flStr, flStr);
+                Filiere fil = ServerData.backPsupData.formations().filieres.get(flCod);
+                if (label2.contains("apprentissage") || label2.contains("LAS")) {
+                    continue;
+                }
+                if (fil == null) {
+                    throw new RuntimeException("no data on filiere " + flCod);
+                }
+                csv.append(flStr);
+                csv.append(label2);
+                csv.append(fil.gFrCod);
+                String typeMacro = ServerData.backPsupData.formations().typesMacros.getOrDefault(fil.gFrCod, "");
+                csv.append(typeMacro);
+                csv.append(data.liensOnisep.getOrDefault(flStr, ""));
+                csv.append("https://dossier.parcoursup.fr/Candidat/carte?search=" + flStr + "x");
+                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
+                if(descriptif != null) {
+                    csv.append(descriptif.getFrontRendering());
+                } else {
+                    csv.append("");
+                }
+                csv.newLine();
+            }
+        }
     }
 
     private static void exportCentresDinterets() throws IOException {

@@ -248,6 +248,23 @@ public record Descriptifs(
             return Collections.emptyList();
         }
 
+        public String getFrontRendering() {
+            if(summary != null) return summary;
+            StringBuilder b = new StringBuilder();
+            if(presentation != null) {
+                b.append("<p>" + presentation + "</p>");
+            }
+            if(poursuite != null) {
+                b.append("<br/><br/>").append("<p>" + poursuite+ "</p>");
+            }
+            if(metiers != null) {
+                b.append("<br/><br/>").append("<p>" + metiers+ "</p>");
+            }
+            String result = b.toString();
+            result.replaceAll("<h3>", "<br>");
+            result.replaceAll("</h3>", "<br/>");
+            return result;
+        }
     }
 
     public static Descriptif getError(String error, @NotNull String url) {
