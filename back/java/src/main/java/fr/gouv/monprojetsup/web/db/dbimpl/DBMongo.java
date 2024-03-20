@@ -822,7 +822,6 @@ public class DBMongo extends DB implements Closeable {
             users.forEach(User::anonymize);
         }
         if(expeENS) {
-            users.forEach(User::anonymize);
             users.removeIf(user -> !groups.isEvalENS(user.getLycees()));
         }
         Serialisation.toJsonFile(filename, users, true);
