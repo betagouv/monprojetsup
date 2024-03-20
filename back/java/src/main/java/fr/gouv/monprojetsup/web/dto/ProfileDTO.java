@@ -3,10 +3,7 @@ package fr.gouv.monprojetsup.web.dto;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.tools.Sanitizer;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_APPROVED;
@@ -36,7 +33,7 @@ public record ProfileDTO(
      */
     public Collection<String> favoris() {
         return choices.values().stream()
-                .filter(s -> s.status().equals(SUGG_APPROVED))
+                .filter(s -> Objects.equals(s.status(), SUGG_APPROVED))
                 .map(SuggestionDTO::fl)
                 .collect(Collectors.toSet());
     }
@@ -51,13 +48,13 @@ public record ProfileDTO(
                 Sanitizer.sanitize(bac),
                 Sanitizer.sanitize(duree),
                 Sanitizer.sanitize(apprentissage),
-                geo_pref == null ? Collections.emptySet() : geo_pref.stream().map(s -> Sanitizer.sanitize(s)).collect(Collectors.toSet()),
-                spe_classes  == null ? Collections.emptySet() : spe_classes.stream().map(s -> Sanitizer.sanitize(s)).collect(Collectors.toSet()),
+                geo_pref == null ? Collections.emptySet() : geo_pref.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
+                spe_classes  == null ? Collections.emptySet() : spe_classes.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
                 scores  == null ? Collections.emptyMap() : scores.entrySet()
                         .stream()
                         .collect(Collectors.toMap(
                                 e -> Sanitizer.sanitize(e.getKey()),
-                                e -> e.getValue()
+                                Map.Entry::getValue
                         )),
                 Sanitizer.sanitize(mention),
                 Sanitizer.sanitize(moygen),

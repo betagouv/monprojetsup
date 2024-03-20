@@ -68,9 +68,9 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
                     Sanitizer.sanitize(groupId),
                     isOpened,
                     token,
-                    students.stream().map(s -> s.sanitize()).toList(),
-                    admins.stream().map(s -> Sanitizer.sanitize(s)).collect(Collectors.toSet()),
-                    moderationList.stream().map(s -> Sanitizer.sanitize(s)).toList(),
+                    students.stream().map(StudentDetails::sanitize).toList(),
+                    admins.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
+                    moderationList.stream().map(Sanitizer::sanitize).toList(),
                     Sanitizer.sanitize(expeENSGroup)
                     );
         }
@@ -89,8 +89,6 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
         if(!WebServer.db().isAdminOfGroup(req.login, req.groupId)) {
             throw new RuntimeException("opération réservée aux admins de groupe");
         }
-
-        if(req.groupId == null) throw new RuntimeException("groupId is null");
 
         GroupDetails details = WebServer.db().getGroupDetails(sanitize(req.groupId));
         return new Response(new ResponseHeader(), details.sanitize());
