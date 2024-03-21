@@ -9,6 +9,7 @@
 **/test-report.html
 **/summaries*
 **/target
+**/*.json
 **/tmp
 **/*.iml
 **/.vscode
