@@ -60,15 +60,15 @@ services:
       - ./app/front:/root/app
     command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
 
-  # appback:
-  #   image: maven:latest
-  #   restart: on-failure
-  #   working_dir: /root/app
-  #   ports:
-  #     - 8001:8001
-  #   volumes:
-  #     - ./app/back:/root/app
-  #   command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
+  appback:
+    image: maven:latest
+    restart: on-failure
+    working_dir: /root/app
+    ports:
+      - ${APP_BACK_PORT}:${APP_BACK_PORT}
+    volumes:
+      - ./app/back:/root/app
+    command: sh -c "mvn clean install spring-boot:run"
 
   metabasedb:
     image: postgres:latest
