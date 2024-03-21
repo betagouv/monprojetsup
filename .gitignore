@@ -1,3 +1,6 @@
-**/db
+app/db
+keycloak/db
+metabase/db
 **/.DS_Store
 .vscode/*
+.vite
