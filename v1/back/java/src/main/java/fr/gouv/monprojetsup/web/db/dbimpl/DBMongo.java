@@ -861,10 +861,11 @@ public class DBMongo extends DB implements Closeable {
         if(role == User.Role.ADMIN) {
             lyceesUserItems.addAll(getLycees());
         } else {
+            /*
             for (String s : lyceesUser) {
                 Lycee lycee = findLycee(s);
                 lyceesUserItems.add(lycee);
-            }
+            }*/
         }
 
         AdminInfosDTO result = new AdminInfosDTO(
