@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  keycloakdb:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${KEYCLOAK_DB_NAME}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      PGPORT: ${KEYCLOAK_DB_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./keycloak/db:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    depends_on:
+      keycloakdb:
+        condition: service_healthy
+    environment:
+      KC_DB: ${KEYCLOAK_DB_NAME}
+      KC_DB_URL: jdbc:postgresql://keycloakdb:${KEYCLOAK_DB_PORT}/${KEYCLOAK_DB_NAME}
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+    restart: always
+    ports:
+      - ${KEYCLOAK_PORT}:${KEYCLOAK_PORT}
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev
+
+  appdb:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${APP_DB_NAME}
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+      PGPORT: ${APP_DB_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./app/db:/var/lib/postgresql/data
+
+  appfront:
+    image: node:lts
+    restart: on-failure
+    working_dir: /root/app
+    ports:
+      - 8000:8000
+    volumes:
+      - ./app/front:/root/app
+    command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
+
+  # appback:
+  #   image: maven:latest
+  #   restart: on-failure
+  #   working_dir: /root/app
+  #   ports:
+  #     - 8001:8001
+  #   volumes:
+  #     - ./app/back:/root/app
+  #   command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
+
+  metabasedb:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${METABASE_DB_NAME}
+      POSTGRES_USER: ${METABASE_DB_USER}
+      POSTGRES_PASSWORD: ${METABASE_DB_PASSWORD}
+      PGPORT: ${METABASE_DB_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./metabase/db:/var/lib/postgresql/data
+
+  metabase:
+    image: metabase/metabase:latest
+    restart: always
+    depends_on:
+      metabasedb:
+        condition: service_healthy
+    ports:
+      - ${METABASE_PORT}:${METABASE_PORT}
+    environment:
+      MB_JETTY_PORT: ${METABASE_PORT}
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: metabasedb
+      MB_DB_DBNAME: ${METABASE_DB_NAME}
+      MB_DB_PORT: ${METABASE_DB_PORT}
+      MB_DB_USER: ${METABASE_DB_USER}
+      MB_DB_PASS: ${METABASE_DB_PASSWORD}
