@@ -6,7 +6,6 @@ export default defineConfig({
   reporter: [["html", { outputFolder: "./tests-e2e/reports" }]],
   fullyParallel: true,
   forbidOnly: true,
-  retries: 1,
   use: {
     baseURL: "http://localhost:4173",
     trace: "on-first-retry",
@@ -20,6 +19,6 @@ export default defineConfig({
   webServer: {
     command: "npm run build && npm run preview",
     url: "http://localhost:4173",
-    reuseExistingServer: true,
+    reuseExistingServer: false,
   },
 });

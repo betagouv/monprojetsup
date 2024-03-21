@@ -52,3 +52,25 @@ jobs:
       - name: Run lint command
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: npm run lint
+  
+  playwright:
+    name: Run Playwright tests
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and packages
+        uses: ./.github/actions/setupNodeAndPackages
+
+      - name: Install Playwright
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npx playwright install --with-deps chromium
+
+      - name: Copy .env
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: cp .env.ci .env
+
+      - name: Run Playwright tests
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npx playwright test
