@@ -11,10 +11,7 @@
 **/target
 **/tmp
 **/*.iml
-**/*.json
-**/*.sh
-**/data/
-**/*.numbers
+**/.vscode
 **/front/dist
 back/docker/
 **/.mvn/**
