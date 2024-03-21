@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ServerData" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="fr.gouv.monprojetsup.data.ServerData" />
-    <module name="monprojetsup" />
+    <module name="old" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tmp" />
     <extension name="coverage">
       <pattern>

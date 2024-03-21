@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ReferenceCases" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="fr.gouv.monprojetsup.suggestions.eval.ReferenceCases" />
-    <module name="monprojetsup" />
+    <module name="old" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tmp" />
     <extension name="coverage">
       <pattern>
