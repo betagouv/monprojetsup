@@ -4,3 +4,6 @@ metabase/db
 **/.DS_Store
 .vscode/*
 .vite
+.idea/*
+*.iml
+/v1/data
