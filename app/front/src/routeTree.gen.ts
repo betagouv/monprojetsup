@@ -15,7 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutInscriptionImport } from './routes/_layout-inscription'
 import { Route as ArticlesIndexImport } from './routes/articles/index'
-import { Route as LayoutInscriptionInscriptionEtape1IndexImport } from './routes/_layout-inscription/inscription/etape1/index'
+import { Route as LayoutInscriptionInscriptionMonProjetIndexImport } from './routes/_layout-inscription/inscription/mon-projet/index'
 
 // Create Virtual Routes
 
@@ -40,9 +40,9 @@ const ArticlesIndexRoute = ArticlesIndexImport.update({
   import('./routes/articles/index.lazy').then((d) => d.Route),
 )
 
-const LayoutInscriptionInscriptionEtape1IndexRoute =
-  LayoutInscriptionInscriptionEtape1IndexImport.update({
-    path: '/inscription/etape1/',
+const LayoutInscriptionInscriptionMonProjetIndexRoute =
+  LayoutInscriptionInscriptionMonProjetIndexImport.update({
+    path: '/inscription/mon-projet/',
     getParentRoute: () => LayoutInscriptionRoute,
   } as any)
 
@@ -62,8 +62,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_layout-inscription/inscription/etape1/': {
-      preLoaderRoute: typeof LayoutInscriptionInscriptionEtape1IndexImport
+    '/_layout-inscription/inscription/mon-projet/': {
+      preLoaderRoute: typeof LayoutInscriptionInscriptionMonProjetIndexImport
       parentRoute: typeof LayoutInscriptionImport
     }
   }
@@ -74,7 +74,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   LayoutInscriptionRoute.addChildren([
-    LayoutInscriptionInscriptionEtape1IndexRoute,
+    LayoutInscriptionInscriptionMonProjetIndexRoute,
   ]),
   ArticlesIndexRoute,
 ])
