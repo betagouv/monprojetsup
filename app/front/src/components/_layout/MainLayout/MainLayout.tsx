@@ -6,7 +6,7 @@ const MainLayout = () => {
   return (
     <>
       <Entête />
-      <main className="fr-m-6w">
+      <main>
         <Outlet />
       </main>
       <PiedDePage />

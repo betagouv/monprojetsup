@@ -1,0 +1,14 @@
+.couleurDeFond {
+  background-color: var(--background-alt-beige-gris-galet);
+}
+
+.imageDeFond {
+  background: url('/images-de-fond/inscription.svg')
+}
+
+.carte {
+  box-shadow: var(--lifted-shadow);
+  background: var(--background-raised-grey);
+  max-width: 840px;
+  margin: 56px 0 80px 0;
+}

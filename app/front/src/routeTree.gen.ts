@@ -13,13 +13,20 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LayoutInscriptionImport } from './routes/_layout-inscription'
 import { Route as ArticlesIndexImport } from './routes/articles/index'
+import { Route as LayoutInscriptionInscriptionEtape1IndexImport } from './routes/_layout-inscription/inscription/etape1/index'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const LayoutInscriptionRoute = LayoutInscriptionImport.update({
+  id: '/_layout-inscription',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -33,6 +40,12 @@ const ArticlesIndexRoute = ArticlesIndexImport.update({
   import('./routes/articles/index.lazy').then((d) => d.Route),
 )
 
+const LayoutInscriptionInscriptionEtape1IndexRoute =
+  LayoutInscriptionInscriptionEtape1IndexImport.update({
+    path: '/inscription/etape1/',
+    getParentRoute: () => LayoutInscriptionRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -41,9 +54,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_layout-inscription': {
+      preLoaderRoute: typeof LayoutInscriptionImport
+      parentRoute: typeof rootRoute
+    }
     '/articles/': {
       preLoaderRoute: typeof ArticlesIndexImport
       parentRoute: typeof rootRoute
+    }
+    '/_layout-inscription/inscription/etape1/': {
+      preLoaderRoute: typeof LayoutInscriptionInscriptionEtape1IndexImport
+      parentRoute: typeof LayoutInscriptionImport
     }
   }
 }
@@ -52,6 +73,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  LayoutInscriptionRoute.addChildren([
+    LayoutInscriptionInscriptionEtape1IndexRoute,
+  ]),
   ArticlesIndexRoute,
 ])
 

@@ -102,7 +102,7 @@ const PiedDePage = () => {
             {liensInternes.map((lienInterne) => (
               <li
                 className="fr-footer__bottom-item"
-                key={lienInterne.url}
+                key={lienInterne.intitulé}
               >
                 <Link
                   className="fr-footer__bottom-link"
