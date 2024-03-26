@@ -5,7 +5,10 @@ const pages = {
 
 export const localeFR = {
   APP: {
-    NAME: "Mon Projet Sup",
+    NOM: "Mon Projet Sup",
+  },
+  ENTÊTE: {
+    DESCRIPTION_SERVICE: "Le guide qui facilite l’orientation des lycéens",
   },
   NAVIGATION: {
     ACCUEIL: pages.ACCUEIL,

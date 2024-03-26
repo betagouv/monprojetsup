@@ -1,8 +1,9 @@
+import logoMPS from "@/assets/logo/logo-mps.svg";
 import Navigation from "@/components/_layout/Navigation/Navigation";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Link } from "@tanstack/react-router";
 
-const Header = () => {
+const Entête = () => {
   return (
     <header
       className="fr-header"
@@ -15,10 +16,21 @@ const Header = () => {
               <div className="fr-header__brand-top">
                 <div className="fr-header__logo">
                   <p className="fr-logo">
-                    République
+                    Ministère
                     <br />
-                    française
+                    de l’enseignement
+                    <br />
+                    supérieur
+                    <br />
+                    et de la recherche
                   </p>
+                </div>
+                <div className="fr-header__operator">
+                  <img
+                    alt="MPS"
+                    className="fr-responsive-img"
+                    src={logoMPS}
+                  />
                 </div>
                 <div className="fr-header__navbar">
                   <button
@@ -36,11 +48,12 @@ const Header = () => {
               </div>
               <div className="fr-header__service">
                 <Link
-                  title={`Accueil - ${i18n.APP.NAME}`}
+                  title={`Accueil - ${i18n.APP.NOM}`}
                   to="/"
                 >
-                  <p className="fr-header__service-title">{i18n.APP.NAME}</p>
+                  <p className="fr-header__service-title">{i18n.APP.NOM}</p>
                 </Link>
+                <p className="fr-header__service-tagline">{i18n.ENTÊTE.DESCRIPTION_SERVICE}</p>
               </div>
             </div>
           </div>
@@ -51,4 +64,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Entête;
