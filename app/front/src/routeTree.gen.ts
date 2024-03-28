@@ -13,9 +13,10 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutInscriptionImport } from './routes/_layout-inscription'
+import { Route as InscriptionImport } from './routes/_inscription'
 import { Route as ArticlesIndexImport } from './routes/articles/index'
-import { Route as LayoutInscriptionInscriptionMonProjetIndexImport } from './routes/_layout-inscription/inscription/mon-projet/index'
+import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_inscription/inscription/scolarite/index'
+import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
 
 // Create Virtual Routes
 
@@ -23,8 +24,8 @@ const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
-const LayoutInscriptionRoute = LayoutInscriptionImport.update({
-  id: '/_layout-inscription',
+const InscriptionRoute = InscriptionImport.update({
+  id: '/_inscription',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -40,10 +41,16 @@ const ArticlesIndexRoute = ArticlesIndexImport.update({
   import('./routes/articles/index.lazy').then((d) => d.Route),
 )
 
-const LayoutInscriptionInscriptionMonProjetIndexRoute =
-  LayoutInscriptionInscriptionMonProjetIndexImport.update({
-    path: '/inscription/mon-projet/',
-    getParentRoute: () => LayoutInscriptionRoute,
+const InscriptionInscriptionScolariteIndexRoute =
+  InscriptionInscriptionScolariteIndexImport.update({
+    path: '/inscription/scolarite/',
+    getParentRoute: () => InscriptionRoute,
+  } as any)
+
+const InscriptionInscriptionProjetIndexRoute =
+  InscriptionInscriptionProjetIndexImport.update({
+    path: '/inscription/projet/',
+    getParentRoute: () => InscriptionRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -54,17 +61,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_layout-inscription': {
-      preLoaderRoute: typeof LayoutInscriptionImport
+    '/_inscription': {
+      preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
     '/articles/': {
       preLoaderRoute: typeof ArticlesIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_layout-inscription/inscription/mon-projet/': {
-      preLoaderRoute: typeof LayoutInscriptionInscriptionMonProjetIndexImport
-      parentRoute: typeof LayoutInscriptionImport
+    '/_inscription/inscription/projet/': {
+      preLoaderRoute: typeof InscriptionInscriptionProjetIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/scolarite/': {
+      preLoaderRoute: typeof InscriptionInscriptionScolariteIndexImport
+      parentRoute: typeof InscriptionImport
     }
   }
 }
@@ -73,8 +84,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  LayoutInscriptionRoute.addChildren([
-    LayoutInscriptionInscriptionMonProjetIndexRoute,
+  InscriptionRoute.addChildren([
+    InscriptionInscriptionProjetIndexRoute,
+    InscriptionInscriptionScolariteIndexRoute,
   ]),
   ArticlesIndexRoute,
 ])

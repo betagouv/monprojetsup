@@ -1,7 +1,6 @@
-/* eslint-disable react/button-has-type */
-import { type BoutonProps } from "./Bouton.interface";
+import { type BoutonSqueletteProps } from "./BoutonSquelette.interface";
 
-const Bouton = ({ label, taille, variante, desactivé, icône, type, auClic }: BoutonProps) => {
+const BoutonSquelette = ({ label, taille, variante, icône }: BoutonSqueletteProps) => {
   const classEnFonctionDeLaTaille = () => {
     if (taille === "grand") return "fr-btn--lg";
     if (taille === "petit") return "fr-btn--sm";
@@ -25,15 +24,12 @@ const Bouton = ({ label, taille, variante, desactivé, icône, type, auClic }: B
   };
 
   return (
-    <button
+    <div
       className={`fr-btn ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
-      disabled={desactivé}
-      onClick={auClic}
-      type={type}
     >
       {label}
-    </button>
+    </div>
   );
 };
 
-export default Bouton;
+export default BoutonSquelette;

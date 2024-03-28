@@ -36,15 +36,15 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
             <div className={`fr-radio-group fr-radio-rich ${estEnColonne ? "h-full" : ""}`}>
               <input
                 disabled={status?.type === "désactivé"}
-                id={option.id}
+                id={option.valeur}
                 name={id}
                 type="radio"
-                value={option.id}
+                value={option.valeur}
                 {...registerHookForm}
               />
               <label
                 className="fr-label"
-                htmlFor={option.id}
+                htmlFor={option.valeur}
               >
                 {option.label}
                 {option.description && <span className="fr-hint-text">{option.description}</span>}

@@ -1,28 +1,28 @@
 import { type IndicateurÉtapesProps } from "./IndicateurÉtapes.interface";
 import { useEffect, useState } from "react";
 
-const IndicateurÉtapes = ({ étapes, étapeActuelle }: IndicateurÉtapesProps) => {
-  const [indexÉtapeCourante, setIndexÉtapeCourante] = useState(étapeActuelle - 1);
-  const [indexÉtapeSuivante, setIndexÉtapeSuivante] = useState(étapeActuelle);
+const IndicateurÉtapes = ({ étapes, indexÉtapeActuelle }: IndicateurÉtapesProps) => {
+  const [indexÉtapeCourante, setIndexÉtapeCourante] = useState(indexÉtapeActuelle);
+  const [indexÉtapeSuivante, setIndexÉtapeSuivante] = useState(indexÉtapeActuelle + 1);
 
   const nombreÉtapes = étapes.length;
 
   useEffect(() => {
-    setIndexÉtapeCourante(étapeActuelle - 1);
-    setIndexÉtapeSuivante(étapeActuelle);
-  }, [étapeActuelle]);
+    setIndexÉtapeCourante(indexÉtapeActuelle);
+    setIndexÉtapeSuivante(indexÉtapeActuelle + 1);
+  }, [indexÉtapeActuelle]);
 
   return (
     <div className="fr-stepper fr-mb-0">
       <h2 className="fr-stepper__title">
         {étapes[indexÉtapeCourante]}{" "}
         <span className="fr-stepper__state">
-          Étape {étapeActuelle} sur {nombreÉtapes}
+          Étape {indexÉtapeActuelle + 1} sur {nombreÉtapes}
         </span>{" "}
       </h2>{" "}
       <div
         className="fr-stepper__steps"
-        data-fr-current-step={étapeActuelle}
+        data-fr-current-step={indexÉtapeActuelle + 1}
         data-fr-steps={nombreÉtapes}
       />
       {indexÉtapeSuivante < nombreÉtapes && (

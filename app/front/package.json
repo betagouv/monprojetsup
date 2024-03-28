@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.11.2",
+    "@hookform/resolvers": "^3.3.4",
     "@t3-oss/env-core": "^0.9.2",
     "@tanstack/react-query": "^5.24.8",
     "@tanstack/react-router": "^1.19.1",

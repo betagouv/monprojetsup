@@ -2,7 +2,7 @@ export type BoutonRadioRicheProps = {
   légende: string;
   description?: string;
   options: Array<{
-    id: string;
+    valeur: string;
     label: string;
     description?: string;
     pictogramme: string;

@@ -35,27 +35,11 @@ export const localeFR = {
     ARTICLES: pages.ARTICLES,
     MAIN_NAVIGATION: "Menu principal",
   },
-  INSCRIPTION: {
-    ÉTAPES: {
-      MON_PROJET: "Mon projet supérieur",
-      MA_SCOLARITÉ: "Ma scolarité",
-      MES_ASPIRATIONS: "Mes aspirations professionnelles",
-      MES_TALENTS: "Mes petits talents",
-      MES_MÉTIERS: "Les métiers qui m'inspirent",
-      MES_ÉTUDES: "Mes futures études",
-    },
-    CONTINUER: "Continuer",
-    RETOUR: "Retour",
-    TITRES: {
-      MON_PROJET: "As-tu déjà un projet d’études supérieures ?",
-      MA_SCOLARITÉ: "Dis-nous en plus sur ta scolarité",
-      MES_ASPIRATIONS: "As-tu déjà identifié des secteurs d’activité ?",
-      MES_TALENTS: "Parlons un peu de toi. Tu dirais que tu es ...",
-      MES_MÉTIERS: "As-tu déjà quelques idées de métiers ?",
-      MES_ÉTUDES: "À propos des études supérieures",
-    },
-  },
   MON_PROJET: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Mon projet supérieur",
+      TITRE: "As-tu déjà un projet d’études supérieures ?",
+    },
     MA_SITUATION: {
       LÉGENDE: "Ma situation *",
       OPTIONS: {
@@ -75,6 +59,37 @@ export const localeFR = {
           EMOJI: "🧐",
         },
       },
+      ERREUR_FORMULAIRE: "Veuillez sélectionner une option parmi la liste.",
+    },
+  },
+  MA_SCOLARITÉ: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Ma scolarité",
+      TITRE: "Dis-nous en plus sur ta scolarité",
+    },
+  },
+  MES_ASPIRATIONS: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Mes aspirations professionnelles",
+      TITRE: "As-tu déjà identifié des secteurs d’activité ?",
+    },
+  },
+  MES_TALENTS: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Mes petits talents",
+      TITRE: "Parlons un peu de toi. Tu dirais que tu es ...",
+    },
+  },
+  MES_MÉTIERS: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Les métiers qui m'inspirent",
+      TITRE: "As-tu déjà quelques idées de métiers ?",
+    },
+  },
+  MES_ÉTUDES: {
+    PARCOURS_INSCRIPTION: {
+      TITRE_ÉTAPE: "Mes futures études",
+      TITRE: "À propos des études supérieures",
     },
   },
   PAGE_ACCUEIL: {
@@ -86,5 +101,7 @@ export const localeFR = {
   COMMUN: {
     CLOSE: "Fermer",
     CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
+    CONTINUER: "Continuer",
+    RETOUR: "Retour",
   },
 } as const;
