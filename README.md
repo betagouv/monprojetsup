@@ -1,4 +1,4 @@
-# Mon Projet Sup
+# MonProjetSup
 
 Ce repository est un mono-repo qui contient plusieurs applications nécessaires au fonctionnement de Mon Projet Sup
 
