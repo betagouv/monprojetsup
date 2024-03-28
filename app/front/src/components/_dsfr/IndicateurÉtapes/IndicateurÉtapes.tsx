@@ -13,7 +13,7 @@ const IndicateurÉtapes = ({ étapes, étapeActuelle }: IndicateurÉtapesProps) 
   }, [étapeActuelle]);
 
   return (
-    <div className="fr-stepper">
+    <div className="fr-stepper fr-mb-0">
       <h2 className="fr-stepper__title">
         {étapes[indexÉtapeCourante]}{" "}
         <span className="fr-stepper__state">

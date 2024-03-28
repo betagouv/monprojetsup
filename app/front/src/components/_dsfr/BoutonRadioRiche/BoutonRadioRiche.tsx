@@ -1,7 +1,7 @@
 import { type BoutonRadioRicheProps } from "./BoutonRadioRiche.interface";
 import { useId } from "react";
 
-const BoutonRadioRiche = ({ légende, description, options, status }: BoutonRadioRicheProps) => {
+const BoutonRadioRiche = ({ légende, description, options, status, registerHookForm }: BoutonRadioRicheProps) => {
   const id = useId();
 
   const estEnColonne = options.length <= 2;
@@ -33,12 +33,14 @@ const BoutonRadioRiche = ({ légende, description, options, status }: BoutonRadi
             className={`fr-fieldset__element ${estEnColonne ? "fr-fieldset__element--inline fr-col-6" : "fr-col-12"}`}
             key={option.label}
           >
-            <div className={`fr-radio-group fr-radio-rich ${estEnColonne && "h-100"}`}>
+            <div className={`fr-radio-group fr-radio-rich ${estEnColonne ? "h-full" : ""}`}>
               <input
                 disabled={status?.type === "désactivé"}
                 id={option.id}
                 name={id}
                 type="radio"
+                value={option.id}
+                {...registerHookForm}
               />
               <label
                 className="fr-label"
@@ -47,7 +49,7 @@ const BoutonRadioRiche = ({ légende, description, options, status }: BoutonRadi
                 {option.label}
                 {option.description && <span className="fr-hint-text">{option.description}</span>}
               </label>
-              <div className="fr-radio-rich__img">{option.pictogramme}</div>
+              <div className="fr-radio-rich__img fr-h3 fr-mb-0">{option.pictogramme}</div>
             </div>
           </div>
         ))}
