@@ -31,12 +31,12 @@ public class AnalyzeUserBehaviour {
 
         /* load all users as a list of users from the file "usersExpeENS.json" */
 
-        Groups groups = Serialisation.fromJsonFile("groups.json", Groups.class);
+        Groups groups = Serialisation.fromJsonFile("groups_2024_03_20.json", Groups.class);
         groups.init();
 
         List<User> usersOfInterest
                 = Serialisation.fromJsonFile(
-                "usersExpeENS.json",
+                "usersExpeENS_2024_03_20.json",
                 new TypeToken<List<User>>(){}.getType()
         );
 
@@ -70,11 +70,10 @@ public class AnalyzeUserBehaviour {
             List<ServerTrace> tracesList
     ) throws IOException {
 
-
-        Map<String, ServerTrace> traces = tracesList.stream().collect(Collectors.toMap(
-                ServerTrace::timestamp,
-                st -> st
-        ));
+        Map<String, ServerTrace> traces = new HashMap<>();
+        tracesList.forEach(serverTrace -> {
+            traces.put(serverTrace.timestamp(), serverTrace);
+        });
 
         if(traces.isEmpty()) throw new RuntimeException("No data to analyze");
 
@@ -105,14 +104,10 @@ public class AnalyzeUserBehaviour {
         LOGGER.info("Classes/groupes: " + groupes.size());
         LOGGER.info("Lycéens: " + users.size());
 
-
         LOGGER.info("Lycées avec au moins 5 lycéens: " + lycees.entrySet().stream()
                 .filter(e -> e.getValue() >= 5).count());
         LOGGER.info("Classes/groupes avec au moins 5 lycéens: " + realGroups.size());
         LOGGER.info("\t\t " + String.join("\n\t\t", realGroups));
-
-
-
 
         List<User> usersOfInterestWithFavori = new ArrayList<>(users);
         /* keeping only users having selected a formation favori */
@@ -120,10 +115,7 @@ public class AnalyzeUserBehaviour {
         //print the number of users fof interest
         LOGGER.info("Lycéens avec au moins une formation en favori: " + usersOfInterestWithFavori.size());
 
-
-
-
-        //computing the set of localdatetime, rounde dto hour, for which we observe at least one trace
+        //computing the set of localdatetime, rounded to hour, for which we observe at least one trace
         List<String> hours = traces.keySet().stream()
                 .map(LocalDateTime::parse)
                 .map(ldt -> ldt.withMinute(0).withSecond(0).withNano(0))
@@ -139,7 +131,7 @@ public class AnalyzeUserBehaviour {
         LOGGER.info("Traces d'évènement: " + traces.size());
 
         // Analyzing the traces
-        //compute the first date where the occurecne of an event containing "openUrl" has been seen
+        //compute the first date where the occurence of an event containing "openUrl" has been seen
         LocalDateTime firstOpenUrlTimestamp = traces.values().stream()
                 .filter(st -> st.event() != null && st.event().contains("openUrl")  )
                 .map(ServerTrace::timestamp)
@@ -173,7 +165,7 @@ public class AnalyzeUserBehaviour {
 
         Serialisation.toJsonFile("suggestionsObserved.json", updateProfileServiceWithSuggestions, true);
 
-        List<ServerTrace> updateProfileServices = updateProfileServiceWithSuggestions.stream()
+        List<ServerTrace> ajoutFavoriFormation = updateProfileServiceWithSuggestions.stream()
                 .map(p -> Pair.of(p.getLeft(), (Map<String, Object>)p.getRight()))
                 .filter(p -> {
                             Map<String, Object> m = p.getRight();
@@ -197,14 +189,14 @@ public class AnalyzeUserBehaviour {
                 )
                 .toList();
 
-        Set<String> candidatesWithFiliersSuggestions = filieresSuggestions.stream()
+        Set<String> candidatesWithFilieresSuggestions = filieresSuggestions.stream()
                 .map(ServerTrace::origin)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        LOGGER.info("Lycéens ayant vu une ou plusieurs suggestions de filières: " + candidatesWithFiliersSuggestions.size());
+        LOGGER.info("Lycéens ayant vu une ou plusieurs suggestions de filières: " + candidatesWithFilieresSuggestions.size());
 
         Map<String, List<String>> groupsWithFilieresSuggestions =
-                candidatesWithFiliersSuggestions.stream()
+                candidatesWithFilieresSuggestions.stream()
                 .map(id -> Pair.of(id, usertoGroup.get(id)))
                 .filter(p -> p.getRight() != null)
                 .collect(Collectors.groupingBy(p -> p.getRight().getId()))
@@ -218,7 +210,7 @@ public class AnalyzeUserBehaviour {
 
         /*reloadSuggestions fl*/
 
-        Serialisation.toJsonFile("addSingleFiliereToFavorisByENSUserEvents.json", updateProfileServices, true);
+        Serialisation.toJsonFile("addSingleFiliereToFavorisByENSUserEvents.json", ajoutFavoriFormation, true);
 
 
         List<ServerTrace> openPsupUrl = traces.values().stream()
@@ -263,14 +255,14 @@ public class AnalyzeUserBehaviour {
 
     }
 
-    public static boolean anonymize= true;
+    public static boolean anonymize= false;
 
     private static void detailedNavigationAnalysis(
             String filename,
             Map<String, List<ServerTrace>> connectionsOfUserOfInterestsInTestsGroupAfterStratification,
             Map<String, Group> usertoGroup) throws IOException {
         Map<String,List<String>> tracesOfUsersHavingNotSeenSuggestions
-                = f(connectionsOfUserOfInterestsInTestsGroupAfterStratification);
+                = reorderEventsByTimestamps(connectionsOfUserOfInterestsInTestsGroupAfterStratification);
 
         Map<String, List<Pair<String,List<String>>>> details = new HashMap<>();
         tracesOfUsersHavingNotSeenSuggestions.forEach((k,v) -> {
@@ -297,23 +289,56 @@ public class AnalyzeUserBehaviour {
 
         Set<String> nbUsersWithRealNavigation = new HashSet<>();
         try(CsvTools csv = new CsvTools(filename.replace("json","csv"), ',')) {
-            csv.append(List.of("Group", "Date et heure", "Utilisateur","Durée de navigation (min)", "exploration formations"));
+            csv.append(List.of(
+                    "Lycée",
+                    "Groupe",
+                    "Date et heure",
+                    "Utilisateur",
+                    "Durée de navigation (min)",
+                    "nombre de détails",
+                    "nombre d'url parcoursup",
+                    "nombre d'url onisep",
+                    "terminale expe scientifique",
+                    "a vu une suggestion de filière"
+                    ));
             AtomicInteger i = new AtomicInteger(1);
             Map<String, String> userToIndex = new HashMap<>();
-            for (Map.Entry<String, List<Pair<String, List<String>>>> entry : details.entrySet()) {
-                String g = entry.getKey();
-                List<Pair<String, List<String>>> v = entry.getValue();
-                for (Pair<String, List<String>> p : v) {
-                    csv.append(g);
-                    csv.append(p.getRight().get(0).substring(0, p.getRight().get(0).indexOf('.')));
-                    csv.append(anonymize ? (userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()) ) : p.getLeft());
+            List<Pair<String, List<String>>> l =
+                    details.values().stream().flatMap(List::stream)
+                            .sorted(Comparator.comparing(p -> p.getRight().get(0))).toList();
+
+            //for (Map.Entry<String, List<Pair<String, List<String>>>> entry : details.entrySet()) {
+                //String g = entry.getKey();
+                //List<Pair<String, List<String>>> v = entry.getValue();
+                for (Pair<String, List<String>> p : l) {
                     long dur = duration(p.getRight());
+                    if(dur <= 0) continue;
+                    Group gr = usertoGroup.get(p.getLeft());
+                    //lycée
+                    csv.append(gr == null ? "null" : gr.getLycee());
+                    //group
+                    csv.append(gr == null ? "null" : gr.getId());
+                    //Date et heure
+                    csv.append(p.getRight().get(0).substring(0, p.getRight().get(0).indexOf('.')));
+                    //user
+                    csv.append(userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()));
+                    //csv.append(anonymize ? (userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()) ) : p.getLeft());
                     if(dur > 10) nbUsersWithRealNavigation.add(p.getLeft());
+                    ///user
                     csv.append(dur);
-                    csv.append(aVisiteUneFormation(p.getRight()));
+                    //nb details
+                    csv.append(nbDetails(p.getRight()));
+                    //nb url psup
+                    csv.append(nbUrlPsup(p.getRight()));
+                    //nb url onisep
+                    csv.append(nbUrlOnisep(p.getRight()));
+                    //expe scientique
+                    csv.append(gr == null ? "null group" : gr.getExpeENSGroupe());
+                    //a vu une suggestion de filière
+                    csv.append(aVuUneSuggestionDeFiliere(p.getRight()));
                     csv.newLine();
                 }
-            }
+            //}
 
 
         }
@@ -342,11 +367,26 @@ public class AnalyzeUserBehaviour {
         return result;
     }
 
-    private static String aVisiteUneFormation(List<String> right) {
-        if(right.stream().anyMatch(s -> s.contains("reloadSuggestions fl") || s.contains("reloadSuggestions fr"))) {
+    private static String aVuUneSuggestionDeFiliere(List<String> right) {
+        if(right.stream().anyMatch(s ->
+                s.contains("reloadSuggestions fl")
+                || s.contains("reloadSuggestions fr")
+                || s.contains("reloadSuggestions formations"))
+        ) {
             return "oui";
         }
         return "";
+    }
+
+    private static long nbUrlPsup(List<String> right) {
+        return right.stream().filter(s -> s.contains("openUrl") && s.contains("parcoursup")).count();
+    }
+
+    private static long nbDetails(List<String> right) {
+        return right.stream().filter(s -> s.contains("doOpenDetailsModal")).count();
+    }
+    private static long nbUrlOnisep(List<String> right) {
+        return right.stream().filter(s -> s.contains("openUrl") && ( s.contains("www.onisep.fr") || s.contains("avenirs"))).count();
     }
 
     private static long duration(List<String> right) {
@@ -358,7 +398,7 @@ public class AnalyzeUserBehaviour {
         return duration.toMinutes();
     }
 
-    private static Map<String, List<String>> f(Map<String, List<ServerTrace>> map) {
+    private static Map<String, List<String>> reorderEventsByTimestamps(Map<String, List<ServerTrace>> map) {
         Map<String, List<String>> result = new HashMap<>();
         map.forEach((k, v) -> {
             List<String> l = v.stream().sorted(Comparator.comparing(ServerTrace::timestamp))

@@ -156,6 +156,7 @@ export function getCachedAdminInfos() {
   return JSON.parse(sessionStorage.adminInfos);
 }
 
+/*
 function isEvalENS() {
   const infos = getCachedAdminInfos();
   if (infos?.config) {
@@ -163,9 +164,11 @@ function isEvalENS() {
   } else {
     return false;
   }
-}
+}*/
 
 export function hideFormations() {
+  return false;
+  /*
   try {
     const infos = getCachedAdminInfos();
     return (
@@ -176,17 +179,22 @@ export function hideFormations() {
     );
   } catch (e) {
     return undefined;
-  }
+  }*/
 }
 
 export function isExpeENS() {
+  return false;
+  /*
   const infos = getCachedAdminInfos();
-  return infos?.config?.evalENS;
+  return infos?.config?.evalENS;*/
 }
 
 export function isExpeENSTest() {
+  return false;
+  /*
   const infos = getCachedAdminInfos();
   return infos?.config?.evalENS && infos.config.expeENSGroup === "T";
+  */
 }
 
 export function showMinimalStats() {
@@ -200,6 +208,8 @@ export function showMinimalStats() {
 }
 
 export function isEvalIndivisible() {
+  return false;
+  /*
   const infos = getCachedAdminInfos();
-  return infos?.config.evalIndivisible;
+  return infos?.config.evalIndivisible;*/
 }
