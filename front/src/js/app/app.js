@@ -249,7 +249,8 @@ function disconnect() {
   session.clear();
   if (session.isLoggedIn()) server.disconnect();
   data.init();
-  ui.showConnectionScreen();
+  //ui.showConnectionScreen();
+  ui.showLandingScreen();
 }
 
 function setAdminInfos(msg) {

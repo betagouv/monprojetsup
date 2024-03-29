@@ -27,8 +27,14 @@ $card-border-color: $card-icon-color;
 $card-background-color: white;
 $stats-color: #B6CFFB;
 
+.landing {
+  background-color: $myPurpleLight;
+  background-image: url('../img/landing.jpg');
+}
+
 .body {
   background-color: $myPurpleLight;
+    
 }
 
 .bg-light2 {

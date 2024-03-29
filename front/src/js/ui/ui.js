@@ -44,8 +44,6 @@ import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
 
 export {
-  showConnectionScreen,
-  showDataLoadScreen,
   initOnce,
   loadProfile,
   loadGroupsInfo,
@@ -55,18 +53,26 @@ export {
   displayProfileTabs,
 };
 
-const screens = ["loading", "connect", "connected"];
+const screens = ["landing", "loading", "connect", "connected"];
 
 function showScreen(screen) {
   for (const scr of screens) $(`#${scr}`).toggle(scr === screen);
 }
 
-function showDataLoadScreen() {
+export function showDataLoadScreen() {
   showScreen("loading");
 }
 
-function showConnectionScreen() {
+export function showConnectionScreen() {
   showScreen("connect");
+}
+
+export function showLandingScreen() {
+  //$(".body").addClass("landing");
+  showScreen("landing");
+  $("#landing").on("click", () => {
+    showConnectionScreen();
+  });
 }
 
 export const tabs = {
