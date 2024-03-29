@@ -70,6 +70,11 @@ public class CsvTools implements Closeable {
         writer.append(String.valueOf(val));
         skipNextSeparator = false;
     }
+    public void append(long val) throws IOException {
+        if(!this.skipNextSeparator) writer.append(separator);
+        writer.append(String.valueOf(val));
+        skipNextSeparator = false;
+    }
 
     public void newLine() throws IOException {
         writer.append(System.lineSeparator());
