@@ -2,6 +2,8 @@ package fr.gouv.monprojetsup.data.update.onisep.formations;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 public record Formation(
         /*
         {
@@ -31,7 +33,9 @@ public record Formation(
         String libelle_niveau_de_certification,
         String tutelle,
         String url_et_id_onisep,
-        String domainesous_domaine)
+        String domainesous_domaine,
+
+        NiveauEtudes niveau_etudes)
 {
         public @Nullable String identifiant() {
                 if(url_et_id_onisep == null) return null;
@@ -39,4 +43,18 @@ public record Formation(
                 if(pos < 0) return null;
                 return url_et_id_onisep.substring(pos+1);
         }
+
+        private static Set<String> niveauxCertif = Set.of("5","6","7","8");
+    public boolean isFormationDuSup() {
+        return (niveau_etudes() != null && niveau_etudes().isFormationDuSup())
+                || niveau_de_certification != null && niveau_de_certification.toLowerCase().contains("bac +")
+                || niveau_de_certification != null && niveauxCertif.contains(niveau_de_certification)
+                || niveau_de_sortie_indicatif != null && niveau_de_sortie_indicatif.toLowerCase().contains("bac +");
+    }
+
+    public record NiveauEtudes(String id, String libelle) {
+        public boolean isFormationDuSup() {
+            return libelle.toLowerCase().contains("bac +");
+        }
+    }
 }

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -266,12 +267,13 @@ public record FichesMetierOnisep(
 
     ) {
 
-        public boolean isMetierSup() {
+        public boolean isMetierSup(Collection<String> idFormationsSup) {
             return niveau_acces_min == null
                     || niveau_acces_min.id == null
                     || niveau_acces_min.id.isBlank()
                     || niveau_acces_min.equals("null")
-                    || niveau_acces_min().libelle().contains("Bac + ");
+                    || niveau_acces_min().libelle().contains("Bac + ")
+                    || formations_min_requise != null && formations_min_requise.isSup(idFormationsSup);
         }
 
     }
@@ -325,6 +327,9 @@ public record FichesMetierOnisep(
             List<FormationMinRequise> formation_min_requise
     ) {
 
+        public boolean isSup(Collection<String> idFormationsSup) {
+            return formation_min_requise != null && formation_min_requise.stream().anyMatch(f -> idFormationsSup.contains(f.id));
+        }
     }
 
             public record FormationMinRequise(

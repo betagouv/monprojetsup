@@ -125,7 +125,10 @@ public class ServerData {
 
         ServerData.updateLabelsForDebug();
 
-        liensSecteursMetiers  = OnisepData.getSecteursVersMetiers(onisepData.fichesMetiers());
+        liensSecteursMetiers  = OnisepData.getSecteursVersMetiers(
+                onisepData.fichesMetiers(),
+                onisepData.formations().getFormationsDuSup()
+        );
         liensDomainesMetiers  = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
         dataLoaded = true;

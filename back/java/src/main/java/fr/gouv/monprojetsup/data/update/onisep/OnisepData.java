@@ -53,7 +53,9 @@ public record OnisepData(
 
         FichesMetierOnisep fichesMetiers,
 
-        TypeFormationOni.Typesformations typesformations
+        TypeFormationOni.Typesformations typesformations,
+
+        Formations formations
         ) {
 
     private static final Logger LOGGER = Logger.getLogger(OnisepData.class.getSimpleName());
@@ -80,9 +82,7 @@ public record OnisepData(
                 MetiersScrapped.class
         );
 
-
         metiers.inject(metiersScrapped);
-
 
         Thematiques thematiques = Thematiques.load();
 
@@ -165,13 +165,20 @@ public record OnisepData(
                         )//id_formation should be metier...
                 );
 
-        removeMetiersBelowBac(metiersScrapped, fichesMetiers, metiers, edgesInteretsMetiers);
-
         LOGGER.info("Chargement de " + DataSources.ONISEP_FORMATIONS_PATH);
         Formations formations = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_PATH),
                 Formations.class
         );
+
+        removeMetiersBelowBac(
+                metiersScrapped,
+                fichesMetiers,
+                metiers,
+                edgesInteretsMetiers,
+                formations.getFormationsDuSup()
+        );
+
         LOGGER.info("Chargement de " + DataSources.ONISEP_FORMATIONS_WITH_METIER_PATH);
         FormationsAvecMetiers formationsAvecMetiers = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_WITH_METIER_PATH),
@@ -293,7 +300,9 @@ public record OnisepData(
                 );
 
 
-        return new OnisepData(metiers, thematiques, interets,
+        return new OnisepData(metiers,
+                thematiques,
+                interets,
                 edgesThematiquesFilieres,
                 edgesThematiquesMetiers,
                 edgesMetiersFilieres,
@@ -302,21 +311,25 @@ public record OnisepData(
                 lines,
                 secteursPro,
                 fichesMetiers,
-                typesformations);
+                typesformations,
+                formations);
 
     }
 
     private static void removeMetiersBelowBac(
             MetiersScrapped metiersScrapped,
             FichesMetierOnisep fichesMetiers,
-            Metiers metiers, Edges edgesInteretsMetiers) {
+            Metiers metiers,
+            Edges edgesInteretsMetiers,
+            Collection<String> formationsDuSup
+    ) {
         Set<String> metiersToRemove = fichesMetiers.metiers().metier().stream()
-                .filter(m -> !m.isMetierSup())
+                .filter(m -> !m.isMetierSup(formationsDuSup))
                 .map(m -> Constants.cleanup(m.identifiant()))
                 .collect(Collectors.toSet());
 
         metiersScrapped.metiers().values().removeIf(m -> metiersToRemove.contains(m.key()));
-        fichesMetiers.metiers().metier().removeIf(m -> !m.isMetierSup());
+        fichesMetiers.metiers().metier().removeIf(m -> !m.isMetierSup(formationsDuSup));
         metiers.metiers().keySet().removeAll(metiersToRemove);
         edgesInteretsMetiers.remove(metiersToRemove);
 
@@ -494,7 +507,8 @@ public record OnisepData(
 
 
     public static Map<String, Set<String>> getSecteursVersMetiers(
-            FichesMetierOnisep fiches
+            FichesMetierOnisep fiches,
+            Collection<String> formationsDuSup
     ) {
         Map<String, Set<String>> result = new HashMap<>();
         fiches.metiers().metier().forEach(fiche -> {
@@ -502,7 +516,7 @@ public record OnisepData(
             if (fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
                 fiche.secteurs_activite().secteur_activite().forEach(secteur -> {
                     String keySecteur = Constants.cleanup(secteur.id());
-                    if(fiche.isMetierSup()) {
+                    if(fiche.isMetierSup(formationsDuSup)) {
                         result.computeIfAbsent(keySecteur, z -> new HashSet<>()).add(keyMetier);
                     }
                 });

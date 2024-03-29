@@ -90,7 +90,10 @@ public class UpdateFrontData {
                     = onisepData.getExtendedMetiersVersFormations(groups, lasCorrespondance, descriptifs);
 
             Map<String, Set<String>> liensSecteursMetiers
-                    = onisepData.getSecteursVersMetiers(onisepData.fichesMetiers());
+                    = onisepData.getSecteursVersMetiers(
+                            onisepData.fichesMetiers(),
+                            onisepData.formations().getFormationsDuSup()
+            );
 
             Map<DomainePro, Set<String>> liensDomainesMetiers
                     = OnisepData.getDomainesVersMetiers(onisepData.metiers());

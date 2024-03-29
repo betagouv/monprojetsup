@@ -31,12 +31,12 @@ public class AnalyzeUserBehaviour {
 
         /* load all users as a list of users from the file "usersExpeENS.json" */
 
-        Groups groups = Serialisation.fromJsonFile("groups_2024_03_20.json", Groups.class);
+        Groups groups = Serialisation.fromJsonFile("groups.json", Groups.class);
         groups.init();
 
         List<User> usersOfInterest
                 = Serialisation.fromJsonFile(
-                "usersExpeENS_2024_03_20.json",
+                "users.json",
                 new TypeToken<List<User>>(){}.getType()
         );
 
@@ -161,7 +161,7 @@ public class AnalyzeUserBehaviour {
                 .toList();
 
 
-        analyseFormationsSuggestions(traces, usertoGroup);
+        analyseFormationsSuggestions(traces, usertoGroup, users);
 
         Serialisation.toJsonFile("suggestionsObserved.json", updateProfileServiceWithSuggestions, true);
 
@@ -240,7 +240,7 @@ public class AnalyzeUserBehaviour {
 
     private static void analyseFormationsSuggestions(
             Map<String, ServerTrace> traces,
-            Map<String, Group> users) throws IOException {
+            Map<String, Group> usertoGroup, List<User> users) throws IOException {
 
         Map<String,List<ServerTrace>> connectionsOfUserOfInterestsInTestsGroupAfterStratification = traces.values().stream()
                 .filter(st -> st.origin() != null)
@@ -249,6 +249,7 @@ public class AnalyzeUserBehaviour {
         detailedNavigationAnalysis(
                 "traces_utilisateurs.json",
                 connectionsOfUserOfInterestsInTestsGroupAfterStratification,
+                usertoGroup,
                 users
         );
 
@@ -260,7 +261,12 @@ public class AnalyzeUserBehaviour {
     private static void detailedNavigationAnalysis(
             String filename,
             Map<String, List<ServerTrace>> connectionsOfUserOfInterestsInTestsGroupAfterStratification,
-            Map<String, Group> usertoGroup) throws IOException {
+            Map<String, Group> usertoGroup,
+            List<User> usersList) throws IOException {
+
+        Map<String, User> users = new HashMap<>();
+        usersList.forEach(u -> users.put(u.login(), u));
+
         Map<String,List<String>> tracesOfUsersHavingNotSeenSuggestions
                 = reorderEventsByTimestamps(connectionsOfUserOfInterestsInTestsGroupAfterStratification);
 
@@ -271,10 +277,10 @@ public class AnalyzeUserBehaviour {
                 List<Pair<String,List<String>>> m = details.computeIfAbsent(group.getId(), s -> new ArrayList<>());
                 if(!v.isEmpty()) {
                     List<List<String>> vs = stratify(v);
-                    vs.forEach(l -> m.add(Pair.of(anonymize ? (""+abs(k.hashCode())) : k, l)));
+                    vs.forEach(l -> m.add(Pair.of(anonymize ? ("" + abs(k.hashCode())) : k, l)));
                 }
             } else {
-                LOGGER.info("No group for user " + k);
+                //LOGGER.info("No group for user " + k);
             }
         });
         details.values().forEach(l -> l.sort(
@@ -288,6 +294,13 @@ public class AnalyzeUserBehaviour {
         );
 
         Set<String> nbUsersWithRealNavigation = new HashSet<>();
+        Map<String, LocalDateTime> datesConnexions = new HashMap<>();
+
+        Set<String> retours = new HashSet<>();
+        Set<String> allUSers = new HashSet<>();
+
+        Map<String, Set<String>> suggestionsVues = new HashMap<>();
+
         try(CsvTools csv = new CsvTools(filename.replace("json","csv"), ',')) {
             csv.append(List.of(
                     "Lycée",
@@ -298,8 +311,10 @@ public class AnalyzeUserBehaviour {
                     "nombre de détails",
                     "nombre d'url parcoursup",
                     "nombre d'url onisep",
-                    "terminale expe scientifique",
-                    "a vu une suggestion de filière"
+                    "nombre de clicks",
+                    "nb favoris",
+                    "groupe expé scien",
+                    "retour"
                     ));
             AtomicInteger i = new AtomicInteger(1);
             Map<String, String> userToIndex = new HashMap<>();
@@ -313,29 +328,48 @@ public class AnalyzeUserBehaviour {
                 for (Pair<String, List<String>> p : l) {
                     long dur = duration(p.getRight());
                     if(dur <= 0) continue;
-                    Group gr = usertoGroup.get(p.getLeft());
+                    if(!aVuUneSuggestionDeFiliere(p.getRight())) continue;
+                    String user = p.getLeft();
+                    Group gr = usertoGroup.get(user);
+                    if(gr == null) continue;
+                    if(gr.getLycee().contains("Demo")) continue;
+
+                    allUSers.add(user);
+                    //calcul des suggestions vues
+                    suggestionsVues.computeIfAbsent(user, s -> new HashSet<>()).addAll(getSuggestions(p.getRight()));
                     //lycée
                     csv.append(gr == null ? "null" : gr.getLycee());
                     //group
                     csv.append(gr == null ? "null" : gr.getId());
                     //Date et heure
-                    csv.append(p.getRight().get(0).substring(0, p.getRight().get(0).indexOf('.')));
+                    String ldtString = p.getRight().get(0).substring(0, p.getRight().get(0).indexOf('.'));
+                    LocalDateTime ldt = LocalDateTime.parse(ldtString);
+                    boolean retour = datesConnexions.get(user) != null && Duration.between(datesConnexions.get(user), ldt).toDays() >= 1;
+                    if(retour) retours.add(user);
+
+                    datesConnexions.put(user, ldt);
+
+                    csv.append(ldt.toString());
                     //user
-                    csv.append(userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()));
+                    csv.append(p.getLeft());
+                    //csv.append(userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()));
                     //csv.append(anonymize ? (userToIndex.computeIfAbsent(p.getLeft(), z -> "" + i.getAndIncrement()) ) : p.getLeft());
                     if(dur > 10) nbUsersWithRealNavigation.add(p.getLeft());
                     ///user
                     csv.append(dur);
                     //nb details
                     csv.append(nbDetails(p.getRight()));
+
                     //nb url psup
                     csv.append(nbUrlPsup(p.getRight()));
                     //nb url onisep
                     csv.append(nbUrlOnisep(p.getRight()));
+                    //nb clicks
+                    csv.append(p.getRight().size());
                     //expe scientique
                     csv.append(gr == null ? "null group" : gr.getExpeENSGroupe());
-                    //a vu une suggestion de filière
-                    csv.append(aVuUneSuggestionDeFiliere(p.getRight()));
+                    //retour
+                    csv.append(retour ? "retour" : "");
                     csv.newLine();
                 }
             //}
@@ -343,9 +377,103 @@ public class AnalyzeUserBehaviour {
 
         }
 
-        LOGGER.info("Lycéens ayant navigué au moins 10 minutes : " + nbUsersWithRealNavigation.size());
+        LOGGER.info("Lycéens " + allUSers.size());
+        LOGGER.info("Lycéens revenus " + retours.size());
+
+        try(CsvTools csv = new CsvTools("lyceen" + filename.replace("json","csv"), ',')) {
+            csv.append(List.of(
+                    "lycéens",
+                    "nb favoris",
+                    "nb favoris formations",
+                    "nb favoris metiers",
+                    "nb favoris formations suggestions"
+            ));
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String s = entry.getKey();
+                User user = entry.getValue();
+                if (allUSers.contains(s)) {
+                    csv.append(s);
+                    csv.append(user.pf().suggApproved().size());
+                    csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())).count());
+                    csv.append(user.pf().suggApproved().stream().filter(s1 -> !isFiliere(s1.fl())).count());
+                    csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())
+                            && suggestionsVues.get(s).contains(s1.fl())
+                            ).count());
+                    csv.newLine();
+                }
+            }
+        }
+
+        try(CsvTools csv = new CsvTools("lyceen_sugg_" + filename.replace("json","csv"), ',')) {
+            csv.append(List.of(
+                    "lycéens",
+                    "nb favoris",
+                    "nb favoris formations",
+                    "nb favoris metiers",
+                    "nb favoris formations suggestions"
+            ));
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String s = entry.getKey();
+                if (!allUSers.contains(s)) continue;
+                User user = entry.getValue();
+                csv.append(s);
+                csv.append(user.pf().suggApproved().size());
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())).count());
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> !isFiliere(s1.fl())).count());
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())
+                        && suggestionsVues.get(s).contains(s1.fl())
+                ).count());
+                csv.newLine();
+            }
+        }
+
+        Map<String,Integer> statsLyceesNbUsers = new HashMap<>();
+        Map<String,Integer> statsLyceesFavoris = new HashMap<>();
+
+        Set <String> lycees = Set.of("vaclav","graves","smdc_toulouse","bremonthier","libourne");
+
+        try(CsvTools csv = new CsvTools("lyceen_non_ENS" + filename.replace("json","csv"), ',')) {
+            csv.append(List.of(
+                    "lycéens",
+                    "nb favoris",
+                    "nb favoris formations",
+                    "nb favoris metiers",
+                    "nb favoris formations suggestions"
+            ));
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String s = entry.getKey();
+                User user = entry.getValue();
+                Group gr = usertoGroup.get(s);
+                if(gr == null) continue;
+                if(gr.isExpeENSGroup()) continue;
+
+                String lycee = gr.getLycee();
+                if(!lycees.contains(lycee)) {
+                    System.out.println(lycee);
+                    continue;
+                }
+
+                int nbFavoris = user.pf().suggApproved().size();
+                statsLyceesNbUsers.put(lycee, statsLyceesNbUsers.getOrDefault(lycee, 0) + 1);
+                statsLyceesFavoris.put(lycee, statsLyceesFavoris.getOrDefault(lycee, 0) + nbFavoris);
+
+                csv.append(s);
+                csv.append(nbFavoris);
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())).count());
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> !isFiliere(s1.fl())).count());
+                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())
+                        && suggestionsVues.getOrDefault(s,Collections.emptySet()).contains(s1.fl())
+                ).count());
+                csv.newLine();
+            }
+        }
+        LOGGER.info(statsLyceesNbUsers.toString());
+        LOGGER.info(statsLyceesFavoris.toString());
+
+            LOGGER.info("Lycéens ayant navigué au moins 10 minutes : " + nbUsersWithRealNavigation.size());
 
     }
+
 
     private static List<List<String>> stratify(List<String> v) {
         List<LocalDateTime> l = v.stream().map(s -> LocalDateTime.parse(s.substring(0, s.indexOf('.')))).toList();
@@ -367,15 +495,15 @@ public class AnalyzeUserBehaviour {
         return result;
     }
 
-    private static String aVuUneSuggestionDeFiliere(List<String> right) {
+    private static boolean aVuUneSuggestionDeFiliere(List<String> right) {
         if(right.stream().anyMatch(s ->
                 s.contains("reloadSuggestions fl")
                 || s.contains("reloadSuggestions fr")
                 || s.contains("reloadSuggestions formations"))
         ) {
-            return "oui";
+            return true;
         }
-        return "";
+        return false;
     }
 
     private static long nbUrlPsup(List<String> right) {
@@ -388,6 +516,23 @@ public class AnalyzeUserBehaviour {
     private static long nbUrlOnisep(List<String> right) {
         return right.stream().filter(s -> s.contains("openUrl") && ( s.contains("www.onisep.fr") || s.contains("avenirs"))).count();
     }
+
+    private static Collection<String> getSuggestions(List<String> right) {
+        List<String> result = new ArrayList<>();
+        final String pattern = "front reloadSuggestions ";
+        right.forEach(s -> {
+            int i = s.indexOf(pattern);
+            if (i >= 0) {
+                String liste = s.substring(i + pattern.length());
+                String[] items = liste.split(",");
+                for (String item : items) {
+                    result.add(item.trim());
+                }
+            }
+        });
+        return result;
+    }
+
 
     private static long duration(List<String> right) {
         List<LocalDateTime> l = right.stream().map(s -> LocalDateTime.parse(s.substring(0, s.indexOf('.')))).toList();
