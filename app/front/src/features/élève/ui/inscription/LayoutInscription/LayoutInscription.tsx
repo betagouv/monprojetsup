@@ -1,24 +1,25 @@
 import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
 import IndicateurÉtapes from "@/components/_dsfr/IndicateurÉtapes/IndicateurÉtapes";
 import Bouton from "@/components/Bouton/Bouton";
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import {
-  actionsInscriptionÉlèveStore,
-  étapeActuelleInscriptionÉlèveStore,
-  étapePrécédenteInscriptionÉlèveStore,
-  étapesInscriptionÉlèveStore,
-  indexÉtapeActuelleInscriptionÉlèveStore,
-} from "@/store/useInscriptionÉlève/useInscriptionÉlève";
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+  actionsÉtapesInscriptionÉlèveStore,
+  étapeActuelleÉtapesInscriptionÉlèveStore,
+  étapePrécédenteÉtapesInscriptionÉlèveStore,
+  étapesÉtapesInscriptionÉlèveStore,
+  indexÉtapeActuelleÉtapesInscriptionÉlèveStore,
+} from "@/features/élève/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
+import { Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const LayoutInscription = () => {
-  const { définirÉtapeActuelle } = actionsInscriptionÉlèveStore();
-  const étapeActuelle = étapeActuelleInscriptionÉlèveStore();
-  const étapePrécédente = étapePrécédenteInscriptionÉlèveStore();
-  const indexÉtapeActuelle = indexÉtapeActuelleInscriptionÉlèveStore();
-  const étapes = étapesInscriptionÉlèveStore();
+  const { définirÉtapeActuelle } = actionsÉtapesInscriptionÉlèveStore();
+  const étapeActuelle = étapeActuelleÉtapesInscriptionÉlèveStore();
+  const étapePrécédente = étapePrécédenteÉtapesInscriptionÉlèveStore();
+  const indexÉtapeActuelle = indexÉtapeActuelleÉtapesInscriptionÉlèveStore();
+  const étapes = étapesÉtapesInscriptionÉlèveStore();
   const router = useRouterState();
 
   useEffect(() => {
@@ -38,25 +39,30 @@ const LayoutInscription = () => {
                 />
               </div>
               <div className="fr-py-3w fr-px-2w fr-py-md-6w fr-px-md-8w">
-                <Titre
-                  class="fr-mb-1w"
-                  niveauDeTitre="h1"
-                  styleDeTitre="h2"
-                >
-                  {étapeActuelle?.titre}
-                </Titre>
+                <div className="*:mb-0">
+                  <Titre
+                    niveauDeTitre="h1"
+                    styleDeTitre="h2"
+                  >
+                    {étapeActuelle?.titre}
+                  </Titre>
+                </div>
                 <p className="fr-text--lg">{i18n.COMMUN.CHAMPS_OBLIGATOIRES}</p>
                 <Outlet />
                 <hr />
-                <div className={`fr-grid-row  ${étapePrécédente ? "justify-between" : "justify-end"}`}>
+                <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
                   {étapePrécédente && (
-                    <Link to={étapePrécédente.url}>
+                    <LienInterne
+                      ariaLabel={i18n.COMMUN.RETOUR}
+                      href={étapePrécédente.url}
+                      variante="neutre"
+                    >
                       <BoutonSquelette
                         icône={{ position: "gauche", classe: "fr-icon-arrow-left-line" }}
                         label={i18n.COMMUN.RETOUR}
                         variante="secondaire"
                       />
-                    </Link>
+                    </LienInterne>
                   )}
                   <Bouton
                     formId={étapeActuelle?.url}

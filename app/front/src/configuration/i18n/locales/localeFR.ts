@@ -35,61 +35,63 @@ export const localeFR = {
     ARTICLES: pages.ARTICLES,
     MAIN_NAVIGATION: "Menu principal",
   },
-  MON_PROJET: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Mon projet supérieur",
-      TITRE: "As-tu déjà un projet d’études supérieures ?",
-    },
-    MA_SITUATION: {
-      LÉGENDE: "Ma situation *",
-      OPTIONS: {
-        AUCUNE_IDÉE: {
-          LABEL: "Je n'ai encore aucune idée",
-          DESCRIPTION: "Ca tombe bien, MPS est là pour ça.",
-          EMOJI: "😇",
-        },
-        QUELQUES_PISTES: {
-          LABEL: "J’ai déjà quelques pistes d’orientation",
-          DESCRIPTION: "Super, MPS va t’aider à affiner ton projet post-bac.",
-          EMOJI: "🤔",
-        },
-        PROJET_PRÉCIS: {
-          LABEL: "J'ai déjà un projet précis",
-          DESCRIPTION: "Formidable, explorons tes options ensemble.",
-          EMOJI: "🧐",
-        },
+  ÉLÈVE: {
+    PROJET: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Mon projet supérieur",
+        TITRE: "As-tu déjà un projet d’études supérieures ?",
       },
-      ERREUR_FORMULAIRE: "Veuillez sélectionner une option parmi la liste.",
+      SITUATION: {
+        LÉGENDE: "Ma situation *",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Je n'ai encore aucune idée",
+            DESCRIPTION: "Ca tombe bien, MPS est là pour ça.",
+            EMOJI: "😇",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai déjà quelques pistes d’orientation",
+            DESCRIPTION: "Super, MPS va t’aider à affiner ton projet post-bac.",
+            EMOJI: "🤔",
+          },
+          PROJET_PRÉCIS: {
+            LABEL: "J'ai déjà un projet précis",
+            DESCRIPTION: "Formidable, explorons tes options ensemble.",
+            EMOJI: "🧐",
+          },
+        },
+        ERREUR_FORMULAIRE: "Veuillez sélectionner une option parmi la liste.",
+      },
     },
-  },
-  MA_SCOLARITÉ: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Ma scolarité",
-      TITRE: "Dis-nous en plus sur ta scolarité",
+    SCOLARITÉ: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Ma scolarité",
+        TITRE: "Dis-nous en plus sur ta scolarité",
+      },
     },
-  },
-  MES_ASPIRATIONS: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Mes aspirations professionnelles",
-      TITRE: "As-tu déjà identifié des secteurs d’activité ?",
+    ASPIRATIONS: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Mes aspirations professionnelles",
+        TITRE: "As-tu déjà identifié des secteurs d’activité ?",
+      },
     },
-  },
-  MES_TALENTS: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Mes petits talents",
-      TITRE: "Parlons un peu de toi. Tu dirais que tu es ...",
+    TALENTS: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Mes petits talents",
+        TITRE: "Parlons un peu de toi. Tu dirais que tu es ...",
+      },
     },
-  },
-  MES_MÉTIERS: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Les métiers qui m'inspirent",
-      TITRE: "As-tu déjà quelques idées de métiers ?",
+    MÉTIERS: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Les métiers qui m'inspirent",
+        TITRE: "As-tu déjà quelques idées de métiers ?",
+      },
     },
-  },
-  MES_ÉTUDES: {
-    PARCOURS_INSCRIPTION: {
-      TITRE_ÉTAPE: "Mes futures études",
-      TITRE: "À propos des études supérieures",
+    ÉTUDES: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Mes futures études",
+        TITRE: "À propos des études supérieures",
+      },
     },
   },
   PAGE_ACCUEIL: {
@@ -103,5 +105,10 @@ export const localeFR = {
     CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
     CONTINUER: "Continuer",
     RETOUR: "Retour",
+  },
+  ACCESSIBILITÉ: {
+    LIEN_EXTERNE: "ouvre un lien externe",
+    LIEN_EMAIL: "envoyer un email",
+    LIEN_TÉLÉPHONE: "composer le numéro",
   },
 } as const;

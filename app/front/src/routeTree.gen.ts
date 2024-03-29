@@ -45,13 +45,21 @@ const InscriptionInscriptionScolariteIndexRoute =
   InscriptionInscriptionScolariteIndexImport.update({
     path: '/inscription/scolarite/',
     getParentRoute: () => InscriptionRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/scolarite/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const InscriptionInscriptionProjetIndexRoute =
   InscriptionInscriptionProjetIndexImport.update({
     path: '/inscription/projet/',
     getParentRoute: () => InscriptionRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/projet/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 

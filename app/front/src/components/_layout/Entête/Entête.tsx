@@ -1,7 +1,7 @@
 import logoMPS from "@/assets/logo/logo-mps.svg";
 import Navigation from "@/components/_layout/Navigation/Navigation";
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import { Link } from "@tanstack/react-router";
 
 const Entête = () => {
   return (
@@ -47,12 +47,12 @@ const Entête = () => {
                 </div>
               </div>
               <div className="fr-header__service">
-                <Link
-                  title={`Accueil - ${i18n.APP.NOM}`}
-                  to="/"
+                <LienInterne
+                  ariaLabel={`Accueil - ${i18n.APP.NOM}`}
+                  href="/"
                 >
                   <p className="fr-header__service-title">{i18n.APP.NOM}</p>
-                </Link>
+                </LienInterne>
                 <p className="fr-header__service-tagline">{i18n.ENTÊTE.DESCRIPTION_SERVICE}</p>
               </div>
             </div>
