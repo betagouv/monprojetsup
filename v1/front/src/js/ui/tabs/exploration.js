@@ -73,6 +73,8 @@ export function hideFormations() {
 
 let current_source = "formations";
 
+/*
+deprecated
 export function initOnce() {
   const hide = session.hideFormations();
   if (hide) {
@@ -102,7 +104,7 @@ export function initOnce() {
       }
       reloadTab();
     });
-}
+}*/
 
 function getActiveSuggestionType() {
   const hide = session.hideFormations();

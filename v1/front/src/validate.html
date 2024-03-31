@@ -1,39 +1,64 @@
-<!DOCTYPE lang="fr" html>
-<link rel="icon" href="favicon.ico" />
-<meta
-  http-equiv="Cache-control"
-  content="no-cache, no-store, must-revalidate"
-/>
-<meta http-equiv="Pragma" content="no-cache" />
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MonProjetSup: validation de l'adresse email</title>
-</head>
+    <meta name="theme-color" content="#000091" />
+    <!-- Défini la couleur de thème du navigateur (Safari/Android) -->
+    <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+    <!-- 180×180 -->
+    <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon" />
+    <!-- 32×32 -->
+    <link
+      rel="manifest"
+      href="favicon/manifest.webmanifest"
+      crossorigin="use-credentials"
+    />
+    <!-- Modifier les chemins relatifs des favicons en fonction de la structure du projet -->
+    <!-- Dans le fichier manifest.webmanifest aussi, modifier les chemins vers les images -->
 
-<body class="body" ready="onload()">
-  <main id="main">
-    <section class="py-5 text-center container-lg">
-      <div class="row py-lg-3">
-        <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="py-9 fw-light">MonProjetSup</h1>
-          <p class="text-muted" id="text"></p>
+    <link rel="stylesheet" href="dsfr.min.css" />
+    <link rel="stylesheet" href="utility/utility.min.css" />
+
+    <title>MonProjetSup - validation de l'adresse email</title>
+
+    <!-- best effort to avoid caching while in dev mode -->
+    <meta
+      http-equiv="Cache-control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+  </head>
+
+  <body class="body" ready="onload()">
+    <main id="main">
+      <section class="py-5 text-center container-lg">
+        <div class="row py-lg-3">
+          <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="py-9 fw-light">MonProjetSup</h1>
+            <p class="text-muted" id="text"></p>
+          </div>
+          <br />
+          <br />
+          <br />
+          <div ok="alert alert-success" id="result">
+            Votre email est cours de validation, merci de patienter...
+          </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <div ok="alert alert-success" id="result">
-          Votre email est cours de validation, merci de patienter...
-        </div>
-      </div>
-    </section>
-    <section class="py-5 container-lg">
-      <!-- LOG / ERRORS  -->
-      <div class="text-danger" id="server-error"></div>
-      <div class="text-danger" id="front-error"></div>
-      <div class="text-danger" id="front-feedback"></div>
-      <!-- AND LOG / ERRORS  -->
-    </section>
-  </main>
-</body>
+      </section>
+      <section class="py-5 container-lg">
+        <!-- LOG / ERRORS  -->
+        <div class="text-danger" id="server-error"></div>
+        <div class="text-danger" id="front-error"></div>
+        <div class="text-danger" id="front-feedback"></div>
+        <!-- AND LOG / ERRORS  -->
+      </section>
+    </main>
+  </body>
+</html>

@@ -24,9 +24,7 @@ $(async function () {
     frontErrorHandler(errObj, true);
   };
 
-  window.onload = function () {
-    //google_sign_in_init();
-  };
+  ui.injectHtml();
 
   /*
   const toto = (response) => {
@@ -53,9 +51,6 @@ $(async function () {
   /* Step3: trying automatic reconnection based on session cookie */
   if (session.isLoggedIn()) {
     postLoginHandler();
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
   } else {
     //ui.showConnectionScreen();
     ui.showLandingScreen();

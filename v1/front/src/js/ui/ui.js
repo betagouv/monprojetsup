@@ -33,6 +33,7 @@ import * as notes from "./notes/notes";
 import * as details from "./details/detailsModal";
 import * as data from "./../data/data";
 import * as account from "./account/account";
+import * as connect from "./account/connect";
 import * as bin from "./tabs/bin";
 import * as session from "../app/session";
 
@@ -55,8 +56,36 @@ export {
 
 const screens = ["landing", "loading", "connect", "connected"];
 
+const screensHandlersInit = {
+  connect: () => connect.init(),
+};
+
 function showScreen(screen) {
+  $("#main-placeholder").off();
   for (const scr of screens) $(`#${scr}`).toggle(scr === screen);
+
+  fetch("html/" + screen + ".html")
+    .then((response) => response.text())
+    .then((html) => {
+      $(`#main-placeholder`).html(html);
+    });
+  if (screen in screensHandlersInit) screensHandlersInit[screen]();
+}
+
+export function injectHtml() {
+  const m = {
+    "header.html": "header-placeholder",
+    "footer.html": "footer-placeholder",
+    "rgpd_content.html": "rgpd-placeholder",
+    "modals/oubli_mdp.html": "oubli_mdp-placeholder",
+  };
+  for (const [file, id] of Object.entries(m)) {
+    fetch("html/" + file)
+      .then((response) => response.text())
+      .then((html) => {
+        $(`#${id}`).html(html);
+      });
+  }
 }
 
 export function showDataLoadScreen() {
@@ -70,9 +99,11 @@ export function showConnectionScreen() {
 export function showLandingScreen() {
   //$(".body").addClass("landing");
   showScreen("landing");
-  $("#landing").on("click", () => {
-    showConnectionScreen();
-  });
+  $("#main-placeholder")
+    .off()
+    .on("click", () => {
+      showConnectionScreen();
+    });
 }
 
 export const tabs = {
@@ -185,8 +216,6 @@ function initOnce() {
     });
   }
 
-  account.init();
-
   const addToHistory = (e) => {
     const id = e.currentTarget.id;
     handlers.addTransitionToHistory(id, {
@@ -225,7 +254,7 @@ function initOnce() {
       addToHistory(e);
       showAccountTab();
     });
-  suggestions.initOnce();
+  //deprecated suggestions.initOnce();
 
   //
 }

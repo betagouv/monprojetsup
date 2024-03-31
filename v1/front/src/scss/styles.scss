@@ -11,6 +11,8 @@ $myPurple: #E3E3FD;
 $myPurpleStrong: #6A6AFD;
 $myBleuMarine: #000091;
 $my-orange: #ffe169;
+$white: #ffffff;
+$black: #000000;
 $interest-color: $myPurpleStrong;
 //$question-color: rgb(183, 212, 246);
 $question-color: rgb(147, 145, 191);;
@@ -27,18 +29,112 @@ $card-border-color: $card-icon-color;
 $card-background-color: white;
 $stats-color: #B6CFFB;
 
+header {
+  display: flex;
+  flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+    border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    width: 100vw;
+    padding-top: 10px;
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+      width: 100vw;
+          padding-top: 10px;
+}
+
 .landing {
-  background-color: $myPurpleLight;
+  background-color: var(--light-neutral-grey-1000-grey-1000, #FFF);
   background-image: url('../img/landing.jpg');
 }
 
 .body {
-  background-color: $myPurpleLight;
+  background-color: var(--light-neutral-grey-1000-grey-1000, #FFF);
     
 }
 
+.mt-40px {
+  margin-top: 40px;
+}
+.w-100 {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.w-80 {
+  width: 80%;
+  height: auto;
+  max-width: 80%;
+}
+
+.px-25 {
+  padding-right: 12.5%;
+  padding-left: 12.5% ;
+  height: auto;
+}
+
+.py-10px {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dsfr-text-neutral {
+  color: var(--light-neutral-grey-50, #161616);
+}
+
+.dsfr-text-large {
+    color: var(--light-neutral-grey-50, #161616);
+    /* 1.Titres/H2 - LG/Desktop */
+    font-family: Marianne;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+}
+
+.dsfr-mdp-oublie {
+  color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+.horizontal-lines {
+  display: flex;
+  align-items: center;
+}
+
+.line {
+  flex: 1;
+  border-top: 1px solid black;
+}
+
+.text-between-horizontal-lines {
+  margin: 40px 10px;
+  color: var(--light-decisions-text-text-disabled-grey, #929292);
+  /* Adjust spacing between text and lines as needed */
+}
+
+
+.fr-input {
+   border-radius: 4px 4px 0px 0px;
+    border-bottom: 2px solid var(--light-decisions-border-border-plain-grey, #3a3a3a);
+    background: var(--light-decisions-background-background-contrast-grey,
+        #eee);
+}
+
 .bg-light2 {
-  background-color: $myPurpleLight;
+  background-color: var(--light-neutral-grey-1000-grey-1000, #FFF);
 }
 
 .myBleuMarine {
@@ -63,6 +159,12 @@ color: $myBleuMarine;
   text-decoration: none;
   opacity: 1.0;
 }
+
+
+.nodeco {
+  text-decoration: none;
+}
+
 .blue-hr {
   height: 4px;
     border: 0;
@@ -110,13 +212,50 @@ $accordion-icon-active-color: myBleuMarine;
 $accordion-icon-transition: transform 0.2s ease-in-out;
 $accordion-button-focus-box-shadow: 0;
 $accordion-button-focus-border-color: $interest-color;
+$beige-gris-galet-950: #F3EDE5;
 
-@import "~bootstrap/scss/bootstrap";
+//@import "~bootstrap/scss/bootstrap";
 
 /*
 .accordion-item:hover {
   background-color: $accordion-button-color;
 }*/
+
+
+/* ensures the footer is at the bottom of the page */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--light-neutral-grey-1000-grey-1000, #FFF);;
+}
+//done
+
+#connected {
+  //background-color: $beige-gris-galet-950;
+  //background-image: url('../img/connected-bg.svg');
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#main-placeholder {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.tab-content {
+  //background-color: $beige-gris-galet-950;
+  background-image: url('../img/connected-bg.svg');
+  background-size: cover;
+  flex: 1;
+}
 
 .accordion-button[excluded] {
   background-color: lightgray;
@@ -211,6 +350,7 @@ $accordion-button-focus-border-color: $interest-color;
   background-color: $myPurple;
   border: none;
 }
+
 .btn-info:hover,
 .btn-info:focus,
 .btn-info:active,
@@ -543,7 +683,7 @@ fieldset[disabled] .btn-primary.active {
   color: white !important;
   font-weight: bold !important;
 }
-
+/*
 .modal-content,
 .question,
 .search_bar,
@@ -554,7 +694,7 @@ fieldset[disabled] .btn-primary.active {
   border: solid $myBleuMarine !important;
     border-width: 2px !important;
     border-radius: 10px !important;
-}
+}*/
 
 .accordion-button,
 .accordion-body {
@@ -585,29 +725,41 @@ fieldset[disabled] .btn-primary.active {
   font-size: 16px;
 }
 
-
+/*
 @font-face {
   font-family: "Marianne";
-  src: url("../fonts/Marianne-Regular.woff2") format('woff2');
+  src: url("../dsfr/fonts/Marianne-Regular.woff2") format('woff2');
 }
 
 @font-face {
   font-family: "Marianne";
-  src: url("../fonts/Marianne-Bold.woff2") format('woff2');
+  src: url("../dsfr/fonts/Marianne-Bold.woff2") format('woff2');
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Marianne";
-  src: url("../fonts/Marianne-Bold_Italic.woff2") format('woff2');
+  src: url("../dsfr/fonts/Marianne-Bold_Italic.woff2") format('woff2');
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Marianne";
-  src: url("../fonts/Marianne-Regular_Italic.woff2") format('woff2');
+  src: url("../dsfr/fonts/Marianne-Regular_Italic.woff2") format('woff2');
   font-style: italic;
+}*/
+
+.dsfr_light_decision {
+  border: 0px solid var(--light-decisions-border-border-default-grey, #DDD);
+    background: var(--light-decisions-background-background-raised-grey, #FFF);
+    color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+      text-align: center;
+      text-decoration: none;
+    /* Light/Decisions/shadow/raised */
+}
+.dsfr_shadow {
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
 }
 
 body {

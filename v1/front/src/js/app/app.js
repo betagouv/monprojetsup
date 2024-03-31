@@ -49,6 +49,52 @@ export {
   commentChanged,
 };
 
+const states = [
+  "landing",
+  "connect",
+  "reset_password",
+  "create_account",
+  "create_account_2",
+  "tableau_bord",
+  "groupes",
+];
+
+let current_state = "landing";
+
+export function setState(state) {
+  if (states.includes(state)) {
+    doTransition(current_state, state);
+    current_state = state;
+    session.saveState(state);
+  }
+}
+
+function doTransition(old_state, new_state) {
+  exitState(old_state);
+  enterState(new_state);
+}
+function enterState(state) {
+  if (state == "landing") {
+    ui.showLandingScreen();
+  } else if (state == "connect") {
+    //ui.showConnectionScreen();
+  } else if (state == "reset_password") {
+    //ui.showResetPasswordScreen();
+  } else if (state == "create_account") {
+    //ui.showCreateAccountScreen();
+  } else if (state == "create_account_2") {
+    //ui.showCreateAccountScreen2();
+  } else if (state == "tableau_bord") {
+    //ui.showAccountTab();
+  } else if (state == "groupes") {
+    refreshGroupTab(false);
+    ui.showGroupsTab();
+  } else {
+    ui.showLandingScreen();
+  }
+}
+function exitState(state) {}
+
 /* the new $( document ).ready( handler ), see https://api.jquery.com/ready/ */
 
 export function loginHandler(login, password) {
@@ -146,26 +192,10 @@ export function postLoginHandler() {
         server.getProfile((msg) => {
           data.loadProfile(msg.profile);
           ui.loadProfile();
-          refreshGroupTab(false);
-          ui.showGroupsTab();
+          startNavigation();
         });
-      } else if (profileCompleteness < 2) {
-        const category = profileCompleteness == 0 ? "profil" : "preferences";
-        askProfileAndSuggestions(() => tunnel.beginTunnel(category));
       } else {
-        ui.hideMainProfileTab();
-        askProfileAndSuggestions(() => {
-          tunnel.openTutoModal(
-            "",
-            `<p>C'est parti pour l'exploration!</p>
-                            <p class="text-muted">
-                            Tu as deux étapes à suivre. Dans la première étape tu vas explorer des thématiques et métiers, et dans la seconde partie tu vas explorer des formations !</p>
-                            <p class="text-muted"> Des suggestions te sont proposées mais libre à toi de naviguer dans la barre de recherche. 
-                            </p>`
-          );
-          ui.showSuggestionsTab();
-          //showDetails("fl11");
-        });
+        askProfileAndSuggestions(startNavigation);
       }
     });
   });
@@ -173,6 +203,25 @@ export function postLoginHandler() {
   $(".nav-link").on("click", function (e) {
     logAction("tab click " + e.currentTarget.id);
   });
+}
+
+function startNavigation() {
+  const state = session.getState();
+  if (state != undefined) {
+    setState(state);
+  } else {
+    if (session.isAdminOrTeacher()) {
+      setState("groupes");
+    } else {
+      const profileCompleteness = msg.infos.profileCompleteness;
+      if (profileCompleteness < 2) {
+        const category = profileCompleteness == 0 ? "profil" : "preferences";
+        tunnel.beginTunnel(category);
+      } else {
+        ui.showSuggestionsTab();
+      }
+    }
+  }
 }
 
 function askProfileAndSuggestions(handler) {

@@ -13,6 +13,7 @@ module.exports = {
     index: "./src/js/index.js",
     validate: "./src/js/app/entrypoints/validate.js",
     reset_password: "./src/js/app/entrypoints/reset_password.js",
+    legal: "./src/js/app/entrypoints/legal.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -56,25 +57,45 @@ module.exports = {
       filename: "maintenance.html",
       chunks: [],
     }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "src/legal.html",
+      filename: "legal.html",
+      chunks: ["legal"],
+    }),
     new webpack.DefinePlugin({
       __VERSION__: JSON.stringify(version),
     }),
     new CopyPlugin({
       patterns: [
+        { from: "src/data", to: "data" },
+        { from: "src/favicon", to: "favicon" },
+        { from: "src/fonts", to: "fonts" },
+        { from: "src/html", to: "html" },
+        { from: "src/icons", to: "icons" },
+        { from: "src/img", to: "img" },
+        { from: "src/js", to: "js" },
+        { from: "src/utility", to: "utility" },
+        { from: "src/*.js", to: "[name][ext]" },
+        { from: "src/*.map", to: "[name][ext]" },
         { from: "src/robots.txt", to: "robots.txt" },
-        { from: "src/fonts/*", to: "fonts/[name][ext]" },
-        { from: "src/img/favicon.ico", to: "favicon.ico" },
-        { from: "src/img/*", to: "img/[name][ext]" },
-        {
-          from: "src/img/parcoursup_square.jpg",
-          to: "img/parcoursup_square.jpg",
-        },
-        { from: "src/data/data.zip", to: "data/data.zip" },
+        //do not put the html entry points
       ],
     }),
   ],
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader", // You might need to install html-loader
+            options: {
+              minimize: true,
+            },
+          },
+        ],
+      },
       {
         test: /\.(scss)$/,
         exclude: /(node_modules|bower_components)/,

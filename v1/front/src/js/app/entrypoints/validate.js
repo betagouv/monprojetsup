@@ -26,8 +26,9 @@
 
  */
 import "../../../scss/styles.scss";
-import $ from "jquery";
 
+import $ from "jquery";
+import * as ui from "./../../ui/ui";
 import { validateAccount } from "../../services/services";
 import { frontErrorHandler } from "./../app";
 
@@ -43,6 +44,8 @@ $(async function () {
     };
     frontErrorHandler(errObj, true);
   };
+
+  ui.injectHtml();
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
