@@ -55,7 +55,7 @@ public class WebServer extends Server {
         LOGGER.info("Loaded config..." + new Gson().toJson(config));
 
         if(!onlyDB) {
-            ServerData.load(Path.of(config.getDataRootDirectory()));
+            ServerData.load();
 
             if (!config.isDoNotProvideSuggestions()) {
                 LOGGER.info("Starting suggestions server...");

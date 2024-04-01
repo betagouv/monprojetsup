@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.model.formations;
+package fr.gouv.monprojetsup.data.analysis.typesFormation;
 
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.tools.Serialisation;

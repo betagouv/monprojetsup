@@ -8,7 +8,7 @@ import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.disciplines.LiensMetiersThemesOnisep;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
-import fr.gouv.monprojetsup.data.model.formations.TypeFormationOni;
+import fr.gouv.monprojetsup.data.analysis.typesFormation.TypeFormationOni;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
@@ -52,8 +52,6 @@ public record OnisepData(
         SecteursPro domainesWeb,
 
         FichesMetierOnisep fichesMetiers,
-
-        TypeFormationOni.Typesformations typesformations,
 
         Formations formations
         ) {
@@ -311,7 +309,6 @@ public record OnisepData(
                 lines,
                 secteursPro,
                 fichesMetiers,
-                typesformations,
                 formations);
 
     }

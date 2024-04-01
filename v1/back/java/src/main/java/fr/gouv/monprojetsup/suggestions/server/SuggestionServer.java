@@ -22,7 +22,7 @@ public class SuggestionServer extends Server {
         config = SuggestionsServerConfig.load();
 
         LOGGER.info("Loading data for suggestion Server...");
-        ServerData.load(Path.of(config.getDataRootDirectory()));
+        ServerData.load();
 
         LOGGER.info("Initializing suggestions ");
         AlgoSuggestions.initialize();

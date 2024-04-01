@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.model.formations;
+package fr.gouv.monprojetsup.data.analysis.typesFormation;
 
 import java.util.ArrayList;
 import java.util.List;
