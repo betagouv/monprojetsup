@@ -1,1 +1,0 @@
-Ce répertoire doit contenir les données de référence, qui sont ainsi regroupées dans le répertoire monprojestup/data/data . 
