@@ -1,0 +1,84 @@
+<!------------- TAB 3: FAVORIS (favoris.js) ---------------->
+<div
+  class="tab-pane fade"
+  id="favoris"
+  role="tabpanel"
+  aria-labelledby="nav-favoris-tab"
+>
+  <!-- begin for small screens -->
+  <br />
+  <br />
+  <br />
+  <!-- end for small screens -->
+
+  <section class="py-5 container-lg">
+    <div class="row py-lg-3">
+      <div class="col-md-8 mx-auto myBleuMarine">
+        <h1>MA SELECTION</h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- end for small screens -->
+  <!----- ONGLET FAVORIS -->
+
+  <div class="container-fluid">
+    <div class="container-lg my-3" id="favoris_list">
+      <!-- next div is shown only if there are favoris -->
+      <div id="favoris-nonempty-list">
+        <div id="favoris-metiers-liste-div"></div>
+
+        <!-- <b>Vos formations favorites</b><br /><br />-->
+        <div id="visualiser-favoris-div" class="mb-5 row">
+          <div id="favoris-formations-liste-div" class="col-8"></div>
+          <div class="col-4">
+            <button
+              id="visualiser-favoris-button"
+              class="fr-btn btn-disabled question bacAttribute p-4 border border-2 mw-25"
+              role="button"
+            >
+              <p>Voir tes formations en détails sur Parcoursup</p>
+              <img
+                src="img/carte.svg"
+                class="img-fluid"
+                alt="carte des formations"
+              />
+            </button>
+          </div>
+        </div>
+
+        <!-- <divclass="p-4  rounded mb-5 text-center question" > -->
+      </div>
+      <!-- next div is shown when there are no favoris, but at least one suggestion -->
+      <div
+        id="favoris-empty-list-suggestions"
+        class="p-4 rounded mb-5 question"
+      >
+        <br />
+        <p>
+          Votre sélection est vide actuellement, ajoutez de nouvelles formations
+          en consultant les suggestions.
+        </p>
+      </div>
+
+      <!-- next div is shown when there are no favoris neother suggestion -->
+      <div
+        id="favoris-empty-list-no-suggestion"
+        class="p-4 rounded mb-5 question"
+      >
+        <br />
+        <p>Vous n'avez sélectionné aucune formation.</p>
+        <p>
+          Pour obtenir de nouvelles suggestions à ajouter à ta sélection,
+          continue à compléter ton profil.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-lg px-4">
+    <div class="row" id="rejected_list"></div>
+  </div>
+  <br />
+  <br />
+</div>

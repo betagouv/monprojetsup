@@ -1,0 +1,212 @@
+<!------------- TAB 7: ADMIN admin.js -->
+<div
+  class="tab-pane fade"
+  id="admin"
+  role="tabpanel"
+  aria-labelledby="nav-admin-tab"
+>
+  <div class="container-lg">
+    <br />
+    <br />
+    <br />
+
+    <div id="groupListContainer"></div>
+
+    <!--    DEBUT ADMIN DIV -->
+    <div id="admindiv">
+      <!-- MODERATE -->
+      <div class="p-4 rounded mb-5 question"></div>
+      <div class="p-4 rounded mb-5 question">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="confirmEmailSwitch"
+          />
+          <label class="form-check-label" for="confirmEmailSwitch"
+            >Demander confirmation des emails lors des nouvelles
+            inscriptions</label
+          >
+        </div>
+      </div>
+      <!--    ADD MMEBER -->
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Ajouter un membre à un groupe</p>
+
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="addGroupMemberGroup"
+            >Groupe</label
+          >
+          <select class="form-select groupSelect" id="addUserGroup"></select>
+          <label class="input-group-text" for="addGroupMemberUser"
+            >Membre</label
+          >
+          <select class="form-select" id="addUserLogin"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="addGroupMemberButton"
+          >
+            Ajouter
+          </button>
+        </div>
+      </div>
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Retirer un membre à un groupe</p>
+
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="removeGroupMemberGroup"
+            >Groupe</label
+          >
+          <select class="form-select groupSelect" id="removeUserGroup"></select>
+          <label class="input-group-text" for="removeGroupMemberUser"
+            >Membre</label
+          >
+          <select class="form-select" id="removeUserLogin"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="removeGroupMemberButton"
+          >
+            Retirer
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Créer un groupe</p>
+        <div class="input-group mb-3">
+          <span class="input-group-text">Nom du groupe</span>
+
+          <select class="form-select" id="createGroupLyceeSelect"></select>
+          <input
+            type="text"
+            id="createGroupClasse"
+            class="form-control"
+            placeholder="Nom du groupe à créer"
+            aria-label="groupname"
+            aria-describedby="wtf"
+          />
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="createGroupButton"
+          >
+            Créer le groupe
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Supprimer un groupe</p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="deleteGroupAdminGroup"
+            >Groupe</label
+          >
+          <select
+            class="form-select groupSelect"
+            id="deleteGroupSelect"
+          ></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="deleteGroupButton"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Ajouter un admin à un groupe</p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="setGroupAdminGroup"
+            >Groupe</label
+          >
+          <select class="form-select groupSelect" id="addAdminGroup"></select>
+          <label class="input-group-text" for="setGroupAdminUser">Admin</label>
+          <select class="form-select" id="addAdminLogin"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="setGroupAdminButton"
+          >
+            Ajouter
+          </button>
+        </div>
+      </div>
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Retirer un admin à un groupe</p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="removeGroupAdminGroup"
+            >Groupe</label
+          >
+          <select
+            class="form-select groupSelect"
+            id="removeAdminGroup"
+          ></select>
+          <label class="input-group-text" for="removeGroupAdminUser"
+            >Admin</label
+          >
+          <select class="form-select" id="removeAdminLogin"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="removeGroupAdminButton"
+          >
+            Retirer
+          </button>
+        </div>
+      </div>
+      <!--TOD: generate dynamically the html-->
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Réinitialiser un mot de passe</p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="resetUserPassword">Login</label>
+          <select class="form-select" id="resetUserPasswordSelect"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="resetUserPasswordButton"
+          >
+            Reinitialiser
+          </button>
+        </div>
+      </div>
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">
+          Accepter une demande de création de compte en cours de modération
+        </p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="acceptAccountCreation"
+            >Login</label
+          >
+          <select class="form-select" id="acceptAccountCreationSelect"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="acceptAccountCreationButton"
+          >
+            Accepter
+          </button>
+        </div>
+      </div>
+      <div class="p-4 rounded mb-5 question">
+        <p class="fw-bold fs-6">Supprimer un compte</p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="deleteUser">Login</label>
+          <select class="form-select" id="deleteUserSelect"></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            id="deleteUserButton"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- fin admin div -->
+  </div>
+</div>

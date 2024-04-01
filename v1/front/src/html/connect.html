@@ -1,0 +1,345 @@
+<!------------- STEP 0: CONNECTION SCREEN ---------------->
+
+<div id="connect" class="fr-container fr-container--fluid">
+  <!--
+      <section class="py-5 text-center container-lg">
+        <div class="row py-lg-3">
+          <div class="col-lg-6 col-md-8 mx-auto">
+            <span class="col my-auto text-center inline mx-2">
+              <img alt="cnrs" src="img/monprojetsup.svg" class="img-fluid" />
+            </span>
+            <h3 class="text-muted">
+              Trouve ta voie et passe au niveau supérieur.
+            </h3>
+          </div>
+        </div>
+      </section>
+      -->
+
+  <div class="fr-container fr-container--fluid w-100" style="display: flex">
+    <div class="column w-50">
+      <img
+        class="w-100 img-fluid"
+        src="img/premierspas.svg"
+        alt="premiers pas"
+      />
+    </div>
+    <div class="column w-50">
+      <div
+        class="fr-container fr-container--fluid mt-40px"
+        style="justify-content: center; align-items: center"
+      >
+        <div class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col">
+            <fieldset
+              class="fr-fieldset w-50 p-5 column"
+              id="login-modal-contained"
+              aria-labelledby="text-legend text-messages"
+            >
+              <legend
+                class="fr-fieldset__legend dsfr-text-large"
+                id="text-legend"
+              >
+                Connexion à mon espace
+              </legend>
+
+              <div class="fr-fieldset__element">
+                <div class="fr-input-group">
+                  <label class="fr-label" for="champEmail"> Identifiant </label>
+                  <input
+                    class="fr-input"
+                    spellcheck="false"
+                    autocomplete="username"
+                    autocapitalize="off"
+                    autocorrect="off"
+                    aria-describedby="champEmail-messages"
+                    id="champEmail"
+                    name="champEmail"
+                    type="text"
+                  />
+                  <div
+                    class="fr-messages-group"
+                    id="email-7992-messages"
+                    aria-live="polite"
+                  ></div>
+                </div>
+              </div>
+              <div class="fr-fieldset__element">
+                <div class="fr-input-group">
+                  <label class="fr-label" for="champMotDePasse">
+                    Mot de passe
+                  </label>
+                  <input
+                    class="fr-input inputPassword inputPasswordCreateAccount"
+                    aria-describedby="champMotDePasse-messages"
+                    name="champMotDePasse"
+                    id="champMotDePasse"
+                    type="password"
+                  />
+                  <div class="fr-messages-group" aria-live="polite"></div>
+                </div>
+              </div>
+            </fieldset>
+
+            <div id="oubli_mdp-placeholder">
+              <a
+                href="#"
+                data-fr-opened="false"
+                aria-controls="modal-oubli-mdp"
+                id="button-oubli-mdp"
+              >
+                Mot de passe oublié...
+              </a>
+              <dialog
+                id="modal-oubli-mdp"
+                class="fr-modal"
+                aria-labelledby="button-oubli-mdp"
+              >
+                <div class="fr-container fr-container--fluid fr-container-md">
+                  <div class="fr-grid-row fr-grid-row--center">
+                    <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                      <div class="fr-modal__body">
+                        <div class="fr-modal__header">
+                          <button
+                            class="fr-btn--close fr-btn"
+                            aria-controls="modal-oubli-mdp"
+                            title="Fermer"
+                          >
+                            Fermer
+                          </button>
+                        </div>
+                        <div class="fr-modal__content">
+                          <h1 id="modal-6243-title" class="fr-modal__title">
+                            <span
+                              class="fr-icon-arrow-right-line fr-icon--lg"
+                              aria-hidden="true"
+                            ></span>
+                            Demande de réinitialisation de mot de passe
+                          </h1>
+                          <form action="">
+                            <fieldset
+                              class="fr-fieldset"
+                              aria-labelledby="undefined-legend undefined-messages"
+                            >
+                              <legend
+                                class="fr-fieldset__legend"
+                                id="undefined-legend"
+                              >
+                                Un lien de réinitialisation sera envoyé à votre
+                                adresse.
+                              </legend>
+                              <div class="fr-fieldset__element">
+                                <div
+                                  class="fr-input-group"
+                                  id="input-group-6213"
+                                >
+                                  <label class="fr-label" for="undefined-1">
+                                    E-mail
+                                  </label>
+                                  <input
+                                    class="fr-input"
+                                    aria-describedby="sendResetPasswordEmailInputEmail-messages"
+                                    name="undefined"
+                                    id="sendResetPasswordEmailInputEmail"
+                                    type="email"
+                                    autocomplete="email"
+                                    autocapitalize="off"
+                                    autocorrect="off"
+                                  />
+                                  <div
+                                    class="fr-messages-group"
+                                    id="sendResetPasswordEmailInputEmail-messages"
+                                    aria-live="polite"
+                                  ></div>
+                                </div>
+                              </div>
+                              <div
+                                class="fr-messages-group"
+                                id="undefined-messages"
+                                aria-live="polite"
+                              ></div>
+                            </fieldset>
+                            <button
+                              class="fr-btn"
+                              id="sendResetPasswordEmail"
+                              title="Réinitialiser votre mot de passe"
+                            >
+                              Réinitialiser votre mot de passe
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </dialog>
+            </div>
+
+            <br />
+            <button id="login-button" class="fr-btn">Se connecter</button>
+            <div class="horizontal-lines">
+              <div class="line"></div>
+              <div class="text-between-horizontal-lines">ou</div>
+              <div class="line"></div>
+            </div>
+
+            <p class="dsfr-text-large">Pas encore inscrit?</p>
+
+            <br />
+            <div id="create-account_div">
+              <button
+                class="fr-btn fr-btn--secondary"
+                data-fr-opened="false"
+                aria-controls="modal-create-account"
+                id="createAccountButton"
+              >
+                Créer son compte
+              </button>
+              <dialog
+                id="modal-create-account"
+                class="fr-modal"
+                aria-labelledby="createAccountButton"
+              >
+                <div class="fr-container fr-container--fluid fr-container-md">
+                  <div class="fr-grid-row fr-grid-row--center">
+                    <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                      <div class="fr-modal__body">
+                        <div class="fr-modal__header">
+                          <button
+                            class="fr-btn--close fr-btn"
+                            aria-controls="modal-create-account"
+                            title="Fermer"
+                          >
+                            Fermer
+                          </button>
+                        </div>
+                        <div class="fr-modal__content">
+                          <h1 id="modal-6243-title" class="fr-modal__title">
+                            <span
+                              class="fr-icon-arrow-right-line fr-icon--lg"
+                              aria-hidden="true"
+                            ></span>
+                            S'inscrire et préparer son futur dans le sup
+                          </h1>
+                          <form action="">
+                            <fieldset
+                              class="fr-fieldset"
+                              aria-labelledby="undefined-legend undefined-messages"
+                            >
+                              <legend class="fr-fieldset__legend">
+                                Mon Profil
+                              </legend>
+
+                              <div
+                                class="fr-fieldset__element fr-fieldset__element--inline"
+                              >
+                                <div class="fr-radio-group fr-radio-rich">
+                                  <input
+                                    type="radio"
+                                    id="radio-create-account-lyceen"
+                                    name="radio-rich-inline"
+                                  />
+                                  <label
+                                    class="fr-label"
+                                    for="radio-create-account-lyceen"
+                                  >
+                                    Lycéen
+                                  </label>
+                                  <div class="fr-radio-rich__img">
+                                    <img src="/img/user.svg" alt="" />
+                                    <!-- L’alternative de l’image (attribut alt) doit toujours être présente, sa valeur peut-être vide (image n’apportant pas de sens supplémentaire au contexte) ou non (porteuse de texte ou apportant du sens) selon votre contexte -->
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="fr-fieldset__element fr-fieldset__element--inline"
+                              >
+                                <div class="fr-radio-group fr-radio-rich">
+                                  <input
+                                    type="radio"
+                                    id="radio-create-account-prof"
+                                    name="radio-rich-inline"
+                                  />
+                                  <label
+                                    class="fr-label"
+                                    for="radio-create-account-prof"
+                                  >
+                                    Equipe éducative
+                                  </label>
+                                  <div class="fr-radio-rich__img">
+                                    <img src="/img/book.svg" alt="" />
+                                    <!-- L’alternative de l’image (attribut alt) doit toujours être présente, sa valeur peut-être vide (image n’apportant pas de sens supplémentaire au contexte) ou non (porteuse de texte ou apportant du sens) selon votre contexte -->
+                                  </div>
+                                </div>
+                                <div
+                                  class="fr-messages-group"
+                                  id="createAccount-profil-messages"
+                                  aria-live="polite"
+                                ></div>
+                              </div>
+
+                              <div class="fr-fieldset__element">
+                                <div
+                                  class="fr-input-group"
+                                  id="input-group-6213"
+                                >
+                                  <label class="fr-label" for="undefined-1">
+                                    Code d'accès
+                                  </label>
+                                  <input
+                                    class="fr-input"
+                                    aria-describedby="createAccount-messages"
+                                    name="undefined"
+                                    id="inputCreateAccountCodeAcces"
+                                    type="text"
+                                    autocomplete="off"
+                                    autocapitalize="off"
+                                    autocorrect="off"
+                                  />
+                                  <div
+                                    class="fr-messages-group"
+                                    id="createAccount-code-acces-messages"
+                                    aria-live="polite"
+                                  ></div>
+                                </div>
+                              </div>
+                              <div
+                                class="fr-messages-group"
+                                id="undefined-messages"
+                                aria-live="polite"
+                              ></div>
+                            </fieldset>
+                            <button
+                              aria-controls="modal-create-account"
+                              class="fr-btn fr-btn--secondary"
+                              title="Réinitialiser votre mot de passe"
+                            >
+                              Retour
+                            </button>
+                            <button
+                              class="fr-btn"
+                              id="doCreateAccount"
+                              title="Continuer"
+                            >
+                              Continuer
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </dialog>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END CONNECTION -->
+
+      <!-- LOG / ERRORS  -->
+      <div class="text-danger" id="server-error"></div>
+      <div class="text-danger" id="front-error"></div>
+      <!-- AND LOG / ERRORS  -->
+    </div>
+  </div>
+</div>
