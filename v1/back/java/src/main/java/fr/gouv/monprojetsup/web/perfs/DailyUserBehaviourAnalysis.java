@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.tools.perfs;
+package fr.gouv.monprojetsup.web.perfs;
 
 import fr.gouv.monprojetsup.tools.Serialisation;
 import fr.gouv.monprojetsup.tools.csv.CsvTools;

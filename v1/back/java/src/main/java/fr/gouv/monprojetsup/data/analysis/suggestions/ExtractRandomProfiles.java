@@ -1,18 +1,18 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.data.analysis.suggestions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.eval.ReferenceCases;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.tools.Serialisation;
+import fr.gouv.monprojetsup.web.db.dbimpl.DBMongo;
 import fr.gouv.monprojetsup.web.db.model.User;
 import fr.gouv.monprojetsup.web.server.WebServerConfig;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -21,20 +21,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
-@SpringBootApplication
-@EnableMongoRepositories
-@ComponentScan(basePackages = {"fr.gouv.monprojetsup"})
-public class ExtractListedProfiles {
+public class ExtractRandomProfiles {
 
-    public static final Logger LOGGER = Logger.getLogger(ExtractListedProfiles.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(ExtractRandomProfiles.class.getName());
 
     public static void main(String[] args) throws Exception {
 
 
-        WebServerConfig config = WebServerConfig.load();
+        LOGGER.info("Loading config...");
+        WebServerConfig webServerConfig = WebServerConfig.load();
 
         try {
             ServerData.statistiques = new PsupStatistiques();
@@ -47,22 +44,22 @@ public class ExtractListedProfiles {
             server.init();
         }
 
-        List<User> users = Serialisation.fromJsonFile("usersExpeENS.json",
-                new TypeToken<List<User>>(){}.getType()
+        ConfigurableApplicationContext context = SpringApplication.run(ExtractRandomProfiles.class, args);
+        DBMongo db = context.getBean(DBMongo.class);
+
+        db.load(webServerConfig);
+
+        List<User> users = new ArrayList<>(
+                db.getExpeENSUsers()
+                        .stream()
+                        .filter(
+                                u -> !u.getProfile().suggApproved().isEmpty()
+                        ).toList()
         );
 
-        Set listedUsers = Set.of("linsttr@gmail.com",
-                "ambrine.selmane",
-                "sechaud.l74@gmail.com",
-                "elisa.mercier.2004@icloud.com",
-                "stellaromagny@gmail.com",
-                "enzo.debieuvre@gmail.com",
-                "schneider.elliott@gmail.com",
-                "louisa@deveaux.fr",
-                "cumbooceane17@gmail.com",
-                "elmaataoui.youssra9@gmail.com",
-                "mathildeferriol11@gmail.com");
-        users.removeIf(u -> !listedUsers.contains(u.getId()));
+        while(users.size() > 30) {
+            users.remove((int) (Math.random() * users.size()));
+        }
         users.forEach(User::anonymize);
         users.forEach(u -> u.getProfile().anonymize());
 
@@ -70,12 +67,12 @@ public class ExtractListedProfiles {
         cases.cases().addAll(
                 users.stream().map(
                         u -> new ReferenceCases.ReferenceCase(
-                                u.login(),
+                                u.getProfile().toExplanationString(),
                                 new Gson().fromJson( new Gson().toJson(u.getProfile().toDTO()), ProfileDTO.class)
                         )
                 ).toList()
         );
-        Serialisation.toJsonFile("listedReferenceCases.json", cases, true);
+        Serialisation.toJsonFile("randomReferenceCases.json", cases, true);
 
         int i = 1;
         for (ReferenceCases.ReferenceCase refCase : cases.cases()) {
@@ -101,6 +98,7 @@ public class ExtractListedProfiles {
             }
         }
 
+        db.stop();
 
         System.out.println("Hello world!");
     }

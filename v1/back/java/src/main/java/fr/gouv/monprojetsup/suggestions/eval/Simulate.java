@@ -16,7 +16,7 @@ public class Simulate {
     public static final Logger LOGGER = Logger.getLogger(Simulate.class.getName());
     public static final String REF_CASES_WITH_SUGGESTIONS = "refCasesWithSuggestions.json";
 
-    private static Integer RESTRICT_TO_INDEX = null;
+    private static final Integer RESTRICT_TO_INDEX = null;
 
     private static final boolean ONLY_FORMATIONS = true;
 
@@ -46,11 +46,9 @@ public class Simulate {
         ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX);
 
         if(ONLY_FORMATIONS) {
-            results.cases().forEach(referenceCase -> {
-                referenceCase.suggestions().removeIf(
-                        suggestion -> !isFiliere(suggestion.fl())
-                );
-            });
+            results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(
+                    suggestion -> !isFiliere(suggestion.fl())
+            ));
         }
 
         LOGGER.info("Saving results...");

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.tools.perfs;
+package fr.gouv.monprojetsup.suggestions.eval;
 
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
@@ -54,9 +54,7 @@ public class StressTest {
                                     }
                                 }
                         );*/
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
+                    } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }

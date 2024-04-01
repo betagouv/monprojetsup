@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.tools.perfs;
+package fr.gouv.monprojetsup.web.perfs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.reflect.TypeToken;

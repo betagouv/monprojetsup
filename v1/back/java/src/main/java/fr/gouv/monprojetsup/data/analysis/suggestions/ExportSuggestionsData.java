@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.server;
+package fr.gouv.monprojetsup.data.analysis.suggestions;
 
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
