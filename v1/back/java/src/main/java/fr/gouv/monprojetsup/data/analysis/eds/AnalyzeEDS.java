@@ -1,6 +1,7 @@
-package fr.gouv.monprojetsup.data.model.eds;
+package fr.gouv.monprojetsup.data.analysis.eds;
 
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
 import fr.gouv.monprojetsup.tools.Serialisation;
 
 

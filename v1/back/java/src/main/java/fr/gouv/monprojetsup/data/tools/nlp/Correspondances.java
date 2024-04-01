@@ -189,20 +189,4 @@ public class Correspondances {
         return descriptionsWords;
     }
 
-
-    /*
-     * Testing.
-     */
-    public static void main(String[] args) {
-//        Correspondances init = new Correspondances();
-//
-//        try(OutputStreamWriter os = new OutputStreamWriter(
-//                Files.newOutputStream(Path.of("output.json")),
-//                StandardCharsets.UTF_8)
-//
-//        ) {
-//            new GsonBuilder().setPrettyPrinting().create().toJson(init, os);
-//        }
-        System.out.print(getDescriptifsWordsSet());
-    }
 }

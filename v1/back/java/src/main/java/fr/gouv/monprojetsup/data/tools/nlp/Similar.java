@@ -42,20 +42,5 @@ public class Similar {
         return similarWords;
     }
 
-    /*
-     * Testing.
-     */
-    public static void main(String[] args) {
-        if(args.length < 2) {
-            System.out.println(String.format("Usage:\n\t %s %s %s", Init.class.getSimpleName(), "%path_to_front_data_dir", "%path_to_words_data_dir"));
-            System.out.println(String.format("Exemple (from the root of the git):\n\t%s js/src/data java/data", Init.class.getSimpleName()));
-            System.exit(0);
-        }
-        final String wordsDataDir = args[1];
-        Init init = new Init(wordsDataDir);
-        List<List<String>> relations = init.GetRelations();
-        List<List<String>> keywords = init.GetWords();
-        Similar similar = new Similar();
-        System.out.println(similar.GetSimilarWords("mathématiques", keywords, relations));
-    }
+
 }

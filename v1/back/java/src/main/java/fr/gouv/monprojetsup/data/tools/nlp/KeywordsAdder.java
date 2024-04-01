@@ -32,19 +32,4 @@ public class KeywordsAdder {
         return data;
     }
 
-    public static void main(String[] args) throws IOException {
-        // Init (load data and nlp model).
-        KeywordsAdder keywordsAdder = new KeywordsAdder();
-        PorterStemmer stem = new PorterStemmer();
-        String result = stem.stem("running");
-        System.out.println(result);
-
-        // Load data.
-        List<List<String>> searchResult = ReadCSV(searchResultPath);
-        ArrayList codewordTable = (ArrayList) ReadCSV(codeWordTablePath);
-
-        // Compare search result with code word table.
-        // Create dict with code as key and list of keywords as value.
-
-    }
 }

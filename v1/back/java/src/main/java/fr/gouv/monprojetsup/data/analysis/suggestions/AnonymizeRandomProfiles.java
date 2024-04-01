@@ -1,10 +1,11 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.data.analysis.suggestions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.eval.ReferenceCases;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionsServerConfig;
 import fr.gouv.monprojetsup.tools.Serialisation;
