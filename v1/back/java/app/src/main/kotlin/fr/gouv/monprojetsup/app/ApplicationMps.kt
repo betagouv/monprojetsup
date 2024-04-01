@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.app
 import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.server.WebServer
 import fr.gouv.monprojetsup.app.tools.server.MyServiceException
+import fr.gouv.monprojetsup.app.tools.server.WritePidToFile
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -11,9 +12,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 @SpringBootApplication
@@ -36,33 +34,14 @@ const val BASE_PATH = "/api/$API_VERSION"
  */
 fun main(args: Array<String>) {
 
-    writePidtoFile()
+    WritePidToFile.write("mps")
+
     val app = SpringApplication(ApplicationMps::class.java)
     val context = app.run(*args)
     val webServer = context.getBean(WebServer::class.java)
 
-    val loadOnlyDB = false;
+    val loadOnlyDB = false
     webServer.init(loadOnlyDB)
-
-}
-
-fun writePidtoFile() {
-    // Get the current process handle
-    val currentProcess = ProcessHandle.current()
-
-    // Get the PID of the current process
-    val pid = currentProcess.pid()
-
-    // Define the path to the file where the PID should be written
-    val filePath = "mps.pid"
-
-    try {
-        // Write the PID to the file
-        Files.writeString(Paths.get(filePath), pid.toString())
-        println("Successfully wrote PID to file: $filePath")
-    } catch (e: IOException) {
-        System.err.println("An error occurred while writing the PID to file: ")
-    }
 
 }
 
