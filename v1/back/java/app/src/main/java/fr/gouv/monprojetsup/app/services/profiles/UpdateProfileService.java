@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.services.profiles;
 
-import fr.gouv.monprojetsup.app.tools.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;

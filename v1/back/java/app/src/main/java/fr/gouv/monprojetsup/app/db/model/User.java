@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.app.db.model;
 
-import fr.gouv.monprojetsup.suggestions.algos.Profile;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
@@ -18,7 +17,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import static fr.gouv.monprojetsup.suggestions.algos.Profile.PROFILE_COMPLETENESS_LEVEL_OK;
+import static fr.gouv.monprojetsup.app.db.model.Profile.PROFILE_COMPLETENESS_LEVEL_OK;
 import static fr.gouv.monprojetsup.app.db.model.User.USERS_COLL_NAME;
 import static fr.gouv.monprojetsup.app.db.model.User.UserTypes.*;
 

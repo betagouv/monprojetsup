@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.tools.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;

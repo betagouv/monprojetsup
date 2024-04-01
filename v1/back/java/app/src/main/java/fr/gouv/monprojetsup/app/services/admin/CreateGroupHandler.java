@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
 import fr.gouv.monprojetsup.app.services.teacher.GetAdminInfosService;
 import fr.gouv.monprojetsup.app.tools.server.Helpers;
-import fr.gouv.monprojetsup.app.tools.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

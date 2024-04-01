@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.app.db;
 
-import fr.gouv.monprojetsup.suggestions.algos.Profile;
 import fr.gouv.monprojetsup.app.tools.Sanitizer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;

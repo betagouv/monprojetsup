@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.services.log;
 
-import fr.gouv.monprojetsup.app.tools.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.log.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

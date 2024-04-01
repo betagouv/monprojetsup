@@ -19,7 +19,9 @@
 	<modules>
 		<module>app</module>
 		<module>etl</module>
-	</modules>
+		<module>suggestions</module>
+        <module>tools</module>
+    </modules>
 
 
 </project>

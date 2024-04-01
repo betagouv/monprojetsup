@@ -12,7 +12,7 @@
 	<artifactId>app</artifactId>
 	<version>1.4.0</version>
 	<name>app</name>
-	<description>MonProjetSup</description>
+	<description>The WebApp of MonProjetSup</description>
 
 	<properties>
 		<java.version>19</java.version>
@@ -176,7 +176,19 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>fr.gouv.monprojetsup</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.4.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.gouv.monprojetsup</groupId>
+            <artifactId>suggestions</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -300,7 +312,7 @@
 		  <configuration>
 		    <archive>
 		      <manifest>
-			<mainClass>fr.gouv.monprojetsup.ApplicationKt</mainClass>
+			<mainClass>fr.gouv.monprojetsup.app.ApplicationKt</mainClass>
 		      </manifest>
 		    </archive>
 		    <descriptorRefs>

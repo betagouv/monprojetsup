@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.app.log;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.db.DB;
+import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.mail.MailSender;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;
@@ -66,5 +68,21 @@ public class Log {
         if(db != null) {
             db.logTrace(origin, trace, object);
         }
+    }
+
+    public static void logBackError(Throwable e) {
+        if (!(e instanceof DBExceptions.UserInputException.InvalidPasswordException)
+                && !(e instanceof Authenticator.TokenInvalidException)
+                && !(e instanceof DBExceptions.UserInputException.WrongAccessCodeException)
+                && !(e instanceof DBExceptions.UserInputException.UnauthorizedLoginException)
+        ) {
+            String error = e.getMessage();
+            if (e instanceof DBExceptions.InvalidTokenException) {
+                WebServer.LOGGER.warning(error);
+                error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
+            }
+            logBackError(error);
+        }
+
     }
 }

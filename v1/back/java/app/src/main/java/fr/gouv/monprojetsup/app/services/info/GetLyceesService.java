@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.model.Lycee;
-import fr.gouv.monprojetsup.app.tools.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

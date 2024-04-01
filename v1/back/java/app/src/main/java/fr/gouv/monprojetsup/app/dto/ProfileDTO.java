@@ -1,12 +1,13 @@
 package fr.gouv.monprojetsup.app.dto;
 
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.app.tools.Sanitizer;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_APPROVED;
+
 
 public record ProfileDTO(
         String login,
