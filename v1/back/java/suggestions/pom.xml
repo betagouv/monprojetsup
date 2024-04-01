@@ -306,7 +306,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>fr.gouv.monprojetsup.suggestions.ApplicationKt</mainClass>
+									<mainClass>fr.gouv.monprojetsup.suggestions.ApplicationSuggestionsKt</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

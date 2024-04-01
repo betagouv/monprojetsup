@@ -294,7 +294,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>fr.gouv.monprojetsup.etl.ApplicationKt</mainClass>
+									<mainClass>fr.gouv.monprojetsup.etl.ApplicationEtlKt</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

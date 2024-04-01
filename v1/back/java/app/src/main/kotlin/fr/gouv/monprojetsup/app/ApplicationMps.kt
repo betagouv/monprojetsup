@@ -18,7 +18,7 @@ import java.nio.file.Paths
 
 @SpringBootApplication
 @EnableMongoRepositories
-class Application
+class ApplicationMps
 
 /**
  * Version of the API used to implement the service,
@@ -37,7 +37,7 @@ const val BASE_PATH = "/api/$API_VERSION"
 fun main(args: Array<String>) {
 
     writePidtoFile()
-    val app = SpringApplication(Application::class.java)
+    val app = SpringApplication(ApplicationMps::class.java)
     val context = app.run(*args)
     val webServer = context.getBean(WebServer::class.java)
 

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data;
 
+import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
@@ -72,6 +73,8 @@ public class ServerData {
     public static synchronized void load() throws IOException {
 
         if(dataLoaded) return;
+
+        DataServerConfig.load();
 
         log.info("Loading server data...");
 

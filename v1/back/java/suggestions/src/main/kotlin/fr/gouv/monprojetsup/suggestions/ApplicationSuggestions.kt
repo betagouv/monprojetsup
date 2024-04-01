@@ -15,8 +15,8 @@ const val API_VERSION = "1.1"
  */
 const val BASE_PATH = "/api/$API_VERSION"
 @SpringBootApplication
-class Application
+class ApplicationSuggestions
 
 fun main(args: Array<String>) {
-	runApplication<Application>(*args)
+	runApplication<ApplicationSuggestions>(*args)
 }

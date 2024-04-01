@@ -312,7 +312,7 @@
 		  <configuration>
 		    <archive>
 		      <manifest>
-			<mainClass>fr.gouv.monprojetsup.app.ApplicationKt</mainClass>
+			<mainClass>fr.gouv.monprojetsup.app.ApplicationMpsKt</mainClass>
 		      </manifest>
 		    </archive>
 		    <descriptorRefs>
