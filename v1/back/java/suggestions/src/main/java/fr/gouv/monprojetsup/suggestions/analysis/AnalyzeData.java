@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.analysis.eds.AnalyzeEDS;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
@@ -67,7 +68,7 @@ public class AnalyzeData {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });
 
-        Map<String, Attendus> eds = ServerData.getEDSSimple(
+        Map<String, Attendus> eds = AnalyzeEDS.getEDSSimple(
                 psupData,
                 data,
                 SpecialitesLoader.load(),

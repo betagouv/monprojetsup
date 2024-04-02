@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,8 @@ import static fr.gouv.monprojetsup.suggestions.eval.Simulate.REF_CASES_WITH_SUGG
 
 public class Evaluate {
 
+
+    private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
 
     public static void main(String[] args) throws Exception {
 
@@ -114,7 +118,7 @@ public class Evaluate {
                                         + "\n\n\t\twas overtaken by \n\n\t"
                                         + worstName + "\n\n");
                                 fos2.write("************ " + expectation +  "******************\n\n");
-                                @Nullable String cod = ServerData.getFlCodFromLabel(expectation);
+                                @Nullable String cod = getFlCodFromLabel(expectation);
                                 if (cod == null) {
                                     fos2.write("could not find '" + expectation + "'");
                                 } else {
@@ -173,9 +177,18 @@ public class Evaluate {
                 .orElse(-1);
     }
 
-    private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
 
     private static boolean isIn(String expectation, Stream<String> suggested) {
         return suggested.anyMatch(s -> levenAlgo.apply(expectation, s) < 5);
+    }
+
+    public static @Nullable String getFlCodFromLabel(String expectation) {
+        return
+                ServerData.statistiques.labels.entrySet().stream()
+                        .map(e -> Pair.of(e.getKey(), levenAlgo.apply(e.getValue(), expectation)))
+                        .filter(e -> e.getRight() >= 0)
+                        .min(Comparator.comparingInt(Pair::getRight))
+                        .map(Pair::getLeft)
+                        .orElse(null);
     }
 }

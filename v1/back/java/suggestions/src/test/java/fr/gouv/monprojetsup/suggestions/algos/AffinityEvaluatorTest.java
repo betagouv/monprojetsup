@@ -1,11 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.app.db.model.Profile;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;

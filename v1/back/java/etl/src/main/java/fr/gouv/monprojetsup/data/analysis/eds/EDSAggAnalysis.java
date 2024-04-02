@@ -1,5 +1,6 @@
-package fr.gouv.monprojetsup.data.model.eds;
+package fr.gouv.monprojetsup.data.analysis.eds;
 
+import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;

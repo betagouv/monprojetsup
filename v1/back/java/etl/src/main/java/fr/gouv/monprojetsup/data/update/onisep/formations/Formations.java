@@ -1,14 +1,9 @@
 package fr.gouv.monprojetsup.data.update.onisep.formations;
 
-<<<<<<< HEAD
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-=======
-import java.util.List;
-
->>>>>>> origin/prod
 
 
 public record Formations(
@@ -22,7 +17,6 @@ public record Formations(
                 .orElse(null);
     }
 
-<<<<<<< HEAD
     public Collection<String> getFormationsDuSup() {
         if(formations == null) return Collections.emptySet();
         return formations.stream()
@@ -30,6 +24,5 @@ public record Formations(
                 .map(Formation::identifiant)
                 .collect(Collectors.toSet());
     }
-=======
->>>>>>> origin/prod
+
 }

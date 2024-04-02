@@ -1,5 +1,6 @@
-package fr.gouv.monprojetsup.data.model.eds;
+package fr.gouv.monprojetsup.data.analysis.eds;
 
+import fr.gouv.monprojetsup.data.model.eds.Attendus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
