@@ -16,7 +16,8 @@ class JacksonConfig {
         // Enable auto-detection of fields with any visibility
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        
         return objectMapper
     }
 }
