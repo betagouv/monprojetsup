@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.tools.server;
+package fr.gouv.monprojetsup.common.server;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

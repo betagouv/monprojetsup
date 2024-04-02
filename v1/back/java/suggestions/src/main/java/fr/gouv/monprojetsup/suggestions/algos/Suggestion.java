@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.app.tools.Sanitizer;
+import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static fr.gouv.monprojetsup.data.Constants.BR;
+import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_PENDING;
 import static java.lang.System.lineSeparator;
 
 /**
@@ -25,9 +26,6 @@ public record Suggestion(
 
         List<String> items//items, like filiere in a grouped filiere
 ) {
-    public static final int SUGG_PENDING = 0;
-    public static final int SUGG_APPROVED = 1;
-    public static final int SUGG_REJECTED = 2;
 
     public Suggestion(String fl) {
         this(fl, null, LocalDateTime.now().toString(), SUGG_PENDING, Collections.emptyList());

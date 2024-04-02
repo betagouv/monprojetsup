@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.tools.server;
+package fr.gouv.monprojetsup.common.server;
 
 import java.util.logging.Logger;
 

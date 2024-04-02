@@ -12,7 +12,7 @@ import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.Log;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.Getter;

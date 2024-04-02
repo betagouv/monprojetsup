@@ -4,8 +4,7 @@ import fr.gouv.monprojetsup.app.db.DBTools;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
-import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -15,9 +14,9 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_APPROVED;
-import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_REJECTED;
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
+import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_APPROVED;
+import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_REJECTED;
 
 @Data
 @AllArgsConstructor
@@ -131,12 +130,12 @@ public final class Profile {
 
     @Transient
     public List<SuggestionDTO> suggApproved() {
-        return choices.values().stream().filter(s -> Objects.equals(s.status(), Suggestion.SUGG_APPROVED)).toList();
+        return choices.values().stream().filter(s -> Objects.equals(s.status(), SUGG_APPROVED)).toList();
     }
 
     @Transient
     public List<SuggestionDTO> suggRejected() {
-        return choices.values().stream().filter(s -> Objects.equals(s.status(), Suggestion.SUGG_REJECTED)).toList();
+        return choices.values().stream().filter(s -> Objects.equals(s.status(), SUGG_REJECTED)).toList();
     }
 
     @Transient

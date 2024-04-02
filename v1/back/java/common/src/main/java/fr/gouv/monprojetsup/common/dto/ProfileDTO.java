@@ -1,13 +1,9 @@
-package fr.gouv.monprojetsup.suggestions.dto;
+package fr.gouv.monprojetsup.common.dto;
 
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_APPROVED;
-import static fr.gouv.monprojetsup.suggestions.algos.Suggestion.SUGG_REJECTED;
 
 public record ProfileDTO(
         String niveau,
@@ -19,7 +15,7 @@ public record ProfileDTO(
         Map<String, Integer> scores,
         String mention,
         String moygen,
-        Map<String, Suggestion> choices
+        Map<String, SuggestionDTO> choices
 ) {
 
     /*
@@ -41,12 +37,12 @@ public record ProfileDTO(
         );
     }*/
 
-    public List<Suggestion> suggApproved() {
-        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SUGG_APPROVED)).toList();
+    public List<SuggestionDTO> suggApproved() {
+        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_APPROVED)).toList();
     }
 
-    public List<Suggestion> suggRejected() {
-        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SUGG_REJECTED)).toList();
+    public List<SuggestionDTO> suggRejected() {
+        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).toList();
     }
 
     public int bacIndex() {
@@ -87,7 +83,7 @@ public record ProfileDTO(
         return apprentissage;
     }
 
-    public static String toExplanationString(List<Suggestion> suggestions, String sep) {
+    public static String toExplanationString(List<SuggestionDTO> suggestions, String sep) {
         if (suggestions == null) return sep;
         return suggestions.stream()
                 .map(s -> ServerData.getDebugLabel(s.fl()))
@@ -122,7 +118,7 @@ public record ProfileDTO(
         );
     }
 
-    private Map<String, Suggestion> cleanupDates(Map<String, Suggestion> choices) {
+    private Map<String, SuggestionDTO> cleanupDates(Map<String, SuggestionDTO> choices) {
         return choices.entrySet()
                 .stream()
                 .collect(

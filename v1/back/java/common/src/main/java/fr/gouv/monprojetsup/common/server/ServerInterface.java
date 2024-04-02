@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.tools.server;
+package fr.gouv.monprojetsup.common.server;
 
 import com.sun.net.httpserver.HttpServer;
 

@@ -105,6 +105,27 @@ public class ServerData {
         dataLoaded = true;
     }
 
+    private static void loadBackEndData() throws IOException {
+
+        BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
+
+        ServerData.onisepData = backendData.onisepData();
+
+        backPsupData = backendData.psupData();
+        backPsupData.cleanup();//should be useless but it does not harm...
+
+        backPsupData.formations().formations.values()
+                .forEach(f -> {
+                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
+                    filToFormations
+                            .computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new ArrayList<>())
+                            .add(f);
+                });
+
+        ServerData.cities = new CitiesBack(backendData.cities().cities());
+
+    }
+
     private static Map<String, Set<String>> getLasToGtaMapping() {
         //fl1002033
         Set<String> lasCodes = ServerData.statistiques.getLASCorrespondance().lasToGeneric().keySet();
@@ -146,6 +167,27 @@ public class ServerData {
     }
 
 
+    /* ************************************************************************
+    ************************* HELPERS to get labels associated with a key ***********************
+     */
+    public static String getLabel(String key) {
+        return ServerData.statistiques.labels.getOrDefault(
+                key,
+                ServerData.statistiques.nomsFilieres.get(key)
+        );
+    }
+
+    public static String getDebugLabel(String key) {
+        return getLabel(key) + " (" + key  + ")";
+    }
+
+    public static String getLabel(String key, String defaultValue) {
+        return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
+    }
+
+    /* ************************************************************************
+    ************************* HELPERS to determine type from key ***********************
+     */
     public static boolean isFiliere(@NotNull String key) {
         return key.startsWith(FILIERE_PREFIX)
                 || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
@@ -163,26 +205,6 @@ public class ServerData {
                 || key.startsWith(Constants.CENTRE_INTERETS_ROME);
     }
 
-    static void loadBackEndData() throws IOException {
-
-        BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
-
-        ServerData.onisepData = backendData.onisepData();
-
-        backPsupData = backendData.psupData();
-        backPsupData.cleanup();//should be useless but it does not harm...
-
-        backPsupData.formations().formations.values()
-                .forEach(f -> {
-                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
-                    filToFormations
-                            .computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new ArrayList<>())
-                            .add(f);
-                });
-
-        ServerData.cities = new CitiesBack(backendData.cities().cities());
-
-    }
 
     /*
     ***********************************************
@@ -204,12 +226,6 @@ public class ServerData {
                 g -> getDetailedGroupStats(finalBac, g)
         ));
     }
-
-    /**
-    Utilisé pour aire des stats
-     */
-
-
 
     /**
      * utilisé pour l'envoi des stats aux élèves
@@ -283,6 +299,11 @@ public class ServerData {
         }
     }
 
+    /**
+     * Get the list of formations for a filiere. Used by the suggestion service to compute foi (formations of interest).
+     * @param fl the filiere
+     * @return the list of formations
+     */
     public static List<Formation> getFormationsFromFil(String fl) {
         return filToFormations
                 .getOrDefault(fl, Collections.emptyList());
@@ -292,20 +313,6 @@ public class ServerData {
 
     }
 
-    public static String getLabel(String key) {
-        return ServerData.statistiques.labels.getOrDefault(
-                key,
-                ServerData.statistiques.nomsFilieres.get(key)
-        );
-    }
-
-    public static String getDebugLabel(String key) {
-        return getLabel(key) + " (" + key  + ")";
-    }
-
-    public static String getLabel(String key, String defaultValue) {
-        return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
-    }
 
 }
 

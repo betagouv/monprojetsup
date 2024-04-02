@@ -2,10 +2,10 @@ package fr.gouv.monprojetsup.suggestions.services;
 
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestions;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.MyService;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
+import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

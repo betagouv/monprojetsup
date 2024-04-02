@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.suggestions.services;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
-import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
+import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.server.MyService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

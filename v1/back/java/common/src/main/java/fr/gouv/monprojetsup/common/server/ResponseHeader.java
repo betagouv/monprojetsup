@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.tools.server;
+package fr.gouv.monprojetsup.common.server;
 
 public record ResponseHeader(
         int status,

@@ -5,7 +5,7 @@ import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService;
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService;
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ONISEP;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ROME;
 import static fr.gouv.monprojetsup.data.ServerData.*;
-import static fr.gouv.monprojetsup.suggestions.dto.ProfileDTO.toExplanationString;
-import static fr.gouv.monprojetsup.suggestions.dto.ProfileDTO.toExplanations;
+import static fr.gouv.monprojetsup.common.dto.ProfileDTO.toExplanationString;
+import static fr.gouv.monprojetsup.common.dto.ProfileDTO.toExplanations;
 import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
@@ -266,7 +266,7 @@ public record ReferenceCases(
                                                 Collectors.joining("\n")
                                         )
                 );
-                output.append(toExplanationString(refCase.suggestions, ""));
+                output.append(toExplanationString(refCase.suggestions.stream().map(s -> s.toDTO()).toList(), ""));
                 output.append("");
                 output.append("");
                 output.newLine();

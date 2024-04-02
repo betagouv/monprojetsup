@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.app.server;
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.app.tools.server.Server;
+import fr.gouv.monprojetsup.common.server.Server;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.dbimpl.DBMongo;
 import org.springframework.beans.factory.annotation.Autowired;

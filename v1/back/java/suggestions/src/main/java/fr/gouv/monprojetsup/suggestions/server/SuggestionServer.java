@@ -1,8 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.app.tools.server.Server;
+import fr.gouv.monprojetsup.common.server.Server;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.Getter;
 import org.springframework.stereotype.Component;

@@ -20,7 +20,7 @@
 		<module>app</module>
 		<module>etl</module>
 		<module>suggestions</module>
-        <module>tools</module>
+        <module>common</module>
     </modules>
 
 

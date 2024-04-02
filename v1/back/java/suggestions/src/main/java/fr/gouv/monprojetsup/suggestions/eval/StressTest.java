@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.eval;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService.SuggestionsDTO.Suggestion;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;

@@ -1,13 +1,9 @@
 package fr.gouv.monprojetsup.suggestions
 
-import fr.gouv.monprojetsup.app.tools.server.WritePidToFile
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
+import fr.gouv.monprojetsup.common.server.WritePidToFile
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 /**
@@ -22,8 +18,6 @@ const val API_VERSION = "1.1"
 const val BASE_PATH = "/api/$API_VERSION"
 @SpringBootApplication
 class ApplicationSuggestions
-
-
 
 /**
  * Main function

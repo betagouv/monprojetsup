@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.app
 
 import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.server.WebServer
-import fr.gouv.monprojetsup.app.tools.server.MyServiceException
-import fr.gouv.monprojetsup.app.tools.server.WritePidToFile
+import fr.gouv.monprojetsup.common.server.MyServiceException
+import fr.gouv.monprojetsup.common.server.WritePidToFile
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication

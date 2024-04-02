@@ -5,7 +5,8 @@ import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
-import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -72,15 +73,15 @@ public class AffinityEvaluator {
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
-        List<Suggestion> approved = pf.suggApproved();
-        this.flApproved = approved.stream().filter(s -> s.fl().startsWith(FILIERE_PREFIX)).toList();
+        List<SuggestionDTO> approved = pf.suggApproved();
+        this.flApproved = approved.stream().map(s -> s.fl()).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
 
         approved.forEach(sugg -> addAlreadyKnown(sugg.fl()));
         pf.suggRejected().forEach(sugg -> addAlreadyKnown(sugg.fl()));
 
         //precomputing candidats for filieres similaires
-        for (Suggestion sugg : flApproved) {
-            Map<String, Integer> sim = ServerData.backPsupData.getFilieresSimilaires(sugg.fl(), pf.bacIndex());
+        for (String fl : flApproved) {
+            Map<String, Integer> sim = ServerData.backPsupData.getFilieresSimilaires(fl, pf.bacIndex());
             if (sim != null) {
                 candidatsSimilaires.addAll(sim.keySet());
             }
@@ -97,7 +98,7 @@ public class AffinityEvaluator {
                 .toList());
 
         //autres formations
-        nonZeroScores.addAll(approved.stream().map(Suggestion::fl).toList());
+        nonZeroScores.addAll(approved.stream().map(s -> s.fl()).toList());
 
         isInterestedinHealth = isRelatedToHealth(nonZeroScores);
 
@@ -182,7 +183,7 @@ public class AffinityEvaluator {
 
     private final Map<String, List<Path>> pathesFromTagsIndexedByTarget;
 
-    private final List<Suggestion> flApproved;
+    private final List<String> flApproved;
 
     /**
      * Calcule les scores affinités entre un profil et une filière
@@ -441,7 +442,7 @@ public class AffinityEvaluator {
             String fl,
             int bacIndex,
             List<Paire<Double, Explanation>> expl,
-            List<Suggestion> ok,
+            List<String> ok,
             Set<String> okCodes,
             double weight
     ) {
@@ -451,14 +452,14 @@ public class AffinityEvaluator {
         if (sim == null) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
-        for (Suggestion sugg : ok) {
-            int simScore = sim.getOrDefault(sugg.fl(), 0);
+        for (String approved : ok) {
+            int simScore = sim.getOrDefault(approved, 0);
             if (simScore > 0) {
                 double simi = 1.0 * simScore / PsupStatistiques.SIM_FIL_MAX_WEIGHT;
                 bonus += simi;
                 if (expl != null) {
                     int percentage = Math.max(1, (int) simi * 100);
-                    expl.add(new Paire<>(simi * weight, Explanation.getSimilarityExplanation(sugg.fl(), percentage)));
+                    expl.add(new Paire<>(simi * weight, Explanation.getSimilarityExplanation(approved, percentage)));
                 }
             }
         }
