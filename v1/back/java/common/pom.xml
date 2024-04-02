@@ -98,12 +98,6 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.86.Final</version>
         </dependency>
-        <dependency>
-            <groupId>fr.gouv.monprojetsup</groupId>
-            <artifactId>etl</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 </project>

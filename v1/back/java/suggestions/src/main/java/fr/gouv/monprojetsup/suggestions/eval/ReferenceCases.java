@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.eval;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
@@ -31,8 +32,6 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ONISEP;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ROME;
 import static fr.gouv.monprojetsup.data.ServerData.*;
-import static fr.gouv.monprojetsup.common.dto.ProfileDTO.toExplanationString;
-import static fr.gouv.monprojetsup.common.dto.ProfileDTO.toExplanations;
 import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
@@ -45,6 +44,43 @@ public record ReferenceCases(
 
     public ReferenceCases() {
         this(new ArrayList<>());
+    }
+
+    public static String toExplanationString(List<SuggestionDTO> suggestions, String sep) {
+        if (suggestions == null) return sep;
+        return suggestions.stream()
+                .map(s -> getDebugLabel(s.fl()))
+                .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
+    }
+
+    public static String toExplanationString(Map<String, Integer> scores, String sep) {
+        return scores.entrySet().stream()
+                .map(e -> getDebugLabel(e.getKey()) + ":" + e.getValue())
+                .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
+    }
+
+    public static String toExplanations(List<String> list, String sep) {
+        return list.stream()
+                .map(e -> getDebugLabel(e))
+                .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
+    }
+
+    public static String toExplanationString(ProfileDTO pf) {
+        return "Profil: \n" + toExplanationStringShort(pf, "\t") +
+                "\n\tcentres d'intérêts: " + toExplanationString(pf.scores(), "\t") + "\n" +
+                "\n\tformations et métiers d'intérêt: " + toExplanationString(pf.suggApproved(), "\t") + "\n" +
+                "\n\tcorbeille (refus / rejet): " + toExplanationString(pf.suggRejected(), "\t") + "\n" +
+                '}';
+    }
+
+    public static String toExplanationStringShort(ProfileDTO pf, String sep) {
+        return sep + "niveau: '" + pf.niveau() + "'\n" +
+                sep + "bac: '" + pf.bac() + "'\n" +
+                sep + "duree: '" + pf.duree() + "'\n" +
+                sep + "apprentissage: '" + Evaluate.toApprentissageExplanationString(pf.apprentissage()) + "'\n" +
+                sep + "geo_pref: " + pf.geo_pref() + "'\n" +
+                sep + "spe_classes: " + pf.spe_classes() + "'\n" +
+                sep + "moyenne générale auto-évaluée: '" + pf.moygen() + "'\n";
     }
 
     public void toFile(String refCasesWithSuggestions) throws IOException {
@@ -125,7 +161,7 @@ public record ReferenceCases(
                 fos.write(STAR_SEP);
                 fos.write("************ Profile " + (name == null || name.startsWith("ProfileDTO") ? "" : name) + " ***********\n");
                 fos.write(STAR_SEP);
-                fos.write("Profile: " + pf.toExplanationString());
+                fos.write("Profile: " + toExplanationString(pf));
                 fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
                 if(expectations != null && !expectations.isEmpty()) {
                     fos.write("Suggestions définies par experts:\n" + expectations.stream()
@@ -199,7 +235,7 @@ public record ReferenceCases(
             fos.append("************ Profile ").append(i).append(" ***********\n");
             fos.append("************ ").append(refCase.name()).append(" ***********\n");
             fos.append(STAR_SEP);
-            fos.append(refCase.pf.toExplanationString());
+            fos.append(toExplanationString(refCase.pf));
             i++;
             if(refCase.expectations != null) {
                 fos.append("\n\n" + STAR_SEP);
@@ -244,7 +280,7 @@ public record ReferenceCases(
                 i++;
                 if (refCase.name() != null && !refCase.name.contains("ProfileDTO")) name = refCase.name();
                 output.append(name);
-                output.append(refCase.pf.toExplanationStringShort(""));
+                output.append(toExplanationStringShort(refCase.pf, ""));
 
                 output.append(toExplanations(refCase.pf.scores().keySet().stream()
                         .filter(e -> isInteret(e)

@@ -112,7 +112,7 @@ public class Evaluate {
                                             StandardCharsets.UTF_8
                                     )
                             ) {
-                                fos2.write(refCase.pf().toExplanationString());
+                                fos2.write(ReferenceCases.toExplanationString(refCase.pf()));
                                 fos2.write("\n\n************ MISSED EXPECTATION ******************\n");
                                 fos2.write("\n\t" + expectation
                                         + "\n\n\t\twas overtaken by \n\n\t"
@@ -175,6 +175,15 @@ public class Evaluate {
                 .mapToInt(Map.Entry::getValue)
                 .min()
                 .orElse(-1);
+    }
+
+
+    static String toApprentissageExplanationString(String apprentissage) {
+        if (apprentissage == null) return "Non-renseigné";
+        if (apprentissage.equals("A")) return "Indifférent";
+        if (apprentissage.equals("B")) return "Indifférent";
+        if (apprentissage.equals("C")) return "Peu intéressé";
+        return apprentissage;
     }
 
 
