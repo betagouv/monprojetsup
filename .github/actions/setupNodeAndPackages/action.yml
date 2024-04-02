@@ -19,4 +19,4 @@ runs:
         cache-name: cache-node-modules
       with:
         path: ${{ env.WORKING_DIRECTORY }}/node_modules
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('${{ env.WORKING_DIRECTORY }}/package-lock.json') }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles(format('{0}/package-lock.json', env.WORKING_DIRECTORY)) }}

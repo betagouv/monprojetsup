@@ -2,10 +2,12 @@ import { type ProjetFormInputs, type ProjetFormProps, type SituationOptions } fr
 import { projetValidationSchema } from "./ProjetForm.validation";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-const ProjetForm = ({ valeursParDéfaut, àLaSoumissionDuFormulaireSansErreur, formId }: ProjetFormProps) => {
+const ProjetForm = ({ valeursParDéfaut, àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFormProps) => {
+  const { mettreÀJourÉlève } = useÉlève();
   const {
     register,
     handleSubmit,
@@ -18,7 +20,8 @@ const ProjetForm = ({ valeursParDéfaut, àLaSoumissionDuFormulaireSansErreur, f
   });
 
   const soumissionDuFormulaire: SubmitHandler<ProjetFormInputs> = async (données) => {
-    àLaSoumissionDuFormulaireSansErreur?.(données);
+    await mettreÀJourÉlève(données);
+    àLaSoumissionDuFormulaireAvecSuccès?.();
   };
 
   const situationOptions: SituationOptions = [
