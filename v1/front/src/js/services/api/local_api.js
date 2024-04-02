@@ -3,7 +3,7 @@
 import $ from "jquery";
 
 export function callAPI(serviceName, data, successHandler, errorHandler, type) {
-  let port = 8002;
+  let port = serviceName.includes("public") ? 8003 : 8002;
   const IPserver = "http://" + document.location.hostname + ":" + port;
   const API = "/api/1.1/";
   const url = IPserver + API + serviceName;
