@@ -1,8 +1,10 @@
 package fr.gouv.monprojetsup.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.gouv.monprojetsup.common.Sanitizer;
 import org.jetbrains.annotations.Nullable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record SuggestionDTO(
             String fl,
             @Nullable Integer status,

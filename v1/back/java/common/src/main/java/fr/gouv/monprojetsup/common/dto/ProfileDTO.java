@@ -1,8 +1,11 @@
 package fr.gouv.monprojetsup.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
         String niveau,
         String bac,
