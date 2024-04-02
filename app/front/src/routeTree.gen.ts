@@ -14,7 +14,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as InscriptionImport } from './routes/_inscription'
-import { Route as ArticlesIndexImport } from './routes/articles/index'
 import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_inscription/inscription/scolarite/index'
 import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
 
@@ -33,13 +32,6 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-
-const ArticlesIndexRoute = ArticlesIndexImport.update({
-  path: '/articles/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/articles/index.lazy').then((d) => d.Route),
-)
 
 const InscriptionInscriptionScolariteIndexRoute =
   InscriptionInscriptionScolariteIndexImport.update({
@@ -73,10 +65,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
-    '/articles/': {
-      preLoaderRoute: typeof ArticlesIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_inscription/inscription/projet/': {
       preLoaderRoute: typeof InscriptionInscriptionProjetIndexImport
       parentRoute: typeof InscriptionImport
@@ -96,7 +84,6 @@ export const routeTree = rootRoute.addChildren([
     InscriptionInscriptionProjetIndexRoute,
     InscriptionInscriptionScolariteIndexRoute,
   ]),
-  ArticlesIndexRoute,
 ])
 
 /* prettier-ignore-end */

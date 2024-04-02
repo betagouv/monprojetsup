@@ -7,10 +7,6 @@ const Navigation = () => {
       title: i18n.PAGE_ACCUEIL.TITLE,
       to: "/",
     },
-    {
-      title: i18n.PAGE_ARTICLES.TITLE,
-      to: "/articles/",
-    },
   ];
 
   return (
