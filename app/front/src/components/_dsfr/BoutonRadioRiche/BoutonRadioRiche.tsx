@@ -49,7 +49,12 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
                 {option.label}
                 {option.description && <span className="fr-hint-text">{option.description}</span>}
               </label>
-              <div className="fr-radio-rich__img fr-h3 fr-mb-0">{option.pictogramme}</div>
+              <div
+                aria-hidden="true"
+                className="fr-radio-rich__img fr-h3 fr-mb-0"
+              >
+                {option.pictogramme}
+              </div>
             </div>
           </div>
         ))}
