@@ -101,7 +101,7 @@ export const localeFR = {
     TITLE: pages.ARTICLES,
   },
   COMMUN: {
-    CLOSE: "Fermer",
+    FERMER: "Fermer",
     CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
     CONTINUER: "Continuer",
     RETOUR: "Retour",
