@@ -27,8 +27,8 @@ const LayoutInscription = () => {
   }, [router.location.pathname, définirÉtapeActuelle]);
 
   return (
-    <div className="bg-[--background-alt-beige-gris-galet]">
-      <div className="bg-[url('/images-de-fond/inscription.svg')] bg-no-repeat">
+    <div className="bg-[--background-alt-beige-gris-galet] h-full">
+      <div className="bg-[url('/images-de-fond/inscription.svg')] bg-no-repeat h-full bg-cover">
         <div className="fr-container--fluid">
           <div className="fr-grid-row fr-grid-row--center">
             <div className="bg-[--background-raised-grey] md:max-w-[840px] md:min-w-[740px] md:shadow-md fr-col-12 fr-col-md-8 fr-mt-md-7w fr-mb-md-10w">
