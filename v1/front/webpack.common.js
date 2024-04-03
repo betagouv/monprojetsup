@@ -69,7 +69,7 @@ module.exports = {
           from: "src/img/parcoursup_square.jpg",
           to: "img/parcoursup_square.jpg",
         },
-        { from: "src/data/data.zip", to: "data/data.zip" },
+        { from: "src/data/frontendData.zip", to: "data/data.zip" },
       ],
     }),
   ],
