@@ -36,7 +36,7 @@ export function init() {
   /******************* CREATE ACCOUNT *******************  */
 
   const typeAccountSel = $("#createAccountSelectType");
-  typeAccountSel.off("change").on("change", updateAccounCreationMenu);
+  //typeAccountSel.off("change").on("change", updateAccounCreationMenu);
 
   $(".inputPasswordEyeIcon")
     .off("mouseover")

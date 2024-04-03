@@ -20,7 +20,9 @@ public class CreateAccountService extends MyService<CreateAccountService.Request
             @NotNull String login,
             @NotNull String password,
             @NotNull String cguVersion,
-            @Nullable String accesGroupe
+            @Nullable String accesGroupe,
+            @Nullable String nom,
+            @Nullable String prenom
     ) {
 
     }

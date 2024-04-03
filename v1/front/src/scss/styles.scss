@@ -29,6 +29,10 @@ $card-border-color: $card-icon-color;
 $card-background-color: white;
 $stats-color: #B6CFFB;
 
+.inscription-screen {
+
+}
+
 header {
   display: flex;
   flex-wrap: wrap;
@@ -79,6 +83,34 @@ footer {
   height: auto;
 }
 
+#sub-container {
+  height: 100%;
+  //background-image: url("../img/premierspas.svg");
+  //background-size: cover;
+    //background-position: center;
+    //background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+}
+
+#sub-placeholder {
+  padding: 20px;
+  margin-top: 50px;
+  max-width: 700px;
+  width: 75%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: white;
+    justify-content: center;
+      align-items: center;
+              height: 100%;
+    }
+#main-placeholder {
+//  background-color: #f9f6f2;
+  background-image: url("../img/bg.svg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 .py-10px {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -96,6 +128,24 @@ footer {
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  margin: 0 5px;
+}
+
+.button-container button.left {
+  float: left;
+}
+
+.button-container button.right {
+  float: right;
 }
 
 .dsfr-mdp-oublie {
@@ -238,8 +288,6 @@ main {
 //done
 
 #connected {
-  //background-color: $beige-gris-galet-950;
-  //background-image: url('../img/connected-bg.svg');
   display: flex;
   flex-direction: column;
   flex: 1;

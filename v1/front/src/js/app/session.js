@@ -84,12 +84,12 @@ function getToken() {
   return sessionStorage.token;
 }
 
-export function getState(state) {
-  return sessionStorage.state;
+export function getScreen() {
+  return sessionStorage.screen;
 }
 
-export function saveState(state) {
-  sessionStorage.state = state;
+export function saveScreen(screen) {
+  sessionStorage.screen = screen;
 }
 
 function setSelectedGroup(group) {

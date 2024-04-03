@@ -34,6 +34,7 @@ import * as ui from "../ui/ui";
 import * as animate from "../ui/animate/animate";
 import * as dataload from "../data/load";
 import * as tunnel from "../ui/tunnel";
+import * as nav from "../app/navigation";
 
 import { toast } from "../ui/animate/toasts";
 
@@ -48,52 +49,6 @@ export {
   setSelectedStudent,
   commentChanged,
 };
-
-const states = [
-  "landing",
-  "connect",
-  "reset_password",
-  "create_account",
-  "create_account_2",
-  "tableau_bord",
-  "groupes",
-];
-
-let current_state = "landing";
-
-export function setState(state) {
-  if (states.includes(state)) {
-    doTransition(current_state, state);
-    current_state = state;
-    session.saveState(state);
-  }
-}
-
-function doTransition(old_state, new_state) {
-  exitState(old_state);
-  enterState(new_state);
-}
-function enterState(state) {
-  if (state == "landing") {
-    ui.showLandingScreen();
-  } else if (state == "connect") {
-    //ui.showConnectionScreen();
-  } else if (state == "reset_password") {
-    //ui.showResetPasswordScreen();
-  } else if (state == "create_account") {
-    //ui.showCreateAccountScreen();
-  } else if (state == "create_account_2") {
-    //ui.showCreateAccountScreen2();
-  } else if (state == "tableau_bord") {
-    //ui.showAccountTab();
-  } else if (state == "groupes") {
-    refreshGroupTab(false);
-    ui.showGroupsTab();
-  } else {
-    ui.showLandingScreen();
-  }
-}
-function exitState(state) {}
 
 /* the new $( document ).ready( handler ), see https://api.jquery.com/ready/ */
 
@@ -131,6 +86,16 @@ export function createAccount(data) {
     storeCredentialsAfterSuccesfulAuth(data.login, data.password);
     loginServerAnswerHandler(msg.data, data.login);
   });
+}
+
+export function validateCodeAcces(accounTypen, accessGroupe, handler) {
+  server.validateCodeAcces(
+    {
+      type: accounTypen,
+      code: accesGroupe,
+    },
+    handler
+  );
 }
 
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
@@ -206,19 +171,19 @@ export function postLoginHandler() {
 }
 
 function startNavigation() {
-  const state = session.getState();
-  if (state != undefined) {
-    setState(state);
+  const screen = session.getScreen();
+  if (screen != undefined) {
+    nav.setScreen(screen);
   } else {
     if (session.isAdminOrTeacher()) {
-      setState("groupes");
+      nav.setScreen("groupes");
     } else {
       const profileCompleteness = msg.infos.profileCompleteness;
       if (profileCompleteness < 2) {
         const category = profileCompleteness == 0 ? "profil" : "preferences";
-        tunnel.beginTunnel(category);
+        nav.setScreen("inscription1");
       } else {
-        ui.showSuggestionsTab();
+        nav.setScreen("tableau_bord");
       }
     }
   }

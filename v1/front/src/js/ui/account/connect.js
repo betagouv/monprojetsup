@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { toast } from "./../animate/toasts";
 import { Modal } from "bootstrap";
+import * as nav from "../../app/navigation";
 
 import * as app from "../../app/app";
 
@@ -16,8 +17,7 @@ function errorHtml(id, errorMsg) {
   }
 }
 export function init() {
-  updateAccounCreationMenu();
-
+  /*
   $("#sendResetPasswordEmail")
     .off("click")
     .on("click", () => {
@@ -32,103 +32,13 @@ export function init() {
       } else {
         errorHtml("sendResetPasswordEmailInputEmail-messages", "");
         app.sendResetPasswordEmail(email);
-        /*
-        const myModal = new Modal(document.getElementById("oublimdpModal"));
-        myModal.hide();*/
       }
-    });
-
-  $("#doCreateAccount")
-    .off("click")
-    .on("click", () => {
-      //login normal, infos supprimées à la fin du parcours
-      errorHtml("createAccount-profil-messages", "");
-      errorHtml("createAccount-code-acces-messages", "");
-
-      if (
-        $("#radio-create-account-lyceen").unchecked &&
-        $("#radio-create-account-prof").unchecked
-      ) {
-        errorHtml(
-          "createAccount-profil-messages",
-          "Veuillez sélectionner un profil"
-        );
-        return;
-      }
-      if ($("#radio-create-account-lyceen").unchecked) {
-        accounType = "lyceen";
-      } else {
-        accounType = "pp";
-      }
-
-      const accessGroupe = $("#inputCreateAccountCodeAcces").val();
-      if (
-        accessGroupe === undefined ||
-        accessGroupe === null ||
-        accessGroupe.length == 0
-      ) {
-        errorHtml(
-          "createAccount-code-acces-messages",
-          "Veuillez renseigner le code d'accès à votre groupe"
-        );
-        return;
-      }
-      //todo ecran suivant
-
-      //const accounType = $("#createAccountSelectType").val();
-      const login = $("#inputEmailCgu").val();
-
-      const password = $("#inputPasswordCgu").val();
-      const pattern = /^[a-zA-Z0-9+_.\-@]+$/;
-
-      if (password == accessGroupe) {
-        toast(
-          "",
-          "Le mot de passe (privé et personnel) doit être différent du code d'accès au groupe (public)"
-        );
-      } else if (login === undefined || login === null || login.length == 0) {
-        toast("", "Email non renseigné");
-      } else if (!pattern.test(login)) {
-        toast(
-          "",
-          "Les logins autorisés ne comportent que des lettres, des chiffres et les symboles +_.-@"
-        );
-      } else if (
-        password === undefined ||
-        password === null ||
-        password.length == 0
-      ) {
-        toast("", "Mot de passe non renseigné");
-      } else if (password.length < 8) {
-        toast("", "Mot de passe trop court (8 caractères minimum)");
-      } else if (validEmailNeeded() && !isValidEmail(login)) {
-        toast("", "Renseignez une adresse email valide");
-      } else {
-        //make modal disappaer
-        const myModalEl = document.getElementById("createAccountModal");
-        const modal = Modal.getInstance(myModalEl); // Returns a Bootstrap modal instance
-        modal.hide();
-
-        $("#inputPasswordCgu").val("");
-
-        app.createAccount({
-          type: accounType,
-          login: login,
-          accesGroupe: accessGroupe,
-          password: password,
-        });
-      }
-    });
+    });*/
 
   $("#createAccountButton")
     .off("click")
     .on("click", () => {
-      //call to server then open modal
-      updateAccounCreationMenu();
-
-      const myModalEl = document.querySelector("#createAccountModal");
-      const myModal = Modal.getOrCreateInstance(myModalEl);
-      myModal.show(document.getElementById("login-modal-contained"));
+      nav.setScreen("inscription1");
     });
 
   $("#login-button")
@@ -142,7 +52,7 @@ export function init() {
 }
 
 //called on account change type
-
+/*
 function updateAccounCreationMenu() {
   const selected = $("#createAccountSelectType").find(":selected").val();
   let text = "";
@@ -197,3 +107,4 @@ function updateAccounCreationMenu() {
   $("#inputPasswordCgu").attr("placeholder", placeholderPAssword);
   $("#inputAccesGroupe").attr("placeholder", placeholderCodeAcces);
 }
+*/

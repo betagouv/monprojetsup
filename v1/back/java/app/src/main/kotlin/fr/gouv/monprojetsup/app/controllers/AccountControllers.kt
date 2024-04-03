@@ -36,7 +36,7 @@ class LoginController(
 class PublicAccountController(
     private val createAccountService: CreateAccountService,
     private val confirmEmailService: ConfirmEmailService,
-
+    private val validateAccountService : ValidateAccountService,
     private val sendResetPasswordEmailService: SendResetPasswordEmailService
 ) {
 
@@ -44,6 +44,11 @@ class PublicAccountController(
     @PostMapping("/create")
     fun registerUser(@RequestBody request: CreateAccountService.Request): CreateAccountService.Response {
         return createAccountService.handleRequestAndExceptions(request)
+    }
+
+    @PostMapping("/validate")
+    fun validateCoder(@RequestBody request: ValidateAccountService.Request): ValidateAccountService.Response {
+        return validateAccountService.handleRequestAndExceptions(request)
     }
 
     @PostMapping("/confirmEmail")

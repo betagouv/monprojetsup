@@ -41,10 +41,10 @@ $(async function () {
   ui.initOnce();
 
   /* Step1: loading data */
-  ui.showDataLoadScreen();
+  await ui.showDataLoadScreen();
   $(".body").css("visibility", "visible");
 
-  console.log(__VERSION__);
+  console.log("MPS version " + __VERSION__);
 
   $("#version_appli").html("Version " + __VERSION__);
 

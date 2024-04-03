@@ -641,6 +641,18 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
+    public void validateCode(UserTypes type, String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
+        if (code == null || code.isEmpty()) {
+            throw new DBExceptions.UserInputException.WrongAccessCodeException();
+        }
+        if (type == lyceen) {
+            findGroupWithAccessCode(code);
+        } else {
+            findGroupWithAdminAccessCode(code);
+        }
+    }
+
+    @Override
     public synchronized void createNewUser(
             @NotNull CreateAccountService.CreateAccountRequest data,
             boolean confirmEmailOnAccountCreation) throws DBExceptions.ModelException, NoSuchAlgorithmException, InvalidKeySpecException, DBExceptions.UserInputException.InvalidPasswordException, DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UserInputException.InvalidGroupTokenException, DBExceptions.UserInputException.UserAlreadyExistsException, DBExceptions.UserInputException.UnauthorizedLoginException {

@@ -60,16 +60,45 @@ const screensHandlersInit = {
   connect: () => connect.init(),
 };
 
-function showScreen(screen) {
-  $("#main-placeholder").off();
+async function fetchData(screen) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "html/" + screen + ".html",
+      method: "GET",
+      dataType: "html",
+      success: function (html) {
+        resolve(html); // Resolve the Promise with the fetched HTML content
+      },
+      error: function () {
+        reject(new Error("Failed to fetch data")); // Reject the Promise with an error
+      },
+    });
+  });
+}
+
+async function showScreen(screen, ph = null) {
+  if (ph === null) {
+    ph = `main-placeholder`;
+  }
+  $(`#main-placeholder`).hide();
+  $(`#landing-placeholder`).hide();
+  $(`#main-placeholder`).off();
+  $(`#landing-placeholder`).off();
+  const $div = $(`#${ph}`);
+  $div.show();
   for (const scr of screens) $(`#${scr}`).toggle(scr === screen);
 
-  fetch("html/" + screen + ".html")
-    .then((response) => response.text())
-    .then((html) => {
-      $(`#main-placeholder`).html(html);
-    });
-  if (screen in screensHandlersInit) screensHandlersInit[screen]();
+  const html = await fetchData(screen);
+  $div.html(html);
+  if (screen in screensHandlersInit) {
+    screensHandlersInit[screen]();
+  }
+}
+
+async function showSubScreen(subscreen) {
+  await showScreen("main");
+  const html = await fetchData(subscreen);
+  $(`#sub-placeholder`).html(html);
 }
 
 export function injectHtml() {
@@ -88,22 +117,29 @@ export function injectHtml() {
   }
 }
 
-export function showDataLoadScreen() {
-  showScreen("loading");
+export async function showDataLoadScreen() {
+  await showScreen("loading");
 }
 
-export function showConnectionScreen() {
-  showScreen("connect");
+export async function showConnectionScreen() {
+  await showScreen("connect", "landing-placeholder");
 }
 
-export function showLandingScreen() {
+export async function showLandingScreen() {
   //$(".body").addClass("landing");
-  showScreen("landing");
-  $("#main-placeholder")
+  await showScreen("landing", "landing-placeholder");
+  $("#landing-placeholder")
     .off()
     .on("click", () => {
       showConnectionScreen();
     });
+}
+
+export async function showInscriptionScreen1() {
+  await showSubScreen("inscription1");
+}
+export async function showInscriptionScreen2() {
+  await showSubScreen("inscription2");
 }
 
 export const tabs = {
@@ -173,7 +209,7 @@ export function hideMainProfileTab() {
   $("#profile").hide();
 }
 
-export function showSuggestionsTab() {
+export async function showSuggestionsTab() {
   $("#profile").hide();
   showTab(`suggestions`);
 }

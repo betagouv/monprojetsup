@@ -42,9 +42,10 @@ export const passwordLogin = account_services.passwordLogin;
 export const oidcLogin = account_services.oidcLogin;
 export const disconnect = account_services.disconnect;
 export const createAccount = account_services.createAccount;
+export const validateAccount = account_services.validateAccount;
 export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
-export const validateAccount = account_services.validateAccount;
+export const validateCodeAcces = account_services.validateCodeAcces;
 export const joinGroup = account_services.joinGroup;
 
 /*************** PUBLIC INFO ******************* */
