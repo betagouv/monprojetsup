@@ -7,10 +7,6 @@ const Navigation = () => {
       title: i18n.PAGE_ACCUEIL.TITLE,
       to: "/",
     },
-    {
-      title: i18n.PAGE_ARTICLES.TITLE,
-      to: "/articles/",
-    },
   ];
 
   return (
@@ -23,10 +19,10 @@ const Navigation = () => {
         <button
           aria-controls="navigation-modal"
           className="fr-btn--close fr-btn"
-          title={i18n.GENERIC.CLOSE}
+          title={i18n.COMMUN.CLOSE}
           type="button"
         >
-          {i18n.GENERIC.CLOSE}
+          {i18n.COMMUN.CLOSE}
         </button>
         <div className="fr-header__menu-links" />
         <nav
