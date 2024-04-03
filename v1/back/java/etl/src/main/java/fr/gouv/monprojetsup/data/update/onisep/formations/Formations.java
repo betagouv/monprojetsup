@@ -24,4 +24,5 @@ public record Formations(
                 .map(Formation::identifiant)
                 .collect(Collectors.toSet());
     }
+
 }

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.db.model;
 
-import fr.gouv.monprojetsup.app.tools.Sanitizer;
+import fr.gouv.monprojetsup.common.Sanitizer;
 
 import java.time.LocalDateTime;
 

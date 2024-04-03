@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.data.update;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.analysis.eds.AnalyzeEDS;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.cities.CitiesFront;
 import fr.gouv.monprojetsup.data.model.cities.CitiesLoader;
@@ -274,7 +274,7 @@ public class UpdateFrontData {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });
 
-        Map<String, Attendus> eds = ServerData.getEDSSimple(
+        Map<String, Attendus> eds = AnalyzeEDS.getEDSSimple(
                 psupData,
                 data,
                 SpecialitesLoader.load(),

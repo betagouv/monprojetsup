@@ -80,6 +80,14 @@ module.exports = {
         { from: "src/*.map", to: "[name][ext]" },
         { from: "src/robots.txt", to: "robots.txt" },
         //do not put the html entry points
+        { from: "src/fonts/*", to: "fonts/[name][ext]" },
+        { from: "src/img/favicon.ico", to: "favicon.ico" },
+        { from: "src/img/*", to: "img/[name][ext]" },
+        {
+          from: "src/img/parcoursup_square.jpg",
+          to: "img/parcoursup_square.jpg",
+        },
+        { from: "src/data/frontendData.zip", to: "data/data.zip" },
       ],
     }),
   ],

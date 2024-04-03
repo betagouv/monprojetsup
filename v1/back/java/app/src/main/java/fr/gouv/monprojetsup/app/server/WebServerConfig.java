@@ -70,8 +70,6 @@ public final class WebServerConfig {
     @Getter
     private String errorsEmailAddress = DEFAULT_ERRORS_ADDRESS;
     @Getter
-    private boolean doNotProvideSuggestions = false;
-    @Getter
     public String googleOauth2ClientId;
     @Getter
     public String googleOauth2ClientSecret;

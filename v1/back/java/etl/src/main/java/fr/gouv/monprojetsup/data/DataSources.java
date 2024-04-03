@@ -59,16 +59,16 @@ public class DataSources {
     /* the directory containing the data */
     @Getter
     @Setter
-    private static String rootDirectory = "../../../../";
+    private static String rootDirectory = "./";
 
     /* the data file downloaded by the front clients */
     public static String getFrontSrcPath() {
-        return getRootDirectory() + "/front/src/data/data.zip";
+        return getRootDirectory() + "frontendData.zip";
     }
 
     /* one of the data files used by the server */
     public static String getBackDataFilePath() {
-        return getRootDirectory() + "/back/data/data/backendData.zip";
+        return getRootDirectory() + "backendData.zip";
     }
 
     public static String getSourceDataFilePath(String filename) {

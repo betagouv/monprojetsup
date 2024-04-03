@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.tools.server.MyService;
-import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.mail.AccountManagementEmails;
@@ -9,7 +9,7 @@ import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static fr.gouv.monprojetsup.app.tools.server.Helpers.LOGGER;
+import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
 
 @Service

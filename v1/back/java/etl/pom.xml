@@ -185,7 +185,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>fr.gouv.monprojetsup.ApplicationKt</mainClass>
+					<mainClass>fr.gouv.monprojetsup.etl.ApplicationEtlKt</mainClass>
 					<classifier>exec</classifier>
 					<excludes>
 						<exclude>
@@ -294,7 +294,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>fr.gouv.monprojetsup.ApplicationKt</mainClass>
+									<mainClass>fr.gouv.monprojetsup.etl.ApplicationEtlKt</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

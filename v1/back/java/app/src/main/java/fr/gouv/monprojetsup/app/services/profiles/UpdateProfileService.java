@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.app.services.profiles;
 
-import fr.gouv.monprojetsup.app.tools.server.MyService;
-import fr.gouv.monprojetsup.app.tools.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
-import static fr.gouv.monprojetsup.app.tools.server.Helpers.LOGGER;
+import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 
 @Service
 public class UpdateProfileService extends MyService<UpdateProfileService.Request, UpdateProfileService.Response> {

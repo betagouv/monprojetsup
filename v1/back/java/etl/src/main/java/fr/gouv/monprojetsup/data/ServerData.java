@@ -1,9 +1,7 @@
 package fr.gouv.monprojetsup.data;
 
+import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
-import fr.gouv.monprojetsup.data.model.eds.Attendus;
-import fr.gouv.monprojetsup.data.model.eds.EDSAggAnalysis;
-import fr.gouv.monprojetsup.data.model.eds.EDSAnalysis;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
@@ -15,8 +13,6 @@ import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,6 +69,8 @@ public class ServerData {
 
         if(dataLoaded) return;
 
+        DataServerConfig.load();
+
         log.info("Loading server data...");
 
         loadBackEndData();
@@ -105,6 +103,27 @@ public class ServerData {
         liensDomainesMetiers  = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
         dataLoaded = true;
+    }
+
+    private static void loadBackEndData() throws IOException {
+
+        BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
+
+        ServerData.onisepData = backendData.onisepData();
+
+        backPsupData = backendData.psupData();
+        backPsupData.cleanup();//should be useless but it does not harm...
+
+        backPsupData.formations().formations.values()
+                .forEach(f -> {
+                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
+                    filToFormations
+                            .computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new ArrayList<>())
+                            .add(f);
+                });
+
+        ServerData.cities = new CitiesBack(backendData.cities().cities());
+
     }
 
     private static Map<String, Set<String>> getLasToGtaMapping() {
@@ -148,6 +167,27 @@ public class ServerData {
     }
 
 
+    /* ************************************************************************
+    ************************* HELPERS to get labels associated with a key ***********************
+     */
+    public static String getLabel(String key) {
+        return ServerData.statistiques.labels.getOrDefault(
+                key,
+                ServerData.statistiques.nomsFilieres.get(key)
+        );
+    }
+
+    public static String getDebugLabel(String key) {
+        return getLabel(key) + " (" + key  + ")";
+    }
+
+    public static String getLabel(String key, String defaultValue) {
+        return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
+    }
+
+    /* ************************************************************************
+    ************************* HELPERS to determine type from key ***********************
+     */
     public static boolean isFiliere(@NotNull String key) {
         return key.startsWith(FILIERE_PREFIX)
                 || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
@@ -165,26 +205,6 @@ public class ServerData {
                 || key.startsWith(Constants.CENTRE_INTERETS_ROME);
     }
 
-    static void loadBackEndData() throws IOException {
-
-        BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
-
-        ServerData.onisepData = backendData.onisepData();
-
-        backPsupData = backendData.psupData();
-        backPsupData.cleanup();//should be useless but it does not harm...
-
-        backPsupData.formations().formations.values()
-                .forEach(f -> {
-                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
-                    filToFormations
-                            .computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new ArrayList<>())
-                            .add(f);
-                });
-
-        ServerData.cities = new CitiesBack(backendData.cities().cities());
-
-    }
 
     /*
     ***********************************************
@@ -206,12 +226,6 @@ public class ServerData {
                 g -> getDetailedGroupStats(finalBac, g)
         ));
     }
-
-    /**
-    Utilisé pour aire des stats
-     */
-
-
 
     /**
      * utilisé pour l'envoi des stats aux élèves
@@ -285,6 +299,11 @@ public class ServerData {
         }
     }
 
+    /**
+     * Get the list of formations for a filiere. Used by the suggestion service to compute foi (formations of interest).
+     * @param fl the filiere
+     * @return the list of formations
+     */
     public static List<Formation> getFormationsFromFil(String fl) {
         return filToFormations
                 .getOrDefault(fl, Collections.emptyList());
@@ -294,87 +313,6 @@ public class ServerData {
 
     }
 
-
-    public static EDSAggAnalysis getEDS(PsupData backPsupData, PsupStatistiques statistiques, Specialites specialites, boolean specifiques, boolean prettyPrint) {
-
-        EDSAggAnalysis analyses = new EDSAggAnalysis();
-
-        backPsupData.filActives().forEach(gFlCod -> {
-            String key = Constants.gFlCodToFrontId(gFlCod);
-            String gFlLib = statistiques.nomsFilieres.get(key);
-            if(gFlLib != null) {
-                String ppkey = prettyPrint ? ServerData.getDebugLabel(key) : key;
-                //les nbAdmisEDS
-                EDSAnalysis analysis = analyses.analyses().computeIfAbsent(ppkey, z -> new EDSAnalysis(
-                        gFlCod,
-                        gFlLib,
-                        backPsupData.getAttendus(gFlCod),
-                        backPsupData.getRecoPremGeneriques(gFlCod),
-                        backPsupData.getRecoTermGeneriques(gFlCod)
-                ));
-                Map<Integer, Integer> statsEds = statistiques.getStatsSpec(key);
-                if(statsEds != null) {
-                    statsEds.forEach((iMtCod, pct) -> {
-                        String name = specialites.specialites().get(iMtCod);
-                        if(name != null) {
-                            analysis.nbAdmisEDS().put(pct, name);
-                        }
-                    });
-                }
-                Map<Integer, Integer> statsEds2 = statistiques.getStatsSpecCandidats(key);
-                if(statsEds2 != null) {
-                    statsEds2.forEach((iMtCod, pct) -> {
-                        String name = specialites.specialites().get(iMtCod);
-                        if(name != null) {
-                            analysis.nbCandidatsEDS().put(pct, name);
-                        }
-                    });
-                }
-
-                if(specifiques) {
-                    //les messages
-                    //on aggrege tous les codes jurys de la filiere
-                    List<Integer> gTaCods = getFormationsFromFil(key).stream().map(f -> f.gTaCod).toList();
-                    Set<String> juryCodes = backPsupData.getJuryCodesFromGTaCods(gTaCods);
-                    analysis.recosScoPremSpecifiques().putAll(backPsupData.getRecoScoPremiere(juryCodes));
-                    analysis.recosScoTermSpecifiques().putAll(backPsupData.getRecoScoTerminale(juryCodes));
-                }
-            }
-        });
-        return analyses;
-    }
-
-    public static Map<String, Attendus> getEDSSimple(PsupData psupData, PsupStatistiques data, Specialites specs, boolean specifiques) {
-        EDSAggAnalysis eds = getEDS(psupData, data, specs, specifiques, false);
-        return eds.getFrontData();
-    }
-
-
-    public static String getLabel(String key) {
-        return ServerData.statistiques.labels.getOrDefault(
-                key,
-                ServerData.statistiques.nomsFilieres.get(key)
-        );
-    }
-
-    public static String getDebugLabel(String key) {
-        return getLabel(key) + " (" + key  + ")";
-    }
-
-    public static String getLabel(String key, String defaultValue) {
-        return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
-    }
-
-    private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
-    public static @Nullable String getFlCodFromLabel(String expectation) {
-        return
-                statistiques.labels.entrySet().stream()
-                        .map(e -> Pair.of(e.getKey(), levenAlgo.apply(e.getValue(), expectation)))
-                        .filter(e -> e.getRight() >= 0)
-                        .min(Comparator.comparingInt(Pair::getRight))
-                        .map(Pair::getLeft)
-                        .orElse(null);
-    }
 
 }
 
