@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const pages = ["/", "/articles"];
+const pages = ["/", "/inscription/projet"];
 
 for (const testedPage of pages) {
   test(`la page "${testedPage}" valide tous les tests d'accessibilité`, async ({ page }) => {
