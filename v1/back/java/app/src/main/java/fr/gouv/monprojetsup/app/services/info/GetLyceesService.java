@@ -1,19 +1,19 @@
-package fr.gouv.monprojetsup.data.service;
+package fr.gouv.monprojetsup.app.services.info;
 
-import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.model.Lycee;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GetLyceesService extends MyService<MyService.EmptyRequest, GetLyceesService.Response> {
+public class GetLyceesService extends fr.gouv.monprojetsup.data.services.MyService<Server.EmptyRequest, GetLyceesService.Response> {
 
     public GetLyceesService() {
-        super(EmptyRequest.class);
+        super(Server.EmptyRequest.class);
     }
 
     public record Response(
@@ -25,7 +25,7 @@ public class GetLyceesService extends MyService<MyService.EmptyRequest, GetLycee
 
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull EmptyRequest req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull Server.EmptyRequest req) throws Exception {
         return new Response(WebServer.db().getLycees());
     }
 

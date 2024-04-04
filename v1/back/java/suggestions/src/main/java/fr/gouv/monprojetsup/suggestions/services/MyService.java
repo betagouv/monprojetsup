@@ -1,12 +1,10 @@
-package fr.gouv.monprojetsup.suggestions.server;
+package fr.gouv.monprojetsup.suggestions.services;
 
-import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import fr.gouv.monprojetsup.common.server.ErrorResponse;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.common.server.MyServiceException;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.suggestions.server.Exceptions;
+import fr.gouv.monprojetsup.suggestions.server.Log;
+import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.Objects;
 
 @Slf4j
@@ -70,5 +67,9 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
         }
     }
 
+    @Override
+    protected boolean isServerReady() {
+        return SuggestionServer.isReady();
+    }
 
 }

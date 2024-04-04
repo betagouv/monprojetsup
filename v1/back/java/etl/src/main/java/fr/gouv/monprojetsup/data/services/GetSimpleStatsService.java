@@ -1,5 +1,6 @@
-package fr.gouv.monprojetsup.data.service;
+package fr.gouv.monprojetsup.data.services;
 
+import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import org.jetbrains.annotations.NotNull;

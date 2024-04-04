@@ -33,6 +33,7 @@ export const addMessage = profile_services.addMessage;
 
 export const getExplanations = suggestions_services.getExplanations;
 export const getSuggestions = suggestions_services.getSuggestions;
+export const getStats = suggestions_services.getStats;
 export const getFormationsOfInterest =
   suggestions_services.getFormationsOfInterest;
 
@@ -46,10 +47,6 @@ export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
 export const validateAccount = account_services.validateAccount;
 export const joinGroup = account_services.joinGroup;
-
-/*************** PUBLIC INFO ******************* */
-
-export const getStats = public_info_services.getStats;
 
 /**************** TEACHER SERVICES ************* */
 export const updateAdminInfos = teacher_services.getAdminInfos;

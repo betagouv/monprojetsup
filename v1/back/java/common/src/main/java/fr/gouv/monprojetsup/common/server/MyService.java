@@ -3,21 +3,14 @@ package fr.gouv.monprojetsup.common.server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import fr.gouv.monprojetsup.common.server.ErrorResponse;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.common.server.MyServiceException;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -29,7 +22,7 @@ public abstract class MyService<T,U> implements HttpHandler {
         this.classT = classT;
     }
 
-    protected abstract boolean isServerInitialized();
+    protected abstract boolean isServerReady();
 
     /* we synchronized it to avoid the strange bug */
     @Override
@@ -37,7 +30,7 @@ public abstract class MyService<T,U> implements HttpHandler {
         T req = null;
         try {
             req = extractRequest(exchange);
-            if(!isServerInitialized()) {
+            if(!isServerReady()) {
                 throw new ServerStartingException();
             }
             U ans = handleRequest(req);

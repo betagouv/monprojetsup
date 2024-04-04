@@ -1,18 +1,23 @@
 package fr.gouv.monprojetsup.suggestions.controllers
 
+import fr.gouv.monprojetsup.data.ServerData
+import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
+import org.jetbrains.annotations.NotNull
+import org.springframework.context.annotation.Bean
 import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("$BASE_PATH/public")
+@RequestMapping("$BASE_PATH")
 class SuggestionsControllerz(
     private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
-    private val getSuggestionsService: GetSuggestionsService
+    private val getSuggestionsService: GetSuggestionsService,
+    private val getSimpleStatsService: GetSimpleStatsService
 ) {
     @PostMapping("/explanations")
     fun getExplanationsAndExamples(@RequestBody request : GetExplanationsAndExamplesService.Request ): GetExplanationsAndExamplesService.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
@@ -27,15 +32,17 @@ class SuggestionsControllerz(
 
     @GetMapping("/stats")
     fun getStats(
-        @RequestParam("bac")  bac: String,
-        @RequestParam("key")  key: String
+        @RequestParam("key")  key: String,
+        @RequestParam("bac", required = false)  bac: String?
     ): GetSimpleStatsService.Response {
         return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key));
     }
 
-    @PostMapping("/label")
-    fun getLabel(@RequestBody request : GetSuggestionsService.Request): GetSuggestionsService.Response {
-        return getSuggestionsService.handleRequestAndExceptions(request)
+    @GetMapping("/label")
+    fun getLabel(
+        @RequestParam("key")  @NotNull key: String
+    ): @NotNull String {
+        return ServerData.getLabel(key, key)
     }
 
     @GetMapping("/ping")
@@ -44,3 +51,5 @@ class SuggestionsControllerz(
     }
 
 }
+
+
