@@ -1,0 +1,93 @@
+<div class="fr-container fr-container--fluid inscription-screen">
+  <h2 class="fr-title">
+    <span
+      class="fr-icon-arrow-right-line fr-icon--lg"
+      aria-hidden="true"
+    ></span>
+    Rejoindre MonProjetSup
+  </h2>
+  <form action="">
+    <fieldset
+      class="fr-fieldset"
+      aria-labelledby="undefined-legend undefined-messages"
+    >
+      <legend class="fr-fieldset__legend">Mon Profil</legend>
+
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="fr-radio-group fr-radio-rich">
+          <input
+            type="radio"
+            id="radio-create-account-lyceen"
+            name="radio-rich-inline"
+          />
+          <label class="fr-label" for="radio-create-account-lyceen">
+            Lycéen
+          </label>
+          <div class="fr-radio-rich__img">
+            <img src="/img/user.svg" alt="" />
+            <!-- L’alternative de l’image (attribut alt) doit toujours être présente, sa valeur peut-être vide (image n’apportant pas de sens supplémentaire au contexte) ou non (porteuse de texte ou apportant du sens) selon votre contexte -->
+          </div>
+        </div>
+      </div>
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="fr-radio-group fr-radio-rich">
+          <input
+            type="radio"
+            id="radio-create-account-prof"
+            name="radio-rich-inline"
+          />
+          <label class="fr-label" for="radio-create-account-prof">
+            Equipe éducative
+          </label>
+          <div class="fr-radio-rich__img">
+            <img src="/img/book.svg" alt="" />
+            <!-- L’alternative de l’image (attribut alt) doit toujours être présente, sa valeur peut-être vide (image n’apportant pas de sens supplémentaire au contexte) ou non (porteuse de texte ou apportant du sens) selon votre contexte -->
+          </div>
+        </div>
+      </div>
+      <div
+        class="fr-messages-group"
+        id="inscription1-messages"
+        aria-live="polite"
+      ></div>
+
+      <div class="fr-fieldset__element">
+        <div class="fr-input-group" id="input-group-6213">
+          <label class="fr-label" for="undefined-1"> Code d'accès </label>
+          <input
+            class="fr-input"
+            aria-describedby="createAccount-messages"
+            name="undefined"
+            id="inputCreateAccountCodeAcces"
+            type="text"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+          />
+          <div
+            class="fr-messages-group"
+            id="createAccount-code-acces-messages"
+            aria-live="polite"
+          ></div>
+        </div>
+      </div>
+      <div
+        class="fr-messages-group"
+        id="undefined-messages"
+        aria-live="polite"
+      ></div>
+    </fieldset>
+  </form>
+  <div class="button-container">
+    <button
+      aria-controls="modal-create-account"
+      class="fr-btn fr-btn--secondary left"
+      id="backButton"
+    >
+      Retour
+    </button>
+    <button class="fr-btn right" id="nextButton" title="Continuer">
+      Continuer
+    </button>
+  </div>
+</div>
