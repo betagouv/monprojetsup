@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ONISEP;
 import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ROME;
 import static fr.gouv.monprojetsup.data.ServerData.*;
-import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.*;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
 

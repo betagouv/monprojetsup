@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.common.dto.ProfileDTO;
@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.useRemoteUrl;
-import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.callSuggestionsService;
-import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.getExplanationsAndExamples;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.useRemoteUrl;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.callSuggestionsService;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.getExplanationsAndExamples;
 
 @Slf4j
 public class StressTest {

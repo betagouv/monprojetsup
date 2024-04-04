@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.suggestions.analysis;
 
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.eval.ReferenceCases.ReferenceCase.useRemoteUrl;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.useRemoteUrl;
 
 public class Simulate {
 

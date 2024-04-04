@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.perfs;
+package fr.gouv.monprojetsup.app.analysis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.reflect.TypeToken;
@@ -46,6 +46,8 @@ public class AnalyzeUserBehaviour {
 
         List<ServerTrace> allTraces = Collections.synchronizedList(new ArrayList<>());
 
+        analyseWordSearch(allTraces);
+
         Arrays.stream(Objects.requireNonNull(new File(directory).listFiles())).parallel()
                 .filter(f -> f.getName().startsWith("traces"))
                 .filter(f -> f.getName().endsWith(".json"))
@@ -62,6 +64,15 @@ public class AnalyzeUserBehaviour {
 
 
         analyze(groups.getGroups(), usersOfInterest, allTraces);
+    }
+
+    private static void analyseWordSearch(List<ServerTrace> allTraces) throws IOException {
+        Map<String, Long> searches = allTraces.stream()
+                .filter(st -> st.event() != null && st.event().contains("searching "))
+                .map(st -> st.event().substring(st.event().indexOf("searching ")))
+                .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+
+        Serialisation.toJsonFile("searches.json", searches, true);
     }
 
     public static void analyze(

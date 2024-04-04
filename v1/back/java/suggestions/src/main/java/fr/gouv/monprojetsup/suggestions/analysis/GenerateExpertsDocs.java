@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.eval;
+package fr.gouv.monprojetsup.suggestions.analysis;
 
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
@@ -11,8 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.suggestions.eval.Simulate.LOGGER;
-import static fr.gouv.monprojetsup.suggestions.eval.Simulate.REF_CASES_WITH_SUGGESTIONS;
+import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
+import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
 public class GenerateExpertsDocs {
 

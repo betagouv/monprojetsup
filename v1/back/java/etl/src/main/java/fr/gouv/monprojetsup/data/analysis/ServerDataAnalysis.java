@@ -60,9 +60,9 @@ public class ServerDataAnalysis {
 
         ServerData.load();
 
-        exportDeltaWithBillyCorr();
-
         exportFrontDatasToCsvForDescriptifsImprovements();
+
+        exportDeltaWithBillyCorr();
 
         exportLiensDomainesMetiers();
 
