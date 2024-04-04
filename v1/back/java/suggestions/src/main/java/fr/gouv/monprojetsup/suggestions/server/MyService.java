@@ -21,50 +21,16 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-public abstract class MyService<T,U> implements HttpHandler {
-
-    private final Type classT;
+public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.MyService<T,U> {
 
     protected MyService(@NotNull Type classT) {
-       this.classT = classT;
-    }
-
-    /* we synchronized it to avoid the strange bug */
-    @Override
-    public synchronized void handle(@NotNull HttpExchange exchange) {
-        T req = null;
-        try {
-            req = extractRequest(exchange);
-            if(!SuggestionServer.isInitialized()) {
-                throw new Exceptions.ServerStartingException();
-            }
-            U ans = handleRequest(req);
-            Helpers.write(ans, exchange);
-        } catch (Exception e) {
-            try {
-                URI uri = exchange.getRequestURI();
-                ErrorResponse response = handleException(e, req, uri == null ? null : uri.toString() );
-                Helpers.write(response, exchange);
-            }  catch (Exception ignored) {
-                //ignored
-            }
-        }
+       super(classT);
     }
 
     protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
 
-    private @NotNull T extractRequest(@NotNull HttpExchange t) throws IOException {
-        String buffer = Helpers.getSanitizedBuffer(t);
-        try {
-            T req = new Gson().fromJson(buffer, classT);
-            if (req == null) throw new RuntimeException(Helpers.NULL_DATA);
-            return req;
-        } catch (Exception e) {
-            throw new RuntimeException("extractRequest failed on buffer " + (buffer == null ? "null" : buffer), e);
-        }
-    }
-
-    public static ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+    @Override
+    public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,
@@ -90,15 +56,6 @@ public abstract class MyService<T,U> implements HttpHandler {
                 e.printStackTrace(new PrintWriter(out));
                 if (o != null) {
                     String buffer = o.toString();
-                    int i = buffer.indexOf("password=");
-                    if (i >= 0) {
-                        int j = buffer.indexOf(",", i);
-                        if (j >= 0) {
-                            buffer = buffer.substring(0, i) + "password=***" + buffer.substring(j);
-                        } else {
-                            buffer = buffer.substring(0, i) + "password=***";
-                        }
-                    }
                     out.append(buffer).append(System.lineSeparator());
                 }
 
@@ -110,14 +67,6 @@ public abstract class MyService<T,U> implements HttpHandler {
                         error
                 ));
             }
-        }
-    }
-
-    public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
-        try {
-            return handleRequest(req);
-        } catch (Exception e) {
-            throw new MyServiceException(e, req);
         }
     }
 

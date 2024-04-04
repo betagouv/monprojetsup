@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
-import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.services.accounts.*
+import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -68,7 +68,7 @@ class AuthenticatedAccountController(
 
 
     @PostMapping("/disconnect")
-    fun disconnect(@RequestBody request: MyService.BasicRequest): DisconnectService.Response {
+    fun disconnect(@RequestBody request: Server.BasicRequest): DisconnectService.Response {
         return disconnectService.handleRequestAndExceptions(request)
     }
 

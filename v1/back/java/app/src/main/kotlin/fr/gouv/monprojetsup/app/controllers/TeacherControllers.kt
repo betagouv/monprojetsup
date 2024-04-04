@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
-import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.services.teacher.*
+import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,7 +22,7 @@ class TeacherControllers(
 
 
     @PostMapping("/groups/list")
-    fun getGroupInfos(@RequestBody request: MyService.BasicRequest): GetAdminInfosService.Response {
+    fun getGroupInfos(@RequestBody request: Server.BasicRequest): GetAdminInfosService.Response {
         return getAdminInfosService.handleRequestAndExceptions(request)
     }
 
@@ -47,7 +47,7 @@ class TeacherControllers(
     }
 
     @PostMapping("/role")
-    fun switchRole(@RequestBody request: SwitchRoleService.Request): MyService.BasicResponse {
+    fun switchRole(@RequestBody request: SwitchRoleService.Request): Server.BasicResponse {
         return switchRoleService.handleRequestAndExceptions(request)
     }
 

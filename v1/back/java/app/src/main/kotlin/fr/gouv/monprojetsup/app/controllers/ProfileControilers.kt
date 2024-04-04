@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
-import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.services.profiles.AddMessageService
 import fr.gouv.monprojetsup.app.services.profiles.GetMessagesService
 import fr.gouv.monprojetsup.app.services.profiles.GetMyProfileService
 import fr.gouv.monprojetsup.app.services.profiles.UpdateProfileService
+import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -18,7 +18,7 @@ class ProfileControilers(
     ) {
 
     @PostMapping("/get")
-    fun getProfile(@RequestBody request: MyService.BasicRequest): GetMyProfileService.Response {
+    fun getProfile(@RequestBody request: Server.BasicRequest): GetMyProfileService.Response {
         return getMyProfileService.handleRequestAndExceptions(request)
     }
 

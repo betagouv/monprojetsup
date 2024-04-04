@@ -1,9 +1,7 @@
-package fr.gouv.monprojetsup.app.services.info;
+package fr.gouv.monprojetsup.data.service;
 
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;

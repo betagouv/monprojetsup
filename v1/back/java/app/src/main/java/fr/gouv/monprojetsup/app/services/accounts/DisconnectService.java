@@ -4,16 +4,17 @@ import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.log.Log;
+import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import static fr.gouv.monprojetsup.app.db.DB.authenticator;
 
 @Service
-public class DisconnectService extends MyService<MyService.BasicRequest, DisconnectService.Response> {
+public class DisconnectService extends MyService<Server.BasicRequest, DisconnectService.Response> {
 
     public DisconnectService() {
-        super(MyService.BasicRequest.class);
+        super(Server.BasicRequest.class);
     }
 
 
@@ -24,7 +25,7 @@ public class DisconnectService extends MyService<MyService.BasicRequest, Disconn
     }
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull MyService.BasicRequest req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull Server.BasicRequest req) throws Exception {
         authenticator.tokenAuthenticate(req.login(), req.token());
         Log.logTrace(req.login(), "logout");
         try {

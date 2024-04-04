@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.app.services.info;
+package fr.gouv.monprojetsup.data.service;
 
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.model.Lycee;

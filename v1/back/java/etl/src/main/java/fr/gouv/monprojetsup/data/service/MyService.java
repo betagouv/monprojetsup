@@ -1,11 +1,8 @@
-package fr.gouv.monprojetsup.app.server;
+package fr.gouv.monprojetsup.data.service;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import fr.gouv.monprojetsup.app.db.DBExceptions;
-import fr.gouv.monprojetsup.common.server.ServerStartingException;
-import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.common.server.ErrorResponse;
 import fr.gouv.monprojetsup.common.server.Helpers;
 import fr.gouv.monprojetsup.common.server.MyServiceException;
@@ -24,15 +21,50 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.MyService<T,U> {
+public abstract class MyService<T,U> implements HttpHandler {
 
+    private final Type classT;
 
     protected MyService(@NotNull Type classT) {
-        super(classT);
+       this.classT = classT;
     }
 
+    /* we synchronized it to avoid the strange bug */
     @Override
-    public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+    public synchronized void handle(@NotNull HttpExchange exchange) {
+        T req = null;
+        try {
+            req = extractRequest(exchange);
+            if(!SuggestionServer.isInitialized()) {
+                throw new Exceptions.ServerStartingException();
+            }
+            U ans = handleRequest(req);
+            Helpers.write(ans, exchange);
+        } catch (Exception e) {
+            try {
+                URI uri = exchange.getRequestURI();
+                ErrorResponse response = handleException(e, req, uri == null ? null : uri.toString() );
+                Helpers.write(response, exchange);
+            }  catch (Exception ignored) {
+                //ignored
+            }
+        }
+    }
+
+    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
+
+    private @NotNull T extractRequest(@NotNull HttpExchange t) throws IOException {
+        String buffer = Helpers.getSanitizedBuffer(t);
+        try {
+            T req = new Gson().fromJson(buffer, classT);
+            if (req == null) throw new RuntimeException(Helpers.NULL_DATA);
+            return req;
+        } catch (Exception e) {
+            throw new RuntimeException("extractRequest failed on buffer " + (buffer == null ? "null" : buffer), e);
+        }
+    }
+
+    public static ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,
@@ -40,7 +72,7 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
             ));
         }
         Log.logTrace("handleException", e.getMessage());
-        if (e instanceof DBExceptions.UserInputException) {
+        if (e instanceof Exceptions.UserInputException) {
             Log.logBackError(e);
             //for those we do not include the stacktrace in the message
             return new ErrorResponse(new ResponseHeader(
@@ -73,7 +105,6 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
                 String error = out.toString();
                 log.warn(error);
                 error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
-                Log.logBackError(error);
                 return new ErrorResponse(new ResponseHeader(
                         ResponseHeader.SERVER_ERROR,
                         error
@@ -82,9 +113,13 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
         }
     }
 
-    @Override
-    protected boolean isServerInitialized() {
-        return WebServer.isInitialized();
+    public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
+        try {
+            return handleRequest(req);
+        } catch (Exception e) {
+            throw new MyServiceException(e, req);
+        }
     }
+
 
 }

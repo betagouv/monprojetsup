@@ -5,11 +5,12 @@ import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SwitchRoleService extends MyService<SwitchRoleService.Request, MyService.BasicResponse> {
+public class SwitchRoleService extends MyService<SwitchRoleService.Request, Server.BasicResponse> {
 
     public SwitchRoleService() {
         super(Request.class);
@@ -24,7 +25,7 @@ public class SwitchRoleService extends MyService<SwitchRoleService.Request, MySe
     }
 
     @Override
-    public @NotNull MyService.BasicResponse handleRequest(Request req) throws Exception {
+    public @NotNull Server.BasicResponse handleRequest(Request req) throws Exception {
         DB.authenticator.tokenAuthenticate(req.login(), req.token());
 
         String role = req.role;
@@ -39,7 +40,7 @@ public class SwitchRoleService extends MyService<SwitchRoleService.Request, MySe
         String userMessage = pp ? "Vous êtes repassé en mode référent"
                 : "Vous êtes temporairement passé en mode lycéen.";
 
-        return new MyService.BasicResponse(
+        return new Server.BasicResponse(
                 new ResponseHeader(userMessage)
         );
 

@@ -25,6 +25,19 @@ class SuggestionsControllerz(
         return getSuggestionsService.handleRequestAndExceptions(request)
     }
 
+    @GetMapping("/stats")
+    fun getStats(
+        @RequestParam("bac")  bac: String,
+        @RequestParam("key")  key: String
+    ): GetSimpleStatsService.Response {
+        return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key));
+    }
+
+    @PostMapping("/label")
+    fun getLabel(@RequestBody request : GetSuggestionsService.Request): GetSuggestionsService.Response {
+        return getSuggestionsService.handleRequestAndExceptions(request)
+    }
+
     @GetMapping("/ping")
     fun getPong(): String {
         return getSuggestionsService.checkHealth()

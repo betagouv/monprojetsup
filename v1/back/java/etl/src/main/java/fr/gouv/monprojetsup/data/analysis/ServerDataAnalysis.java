@@ -55,7 +55,6 @@ public class ServerDataAnalysis {
 
         DataServerConfig.load();
 
-
         compareActionsFormations();
 
         ServerData.load();
