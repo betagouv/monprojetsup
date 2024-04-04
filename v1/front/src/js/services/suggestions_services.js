@@ -1,4 +1,4 @@
-import { postToSpringService } from "./api/call_service";
+import { postToSpringService, getFromSpringService } from "./api/call_service";
 
 export function getExplanations(profile, key, onSuccess = null) {
   postToSpringService(
@@ -23,12 +23,12 @@ export function getSuggestions(profile, onSuccess) {
   );
 }
 
-export function getStats(key, bac, onSuccess) {
-  postToSpringService(
+export function getStats(bac, key, onSuccess = null) {
+  getFromSpringService(
     "stats",
     {
-      key: key,
       bac: bac,
+      key: key,
     },
     onSuccess,
     true

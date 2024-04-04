@@ -8,7 +8,6 @@ import { postToSpringService } from "./api/call_service";
 import * as profile_services from "./profile_services";
 import * as account_services from "./account_services";
 import * as suggestions_services from "./suggestions_services";
-import * as public_info_services from "./public_info_services";
 import * as teacher_services from "./teacher_services";
 import * as admin_services from "./admin_services";
 
