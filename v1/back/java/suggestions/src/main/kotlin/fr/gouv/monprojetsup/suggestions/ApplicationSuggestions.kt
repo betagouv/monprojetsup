@@ -1,9 +1,18 @@
 package fr.gouv.monprojetsup.suggestions
 
+import fr.gouv.monprojetsup.common.server.MyServiceException
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
 import fr.gouv.monprojetsup.common.server.WritePidToFile
+import jakarta.servlet.http.HttpServletRequest
+import jdk.jshell.spi.ExecutionControl
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.badRequest
+import org.springframework.http.ResponseEntity.internalServerError
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 
 /**
@@ -35,3 +44,17 @@ fun main(args: Array<String>) {
 	webServer.init()
 
 }
+
+@ControllerAdvice
+class RestExceptionHandler : ResponseEntityExceptionHandler() {
+
+	@ExceptionHandler(Exception::class)
+	protected fun handleException(
+		e: Exception,
+		httpServletRequest: HttpServletRequest
+	): ResponseEntity<Any> {
+		return if(e is MyServiceException) internalServerError().body(e.message)
+		else badRequest().body(e.message)
+	}
+}
+

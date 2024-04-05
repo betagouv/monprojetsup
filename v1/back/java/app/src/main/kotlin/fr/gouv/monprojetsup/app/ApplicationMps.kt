@@ -1,10 +1,12 @@
 package fr.gouv.monprojetsup.app
 
+
 import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.server.WebServer
 import fr.gouv.monprojetsup.common.server.MyServiceException
 import fr.gouv.monprojetsup.common.server.WritePidToFile
 import jakarta.servlet.http.HttpServletRequest
+import jdk.jshell.spi.ExecutionControl.UserException
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
@@ -48,14 +50,14 @@ fun main(args: Array<String>) {
 @ControllerAdvice
 class RestExceptionHandler : ResponseEntityExceptionHandler() {
 
+
     //this is thrown by MyService.handleRequestAndExceptions
     @ExceptionHandler(MyServiceException::class)
     protected fun handleMyServiceException(
         e: MyServiceException,
         httpServletRequest: HttpServletRequest
     ): ResponseEntity<Any> {
-        val response = MyService.handleException(e.cause, e.request, httpServletRequest.requestURI)
-        return ResponseEntity.ok().body(response)
+        return ResponseEntity.internalServerError().body(e.message)
     }
 
 }

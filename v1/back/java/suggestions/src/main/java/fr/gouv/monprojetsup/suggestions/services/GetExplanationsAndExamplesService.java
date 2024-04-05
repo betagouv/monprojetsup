@@ -2,10 +2,10 @@ package fr.gouv.monprojetsup.suggestions.services;
 
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
-import fr.gouv.monprojetsup.suggestions.server.MyService;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,9 @@ public class GetExplanationsAndExamplesService extends MyService<GetExplanations
 
     public record Request(
         @NotNull ProfileDTO profile,
-        @NotNull String key) {
+        @Schema(name = "key", example = "fl2014", description = "clé de la formation", required = true)
+        @NotNull String key
+    ) {
     }
 
     public record Response(

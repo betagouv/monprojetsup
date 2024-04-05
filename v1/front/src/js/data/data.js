@@ -239,6 +239,11 @@ export function getAnonymousProfile() {
   const profile = getProfile();
   console.log("profile", profile);
   console.log("profileFields", data.profileFields);
+  const mapChoices = profile.choices;
+  profile.choices = Object.values(mapChoices);
+  profile.interests = Object.entries(profile.scores)
+    .filter((e) => e[1] > 0)
+    .map((e) => e[0]);
   const profileAnonymous = Object.fromEntries(
     Object.entries(profile).filter((x) => data.profileFields.has(x[0]))
   );
@@ -873,13 +878,7 @@ export function getParcoursupSearchAdress(groups, searchBanner, gtas = []) {
 }
 
 export function getStats(statsAll, bac) {
-  const stats = statsAll
-    ? statsAll.stat
-      ? statsAll.stat.stats
-        ? statsAll.stat.stats
-        : null
-      : null
-    : null;
+  const stats = statsAll ? (statsAll.stats ? statsAll.stats : null) : null;
   let statsTousBacs = null;
   if (stats && stats[tousBacs]) statsTousBacs = stats[tousBacs];
   let statsBac = null;

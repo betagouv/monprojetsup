@@ -68,8 +68,7 @@ From within a temporary working directory, typically `monprojetsup/back/java/tmp
 `mvn clean compile exec:java -f../suggestions/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.ApplicationSuggestionsKt`
 
 
-### Start the app
-
+### Start the app 
 
 From within a temporary working directory, typically `monprojetsup/back/java/tmp`.
 

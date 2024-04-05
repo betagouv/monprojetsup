@@ -55,14 +55,13 @@ public class ServerDataAnalysis {
 
         DataServerConfig.load();
 
-
         compareActionsFormations();
 
         ServerData.load();
 
-        exportDeltaWithBillyCorr();
-
         exportFrontDatasToCsvForDescriptifsImprovements();
+
+        exportDeltaWithBillyCorr();
 
         exportLiensDomainesMetiers();
 

@@ -1,8 +1,8 @@
-import { postToSpringService } from "./api/call_service";
+import { postToSpringService, getFromSpringService } from "./api/call_service";
 
 export function getExplanations(profile, key, onSuccess = null) {
   postToSpringService(
-    "public/explanations",
+    "explanations",
     {
       profile: profile,
       key: key,
@@ -14,7 +14,7 @@ export function getExplanations(profile, key, onSuccess = null) {
 
 export function getSuggestions(profile, onSuccess) {
   postToSpringService(
-    "public/suggestions",
+    "suggestions",
     {
       profile: profile,
     },
@@ -23,9 +23,21 @@ export function getSuggestions(profile, onSuccess) {
   );
 }
 
+export function getStats(bac, key, onSuccess = null) {
+  getFromSpringService(
+    "stats",
+    {
+      bac: bac,
+      key: key,
+    },
+    onSuccess,
+    true
+  );
+}
+
 export function getFormationsOfInterest(geo_pref, keys, onSuccess = null) {
   postToSpringService(
-    "public/foi",
+    "foi",
     {
       geo_pref: geo_pref,
       keys: keys,

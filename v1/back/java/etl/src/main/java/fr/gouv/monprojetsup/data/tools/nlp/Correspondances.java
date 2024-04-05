@@ -28,7 +28,7 @@ record Match(String word, Integer weight){}
 
 public class Correspondances {
     public final Map<String, List<Match>> links;
-    //Rather a map from string (user input) to list of strings + scores (correspondances)
+    //Rather a map from string (user input) to list of strings + interests (correspondances)
     public Correspondances() throws IOException {
         this.links = getLinks(
                 getNonFilteredWords(),

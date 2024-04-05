@@ -39,14 +39,6 @@ public class DBExceptions {
     }
 
 
-    public static class ServerStartingException extends UserInputException {
-
-        public ServerStartingException() {
-            super("Service en cours de démarrage, veuillez réessayer dans quelques secondes");
-        }
-
-    }
-
     public static class UnknownGroupException extends ModelException {
         public UnknownGroupException() {
             super("Groupe inconnu.");

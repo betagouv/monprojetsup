@@ -16,7 +16,7 @@ public class SuggestionServer extends Server {
     @Getter
     private static SuggestionsServerConfig config;
 
-    public static boolean isInitialized() {
+    public static boolean isReady() {
         return true;
     }
 

@@ -1,15 +1,16 @@
 import { i18n } from "@/configuration/i18n/i18n";
+import { type router } from "@/configuration/lib/tanstack-router";
 import { Link } from "@tanstack/react-router";
 
 const Navigation = () => {
-  const pages = [
+  const pages: Array<{ titre: string; href: keyof (typeof router)["routesByPath"] }> = [
     {
-      title: i18n.PAGE_ACCUEIL.TITLE,
-      to: "/",
+      titre: i18n.PAGE_ACCUEIL.TITLE,
+      href: "/",
     },
     {
-      title: i18n.PAGE_ARTICLES.TITLE,
-      to: "/articles/",
+      titre: "Inscription",
+      href: "/inscription/projet",
     },
   ];
 
@@ -23,10 +24,10 @@ const Navigation = () => {
         <button
           aria-controls="navigation-modal"
           className="fr-btn--close fr-btn"
-          title={i18n.GENERIC.CLOSE}
+          title={i18n.COMMUN.FERMER}
           type="button"
         >
-          {i18n.GENERIC.CLOSE}
+          {i18n.COMMUN.FERMER}
         </button>
         <div className="fr-header__menu-links" />
         <nav
@@ -39,15 +40,15 @@ const Navigation = () => {
             {pages.map((page) => (
               <li
                 className="fr-nav__item"
-                key={page.to}
+                key={page.href}
               >
                 <Link
                   activeProps={{ "aria-current": "page" }}
                   className="fr-nav__link"
                   target="_self"
-                  to={page.to}
+                  to={page.href}
                 >
-                  {page.title}
+                  {page.titre}
                 </Link>
               </li>
             ))}

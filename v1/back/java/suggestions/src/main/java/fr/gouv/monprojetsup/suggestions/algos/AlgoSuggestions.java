@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
@@ -74,11 +75,11 @@ public class AlgoSuggestions {
             LOGGER.info("Nothing personal in the profile, serving nothing.");
             return new Suggestions();
         }
-        //computing scores of all alive filieres
+        //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
         Map<String, Double> filieresScores = new HashMap<>();
 
-        /* première passe pour calculer les scores */
+        /* première passe pour calculer les interests */
         backPsupData.filActives().forEach(gFlCod -> {
             String fl = FILIERE_PREFIX + gFlCod;
             // the core computation
@@ -90,7 +91,7 @@ public class AlgoSuggestions {
         });
 
         if(filieresScores.isEmpty()) {
-            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les scores des filières à 0 sur un un profil contenant des éléments personnesl"
+            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les interests des filières à 0 sur un un profil contenant des éléments personnesl"
                     + new Gson().toJson(pf.cleanupDates())
             );
         }
@@ -102,7 +103,7 @@ public class AlgoSuggestions {
         List<Suggestion> filiereSuggs = getFilieresSuggestions(filieresScores, cfg);
 
         if(filiereSuggs.isEmpty()  && !filieresScores.isEmpty()) {
-            Log.logBackError("Pas de suggestion de filiere sur un un profil contenant des éléments personnesl et des scores filieres non vide"
+            Log.logBackError("Pas de suggestion de filiere sur un un profil contenant des éléments personnesl et des interests filieres non vide"
                     + new Gson().toJson(pf.cleanupDates())
             );
         }
@@ -117,7 +118,7 @@ public class AlgoSuggestions {
                         cfg.maxNbSuggestions()
                 );
         if(metiersSuggestions.isEmpty()) {
-            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les scores des metiers à 0 sur le profil " + new Gson().toJson(pf.cleanupDates()));
+            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les interests des metiers à 0 sur le profil " + new Gson().toJson(pf.cleanupDates()));
         }
         //LOGGER.info(metiersSuggestions.size() + " metiers suggestions");
 
@@ -145,6 +146,71 @@ public class AlgoSuggestions {
 
 
     /**
+     * Get affinities associated to a profile.
+     *
+     * @param pf the profile
+     * @param cfg the config
+     * @return the affinities
+     */
+    public static Map<String, Double> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg) {
+        counter.getAndIncrement();
+        //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
+        if(containsNothingPersonal(pf)) {
+            LOGGER.info("Nothing personal in the profile, serving nothing.");
+            return Map.of();
+        }
+        //computing interests of all alive filieres
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
+
+        Map<String, Double> affnites = backPsupData.filActives().stream()
+                .map(flCod -> gFlCodToFrontId(flCod))
+                .collect(Collectors.toMap(
+                        fl -> fl,
+                        affinityEvaluator::getAffinityEvaluation,
+                        (x, y) -> x,
+                        TreeMap::new
+                ));
+        affnites.values().removeIf(x -> x <= NO_MATCH_SCORE);
+        if(affnites.isEmpty()) return affnites;
+
+        //computing maximal score for etalonnage
+        double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
+
+        //remove from the result the filieres that already appear in the profile
+        affnites.keySet().removeAll(pf.suggRejected().stream().map(SuggestionDTO::fl).toList());
+
+        //rounding to 6 digits
+        affnites.entrySet().forEach(e -> e.setValue(Math.max(0.0, Math.min(1.0, (double) Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
+        return affnites;
+    }
+
+
+    /**
+     * Sort metiers by affinities
+     * @param pf the profile
+     * @param cles the keys
+     * @param cfg the config
+     * @return the sorted metiers. Best first in the list, then second best and so on...
+     */
+    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @NotNull List<String> cles, @NotNull Config cfg) {
+        counter.getAndIncrement();
+        //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
+
+        if(containsNothingPersonal(pf)) {
+            LOGGER.info("Nothing personal in the profile, serving nothing.");
+            return List.of();
+        }
+
+        //computing interests of all alive filieres
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
+
+        Set<String> clesFiltrees = new HashSet<>(cles);
+        clesFiltrees.removeAll(pf.suggRejected().stream().map(SuggestionDTO::fl).toList());
+
+        return  affinityEvaluator.getCandidatesOrderedByPertinence(clesFiltrees);
+    }
+
+    /**
      * Get explanations and examples associated to a suggestion
      * @param profile the profile
      * @param key the key of the node
@@ -160,12 +226,15 @@ public class AlgoSuggestions {
             return Pair.of(Collections.emptyList(), Collections.emptyList());
         }
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg);
-        Set<String> candidates;
+
+        final Set<String> candidates = new HashSet<>();
         if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
-            candidates = liensSecteursMetiers.getOrDefault(key, Collections.emptySet());
+            candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
         } else  {
-            candidates = onisepData.edgesMetiersFilieres().getSuccessors(key).keySet();
+            candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
         }
+        candidates.removeAll(profile.suggRejected().stream().map(SuggestionDTO::fl).toList());
+
         List<String> examples = affinityEvaluator.getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;
@@ -221,7 +290,7 @@ public class AlgoSuggestions {
                         ).max().orElse(NO_MATCH_SCORE)
                 ));
         List<String> bestSuggestionsGrouped = new ArrayList<>(groupedIndices.keySet());
-        //les plus gros scores en premier
+        //les plus gros interests en premier
         bestSuggestionsGrouped.sort((o1, o2) ->
              (int) signum(filieresScores.get(o2) - filieresScores.get(o1))
         );
@@ -237,8 +306,9 @@ public class AlgoSuggestions {
     }
 
     private static boolean containsNothingPersonal(@NotNull ProfileDTO pf) {
-        return  (pf.scores() == null || pf.scores().isEmpty())
-                && pf.suggApproved().isEmpty();
+        return  (pf.interests() == null || pf.interests().isEmpty())
+                && pf.suggApproved().isEmpty()
+                && (pf.geo_pref() == null || pf.geo_pref().isEmpty());
     }
 
     /**
@@ -530,4 +600,5 @@ public class AlgoSuggestions {
                 + "<br>\ndistance cache size " + distanceCaches.size();
 
     }
+
 }

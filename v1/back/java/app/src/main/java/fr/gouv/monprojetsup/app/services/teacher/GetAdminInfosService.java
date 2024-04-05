@@ -5,15 +5,16 @@ import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetAdminInfosService extends MyService<MyService.BasicRequest, GetAdminInfosService.Response> {
+public class GetAdminInfosService extends MyService<Server.BasicRequest, GetAdminInfosService.Response> {
 
     public GetAdminInfosService() {
-        super(MyService.BasicRequest.class);
+        super(Server.BasicRequest.class);
     }
 
     public record Response(
@@ -26,7 +27,7 @@ public class GetAdminInfosService extends MyService<MyService.BasicRequest, GetA
     }
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull MyService.BasicRequest req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull Server.BasicRequest req) throws Exception {
         DB.authenticator.tokenAuthenticate(req.login(), req.token());
         AdminInfosDTO infos = WebServer.db().getAdminInfos(req.login());
         return new Response(infos);

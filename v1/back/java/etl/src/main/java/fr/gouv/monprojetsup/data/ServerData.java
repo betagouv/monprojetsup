@@ -234,9 +234,9 @@ public class ServerData {
      * @param g le groupe
      * @return les détails
      */
-    public static @NotNull StatsContainers.DetailFiliere getSimpleGroupStats(@Nullable String bac, String g) {
+    public static @NotNull StatsContainers.SimpleStatGroupParBac getSimpleGroupStats(@Nullable String bac, String g) {
         if(bac == null) bac = PsupStatistiques.TOUS_BACS_CODE;
-        return getDetailedGroupStats(bac, g, false);
+        return getDetailedGroupStats(bac, g, false).stat();
     }
 
     /**

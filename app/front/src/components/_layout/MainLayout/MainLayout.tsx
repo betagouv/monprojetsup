@@ -1,15 +1,15 @@
-import Footer from "@/components/_layout/Footer/Footer";
-import Header from "@/components/_layout/Header/Header";
+import Entête from "@/components/_layout/Entête/Entête";
+import PiedDePage from "@/components/_layout/PiedDePage/PiedDePage";
 import { Outlet } from "@tanstack/react-router";
 
 const MainLayout = () => {
   return (
     <>
-      <Header />
-      <main className="fr-m-6w">
+      <Entête />
+      <main>
         <Outlet />
       </main>
-      <Footer />
+      <PiedDePage />
     </>
   );
 };

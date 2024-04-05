@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
+import fr.gouv.monprojetsup.common.server.ServerStartingException;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
@@ -57,7 +58,7 @@ public class PasswordLoginService extends MyService<PasswordLoginService.Request
     @Override
     protected Response handleRequest(@NotNull Request req) throws Exception {
         if(WebServer.db() == null) {
-            throw new DBExceptions.ServerStartingException();
+            throw new ServerStartingException();
         }
         if(req.login == null || req.password == null) throw new DBExceptions.UserInputException.InvalidPasswordException();
 
