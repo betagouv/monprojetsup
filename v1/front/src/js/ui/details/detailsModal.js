@@ -169,10 +169,10 @@ export function getChoiceDetails(
   forsOfInterest = [],
   hideFormations = false
 ) {
-  let $div = $(`<div class="px-md-5 "></div>`);
+  const expeENS = false;
+  const showMinimalStats = false;
 
-  const showMinimalStats = session.showMinimalStats();
-  const expeENS = session.isExpeENS();
+  let $div = $(`<div class="px-md-5 "></div>`);
 
   let id = sugg === undefined ? undefined : sugg.fl;
   if (id === undefined) return "";
@@ -204,38 +204,6 @@ export function getChoiceDetails(
         `<div class="descriptif-formation py-2 px-4 m-2"><p>${descriptif}<p></div>`
       )
     );
-  }
-
-  if (expeENS && !showMinimalStats) {
-    /* stats */
-    let bac = data.getProfileValue("bac");
-    if (bac === undefined) bac = data.tousBacs;
-    if (stats && Object.keys(stats).length > 0) {
-      const niveau = data.getProfileValue("niveau");
-      const showNotes = niveau == "prem" || niveau == "term";
-      const $stats = getStatsSectionDiv2(
-        id,
-        stats,
-        bac,
-        showNotes,
-        expeENS,
-        showMinimalStats
-      );
-      if ($stats) {
-        const $subdiv = $(
-          `<div class="pourquoi m-2 p-2">
-        <p>
-        <b>
-        <i class="bi bi-arrow-right me-2">
-        </i><b>Les attendus de la formation</b>
-        </p>
-        </div>`
-        );
-        $div.append($(`<hr class="w-100 yellow-hr"/>`));
-        $subdiv.append($stats);
-        $div.append($subdiv);
-      }
-    }
   }
 
   /* urls */
@@ -287,50 +255,41 @@ export function getChoiceDetails(
     }
   }
 
-  if (!expeENS || showMinimalStats) {
-    /* stats */
-    let bac = data.getProfileValue("bac");
-    if (bac === undefined) bac = data.tousBacs;
-    if (stats?.stat?.stats && Object.keys(stats.stat.stats).length > 0) {
-      const niveau = data.getProfileValue("niveau");
-      const showNotes = niveau == "prem" || niveau == "term";
-      const $stats = getStatsSectionDiv2(
-        id,
-        stats,
-        bac,
-        showNotes,
-        expeENS,
-        showMinimalStats
-      );
-      if ($stats) {
-        let $subdiv = $(
-          `<div class="pourquoi m-2 p-2">
+  /* stats */
+  let bac = data.getProfileValue("bac");
+  if (bac === undefined) bac = data.tousBacs;
+  if (stats && Object.keys(stats.stats).length > 0) {
+    const niveau = data.getProfileValue("niveau");
+    const showNotes = niveau == "prem" || niveau == "term";
+    const $stats = getStatsSectionDiv2(id, stats, bac, showNotes, expeENS);
+    if ($stats) {
+      let $subdiv = $(
+        `<div class="pourquoi m-2 p-2">
         <p>
         <b>
         <i class="bi bi-arrow-right me-2">
         </i><b>Les attendus de la formation</b>
         </p>
         </div>`
-        );
-        $div.append($(`<hr class="w-100 yellow-hr"/>`));
-        if (!showMinimalStats) {
-          $subdiv.append($stats);
-        } else {
-          $subdiv = $(
-            `<div class="pourquoi m-2 p-2">
+      );
+      $div.append($(`<hr class="w-100 yellow-hr"/>`));
+      if (!showMinimalStats) {
+        $subdiv.append($stats);
+      } else {
+        $subdiv = $(
+          `<div class="pourquoi m-2 p-2">
         </div>`
-          );
-          const $hidediv = $(
-            collapsibleContentHtml(
-              "<b>Les attendus de la formation</b>",
-              $stats,
-              "stats" + id
-            )
-          );
-          $subdiv.append($hidediv);
-        }
-        $div.append($subdiv);
+        );
+        const $hidediv = $(
+          collapsibleContentHtml(
+            "<b>Les attendus de la formation</b>",
+            $stats,
+            "stats" + id
+          )
+        );
+        $subdiv.append($hidediv);
       }
+      $div.append($subdiv);
     }
   }
 
@@ -390,14 +349,7 @@ function notGood(stats) {
   return result;
 }
 
-function getStatsSectionDiv2(
-  fl,
-  statsAll,
-  bac,
-  showNotes,
-  expeENS,
-  showMinimalStats
-) {
+function getStatsSectionDiv2(fl, statsAll, bac, showNotes) {
   const $div = $(`<div></div>`);
 
   const o = data.getStats(statsAll, bac);
@@ -412,12 +364,10 @@ function getStatsSectionDiv2(
       `<p>Nombre de lycéens admis en 2023: <span class="stats rounded-pill p-2">${admisTousBacs}</span></p>`
     );
   }
+  const showMinimalStats = false;
+  const expeENS = false;
   const $ul = $(`<ul></ul>`);
-  if (
-    expeENS &&
-    !showMinimalStats &&
-    ((showNotes && statsTousBacs) || statsBac)
-  ) {
+  if ((showNotes && statsTousBacs) || statsBac) {
     $ul.append(
       getStatsScolDiv(bac, statsTousBacs, statsBac, !showMinimalStats)
     );
@@ -433,21 +383,7 @@ function getStatsSectionDiv2(
     (!expeENS || showMinimalStats) &&
     ((showNotes && statsTousBacs) || statsBac)
   ) {
-    if (showMinimalStats) {
-      const $collapse = collapsibleContentHtml(
-        "<b>Infos</b>",
-        getStatsScolDiv(bac, statsTousBacs, statsBac, false),
-        "statsssss" + fl
-      );
-      $ul.append($collapse);
-      $collapse.on("click", function () {
-        events.handlers.logAction("showStats  " + fl);
-      });
-
-      $(".collapsed", $collapse).on("click", () => {});
-    } else {
-      $ul.append(getStatsScolDiv(bac, statsTousBacs, statsBac, false));
-    }
+    $ul.append(getStatsScolDiv(bac, statsTousBacs, statsBac, false));
   }
   $div.append($ul);
 
@@ -494,7 +430,8 @@ export function getStatsScolLine(stat) {
     </li>`);
 }
 
-function getStatsScolDiv(bac, statsTousBacs, statsBac, highlight) {
+function getStatsScolDiv(bac, statsTousBacs, statsBac) {
+  const highlight = false;
   let stats = statsBac;
   let serie = data.ppBac(bac);
   let qualifSerieBac = "";

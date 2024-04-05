@@ -878,7 +878,7 @@ export function getParcoursupSearchAdress(groups, searchBanner, gtas = []) {
 }
 
 export function getStats(statsAll, bac) {
-  const stats = statsAll ? statsAll : null;
+  const stats = statsAll ? (statsAll.stats ? statsAll.stats : null) : null;
   let statsTousBacs = null;
   if (stats && stats[tousBacs]) statsTousBacs = stats[tousBacs];
   let statsBac = null;
