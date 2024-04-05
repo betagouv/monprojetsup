@@ -74,7 +74,7 @@ public class AffinityEvaluator {
         //computing filieres we do not want to give advice about
         //because they are already in the profile
         List<SuggestionDTO> approved = pf.suggApproved();
-        this.flApproved = approved.stream().map(s -> s.fl()).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
+        this.flApproved = approved.stream().map(SuggestionDTO::fl).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
 
         approved.forEach(sugg -> addAlreadyKnown(sugg.fl()));
         pf.suggRejected().forEach(sugg -> addAlreadyKnown(sugg.fl()));
@@ -91,11 +91,17 @@ public class AffinityEvaluator {
 
         //centres d'intérêts
         Set<String> nonZeroScores = new HashSet<>();
-        nonZeroScores.addAll(pf.scores().entrySet()
-                .stream()
-                .filter(e -> e.getValue() > 0)
-                .map(Map.Entry::getKey)
-                .toList());
+        if(pf.interests() != null)
+            nonZeroScores.addAll(pf.interests());
+
+        //deprecated
+        if(pf.scores() != null) {
+            nonZeroScores.addAll(pf.scores().entrySet()
+                    .stream()
+                    .filter(e -> e.getValue() > 0)
+                    .map(Map.Entry::getKey)
+                    .toList());
+        }
 
         //autres formations
         nonZeroScores.addAll(approved.stream().map(s -> s.fl()).toList());
@@ -132,7 +138,7 @@ public class AffinityEvaluator {
      */
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
-        //en verbose mode, on récupère également les scores
+        //en verbose mode, on récupère également les interests
         TreeMap<String, Double> nonZeroScores = cfg.isVerboseMode() ? new TreeMap<>() : null;
 
         List<Paire<Double, Explanation>> unsortedExpl = new ArrayList<>();
@@ -186,7 +192,7 @@ public class AffinityEvaluator {
     private final List<String> flApproved;
 
     /**
-     * Calcule les scores affinités entre un profil et une filière
+     * Calcule les interests affinités entre un profil et une filière
      *
      * @param fl      la filière considérée
      * @param expl    les explications, à compléter si expl != null
@@ -237,6 +243,8 @@ public class AffinityEvaluator {
         }
 
         double score = 0;
+
+        //on fait la somme pondérée des interests additifs
         for(Map.Entry<String, Double> e : scores.entrySet()) {
             String key = e.getKey();
             Double value = e.getValue();
@@ -245,6 +253,8 @@ public class AffinityEvaluator {
                 score += value * weight;
             }
         }
+
+        //on applique les multiplicateurs
         for(Map.Entry<String, Double> e : scores.entrySet()) {
             String key = e.getKey();
             Double value = e.getValue();
@@ -254,7 +264,7 @@ public class AffinityEvaluator {
             }
         }
 
-        //put scores in expl, if required
+        //put interests in expl, if required
         if (matches != null && cfg.isVerboseMode()) {
             matches.putAll(scores.entrySet().stream().filter(
                     e -> e.getValue() > Config.NO_MATCH_SCORE
@@ -303,7 +313,7 @@ public class AffinityEvaluator {
     /**
      * Computes the bonus.
      *
-     * @param expl   if null, no explanation is generated. If non-null, expl is populated with explanations and scores.
+     * @param expl   if null, no explanation is generated. If non-null, expl is populated with explanations and interests.
      * @param weight weight, for explanations
      * @return the bonus
      */
@@ -522,7 +532,7 @@ public class AffinityEvaluator {
 
     private String getTagSubScoreExplanation(double score, Map<String, Double> subscores) {
 
-        return "Mots-clés scores total: " + score + "=Sum( "
+        return "Mots-clés interests total: " + score + "=Sum( "
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
@@ -546,7 +556,7 @@ public class AffinityEvaluator {
         //stocke les chemins de chaque match
         Map<String, Set<Path>> matches = new HashMap<>();
 
-        //stocke les scores de chaque match, obtenus en sommant les scores des chemins individuels
+        //stocke les interests de chaque match, obtenus en sommant les interests des chemins individuels
         Map<String, Double> scores = new HashMap<>();
 
         //on itère sur les chemins depuis les noeuds activés, source par source
@@ -635,7 +645,12 @@ public class AffinityEvaluator {
         return score;
     }
 
-    public @NotNull List<String> getCandidatesOrderedByPertinence(@NotNull Set<String> candidates) {
+    /**
+     * Returns the candidates ordered by pertinence, the most pertinent first
+     * @param candidates
+     * @return
+     */
+    public @NotNull List<String> getCandidatesOrderedByPertinence(@NotNull Collection<String> candidates) {
 
         Map<String,Double> scores = new HashMap<>();
         candidates.stream().filter(m -> !alreadyKnown.contains(m)).forEach(met -> scores.put(met,0.0));

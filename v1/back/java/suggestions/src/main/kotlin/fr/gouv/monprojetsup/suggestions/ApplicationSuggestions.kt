@@ -8,6 +8,8 @@ import jdk.jshell.spi.ExecutionControl
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.badRequest
+import org.springframework.http.ResponseEntity.internalServerError
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
@@ -51,9 +53,8 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
 		e: Exception,
 		httpServletRequest: HttpServletRequest
 	): ResponseEntity<Any> {
-		if(e is ExecutionControl.UserException) return ResponseEntity.badRequest().body(e.message)
-		if(e is MyServiceException) return ResponseEntity.internalServerError().body(e.message)
-		else return ResponseEntity.badRequest().body(e.message)
+		return if(e is MyServiceException) internalServerError().body(e.message)
+		else badRequest().body(e.message)
 	}
 }
 

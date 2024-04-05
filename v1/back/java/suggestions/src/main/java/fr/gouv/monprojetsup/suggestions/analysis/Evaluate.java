@@ -103,7 +103,7 @@ public class Evaluate {
                             fos.write("OK: rank " + rank + " " + expectation + "\n");
                         } else {
                             fos.write("    KO: " + expectation + "\n");
-                            //TODO: retro details compute scores ok KO
+                            //TODO: retro details compute interests ok KO
                             try (
                                     OutputStreamWriter fos2 = new OutputStreamWriter(
                                             Files.newOutputStream(Path.of("profile " + i + " fail " + expectation.replace("\\","_")

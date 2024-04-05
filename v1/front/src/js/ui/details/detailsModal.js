@@ -210,7 +210,7 @@ export function getChoiceDetails(
     /* stats */
     let bac = data.getProfileValue("bac");
     if (bac === undefined) bac = data.tousBacs;
-    if (stats?.stat?.stats && Object.keys(stats.stat.stats).length > 0) {
+    if (stats && Object.keys(stats).length > 0) {
       const niveau = data.getProfileValue("niveau");
       const showNotes = niveau == "prem" || niveau == "term";
       const $stats = getStatsSectionDiv2(

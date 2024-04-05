@@ -53,9 +53,9 @@ public record ReferenceCases(
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
-    public static String toExplanationString(Map<String, Integer> scores, String sep) {
-        return scores.entrySet().stream()
-                .map(e -> getDebugLabel(e.getKey()) + ":" + e.getValue())
+    public static String toExplanationString2(List<String> interests, String sep) {
+        return interests.stream()
+                .map(e -> getDebugLabel(e))
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
@@ -67,7 +67,7 @@ public record ReferenceCases(
 
     public static String toExplanationString(ProfileDTO pf) {
         return "Profil: \n" + toExplanationStringShort(pf, "\t") +
-                "\n\tcentres d'intérêts: " + toExplanationString(pf.scores(), "\t") + "\n" +
+                "\n\tcentres d'intérêts: " + toExplanationString2(pf.interests(), "\t") + "\n" +
                 "\n\tformations et métiers d'intérêt: " + toExplanationString(pf.suggApproved(), "\t") + "\n" +
                 "\n\tcorbeille (refus / rejet): " + toExplanationString(pf.suggRejected(), "\t") + "\n" +
                 '}';
@@ -282,12 +282,12 @@ public record ReferenceCases(
                 output.append(name);
                 output.append(toExplanationStringShort(refCase.pf, ""));
 
-                output.append(toExplanations(refCase.pf.scores().keySet().stream()
+                output.append(toExplanations(refCase.pf.interests().stream()
                         .filter(e -> isInteret(e)
                         )
                         .toList(),""));
 
-                output.append(toExplanations(refCase.pf.scores().keySet().stream()
+                output.append(toExplanations(refCase.pf.interests().stream()
                         .filter(e -> isTheme(e)
                         )
                         .toList(),""));

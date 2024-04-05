@@ -3,27 +3,43 @@ package fr.gouv.monprojetsup.suggestions.controllers
 import fr.gouv.monprojetsup.data.ServerData
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
+import fr.gouv.monprojetsup.suggestions.services.GetFormationsAffinitiesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.info.Info
+import io.swagger.v3.oas.annotations.servers.Server
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.jetbrains.annotations.NotNull
-import org.jetbrains.annotations.Nullable
-import org.springframework.context.annotation.Bean
 import org.springframework.web.bind.annotation.*
 
 
 @RestController
 @RequestMapping("$BASE_PATH")
 @Tag(name = "API Suggestions MonProjetSup")
+@OpenAPIDefinition(
+    info = Info(title = "MonProjetSup API", version = "1.1"),
+    servers = [ Server(url = "https://monprojetsup.fr/"), Server(url = "http://localhost:8003/") ]
+)
 class SuggestionsControllerz(
     private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
-    private val getSimpleStatsService: GetSimpleStatsService
+    private val getSimpleStatsService: GetSimpleStatsService,
+    private val getAffiniteFormationsService: GetFormationsAffinitiesService,
 ) {
+
+    @Operation(summary = "Calcule l'affinité d'un profil et d'une liste de formations et métiers.")
+    @PostMapping("/affinite")
+    fun getAffinite(
+        @RequestBody(required = true) request : GetFormationsAffinitiesService.Request
+    ): GetFormationsAffinitiesService.Response {
+        return getAffiniteFormationsService.handleRequestAndExceptions(request)
+    }
+
     @Operation(summary = "Récupère une liste de suggestions de formations et métiers associés à un profil.")
     @PostMapping("/suggestions")
     fun getSuggestions(
@@ -56,7 +72,7 @@ class SuggestionsControllerz(
     @Operation(summary = "Fournit le libellé associé à une clé formation, métier ou secteur d'activité.")
     @GetMapping("/label")
     fun getLabel(
-        @RequestParam("key") @Parameter(name = "key", description = "La clé.", example = "fl1")  @NotNull key: String
+        @RequestParam("key") @Parameter(name = "key", description = "clé", example = "fl1")  @NotNull key: String
     ): String {
         return ServerData.getLabel(key, "")
     }

@@ -57,8 +57,7 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         e: MyServiceException,
         httpServletRequest: HttpServletRequest
     ): ResponseEntity<Any> {
-        if( e is UserException) return ResponseEntity.badRequest().body(e.message)
-        else return ResponseEntity.internalServerError().body(e.message)
+        return ResponseEntity.internalServerError().body(e.message)
     }
 
 }

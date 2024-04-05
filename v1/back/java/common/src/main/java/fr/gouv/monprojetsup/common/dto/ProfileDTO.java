@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
@@ -17,16 +17,20 @@ public record ProfileDTO(
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", required = false, allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "Soulac", required = false)
+        @ArraySchema(schema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "Soulac-sur-Mer", required = false))
         Set<String> geo_pref,
-        @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", required = false)
+        @ArraySchema(schema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "Sciences de la vie et de la Terre", required = false))
         Set<String> spe_classes,
-        @Schema(name = "scores", description = "centres d'intérêts", required = false)
-        Map<String, Integer> scores,
+        @ArraySchema(schema = @Schema(name = "interests", description = "centres d'intérêt", example = "T_ITM_1054", required = false))
+        List<String> interests,
         @Schema(name = "moygen", description = "moyenne générale scolaire estimée en terminale", example = "14", required = false)
         String moygen,
-        @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité", required = false)
-        Map<String, SuggestionDTO> choices
+        @ArraySchema(schema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité", required = false))
+        List<SuggestionDTO> choices,
+
+        //replaced by interests
+        @Schema(name = "deprecated", description = "deprecated", required = false)
+        @Deprecated Map<String,Integer> scores
 ) {
 
     /*
@@ -38,7 +42,7 @@ public record ProfileDTO(
                 dto.apprentissage(),
                 dto.geo_pref(),
                 dto.spe_classes(),
-                dto.scores(),
+                dto.interests(),
                 dto.mention(),
                 dto.moygen(),
                 dto.choices().entrySet().stream().collect(Collectors.toMap(
@@ -49,11 +53,11 @@ public record ProfileDTO(
     }*/
 
     public List<SuggestionDTO> suggApproved() {
-        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_APPROVED)).toList();
+        return choices == null ? List.of() : choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_APPROVED)).toList();
     }
 
     public List<SuggestionDTO> suggRejected() {
-        return choices == null ? List.of() : choices.values().stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).toList();
+        return choices == null ? List.of() : choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).toList();
     }
 
     public int bacIndex() {
@@ -75,21 +79,15 @@ public record ProfileDTO(
                 apprentissage,
                 geo_pref,
                 spe_classes,
-                scores,
+                interests,
                 moygen,
-                cleanupDates(choices)
-        );
+                cleanupDates(choices),
+                scores
+                );
     }
 
-    private Map<String, SuggestionDTO> cleanupDates(Map<String, SuggestionDTO> choices) {
-        return choices.entrySet()
-                .stream()
-                .collect(
-                        Collectors.toMap(
-                                e -> e.getKey(),
-                                e -> e.getValue().anonymize()
-                        )
-                );
+    private List<SuggestionDTO> cleanupDates(List<SuggestionDTO> choices) {
+        return choices.stream().map(e -> e.anonymize()).toList();
     }
 
 }

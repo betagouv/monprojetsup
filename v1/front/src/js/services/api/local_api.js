@@ -4,10 +4,10 @@ import $ from "jquery";
 
 export function callAPI(serviceName, data, successHandler, errorHandler, type) {
   let port =
-    serviceName == "stats" ||
-    serviceName == "suggestions" ||
-    serviceName == "foi" ||
-    serviceName == "explanations"
+    serviceName.startsWith("stats") ||
+    serviceName.startsWith("suggestions") ||
+    serviceName.startsWith("foi") ||
+    serviceName.startsWith("explanations")
       ? 8003
       : 8002;
   const IPserver = "http://" + document.location.hostname + ":" + port;

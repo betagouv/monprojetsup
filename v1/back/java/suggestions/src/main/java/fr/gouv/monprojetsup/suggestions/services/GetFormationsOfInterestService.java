@@ -4,6 +4,8 @@ import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -37,8 +39,11 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
     }
 
     public record Request(
-        @Nullable Set<String> geo_pref,
-        @NotNull List<String> keys
+            @ArraySchema(schema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "Soulac-sur-Mer", required = false))
+            @Nullable Set<String> geo_pref,
+
+            @ArraySchema(schema = @Schema(name = "keys", description = "clés", example = "fl2014", required = false))
+            @NotNull List<String> keys
         ) {
     }
 

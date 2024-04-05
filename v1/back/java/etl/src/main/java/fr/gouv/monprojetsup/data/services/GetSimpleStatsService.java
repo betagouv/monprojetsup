@@ -21,10 +21,10 @@ public class GetSimpleStatsService extends MyService<GetSimpleStatsService.Reque
 
     public record Response(
             @NotNull ResponseHeader header,
-            @Nullable StatsContainers.DetailFiliere stats
+            @Nullable StatsContainers.SimpleStatGroupParBac stats
     ) {
         public Response(
-                @NotNull StatsContainers.DetailFiliere stats
+                @NotNull StatsContainers.SimpleStatGroupParBac stats
                 ) {
             this(new ResponseHeader(), stats);
         }
@@ -32,7 +32,7 @@ public class GetSimpleStatsService extends MyService<GetSimpleStatsService.Reque
 
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
-        @NotNull StatsContainers.DetailFiliere stats = ServerData.getSimpleGroupStats(
+        @NotNull StatsContainers.SimpleStatGroupParBac stats = ServerData.getSimpleGroupStats(
                 req.bac(),
                 req.key
         );

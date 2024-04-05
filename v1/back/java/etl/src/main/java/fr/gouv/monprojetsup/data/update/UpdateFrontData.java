@@ -108,7 +108,7 @@ public class UpdateFrontData {
                     "apprentissage",
                     "geo_pref",
                     "spe_classes",
-                    "scores",
+                    "interests",
                     "mention",
                     "moygen",
                     "choices"
