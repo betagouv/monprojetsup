@@ -39,10 +39,10 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
     }
 
     public record Request(
-            @ArraySchema(schema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "Soulac-sur-Mer", required = false))
+            @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]", required = false))
             @Nullable Set<String> geo_pref,
 
-            @ArraySchema(schema = @Schema(name = "keys", description = "clés", example = "fl2014", required = false))
+            @ArraySchema(arraySchema = @Schema(name = "keys", description = "clés", example = "[\"fl2014\",\"fl2007\"]", required = false))
             @NotNull List<String> keys
         ) {
     }

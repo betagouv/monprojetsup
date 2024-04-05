@@ -17,15 +17,15 @@ public record ProfileDTO(
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", required = false, allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @ArraySchema(schema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "Soulac-sur-Mer", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]", required = false))
         Set<String> geo_pref,
-        @ArraySchema(schema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "Sciences de la vie et de la Terre", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]", required = false))
         Set<String> spe_classes,
-        @ArraySchema(schema = @Schema(name = "interests", description = "centres d'intérêt", example = "T_ITM_1054", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "interests", description = "centres d'intérêt", example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\", \"T_ROME_2092381917\", \"T_IDEO2_4812\"]", required = false))
         List<String> interests,
         @Schema(name = "moygen", description = "moyenne générale scolaire estimée en terminale", example = "14", required = false)
         String moygen,
-        @ArraySchema(schema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité", required = false))
+        @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité", required = false))
         List<SuggestionDTO> choices,
 
         //replaced by interests

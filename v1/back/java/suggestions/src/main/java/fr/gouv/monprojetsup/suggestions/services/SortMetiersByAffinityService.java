@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,8 @@ public class SortMetiersByAffinityService extends MyService<SortMetiersByAffinit
             @Schema(name = "profile", description = "Profil utilisé pour trier les métiers.", required = true)
             @NotNull ProfileDTO profile,
 
-            @Schema(name = "keys", description = "List des clés métiers pour lesquelles le tri est demandé.", required = true)
-            @NotNull List<String> cles
+            @ArraySchema(arraySchema = @Schema(name = "keys", example = "[\"MET_450\",\"MET_883\",\"MET_77\"]",description = "Liste des clés métiers dont le tri est attendu.", required = true))
+            @NotNull List<String> keys
 
     ) {
 
@@ -56,7 +57,7 @@ public class SortMetiersByAffinityService extends MyService<SortMetiersByAffinit
         //LOGGER.info("HAndling request " + req);
         final @NotNull List<String> clesTriees = AlgoSuggestions.sortMetiersByAffinites(
                 req.profile,
-                req.cles,
+                req.keys,
                 SuggestionServer.getConfig().getSuggFilConfig()
         );
 

@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.suggestions.services.GetFormationsAffinitiesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
+import fr.gouv.monprojetsup.suggestions.services.SortMetiersByAffinityService
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -30,14 +31,23 @@ class SuggestionsControllerz(
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService,
     private val getAffiniteFormationsService: GetFormationsAffinitiesService,
+    private val sortMetiersByAffinityService: SortMetiersByAffinityService,
 ) {
 
     @Operation(summary = "Calcule l'affinité d'un profil et d'une liste de formations et métiers.")
-    @PostMapping("/affinite")
+    @PostMapping("/affinite/formations")
     fun getAffinite(
         @RequestBody(required = true) request : GetFormationsAffinitiesService.Request
     ): GetFormationsAffinitiesService.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
+    }
+
+    @Operation(summary = "Trie une liste de métiers par affinite.")
+    @PostMapping("/affinite/metiers")
+    fun getAffinite(
+        @RequestBody(required = true) request : SortMetiersByAffinityService.Request
+    ): SortMetiersByAffinityService.Response {
+        return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
     @Operation(summary = "Récupère une liste de suggestions de formations et métiers associés à un profil.")
