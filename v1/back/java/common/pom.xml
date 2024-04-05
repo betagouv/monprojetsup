@@ -95,11 +95,6 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>fr.gouv.education</groupId>
-            <artifactId>parcoursup-simulations</artifactId>
-            <version>2023-11.0</version>
-        </dependency>
 
     </dependencies>
 
