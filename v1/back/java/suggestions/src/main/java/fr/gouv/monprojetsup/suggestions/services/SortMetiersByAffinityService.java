@@ -36,7 +36,7 @@ public class SortMetiersByAffinityService extends MyService<SortMetiersByAffinit
             ResponseHeader header,
             @Schema(
                     name = "clesTriees",
-                    description = "Clés triées par ordre décroissant d'affinité. Le meilleur métier en premier. Les métiers apparaissant dans les favoris ou la corbeille du profil sont exclus du résultat",
+                    description = "Clés triées par ordre décroissant d'affinité. Le meilleur métier en premier. Les métiers apparaissant dans la corbeille du profil sont exclus du résultat",
                     required = true
             )
             @NotNull List<String> clesTriees

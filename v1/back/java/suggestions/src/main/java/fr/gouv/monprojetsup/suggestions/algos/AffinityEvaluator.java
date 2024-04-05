@@ -647,13 +647,15 @@ public class AffinityEvaluator {
 
     /**
      * Returns the candidates ordered by pertinence, the most pertinent first
+     *
      * @param candidates
+     * @param b
      * @return
      */
     public @NotNull List<String> getCandidatesOrderedByPertinence(@NotNull Collection<String> candidates) {
 
         Map<String,Double> scores = new HashMap<>();
-        candidates.stream().filter(m -> !alreadyKnown.contains(m)).forEach(met -> scores.put(met,0.0));
+        candidates.stream().forEach(met -> scores.put(met, 0.0));
 
         pathesFromTagsIndexedByTarget
                 .entrySet().stream()

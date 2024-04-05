@@ -177,7 +177,7 @@ public class AlgoSuggestions {
         double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
 
         //remove from the result the filieres that already appear in the profile
-        affnites.keySet().removeAll(affinityEvaluator.alreadyKnown);
+        affnites.keySet().removeAll(pf.suggRejected().stream().map(SuggestionDTO::fl).toList());
 
         //rounding to 6 digits
         affnites.entrySet().forEach(e -> e.setValue(Math.max(0.0, Math.min(1.0, (double) Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
@@ -201,22 +201,13 @@ public class AlgoSuggestions {
             return List.of();
         }
 
-        Set<String> approved = pf.suggApproved().stream()
-                .map(SuggestionDTO::fl)
-                .filter(ServerData::isMetier)
-                .collect(Collectors.toSet());
-        Set<String> rejected = pf.suggRejected().stream()
-                .map(SuggestionDTO::fl)
-                .filter(ServerData::isMetier)
-                .collect(Collectors.toSet());
-        approved.retainAll(cles);
-        rejected.retainAll(cles);
-
-
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
 
-        return  affinityEvaluator.getCandidatesOrderedByPertinence(cles);
+        Set<String> clesFiltrees = new HashSet<>(cles);
+        clesFiltrees.removeAll(pf.suggRejected().stream().map(SuggestionDTO::fl).toList());
+
+        return  affinityEvaluator.getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
     /**
@@ -235,12 +226,15 @@ public class AlgoSuggestions {
             return Pair.of(Collections.emptyList(), Collections.emptyList());
         }
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg);
-        Set<String> candidates;
+
+        final Set<String> candidates = new HashSet<>();
         if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
-            candidates = liensSecteursMetiers.getOrDefault(key, Collections.emptySet());
+            candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
         } else  {
-            candidates = onisepData.edgesMetiersFilieres().getSuccessors(key).keySet();
+            candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
         }
+        candidates.removeAll(profile.suggRejected().stream().map(SuggestionDTO::fl).toList());
+
         List<String> examples = affinityEvaluator.getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;

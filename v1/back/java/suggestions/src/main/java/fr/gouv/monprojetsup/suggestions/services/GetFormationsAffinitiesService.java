@@ -35,7 +35,7 @@ public class GetFormationsAffinitiesService extends MyService<GetFormationsAffin
                             """
                                Associe à chaque formation représentée par sa clé un score entre 0.0 et 1.0.
                                Précision 6 décimales. 
-                               Les clés apparaissant dans les favoris ou la corbeille du profil sont exclues du résultat.
+                               Les clés apparaissant dans la corbeille du profil sont exclues du résultat.
                                Les scores nuls sont exclus du résultat.
                                """,
                     required = true
