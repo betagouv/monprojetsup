@@ -2,11 +2,14 @@ package fr.gouv.monprojetsup.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.gouv.monprojetsup.common.Sanitizer;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.Nullable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SuggestionDTO(
+            @Schema(name = "fl", example = "fl11", description = "clé de la formation, du métier ou du secteur d'activité", required = false)
             String fl,
+            @Schema(name = "status", example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"0", "1", "2" }, required = false)
             @Nullable Integer status,
             @Nullable String date
     ) {
