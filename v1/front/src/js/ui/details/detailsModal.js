@@ -379,12 +379,6 @@ function getStatsSectionDiv2(fl, statsAll, bac, showNotes) {
     //$ul.append($(getStatsEDS(statsTousBacs, fl)));
     //$ul.append($(getStatsEDSSimple(statsTousBacs, fl)));
   }
-  if (
-    (!expeENS || showMinimalStats) &&
-    ((showNotes && statsTousBacs) || statsBac)
-  ) {
-    $ul.append(getStatsScolDiv(bac, statsTousBacs, statsBac, false));
-  }
   $div.append($ul);
 
   //PARTIE ELEVES
