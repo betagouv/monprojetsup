@@ -101,6 +101,12 @@ async function showSubScreen(subscreen) {
   $(`#sub-placeholder`).html(html);
 }
 
+async function showConnectedScreen(subscreen) {
+  await showScreen("connected");
+  const html = await fetchData(subscreen);
+  $(`#myTabContent`).html(html);
+}
+
 export function injectHtml() {
   const m = {
     "header.html": "header-placeholder",
@@ -141,6 +147,9 @@ export async function showInscriptionScreen1() {
 export async function showInscriptionScreen2() {
   await showSubScreen("inscription2");
 }
+export async function showRecherche() {
+  await showConnectedScreen("recherche");
+}
 
 export const tabs = {
   profile: "nav-profile-tab",
@@ -151,18 +160,13 @@ export const tabs = {
   suggestions: "nav-suggestions-tab",
 };
 
-function showConnectedScreen() {
+function showConnectedScreenOld() {
   showScreen("connected");
   const is = isAdmin();
 
   $(`#${tabs.admin}`).toggle(isAdmin());
 
   $(`#${tabs.groups}`).toggle(isAdminOrTeacher());
-  /*
-    !isAnonymous() &&
-      !session.isAStudentalreadyInAGroup() &&
-      !session.getNoGroupOpenFlag()
-  );*/
 }
 
 function displayProfileTabs() {
@@ -179,7 +183,7 @@ export function showTab(label) {
 }
 
 export function showTabWithId(id) {
-  showConnectedScreen();
+  showConnectedScreenOld();
   const someTabTriggerEl = document.querySelector(`#${id}`);
   if (someTabTriggerEl != null) {
     const tab = new Tab(someTabTriggerEl);
@@ -327,6 +331,7 @@ export function updateNotes() {
 }
 
 function loadProfile() {
+  return;
   loadingProfile = true;
 
   //afficher les tabs nécessaires

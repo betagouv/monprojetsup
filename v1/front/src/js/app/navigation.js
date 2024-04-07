@@ -11,11 +11,12 @@ const screens = [
   "reset_password",
   "inscription1",
   "inscription2",
-  "tableau_bord",
+  "recherche",
   "groupes",
 ];
 
 export function setScreen(screen) {
+  console.log("setScreen", screen);
   if (screens.includes(screen)) {
     let current_screen = session.getScreen();
     doTransition(current_screen, screen);
@@ -45,7 +46,7 @@ function doTransition(old_screen, new_screen) {
 
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
-  tableau_bord: async () => await ui.showSuggestionsTab(),
+  recherche: async () => await ui.showRecherche(),
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),
   groupes: async () => {

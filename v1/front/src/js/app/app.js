@@ -156,7 +156,7 @@ export function postLoginHandler() {
       if (session.isAdminOrTeacher()) {
         server.getProfile((msg) => {
           data.loadProfile(msg.profile);
-          ui.loadProfile();
+          //ui.loadProfile();
           startNavigation();
         });
       } else {
@@ -178,12 +178,12 @@ function startNavigation() {
     if (session.isAdminOrTeacher()) {
       nav.setScreen("groupes");
     } else {
-      const profileCompleteness = msg.infos.profileCompleteness;
+      const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
         const category = profileCompleteness == 0 ? "profil" : "preferences";
         nav.setScreen("inscription1");
       } else {
-        nav.setScreen("tableau_bord");
+        nav.setScreen("recherche");
       }
     }
   }
@@ -193,12 +193,12 @@ function askProfileAndSuggestions(handler) {
   server.getProfile((msg) => {
     console.log(JSON.stringify(msg));
     data.loadProfile(msg.profile);
-    ui.loadProfile();
-    ui.hideMainProfileTab();
+    //ui.loadProfile();
+    //ui.hideMainProfileTab();
     server.getSuggestions(data.getAnonymousProfile(), (msg) => {
       loadSuggestions(msg);
       if (handler) handler();
-      else ui.showSuggestionsTab();
+      //ui.showSuggestionsTab();
     });
   });
 }

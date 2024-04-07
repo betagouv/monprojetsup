@@ -68,12 +68,10 @@ footer {
 }
 .w-100 {
   width: 100%;
-  height: auto;
   max-width: 100%;
 }
 .w-80 {
   width: 80%;
-  height: auto;
   max-width: 80%;
 }
 
@@ -106,11 +104,7 @@ footer {
     }
 #main-placeholder {
 //  background-color: #f9f6f2;
-  background-image: url("../img/bg.svg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+}
 .py-10px {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -292,28 +286,420 @@ main {
   flex-direction: column;
   flex: 1;
 }
-
 #main-placeholder {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
+#main-div-recherche {
+  background-color: $white;
+  height: 100%;
+  margin-left: 0px;
+}
 .tab-content {
   //background-color: $beige-gris-galet-950;
-  background-image: url('../img/connected-bg.svg');
-  background-size: cover;
-  flex: 1;
+      background-image: url("../img/bg.svg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding-left: 0px;
+  //background-image: url('../img/connected-bg.svg');
+  //background-size: cover;
+  }
+#main-div-recherche {
+  min-width: 100%;
+  display: flex;
+    flex-direction: column;
+    /* Make container flex direction vertical */
+    min-height: 50vh;
+    margin-left: 0px;
+}
+#explore-div-entete {
+  padding-top: 20px;
+  height: 100%;
+  padding-left: 60px;
+}
+#explore-div-resultats {
+  //display: grid;
+  //grid-template-columns: 2fr 3fr;
+  display: flex;
+  flex:1;
+  align-items: flex-start;//algin item to the top ('top' is not acepted)
+  min-height: 60vh;
+  border-color: $beige-gris-galet-950;
+  border: 1px solid;
+  //box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  padding-left: 0px;
+  margin-left: 0px;
+
+  height: min-content;
+}
+#explore-div-resultats-left {
+  flex: 4;  
+  background-color: $beige-gris-galet-950;
+  //min-height: 60vh;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
+  overflow: auto;
+  max-height: 100vh;
+  align-items: flex-start;
+  
+}
+#explore-div-resultats-right {
+  flex: 5;
+  background-color: white;
+  //var(--light-decisions-text-text-disabled-grey, #929292);
+  min-height: 50vh;
+  padding-top: 48px;
+  padding-left: 8%;
+  padding-right: 12%;
+  margin-bottom: 56px;
+
+  height: 100%;
+  align-items: flex-start;
+}
+#explore-div-resultats-left-entete {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  //height: 100%;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    text-align: left;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    /* 142.857% */
+}
+.formation-card {
+  display: flex;
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: top;
+    /* Center items horizontally */
+    justify-content: left;
+    background-color: white;
+    margin-left: 12%;
+    margin-right: 8%;
+    margin-top: 0px;
+  margin-bottom: 24px;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
+  padding-top: 3%;
+  padding-bottom: 3%;  
+  padding-left: 5%;
+    padding-right: 5%;
+  }
+.horizontal-container {
+  display: flex;
+    /* Use flexbox layout */
+    justify-content: space-between;
+    /* Distribute items evenly along the main axis */
+    align-items: center;
+    /* Center items along the cross axis */
+    /* Optional: Add additional styles as needed */
+}
+.formation-card-header {
+  display: flex;
+  width: 100%;
+  margin-bottom: 12px;
+}
+.formation-details-header {
+  display: flex;
+  width: 100%;
+  margin-bottom: 24px;
+  align-items: center;
+  
+}
+.formation-details-header-sep {
+  flex-grow:1;
+}
+.formation-details-header-nav {
+  display: flex;
 }
 
-.accordion-button[excluded] {
-  background-color: lightgray;
+.formation-card-header-type,
+.formation-details-header-type {
+  border-radius: 4px;
+  //padding: 3px;
+  padding: 0px 6px;
+  background-color: #E7FAF6;
+  color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425, #297254);;
+  font-weight: 700;
+  text-transform: uppercase;
+    font-size: 12px;
+    font-style: normal;
+    align-items: center;
+    height: 100%;
+    //width: 100%;
+    //line-height: 20px;
+    /* 166.667% */
 }
-.accordion-item[excluded] {
-  background-color: lightgray;
+.formation-details-header-nav-icon {
+  padding: 8px;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+  margin-right: 8px;
+}
+.formation-details-header-nav-icon span {
+  color: var(--light-decisions-text-action-high-blue-france, #000091);
+}
+.metier-card-header-type {
+  border-radius: 4px;
+  //padding: 3px;
+  padding: 0px 6px;
+  background: #FFECE7;
+  color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
+  ;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  //width: 100%;
+  //line-height: 20px;
+  /* 166.667% */
+}
+.formation-card-header-sep {
+  flex-grow:1;
+}
+.formation-card-header-affinity {
+padding: 0px 6px;
+//width: 100%;
+align-items: center;
+color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425, #297254);
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
 }
 
-.bg-excluded {
-  background-color: lightgray;
+.card-formation-title {
+  //color: $myBleuMarine !important;
+  //text-decoration: none !important;
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  /* 1.Titres/H4 - SM/Desktop */
+  font-family: Marianne;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  margin-bottom: 24px;
+}
+.formation-details-title {
+  color: var(--light-decisions-text-text-title-grey, #161616);  
+    /* 1.Titres/H2 - LG/Desktop */
+    font-family: Marianne;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+  margin-bottom: 24px;    /* 125% */
+  line-height: 40px;
+    /* 125% */
+}
+.card-metier-title {
+  //color: $myBleuMarine !important;
+  //text-decoration: none !important;
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  /* 1.Titres/H4 - SM/Desktop */
+  font-family: Marianne;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  //line-height: 32px;
+  margin-bottom: 16px;
+    /* 133.333% */
+}
+
+.card-geoloc {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 24px;
+    /* 142.857% */
+}
+.card-studies-level {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 16px;
+}
+.card-metiers-header {
+  color: var(--light-decisions-border-border-action-high-grey, #161616);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 12px;
+    /* 142.857% */
+}
+.card-metiers-list {
+  display: flex;
+  flex-wrap: wrap;
+    /* Use flexbox layout */
+    //justify-content: space-between;
+    /* Distribute items evenly along the main axis */
+    align-items: left;
+}
+.card-metier {
+  border-radius: 12px;
+  background: var(--light-decisions-background-background-contrast-grey, #EEE);
+  color: var(--light-decisions-text-text-label-grey, #161616);
+    text-align: center;
+    padding: 2px 8px;
+  
+    /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Regular */
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    /* 166.667% */
+}
+
+.formation-details-summary {
+  color: var(--light-decisions-text-text-default-grey, #3A3A3A);
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+    margin-bottom: 12px;
+}
+.formation-details-links {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.formation-details-stats-sep {
+  color : #dddddd;
+}
+.formation-details-link {
+  color: var(--light-decisions-text-action-high-blue-france, #000091);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    margin-right: 32px;
+    /* 171.429% */
+
+}
+.formation-details-link img {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  margin-bottom: -2px;
+  
+}
+.formation-details-sub-title {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+    /* 2.Corps de texte/LG - Texte article/Desktop & Mobile - Bold */
+    font-family: Marianne;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 28px;
+    /* 155.556% */
+}
+.formation-details-stats-bacs {
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--light-decisions-border-border-action-high-grey, #161616);
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 125% */
+    margin-bottom: 40px;
+}
+.formation-details-stats-bac-badge {
+  margin-left: 12px;
+  color: var(--light-options-illustration-color-sun-default-beige-gris-galet-sun-407, #6A6156);
+  
+    /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Maj */
+    font-family: Marianne;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    /* 166.667% */
+    text-transform: uppercase;
+    border-radius: 4px;
+    background: var(--light-options-illustration-color-950-default-beige-gris-galet-950, #F3EDE5);
+    padding-left: 6px;
+    padding-right: 6px;
+}
+.formation-details-pourquoi {
+    margin-bottom: 40px;
+}
+
+
+.formation-details-reasons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.formation-details-reason {
+  margin-top: 16px;
+
+  color: var(--light-decisions-border-border-action-high-grey, #161616);
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 125% */
+}
+.formation-details-reason img {
+  margin-right: 8px;
+}
+
+.formation-details-exemples-metiers-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.formation-details-exemples-metiers
+.formation-details-sub-title {
+  margin-bottom: 16px;
+}
+
+.formation-details-exemple-metier {
+    margin-left: 8px;
+
+    /* 166.667% */
+    border-radius: 16px;
+      background: #E3E3FD;
+
+      padding-left: 12px;
+      padding-right: 12px;
+
+      color: var(--light-decisions-artwork-artwork-major-blue-france, #000091);
+        text-align: center;
+      
+        /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+        font-family: Marianne;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        /* 171.429% */
+}
+
+.formation-details-foldable-container {
+  margin-bottom: 40px;
+
+}
+.fr-btn img {
+  color:white;
+}
+.formation-details-actions {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .accordion-collapse {
@@ -715,11 +1101,6 @@ fieldset[disabled] .btn-primary.active {
   color: $myBleuMarine;
 }
 
-.tab-title,
-.card-title {
-  color: $myBleuMarine !important;
-  text-decoration: none !important;
-}
 
 .btn-success {
   background-color: $myBleuMarine !important;
