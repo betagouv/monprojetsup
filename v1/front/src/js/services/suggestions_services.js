@@ -1,3 +1,4 @@
+import { error } from "jquery";
 import { postToSpringService, getFromSpringService } from "./api/call_service";
 
 export function getExplanations(profile, key, onSuccess = null) {
@@ -23,6 +24,55 @@ export function getSuggestions(profile, onSuccess) {
   );
 }
 
+export async function getFormationsAffinities(profile) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "affinite/formations",
+      {
+        profile: profile,
+      },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
+
+export async function getExplanationsAsync(key, profile) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "explanations",
+      {
+        key: key,
+        profile: profile,
+      },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
+
+export async function getDetails(keys, profile) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "details",
+      {
+        keys: keys,
+        profile: profile,
+      },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
 export function getStats(bac, key, onSuccess = null) {
   getFromSpringService(
     "stats",

@@ -28,7 +28,7 @@ public class ExportSuggestionsData {
         LOGGER.info("Loading data for suggestion Server...");
         ServerData.load();
 
-        log.info("Initializing suggestions ");
+        log.info("Initializing details ");
         AlgoSuggestions.initialize();
 
         exportCorrSecteursMetiers();

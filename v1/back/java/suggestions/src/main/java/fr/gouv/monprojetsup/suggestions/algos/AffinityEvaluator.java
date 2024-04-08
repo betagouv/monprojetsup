@@ -17,10 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.ServerData.flGroups;
-import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.isLas;
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.isRelatedToHealth;
+import static fr.gouv.monprojetsup.data.ServerData.*;
+import static fr.gouv.monprojetsup.data.ServerData.onisepData;
+import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.*;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.*;
 import static java.util.Map.entry;
 
@@ -48,6 +47,7 @@ public class AffinityEvaluator {
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
 
     private final boolean isInterestedinHealth;
+    private final Set<String> rejected =  new HashSet<>();
 
     /**
      * Adds an item to already known items
@@ -66,6 +66,15 @@ public class AffinityEvaluator {
         }
 
     }
+    private void addRejected(String key) {
+        rejected.add(key);
+        //NB: we do NOT generalize  using flGroups
+        Collection<String> grps = ServerData.reverseFlGroups.get(key);
+        if (grps != null) {
+            rejected.addAll(grps);
+        }
+
+    }
 
     public AffinityEvaluator(ProfileDTO pf, Config cfg) {
         this.cfg = cfg;
@@ -76,8 +85,11 @@ public class AffinityEvaluator {
         List<SuggestionDTO> approved = pf.suggApproved();
         this.flApproved = approved.stream().map(SuggestionDTO::fl).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
 
+        List<SuggestionDTO> rejectedSuggestions = pf.suggRejected();
+
         approved.forEach(sugg -> addAlreadyKnown(sugg.fl()));
-        pf.suggRejected().forEach(sugg -> addAlreadyKnown(sugg.fl()));
+        rejectedSuggestions.forEach(sugg -> addAlreadyKnown(sugg.fl()));
+        rejectedSuggestions.forEach(sugg -> addRejected(sugg.fl()));
 
         //precomputing candidats for filieres similaires
         for (String fl : flApproved) {
@@ -104,7 +116,7 @@ public class AffinityEvaluator {
         }
 
         //autres formations
-        nonZeroScores.addAll(approved.stream().map(s -> s.fl()).toList());
+        nonZeroScores.addAll(approved.stream().map(SuggestionDTO::fl).toList());
 
         isInterestedinHealth = isRelatedToHealth(nonZeroScores);
 
@@ -127,7 +139,7 @@ public class AffinityEvaluator {
 
     /* the public entry points */
     public Double getAffinityEvaluation(String fl) {
-        if (alreadyKnown.contains(fl)) return Config.NO_MATCH_SCORE;
+        if (rejected.contains(fl)) return Config.NO_MATCH_SCORE;
         return getScoreAndExplanation(fl, null, null);
     }
 
@@ -204,6 +216,8 @@ public class AffinityEvaluator {
             List<Paire<Double, Explanation>> expl,
             Map<String, Double> matches
             ) {
+
+        if(rejected.contains(fl)) return Config.NO_MATCH_SCORE;
 
         final int bacIndex = pf.bacIndex();
 
@@ -358,10 +372,9 @@ public class AffinityEvaluator {
         final Middle50 middle50 = stats.getRight().middle50();
         int noteMaxInt = stats.getRight().frequencesCumulees().length;
         int note = (int) (noteMaxInt * autoEval / 20);
-        //avantage aux suggestions plus exigeantes
+        //avantage aux details plus exigeantes
         return (0.7 * computeAdmissibiliteNotes(middle50, note, noteMaxInt)
-                + 0.3 * computeProximiteNotes(middle50, note, noteMaxInt));
-                //* middle50.rangEch75() / noteMaxInt;
+                + 0.3 * computeProximiteNotes(middle50, note));
     }
 
     private double computeAdmissibiliteNotes(Middle50 middle50, int note, int noteMaxInt) {
@@ -383,7 +396,7 @@ public class AffinityEvaluator {
         }
     }
 
-    private double computeProximiteNotes(Middle50 middle50, int note, int noteMaxInt) {
+    private double computeProximiteNotes(Middle50 middle50, int note) {
         if (note >= middle50.rangEch90()) {
             return 0.0;
         } else if (note < middle50.rangEch10()) {
@@ -404,7 +417,7 @@ public class AffinityEvaluator {
     }
 
     private double getBonusCities(String fl, List<Paire<Double, Explanation>> expl, double weight) {
-        //pour chaque filiere, on scanne toutes les suggestions et on calcule la distance min ç chaque ville
+        //pour chaque filiere, on scanne toutes les details et on calcule la distance min ç chaque ville
         double bonus = Config.NO_MATCH_SCORE;
 
         for (String cityName : pf.geo_pref()) {
@@ -517,16 +530,6 @@ public class AffinityEvaluator {
                 expl.add(new Paire<>(score * weight, Explanation.getTagExplanationShort(pathes)));
             }
         }
-        /*
-        List<Suggestion> suggNodes
-                = affinityEvaluator
-                .getCloseTagsSuggestionsOrderedByIncreasingDistance(
-                        MAX_LENGTH_FOR_SUGGESTIONS,
-                        false,
-                        SEC_ACT_PREFIX_IN_GRAPH,
-                        cfg.maxNbSuggestions()
-                );
-        */
         return score;
     }
 
@@ -549,7 +552,6 @@ public class AffinityEvaluator {
     public List<Suggestion> getCloseTagsSuggestionsOrderedByIncreasingDistance(
             int maxLength,
             boolean includeExplanations,
-            String prefix,
             int maxNbSuggestions
     ) {
 
@@ -646,23 +648,20 @@ public class AffinityEvaluator {
     }
 
     /**
-     * Returns the candidates ordered by pertinence, the most pertinent first
+     * Sort some candidates by pertinence
      *
-     * @param candidates
-     * @param b
-     * @return
+     * @param candidates the candidates
+     * @return  the candidates ordered by pertinence, the most pertinent first
      */
     public @NotNull List<String> getCandidatesOrderedByPertinence(@NotNull Collection<String> candidates) {
 
         Map<String,Double> scores = new HashMap<>();
-        candidates.stream().forEach(met -> scores.put(met, 0.0));
+        candidates.forEach(met -> scores.put(met, 0.0));
 
         pathesFromTagsIndexedByTarget
                 .entrySet().stream()
                 .filter(e -> candidates.contains(e.getKey()))
-                .forEach(e -> {
-                    scores.put(e.getKey(), scores.getOrDefault(e.getKey(), 0.0) + getSubScoreOfPathList(e.getValue()));
-                });
+                .forEach(e -> scores.put(e.getKey(), scores.getOrDefault(e.getKey(), 0.0) + getSubScoreOfPathList(e.getValue())));
         return scores
                 .keySet()
                 .stream()
@@ -671,6 +670,44 @@ public class AffinityEvaluator {
     }
 
 
+    public Pair<List<Explanation>, List<String>> getExplanationsAndExamples(String key) {
+        final Set<String> candidates = new HashSet<>();
+        if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
+            candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
+        } else  {
+            candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
+        }
 
+        List<String> examples = getCandidatesOrderedByPertinence(candidates);
 
+        List<Explanation> explanations;
+        if(isFiliere(key)) {
+            Set<String> keys = ServerData.getFilieresOfGroup(key);
+            explanations =
+                    keys.stream()
+                            .map(this::getExplanations)
+                            .sorted(Comparator.comparingDouble(p -> -p.getRight()))
+                            .map(Pair::getLeft)
+                            .findFirst()
+                            .orElse(List.of());
+        } else {
+            restrictPathesToTarget(key);
+            explanations =
+                    getCloseTagsSuggestionsOrderedByIncreasingDistance(
+                                    MAX_LENGTH_FOR_SUGGESTIONS,
+                                    true,
+                            cfg.maxNbSuggestions()
+                            )
+                            .stream()
+                            .filter(e -> e.expl() != null)
+                            .flatMap(e -> e.expl().stream())
+                            .toList();
+
+        }
+        return Pair.of(
+                Explanation.merge(explanations),
+                examples
+        );
+
+    }
 }

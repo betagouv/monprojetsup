@@ -42,7 +42,7 @@ public class Simulate {
         ReferenceCases cases = ReferenceCases.loadFromFile("referenceCases.json");
 
 
-        LOGGER.info("Retrieving suggestions and explanations...");
+        LOGGER.info("Retrieving details and explanations...");
         ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX);
 
         if(ONLY_FORMATIONS) {
@@ -53,7 +53,7 @@ public class Simulate {
 
         LOGGER.info("Saving results...");
         results.toFile(REF_CASES_WITH_SUGGESTIONS);
-        results.toDetails("suggestions", true);
+        results.toDetails("details", true);
 
     }
 }

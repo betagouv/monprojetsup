@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.controllers
 import fr.gouv.monprojetsup.data.ServerData
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
+import fr.gouv.monprojetsup.suggestions.services.GetDetailsService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsAffinitiesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("$BASE_PATH")
+@RequestMapping(BASE_PATH)
 @Tag(name = "API Suggestions MonProjetSup")
 @OpenAPIDefinition(
     info = Info(title = "MonProjetSup API", version = "1.1"),
@@ -32,11 +33,12 @@ class SuggestionsControllerz(
     private val getSimpleStatsService: GetSimpleStatsService,
     private val getAffiniteFormationsService: GetFormationsAffinitiesService,
     private val sortMetiersByAffinityService: SortMetiersByAffinityService,
+    private val getDetailsService: GetDetailsService
 ) {
 
-    @Operation(summary = "Calcule l'affinité d'un profil et d'une liste de formations et métiers.")
+    @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
     @PostMapping("/affinite/formations")
-    fun getAffinite(
+    fun getAffiniteFormations(
         @RequestBody(required = true) request : GetFormationsAffinitiesService.Request
     ): GetFormationsAffinitiesService.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
@@ -44,13 +46,22 @@ class SuggestionsControllerz(
 
     @Operation(summary = "Trie une liste de métiers par affinite.")
     @PostMapping("/affinite/metiers")
-    fun getAffinite(
+    fun getAffiniteMetiers(
         @RequestBody(required = true) request : SortMetiersByAffinityService.Request
     ): SortMetiersByAffinityService.Response {
         return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
-    @Operation(summary = "Récupère une liste de suggestions de formations et métiers associés à un profil.")
+    @Operation(summary = "Récupère des détails sur un ensemble de details.")
+    @PostMapping("/details")
+    fun getDetails(
+        @RequestBody(required = true) request : GetDetailsService.Request
+    ): GetDetailsService.Response {
+        return getDetailsService.handleRequestAndExceptions(request)
+    }
+
+
+    @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/suggestions")
     fun getSuggestions(
         @RequestBody(required = true) request : GetSuggestionsService.Request
@@ -64,7 +75,7 @@ class SuggestionsControllerz(
         @RequestParam("key", required = true)  @Parameter(name = "key", description = "clé de la formation", example = "fl1") key: String,
         @RequestParam("bac", required = false)  @Parameter(name = "key", description = "type de bac", example = "STMG") bac: String?
     ): GetSimpleStatsService.Response {
-        return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key));
+        return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key))
     }
 
     @Operation(summary = "Produit des explications au sujet de l'affinité d'un profil à une formation.",

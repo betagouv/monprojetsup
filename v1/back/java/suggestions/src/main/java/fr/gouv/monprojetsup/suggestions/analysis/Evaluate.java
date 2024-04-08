@@ -95,7 +95,7 @@ public class Evaluate {
                     fos.write("***********************************************\n");
                     fos.write("\n");
                     fos.write("************ EXPECTATIONS ******************\n");
-                    for (String expectation : refCase.expectations()) {//Todo compute distance between expectation and suggestions
+                    for (String expectation : refCase.expectations()) {//Todo compute distance between expectation and details
                         /*if(!expectation.contains("parcours coordination et gestion des établissements et services sanitaires ")
                         || expectation.contains("apprentissage")) continue;*/
                         int rank = getRank(expectation, suggestionsRanks);

@@ -32,9 +32,13 @@ export const addMessage = profile_services.addMessage;
 
 export const getExplanations = suggestions_services.getExplanations;
 export const getSuggestions = suggestions_services.getSuggestions;
+export const getFormationsAffinities =
+  suggestions_services.getFormationsAffinities;
 export const getStats = suggestions_services.getStats;
 export const getFormationsOfInterest =
   suggestions_services.getFormationsOfInterest;
+export const getExplanationsAsync = suggestions_services.getExplanationsAsync;
+export const getDetails = suggestions_services.getDetails;
 
 /**************** ACCOUNT SERVICES ******************** */
 

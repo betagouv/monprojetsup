@@ -160,7 +160,8 @@ export function postLoginHandler() {
           startNavigation();
         });
       } else {
-        askProfileAndSuggestions(startNavigation);
+        startNavigation();
+        //askProfileAndSuggestions(startNavigation);
       }
     });
   });
@@ -187,6 +188,39 @@ function startNavigation() {
       }
     }
   }
+}
+
+export async function askFormationsAffinities() {
+  const profile = data.getAnonymousProfile();
+  const msg = await server.getFormationsAffinities(profile);
+  const affinites = msg.affinites;
+  /* TODO optimize
+  const msg2 = await server.getExplanationsAsync(
+    affinites.map((aff) => aff.key).limit(20),
+    profile
+  );*/
+  const detailsKeys = [];
+  for (let i = 0; i < 20; i++) {
+    //horrible way to do that
+    if (i >= affinites.length) break;
+    const key = msg.affinites[i].key;
+    detailsKeys.push(key);
+  }
+
+  const msg2 = await server.getDetails(keys, profile);
+  i = 0;
+  for (const detail of msgs2.details) {
+    //todo  check key
+    if (detail.key != detailsKeys[i]) {
+      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      break;
+    }
+    const detailKey = detail;
+    affinites[i].explanations = detail.explanations;
+    affinites[i].exemples = detail.exemples;
+  }
+
+  return affinites;
 }
 
 function askProfileAndSuggestions(handler) {

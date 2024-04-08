@@ -147,8 +147,90 @@ export async function showInscriptionScreen1() {
 export async function showInscriptionScreen2() {
   await showSubScreen("inscription2");
 }
-export async function showRecherche() {
+export async function showRecherche(affinities) {
   await showConnectedScreen("recherche");
+  clearAffinityCards();
+  for (let i = 0; i < 20; i++) {
+    if (i >= affinities.length) break;
+    const aff = affinities[i];
+    if (i == 0) displayFormationDetails(aff.key);
+    addAffinityCard(aff);
+  }
+}
+
+function clearAffinityCards() {
+  $("#explore-div-resultats-left-liste").empty();
+}
+function addAffinityCard(aff) {
+  const $div = buildAffinityCard(aff);
+  $("#explore-div-resultats-left-liste").append($div);
+  $div.on("click", () => {
+    displayFormationDetails(aff.key);
+  });
+}
+
+function displayFormationDetails(key) {
+  const label = data.getLabel(key);
+  $("#formation-details-title").html(label);
+  const summary = data.getSummary(key);
+  if (summary && summary.length > 0) {
+    $("#formation-details-summary").show();
+    $("#formation-details-summary").html(summary);
+  } else {
+    $("#formation-details-summary").hide();
+    $("#formation-details-summary").empty();
+  }
+}
+function buildAffinityCard(aff) {
+  const label = data.getLabel(aff.key);
+  const $div = $(`<div class="formation-card">
+          <div class="formation-card-header">
+            <div class="formation-card-header-type">FORMATION</div>
+            <div class="formation-card-header-sep"></div>
+            <div class="formation-card-header-affinity">
+              Taux d'affinité ${Math.trunc(100 * aff.affinite)}%
+            </div>
+          </div>
+          <div class="card-formation-title">
+            ${label}
+          </div>
+          <div class="card-geoloc">
+            <img src="img/loc.svg" alt="geo" />
+            Paris &middot; Bordeaux &middot; Noisy-le-grand &middot; Corté
+            &middot; +8
+          </div>
+          <div class="card-metiers-header">
+            Métiers accessibles après cette formation
+          </div>
+          <div class="card-metiers-list">
+            <div class="card-metier">Chef de projet</div>
+            <div class="card-metier">Designer graphique</div>
+            <div class="card-metier">Graphiste</div>
+            <div class="card-metier">+4</div>
+          </div>
+        </div>`);
+  if (aff.exemples.length == 0) {
+    $(".card-metiers-header", $div).empty();
+    $(".card-metiers-list", $div).empty();
+  } else {
+    $(".card-metiers-header", $div).html(
+      "Métiers accessibles après cette formation"
+    );
+    $(".card-metiers-list", $div).empty();
+    for (let j = 0; j < 5; j++) {
+      if (j >= aff.exemples) break;
+      const metier = aff.exemples[j];
+      const labelMetier = data.getLabel(metier);
+      $(".card-metiers-list", $div).append(
+        `<div class="card-metier">${labelMetier}</div>`
+      );
+    }
+    if (aff.exemples.length > 5)
+      $(".card-metiers-list", $div).append(
+        `<div class="card-metier">+${aff.exemples.length - 5}</div>`
+      );
+  }
+  return $div;
 }
 
 export const tabs = {

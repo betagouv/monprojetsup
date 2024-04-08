@@ -30,7 +30,8 @@ export function postToSpringService(
   service_name,
   toSend = {},
   onSuccess = null,
-  noToken = false
+  noToken = false,
+  onError = null
 ) {
   callService(
     service_name,
@@ -39,7 +40,8 @@ export function postToSpringService(
     noToken,
     "POST",
     session.getLogin(),
-    session.getToken()
+    session.getToken(),
+    onError
   );
 }
 
@@ -50,7 +52,8 @@ function callService(
   noToken = false,
   type = "POST",
   login = undefined,
-  token = undefined
+  token = undefined,
+  onError = null
 ) {
   console.log("client -- " + service_name + " --> server");
   if (!noToken) {
@@ -114,6 +117,8 @@ function callService(
             " error " +
             answer.header.error
         );
+        if (onError != null) onError(answer.header.error);
+
         if (answer.header.status == 1) {
           serverErrorHandler(answer.header.error);
         } else {
@@ -123,6 +128,7 @@ function callService(
     },
     (xhr, status, error) => {
       console.log("client <-xx " + service_name + " xxx server  :-(");
+      if (onError != null) onError(xhr);
       serverErrorHandler(xhr);
     },
     type

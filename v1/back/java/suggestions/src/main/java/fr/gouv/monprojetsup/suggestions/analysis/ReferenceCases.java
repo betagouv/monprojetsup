@@ -324,7 +324,7 @@ public record ReferenceCases(
                 new ArrayList<>()
         );
 
-        LOGGER.info("\tgetting suggestions #");
+        LOGGER.info("\tgetting details #");
         AtomicInteger j = new AtomicInteger(1);
 
         answer.suggestions.addAll(
@@ -418,7 +418,7 @@ public record ReferenceCases(
         return callSuggestionsService(new GetSuggestionsService.Request(pf)).suggestions().suggestions();
     }
     private static GetSuggestionsService.Response callSuggestionsService(GetSuggestionsService.Request pf) throws IOException, InterruptedException {
-        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/suggestions";
+        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/details";
         String response = post(url, pf);
         return new Gson().fromJson(response, GetSuggestionsService.Response.class);
     }

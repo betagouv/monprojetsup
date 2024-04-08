@@ -6,8 +6,6 @@ export {
   //
   //loads a profile coming from server
   loadSuggestions,
-  //produces a serialized version of the profile, to send to server
-  getJsonProfile,
   //
   //getters
   getProfileValue,
@@ -83,10 +81,6 @@ function init() {
     sugg_rejected: [],
   });
   loadSuggestions([]);
-}
-
-function getJsonProfile() {
-  return JSON.stringify(data.profile);
 }
 
 function ensureMandatoryProfileFields() {
