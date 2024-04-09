@@ -1,19 +1,25 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
-import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AffinityEvaluatorTest  {
+public class AffinityEvaluatorTest {
+
+    @Autowired
+    @Lazy
+    SuggestionServer server;
 
     private AffinityEvaluator getTestEvaluator(ProfileDTO profile) {
         Config cfg = new Config();
@@ -23,7 +29,6 @@ public class AffinityEvaluatorTest  {
     @BeforeClass
     @BeforeAll
     public static void prepareData() throws Exception {
-        DataSources.setRootDirectory(Path.of("../../").toAbsolutePath().toString());
         ServerData.load();
     }
 
@@ -41,16 +46,19 @@ public class AffinityEvaluatorTest  {
 
     @Test
     public void testGetAffinityEvaluation() {
+        //TODO
         assertTrue(true);
     }
 
     @Test
     public void testGetExplanation() {
+        //TODO
         assertTrue(true);
     }
 
     @Test
     public void testGetCloseTagsSuggestionsOrderedByIncreasingDistance() {
+        //TODO
         assertTrue(true);
     }
 

@@ -289,6 +289,15 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+					<workingDirectory>${project.basedir}/../tmp</workingDirectory>
+					<argLine>-Xmx8G</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
