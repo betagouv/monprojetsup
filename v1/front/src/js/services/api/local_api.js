@@ -8,6 +8,7 @@ export function callAPI(serviceName, data, successHandler, errorHandler, type) {
     serviceName.startsWith("suggestions") ||
     serviceName.startsWith("foi") ||
     serviceName.startsWith("affinite") ||
+    serviceName.startsWith("details") ||
     serviceName.startsWith("explanations")
       ? 8003
       : 8002;

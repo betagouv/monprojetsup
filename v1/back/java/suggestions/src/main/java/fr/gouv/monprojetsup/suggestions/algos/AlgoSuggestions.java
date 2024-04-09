@@ -600,7 +600,9 @@ public class AlgoSuggestions {
     public record DetailedSuggestion(
             String key,
             @NotNull List<Explanation> explanations,
-            @NotNull List<String> exemples
+            @NotNull List<String> exemples,
+            @NotNull List<String> fois
+
 
     ) {
     }

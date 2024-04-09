@@ -165,22 +165,72 @@ function addAffinityCard(aff) {
   const $div = buildAffinityCard(aff);
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(aff.key);
+    displayFormationDetails(aff);
   });
 }
 
-function displayFormationDetails(key) {
+function displayFormationDetails(aff) {
+  const key = aff.key;
+  //title
   const label = data.getLabel(key);
-  $("#formation-details-title").html(label);
+  $(".formation-details-title").html(label);
+  //summary
+  displaySummary(key);
+  //links
+  const forsOfInterest
+  displayUrls(key, forsOfInterest);
+}
+
+function displaySummary(key) {
   const summary = data.getSummary(key);
   if (summary && summary.length > 0) {
-    $("#formation-details-summary").show();
-    $("#formation-details-summary").html(summary);
+    $(".formation-details-summary").show();
+    $(".formation-details-summary").html(summary);
   } else {
-    $("#formation-details-summary").hide();
-    $("#formation-details-summary").empty();
+    $(".formation-details-summary").hide();
+    $(".formation-details-summary").empty();
   }
 }
+
+function displayUrls(subkey, forsOfInterest) {
+  const urls = [...data.getUrls(subkey, true)];
+  const label = data.getExtendedLabel(subkey);
+  let found = urls.length > 0;
+  if (data.isFiliere(subkey)) {
+    let uri = data.getParcoursupSearchAdress([subkey], label, forsOfInterest);
+    uri = uri.replace("'", " "); //this caracter is ok in uris but not in html
+    urls.push(uri);
+    found = true;
+  }
+
+  $(".formation-details-links").empty();
+  for (const url of urls) {
+    $(".formation-details-links").append(
+      `<div class="formation-details-link">
+          <a href="${url}"
+            >${getUrlLabel(url)}<img
+              src="img/link-dsfr.svg"
+              alt="lien vers le site"
+          /></a>
+        </div>
+        `
+    );
+  }
+}
+
+function getUrlLabel(url) {
+  if (url.includes("onisep") || url.includes("terminales")) {
+    return "Plus d'infos sur Onisep";
+  }
+  if (url.includes("pole")) {
+    return "Plus d'infos sur France Travail";
+  }
+  if (url.includes("parcoursup")) {
+    return "Plus d'infos sur Parcoursup";
+  }
+  return "Plus d'infos";
+}
+
 function buildAffinityCard(aff) {
   const label = data.getLabel(aff.key);
   const $div = $(`<div class="formation-card">
