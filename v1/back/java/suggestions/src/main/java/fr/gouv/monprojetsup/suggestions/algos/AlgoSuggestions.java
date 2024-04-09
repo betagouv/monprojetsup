@@ -32,6 +32,7 @@ import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService.getFormationsOfInterest;
 import static java.lang.Math.max;
 import static java.lang.Math.signum;
 
@@ -230,11 +231,18 @@ public class AlgoSuggestions {
         keys.forEach(key -> {
             affinityEvaluator.getExplanations(key);
             val expls = affinityEvaluator.getExplanationsAndExamples(key);
+
+            val gtas = getFormationsOfInterest(
+                    List.of(key),
+                    pf.geo_pref()
+            );
+
             result.add(
                     new DetailedSuggestion(
                             key,
                             expls.getLeft(),
-                            expls.getRight()
+                            expls.getRight(),
+                            gtas
                     )
             );
         });
