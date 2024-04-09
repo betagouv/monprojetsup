@@ -16,6 +16,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>fr.gouv.education</groupId>
+            <artifactId>parcoursup-carte</artifactId>
+            <version>2023-3-orientation</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10</version>
