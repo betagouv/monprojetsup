@@ -650,6 +650,10 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     /* 125% */
     margin-bottom: 40px;
 }
+.formation-details-stats-bacs-repartition {
+  display: flex;
+  flex-wrap: wrap;
+}
 .formation-details-stats-bac-badge {
   margin-left: 12px;
   color: var(--light-options-illustration-color-sun-default-beige-gris-galet-sun-407, #6A6156);
@@ -675,10 +679,7 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 .formation-details-reasons {
   display: flex;
   flex-wrap: wrap;
-}
 
-
-.formation-details-reason {
   margin-top: 16px;
 
   color: var(--light-decisions-border-border-action-high-grey, #161616);
@@ -689,23 +690,32 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     line-height: 20px;
     /* 125% */
 }
-.formation-details-reason img {
-  margin-right: 8px;
+.formation-details-reason {
+  margin-bottom: 16px;
 }
+.formation-details-reason-icon {
+ margin-right: 8px;
+}
+
+.formation-details-tags{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
 
 .formation-details-exemples-metiers-container {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 40px;
 }
-.formation-details-exemples-metiers
+
 .formation-details-sub-title {
   margin-bottom: 16px;
 }
 
 .formation-details-exemple-metier {
     margin-left: 8px;
-
+      margin-bottom: 16px;
     /* 166.667% */
     border-radius: 16px;
       background: #E3E3FD;

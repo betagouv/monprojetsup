@@ -12,7 +12,9 @@ import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +38,7 @@ public class ServerData {
     public static PsupData backPsupData;
     public static PsupStatistiques statistiques;
     public static OnisepData onisepData;
+    public static JsonCarte carte;
 
     public static Map<String, Set<String>> liensSecteursMetiers;
     public static Map<DomainePro, Set<String>> liensDomainesMetiers;
@@ -110,16 +113,26 @@ public class ServerData {
         BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
 
         ServerData.onisepData = backendData.onisepData();
+        ServerData.carte = backendData.carte();
 
         backPsupData = backendData.psupData();
         backPsupData.cleanup();//should be useless but it does not harm...
 
+        val groupes = backPsupData.getCorrespondances();
+
         backPsupData.formations().formations.values()
                 .forEach(f -> {
                     int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
+                    String key = Constants.gFlCodToFrontId(gFlCod);
                     filToFormations
-                            .computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new ArrayList<>())
+                            .computeIfAbsent(key, z -> new ArrayList<>())
                             .add(f);
+                    if(groupes.containsKey(key)) {
+                        filToFormations
+                                .computeIfAbsent(groupes.get(key), z -> new ArrayList<>())
+                                .add(f);
+
+                    }
                 });
 
         ServerData.cities = new CitiesBack(backendData.cities().cities());

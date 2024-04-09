@@ -812,6 +812,9 @@ function updateAutoComplete() {
 }
 
 export function startsWith(str, prefixes) {
+  if (str == undefined) {
+    return false;
+  }
   for (const pref of prefixes) {
     if (str.startsWith(pref)) return true;
   }

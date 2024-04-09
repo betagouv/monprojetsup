@@ -53,13 +53,6 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
 
     }
 
-    public record Affinity(
-            String key,
-            double affinite
-
-    ) {
-    }
-
     @Override
     protected @NotNull Response handleRequest(@NotNull GetDetailsService.Request req) throws Exception {
 

@@ -421,11 +421,11 @@ public class AffinityEvaluator {
         double bonus = Config.NO_MATCH_SCORE;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = AlgoSuggestions.getDistanceKm(fl, cityName);
+            @NotNull val result = AlgoSuggestions.getGeoExplanations(fl, cityName);
             int distanceKm = result.stream().mapToInt(Explanation.ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
-                if (expl != null && distanceKm < 150) {
+                if (expl != null && distanceKm < 50) {
                     expl.add(new Paire<>(weight / distanceKm,
                                     Explanation.getGeoExplanation(result)
                             )
@@ -676,6 +676,13 @@ public class AffinityEvaluator {
             candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
         } else  {
             candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
+            if(isLas(key)) {
+                String key2 = lasCorrespondance.lasToGeneric().get(key);
+                if(key2 != null) {
+                    candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
+                    candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
+                }
+            }
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);

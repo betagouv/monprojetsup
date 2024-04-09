@@ -32,7 +32,6 @@ import * as suggestions from "./tabs/exploration";
 import * as notes from "./notes/notes";
 import * as details from "./details/detailsModal";
 import * as data from "./../data/data";
-import * as account from "./account/account";
 import * as connect from "./account/connect";
 import * as bin from "./tabs/bin";
 import * as session from "../app/session";
@@ -153,32 +152,45 @@ export async function showRecherche(affinities) {
   for (let i = 0; i < 20; i++) {
     if (i >= affinities.length) break;
     const aff = affinities[i];
-    if (i == 0) displayFormationDetails(aff.key);
-    addAffinityCard(aff);
+    if (i == 0) displayFormationDetails(aff.details);
+    addAffinityCard(aff.key, aff.affinite, aff.details);
   }
 }
 
 function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
 }
-function addAffinityCard(aff) {
-  const $div = buildAffinityCard(aff);
+function addAffinityCard(key, affinite, details) {
+  const $div = buildAffinityCard(
+    key,
+    affinite,
+    details.cities,
+    details.examples
+  );
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(aff);
+    displayFormationDetails(details);
   });
 }
 
-function displayFormationDetails(aff) {
-  const key = aff.key;
+function displayFormationDetails(details) {
+  const key = details.key;
   //title
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
   //summary
   displaySummary(key);
   //links
-  const forsOfInterest
-  displayUrls(key, forsOfInterest);
+  displayUrls(key, details.fois);
+  //stats
+  displayStats(details.stats.stats);
+  //Explication
+  const devMode = false;
+  displayExplanations(details.explanations, devMode);
+  //exemples
+  displayMetiers(details.examples);
+  //attendus
+  displayAttendus(key);
 }
 
 function displaySummary(key) {
@@ -231,14 +243,317 @@ function getUrlLabel(url) {
   return "Plus d'infos";
 }
 
-function buildAffinityCard(aff) {
-  const label = data.getLabel(aff.key);
+function format(x, nbDigits) {
+  return new Intl.NumberFormat("fr-FR", {
+    maximumFractionDigits: nbDigits,
+    style: "percent",
+    roundingMode: "floor",
+  })
+    .format(x)
+    .replace(",", ".");
+}
+
+function displayStats(stats) {
+  if (stats == null || stats == undefined || !(data.tousBacs in stats)) {
+    $(".formation-details-stats-bloc").hide();
+  } else {
+    $(".formation-details-stats-bloc").show();
+    const nbAdmis = [];
+    let total = -1;
+    for (const o of Object.entries(stats)) {
+      const nb = o[1].nbAdmis;
+      let bac = o[0];
+      if (bac == data.tousBacs) {
+        total = nb;
+      } else if (nb > 0) {
+        nbAdmis.push(o);
+      }
+    }
+
+    if (total > 0 && nbAdmis.length > 0) {
+      $(".formation-details-stats-bloc-nb-admis").html(total);
+      $(".formation-details-stats-bacs-repartition").empty();
+      nbAdmis.sort((x, y) => {
+        return y[1].nbAdmis - x[1].nbAdmis;
+      });
+
+      /*<ol class="progressbar mt-3">
+    <span class="stats-bar-step out" style=";width:${per5}%"> 
+      <span class="stats-bar-step-label rounded-pill py-1 px-2 stats">${note5}</span>
+    </span>*/
+
+      let lastpct = 0;
+      for (const d of nbAdmis) {
+        let bac = data.ppBac(d[0]);
+        const nb = d[1].nbAdmis;
+        const pct = (100 * nb) / total;
+        if (pct < 1) break;
+        $(".formation-details-stats-bacs-repartition").append(
+          `
+          <div class="formation-details-stats-bac-badge">${bac} ${format(
+            pct / 100,
+            0
+          )}</div>
+          `
+        );
+      }
+      $(".formation-details-stats-bloc").show();
+    } else {
+      $(".formation-details-stats-bloc").hide();
+    }
+
+    /*
+    <div class="formation-details-stats-bacs">
+          Répartition par filières
+          <div class="formation-details-stats-bac-badge">Générale 89%</div>
+          <div class="formation-details-stats-bac-badge">Pro 3.7%</div>
+          <div class="formation-details-stats-bac-badge">STMG 3.3%</div>
+          <div class="formation-details-stats-bac-badge">STI2D 1%</div>
+        </div>
+    */
+  }
+}
+
+function addExplanation(msg, icon = "fr-icon-success-line") {
+  $(".formation-details-reasons").append(
+    `
+    <div class="formation-details-reason ">
+    <span class="formation-details-reason-icon ${icon}" aria-hidden="true"></span>${msg}</div>`
+  );
+}
+
+function getHTMLMiddle50(moy) {
+  const intLow = moy.middle50.rangEch25 / data.statNotesDivider();
+  const intHigh = moy.middle50.rangEch75 / data.statNotesDivider();
+  if (intHigh == intLow) {
+    //un cas très rare
+    return `[${intLow}, ${intLow + 0.5}[`;
+  } else {
+    return `[${intLow},${intHigh}]`;
+  }
+}
+function displayExplanations(explications, detailed) {
+  if (
+    explications == null ||
+    explications === undefined ||
+    explications.length == 0
+  ) {
+    $(".formation-details-pourquoi").hide();
+    return;
+  }
+  $(".formation-details-pourquoi").show();
+  $(".formation-details-reasons").empty();
+
+  const geos = explications.filter((expl) => expl.geo);
+  if (geos.length > 0) {
+    const villeToDist = {};
+    for (const expl of geos) {
+      for (const d of expl.geo) {
+        let dist = d.distance;
+        const city = d.city;
+        if (city in villeToDist) {
+          dist = Math.min(dist, villeToDist[city]);
+        }
+        villeToDist[city] = dist;
+      }
+      for (const { geo } of geos) {
+        for (const { city, distance, form } of geo) {
+          let dist = distance;
+          if (city in villeToDist) {
+            dist = Math.min(dist, villeToDist[city]);
+          }
+          villeToDist[city] = dist;
+        }
+      }
+    }
+    let msg = `Une ou plusieurs formations de ce type sont situées à proximité de `;
+    for (const [city, dist] of Object.entries(villeToDist)) {
+      msg = msg + ` ${city} (${dist}km)`;
+    }
+    msg = msg + ".";
+    addExplanation(msg, "fr-icon-map-pin-2-line");
+  }
+
+  let simis = explications
+    .filter((expl) => expl.simi && expl.simi.fl)
+    .map((expl) => data.getExtendedLabel(expl.simi.fl))
+    .filter((l) => l);
+  simis = Array.from(new Set(simis));
+  if (simis.length == 1) {
+    addExplanation(
+      `Cette formation est similaire à <em>&quot;${simis[0]}&quot;</em>.`,
+      "fr-icon-arrow-right-up-line"
+    );
+  } else if (simis.length > 1) {
+    str.push(
+      `Cette formation est similaire à: <em>&quot;${simis.join(
+        "&quot;,&quot;"
+      )}</em>.</p>`,
+      "fr-icon-arrow-right-up-line"
+    );
+  }
+  /*  } else if (expl.simi && expl.simi.fl) {
+   */
+
+  for (const expl of explications) {
+    addExplanation2(expl);
+  }
+}
+
+function addExplanation2(expl) {
+  const giveDetailsFlag = false; //keep it for later
+  let str = [];
+  if (expl.dur && expl.dur.option == "court") {
+    addExplanation(
+      "Tu as une préférence pour les études courtes.",
+      "fr-icon-pie-chart-box-line"
+    );
+  } else if (expl.dur && expl.dur.option == "long") {
+    addExplanation(
+      "Tu as une préférence pour les études longues.",
+      "fr-icon-pie-chart-box-line"
+    );
+  } else if (expl.app) {
+    addExplanation("Cette formation existe en apprentissage.");
+  } else if (expl.tag || expl.tags) {
+    const labels = [];
+    if (giveDetailsFlag && expl.tag && expl.tag.pathes) {
+      //al details
+      for (const path of expl.tag.pathes) {
+        const nodes = path.nodes;
+        let strs = [];
+        if (nodes) {
+          for (const node of nodes) {
+            let label = data.getExtendedLabel(node) + " (" + node + ")";
+            if (!label) label = node;
+            strs.push(label);
+          }
+        }
+        strs.pop();
+        const weight = path.weight;
+        strs.push(`[score ${Math.round(1000 * weight)}]`);
+        labels.push(strs.join(" - "));
+      }
+    } else {
+      //no details
+      const s = new Set();
+      if (expl?.tags?.ns) {
+        for (const node of expl.tags.ns) {
+          //let label = data.getExtendedLabel(node);
+          let label = data.getExtendedLabel(node);
+          s.add(label);
+        }
+      }
+      if (expl?.tag?.pathes) {
+        for (const path of expl.tag.pathes) {
+          const nodes = path.nodes;
+          if (nodes && nodes.length > 0) {
+            const node = nodes[0];
+            let label = data.getExtendedLabel(node);
+            s.add(label);
+          }
+        }
+      }
+      for (const l of s) {
+        let label = l;
+        const firstIndexOcc = label.indexOf("(");
+        if (firstIndexOcc > 0) {
+          label = label.substring(0, firstIndexOcc - 1);
+        }
+        labels.push(label);
+      }
+    }
+    const msgs = [];
+    //msgs.push(`<p>En lien avec tes choix et ta sélection:</p>`);
+    msgs.push(`<div class="formation-details-tags">`);
+    for (const label of labels) {
+      msgs.push(
+        `<div  class="formation-details-exemple-metier">${label}</div>`
+      );
+    }
+    msgs.push("</div>");
+    addExplanation("En lien avec tes choix " + msgs.join(""));
+  } else if (expl.bac) {
+    addExplanation(
+      "Tu as auto-évalué ta " +
+        " moyenne générale à <b>" +
+        +expl.bac.moy +
+        "</b>. " +
+        "Parmi les lycéennes et lycéens " +
+        (expl.bac.bacUtilise == ""
+          ? ""
+          : "de série '" + expl.bac.bacUtilise + "' ") +
+        "admis dans ce type de formation en 2023, la moitié avait une moyenne au bac dans l'intervalle <b>" +
+        getHTMLMiddle50(expl.bac) +
+        "</b>."
+    );
+  } else if (expl.tbac) {
+    addExplanation("Idéal si tu as un bac série '" + expl.tbac.bac + "'.</p>");
+  } else if (expl.perso) {
+    return; // "<p>Tu as toi-même ajouté cette formation à ta sélection.</p>";
+  } else if (expl.spec) {
+    const stats = expl.spec.stats;
+    let result = "";
+    for (const [spe, pourcentage] of Object.entries(expl.spec.stats)) {
+      result +=
+        "<p>La spécialité '" +
+        spe +
+        "' a été choisie par " +
+        Math.round(100 * pourcentage) +
+        "% des candidats admis dans ce type de formation en 2023.</p>";
+    }
+    addExplanation(result);
+  } else if (expl.interets) {
+    const tags = expl.interets.tags;
+    let result =
+      "<p>Tu as demandé à consulter les formations correspondant aux mots-clés '" +
+      tags +
+      "'.</p>";
+    addExplanation(result);
+  }
+}
+
+function displayMetiers(metiers) {
+  if (metiers == null || metiers === undefined || metiers.length == 0) {
+    $(".formation-details-exemples-metiers").hide();
+  } else {
+    $(".formation-details-exemples-metiers").show();
+    $(".formation-details-exemples-metiers-container").empty();
+    for (let j = 0; j < 5; j++) {
+      if (j >= metiers.length) break;
+      const metier = metiers[j];
+      const labelMetier = data.getLabel(metier);
+      $(".formation-details-exemples-metiers-container").append(
+        `<div class="formation-details-exemple-metier">${labelMetier}</div>`
+      );
+    }
+  }
+}
+
+function displayAttendus(key) {
+  const d = data.getEDSData(key);
+  $("#accordion-attendus").empty();
+  $("#accordion-eds").empty();
+  if (d) {
+    const label = d.label;
+    const eds = d.eds;
+    if (eds.attendus) {
+      $("#accordion-attendus").html(eds.attendus);
+    }
+    if (eds.recoEDS) {
+      $("#accordion-eds").html(eds.recoEDS);
+    }
+  }
+}
+
+function buildAffinityCard(key, affinite, villes, metiers) {
+  const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header">
             <div class="formation-card-header-type">FORMATION</div>
             <div class="formation-card-header-sep"></div>
             <div class="formation-card-header-affinity">
-              Taux d'affinité ${Math.trunc(100 * aff.affinite)}%
+              Taux d'affinité ${Math.trunc(100 * affinite)}%
             </div>
           </div>
           <div class="card-formation-title">
@@ -246,39 +561,44 @@ function buildAffinityCard(aff) {
           </div>
           <div class="card-geoloc">
             <img src="img/loc.svg" alt="geo" />
-            Paris &middot; Bordeaux &middot; Noisy-le-grand &middot; Corté
-            &middot; +8
           </div>
           <div class="card-metiers-header">
-            Métiers accessibles après cette formation
+            Exemples de métiers accessibles après cette formation
           </div>
           <div class="card-metiers-list">
-            <div class="card-metier">Chef de projet</div>
-            <div class="card-metier">Designer graphique</div>
-            <div class="card-metier">Graphiste</div>
-            <div class="card-metier">+4</div>
           </div>
         </div>`);
-  if (aff.exemples.length == 0) {
-    $(".card-metiers-header", $div).empty();
-    $(".card-metiers-list", $div).empty();
+  if (villes.length == 0) {
+    $(".card-geoloc", $div).empty();
   } else {
-    $(".card-metiers-header", $div).html(
-      "Métiers accessibles après cette formation"
-    );
+    for (let j = 0; j < 5; j++) {
+      if (j >= villes.length) break;
+      const ville = villes[j];
+      $(".card-geoloc", $div).append(
+        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + ville
+      );
+    }
+    if (villes.length > 5) {
+      $(".card-geoloc", $div).append(`+${villes.length - 5}`);
+    }
+  }
+
+  if (metiers.length > 0) {
     $(".card-metiers-list", $div).empty();
     for (let j = 0; j < 5; j++) {
-      if (j >= aff.exemples) break;
-      const metier = aff.exemples[j];
+      if (j >= metiers.length) break;
+      const metier = metiers[j];
       const labelMetier = data.getLabel(metier);
       $(".card-metiers-list", $div).append(
         `<div class="card-metier">${labelMetier}</div>`
       );
     }
-    if (aff.exemples.length > 5)
+    if (metiers.length > 5)
       $(".card-metiers-list", $div).append(
-        `<div class="card-metier">+${aff.exemples.length - 5}</div>`
+        `<div class="card-metier">+${metiers.length - 5}</div>`
       );
+  } else {
+    $(".card-metiers-header", $div).empty();
   }
   return $div;
 }

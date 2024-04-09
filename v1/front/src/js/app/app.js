@@ -210,14 +210,13 @@ export async function askFormationsAffinities() {
 
   const msg2 = await server.getDetails(keys, profile);
   let i = 0;
-  for (const detail of msg2.details) {
+  for (const details of msg2.details) {
     //todo  check key
-    if (detail.key != keys[i]) {
+    if (details.key != keys[i]) {
       frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
       break;
     }
-    affinites[i].explanations = detail.explanations;
-    affinites[i].exemples = detail.exemples;
+    affinites[i].details = details;
     i++;
   }
 

@@ -267,7 +267,13 @@ public class Explanation {
         return sb.toString();
     }
 
-    public record ExplanationGeo  (int distance, String city, @Nullable String form) {}
+    public record ExplanationGeo  (int distance, String city, @Nullable String form) {
+
+        public ExplanationGeo merge2(ExplanationGeo other) {
+            if(other == null) return this;
+            return (this.distance <= other.distance) ? this : other;
+        }
+    }
 
     public String toExplanation() {
         StringBuilder sb = new StringBuilder();

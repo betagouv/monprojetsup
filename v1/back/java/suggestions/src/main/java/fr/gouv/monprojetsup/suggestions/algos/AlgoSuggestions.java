@@ -12,12 +12,17 @@ import fr.gouv.monprojetsup.data.model.cities.Distance;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.common.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.Log;
+import fr.gouv.parcoursup.carte.modele.modele.Etablissement;
 import fr.parcoursup.carte.algos.tools.Paire;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.val;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,16 +30,18 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.ServerData.*;
+import static fr.gouv.monprojetsup.data.tools.GeodeticDistance.distance;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
-import static fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService.getFormationsOfInterest;
-import static java.lang.Math.max;
-import static java.lang.Math.signum;
+import static fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService.getGeographicInterests;
+import static java.lang.Math.*;
 
 public class AlgoSuggestions {
 
@@ -52,7 +59,7 @@ public class AlgoSuggestions {
     private static final double LAX_TO_PASS_METIERS_PENALTY = 0.25;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
 
-    private static PsupStatistiques.LASCorrespondance lasCorrespondance;
+    protected static PsupStatistiques.LASCorrespondance lasCorrespondance;
 
     @Getter
     protected static final Set<String> relatedToHealth = new HashSet<>();
@@ -186,7 +193,7 @@ public class AlgoSuggestions {
         });
 
         //rounding to 6 digits
-        affnites.entrySet().forEach(e -> e.setValue(max(0.0, Math.min(1.0, Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
+        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
         return affnites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight())).toList();
     }
 
@@ -213,6 +220,7 @@ public class AlgoSuggestions {
     }
 
 
+
     /**
      * Get all details about details
      *
@@ -230,19 +238,44 @@ public class AlgoSuggestions {
 
         keys.forEach(key -> {
             affinityEvaluator.getExplanations(key);
+
+            /* explanations */
             val expls = affinityEvaluator.getExplanationsAndExamples(key);
 
-            val gtas = getFormationsOfInterest(
+            /* formations of interest */
+            val fois = getGeographicInterests(
                     List.of(key),
-                    pf.geo_pref()
+                    pf.geo_pref(),
+                    2
+            ).stream().map(Explanation.ExplanationGeo::form).toList();
+
+            /* cities */
+            val citiesDistances = new HashMap<String, Integer>();
+            getGeographicInterests(
+                    List.of(key),
+                    pf.geo_pref(),
+                    Integer.MAX_VALUE
+            ).forEach(e ->
+                    citiesDistances.put(
+                            e.city(),
+                            min(citiesDistances.getOrDefault(e.city(), Integer.MAX_VALUE), e.distance())
+                    )
             );
+
+            val cities = AlgoSuggestions.getCities(key, pf.geo_pref());//citiesDistances.keySet().stream().sorted(Comparator.comparing(citiesDistances::get)).toList();
+
+            val stats = ServerData.getSimpleGroupStats(
+                    pf.bac(),
+                    key);
 
             result.add(
                     new DetailedSuggestion(
                             key,
                             expls.getLeft(),
                             expls.getRight(),
-                            gtas
+                            fois,
+                            cities,
+                            stats
                     )
             );
         });
@@ -250,6 +283,8 @@ public class AlgoSuggestions {
         return result;
 
     }
+
+
 
     /**
      * Get explanations and examples associated to a suggestion
@@ -297,7 +332,7 @@ public class AlgoSuggestions {
              (int) signum(filieresScores.get(o2) - filieresScores.get(o1))
         );
 
-        int nbSugg = Math.min(cfg.maxNbSuggestions(), bestSuggestionsGrouped.size());
+        int nbSugg = min(cfg.maxNbSuggestions(), bestSuggestionsGrouped.size());
 
         return bestSuggestionsGrouped.stream()
                         .limit(nbSugg)
@@ -361,18 +396,12 @@ public class AlgoSuggestions {
     /**
      * computes minimal distance between a city and a filiere
      *
-     * @param node     the node, either "fl123" or "fr1223"
+     * @param flKey     the node, either "fl123" or "fr1223"
      * @param cityName the city name
      * @return the minimal distance of the city to a etablissement providing this filiere
      */
-    public static @NotNull List<Explanation.ExplanationGeo> getDistanceKm(String node, String cityName) {
-
-        /*
-                                    distanceKm.intValue(),
-                                    cityName,
-                                    result.getRight()))
-        */
-        Paire<String, String> p = new Paire<>(node, cityName);
+    public static @NotNull List<Explanation.ExplanationGeo> getGeoExplanations(String flKey, String cityName) {
+        Paire<String, String> p = new Paire<>(flKey, cityName);
 
         val l = distanceCaches.get(p);
         if( l != null) return l;
@@ -383,10 +412,10 @@ public class AlgoSuggestions {
 
         List<Formation> fors = Collections.emptyList();
         ///attention aux groupes
-        if (node.startsWith(FILIERE_PREFIX)) {
-            fors = getFormationsFromFil(node);
-        } else if (node.startsWith((Constants.FORMATION_PREFIX))) {
-            int gTaCod = Integer.parseInt(node.substring(2));
+        if (flKey.startsWith(FILIERE_PREFIX)) {
+            fors = getFormationsFromFil(flKey);
+        } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
+            int gTaCod = Integer.parseInt(flKey.substring(2));
             Formation f = backPsupData.formations().formations.get(gTaCod);
             if (f != null) {
                 fors = List.of(f);
@@ -408,20 +437,45 @@ public class AlgoSuggestions {
                 cityName,
                 result.getRight()
                 )
-                ).toList();
+                )
+                        .sorted(Comparator.comparing(Explanation.ExplanationGeo::distance))
+                        .toList();
         distanceCaches.put(p, e);
         return e;
     }
-    public static @NotNull List<Explanation.ExplanationGeo> getDistanceKm(Collection<String> node, String cityName) {
+    public static @NotNull List<Explanation.ExplanationGeo> getGeoExplanations(Collection<String> flKeys, String cityName, int maxResultsPerNode) {
         return
-                node.stream().flatMap(n -> getDistanceKm(n, cityName).stream())
+                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName).stream().limit(maxResultsPerNode))
                         .filter(Objects::nonNull)
                         .sorted(Comparator.comparing(Explanation.ExplanationGeo::distance))
-                        .distinct()
-                        .limit(2)
                         .toList();
     }
 
+    private static List<String> getCities(String flKey, Set<String> favorites) {
+
+        List<Coords> cities = favorites.stream().flatMap(cityName -> cityClientKeyToCities.get(cityName).stream()).distinct().toList();
+        if (cities.isEmpty())
+            return Collections.emptyList();
+
+        val formations = getFormationsFromFil(flKey);
+
+        Map<String, Double> citiesDistances = new HashMap<>();
+
+        formations
+                .stream()
+                .filter(f -> f.lat != null)
+                .forEach(f -> {
+            Etablissement etablissement = ServerData.carte.etablissements.get( f.etablissement);
+            if(etablissement != null) {
+                String city = etablissement.getNm();
+                double distance = cities.stream().mapToDouble(c -> distance(c.gps_lat(), c.gps_lng(), f.lat, f.lng))
+                        .min().orElse(Double.MAX_VALUE);
+                citiesDistances.put(city, min(citiesDistances.getOrDefault(city, Double.MAX_VALUE), distance));
+            }
+        });
+
+        return citiesDistances.keySet().stream().sorted(Comparator.comparing(citiesDistances::get)).toList();
+    }
 
     protected static final Map<String, List<Coords>> cityClientKeyToCities = new HashMap<>();
 
@@ -606,12 +660,19 @@ public class AlgoSuggestions {
 
 
     public record DetailedSuggestion(
+
+            @Schema(description = "clé", example = "fl2014", required = true)
             String key,
+            @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class, required = true))
             @NotNull List<Explanation> explanations,
-            @NotNull List<String> exemples,
-            @NotNull List<String> fois
-
-
+            @ArraySchema(arraySchema = @Schema(description = "exemples de métiers, triés par affinité décroissante", example = "[\"met_129\",\"met_84\",\"met_5\"]", required = true))
+            @NotNull List<String> examples,
+            @ArraySchema(arraySchema = @Schema(description = "formations d'intérêt", example = "[\"ta201\",\"ta123\"]", required = true))
+            @NotNull List<String> fois,
+            @ArraySchema(arraySchema = @Schema(description = "villes disponibles, triées par affinité décroissantes", example = "[\"Nantes\",\"Melun\"]", required = true))
+            @NotNull List<String> cities,
+            @Schema(description = "statistiques 'admission",  required = true)
+            @NotNull StatsContainers.SimpleStatGroupParBac stats
     ) {
     }
 }

@@ -10,12 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.getDistanceKm;
+import java.util.*;
 
 @Service
 public class GetFormationsOfInterestService extends MyService<GetFormationsOfInterestService.Request, GetFormationsOfInterestService.Response> {
@@ -25,18 +20,20 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
         super(Request.class);
     }
 
-    public static List<String> getFormationsOfInterest(@Nullable List<String> keys, @Nullable Set<String> cities) {
-        if(keys == null || cities == null || keys.isEmpty() || cities.isEmpty()) return Collections.emptyList();
+    public static List<Explanation.ExplanationGeo> getGeographicInterests(@Nullable List<String> flKeys, @Nullable Set<String> cities, int maxFormationsPerFiliere) {
+        if(flKeys == null || cities == null || flKeys.isEmpty() || cities.isEmpty()) return Collections.emptyList();
         return cities.stream().flatMap(city ->
-                        keys.stream()
+                        flKeys.stream()
                                 .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? AlgoSuggestions.getDistanceKm(ServerData.reverseFlGroups.get(key), city).stream()
-                                        : getDistanceKm(key, city).stream()
+                                        ? AlgoSuggestions.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
+                                        : AlgoSuggestions.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
                                 )
                 ).filter(Objects::nonNull)
-                .map(Explanation.ExplanationGeo::form)
+                .sorted(Comparator.comparing(Explanation.ExplanationGeo::distance))
                 .toList();
     }
+
+
 
     public record Request(
             @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]", required = false))
@@ -57,10 +54,11 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) {
 
-        List<String> gtas = getFormationsOfInterest(
+        List<String> gtas = getGeographicInterests(
                 req.keys(),
-                req.geo_pref()
-        );
+                req.geo_pref(),
+                2
+        ).stream().map(Explanation.ExplanationGeo::form).toList();
 
         return new Response(gtas);
     }
