@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Slf4j
 public class WritePidToFile {
 
     /**
@@ -26,7 +25,7 @@ public class WritePidToFile {
         try {
             // Write the PID to the file
             Files.writeString(Paths.get(filePath), Long.toString(pid));
-            log.info("Successfully wrote PID to file: $filePath");
+            System.out.println("Successfully wrote PID to file: $filePath");
         } catch (IOException e) {
             System.err.println("An error occurred while writing the PID to file: ");
         }
