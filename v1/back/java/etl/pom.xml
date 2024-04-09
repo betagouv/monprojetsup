@@ -24,24 +24,19 @@
 			<version>2023-3-orientation</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.15.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.angus</groupId>
-			<artifactId>angus-mail</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.opennlp</groupId>
 			<artifactId>opennlp-tools</artifactId>
 			<version>1.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
 		<dependency>
@@ -55,30 +50,12 @@
 			<version>2.10</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mikesamuel</groupId>
-			<artifactId>json-sanitizer</artifactId>
-			<version>1.2.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -104,11 +81,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
@@ -117,21 +89,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.bitbucket.b_c</groupId>
-			<artifactId>jose4j</artifactId>
-			<version>0.9.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.sourceforge.github.components/jsonwebtoken-jjwt -->
-		<dependency>
-			<groupId>io.sourceforge.github.components</groupId>
-			<artifactId>jsonwebtoken-jjwt</artifactId>
-			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
@@ -149,16 +106,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>3.2.2</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-			<artifactId>owasp-java-html-sanitizer</artifactId>
-			<version>20220608.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>4.1.86.Final</version>
 		</dependency>
 	</dependencies>
 
