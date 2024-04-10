@@ -47,6 +47,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    ports:
+      - ${APP_DB_PORT_EXPOSED}:${APP_DB_PORT}
     volumes:
       - ./app/db:/var/lib/postgresql/data
 

@@ -368,7 +368,7 @@ function displayExplanations(explications, detailed) {
     }
     let msg = `Une ou plusieurs formations de ce type sont situées à proximité de `;
     for (const [city, dist] of Object.entries(villeToDist)) {
-      msg = msg + ` ${city} (${dist}km)`;
+      msg = msg + ` ${city} (${dist < 1 ? "moins de 1 " : dist}km)`;
     }
     msg = msg + ".";
     addExplanation(msg, "fr-icon-map-pin-2-line");
