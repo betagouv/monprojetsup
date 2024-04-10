@@ -37,7 +37,6 @@ export const getFormationsAffinities =
 export const getStats = suggestions_services.getStats;
 export const getFormationsOfInterest =
   suggestions_services.getFormationsOfInterest;
-export const getExplanationsAsync = suggestions_services.getExplanationsAsync;
 export const getDetails = suggestions_services.getDetails;
 
 /**************** ACCOUNT SERVICES ******************** */

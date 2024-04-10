@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
+import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
-import fr.gouv.monprojetsup.suggestions.algos.Explanation;
+import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,16 +20,16 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
         super(Request.class);
     }
 
-    public static List<Explanation.ExplanationGeo> getGeographicInterests(@Nullable List<String> flKeys, @Nullable Set<String> cities, int maxFormationsPerFiliere) {
+    public static List<ExplanationGeo> getGeographicInterests(@Nullable List<String> flKeys, @Nullable Set<String> cities, int maxFormationsPerFiliere) {
         if(flKeys == null || cities == null || flKeys.isEmpty() || cities.isEmpty()) return Collections.emptyList();
         return cities.stream().flatMap(city ->
                         flKeys.stream()
                                 .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? AlgoSuggestions.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
-                                        : AlgoSuggestions.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
+                                        ? Distances.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
+                                        : Distances.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
                                 )
                 ).filter(Objects::nonNull)
-                .sorted(Comparator.comparing(Explanation.ExplanationGeo::distance))
+                .sorted(Comparator.comparing(ExplanationGeo::distance))
                 .toList();
     }
 
@@ -58,7 +58,7 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
                 req.keys(),
                 req.geo_pref(),
                 2
-        ).stream().map(Explanation.ExplanationGeo::form).toList();
+        ).stream().map(ExplanationGeo::form).toList();
 
         return new Response(gtas);
     }

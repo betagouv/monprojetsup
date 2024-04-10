@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
 
+import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
@@ -247,9 +248,9 @@ public class Explanation {
             geo.forEach(explanationGeo -> {
                 sb.append("préférence géographique:")
                         .append(" ville=")
-                        .append(explanationGeo.city)
+                        .append(explanationGeo.city())
                         .append(" distance=")
-                        .append(explanationGeo.distance).append("\n");
+                        .append(explanationGeo.distance()).append("\n");
             });
         }
         if(app != null) sb.append("Apprentissage: ").append(app.option()).append("\n");
@@ -265,14 +266,6 @@ public class Explanation {
         if(interets != null) sb.append("Intérêts: ").append(interets).append("\n");
         if(debug != null) sb.append(debug.expl()).append("\n");
         return sb.toString();
-    }
-
-    public record ExplanationGeo  (int distance, String city, @Nullable String form) {
-
-        public ExplanationGeo merge2(ExplanationGeo other) {
-            if(other == null) return this;
-            return (this.distance <= other.distance) ? this : other;
-        }
     }
 
     public String toExplanation() {

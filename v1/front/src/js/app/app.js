@@ -191,26 +191,35 @@ function startNavigation() {
   }
 }
 
-export async function askFormationsAffinities() {
+export async function askFormationsDetails() {
   const profile = data.getAnonymousProfile();
   const msg = await server.getFormationsAffinities(profile);
   const affinites = msg.affinites;
-  /* TODO optimize
-  const msg2 = await server.getExplanationsAsync(
-    affinites.map((aff) => aff.key).limit(20),
-    profile
-  );*/
   const keys = [];
-  for (let i = 0; i < 20; i++) {
+  let i = 0;
+  for (i = 0; i < 20; i++) {
     //horrible way to do that
     if (i >= affinites.length) break;
     const key = msg.affinites[i].key;
     keys.push(key);
   }
 
-  const msg2 = await server.getDetails(keys, profile);
-  let i = 0;
-  for (const details of msg2.details) {
+  const msg2 = await server.getExplanations(keys, profile);
+  i = 0;
+  for (const explanations of msg2.liste) {
+    //todo  check key
+    if (explanations.key != keys[i]) {
+      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      break;
+    }
+    affinites[i].explanations = explanations;
+    i++;
+  }
+
+  //explanations
+  const msg3 = await server.getDetails(keys, profile);
+  i = 0;
+  for (const details of msg3.details) {
     //todo  check key
     if (details.key != keys[i]) {
       frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);

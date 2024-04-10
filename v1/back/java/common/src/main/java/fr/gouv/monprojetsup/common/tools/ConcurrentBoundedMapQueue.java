@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.algos;
+package fr.gouv.monprojetsup.common.tools;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

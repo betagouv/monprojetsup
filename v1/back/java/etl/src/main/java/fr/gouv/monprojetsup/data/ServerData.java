@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data;
 
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.specialites.Specialites;
@@ -104,6 +105,8 @@ public class ServerData {
                 onisepData.formations().getFormationsDuSup()
         );
         liensDomainesMetiers  = OnisepData.getDomainesVersMetiers(onisepData.metiers());
+
+        Distances.init();
 
         dataLoaded = true;
     }

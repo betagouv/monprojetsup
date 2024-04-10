@@ -47,8 +47,8 @@ function doTransition(old_screen, new_screen) {
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
-    const affinities = await app.askFormationsAffinities();
-    await ui.showRecherche(affinities);
+    const details = await app.askFormationsDetails();
+    await ui.showRecherche(details);
   },
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),

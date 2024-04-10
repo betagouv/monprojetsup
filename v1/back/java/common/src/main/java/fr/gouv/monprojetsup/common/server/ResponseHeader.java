@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ResponseHeader(
 
-        @Schema(name = "status", description = "status. OK = 0. SERVER_ERROR = 1. USER_ERROR = 2", example = "0", required = true, allowableValues = {"0", "1", "2"})
+        @Schema(name = "status", description = "status. OK = 0. SERVER_ERROR = 1. USER_ERROR = 2", example = "0", allowableValues = {"0", "1", "2"})
         int status,
         @Schema(name = "error", description = "explication de l'erreur si sttaus != 0.", example = "", required = false)
         String error,

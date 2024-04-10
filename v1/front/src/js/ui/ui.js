@@ -146,34 +146,35 @@ export async function showInscriptionScreen1() {
 export async function showInscriptionScreen2() {
   await showSubScreen("inscription2");
 }
-export async function showRecherche(affinities) {
+export async function showRecherche(data) {
   await showConnectedScreen("recherche");
   clearAffinityCards();
   for (let i = 0; i < 20; i++) {
-    if (i >= affinities.length) break;
-    const aff = affinities[i];
-    if (i == 0) displayFormationDetails(aff.details);
-    addAffinityCard(aff.key, aff.affinite, aff.details);
+    if (i >= data.length) break;
+    const aff = data[i];
+    if (i == 0)
+      displayFormationDetails(aff.explanations.explanations, aff.details);
+    addAffinityCard(aff.key, aff.affinite, aff.explanations, aff.details);
   }
 }
 
 function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
 }
-function addAffinityCard(key, affinite, details) {
+function addAffinityCard(key, affinite, explanations, details) {
   const $div = buildAffinityCard(
     key,
     affinite,
     details.cities,
-    details.examples
+    explanations.examples
   );
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(details);
+    displayFormationDetails(explanations.explanations, details);
   });
 }
 
-function displayFormationDetails(details) {
+function displayFormationDetails(explanations, details) {
   const key = details.key;
   //title
   const label = data.getLabel(key);
@@ -186,7 +187,7 @@ function displayFormationDetails(details) {
   displayStats(details.stats.stats);
   //Explication
   const devMode = false;
-  displayExplanations(details.explanations, devMode);
+  displayExplanations(explanations, devMode);
   //exemples
   displayMetiers(details.examples);
   //attendus

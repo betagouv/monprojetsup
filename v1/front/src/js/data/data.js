@@ -113,7 +113,9 @@ export function getLabel(key) {
 export function getSummary(key) {
   const res = data.descriptifs[key];
   if (res === undefined) return "";
-  return res.summary;
+  if (res.summary) return res.summary;
+  if (res.presentation) return res.presentation;
+  return null;
 }
 
 export function getDescriptif(key) {

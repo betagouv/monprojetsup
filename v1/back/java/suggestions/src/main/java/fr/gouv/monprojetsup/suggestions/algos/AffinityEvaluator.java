@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
+import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Path;
+import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
@@ -421,8 +423,8 @@ public class AffinityEvaluator {
         double bonus = Config.NO_MATCH_SCORE;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = AlgoSuggestions.getGeoExplanations(fl, cityName);
-            int distanceKm = result.stream().mapToInt(Explanation.ExplanationGeo::distance).min().orElse(-1);
+            @NotNull val result = Distances.getGeoExplanations(fl, cityName);
+            int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
                 if (expl != null && distanceKm < 50) {
@@ -670,7 +672,7 @@ public class AffinityEvaluator {
     }
 
 
-    public Pair<List<Explanation>, List<String>> getExplanationsAndExamples(String key) {
+    public ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
         if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
             candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
@@ -711,7 +713,8 @@ public class AffinityEvaluator {
                             .toList();
 
         }
-        return Pair.of(
+        return new ExplanationAndExamples(
+                key,
                 Explanation.merge(explanations),
                 examples
         );

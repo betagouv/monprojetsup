@@ -22,7 +22,7 @@ public class GetFormationsAffinitiesService extends MyService<GetFormationsAffin
 
     public record Request(
 
-            @Schema(name = "profile", description = "Profil utilisé pour évaluer l'affinité.", required = true)
+            @Schema(name = "profile", description = "Profil utilisé pour évaluer l'affinité.")
             @NotNull ProfileDTO profile
 
     ) {

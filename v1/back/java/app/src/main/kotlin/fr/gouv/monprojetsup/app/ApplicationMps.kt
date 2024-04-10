@@ -52,13 +52,14 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
 
 
     //this is thrown by MyService.handleRequestAndExceptions
+    /*
     @ExceptionHandler(MyServiceException::class)
     protected fun handleMyServiceException(
         e: MyServiceException,
         httpServletRequest: HttpServletRequest
     ): ResponseEntity<Any> {
         return ResponseEntity.internalServerError().body(e.message)
-    }
+    }*/
 
 }
 

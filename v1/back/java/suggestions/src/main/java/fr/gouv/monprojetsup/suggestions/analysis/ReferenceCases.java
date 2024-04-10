@@ -102,10 +102,11 @@ public record ReferenceCases(
 
     public static String evaluate(ProfileDTO pf, String expectation)
             throws IOException, InterruptedException {
-        GetExplanationsAndExamplesService.Response responseExpl =
+       val responseExpl =
 
                 getExplanationsAndExamples(pf, expectation);
-        return responseExpl.explanations().stream().map(Explanation::toExplanation)
+       if(responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
+        return responseExpl.liste().get(0).explanations().stream().map(Explanation::toExplanation)
                 .collect(Collectors.joining("\t\n", "\t", "\n"));
     }
 
@@ -113,7 +114,7 @@ public record ReferenceCases(
         return callExplanationsService(
                 new GetExplanationsAndExamplesService.Request(
                         pf,
-                        fl
+                        List.of(fl)
                 )
         );
 
@@ -341,9 +342,10 @@ public record ReferenceCases(
                                 responseExpl = callExplanationsService(
                                         new GetExplanationsAndExamplesService.Request(
                                                 refCase.pf,
-                                                suggestion.fl()
+                                                List.of(suggestion.fl())
                                         )
                                 );
+                                if(responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             } catch (InterruptedException e) {
@@ -352,7 +354,7 @@ public record ReferenceCases(
                             return
                                             Suggestion.getPendingSuggestion(
                                                     suggestion.fl(),
-                                                    responseExpl.explanations(),
+                                                    responseExpl.liste().get(0).explanations(),
                                                     List.of()
                                             );
                                 }

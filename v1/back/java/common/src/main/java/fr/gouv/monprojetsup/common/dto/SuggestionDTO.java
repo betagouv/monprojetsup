@@ -8,9 +8,9 @@ import org.jetbrains.annotations.Nullable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SuggestionDTO(
-            @Schema(name = "fl", example = "fl2014", description = "clé de la formation, du métier ou du secteur d'activité", required = true)
+            @Schema(name = "fl", example = "fl2014", description = "clé de la formation, du métier ou du secteur d'activité")
             @NotNull String fl,
-            @Schema(name = "status", example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"0", "1", "2" }, required = true)
+            @Schema(name = "status", example = "1", description = "statut. \"1\": dans les favoris. \"2\": dans la corbeille.", allowableValues = {"0", "1", "2" })
             @NotNull Integer status,
             @Nullable String date
     ) {
@@ -38,4 +38,5 @@ public record SuggestionDTO(
                 fl, status, date
         );
     }
+
 }

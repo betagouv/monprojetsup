@@ -1,17 +1,4 @@
-import { error } from "jquery";
 import { postToSpringService, getFromSpringService } from "./api/call_service";
-
-export function getExplanations(profile, key, onSuccess = null) {
-  postToSpringService(
-    "explanations",
-    {
-      profile: profile,
-      key: key,
-    },
-    onSuccess,
-    true
-  );
-}
 
 export function getSuggestions(profile, onSuccess) {
   postToSpringService(
@@ -40,12 +27,12 @@ export async function getFormationsAffinities(profile) {
   });
 }
 
-export async function getExplanationsAsync(key, profile) {
+export async function getExplanations(keys, profile) {
   return new Promise((resolve, reject) => {
     postToSpringService(
       "explanations",
       {
-        key: key,
+        keys: keys,
         profile: profile,
       },
       (data) => {

@@ -5,10 +5,11 @@ import fr.gouv.monprojetsup.suggestions.algos.Explanation;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,33 +23,35 @@ public class GetExplanationsAndExamplesService extends MyService<GetExplanations
 
     public record Request(
         @NotNull ProfileDTO profile,
-        @Schema(name = "key", example = "fl2014", description = "clé de la formation", required = true)
-        @NotNull String key
+        @ArraySchema( arraySchema = @Schema(description = "clé de la formation", example = "[\"fl2014\",\"fl2015\"]"))
+        @NotNull List<String> keys
     ) {
     }
 
     public record Response(
             @NotNull ResponseHeader header,
-            @NotNull List<Explanation> explanations,
-            @Nullable List<String> exemples
+
+            @ArraySchema( arraySchema = @Schema(description = "liste des résultats", allOf = AlgoSuggestions.ExplanationAndExamples.class))
+            @NotNull List<AlgoSuggestions.ExplanationAndExamples> liste
     ) {
         public Response(
-                List<Explanation> explanations,
-                @Nullable List<String> exemples
-                ) {
-            this(new ResponseHeader(), explanations, exemples);
+                List<AlgoSuggestions.ExplanationAndExamples> liste
+        ) {
+            this(new ResponseHeader(), liste);
         }
+
     }
+
 
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
-        Pair<List<Explanation>, List<String>> explanations
+        List<AlgoSuggestions.ExplanationAndExamples> eae
                 = AlgoSuggestions.getExplanationsAndExamples(
                         req.profile,
-                        req.key,
+                        req.keys,
                         SuggestionServer.getConfig().getSuggFilConfig()
         );
-        return new Response( explanations.getLeft(), explanations.getRight());
+        return new Response( eae);
     }
 
 

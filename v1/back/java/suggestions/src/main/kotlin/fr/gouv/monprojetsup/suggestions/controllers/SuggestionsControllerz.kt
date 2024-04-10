@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.controllers
 import fr.gouv.monprojetsup.data.ServerData
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
-import fr.gouv.monprojetsup.suggestions.services.GetDetailsService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsAffinitiesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
@@ -32,7 +31,7 @@ import org.springframework.web.bind.annotation.*
        
        * Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.</li>
        
-       * Step 2: un appel à "/details" sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.</li>
+       * Step 2: un appel à "/details" de l'API 'app' sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.</li>
        
 
        ***********************************************************
@@ -54,8 +53,7 @@ class SuggestionsControllerz(
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService,
     private val getAffiniteFormationsService: GetFormationsAffinitiesService,
-    private val sortMetiersByAffinityService: SortMetiersByAffinityService,
-    private val getDetailsService: GetDetailsService
+    private val sortMetiersByAffinityService: SortMetiersByAffinityService
 ) {
 
     @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
@@ -74,15 +72,6 @@ class SuggestionsControllerz(
         return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
-    @Operation(summary = "Récupère des détails sur un ensemble de formations.")
-    @PostMapping("/details")
-    fun getDetails(
-        @RequestBody(required = true) request : GetDetailsService.Request
-    ): GetDetailsService.Response {
-        return getDetailsService.handleRequestAndExceptions(request)
-    }
-
-
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/suggestions")
     fun getSuggestions(
@@ -94,7 +83,7 @@ class SuggestionsControllerz(
     @Operation(summary = "Récupère des informations sur le profil scolaire des admis dans une formation.")
     @GetMapping("/stats")
     fun getStats(
-        @RequestParam("key", required = true)  @Parameter(name = "key", description = "clé de la formation", example = "fl1") key: String,
+        @RequestParam("key")  @Parameter(name = "key", description = "clé de la formation", example = "fl1") key: String,
         @RequestParam("bac", required = false)  @Parameter(name = "key", description = "type de bac", example = "STMG") bac: String?
     ): GetSimpleStatsService.Response {
         return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key))

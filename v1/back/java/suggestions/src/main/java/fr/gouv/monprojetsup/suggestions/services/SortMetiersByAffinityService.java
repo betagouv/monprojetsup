@@ -22,10 +22,10 @@ public class SortMetiersByAffinityService extends MyService<SortMetiersByAffinit
 
     public record Request(
 
-            @Schema(name = "profile", description = "Profil utilisé pour trier les métiers.", required = true)
+            @Schema(name = "profile", description = "Profil utilisé pour trier les métiers.")
             @NotNull ProfileDTO profile,
 
-            @ArraySchema(arraySchema = @Schema(name = "keys", example = "[\"MET_450\",\"MET_883\",\"MET_77\"]",description = "Liste des clés métiers dont le tri est attendu.", required = true))
+            @ArraySchema(arraySchema = @Schema(name = "keys", example = "[\"MET_450\",\"MET_883\",\"MET_77\"]",description = "Liste des clés métiers dont le tri est attendu."))
             @NotNull List<String> keys
 
     ) {

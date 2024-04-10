@@ -21,7 +21,7 @@ public class GetSuggestionsService extends MyService<GetSuggestionsService.Reque
 
     public record Request(
 
-            @Schema(name = "profile", description = "Profil pour lequel les details sont demandées.", required = true)
+            @Schema(name = "profile", description = "Profil pour lequel les details sont demandées.")
             @NotNull ProfileDTO profile
     ) {
 
