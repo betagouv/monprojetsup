@@ -21,7 +21,17 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(BASE_PATH)
-@Tag(name = "API Suggestions MonProjetSup")
+@Tag(name = "API Suggestions MonProjetSup",
+    description = """
+       API de suggestions de formations et métiers pour MonProjetSup. 
+       
+       Utilisation dans le poc2:
+       Scenario A: arrivée sur la page "recherche" ou "ma sélection"
+            Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.
+            Step 2: un appel à "/details" sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.
+            Step 3: l'utilisateur fait une recherche. Un appel à l'aPI recherche reboive une liste de formations et de métiers.
+            Step 4: un appel à "/affinite/metiers" pour trier par ordre de pertinence décroissante  les métiers renvoyés par la recherche.
+    """)
 @OpenAPIDefinition(
     info = Info(title = "MonProjetSup API", version = "1.1"),
     servers = [ Server(url = "https://monprojetsup.fr/"), Server(url = "http://localhost:8003/") ]
@@ -44,7 +54,7 @@ class SuggestionsControllerz(
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
     }
 
-    @Operation(summary = "Trie une liste de métiers par affinite.")
+    @Operation(summary = "Trie une liste de métiers par affinité.")
     @PostMapping("/affinite/metiers")
     fun getAffiniteMetiers(
         @RequestBody(required = true) request : SortMetiersByAffinityService.Request
@@ -52,7 +62,7 @@ class SuggestionsControllerz(
         return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
-    @Operation(summary = "Récupère des détails sur un ensemble de details.")
+    @Operation(summary = "Récupère des détails sur un ensemble de formations.")
     @PostMapping("/details")
     fun getDetails(
         @RequestBody(required = true) request : GetDetailsService.Request
