@@ -25,12 +25,24 @@ import org.springframework.web.bind.annotation.*
     description = """
        API de suggestions de formations et métiers pour MonProjetSup. 
        
-       Utilisation dans le poc2:
-       Scenario A: arrivée sur la page "recherche" ou "ma sélection"
-            Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.
-            Step 2: un appel à "/details" sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.
-            Step 3: l'utilisateur fait une recherche. Un appel à l'aPI recherche reboive une liste de formations et de métiers.
-            Step 4: un appel à "/affinite/metiers" pour trier par ordre de pertinence décroissante  les métiers renvoyés par la recherche.
+       Détails sur l'utilisation dans le poc2.
+
+       ***********************************************************
+       Scenario A: arrivée sur la page "Explore" ou "Mon Projet"
+       
+       * Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.</li>
+       
+       * Step 2: un appel à "/details" sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.</li>
+       
+
+       ***********************************************************
+       Scenario B: l'utilisateur fait une recherche sur la page "Explore" 
+       
+       * Step 1: Un appel à l'API recherche reboive une liste de formations et de métiers.
+       
+       * Step 2: un appel à "/affinite/metiers" pour trier par ordre de pertinence décroissante  les métiers renvoyés par la recherche.
+       
+       
     """)
 @OpenAPIDefinition(
     info = Info(title = "MonProjetSup API", version = "1.1"),
