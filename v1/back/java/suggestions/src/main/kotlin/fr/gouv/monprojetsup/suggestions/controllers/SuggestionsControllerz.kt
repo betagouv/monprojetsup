@@ -37,9 +37,9 @@ import org.springframework.web.bind.annotation.*
        ***********************************************************
        Scenario B: l'utilisateur fait une recherche sur la page "Explore" 
        
-       * Step 1: Un appel à l'API recherche reboive une liste de formations et de métiers.
+       * Step 1: Un appel au endpoint 'recherche' renvoie une liste de formations et de métiers.
        
-       * Step 2: un appel à "/affinite/metiers" pour trier par ordre de pertinence décroissante  les métiers renvoyés par la recherche.
+       * Step 2: un appel à "/affinite/metiers" pour trier par ordre de pertinence décroissante les métiers renvoyés par l'appel précédent.'
        
        
     """)
