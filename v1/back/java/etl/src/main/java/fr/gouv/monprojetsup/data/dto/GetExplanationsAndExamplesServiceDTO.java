@@ -11,7 +11,7 @@ import java.util.List;
 public class GetExplanationsAndExamplesServiceDTO {
     public record Request(
             @NotNull ProfileDTO profile,
-            @ArraySchema(arraySchema = @Schema(description = "clé de la formation", example = "[\"fl2014\",\"fl2015\"]"))
+            @ArraySchema(arraySchema = @Schema(description = "clés des formations et métiers pour lesquelles les explications sont demandées", example = "[\"fl2014\",\"fl2015\"]"))
             @NotNull List<String> keys
     ) {
     }
