@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.distances;
 
-import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;

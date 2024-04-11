@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
@@ -38,9 +38,11 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
 
     }
 
-    public record DetailedSuggestion(
+    public record ResultatRecherche(
             @Schema(description = "clé", example = "fl2014")
             @NotNull String key,
+            @Schema(description = "type", example = "formation", allowableValues = {"formation", "metier"})
+            @NotNull String type,
             @ArraySchema(arraySchema = @Schema(description = "formations d'intérêt", example = "[\"ta201\",\"ta123\"]"))
             @NotNull List<String> fois,
             @ArraySchema(arraySchema = @Schema(description = "villes disponibles, triées par affinité décroissantes", example = "[\"Nantes\",\"Melun\"]"))
@@ -65,10 +67,10 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
                                """,
                     required = true
             )
-            List<DetailedSuggestion> details
+            List<ResultatRecherche> details
     ) {
 
-        public Response(@NotNull List<DetailedSuggestion>  suggestions) {
+        public Response(@NotNull List<ResultatRecherche>  suggestions) {
             this(
                     new ResponseHeader(),
                     suggestions
@@ -81,7 +83,7 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
     protected @NotNull Response handleRequest(@NotNull GetDetailsService.Request req) throws Exception {
 
         //LOGGER.info("HAndling request " + req);
-        final @NotNull List<DetailedSuggestion> suggestions = getDetails(
+        final @NotNull List<ResultatRecherche> suggestions = getDetails(
                 req.profile,
                 req.keys
         );
@@ -97,11 +99,11 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
      * @param keys the list of keys for which details are required
      * @return the details
      */
-    public static List<DetailedSuggestion> getDetails(ProfileDTO pf, List<String> keys) {
+    public static List<ResultatRecherche> getDetails(ProfileDTO pf, List<String> keys) {
 
 
 
-        List<DetailedSuggestion> result = new ArrayList<>();
+        List<ResultatRecherche> result = new ArrayList<>();
 
         keys.forEach(key -> {
 
@@ -132,8 +134,9 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
                     key);
 
             result.add(
-                    new DetailedSuggestion(
+                    new ResultatRecherche(
                             key,
+                            "formation",
                             fois,
                             cities,
                             stats

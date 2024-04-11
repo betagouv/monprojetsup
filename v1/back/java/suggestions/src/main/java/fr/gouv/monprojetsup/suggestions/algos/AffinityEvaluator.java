@@ -1,14 +1,17 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.model.Explanation;
 import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -246,7 +249,7 @@ public class AffinityEvaluator {
                 .anyMatch(e -> cfg.personalCriteria().contains(e.getKey()) && e.getValue() > Config.NO_MATCH_SCORE);
         if (!process) return Config.NO_MATCH_SCORE;
 
-        if(isFiliere(fl)) {
+        if(Helpers.isFiliere(fl)) {
             scores.putAll(Map.ofEntries(
                     entry(Config.BONUS_GEO, getBonusCities(fl, expl, cfg.weights().getOrDefault(Config.BONUS_GEO, 0.0))),
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl, cfg.weights().getOrDefault(Config.BONUS_DURATION, 0.0))),
@@ -672,7 +675,7 @@ public class AffinityEvaluator {
     }
 
 
-    public ExplanationAndExamples getExplanationsAndExamples(String key) {
+    public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
         if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
             candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
@@ -690,7 +693,7 @@ public class AffinityEvaluator {
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;
-        if(isFiliere(key)) {
+        if(Helpers.isFiliere(key)) {
             Set<String> keys = ServerData.getFilieresOfGroup(key);
             explanations =
                     keys.stream()
@@ -713,7 +716,7 @@ public class AffinityEvaluator {
                             .toList();
 
         }
-        return new ExplanationAndExamples(
+        return new GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples(
                 key,
                 Explanation.merge(explanations),
                 examples

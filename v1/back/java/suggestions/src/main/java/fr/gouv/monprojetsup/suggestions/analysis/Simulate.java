@@ -8,7 +8,7 @@ import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.useRemoteUrl;
 
 public class Simulate {

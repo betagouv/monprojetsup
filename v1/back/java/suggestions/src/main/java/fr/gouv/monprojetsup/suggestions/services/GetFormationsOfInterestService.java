@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;

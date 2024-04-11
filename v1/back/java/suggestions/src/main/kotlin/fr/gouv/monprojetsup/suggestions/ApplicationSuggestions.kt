@@ -44,17 +44,3 @@ fun main(args: Array<String>) {
 	webServer.init()
 
 }
-
-@ControllerAdvice
-class RestExceptionHandler : ResponseEntityExceptionHandler() {
-
-	@ExceptionHandler(Exception::class)
-	protected fun handleException(
-		e: Exception,
-		httpServletRequest: HttpServletRequest
-	): ResponseEntity<Any> {
-		return if(e is MyServiceException) internalServerError().body(e.message)
-		else badRequest().body(e.message)
-	}
-}
-

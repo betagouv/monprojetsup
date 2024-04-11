@@ -54,6 +54,7 @@ export {
 };
 
 const screens = ["landing", "loading", "connect", "connected"];
+const connected_screens = ["recherche", "board", "selection"];
 
 const screensHandlersInit = {
   connect: () => connect.init(),
@@ -100,9 +101,11 @@ async function showSubScreen(subscreen) {
   $(`#sub-placeholder`).html(html);
 }
 
-async function showConnectedScreen(subscreen) {
+export async function showConnectedScreen(subscreen) {
   await showScreen("connected");
   const html = await fetchData(subscreen);
+  $("#header-navigation a").removeAttr("aria-current");
+  $(`#nav-${subscreen}`).attr("aria-current", true);
   $(`#myTabContent`).html(html);
 }
 
@@ -146,50 +149,59 @@ export async function showInscriptionScreen1() {
 export async function showInscriptionScreen2() {
   await showSubScreen("inscription2");
 }
+export async function showBoard() {
+  await showConnectedScreen("board");
+}
+export async function showSelection() {
+  await showConnectedScreen("selection");
+}
+
 export async function showRecherche(data) {
   await showConnectedScreen("recherche");
   clearAffinityCards();
   for (let i = 0; i < 20; i++) {
     if (i >= data.length) break;
-    const aff = data[i];
-    if (i == 0)
-      displayFormationDetails(aff.explanations.explanations, aff.details);
-    addAffinityCard(aff.key, aff.affinite, aff.explanations, aff.details);
+    const dat = data[i];
+    if (i == 0) {
+      displayFormationDetails(dat);
+    }
+    addAffinityCard(dat);
   }
 }
 
 function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
 }
-function addAffinityCard(key, affinite, explanations, details) {
+function addAffinityCard(dat) {
   const $div = buildAffinityCard(
-    key,
-    affinite,
-    details.cities,
-    explanations.examples
+    dat.key,
+    dat.type,
+    dat.affinity,
+    dat.cities,
+    dat.examples
   );
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(explanations.explanations, details);
+    displayFormationDetails(dat);
   });
 }
 
-function displayFormationDetails(explanations, details) {
-  const key = details.key;
+function displayFormationDetails(dat) {
+  const key = dat.key;
   //title
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
   //summary
   displaySummary(key);
   //links
-  displayUrls(key, details.fois);
+  displayUrls(key, dat.fois);
   //stats
-  displayStats(details.stats.stats);
+  displayStats(dat.stats.stats);
   //Explication
   const devMode = false;
-  displayExplanations(explanations, devMode);
+  displayExplanations(dat.explanations, devMode);
   //exemples
-  displayMetiers(details.examples);
+  displayMetiers(dat.examples);
   //attendus
   displayAttendus(key);
 }
@@ -547,7 +559,7 @@ function displayAttendus(key) {
   }
 }
 
-function buildAffinityCard(key, affinite, villes, metiers) {
+function buildAffinityCard(key, type, affinite, villes, metiers) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header">
@@ -696,8 +708,8 @@ export function initPostData(login, infos) {
 /*register some static handlers and
   set up initial visibility of elements */
 function initOnce() {
-  //$("#front-feedback").html("Maintenance en cours, service suspendu.").show();
-  $("#front-feedback").html("").hide();
+  //$(".front-feedback").html("Maintenance en cours, service suspendu.").show();
+  $(".front-feedback").html("").hide();
 
   /* auto scroll upon tab change */
   for (const tabEl of document.querySelectorAll(
@@ -874,14 +886,14 @@ function displayServerError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  $("#server-error").html("Erreur serveur: " + msgHtml + "<br><br><br><br>");
+  $(".server-error").html("Erreur serveur: " + msgHtml + "<br><br><br><br>");
 }
 
 function displayClientError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  $("#front-error").html("Erreur client:<br> " + msgHtml);
+  $(".front-error").html("Erreur client:<br> " + msgHtml);
 }
 
 //validationMessage

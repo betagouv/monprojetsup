@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.data.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.update.BackEndData;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
@@ -23,8 +24,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
@@ -40,6 +41,7 @@ public class ServerData {
     public static PsupStatistiques statistiques;
     public static OnisepData onisepData;
     public static JsonCarte carte;
+    public static TagsSources tagsSources;
 
     public static Map<String, Set<String>> liensSecteursMetiers;
     public static Map<DomainePro, Set<String>> liensDomainesMetiers;
@@ -107,6 +109,8 @@ public class ServerData {
         liensDomainesMetiers  = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
         Distances.init();
+
+        tagsSources = TagsSources.load(backPsupData.getCorrespondances());
 
         dataLoaded = true;
     }
@@ -199,26 +203,6 @@ public class ServerData {
 
     public static String getLabel(String key, String defaultValue) {
         return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
-    }
-
-    /* ************************************************************************
-    ************************* HELPERS to determine type from key ***********************
-     */
-    public static boolean isFiliere(@NotNull String key) {
-        return key.startsWith(FILIERE_PREFIX)
-                || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
-    }
-    public static boolean isMetier(@NotNull String key) {
-        return key.startsWith(Constants.MET_PREFIX);
-    }
-
-    public static boolean isTheme(@NotNull String key) {
-        return key.startsWith(Constants.THEME_PREFIX);
-    }
-
-    public static boolean isInteret(@NotNull String key) {
-        return key.startsWith(Constants.CENTRE_INTERETS_ONISEP)
-                || key.startsWith(Constants.CENTRE_INTERETS_ROME);
     }
 
 
@@ -329,6 +313,19 @@ public class ServerData {
 
     }
 
+    public static Set<String> search(String searchString) {
 
+        List<String> tags = Arrays.stream(
+                searchString.replaceAll("[-,_()]", " ").split(" ")
+        ).filter(s -> !s.isBlank()).toList();
+
+        if(tags.isEmpty()) {
+            return tagsSources.sources().values().stream().flatMap(Set::stream).filter(s -> isFiliere(s)).collect(Collectors.toSet());
+        }
+        boolean allformationsandNoMetier = tags.isEmpty();
+
+
+        return tagsSources.getPrefixMatches(tags);
+    }
 }
 

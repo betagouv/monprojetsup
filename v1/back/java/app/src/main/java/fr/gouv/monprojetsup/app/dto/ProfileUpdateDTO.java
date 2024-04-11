@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.app.dto;
 
 import fr.gouv.monprojetsup.common.Sanitizer;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;

@@ -1,21 +1,20 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.suggestions.server.Log;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -195,7 +194,7 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @NotNull List<String> cles, @NotNull Config cfg) {
+    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @NotNull Collection<String> cles, @NotNull Config cfg) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -221,7 +220,7 @@ public class AlgoSuggestions {
      * @param cfg     the config
      * @return the explanations and examples associated to the node
      */
-    public static List<ExplanationAndExamples> getExplanationsAndExamples(
+    public static List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
             @NotNull List<String> keys,
             @NotNull Config cfg
@@ -409,7 +408,7 @@ public class AlgoSuggestions {
         LOGGER.info("Restricting graph to the prestar of recos");
         Set<String> before = new HashSet<>(edgesKeys.nodes());
         Set<String> recoNodes = edgesKeys.nodes().stream().filter(
-                ServerData::isFiliere
+                Helpers::isFiliere
         ).collect(Collectors.toSet());
         Set<String> useful = edgesKeys.preStar(recoNodes);
         edgesKeys.retainAll(useful);
@@ -490,15 +489,4 @@ public class AlgoSuggestions {
     }
 
 
-
-
-    public record ExplanationAndExamples(
-            @Schema(description = "clé", example = "fl2014")
-            String key,
-            @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
-            @NotNull List<Explanation> explanations,
-            @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante", example = "[\"met_129\",\"met_84\",\"met_5\"]"))
-            @NotNull List<String> examples
-    ) {
-    }
 }

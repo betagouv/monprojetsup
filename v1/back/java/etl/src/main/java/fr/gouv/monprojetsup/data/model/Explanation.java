@@ -1,9 +1,9 @@
-package fr.gouv.monprojetsup.suggestions.algos;
+package fr.gouv.monprojetsup.data.model;
 
 
-import fr.gouv.monprojetsup.common.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static fr.gouv.monprojetsup.data.ServerData.*;
 
 
 record ExplanationApprentissage (String option) {}
@@ -29,6 +27,7 @@ record ExplanationTag(List<Path> pathes) {
                 .map(p -> df.format(p.score()) +  p.nodes().stream().map(ServerData::getDebugLabel).collect(Collectors.joining(" -> ")))
                 .collect(Collectors.joining("\n\t", "\t", "\n"));
     }
+
 }
 
 record ExplanationTagShort(List<String> ns) {
@@ -58,28 +57,28 @@ record ExplanationTagShort(List<String> ns) {
         StringBuilder ssb = new StringBuilder();
 
         ssb.append(ns().stream()
-                        .filter(s -> isFiliere(s))
+                        .filter(s -> Helpers.isFiliere(s))
                 .sorted().map(
                 ServerData::getDebugLabel
         ).collect(Collectors.joining(sep,"\t","\n")))
         ;
 
         ssb.append(ns().stream()
-                .filter(s -> isMetier(s))
+                .filter(s -> Helpers.isMetier(s))
                 .sorted().map(
                         ServerData::getDebugLabel
                 ).collect(Collectors.joining(sep,"\n\t","\n")))
         ;
 
         ssb.append(ns().stream()
-                .filter(s -> isTheme(s))
+                .filter(s -> Helpers.isTheme(s))
                 .sorted().map(
                         ServerData::getDebugLabel
                 ).collect(Collectors.joining(sep,"\n\t","\n")))
         ;
 
         ssb.append(ns().stream()
-                .filter(s -> isInteret(s))
+                .filter(s -> Helpers.isInteret(s))
                 .sorted().map(
                         ServerData::getDebugLabel
                 ).collect(Collectors.joining(sep,"\n\t","\n")))

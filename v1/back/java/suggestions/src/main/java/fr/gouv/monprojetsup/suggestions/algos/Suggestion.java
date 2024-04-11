@@ -2,7 +2,8 @@ package fr.gouv.monprojetsup.suggestions.algos;
 
 import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.model.Explanation;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
@@ -11,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static fr.gouv.monprojetsup.data.Constants.BR;
-import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_PENDING;
+import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_PENDING;
 import static java.lang.System.lineSeparator;
 
 /**
@@ -76,7 +77,7 @@ public record Suggestion(
         sb.append(lineSeparator());
         if(expl != null) {
             for (Explanation e : expl) {
-                if(e.tag != null || e.debug == null) {
+                if(e.getTag() != null || e.getDebug() == null) {
                     continue;
                 }
                 sb.append("\n");

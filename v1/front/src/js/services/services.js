@@ -38,6 +38,7 @@ export const getStats = suggestions_services.getStats;
 export const getFormationsOfInterest =
   suggestions_services.getFormationsOfInterest;
 export const getDetails = suggestions_services.getDetails;
+export const search = suggestions_services.search;
 
 /**************** ACCOUNT SERVICES ******************** */
 

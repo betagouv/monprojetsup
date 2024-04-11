@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.dto;
+package fr.gouv.monprojetsup.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

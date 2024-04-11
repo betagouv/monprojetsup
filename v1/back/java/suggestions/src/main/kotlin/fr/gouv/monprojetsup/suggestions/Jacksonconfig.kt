@@ -22,3 +22,4 @@ class JacksonConfig {
         return objectMapper
     }
 }
+

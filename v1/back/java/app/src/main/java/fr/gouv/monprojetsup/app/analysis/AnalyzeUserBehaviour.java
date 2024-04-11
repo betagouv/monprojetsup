@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static java.lang.Math.abs;
 
 public class AnalyzeUserBehaviour {

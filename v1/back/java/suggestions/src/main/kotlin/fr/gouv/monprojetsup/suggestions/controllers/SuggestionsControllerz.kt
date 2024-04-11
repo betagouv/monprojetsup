@@ -1,13 +1,12 @@
 package fr.gouv.monprojetsup.suggestions.controllers
 
+import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.data.ServerData
+import fr.gouv.monprojetsup.data.dto.GetFormationsAffinitiesServiceDTO
+import fr.gouv.monprojetsup.data.dto.SortMetiersByAffinityServiceDTO
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
-import fr.gouv.monprojetsup.suggestions.services.GetFormationsAffinitiesService
-import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
-import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
-import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
-import fr.gouv.monprojetsup.suggestions.services.SortMetiersByAffinityService
+import fr.gouv.monprojetsup.suggestions.services.*
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -29,9 +28,9 @@ import org.springframework.web.bind.annotation.*
        ***********************************************************
        Scenario A: arrivée sur la page "Explore" ou "Mon Projet"
        
-       * Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.</li>
+       * Step 1: un appel à "/affinite/formations" pour récupérer la liste des formations et leurs affinités, dans l'ordre d'affichage. En cache côté front jusqu'à modif du profil.
        
-       * Step 2: un appel à "/details" de l'API 'app' sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.</li>
+       * Step 2: un appel à "/details" de l'API 'app' sur les 20 premiers résultats de la liste afin de peupler les différents infos des cartes (colonnes gauches) et des fiches (viewer de droite). En cache côté front jusqu'à modif du profil.
        
 
        ***********************************************************
@@ -59,16 +58,16 @@ class SuggestionsControllerz(
     @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
     @PostMapping("/affinite/formations")
     fun getAffiniteFormations(
-        @RequestBody(required = true) request : GetFormationsAffinitiesService.Request
-    ): GetFormationsAffinitiesService.Response {
+        @RequestBody(required = true) request : GetFormationsAffinitiesServiceDTO.Request
+    ): GetFormationsAffinitiesServiceDTO.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
     }
 
     @Operation(summary = "Trie une liste de métiers par affinité.")
     @PostMapping("/affinite/metiers")
     fun getAffiniteMetiers(
-        @RequestBody(required = true) request : SortMetiersByAffinityService.Request
-    ): SortMetiersByAffinityService.Response {
+        @RequestBody(required = true) request : SortMetiersByAffinityServiceDTO.Request
+    ): SortMetiersByAffinityServiceDTO.Response {
         return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
@@ -94,7 +93,7 @@ class SuggestionsControllerz(
                 "Les explications sont des éléments sur la cohérence entre les différents éléments de profil et les caractéristiques de la formation." +
                 "Par exemple la cohérence avec les préférences géographiques ou les centres d'intérêts du candidat.")
     @PostMapping("/explanations")
-    fun getExplanationsAndExamples(@RequestBody request : GetExplanationsAndExamplesService.Request ): GetExplanationsAndExamplesService.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
+    fun getExplanationsAndExamples(@RequestBody request : GetExplanationsAndExamplesServiceDTO.Request): GetExplanationsAndExamplesServiceDTO.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
 
     @Operation(summary = "Récupère une liste de formations d'affectation d'un ou plusieurs types, les plus proches d'une liste de villes données.")
     @PostMapping("/foi")

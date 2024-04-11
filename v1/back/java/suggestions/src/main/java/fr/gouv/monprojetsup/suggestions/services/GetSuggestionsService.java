@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.services;
 
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestions;
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import io.swagger.v3.oas.annotations.media.Schema;

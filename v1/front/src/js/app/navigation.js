@@ -12,6 +12,8 @@ const screens = [
   "inscription1",
   "inscription2",
   "recherche",
+  "board",
+  "selection",
   "groupes",
 ];
 
@@ -44,11 +46,39 @@ function doTransition(old_screen, new_screen) {
   enterScreen(new_screen);
 }
 
+function init_main_nav() {
+  $("#header-navigation a").on("click", async function () {
+    const id = $(this).attr("id");
+    const screen = id.replace("nav-", "");
+    setScreen(screen);
+    //await ui.showConnectedScreen(screen);
+    //init_main_nav();
+  });
+}
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
-    const details = await app.askFormationsDetails();
-    await ui.showRecherche(details);
+    $("#search-784-input").off("input");
+    $("#search-784-input").val("");
+
+    const msg = await app.doSearch("");
+    await ui.showRecherche(msg.details);
+
+    $("#search-784-input").on("input", async () => {
+      const str = $("#search-784-input").val();
+      const msg = await app.doSearch(str);
+      await ui.showRecherche(msg.details);
+    });
+
+    init_main_nav();
+  },
+  board: async () => {
+    await ui.showBoard();
+    init_main_nav();
+  },
+  selection: async () => {
+    await ui.showSelection();
+    init_main_nav();
   },
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),

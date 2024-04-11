@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.update.onisep;
 
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.disciplines.LiensMetiersThemesOnisep;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.ServerData.isMetier;
+import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 
 public record OnisepData(
         Metiers metiers,
@@ -405,7 +405,7 @@ public record OnisepData(
                     .addAll(strings));
         }
         metiersVersFormations.keySet().removeIf(k -> !k.startsWith(Constants.MET_PREFIX));
-        metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !ServerData.isFiliere(s)));
+        metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !Helpers.isFiliere(s)));
 
 
         /* ajouts des las aux metiers PASS */

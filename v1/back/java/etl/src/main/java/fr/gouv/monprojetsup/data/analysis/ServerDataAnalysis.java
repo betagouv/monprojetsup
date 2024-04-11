@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.analysis;
 
 
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
@@ -158,7 +159,7 @@ public class ServerDataAnalysis {
 
         Serialisation.toJsonFile("frontFormationsLabels.json",
                 statistiques.labels.entrySet()
-                        .stream().filter(e -> isFiliere(e.getKey()))
+                        .stream().filter(e -> Helpers.isFiliere(e.getKey()))
                         .filter(e -> !flGroups.containsKey(e.getKey()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
@@ -168,7 +169,7 @@ public class ServerDataAnalysis {
 
         Serialisation.toJsonFile("frontMetiersLabels.json",
                 statistiques.labels.entrySet()
-                        .stream().filter(e -> isMetier(e.getKey()))
+                        .stream().filter(e -> Helpers.isMetier(e.getKey()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
                                 Map.Entry::getValue
@@ -385,7 +386,7 @@ public class ServerDataAnalysis {
     private static void exportDeltaWithBillyCorr() {
         @NotNull Map<String, Set<String>> copy =  onisepData.edgesMetiersFilieres().edges();
         //we keep only formation
-        copy.keySet().removeIf(s -> !isFiliere(s));
+        copy.keySet().removeIf(s -> !Helpers.isFiliere(s));
 
         onisepData.billy().psupToIdeo2().forEach(
                 line -> {
@@ -636,7 +637,7 @@ public class ServerDataAnalysis {
     private static void outputMetiersSansDescriptifs(Descriptifs desc) throws IOException {
         ArrayList<String> copy4 = new ArrayList<>();
         onisepData.metiers().metiers().keySet().forEach(key -> {
-            if (isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
+            if (Helpers.isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
                 String label = ServerData.getDebugLabel(key);
                 if(!label.contains("null")) {
                     copy4.add(label);

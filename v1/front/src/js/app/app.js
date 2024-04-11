@@ -135,9 +135,9 @@ function loginServerAnswerHandler(data) {
 
 /* includes the token in all AJAX requests */
 export function postLoginHandler() {
-  $("#front-feedback").html("").hide();
-  $("#front-error").html("");
-  $("#server-error").html("");
+  $(".front-feedback").html("").hide();
+  $(".front-error").html("");
+  $(".server-error").html("");
 
   $.ajaxSetup({
     beforeSend: function (xhr) {
@@ -154,16 +154,11 @@ export function postLoginHandler() {
       ui.initPostData(session.getLogin(), msg.infos);
       const profileCompleteness = msg.infos.profileCompleteness;
       session.setProfileCompletenessLevel(profileCompleteness);
-      if (session.isAdminOrTeacher()) {
-        server.getProfile((msg) => {
-          data.loadProfile(msg.profile);
-          //ui.loadProfile();
-          startNavigation();
-        });
-      } else {
+      server.getProfile((msg) => {
+        data.loadProfile(msg.profile);
+        //ui.loadProfile();
         startNavigation();
-        //askProfileAndSuggestions(startNavigation);
-      }
+      });
     });
   });
 
@@ -192,6 +187,64 @@ function startNavigation() {
 }
 
 export async function askFormationsDetails() {
+  const profile = data.getAnonymousProfile();
+  const msg = await server.getFormationsAffinities(profile);
+  const affinites = msg.affinites;
+  const keys = [];
+  let i = 0;
+  for (i = 0; i < 20; i++) {
+    //horrible way to do that
+    if (i >= affinites.length) break;
+    const key = msg.affinites[i].key;
+    keys.push(key);
+  }
+
+  const msg2 = await server.getExplanations(keys, profile);
+  i = 0;
+  for (const explanations of msg2.liste) {
+    //todo  check key
+    if (explanations.key != keys[i]) {
+      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      break;
+    }
+    affinites[i].explanations = explanations;
+    i++;
+  }
+
+  //explanations
+  const msg3 = await server.getDetails(keys, profile);
+  i = 0;
+  for (const details of msg3.details) {
+    //todo  check key
+    if (details.key != keys[i]) {
+      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      break;
+    }
+    affinites[i].details = details;
+    i++;
+  }
+
+  return affinites;
+}
+
+export async function doSearch(recherche) {
+  const includeFormations = true;
+  const includeMetiers = true;
+  const pageSize = 20;
+  const pageNb = 0;
+  const profile = data.getAnonymousProfile();
+
+  return server.search(
+    includeFormations,
+    includeMetiers,
+    pageSize,
+    pageNb,
+    recherche,
+    profile
+  );
+}
+
+export async function doSearchOld() {
   const profile = data.getAnonymousProfile();
   const msg = await server.getFormationsAffinities(profile);
   const affinites = msg.affinites;
@@ -300,9 +353,9 @@ export function toLyceen() {
 }
 
 function disconnect() {
-  $("#front-feedback").html("Vous êtes déconnecté(e).").show();
-  $("#front-error").html("");
-  $("#server-error").html("");
+  $(".front-feedback").html("Vous êtes déconnecté(e).").show();
+  $(".front-error").html("");
+  $(".server-error").html("");
   session.clear();
   if (session.isLoggedIn()) server.disconnect();
   data.init();
@@ -543,14 +596,14 @@ function serverErrorHandler(error) {
   } else if (error.status == 404) {
     msg = "Page indisponible [404]";
   } else if (error.status == 500) {
-    msg = "Erreur interne du serveur [500]";
+    msg = "Erreur interne du serveur [500]" + error.responseText;
   } else {
     msg = JSON.stringify(error);
   }
   console.error(msg);
   disconnect();
   if (error.status === 0) {
-    $("#front-feedback")
+    $(".front-feedback")
       .html(
         "Echec: le serveur n'est pas joignable, veuillez SVP vérifier votre connexion internet."
       )
@@ -569,7 +622,7 @@ export function frontErrorHandler(error, severe) {
     ui.displayClientError(msg);
     server.sendError(msg);
   } else {
-    $("#front-feedback").html(error).show();
+    $(".front-feedback").html(error).show();
   }
 }
 
@@ -583,7 +636,7 @@ export function logAction(action) {
 
 function disconnectAndShowFeedback(feedback) {
   disconnect();
-  $("#front-feedback").html(feedback).show();
+  $(".front-feedback").html(feedback).show();
 }
 
 function commentChanged(topic, comment) {

@@ -60,6 +60,35 @@ export async function getDetails(keys, profile) {
     );
   });
 }
+
+export async function search(
+  includeFormations,
+  includeMetiers,
+  pageSize,
+  pageNb,
+  recherche,
+  profile
+) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "recherche",
+      {
+        includeFormations: includeFormations,
+        includeMetiers: includeMetiers,
+        pageSize: pageSize,
+        pageNb: pageNb,
+        recherche: recherche,
+        profile: profile,
+      },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
+
 export function getStats(bac, key, onSuccess = null) {
   getFromSpringService(
     "stats",

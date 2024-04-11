@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.dto;
+package fr.gouv.monprojetsup.data.dto;
 
 import org.jetbrains.annotations.Nullable;
 

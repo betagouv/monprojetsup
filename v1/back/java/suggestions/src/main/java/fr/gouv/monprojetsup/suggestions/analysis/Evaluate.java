@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.gouv.monprojetsup.data.ServerData.isFiliere;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 

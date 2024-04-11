@@ -1,14 +1,15 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.suggestions.algos.Explanation;
+import fr.gouv.monprojetsup.data.model.Explanation;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService;
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
@@ -110,9 +111,9 @@ public record ReferenceCases(
                 .collect(Collectors.joining("\t\n", "\t", "\n"));
     }
 
-    public static GetExplanationsAndExamplesService.Response getExplanationsAndExamples(ProfileDTO pf, String fl) throws IOException, InterruptedException {
+    public static GetExplanationsAndExamplesServiceDTO.Response getExplanationsAndExamples(ProfileDTO pf, String fl) throws IOException, InterruptedException {
         return callExplanationsService(
-                new GetExplanationsAndExamplesService.Request(
+                new GetExplanationsAndExamplesServiceDTO.Request(
                         pf,
                         List.of(fl)
                 )
@@ -284,17 +285,17 @@ public record ReferenceCases(
                 output.append(toExplanationStringShort(refCase.pf, ""));
 
                 output.append(toExplanations(refCase.pf.interests().stream()
-                        .filter(e -> isInteret(e)
+                        .filter(e -> Helpers.isInteret(e)
                         )
                         .toList(),""));
 
                 output.append(toExplanations(refCase.pf.interests().stream()
-                        .filter(e -> isTheme(e)
+                        .filter(e -> Helpers.isTheme(e)
                         )
                         .toList(),""));
 
-                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> isMetier(s.fl())).toList(), ""));
-                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> isFiliere(s.fl())).toList(), ""));
+                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), ""));
+                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), ""));
                 output.append(toExplanationString(refCase.pf.suggRejected(), ""));
                 output.append(
                         refCase.expectations == null ? "" :
@@ -337,10 +338,10 @@ public record ReferenceCases(
                                             + ServerData.getDebugLabel(suggestion.fl()));
                                     j.getAndIncrement();
 
-                            GetExplanationsAndExamplesService.Response responseExpl = null;
+                            GetExplanationsAndExamplesServiceDTO.Response responseExpl = null;
                             try {
                                 responseExpl = callExplanationsService(
-                                        new GetExplanationsAndExamplesService.Request(
+                                        new GetExplanationsAndExamplesServiceDTO.Request(
                                                 refCase.pf,
                                                 List.of(suggestion.fl())
                                         )
@@ -409,11 +410,11 @@ public record ReferenceCases(
         return response.body();
     }
 
-    public static GetExplanationsAndExamplesService.Response callExplanationsService(
-            GetExplanationsAndExamplesService.Request request
+    public static GetExplanationsAndExamplesServiceDTO.Response callExplanationsService(
+            GetExplanationsAndExamplesServiceDTO.Request request
     ) throws IOException, InterruptedException {
         String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/explanations", request);
-        return new Gson().fromJson(response, GetExplanationsAndExamplesService.Response.class);
+        return new Gson().fromJson(response, GetExplanationsAndExamplesServiceDTO.Response.class);
     }
 
     public static List<GetSuggestionsService.SuggestionsDTO.Suggestion> callSuggestionsService(ProfileDTO pf) throws IOException, InterruptedException {
