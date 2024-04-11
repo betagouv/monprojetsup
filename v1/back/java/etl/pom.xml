@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.gouv.monprojetsup</groupId>
 	<artifactId>etl</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>etl</name>
 	<description>Extract, transform, load data of MonProjetSup</description>
 	<properties>
