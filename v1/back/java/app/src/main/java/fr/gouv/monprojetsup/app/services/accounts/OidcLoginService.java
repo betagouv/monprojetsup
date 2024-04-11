@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
+import fr.gouv.monprojetsup.common.server.ServerStartingException;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
@@ -43,7 +44,7 @@ public class OidcLoginService extends MyService<OidcLoginService.JwtEncoded, Pas
     protected @NotNull PasswordLoginService.Response handleRequest(@NotNull OidcLoginService.JwtEncoded jwtEncoded) throws Exception {
 
         if(WebServer.db() == null) {
-            throw new DBExceptions.ServerStartingException();
+            throw new ServerStartingException();
         }
 
         Key key = getKey(jwtEncoded);

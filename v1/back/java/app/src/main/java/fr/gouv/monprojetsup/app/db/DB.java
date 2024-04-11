@@ -666,6 +666,8 @@ public abstract class DB {
     public abstract void addGroupAdmin(String groupId, String groupAdminLogin, boolean addAdmin) throws UnknownGroupException;
 
     public abstract List<ServerTrace> getTraces();
+
+    public abstract void validateCode(UserTypes type, String accesGroupe) throws WrongAccessCodeException;
 }
 
 

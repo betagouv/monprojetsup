@@ -6,8 +6,6 @@ export {
   //
   //loads a profile coming from server
   loadSuggestions,
-  //produces a serialized version of the profile, to send to server
-  getJsonProfile,
   //
   //getters
   getProfileValue,
@@ -85,10 +83,6 @@ function init() {
   loadSuggestions([]);
 }
 
-function getJsonProfile() {
-  return JSON.stringify(data.profile);
-}
-
 function ensureMandatoryProfileFields() {
   if (data.profile === undefined) {
     data.profile = {};
@@ -119,7 +113,9 @@ export function getLabel(key) {
 export function getSummary(key) {
   const res = data.descriptifs[key];
   if (res === undefined) return "";
-  return res.summary;
+  if (res.summary) return res.summary;
+  if (res.presentation) return res.presentation;
+  return null;
 }
 
 export function getDescriptif(key) {
@@ -239,6 +235,11 @@ export function getAnonymousProfile() {
   const profile = getProfile();
   console.log("profile", profile);
   console.log("profileFields", data.profileFields);
+  const mapChoices = profile.choices;
+  profile.choices = Object.values(mapChoices);
+  profile.interests = Object.entries(profile.scores)
+    .filter((e) => e[1] > 0)
+    .map((e) => e[0]);
   const profileAnonymous = Object.fromEntries(
     Object.entries(profile).filter((x) => data.profileFields.has(x[0]))
   );
@@ -813,6 +814,9 @@ function updateAutoComplete() {
 }
 
 export function startsWith(str, prefixes) {
+  if (str == undefined) {
+    return false;
+  }
   for (const pref of prefixes) {
     if (str.startsWith(pref)) return true;
   }
@@ -873,13 +877,7 @@ export function getParcoursupSearchAdress(groups, searchBanner, gtas = []) {
 }
 
 export function getStats(statsAll, bac) {
-  const stats = statsAll
-    ? statsAll.stat
-      ? statsAll.stat.stats
-        ? statsAll.stat.stats
-        : null
-      : null
-    : null;
+  const stats = statsAll ? (statsAll.stats ? statsAll.stats : null) : null;
   let statsTousBacs = null;
   if (stats && stats[tousBacs]) statsTousBacs = stats[tousBacs];
   let statsBac = null;

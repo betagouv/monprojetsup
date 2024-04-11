@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
@@ -28,7 +29,7 @@ public class ExportSuggestionsData {
         LOGGER.info("Loading data for suggestion Server...");
         ServerData.load();
 
-        log.info("Initializing suggestions ");
+        log.info("Initializing details ");
         AlgoSuggestions.initialize();
 
         exportCorrSecteursMetiers();
@@ -121,7 +122,7 @@ public class ExportSuggestionsData {
                         .collect(Collectors.toSet());
         List<String> groupsWithNoMetiers = AlgoSuggestions.edgesKeys.edges()
                 .keySet().stream().filter(
-                        strings -> isFiliere(strings)
+                        strings -> Helpers.isFiliere(strings)
                                 && !formationsAvecMetiers.contains(strings)
                 ).map(strings -> getLabel(strings, strings) + " (" + strings + ")"
                 ).sorted().toList();
@@ -138,7 +139,7 @@ public class ExportSuggestionsData {
         stats.put("métiers graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.MET_PREFIX)).count());
         stats.put("thèmes dans les données onisep", (long) onisepData.thematiques().thematiques().size());
         stats.put("thèmes graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.THEME_PREFIX)).count());
-        stats.put("formations graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(ServerData::isFiliere).count());
+        stats.put("formations graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(Helpers::isFiliere).count());
         stats.put("secteurs d'activité", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)).count());
         stats.put("centres d'intérêts", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.CENTRE_INTERETS_ROME) || n.startsWith(Constants.CENTRE_INTERETS_ONISEP)).count());
         Serialisation.toJsonFile("stats.json", stats, true);

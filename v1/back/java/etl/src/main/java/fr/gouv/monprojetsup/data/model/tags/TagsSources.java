@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
@@ -57,5 +58,12 @@ public record TagsSources(
             keys.addAll(newSources);
         });
 
+    }
+
+    public Set<String> getPrefixMatches(List<String> tags) {
+        return sources.entrySet().stream()
+                .filter(e -> tags.stream().anyMatch(e.getKey()::startsWith))
+                .flatMap(e -> e.getValue().stream())
+                .collect(Collectors.toSet());
     }
 }

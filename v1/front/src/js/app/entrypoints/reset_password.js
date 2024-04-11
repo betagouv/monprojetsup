@@ -26,8 +26,9 @@
 
  */
 import "../../../scss/styles.scss";
-import $ from "jquery";
 
+import $ from "jquery";
+import * as ui from "./../../ui/ui";
 import { setNewPassword } from "../../services/services";
 import { toast } from "../../ui/animate/toasts";
 import { frontErrorHandler, storeCredentialsAfterSuccesfulAuth } from "../app";
@@ -45,6 +46,7 @@ $(async function () {
     frontErrorHandler(errObj, true);
   };
 
+  ui.injectHtml();
   $("#beforePasswordChange").show();
   $("#afterPasswordChange").hide();
 

@@ -1,0 +1,178 @@
+<div class="d-flex flex-row sticky-top bg-white">
+  <div
+    class="nav nav-pills my-nav-pills nav-justified w-100"
+    id="myTab"
+    role="tablist"
+  >
+    <span class="mb-3 mx-auto text-center col">
+      <img
+        alt="monprojetsup"
+        src="img/monprojetsup.svg"
+        class="img-fluid mw-10 mps-icon"
+      />
+    </span>
+    <!----- ONGLET PREFERENCES -->
+    <button
+      class="text-sm-center nav-link profile-tab"
+      id="nav-profile-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#profile"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false"
+      title="Ton profil"
+      data-toggle="tooltip"
+      data-placement="top"
+    >
+      <div class="d-flex flex-row">
+        <h2><i class="bi bi-person-circle"></i></h2>
+        <div class="mx-2 py-1 d-none d-sm-block">PROFIL</div>
+      </div>
+    </button>
+
+    <button
+      class="text-sm-center nav-link profile-tab"
+      id="nav-preferences-tab"
+      type="button"
+      role="tab"
+      data-bs-toggle="tab"
+      data-bs-target="#profile"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false"
+      title="Tes préférences"
+    >
+      <div class="d-flex flex-row">
+        <h2><i class="bi bi-gear"></i></h2>
+        <div class="mx-2 py-1 d-none d-sm-block">PREFERENCES</div>
+      </div>
+    </button>
+    <!----- ONGLET SUGGESTIONS -->
+
+    <button
+      class="nav-link text-sm-center profile-tab"
+      id="nav-suggestions-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#suggestions"
+      type="button"
+      role="tab"
+      aria-controls="suggestions"
+      aria-selected="false"
+      title="Explorer"
+    >
+      <div class="d-flex flex-row">
+        <h2><i class="bi bi-search"></i></h2>
+        <div class="mx-2 py-1 d-none d-sm-block">EXPLORATIONS</div>
+      </div>
+    </button>
+
+    <!----- ONGLET FAVORIS -->
+
+    <button
+      class="nav-link text-sm-center profile-tab"
+      id="nav-favoris-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#favoris"
+      type="button"
+      role="tab"
+      aria-controls="favoris"
+      aria-selected="false"
+      data-toggle="tooltip"
+      data-placement="top"
+      title="Votre sélection de formations favorites"
+    >
+      <div class="d-flex flex-row">
+        <h2 id="nav-favoris-svg">
+          <i class="bi bi-heart"></i>
+        </h2>
+        <div class="mx-2 py-1 d-none d-sm-block">SELECTIONS</div>
+      </div>
+    </button>
+
+    <!----- ONGLET GROUPES ajouté/masqué dynamiquement -->
+    <button
+      class="nav-link text-sm-center"
+      id="nav-groups-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#groups"
+      type="button"
+      role="tab"
+      aria-controls="groups"
+      aria-selected="false"
+      title="Choix et infos du groupe"
+    >
+      <div class="d-flex flex-row">
+        <h2><i class="bi bi-people-fill"></i></h2>
+        <div class="mx-2 py-1 d-none d-sm-block">GROUPE</div>
+      </div>
+    </button>
+    <!----- ONGLET ADMIN GENERALE ajouté/masqué dynamiquement -->
+    <button
+      class="nav-link text-sm-center"
+      id="nav-admin-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#admin"
+      type="button"
+      role="tab"
+      aria-controls="admin"
+      aria-selected="false"
+      title="Administration"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="bi bi-gear"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+        />
+        <path
+          d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+        />
+      </svg>
+      <div class="d-none d-sm-block">Administration</div>
+    </button>
+
+    <!----- MENU MESSAGE -->
+    <button
+      class="nav-link nav-pill text-sm-center profile-tab"
+      id="nav-messages-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#messages"
+      type="button"
+      role="tab"
+      aria-controls="messages"
+      aria-selected="false"
+      title="Mes messages"
+    >
+      <div class="d-flex flex-row justify-content-start">
+        <h2>
+          <i class="bi bi-chat-left-text-fill"></i>
+        </h2>
+        <div class="mx-2 py-1 d-none d-sm-block">MES NOTES</div>
+      </div>
+    </button>
+
+    <!----- MENU COMPTE -->
+    <button
+      class="nav-link nav-pill text-sm-center"
+      id="nav-account-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#account"
+      type="button"
+      role="tab"
+      aria-controls="account"
+      aria-selected="false"
+      title="Mon compte"
+    >
+      <div class="d-flex flex-row justify-content-end">
+        <h2>
+          <i class="bi bi-box-arrow-right"></i>
+        </h2>
+      </div>
+    </button>
+  </div>
+</div>

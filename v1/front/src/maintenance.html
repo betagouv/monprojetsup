@@ -1,111 +1,67 @@
 <!DOCTYPE html>
-<link rel="icon" href="favicon.ico" />
-<meta
-  http-equiv="Cache-control"
-  content="no-cache, no-store, must-revalidate"
-/>
-<meta http-equiv="Pragma" content="no-cache" />
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MonProjetSup</title>
-</head>
-<!--------------------------------- 
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+
+    <meta name="theme-color" content="#000091" />
+    <!-- Défini la couleur de thème du navigateur (Safari/Android) -->
+    <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+    <!-- 180×180 -->
+    <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon" />
+    <!-- 32×32 -->
+    <link
+      rel="manifest"
+      href="favicon/manifest.webmanifest"
+      crossorigin="use-credentials"
+    />
+    <!-- Modifier les chemins relatifs des favicons en fonction de la structure du projet -->
+    <!-- Dans le fichier manifest.webmanifest aussi, modifier les chemins vers les images -->
+
+    <link rel="stylesheet" href="dsfr.min.css" />
+    <link rel="stylesheet" href="utility/utility.min.css" />
+
+    <title>MonProjetSup - site en maintenance</title>
+
+    <!-- best effort to avoid caching while in dev mode -->
+    <meta
+      http-equiv="Cache-control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+  </head>
+  <!--------------------------------- 
                 BODY
     ----------------------------------->
-<body class="body">
-  <!------------- TOASTS ---------
-      Some messages are passed to the user via toasts,
-      they are stored there
-  ------->
-  <div class="toaster toast-container position-fixed top-0 end-0"></div>
-  <div id="modal_container_"></div>
-  <div id="modal_container_themes"></div>
-  <div id="modal_container_formations"></div>
-  <div
-    id="details_modal"
-    class="modal fade w-100"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="modalLabel"
-    aria-hidden="true"
-  >
-    <div
-      class="modal-dialog modal-80 modal-dialog-centered text-start fst-normal fs-6 fw-normal"
-      role="document"
-    >
-      <div class="modal-content bg-light2">
-        <div class="modal-body">
-          <div class="d-flex justify-content-between">
-            <button
-              type="button"
-              class="btn myBleuMarine"
-              id="back_button"
-              aria-label="Fermer"
-            >
-              <h3 class="myBleuMarine">
-                <b>
-                  <i class="bi bi-arrow-left"></i>
-                </b>
-              </h3>
-            </button>
-            <button
-              type="button"
-              class="btn myBleuMarine"
-              id="close_button"
-              aria-label="Fermer"
-            >
-              <h3 class="myBleuMarine">
-                <b>
-                  <i class="bi bi-x-lg"></i>
-                </b>
-              </h3>
-            </button>
+  <body class="body">
+    <main id="main">
+      <div id="maintenance">
+        <section class="py-5 text-center container-lg">
+          <div class="row py-lg-3">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <span class="col my-auto text-center inline mx-2">
+                <img alt="cnrs" src="img/monprojetsup.svg" class="img-fluid" />
+              </span>
+            </div>
           </div>
-          <div class="d-flex justify-content-center details_modal_header"></div>
-          <div class="details_modal_content"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+        </section>
 
-  <main id="main">
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------- STEP 0: CONNECTION SCREEN ---------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <!------------------------------------------------------->
-    <div id="maintenance">
-      <section class="py-5 text-center container-lg">
-        <div class="row py-lg-3">
-          <div class="col-lg-6 col-md-8 mx-auto">
-            <span class="col my-auto text-center inline mx-2">
-              <img alt="cnrs" src="img/monprojetsup.svg" class="img-fluid" />
-            </span>
+        <div class="container-lg">
+          <div class="alert alert-info front-feedback"></div>
+
+          <div class="p-4 rounded mb-5 question">
+            <p class="">
+              Site en maintenance suite à un problème technique, nos équipes
+              travaillent à résoudre le problème.
+            </p>
           </div>
         </div>
-      </section>
-
-      <div class="container-lg">
-        <div class="alert alert-info" id="front-feedback"></div>
-
-        <div class="p-4 rounded mb-5 question" id="login-modal-contained">
-          <p class="">
-            Site en maintenance suite à un problème technique, nos équipes
-            travaillent à résoudre le problème.
-          </p>
-
-          <!-- LOG / ERRORS  -->
-          <div class="text-danger" id="server-error"></div>
-          <div class="text-danger" id="front-error"></div>
-          <!-- AND LOG / ERRORS  -->
-        </div>
       </div>
-    </div>
-  </main>
-</body>
+    </main>
+  </body>
+</html>

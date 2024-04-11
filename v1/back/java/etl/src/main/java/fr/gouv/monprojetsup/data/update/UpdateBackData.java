@@ -9,9 +9,12 @@ import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.rome.RomeData;
+import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import static fr.gouv.monprojetsup.data.analysis.ServerDataAnalysis.CARTE_JSON_PATH;
 
 public class UpdateBackData {
 
@@ -35,8 +38,13 @@ public class UpdateBackData {
         RomeData romeData = RomeData.load();
         onisepData.insertRomeData(romeData.centresInterest());
 
+        JsonCarte carte= Serialisation.fromJsonFile(
+            DataSources.getSourceDataFilePath(CARTE_JSON_PATH),
+            JsonCarte.class
+        );
+
         LOGGER.info("Enregistrement des données dans " + DataSources.getBackDataFilePath());
-        BackEndData data = new BackEndData(psupData, onisepData, cities, romeData);
+        BackEndData data = new BackEndData(psupData, onisepData, cities, romeData, carte);
 
         Serialisation.toZippedJson(DataSources.getBackDataFilePath(), data, true);
 

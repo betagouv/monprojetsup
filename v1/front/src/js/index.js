@@ -24,9 +24,7 @@ $(async function () {
     frontErrorHandler(errObj, true);
   };
 
-  window.onload = function () {
-    //google_sign_in_init();
-  };
+  ui.injectHtml();
 
   /*
   const toto = (response) => {
@@ -43,19 +41,16 @@ $(async function () {
   ui.initOnce();
 
   /* Step1: loading data */
-  ui.showDataLoadScreen();
+  await ui.showDataLoadScreen();
   $(".body").css("visibility", "visible");
 
-  console.log(__VERSION__);
+  console.log("MPS version " + __VERSION__);
 
   $("#version_appli").html("Version " + __VERSION__);
 
   /* Step3: trying automatic reconnection based on session cookie */
   if (session.isLoggedIn()) {
     postLoginHandler();
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
   } else {
     //ui.showConnectionScreen();
     ui.showLandingScreen();

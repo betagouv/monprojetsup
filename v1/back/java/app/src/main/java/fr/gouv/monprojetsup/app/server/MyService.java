@@ -1,13 +1,8 @@
 package fr.gouv.monprojetsup.app.server;
 
-import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.common.server.ErrorResponse;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.common.server.MyServiceException;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -18,55 +13,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.Objects;
 
 @Slf4j
 @Service
-public abstract class MyService<T,U> implements HttpHandler {
+public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.MyService<T,U> {
 
-    private final Type classT;
 
     protected MyService(@NotNull Type classT) {
-       this.classT = classT;
+        super(classT);
     }
 
-    /* we synchronized it to avoid the strange bug */
     @Override
-    public synchronized void handle(@NotNull HttpExchange exchange) {
-        T req = null;
-        try {
-            req = extractRequest(exchange);
-            if(!WebServer.isInitialized()) {
-                throw new DBExceptions.ServerStartingException();
-            }
-            U ans = handleRequest(req);
-            Helpers.write(ans, exchange);
-        } catch (Exception e) {
-            try {
-                URI uri = exchange.getRequestURI();
-                ErrorResponse response = handleException(e, req, uri == null ? null : uri.toString() );
-                Helpers.write(response, exchange);
-            }  catch (Exception ignored) {
-                //ignored
-            }
-        }
-    }
-
-    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
-
-    private @NotNull T extractRequest(@NotNull HttpExchange t) throws IOException {
-        String buffer = Helpers.getSanitizedBuffer(t);
-        try {
-            T req = new Gson().fromJson(buffer, classT);
-            if (req == null) throw new RuntimeException(Helpers.NULL_DATA);
-            return req;
-        } catch (Exception e) {
-            throw new RuntimeException("extractRequest failed on buffer " + (buffer == null ? "null" : buffer), e);
-        }
-    }
-
-    public static ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+    public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,
@@ -116,28 +75,9 @@ public abstract class MyService<T,U> implements HttpHandler {
         }
     }
 
-    public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
-        try {
-            return handleRequest(req);
-        } catch (Exception e) {
-            throw new MyServiceException(e, req);
-        }
+    @Override
+    protected boolean isServerReady() {
+        return WebServer.isInitialized();
     }
-    public record BasicRequest(
-            @NotNull String login,
-            @NotNull String token
-    ) {
-    }
-
-    public record EmptyRequest(
-    ) {
-    }
-
-    public  record BasicResponse(
-            ResponseHeader header
-    ) {
-        public BasicResponse() { this(new ResponseHeader()); }
-    }
-
 
 }

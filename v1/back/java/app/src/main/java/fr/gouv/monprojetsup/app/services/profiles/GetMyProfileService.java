@@ -6,14 +6,15 @@ import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;
 import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetMyProfileService extends MyService<MyService.BasicRequest, GetMyProfileService.Response> {
+public class GetMyProfileService extends MyService<Server.BasicRequest, GetMyProfileService.Response> {
 
     public GetMyProfileService() {
-        super(MyService.BasicRequest.class);
+        super(Server.BasicRequest.class);
     }
 
 
@@ -28,7 +29,7 @@ public class GetMyProfileService extends MyService<MyService.BasicRequest, GetMy
 
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull MyService.BasicRequest req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull Server.BasicRequest req) throws Exception {
         DB.authenticator.tokenAuthenticate(req.login(), req.token());
 
         ProfileDTO profile = WebServer.db().getProfile(req.login());

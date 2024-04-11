@@ -16,7 +16,7 @@ public class SuggestionServer extends Server {
     @Getter
     private static SuggestionsServerConfig config;
 
-    public static boolean isInitialized() {
+    public static boolean isReady() {
         return true;
     }
 
@@ -33,7 +33,7 @@ public class SuggestionServer extends Server {
         LOGGER.info("Loading data for suggestion Server...");
         ServerData.load();
 
-        LOGGER.info("Initializing suggestions ");
+        LOGGER.info("Initializing details ");
         AlgoSuggestions.initialize();
 
         LOGGER.info("Suggestion Server Initialized ");

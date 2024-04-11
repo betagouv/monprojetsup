@@ -8,7 +8,6 @@ import { postToSpringService } from "./api/call_service";
 import * as profile_services from "./profile_services";
 import * as account_services from "./account_services";
 import * as suggestions_services from "./suggestions_services";
-import * as public_info_services from "./public_info_services";
 import * as teacher_services from "./teacher_services";
 import * as admin_services from "./admin_services";
 
@@ -33,8 +32,13 @@ export const addMessage = profile_services.addMessage;
 
 export const getExplanations = suggestions_services.getExplanations;
 export const getSuggestions = suggestions_services.getSuggestions;
+export const getFormationsAffinities =
+  suggestions_services.getFormationsAffinities;
+export const getStats = suggestions_services.getStats;
 export const getFormationsOfInterest =
   suggestions_services.getFormationsOfInterest;
+export const getDetails = suggestions_services.getDetails;
+export const search = suggestions_services.search;
 
 /**************** ACCOUNT SERVICES ******************** */
 
@@ -42,14 +46,11 @@ export const passwordLogin = account_services.passwordLogin;
 export const oidcLogin = account_services.oidcLogin;
 export const disconnect = account_services.disconnect;
 export const createAccount = account_services.createAccount;
+export const validateAccount = account_services.validateAccount;
 export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
-export const validateAccount = account_services.validateAccount;
+export const validateCodeAcces = account_services.validateCodeAcces;
 export const joinGroup = account_services.joinGroup;
-
-/*************** PUBLIC INFO ******************* */
-
-export const getStats = public_info_services.getStats;
 
 /**************** TEACHER SERVICES ************* */
 export const updateAdminInfos = teacher_services.getAdminInfos;

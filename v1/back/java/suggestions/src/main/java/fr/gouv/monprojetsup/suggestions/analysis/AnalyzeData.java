@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.analysis.eds.AnalyzeEDS;
@@ -131,16 +132,16 @@ public class AnalyzeData {
 
         Serialisation.toJsonFile("formations_sans_themes.json",
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
-                        .filter(e -> isFiliere(e.getKey()))
-                        .filter(e -> e.getValue().stream().noneMatch(ServerData::isTheme))
+                        .filter(e -> Helpers.isFiliere(e.getKey()))
+                        .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
                         .map(e -> ServerData.getDebugLabel(e.getKey()))
                         .filter(e -> !e.contains("groupe"))
                         .toList(),
                 true);
         Serialisation.toJsonFile("formations_sans_themes_ni_metier.json",
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
-                        .filter(e -> isFiliere(e.getKey()))
-                        .filter(e -> e.getValue().stream().noneMatch(f -> isTheme(f) || isMetier(f)))
+                        .filter(e -> Helpers.isFiliere(e.getKey()))
+                        .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || Helpers.isMetier(f)))
                         .map(e -> ServerData.getDebugLabel(e.getKey()))
                         .filter(e -> !e.contains("groupe"))
                         .toList(),
@@ -154,8 +155,8 @@ public class AnalyzeData {
 
 
         Map<String, String> metiersSansFormations = edgesKeys.edges().entrySet().stream()
-                .filter(e -> isMetier(e.getKey()))
-                .filter(e -> e.getValue().stream().noneMatch(ServerData::isFiliere))
+                .filter(e -> Helpers.isMetier(e.getKey()))
+                .filter(e -> e.getValue().stream().noneMatch(Helpers::isFiliere))
                 .map(e -> Pair.of(e.getKey(), ServerData.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
@@ -186,8 +187,8 @@ public class AnalyzeData {
 
     private static void outputFormationsSansMetiers() throws IOException {
         Map<String, String> formationsSansMetiers = edgesKeys.edges().entrySet().stream()
-                .filter(e -> isFiliere(e.getKey()))
-                .filter(e -> e.getValue().stream().noneMatch(ServerData::isMetier))
+                .filter(e -> Helpers.isFiliere(e.getKey()))
+                .filter(e -> e.getValue().stream().noneMatch(Helpers::isMetier))
                 .map(e -> Pair.of(e.getKey(), ServerData.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("groupe") && !e.getRight().contains("null"))
                 .collect(Collectors.toMap(

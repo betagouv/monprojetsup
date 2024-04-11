@@ -1,5 +1,10 @@
 package fr.gouv.monprojetsup.data.model.stats;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import java.util.Map;
 
 public abstract class StatsContainers {
@@ -44,4 +49,6 @@ public abstract class StatsContainers {
     ) {
 
     }
+
+
 }

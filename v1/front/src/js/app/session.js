@@ -77,11 +77,19 @@ export function getProfileCompletenessLevel() {
 }
 
 function getLogin() {
-  return sessionStorage["login"];
+  return sessionStorage.login;
 }
 
 function getToken() {
-  return sessionStorage["token"];
+  return sessionStorage.token;
+}
+
+export function getScreen() {
+  return sessionStorage.screen;
+}
+
+export function saveScreen(screen) {
+  sessionStorage.screen = screen;
 }
 
 function setSelectedGroup(group) {

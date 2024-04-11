@@ -109,7 +109,7 @@ const params = {
     },
     {
       category: "profil",
-      txt: "Moyenne générale scolaire estimée",
+      txt: "Moyenne générale scolaire estimée en terminale",
       filtre: "niveau == 'term'",
       explain: `<p>Cette question est facultative. Ton auto-évaluation est utilisée pour te recommander en priorité les formations auxquelles\
          tu as les meilleures chances d'accéder, sans pour autant en exclure aucune.</p>

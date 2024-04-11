@@ -33,6 +33,15 @@ export function createAccount(data, onSuccess = null) {
   postToSpringService("public/account/create", { data: data }, onSuccess, true);
 }
 
+export function validateCodeAcces(data, onSuccess = null) {
+  postToSpringService(
+    "public/account/validate",
+    { data: data },
+    onSuccess,
+    true
+  );
+}
+
 export function sendResetPasswordEmail(email, onSuccess = null) {
   postToSpringService(
     "public/account/resetPassword",

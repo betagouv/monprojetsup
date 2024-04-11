@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.common.dto.ProfileDTO;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.junit.BeforeClass;

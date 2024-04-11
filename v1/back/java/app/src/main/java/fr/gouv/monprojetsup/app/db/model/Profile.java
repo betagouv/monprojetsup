@@ -4,7 +4,7 @@ import fr.gouv.monprojetsup.app.db.DBTools;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.app.dto.ProfileDTO;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
-import fr.gouv.monprojetsup.common.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
-import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_APPROVED;
-import static fr.gouv.monprojetsup.common.dto.SuggestionDTO.SUGG_REJECTED;
+import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_APPROVED;
+import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_REJECTED;
 
 @Data
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public final class Profile {
     private Set<String> geo_pref = new HashSet<>();
     private Set<String> spe_classes= new HashSet<>();
 
-    /** maps various things to integer scores chosen by the student.
+    /** maps various things to integer interests chosen by the student.
      E.g. interets "T-ITM.1020" --> 5
      E.g. interests "T-IDEO2.4819" --> 3
      E.g. metiers ids "MET.7776" --> 4
@@ -169,7 +169,7 @@ public final class Profile {
             case "moygen": moygen = value; break;
             case "duree": duree = value; break;
             case "niveau": niveau = value; break;
-            case "scores":
+            case "interests":
                 if(add) scores.put(value.replace(".","_"), 1);
                 else scores.remove(value.replace(".","_"));
                 break;
@@ -292,7 +292,7 @@ public final class Profile {
                 ", apprentissage='" + apprentissage + "'\n" +
                 ", geo_pref='" + geo_pref + "'\n" +
                 ", spe_classes='" + spe_classes + "'\n" +
-                ", scores='" + toExplanationString(scores) + "'\n" +
+                ", interests='" + toExplanationString(scores) + "'\n" +
                 ", mention='" + mention + "'\n" +
                 ", moygen='" + moygen + "'\n" +
                 ", choices=" + toExplanationString(suggApproved()) + "\n" +

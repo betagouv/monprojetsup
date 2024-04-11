@@ -1,0 +1,153 @@
+<!------------- TAB 5: ADMINGROUP groups.js seulement pour référents -->
+<div
+  class="tab-pane fade"
+  id="groups"
+  role="tabpanel"
+  aria-labelledby="nav-groups-tab"
+>
+  <div class="p-4 my-2" id="groupsAdminDiv">
+    <!-- GROUP/TEACHER no group selected-->
+    <div id="accountCreationByProviseurDiv" class="m-4">
+      <div class="p-4 rounded mb-5 alert alert-danger question">
+        <p class="fw-bold fs-6">
+          Des créations de comptes sont en attente de validation.
+        </p>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="acceptAccountCreation"
+            >Login</label
+          >
+          <select
+            class="form-select"
+            id="accountCreationByProviseurSelect"
+          ></select>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-success mx-2"
+            id="accountCreationByProviseurButton"
+          >
+            Accepter
+          </button>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-danger =x-2"
+            id="rejectAccountCreationByProviseurButton"
+          >
+            Refuser
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="selectGroupTeacherDiv">
+      <div id="selectGroupTeacherDivWithGroup" class="rounded question m-4">
+        <h3 class="m-2">Groupes dont vous êtes référents</h3>
+
+        <p class="fw-bold fs-6 p-4">
+          Cliquez sur un groupe pour en voir les détails.
+        </p>
+        <div id="groupsAdminSelectGroupDiv" class="">Liste des groupes</div>
+      </div>
+      <div id="selectGroupTeacherDivNoGroup" class="rounded question m-4">
+        <h3 class="m-2">Devenir référent d'un nouveau groupe</h3>
+        <p class="fw-bold fs-6 p-4">
+          Cliquez sur un groupe pour en devenir référent.
+        </p>
+        <div id="joinGroupSelectDiv"></div>
+      </div>
+    </div>
+
+    <!-- GROUP/TEACHER no student selected-->
+    <div id="selectStudentTeacherDiv">
+      <h3 class="p-4 m-2 alert alert-danger lienQuestionnaire">
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLScZA1X8zoiyURm8Oznl4pZS-A1ehtc1naEfjCI7eU2Xb3GrCA/viewform"
+        >
+          Lien vers le questionnaire référent à remplir à l'issu de votre ou de
+          vos séances en classe.
+        </a>
+      </h3>
+      <div class="p-4 my-2 container-fluid rounded question">
+        <div
+          class="container-fluid"
+          id="groupsAdminNoStudentSelectedText"
+        ></div>
+      </div>
+
+      <div class="p-4 my-2 container-fluid rounded question">
+        <table class="table m-2" id="groupsAdminNoStudentSelectedTable">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Observations</th>
+            </tr>
+          </thead>
+          <tbody id="groupsAdminNoStudentSelectedTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GROUP/TEACHER zoom on student details-->
+    <div id="studentDetailsDiv">
+      <br />
+      <br />
+      <br />
+      <div
+        type="button"
+        id="seeGroupButton"
+        class="fr-btn btn-disabled btn-primary"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+      </div>
+      <div id="studentDetailsViewDiv"></div>
+    </div>
+  </div>
+  <!-- passwordReset Modal -->
+  <div
+    class="modal fade"
+    id="passwordResetModal"
+    tabindex="-1"
+    aria-labelledby="emailResetModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailResetModalLabel">
+            Réinitialisation de mot de passe
+          </h5>
+        </div>
+        <div class="modal-body">
+          <p>Confirmer la réinitialisation du mot de passe?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-success"
+            data-bs-dismiss="modal"
+            id="doResetPassword"
+          >
+            Confirmer
+          </button>
+          <button
+            type="button"
+            class="fr-btn btn-disabled btn-primary"
+            data-bs-dismiss="modal"
+          >
+            Annuler
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

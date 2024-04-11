@@ -1,0 +1,75 @@
+<!------------------------------------>
+<!------------------------------------>
+<!------------------------------------>
+<!------------------------------------>
+<!------- MODALS / DIALOGS for connection screen ----------->
+<!------------------------------------>
+<!------------------------------------>
+<!------------------------------------>
+<!------------------------------------>
+
+<!-- Reinit mot de passe-->
+<div
+  class="modal fade"
+  id="oublimdpModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Oubli du mot de passe</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Fermer"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Vous pouvez demander une réinitialisation de votre mot de passe au
+          responsable de votre groupe.
+        </p>
+        <p>
+          Vous pouvez également demander une réinitialisation par email en
+          utilisant le formulaire ci-dessous.
+        </p>
+        <div class="form-group m-2">
+          <span class="input-group-text m-2">
+            <div class="fr-fieldset__element">
+              <label class="fr-label" for="text-1"> E-mail </label>
+              <input
+                type="email"
+                class="fr-input form-control"
+                id="sendResetPasswordEmailInputEmail"
+                aria-describedby="emailHelp"
+              />
+            </div>
+          </span>
+          <button
+            id="sendResetPasswordEmail"
+            type="button"
+            data-bs-dismiss="modal"
+            class="fr-btn btn-disabled btn-info-disabled"
+          >
+            Demander à réinitialiser le mot de passe
+          </button>
+        </div>
+
+        <br />
+        <p>En cas de difficulté merci de contacter support@monprojetsup.fr.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="fr-btn fr-btn--secondary btn-disabled btn-secondary-disabled"
+          data-bs-dismiss="modal"
+        >
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
