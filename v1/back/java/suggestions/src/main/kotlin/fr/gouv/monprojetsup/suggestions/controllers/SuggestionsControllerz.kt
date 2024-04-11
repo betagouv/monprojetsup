@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.*
        
     """)
 @OpenAPIDefinition(
-    info = Info(title = "MonProjetSup API", version = "1.1"),
+    info = Info(title = "MonProjetSup API", version = "1.2"),
     servers = [ Server(url = "https://monprojetsup.fr/"), Server(url = "http://localhost:8004/") ]
 )
 class SuggestionsControllerz(

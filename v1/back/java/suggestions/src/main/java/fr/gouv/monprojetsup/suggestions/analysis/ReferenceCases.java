@@ -413,7 +413,7 @@ public record ReferenceCases(
     public static GetExplanationsAndExamplesServiceDTO.Response callExplanationsService(
             GetExplanationsAndExamplesServiceDTO.Request request
     ) throws IOException, InterruptedException {
-        String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/explanations", request);
+        String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.2/public/explanations", request);
         return new Gson().fromJson(response, GetExplanationsAndExamplesServiceDTO.Response.class);
     }
 
@@ -421,7 +421,7 @@ public record ReferenceCases(
         return callSuggestionsService(new GetSuggestionsService.Request(pf)).suggestions().suggestions();
     }
     private static GetSuggestionsService.Response callSuggestionsService(GetSuggestionsService.Request pf) throws IOException, InterruptedException {
-        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/public/details";
+        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.2/public/details";
         String response = post(url, pf);
         return new Gson().fromJson(response, GetSuggestionsService.Response.class);
     }

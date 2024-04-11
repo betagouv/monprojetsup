@@ -2,7 +2,7 @@
 
 import $ from "jquery";
 
-const API = "/api/1.1/";
+const API = "/api/1.2/";
 
 const IPserver = "https://" + document.location.hostname; //https calls
 

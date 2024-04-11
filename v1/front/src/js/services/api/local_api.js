@@ -12,7 +12,7 @@ export function callAPI(serviceName, data, successHandler, errorHandler, type) {
       ? 8003
       : 8002;
   const IPserver = "http://" + document.location.hostname + ":" + port;
-  const API = "/api/1.1/";
+  const API = "/api/1.2/";
   const url = IPserver + API + serviceName;
   $.ajax({
     type: type,

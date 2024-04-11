@@ -24,7 +24,7 @@ class ApplicationMps
  * Version of the API used to implement the service,
  * used in the controllers to define the context of the endpoints
  */
-const val API_VERSION = "1.1"
+const val API_VERSION = "1.2"
 
 /**
  * Base path for the service
