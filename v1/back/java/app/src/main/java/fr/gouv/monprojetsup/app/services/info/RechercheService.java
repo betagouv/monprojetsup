@@ -34,7 +34,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
 
     protected static boolean USE_LOCAL_URL = true;
 
-    public static final String LOCAL_URL = "http://localhost:8004/";
+    public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
     public static final String REMOTE_URL = "https://monprojetsup.fr/";
 
 
@@ -166,7 +166,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     static private List<String> sortMetiersByAffinites(ProfileDTO profile, Set<String> keysMetiers) throws IOException, InterruptedException {
         if(keysMetiers.isEmpty()) return List.of();
         val request = new SortMetiersByAffinityServiceDTO.Request(profile, keysMetiers.stream().toList());
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/affinite/metiers", request);
+        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/metiers", request);
         val response = new Gson().fromJson(responseJson, SortMetiersByAffinityServiceDTO.Response.class);
         return response.clesTriees();
     }
@@ -174,7 +174,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     //
     static private List<Affinity> getFormationsAffinities(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetFormationsAffinitiesServiceDTO.Request(profile);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/affinite/formations", request);
+        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/formations", request);
         val response = new Gson().fromJson(responseJson, GetFormationsAffinitiesServiceDTO.Response.class);
         return response.affinites();
     }
@@ -184,7 +184,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
             List<String> keys)
             throws IOException, InterruptedException {
         val request = new GetExplanationsAndExamplesServiceDTO.Request(profile, keys);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.1/explanations", request);
+        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "explanations", request);
         val response = new Gson().fromJson(responseJson, GetExplanationsAndExamplesServiceDTO.Response.class);
         return response.liste();
     }
@@ -221,27 +221,14 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
 
         List<ResultatRecherche> result = new ArrayList<>();
 
-        for (String key : keys) {/* formations of interest */
+        for (String key : keys) {
             val fois = getGeographicInterests(
                     List.of(key),
                     pf.geo_pref(),
                     2
             ).stream().map(ExplanationGeo::form).toList();
 
-            /* cities */
-            val citiesDistances = new HashMap<String, Integer>();
-            getGeographicInterests(
-                    List.of(key),
-                    pf.geo_pref(),
-                    Integer.MAX_VALUE
-            ).forEach(e ->
-                    citiesDistances.put(
-                            e.city(),
-                            min(citiesDistances.getOrDefault(e.city(), Integer.MAX_VALUE), e.distance())
-                    )
-            );
-
-            val cities = Distances.getCities(key, pf.geo_pref());//citiesDistances.keySet().stream().sorted(Comparator.comparing(citiesDistances::get)).toList();
+            val cities = Distances.getCities(key, pf.geo_pref());
 
             val stats = ServerData.getSimpleGroupStats(
                     pf.bac(),

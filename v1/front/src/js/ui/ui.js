@@ -144,26 +144,30 @@ export async function showLandingScreen() {
 }
 
 export async function showInscriptionScreen1() {
-  await showSubScreen("inscription1");
+  return showSubScreen("inscription1");
 }
 export async function showInscriptionScreen2() {
-  await showSubScreen("inscription2");
+  return showSubScreen("inscription2");
 }
 export async function showBoard() {
-  await showConnectedScreen("board");
+  return showConnectedScreen("board");
 }
 export async function showSelection() {
-  await showConnectedScreen("selection");
+  return showConnectedScreen("selection");
 }
-
-export async function showRecherche(data) {
+export async function showRechercheScreen() {
   await showConnectedScreen("recherche");
   clearAffinityCards();
-  for (let i = 0; i < 20; i++) {
-    if (i >= data.length) break;
+}
+
+export function showRechercheData(data) {
+  clearAffinityCards();
+  const nbResults = data.length;
+  $("#search-results-nb").html(nbResults);
+  for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
     if (i == 0) {
-      displayFormationDetails(dat);
+      displayItemDetails(dat);
     }
     addAffinityCard(dat);
   }
@@ -171,8 +175,14 @@ export async function showRecherche(data) {
 
 function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
+  $("#explore-div-resultats-right").hide();
+  $("#explore-div-resultats-left-noresult").show();
+  $("#explore-div-resultats-left-entete").hide();
 }
 function addAffinityCard(dat) {
+  $("#explore-div-resultats-left-noresult").hide();
+  $("#explore-div-resultats-left-entete").show();
+
   const $div = buildAffinityCard(
     dat.key,
     dat.type,
@@ -182,12 +192,44 @@ function addAffinityCard(dat) {
   );
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(dat);
+    displayItemDetails(dat);
   });
 }
 
-function displayFormationDetails(dat) {
+function displayItemDetails(dat) {
   const key = dat.key;
+  const isMetier = data.isMetier(key);
+  if (isMetier) {
+    $(".explore-specific-formation").hide();
+    $(".explore-specific-metier").show();
+    displayMetierDetails(dat);
+  } else {
+    $(".explore-specific-formation").show();
+    $(".explore-specific-metier").hide();
+    displayFormationDetails(dat);
+  }
+}
+
+function displayMetierDetails(dat) {
+  $("#explore-div-resultats-right").show();
+  const key = dat.key;
+  //title
+  const label = data.getLabel(key);
+  $(".formation-details-title").html(label);
+  //summary
+  displaySummary(key);
+  //Explication
+  const devMode = false;
+  displayExplanations(dat.explanations, devMode);
+  //exemples
+  displayMetiers(dat.examples);
+}
+
+function displayFormationDetails(dat) {
+  $("#explore-div-resultats-right").show();
+
+  const key = dat.key;
+
   //title
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
@@ -209,8 +251,10 @@ function displayFormationDetails(dat) {
 function displaySummary(key) {
   const summary = data.getSummary(key);
   if (summary && summary.length > 0) {
+    const cleanup = summary.replaceAll("h3", "p").replaceAll("h2", "p");
+
+    $(".formation-details-summary").html(cleanup);
     $(".formation-details-summary").show();
-    $(".formation-details-summary").html(summary);
   } else {
     $(".formation-details-summary").hide();
     $(".formation-details-summary").empty();
@@ -398,7 +442,7 @@ function displayExplanations(explications, detailed) {
       "fr-icon-arrow-right-up-line"
     );
   } else if (simis.length > 1) {
-    str.push(
+    addExplanation(
       `Cette formation est similaire à: <em>&quot;${simis.join(
         "&quot;,&quot;"
       )}</em>.</p>`,
@@ -560,6 +604,12 @@ function displayAttendus(key) {
 }
 
 function buildAffinityCard(key, type, affinite, villes, metiers) {
+  if (type == "formation")
+    return buildFormationAffinityCard(key, affinite, villes, metiers);
+  else return buildMetierAffinityCard(key, metiers);
+}
+
+function buildFormationAffinityCard(key, affinite, villes, metiers) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header">
@@ -611,6 +661,29 @@ function buildAffinityCard(key, type, affinite, villes, metiers) {
         `<div class="card-metier">+${metiers.length - 5}</div>`
       );
   } else {
+    $(".card-metiers-header", $div).empty();
+  }
+  return $div;
+}
+function buildMetierAffinityCard(key, formations) {
+  const label = data.getLabel(key);
+  const $div = $(`        <div class="formation-card">
+          <div class="formation-card-header">
+            <div class="metier-card-header-type">METIER</div>
+            <div class="formation-card-header-sep"></div>
+          </div>
+          <div class="card-metier-title">${label}</div>
+          <div class="card-studies-level">
+            <img src="img/arrow-dsfr.svg" alt="arrow" />
+            A partir de Bac + ?
+          </div>
+          <div class="card-metiers-header">
+            ${formations.length} formations pour apprendre le métier
+          </div>
+        </div>
+`);
+
+  if (formations.length == 0) {
     $(".card-metiers-header", $div).empty();
   }
   return $div;

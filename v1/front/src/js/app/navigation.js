@@ -47,30 +47,28 @@ function doTransition(old_screen, new_screen) {
 }
 
 function init_main_nav() {
-  $("#header-navigation a").on("click", async function () {
+  $(".fr-nav__link").on("click", async function () {
     const id = $(this).attr("id");
     const screen = id.replace("nav-", "");
     setScreen(screen);
-    //await ui.showConnectedScreen(screen);
-    //init_main_nav();
   });
 }
+
+async function updateRecherche() {
+  let str = $("#search-784-input").val();
+  if (str === null || str === undefined) str = "";
+  const msg = await app.doSearch(str);
+  ui.showRechercheData(msg.details);
+  $("#search-button").on("click", updateRecherche);
+}
+
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
-    $("#search-784-input").off("input");
-    $("#search-784-input").val("");
-
-    const msg = await app.doSearch("");
-    await ui.showRecherche(msg.details);
-
-    $("#search-784-input").on("input", async () => {
-      const str = $("#search-784-input").val();
-      const msg = await app.doSearch(str);
-      await ui.showRecherche(msg.details);
-    });
-
+    await ui.showRechercheScreen();
     init_main_nav();
+    $("#search-784-input").val("");
+    updateRecherche();
   },
   board: async () => {
     await ui.showBoard();

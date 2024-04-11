@@ -16,6 +16,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.suggestions.server.Log;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -341,30 +342,15 @@ public class AlgoSuggestions {
         backPsupData.filActives().forEach(flcod -> edgesKeys.addNode(gFlCodToFrontId(flcod)));
 
 
-        Descriptifs descriptifs = UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
-        );
 
 
         /* intégration des relations étendues aux graphes */
-        Map<String, Set<String>> metiersVersFormations = onisepData.getExtendedMetiersVersFormations(
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance(),
-                descriptifs
-        );
-       String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
-       Set<String> lasKeys = ServerData.statistiques.getLASCorrespondance().lasToGeneric().keySet();
-
-        Set<String> metiersPass =
-                metiersVersFormations.entrySet().stream()
-                        .filter(e -> e.getValue().contains( passKey))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toSet());
+        Map<String, Set<String>> metiersVersFormations = ServerData.getMetiersVersFormations();
+        val metiersPass = ServerData.getMetiersPass(metiersVersFormations);
+        Set<String> lasKeys = ServerData.statistiques.getLASCorrespondance().lasToGeneric().keySet();
 
         metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasKeys.contains(fil) && metiersPass.contains(metier)) {
+            if(ServerData.statistiques.getLASCorrespondance().isLas(fil) && metiersPass.contains(metier)) {
                 edgesKeys.put(metier, fil, true, LAX_TO_PASS_METIERS_PENALTY);
                 /*last evolutiion was t extend metiers generation to all metiers of onisep
                         and to use this 0.25 coef. That pushes up PCSI on profile #1*/
@@ -377,8 +363,6 @@ public class AlgoSuggestions {
         edgesKeys.putAll(onisepData.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT);
         edgesKeys.putAll(onisepData.edgesFilieresThematiques());
         edgesKeys.putAll(onisepData.edgesThematiquesMetiers());
-
-
 
         //ajout des secteurs d'activité
         onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
@@ -421,7 +405,7 @@ public class AlgoSuggestions {
         Map<String, String> lasCorr = ServerData.statistiques.getLASCorrespondance().lasToGeneric();
         edgesKeys.addEdgesFromMoreGenericItem(lasCorr, 1.0);
 
-        lasCorr.entrySet().forEach(e -> e.setValue(passKey));
+        lasCorr.entrySet().forEach(e -> e.setValue(Constants.gFlCodToFrontId(PASS_FL_COD)));
         edgesKeys.addEdgesFromMoreGenericItem(lasCorr, LAX_TO_PASS_METIERS_PENALTY);
 
         //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
