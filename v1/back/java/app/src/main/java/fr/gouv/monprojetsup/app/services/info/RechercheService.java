@@ -34,7 +34,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
 
     protected static boolean USE_LOCAL_URL = true;
 
-    public static final String LOCAL_URL = "http://localhost:8003/";
+    public static final String LOCAL_URL = "http://localhost:8004/";
     public static final String REMOTE_URL = "https://monprojetsup.fr/";
 
 
