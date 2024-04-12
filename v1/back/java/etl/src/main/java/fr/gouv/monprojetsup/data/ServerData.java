@@ -19,6 +19,7 @@ import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -153,6 +154,31 @@ public class ServerData {
         return result;
     }
 
+    public static @NotNull Map<Pair<String,String>,List<String>> getAttendusParGroupes() {
+        Map<Pair<String,String>, List<String>> result = new HashMap<>();
+        backPsupData.filActives().forEach(gFlCod -> {
+            String key = Constants.gFlCodToFrontId(gFlCod);
+            String label = getDebugLabel(key);
+            if(label != null) {
+                val attendus = backPsupData.getAttendus(gFlCod);
+                val recoPrem = backPsupData.getRecoPremGeneriques(gFlCod);
+                val recoTerm = backPsupData.getRecoTermGeneriques(gFlCod);
+                if(attendus != null) {
+                    val p = Pair.of("attendus", attendus);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+                if(recoPrem != null) {
+                    val p = Pair.of("recoPrem", recoPrem);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+                if(recoTerm != null) {
+                    val p = Pair.of("recoTerm", recoTerm);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+            }
+        });
+        return result;
+    }
     private static void loadBackEndData() throws IOException {
 
         BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);

@@ -2,31 +2,34 @@ package fr.gouv.monprojetsup.data.analysis;
 
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.model.attendus.Attendus;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
+import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
+import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.LienFormationMetier2;
-import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.update.onisep.formations.Formations;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
-import fr.gouv.monprojetsup.data.update.rome.RomeData;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.parcoursup.carte.modele.modele.Etablissement;
 import fr.gouv.parcoursup.carte.modele.modele.Formation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +43,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
@@ -60,13 +63,41 @@ public class ServerDataAnalysis {
 
         ServerData.load();
 
-        exportFrontDatasToCsvForDescriptifsImprovements();
+        DataServerConfig.load();
+
+        /*
+        log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
+        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
+        data.removeFormations();
+        data.removeSmallPopulations();
+
+        log.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
+        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
+        psupData.cleanup();
+
+        log.info("Chargement des données ROME");
+        RomeData romeData = RomeData.load();
+
+        log.info("Chargement des données Onisep");
+        final OnisepData onisepData = OnisepData.fromFiles();
+
+        log.info("Insertion des données ROME dans les données Onisep");
+        onisepData.insertRomeData(romeData.centresInterest()); //before updateLabels
+
+        log.info("Maj des données Onisep (noms des filières et urls)");
+        data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
+        */
+
+        exportCentresDinteretsEtThemes();
+
+        outputResumesdescriptifsFormations();
 
         exportDeltaWithBillyCorr();
 
         exportLiensDomainesMetiers();
 
-        exportCentresDinterets();
+
+        exportAttendus();
 
         Serialisation.toJsonFile("thematiques.json", ServerData.onisepData.thematiques().thematiques(), true);
 
@@ -402,36 +433,6 @@ public class ServerDataAnalysis {
         );
     }
 
-    private static void exportFrontDatasToCsvForDescriptifsImprovements() throws IOException {
-
-        DataServerConfig.load();
-
-        log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
-        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
-        data.removeFormations();
-        data.removeSmallPopulations();
-
-        log.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
-        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
-        psupData.cleanup();
-
-        log.info("Chargement des données ROME");
-        RomeData romeData = RomeData.load();
-
-        log.info("Chargement des données Onisep");
-        final OnisepData onisepData = OnisepData.fromFiles();
-
-        log.info("Insertion des données ROME dans les données Onisep");
-        onisepData.insertRomeData(romeData.centresInterest()); //before updateLabels
-
-        log.info("Maj des données Onisep (noms des filières et urls)");
-        data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
-
-
-
-
-
-    }
 
     public static final String ONISEP_ACTIONS_FORMATIONS_PATH = "ideo_actions_formations/ideo-actions_de_formation_initiale-univers_enseignement_superieur.json";
     public static final String CARTE_JSON_PATH = "psup_actions_formations/psupdata-06-03-2024-11-05-05.json";
@@ -533,7 +534,7 @@ public class ServerDataAnalysis {
         if(f.getGealib() != null) return f.getGealib();
         return carte.etablissements.get(f.getGea()).getUrl();
     }
-    private static void exportCentresDinterets() throws IOException {
+    private static void exportCentresDinteretsEtThemes() throws IOException {
         Interets interets = onisepData.interets();
         try(CsvTools csv = new CsvTools("centresInterets.csv",',')) {
             csv.append(List.of("id", "label"));
@@ -548,6 +549,39 @@ public class ServerDataAnalysis {
                             throw new RuntimeException(f);
                         }
                     });
+        }
+        Thematiques thematiques = onisepData.thematiques();
+        try(CsvTools csv = new CsvTools("thematiques.csv",',')) {
+            csv.append(List.of("id", "label"));
+            thematiques.thematiques().entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(e -> {
+                        try {
+                            csv.append(e.getKey());
+                            csv.append(e.getValue());
+                            csv.newLine();
+                        } catch (IOException f) {
+                            throw new RuntimeException(f);
+                        }
+                    });
+        }
+
+    }
+
+    private static void exportAttendus() throws IOException {
+        val attendus = getAttendusParGroupes();
+        try(CsvTools csv = new CsvTools("attendus.csv",',')) {
+            csv.append(List.of("type", "énonce","formations"));
+            attendus.forEach((stringStringPair, strings) -> {
+                try {
+                    csv.append(stringStringPair.getLeft());
+                    csv.append(stringStringPair.getRight());
+                    csv.append(strings.stream().collect(Collectors.joining("\n")));
+                    csv.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 
@@ -647,6 +681,113 @@ public class ServerDataAnalysis {
         Serialisation.toJsonFile("metiers_sans_descriptif.json", copy4, true);
 
     }
+
+    public static void outputResumesdescriptifsFormations() throws IOException {
+
+        log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
+        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
+        data.removeFormations();
+        data.removeSmallPopulations();
+
+        log.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
+        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
+        psupData.cleanup();
+
+        log.info("Ajout des liens metiers");
+        Map<String, String> urls = new HashMap<>(data.liensOnisep);
+        onisepData.metiers().metiers().forEach((s, metier) -> {
+            //onisep.fr/http/redirections/metier/slug/[identifiant]
+        });
+
+        Map<String, Attendus> eds = Attendus.getAttendus(
+                psupData,
+                data,
+                SpecialitesLoader.load(),
+                false
+        );
+
+        UpdateFrontData.DataContainer data2 = UpdateFrontData.DataContainer.load(
+                psupData,
+                onisepData,
+                urls,
+                data.getLASCorrespondance(),
+                eds);
+
+        try (CsvTools csv = new CsvTools("resumesDescriptifsFormations.csv", ',')) {
+            csv.append(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
+                    "url onisep",
+                    "url psup",
+                    "resume",
+                    "attendus",
+                    "recommandations sur le parcours au lycée"));
+
+            for (String flStr : filieresFront) {
+                if (statistiques.getLASCorrespondance().isLas(flStr)) {
+                    continue;
+                }
+                String label2 = getLabel(flStr, flStr);
+                if (label2.contains("apprentissage") || label2.contains("LAS")) {
+                    continue;
+                }
+
+                csv.append(flStr);
+                csv.append(label2);
+
+                int code = Integer.parseInt(flStr.substring(2));
+                if (flStr.startsWith("fr")) {
+                    csv.append(flStr);
+                    String typeMacro = backPsupData.formations().typesMacros.getOrDefault(code, "");
+                    csv.append(typeMacro);
+                } else {
+                    Filiere fil = backPsupData.formations().filieres.get(code);
+                    if (fil == null) {
+                        throw new RuntimeException("no data on filiere " + flStr);
+                    }
+                    csv.append("fr" + fil.gFrCod);
+                    String typeMacro = backPsupData.formations().typesMacros.getOrDefault(fil.gFrCod, "");
+                    csv.append(typeMacro);
+                }
+
+                val listeFilieres = reverseFlGroups.getOrDefault(flStr, Set.of(flStr));
+
+                //liens onisep (distaincts)
+                csv.append(
+                        listeFilieres
+                                .stream().map(s -> data.liensOnisep.getOrDefault(s, ""))
+                                .filter(s -> !s.isEmpty())
+                                .distinct()
+                                .collect(Collectors.joining("\n"))
+                );
+
+                csv.append("https://dossier.parcoursup.fr/Candidat/carte?search=" + listeFilieres
+                        .stream()
+                                .distinct()
+                        .map(fl -> fl + "x").collect(Collectors.joining("%20")));
+
+                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
+
+                if (descriptif != null) {
+                    csv.append(descriptif.getFrontRendering());
+                } else {
+                    csv.append("");
+                }
+                csv.append(listeFilieres.stream()
+                        .map(fl -> Pair.of(fl, eds.get(fl)))
+                        .filter(p -> p.getRight() != null && p.getRight().attendus() != null)
+                        .map(p -> getLabel(p.getLeft()) + "\n" + p.getRight().attendus())
+                        .filter(o ->  o!= null && !o.isBlank()).distinct()
+                        .collect(Collectors.joining("\n\n****    cas multiple    ****\n\n")));
+                csv.append(listeFilieres.stream()
+                        .map(fl -> Pair.of(fl, eds.get(fl)))
+                        .filter(p -> p.getRight() != null && p.getRight().recoEDS() != null)
+                        .map(p -> getLabel(p.getLeft()) + "\n" + p.getRight().recoEDS())
+                        .filter(o ->  o!= null && !o.isBlank()).distinct()
+                        .collect(Collectors.joining("\n\n****    cas multiple     ****\n\n")));
+                csv.newLine();
+            }
+        }
+    }
+
     static final class Theme {
         public final String cle;
         public final String intitule;

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 import static fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParMatiere.getStatAgregee;
+import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
 record StatistiquesAdmisParMatiere(
@@ -536,7 +537,9 @@ public class PsupStatistiques implements Serializable {
         }
 
         public  boolean isLas(String fl) {
-            return lasToGeneric.containsKey(fl);
+            if(lasToGeneric.containsKey(fl)) return true;
+            int code = Integer.parseInt(fl.substring(2));
+            return code >= LAS_CONSTANT;
         }
 
         public Map<String,Set<String>> getGenericToLas() {
