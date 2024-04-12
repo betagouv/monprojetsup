@@ -35,6 +35,11 @@ export const localeFR = {
     ARTICLES: pages.ARTICLES,
     MAIN_NAVIGATION: "Menu principal",
   },
+  PAGE_RECHERCHE: {
+    TITRE: "Rechercher une formation ou un métier",
+    EXEMPLES_MÉTIERS: "Exemples de métiers accessibles après cette formation",
+    FORMATIONS_POUR_APPRENDRE_METIER: "formations pour apprendre le métier",
+  },
   ÉLÈVE: {
     PROJET: {
       PARCOURS_INSCRIPTION: {
@@ -97,14 +102,14 @@ export const localeFR = {
   PAGE_ACCUEIL: {
     TITLE: pages.ACCUEIL,
   },
-  PAGE_ARTICLES: {
-    TITLE: pages.ARTICLES,
-  },
   COMMUN: {
     FERMER: "Fermer",
     CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
     CONTINUER: "Continuer",
     RETOUR: "Retour",
+    FORMATION: "Formation",
+    MÉTIER: "Métier",
+    TAUX_AFFINITÉ: "Taux d'affinité",
   },
   ACCESSIBILITÉ: {
     LIEN_EXTERNE: "ouvre un lien externe",
