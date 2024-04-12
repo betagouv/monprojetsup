@@ -9,8 +9,8 @@ const CarteMétier = ({ id, nom, formations, sélectionnée = false }: CarteMét
   };
 
   return (
-    <div className={`max-w-[470px] fr-p-4w bg-[--background-default-grey] shadow-md ${classEnFonctionDeLaSelection()}`}>
-      <div className="fr-grid-row justify-between items-center">
+    <div className={`fr-p-4w max-w-[470px] bg-[--background-default-grey] shadow-md ${classEnFonctionDeLaSelection()}`}>
+      <div className="fr-grid-row items-center justify-between">
         <Badge
           taille="sm"
           titre={i18n.COMMUN.MÉTIER}

@@ -24,29 +24,35 @@ const RecherchePage = () => {
   return (
     <>
       <Head title={i18n.PAGE_RECHERCHE.TITRE} />
-      <div className="grid grid-flow-col">
-        <ul className="bg-[--background-contrast-beige-gris-galet] list-none fr-p-2w fr-m-0 grid grid-flow-row gap-6">
-          {résultatsAlternés.map((résultat) => (
-            <li key={`${résultat.type}-${résultat.id}`}>
-              {résultat.type === "formation" ? (
-                <CarteFormation
-                  affinité={résultat.affinité}
-                  id={résultat.id}
-                  métiersAccessibles={résultat.métiersAccessibles}
-                  nom={résultat.nom}
-                  sélectionnée={résultat.id === "1"}
-                />
-              ) : (
-                <CarteMétier
-                  formations={résultat.formations}
-                  id={résultat.id}
-                  nom={résultat.nom}
-                />
-              )}
-            </li>
-          ))}
-        </ul>
-        <div className="bg-white fr-px-10w fr-py-5w">Contenu du détail</div>
+      <div className="bg-gradient-to-r from-[--background-contrast-beige-gris-galet] from-70% to-white to-70%">
+        <div className="fr-container">
+          <div className="grid grid-flow-col grid-cols-[auto_1fr] justify-start">
+            <ul className="m-0 grid h-[calc(100vh-250px)] list-none grid-flow-row gap-6 overflow-auto py-4 pl-0 pr-4 lg:pr-10">
+              {résultatsAlternés.map((résultat) => (
+                <li key={`${résultat.type}-${résultat.id}`}>
+                  {résultat.type === "formation" ? (
+                    <CarteFormation
+                      affinité={résultat.affinité}
+                      id={résultat.id}
+                      métiersAccessibles={résultat.métiersAccessibles}
+                      nom={résultat.nom}
+                      sélectionnée={résultat.id === "1"}
+                    />
+                  ) : (
+                    <CarteMétier
+                      formations={résultat.formations}
+                      id={résultat.id}
+                      nom={résultat.nom}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+            <div className="border-blue border border-solid bg-white px-4 py-6 md:min-w-[500px] md:px-10 md:py-12 lg:min-w-[610px] lg:px-20 lg:py-12">
+              Contenu du détail
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

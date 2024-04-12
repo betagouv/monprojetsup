@@ -12,8 +12,8 @@ const CarteFormation = ({ id, nom, métiersAccessibles, affinité, sélectionné
   };
 
   return (
-    <div className={`max-w-[470px] fr-p-4w bg-[--background-default-grey] shadow-md ${classEnFonctionDeLaSelection()}`}>
-      <div className="fr-grid-row justify-between items-center">
+    <div className={`fr-p-4w max-w-[470px] bg-[--background-default-grey] shadow-md ${classEnFonctionDeLaSelection()}`}>
+      <div className="fr-grid-row items-center justify-between">
         <Badge
           taille="sm"
           titre={i18n.COMMUN.FORMATION}
@@ -34,7 +34,7 @@ const CarteFormation = ({ id, nom, métiersAccessibles, affinité, sélectionné
           <p className="fr-text--sm fr-mb-3v fr-mt-3w text-[--text-label-grey]">
             {i18n.PAGE_RECHERCHE.EXEMPLES_MÉTIERS}
           </p>
-          <ul className="list-none flex gap-2 flex-wrap justify-start p-0 m-0">
+          <ul className="m-0 flex list-none flex-wrap justify-start gap-2 p-0">
             {métiersAccessibles.slice(0, NOMBRE_MÉTIERS_À_AFFICHER).map((métier) => (
               <li key={métier.id}>
                 <Tag
