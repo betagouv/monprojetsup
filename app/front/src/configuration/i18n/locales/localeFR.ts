@@ -110,5 +110,6 @@ export const localeFR = {
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
+    RETIRER: "Retirer",
   },
 } as const;

@@ -11,4 +11,5 @@ export type LienInterneProps = {
     position: "droite" | "gauche";
     classe: string;
   };
+  estUnTag?: boolean;
 };

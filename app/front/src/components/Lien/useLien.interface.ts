@@ -8,4 +8,5 @@ export type useLienProps = {
     classe: string;
   };
   estUnTéléchargement?: boolean;
+  estUnTag?: boolean;
 };

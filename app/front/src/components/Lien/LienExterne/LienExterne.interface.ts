@@ -11,4 +11,5 @@ export type LienExterneProps = {
     classe: string;
   };
   estUnTéléchargement?: boolean;
+  estUnTag?: boolean;
 };
