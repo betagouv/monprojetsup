@@ -29,7 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
@@ -58,7 +57,6 @@ public class ServerData {
     public static final Map<String, Set<String>> reverseFlGroups = new HashMap<>();
 
     public static Specialites specialites;
-    public static Map<String, Integer> codesSpecialites = new HashMap<>();
 
     //regroupement des filieres
     public static Map<String, String> flGroups = null;
@@ -93,7 +91,6 @@ public class ServerData {
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
 
         ServerData.specialites = SpecialitesLoader.load();
-        ServerData.specialites.specialites().forEach((iMtCod, s) -> ServerData.codesSpecialites.put(s, iMtCod));
 
         ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
         ServerData.statistiques.removeSmallPopulations();

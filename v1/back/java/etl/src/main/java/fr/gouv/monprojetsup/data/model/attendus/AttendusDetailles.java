@@ -73,8 +73,8 @@ public record AttendusDetailles(
                 .map(e -> Pair.of(e.getKey(),e.getValue().simplifyForFront()))
                 .filter(p -> p.getRight() != null)
                 .collect(Collectors.toMap(
-                        p -> p.getLeft(),
-                        p -> p.getRight()
+                        Pair::getLeft,
+                        Pair::getRight
                 ));
     }
 

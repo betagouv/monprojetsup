@@ -52,7 +52,9 @@ public class Formation implements Serializable {
     public final Double lat;
     public final Double lng;
 
+    public final String commune;
 
+    public final String codeCommune;
 
     public Formation(
             int gTaCod,
@@ -64,7 +66,9 @@ public class Formation implements Serializable {
             int academieCode,
             int capacite,
             Double lat,
-            Double lng) {
+            Double lng,
+            String commune,
+            String codeCommune) {
         this.gTaCod = gTaCod;
         this.gTiCod = gTiCod;
         this.gFlCod = gFlCod;
@@ -75,6 +79,8 @@ public class Formation implements Serializable {
         this.capacite = capacite;
         this.lat = lat;
         this.lng = lng;
+        this.commune = commune;
+        this.codeCommune = codeCommune;
     }
 
 
@@ -109,6 +115,8 @@ public class Formation implements Serializable {
         this.capacite = 0;
         this.lat = null;
         this.lng = null;
+        this.commune = "";
+        this.codeCommune = "";
     }
 
 

@@ -631,7 +631,15 @@ public class AffinityEvaluator {
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
-            Integer iMtCod = ServerData.codesSpecialites.get(s);
+            //Décodage soit par nom spécialité soit par code
+            Integer iMtCod = codesSpecialites.get(s);
+            if(iMtCod == null) {
+                try {
+                    iMtCod = Integer.parseInt(s);
+                } catch (NumberFormatException ignored) {
+                    //ignored
+                }
+            }
             if (iMtCod != null) {
                 Double stat = ServerData.statistiques.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {

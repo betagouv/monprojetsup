@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.analysis.eds;
 
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.attendus.AttendusDetailles;
+import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 
 
@@ -14,7 +15,7 @@ public class AnalyzeEDS {
         AttendusDetailles analyses = AttendusDetailles.getAttendusDetailles(
                 ServerData.backPsupData,
                 ServerData.statistiques,
-                ServerData.specialites,
+                SpecialitesLoader.load(),
                 true,
                 true);
 

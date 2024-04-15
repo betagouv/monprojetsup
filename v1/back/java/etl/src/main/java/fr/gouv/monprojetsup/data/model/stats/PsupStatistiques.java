@@ -141,9 +141,7 @@ public class PsupStatistiques implements Serializable {
 
 
         /* les noms affichés sur la carte */
-        nomsFilieres.forEach((key, libelle) -> {
-            result.put(key, getLibelleFront(key, libelle));
-        });
+        nomsFilieres.forEach((key, libelle) -> result.put(key, getLibelleFront(key, libelle)));
 
 
         /* used for LAS */
@@ -185,13 +183,6 @@ public class PsupStatistiques implements Serializable {
             result.put(key, getLibelleFront(key, form.toString()));
         });
 
-        /*int before = result.size();
-        ServerData.createGraph(oniData, false);
-        do not do that, fr example fr** labels are removed result.keySet().retainAll(ServerData.edgesKeys.edges().keySet());
-        int after = result.size();
-        LOGGER.info("Removed  " + (before - after) + " elments using prestar computation");
-        */
-
         lasCorrespondance.forEach((s, s2) -> {
             if(result.containsKey(s2)) {
                 result.put(s, result.get(s2) + " -  Accès Santé (LAS)");
@@ -203,14 +194,12 @@ public class PsupStatistiques implements Serializable {
                 .filter(metier -> metier.metiers_associes() != null)
                 .filter(metier -> metier.metiers_associes().metier_associe() != null)
                 .forEach(
-                metier -> {
-                    metier.metiers_associes().metier_associe().stream().forEach(metierAssocie ->
-                        result.put(
-                                cleanup(metierAssocie.id()),
-                                metierAssocie.libelle()
-                        )
-                    );
-                }
+                metier -> metier.metiers_associes().metier_associe().forEach(metierAssocie ->
+                    result.put(
+                            cleanup(metierAssocie.id()),
+                            metierAssocie.libelle()
+                    )
+                )
         );
         return result;
     }
@@ -249,8 +238,8 @@ public class PsupStatistiques implements Serializable {
     /**
      * Retourne le taux d'accès en fonction du groupe et du type de bac.
      * Le type de bac n'est que partiellement pris en compte (Gen / techno / Pro)
-     * @param g
-     * @param bac
+     * @param g groupe
+     * @param bac type de bac
      * @return le taux accés ou null si l'info n'est pas disponible
      */
     @SuppressWarnings("unused")
@@ -557,12 +546,6 @@ public class PsupStatistiques implements Serializable {
         return new ArrayList<>(filieres.values());
     }
 
-    public record StatGroupParBac(
-            Map<String, StatsContainers.StatGroup> stats
-    ) {
-
-    }
-
 
     /**
      * utilisé pour l'envoi des stats aux profs
@@ -601,7 +584,7 @@ public class PsupStatistiques implements Serializable {
     }
 
     //trading cpu for memory
-    private ConcurrentHashMap<Triple<String,String, Boolean>, Map<Integer, StatFront>> statsCache = new ConcurrentHashMap<>();
+    private final transient ConcurrentHashMap<Triple<String,String, Boolean>, Map<Integer, StatFront>> statsCache = new ConcurrentHashMap<>();
 
     private Map<Integer, StatFront> computeStatsScol(String groupe, String bac, boolean minimalForStudent) {
         StatistiquesAdmisParBac sapb = statsAdmis.parGroupe().get(groupe);

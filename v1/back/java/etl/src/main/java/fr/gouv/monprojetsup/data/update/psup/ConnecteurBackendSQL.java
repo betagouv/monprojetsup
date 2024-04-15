@@ -110,7 +110,7 @@ public class ConnecteurBackendSQL {
 
         recupererLiensOnisep(data, filActives);
 
-        TagsSources sources = recupererMotsClesFiltres(data, filActives);
+        TagsSources sources = recupererDonneesCarte(data, filActives);
 
         recupererProfilsScolaires(data, bacs);
 
@@ -533,13 +533,14 @@ public class ConnecteurBackendSQL {
 
     /**
      * Injecte les motsc=c-éls nécessaires à la carte, en préservant les chaines entières.
+     * Effet de bord: injecte les données dsur les formations dans data.
      *
      * @param data
      * @param filActives
      * @return
      * @throws fr.parcoursup.carte.exceptions.AccesDonneesException
      */
-    private TagsSources recupererMotsClesFiltres(PsupStatistiques data, Set<Integer> filActives) throws fr.parcoursup.carte.exceptions.AccesDonneesException, SQLException {
+    private TagsSources recupererDonneesCarte(PsupStatistiques data, Set<Integer> filActives) throws fr.parcoursup.carte.exceptions.AccesDonneesException, SQLException {
         //on recupere tous les mots clés en s'appuyant sur le code de la carte la carte
         ConnecteurJsonCarteSQL conn = new ConnecteurJsonCarteSQL(this.conn);
         AlgoCarteConfig config = new AlgoCarteConfig();//on part de la config par défaut

@@ -177,7 +177,7 @@ public record PsupData(
 
         DureesEtudes duree,
 
-        /* les suggestions et filières */
+        /* les formations et filières */
         Formations formations,
 
         /* indexed by name, mapped to a list of object represented as a String -> String */
