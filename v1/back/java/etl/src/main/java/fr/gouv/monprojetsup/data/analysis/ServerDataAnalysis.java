@@ -13,6 +13,7 @@ import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
+import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
@@ -90,7 +91,7 @@ public class ServerDataAnalysis {
 
         exportCentresDinteretsEtThemes();
 
-        outputResumesdescriptifsFormations();
+        outputResumesDescriptifsFormationsEtMetiersExtraits();
 
         exportDeltaWithBillyCorr();
 
@@ -682,7 +683,7 @@ public class ServerDataAnalysis {
 
     }
 
-    public static void outputResumesdescriptifsFormations() throws IOException {
+    public static void outputResumesDescriptifsFormationsEtMetiersExtraits() throws IOException {
 
         log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
         PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
@@ -786,6 +787,82 @@ public class ServerDataAnalysis {
                 csv.newLine();
             }
         }
+
+        try (CsvTools csv = new CsvTools("metiersExtraitsDesDescriptifsformations.csv", ',')) {
+            csv.append(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
+                    "métiers extraits des descriptifs (codes)",
+                    "intitulé onisep",
+                    "extrait du descriptif",
+                    "descriptif",
+                    "url psup",
+                    "url onisep"
+                    ));
+
+            for (String flStr : filieresFront) {
+                if (statistiques.getLASCorrespondance().isLas(flStr)) {
+                    continue;
+                }
+                String label2 = getLabel(flStr, flStr);
+                if (label2.contains("apprentissage") || label2.contains("LAS")) {
+                    continue;
+                }
+
+                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
+                if(descriptif == null || descriptif.hasError() || descriptif.presentation() == null) continue;
+
+                    int i = descriptif.presentation().indexOf("Exemples de métiers");
+                    if(i < 0) continue;
+                List<Triple<String, String, Metiers.Metier>> triplets = new ArrayList<>(onisepData.metiers().extractMetiers(descriptif.presentation().substring(i)));
+                if(triplets.isEmpty()) continue;
+
+
+                csv.append(flStr);
+                csv.append(label2);
+
+                int code = Integer.parseInt(flStr.substring(2));
+                if (flStr.startsWith("fr")) {
+                    csv.append(flStr);
+                    String typeMacro = backPsupData.formations().typesMacros.getOrDefault(code, "");
+                    csv.append(typeMacro);
+                } else {
+                    Filiere fil = backPsupData.formations().filieres.get(code);
+                    if (fil == null) {
+                        throw new RuntimeException("no data on filiere " + flStr);
+                    }
+                    csv.append("fr" + fil.gFrCod);
+                    String typeMacro = backPsupData.formations().typesMacros.getOrDefault(fil.gFrCod, "");
+                    csv.append(typeMacro);
+                }
+
+                val listeFilieres = reverseFlGroups.getOrDefault(flStr, Set.of(flStr));
+
+
+                csv.append(triplets.stream().map(Triple::getLeft).collect(Collectors.joining("\n")));
+                csv.append(triplets.stream().map(t -> t.getRight().lib()).collect(Collectors.joining("\n")));
+                csv.append(triplets.stream().map(Triple::getMiddle).collect(Collectors.joining("\n")));
+
+
+
+                csv.append(descriptif.getFrontRendering());
+
+                csv.append("https://dossier.parcoursup.fr/Candidat/carte?search=" + listeFilieres
+                        .stream()
+                        .distinct()
+                        .map(fl -> fl + "x").collect(Collectors.joining("%20")));
+
+                //liens onisep (distaincts)
+                csv.append(
+                        listeFilieres
+                                .stream().map(s -> data.liensOnisep.getOrDefault(s, ""))
+                                .filter(s -> !s.isEmpty())
+                                .distinct()
+                                .collect(Collectors.joining("\n"))
+                );
+
+                csv.newLine();
+            }
+        }
+
     }
 
     static final class Theme {

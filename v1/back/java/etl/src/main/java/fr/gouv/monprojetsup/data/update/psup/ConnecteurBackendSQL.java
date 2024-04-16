@@ -442,7 +442,10 @@ public class ConnecteurBackendSQL {
                                 gAaCod,
                                 capacciteFormation,
                                 finalLat,
-                                finalLng);
+                                finalLng,
+                                "",//todo merge with psup
+                                ""//todo merge with psup
+                                );
                         formations.formations.put(gTaCod, f);
                     }
                     f.groupes.add(cGpCod);

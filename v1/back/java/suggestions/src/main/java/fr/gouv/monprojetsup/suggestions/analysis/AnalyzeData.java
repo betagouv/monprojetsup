@@ -36,7 +36,7 @@ public class AnalyzeData {
 
         outputFormationsSansThemes();
 
-        ServerDataAnalysis.outputResumesdescriptifsFormations();
+        ServerDataAnalysis.outputResumesDescriptifsFormationsEtMetiersExtraits();
     }
 
 

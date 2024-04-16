@@ -173,7 +173,8 @@ public class UpdateFrontData {
 
             Map<String, String> summaries = Serialisation.fromJsonFile(
                     DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH),
-                    new TypeToken<Map<String, String>>(){}.getType()
+                    new TypeToken<>() {
+                    }.getType()
             );
             descriptifs.inject(summaries);
 

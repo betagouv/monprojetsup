@@ -171,6 +171,7 @@ export function showRechercheData(data) {
     }
     addAffinityCard(dat);
   }
+  //like and dislike handlers
 }
 
 function clearAffinityCards() {
@@ -603,13 +604,13 @@ function displayAttendus(key) {
   }
 }
 
-function buildAffinityCard(key, type, affinite, villes, metiers) {
+function buildAffinityCard(key, type, affinite, cities, metiers) {
   if (type == "formation")
-    return buildFormationAffinityCard(key, affinite, villes, metiers);
+    return buildFormationAffinityCard(key, affinite, cities, metiers);
   else return buildMetierAffinityCard(key, metiers);
 }
 
-function buildFormationAffinityCard(key, affinite, villes, metiers) {
+function buildFormationAffinityCard(key, affinite, cities, metiers) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header">
@@ -631,18 +632,20 @@ function buildFormationAffinityCard(key, affinite, villes, metiers) {
           <div class="card-metiers-list">
           </div>
         </div>`);
-  if (villes.length == 0) {
+  if (cities.length == 0) {
     $(".card-geoloc", $div).empty();
   } else {
     for (let j = 0; j < 5; j++) {
-      if (j >= villes.length) break;
-      const ville = villes[j];
+      if (j >= cities.length) break;
+      const city = cities[j];
       $(".card-geoloc", $div).append(
-        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + ville
+        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
       );
     }
-    if (villes.length > 5) {
-      $(".card-geoloc", $div).append(`+${villes.length - 5}`);
+    if (cities.length > 5) {
+      $(".card-geoloc", $div).append(
+        `&nbsp;&middot;&nbsp;+${cities.length - 5}`
+      );
     }
   }
 
