@@ -27,12 +27,12 @@ const LayoutInscription = () => {
   }, [router.location.pathname, définirÉtapeActuelle]);
 
   return (
-    <div className="bg-[--background-alt-beige-gris-galet] h-full">
-      <div className="bg-[url('/images-de-fond/inscription.svg')] bg-no-repeat h-full bg-cover">
+    <div className="h-full bg-[--background-alt-beige-gris-galet]">
+      <div className="h-full bg-[url('/images-de-fond/inscription.svg')] bg-cover bg-no-repeat">
         <div className="fr-container--fluid">
           <div className="fr-grid-row fr-grid-row--center">
-            <div className="bg-[--background-raised-grey] md:max-w-[840px] md:min-w-[740px] md:shadow-md fr-col-12 fr-col-md-8 fr-mt-md-7w fr-mb-md-10w">
-              <div className="shadow-md fr-p-2w fr-py-md-3w fr-px-md-10w">
+            <div className="fr-col-12 fr-col-md-8 fr-mt-md-7w fr-mb-md-10w bg-[--background-raised-grey] md:min-w-[740px] md:max-w-[840px] md:shadow-md">
+              <div className="fr-p-2w fr-py-md-3w fr-px-md-10w shadow-md">
                 <IndicateurÉtapes
                   indexÉtapeActuelle={indexÉtapeActuelle ?? 1}
                   étapes={étapes.map((étape) => étape.titreÉtape)}
