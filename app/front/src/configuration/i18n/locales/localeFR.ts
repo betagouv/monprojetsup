@@ -110,6 +110,7 @@ export const localeFR = {
     FORMATION: "Formation",
     MÉTIER: "Métier",
     TAUX_AFFINITÉ: "Taux d'affinité",
+    SÉLECTIONNER_OPTION: "Sélectionner une option",
   },
   ACCESSIBILITÉ: {
     LIEN_EXTERNE: "ouvre un lien externe",
