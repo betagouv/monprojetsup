@@ -696,6 +696,9 @@ public class AffinityEvaluator {
                     candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
                 }
             }
+            if(reverseFlGroups.containsKey(key)) {
+                candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
+            }
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
