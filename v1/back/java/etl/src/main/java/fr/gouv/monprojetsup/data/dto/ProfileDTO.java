@@ -90,4 +90,8 @@ public record ProfileDTO(
         return choices.stream().map(e -> e.anonymize()).toList();
     }
 
+    public boolean isFavori(String key) {
+        if (choices == null) return false;
+        return choices.stream().anyMatch(s -> s.fl().equals(key) && s.status().equals(SuggestionDTO.SUGG_APPROVED));
+    }
 }

@@ -1,8 +1,12 @@
 <div id="main-div-recherche">
   <div id="explore-div-entete">
+    <!--
     <h3>Explore les formations et les métiers</h3>
+    -->
     <div class="explore-header">
       <div class="explore-header-type">
+        <!--
+
         <div class="fr-fieldset__legend--regular2 fr-fieldset__legend2">
           Type de recherche
         </div>
@@ -52,19 +56,25 @@
               ></div>
             </div>
           </div>
+
           <div
             class="fr-messages-group"
             id="checkboxes-inline-messages"
             aria-live="polite"
           ></div>
         </fieldset>
+                      -->
       </div>
+    </div>
+  </div>
+  <div class="horizontal-container" id="explore-div-resultats">
+    <div id="explore-div-resultats-left">
       <div class="explore-header-tags">
         <div class="fr-search-bar" id="header-search" role="search">
           <label class="fr-label" for="search-784-input"> Recherche </label>
           <input
             class="fr-input"
-            placeholder="Rechercher"
+            placeholder="Formation, métier, mots-clés..."
             type="search"
             id="search-784-input"
             name="search-784-input"
@@ -74,10 +84,7 @@
           </button>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="horizontal-container" id="explore-div-resultats">
-    <div id="explore-div-resultats-left">
+
       <div id="explore-div-resultats-left-noresult">
         <p>Pas de résultat</p>
         <!--<p>Les résultats classés par affinité</p>-->
@@ -231,7 +238,10 @@
           <div class="formation-details-header-nav-icon">
             <span class="fr-icon-arrow-left-line"> </span>
           </div>
-          <div class="formation-details-header-nav-icon">
+          <div
+            class="formation-details-header-nav-icon"
+            id="formation-details-header-nav-central-icon"
+          >
             <span class="fr-icon-heart-line"> </span>
           </div>
           <div class="formation-details-header-nav-icon">
@@ -378,12 +388,18 @@
         </div>
       </div>
       <div class="formation-details-actions">
-        <button class="fr-btn fr-icon-heart-line fr-btn--icon-left">
+        <button
+          class="fr-btn fr-icon-heart-line fr-btn--icon-left"
+          id="add-to-favorites-btn"
+          data-id=""
+        >
           <!--<img src="img/heart-dsfr.svg" alt="icon-heart" />-->
           Ajouter aux favoris
         </button>
         <button
           class="fr-btn fr-btn--secondary fr-icon-close-line fr-btn--icon-left"
+          id="add-to-bin-btn"
+          data-id=""
         >
           Pas intéressé
         </button>

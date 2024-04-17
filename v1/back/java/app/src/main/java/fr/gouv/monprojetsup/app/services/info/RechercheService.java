@@ -69,6 +69,8 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     public record ResultatRecherche(
             @Schema(description = "clé", example = "fl2014")
             @NotNull String key,
+            @Schema(description = "fait partie des favoris")
+            @NotNull boolean fav,
             @Schema(description = "affinite entre 0.0 et 1.0, arrondie à 6 décimales", example = "0.8")
             double affinity,
             @Schema(description = "type", example = "formation", allowableValues = {"formation", "metier"})
@@ -77,7 +79,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
             @NotNull List<String> fois,
             @ArraySchema(arraySchema = @Schema(description = "villes disponibles, triées par affinité décroissantes", example = "[\"Nantes\",\"Melun\"]"))
             @NotNull List<String> cities,
-            @Schema(description = "statistiques 'admission",  required = true)
+            @Schema(description = "statistiques 'admission")
             @NotNull StatsContainers.SimpleStatGroupParBac stats,
 
             @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
@@ -242,6 +244,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
             result.add(
                     new ResultatRecherche(
                             key,
+                            pf.isFavori(key),
                             affinites.getOrDefault(key, 0.0),
                             Helpers.isFiliere(key) ? "formation" : "metier",
                             fois,

@@ -94,7 +94,7 @@ function changeSuggestionStatus(id, newStatus, silent) {
     app.updateSuggestionsAndReloadUI(!silent, [
       { fl: sugg.fl, status: sugg.status },
     ]);
-    ui.updateFavoris();
+    //ui.updateFavoris();
   }
   return changed;
 }

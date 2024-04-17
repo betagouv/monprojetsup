@@ -1,7 +1,8 @@
 import * as ui from "../ui/ui";
 import * as session from "./session";
 import * as app from "./app";
-
+import { handlers } from "../app/events";
+import * as events from "../app/events";
 import $ from "jquery";
 /** handles navigation between screens  */
 
@@ -60,6 +61,18 @@ async function updateRecherche() {
   const msg = await app.doSearch(str);
   ui.showRechercheData(msg.details);
   $("#search-button").on("click", updateRecherche);
+  $("#add-to-favorites-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.selectChoice(id, true);
+  });
+  $("#formation-details-header-nav-central-icon").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.selectChoice(id, true);
+  });
+  $("#add-to-bin-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.rejectChoice(id, true);
+  });
 }
 
 const screen_enter_handlers = {

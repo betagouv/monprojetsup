@@ -186,6 +186,7 @@ function addAffinityCard(dat) {
 
   const $div = buildAffinityCard(
     dat.key,
+    dat.fav,
     dat.type,
     dat.affinity,
     dat.cities,
@@ -209,6 +210,9 @@ function displayItemDetails(dat) {
     $(".explore-specific-metier").hide();
     displayFormationDetails(dat);
   }
+  $("#add-to-favorites-btn").attr("data-id", key);
+  $("#add-to-bin-btn").attr("data-id", key);
+  $("#formation-details-header-nav-central-icon").attr("data-id", key);
 }
 
 function displayMetierDetails(dat) {
@@ -230,6 +234,19 @@ function displayFormationDetails(dat) {
   $("#explore-div-resultats-right").show();
 
   const key = dat.key;
+  const fav = dat.fav;
+
+  if (fav) {
+    $("#add-to-favorites-btn").addClass("activated");
+    $("#formation-details-header-nav-central-icon")
+      .empty()
+      .append($(`<span class="fr-icon-heart-fill"> </span>`));
+  } else {
+    $("#add-to-favorites-btn").removeClass("activated");
+    $("#formation-details-header-nav-central-icon")
+      .empty()
+      .append($(`<span class="fr-icon-heart-line"> </span>`));
+  }
 
   //title
   const label = data.getLabel(key);
@@ -604,17 +621,18 @@ function displayAttendus(key) {
   }
 }
 
-function buildAffinityCard(key, type, affinite, cities, metiers) {
+function buildAffinityCard(key, fav, type, affinite, cities, metiers) {
   if (type == "formation")
-    return buildFormationAffinityCard(key, affinite, cities, metiers);
-  else return buildMetierAffinityCard(key, metiers);
+    return buildFormationAffinityCard(key, fav, affinite, cities, metiers);
+  else return buildMetierAffinityCard(key, fav, metiers);
 }
 
-function buildFormationAffinityCard(key, affinite, cities, metiers) {
+function buildFormationAffinityCard(key, fav, affinite, cities, metiers) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header">
             <div class="formation-card-header-type">FORMATION</div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
             <div class="formation-card-header-sep"></div>
             <div class="formation-card-header-affinity">
               Taux d'affinité ${Math.trunc(100 * affinite)}%
@@ -632,6 +650,11 @@ function buildFormationAffinityCard(key, affinite, cities, metiers) {
           <div class="card-metiers-list">
           </div>
         </div>`);
+  if (fav) {
+    $(".icon-favorite", $div).show();
+  } else {
+    $(".icon-favorite", $div).hide();
+  }
   if (cities.length == 0) {
     $(".card-geoloc", $div).empty();
   } else {
@@ -668,7 +691,7 @@ function buildFormationAffinityCard(key, affinite, cities, metiers) {
   }
   return $div;
 }
-function buildMetierAffinityCard(key, formations) {
+function buildMetierAffinityCard(key, fav, formations) {
   const label = data.getLabel(key);
   const $div = $(`        <div class="formation-card">
           <div class="formation-card-header">
