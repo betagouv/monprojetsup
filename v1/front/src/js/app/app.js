@@ -244,6 +244,10 @@ export async function doSearch(recherche) {
   );
 }
 
+export async function getSelection(recherche) {
+  return server.getSelection();
+}
+
 export async function doSearchOld() {
   const profile = data.getAnonymousProfile();
   const msg = await server.getFormationsAffinities(profile);

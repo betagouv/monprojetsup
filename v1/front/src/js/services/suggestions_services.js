@@ -89,6 +89,20 @@ export async function search(
   });
 }
 
+export async function getSelection() {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "getSelection",
+      {},
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
+
 export function getStats(bac, key, onSuccess = null) {
   getFromSpringService(
     "stats",

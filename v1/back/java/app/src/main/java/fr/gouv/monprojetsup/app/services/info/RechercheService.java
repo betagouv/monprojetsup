@@ -2,11 +2,11 @@ package fr.gouv.monprojetsup.app.services.info;
 
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.dto.*;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
+import fr.gouv.monprojetsup.data.dto.*;
 import fr.gouv.monprojetsup.data.dto.GetFormationsAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.data.model.Explanation;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
@@ -26,8 +26,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
-import static java.lang.Math.min;
-import static org.springframework.http.RequestEntity.post;
 
 @Service
 public class RechercheService extends MyService<RechercheService.Request, RechercheService.Response> {
@@ -125,33 +123,39 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
         Set<String> keysFormations
                 = req.includeFormations ? allKeys.stream().filter(Helpers::isFiliere).collect(Collectors.toSet()) : Set.of();
 
+        /*
         Set<String> keysMetiers
                 = req.includeMetiers
                 ? allKeys.stream().filter(Helpers::isMetier).collect(Collectors.toSet())
                 : Set.of();
+        */
 
         //equivalent d'un appel à /affinite/formations
         final List<Affinity> affinites = getFormationsAffinities(
                 req.profile
         );
-        Queue<String> keysf = new LinkedList<>(
+        List<String> keys =
                 affinites.stream()
                         .map(p -> p.key())
                         .filter(key -> keysFormations.contains(key))
-                        .toList());
+                        .toList();
 
 
         //LOGGER.info("HAndling request " + req);
+        /*
         final @NotNull Queue<String> keysm = new LinkedList<>(sortMetiersByAffinites(
                 req.profile,
                 keysMetiers
         ));
 
-        List<String> keys = new ArrayList<>();
+        List<String> keys = new ArrayList<>(keysf);
+
+         */
+        /*
         while(!keysf.isEmpty() || !keysm.isEmpty()) {
             if(!keysf.isEmpty()) keys.add(keysf.remove());
             if(!keysm.isEmpty()) keys.add(keysm.remove());
-        }
+        }*/
 
         List<String> keysPage = keys.stream().skip(req.pageNb * req.pageSize).limit(req.pageSize).toList();
 

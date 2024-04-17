@@ -74,6 +74,22 @@ async function updateRecherche() {
     events.rejectChoice(id, true);
   });
 }
+async function updateSelection() {
+  const msg = await app.getSelection();
+  ui.showRechercheData(msg.details);
+  $("#add-to-favorites-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.selectChoice(id, true);
+  });
+  $("#formation-details-header-nav-central-icon").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.selectChoice(id, true);
+  });
+  $("#add-to-bin-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.rejectChoice(id, true);
+  });
+}
 
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
@@ -81,7 +97,7 @@ const screen_enter_handlers = {
     await ui.showRechercheScreen();
     init_main_nav();
     $("#search-784-input").val("");
-    updateRecherche();
+    await updateRecherche();
   },
   board: async () => {
     await ui.showBoard();
@@ -90,6 +106,7 @@ const screen_enter_handlers = {
   selection: async () => {
     await ui.showSelection();
     init_main_nav();
+    await updateSelection();
   },
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),
