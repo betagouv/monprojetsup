@@ -169,6 +169,13 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
         return new RechercheService.Response(suggestions);
     }
 
+    /**
+     * Sort metiers by affinities
+     *
+     * @param profile    the profile
+     * @param keysMetiers the keys of the metiers
+     * @return the sorted list of metiers
+     */
     static private List<String> sortMetiersByAffinites(ProfileDTO profile, Set<String> keysMetiers) throws IOException, InterruptedException {
         if(keysMetiers.isEmpty()) return List.of();
         val request = new SortMetiersByAffinityServiceDTO.Request(profile, keysMetiers.stream().toList());

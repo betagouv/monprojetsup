@@ -92,7 +92,7 @@ export async function search(
 export async function getSelection() {
   return new Promise((resolve, reject) => {
     postToSpringService(
-      "getSelection",
+      "favoris",
       {},
       (data) => {
         resolve(data);

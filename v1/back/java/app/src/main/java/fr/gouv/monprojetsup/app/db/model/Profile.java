@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.app.db.model;
 
 import fr.gouv.monprojetsup.app.db.DBTools;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
@@ -214,7 +214,7 @@ public final class Profile {
 
     }
 
-    public void updateProfile(ProfileDTO p) {
+    public void updateProfile(ProfileDb p) {
         if(p.nom() != null) nom = p.nom();
         if(p.prenom() != null) prenom = p.prenom();
         if(p.bac() != null) bac = p.bac();
@@ -263,9 +263,9 @@ public final class Profile {
         return UUID.randomUUID().toString();
     }
 
-    public ProfileDTO toDTO() {
+    public ProfileDb toDTO() {
         removeDotsFromKeys();
-        return new ProfileDTO(
+        return new ProfileDb(
                 login,
                 nom,
                 prenom,
