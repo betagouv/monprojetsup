@@ -1,6 +1,9 @@
 import { type ChampDeSaisieProps } from "./ChampDeSaisie.interface";
+import { useId } from "react";
 
-const ChampDeSaisie = ({ label, name, description, status, icône, registerHookForm }: ChampDeSaisieProps) => {
+const ChampDeSaisie = ({ label, description, status, icône, auChangement, registerHookForm }: ChampDeSaisieProps) => {
+  const id = useId();
+
   const classEnFonctionDuStatus = () => {
     if (status?.type === "erreur")
       return { input: "fr-input--error", message: "fr-error-text", inputGroupe: "fr-input-group--error" };
@@ -13,11 +16,12 @@ const ChampDeSaisie = ({ label, name, description, status, icône, registerHookF
 
   const inputJSX = (
     <input
-      aria-describedby={`status-${name}`}
+      aria-describedby={`status-${id}`}
       className={`fr-input ${classEnFonctionDuStatus().input}`}
       disabled={status?.type === "désactivé"}
-      id={name}
-      name={name}
+      id={id}
+      name={id}
+      onChange={auChangement}
       type="text"
       {...registerHookForm}
     />
@@ -27,7 +31,7 @@ const ChampDeSaisie = ({ label, name, description, status, icône, registerHookF
     <div className={`fr-input-group ${classEnFonctionDuStatus().inputGroupe}`}>
       <label
         className="fr-label"
-        htmlFor={name}
+        htmlFor={id}
       >
         {label}
         {description && <span className="fr-hint-text">{description}</span>}
@@ -36,7 +40,7 @@ const ChampDeSaisie = ({ label, name, description, status, icône, registerHookF
       {status && ["erreur", "succès"].includes(status.type) && (
         <p
           className={classEnFonctionDuStatus().message}
-          id={`status-${name}`}
+          id={`status-${id}`}
         >
           {status.message}
         </p>

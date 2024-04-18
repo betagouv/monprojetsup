@@ -1,32 +1,29 @@
 import { type TagCliquableProps } from "./TagCliquable.interface";
-import LienExterne from "@/components/Lien/LienExterne/LienExterne";
-import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import classes from "./TagCliquable.module.scss";
+import { i18n } from "@/configuration/i18n/i18n";
 
-const TagCliquable = ({ libellé, taille, hrefInterne, hrefExterne }: TagCliquableProps) => {
-  if (hrefExterne) {
-    return (
-      <LienExterne
-        ariaLabel={libellé}
-        estUnTag
-        href={hrefExterne}
-        taille={taille === "sm" ? "petit" : undefined}
-        variante="neutre"
-      >
-        {libellé}
-      </LienExterne>
-    );
-  }
+const TagCliquable = ({ libellé, auClic, taille, supprimable }: TagCliquableProps) => {
+  const classEnFonctionDeLaTaille = () => {
+    if (taille === "petit") return "fr-tag--sm";
+
+    return "";
+  };
+
+  const classEnFonctionDeSupprimable = () => {
+    if (supprimable) return classes.tagDismiss;
+
+    return "";
+  };
 
   return (
-    <LienInterne
-      ariaLabel={libellé}
-      estUnTag
-      href={hrefInterne}
-      taille={taille === "sm" ? "petit" : undefined}
-      variante="neutre"
+    <button
+      aria-label={`${supprimable && i18n.ACCESSIBILITÉ.RETIRER} ${libellé}`}
+      className={`fr-tag ${classEnFonctionDeSupprimable()} ${classEnFonctionDeLaTaille()}`}
+      onClick={auClic}
+      type="button"
     >
       {libellé}
-    </LienInterne>
+    </button>
   );
 };
 

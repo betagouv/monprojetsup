@@ -1,3 +1,7 @@
+import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.interface";
+import { bacInMemoryRepository } from "@/features/bac/infrastructure/gateway/bacInMemoryRepository/bacInMemoryRepository";
+import { RécupérerBacsUseCase } from "@/features/bac/usecase/RécupérerBacs";
+import { RécupérerSpécialitésPourUnBacUseCase } from "@/features/bac/usecase/RécupérerSpécialitésPourUnBac";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { élèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
 import { CréerÉlèveUseCase } from "@/features/élève/usecase/CréerÉlève";
@@ -19,6 +23,8 @@ export class Dépendances {
 
   private readonly _métierRepository: MétierRepository;
 
+  private readonly _bacRepository: BacRepository;
+
   public readonly créerÉlèveUseCase: CréerÉlèveUseCase;
 
   public readonly mettreÀJourÉlèveUseCase: MettreÀJourÉlèveUseCase;
@@ -29,15 +35,22 @@ export class Dépendances {
 
   public readonly récupérerMétiersUseCase: RécupérerMétiersUseCase;
 
+  public readonly récupérerBacsUseCase: RécupérerBacsUseCase;
+
+  public readonly récupérerSpécialitésPourUnBacUseCase: RécupérerSpécialitésPourUnBacUseCase;
+
   private constructor() {
     this._élèveRepository = new élèveSessionStorageRepository();
     this._formationRepository = new formationInMemoryRepository();
     this._métierRepository = new métierInMemoryRepository();
+    this._bacRepository = new bacInMemoryRepository();
     this.créerÉlèveUseCase = new CréerÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
     this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
     this.récupérerMétiersUseCase = new RécupérerMétiersUseCase(this._métierRepository);
+    this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
+    this.récupérerSpécialitésPourUnBacUseCase = new RécupérerSpécialitésPourUnBacUseCase(this._bacRepository);
   }
 
   public static getInstance(): Dépendances {

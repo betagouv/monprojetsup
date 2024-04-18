@@ -2,7 +2,7 @@ import { type TagProps } from "./Tag.interface";
 
 const Tag = ({ libellé, taille }: TagProps) => {
   const classEnFonctionDeLaTaille = () => {
-    if (taille === "sm") return "fr-tag--sm";
+    if (taille === "petit") return "fr-tag--sm";
     return "";
   };
 

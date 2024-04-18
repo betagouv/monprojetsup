@@ -34,6 +34,7 @@ const ListeDéroulante = ({
       <select
         aria-describedby={`select-message-${id}`}
         className={`fr-select ${classEnFonctionDuStatus().select}`}
+        defaultValue={valeurOptionSélectionnéeParDéfaut ?? ""}
         disabled={status?.type === "désactivé"}
         id={`select-${id}`}
         {...registerHookForm}
@@ -41,7 +42,6 @@ const ListeDéroulante = ({
         <option
           disabled
           hidden
-          selected={!valeurOptionSélectionnéeParDéfaut}
           value=""
         >
           {i18n.COMMUN.SÉLECTIONNER_OPTION}
@@ -49,7 +49,6 @@ const ListeDéroulante = ({
         {options.map((option) => (
           <option
             key={option.valeur}
-            selected={valeurOptionSélectionnéeParDéfaut === option.valeur}
             value={option.valeur}
           >
             {option.label}
