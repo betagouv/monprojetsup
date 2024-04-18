@@ -157,7 +157,6 @@ export async function showSelection() {
 }
 export async function showRechercheScreen() {
   await showConnectedScreen("recherche");
-  clearAffinityCards();
 }
 
 export function showRechercheData(data) {
@@ -167,20 +166,34 @@ export function showRechercheData(data) {
   for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
     if (i == 0) {
-      displayItemDetails(dat);
+      displayItemDetails(dat, false);
     }
-    addAffinityCard(dat);
+    addAffinityCard(dat, false);
   }
   //like and dislike handlers
 }
 
-function clearAffinityCards() {
+export function showFavoris(data) {
+  clearAffinityCards();
+  const nbResults = data.length;
+  $("#search-results-nb").html(nbResults);
+  for (let i = 0; i < nbResults; i++) {
+    const dat = data[i];
+    if (i == 0) {
+      displayItemDetails(dat, true);
+    }
+    addAffinityCard(dat, true);
+  }
+  //like and dislike handlers
+}
+
+export function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
   $("#explore-div-resultats-right").hide();
   $("#explore-div-resultats-left-noresult").show();
   $("#explore-div-resultats-left-entete").hide();
 }
-function addAffinityCard(dat) {
+function addAffinityCard(dat, nodetails) {
   $("#explore-div-resultats-left-noresult").hide();
   $("#explore-div-resultats-left-entete").show();
 
@@ -190,29 +203,41 @@ function addAffinityCard(dat) {
     dat.type,
     dat.affinity,
     dat.cities,
-    dat.examples
+    dat.examples,
+    nodetails
   );
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayItemDetails(dat);
+    displayItemDetails(dat, nodetails);
   });
 }
 
-function displayItemDetails(dat) {
+function displayItemDetails(dat, nodetails) {
   const key = dat.key;
   const isMetier = data.isMetier(key);
   if (isMetier) {
     $(".explore-specific-formation").hide();
     $(".explore-specific-metier").show();
-    displayMetierDetails(dat);
+    displayMetierDetails(dat, nodetails);
   } else {
     $(".explore-specific-formation").show();
     $(".explore-specific-metier").hide();
-    displayFormationDetails(dat);
+    displayFormationDetails(dat, nodetails);
   }
   $("#add-to-favorites-btn").attr("data-id", key);
   $("#add-to-bin-btn").attr("data-id", key);
   $("#formation-details-header-nav-central-icon").attr("data-id", key);
+  if (dat.fav) {
+    $("#add-to-favorites-btn").html("Ajouté à ma sélection");
+    $("#add-to-favorites-btn").addClass("activated");
+    $("#add-to-favorites-btn").addClass("favori");
+    $("#add-to-bin-btn").html("Plus intéressé");
+  } else {
+    $("#add-to-favorites-btn").html("Ajouter à ma sélection");
+    $("#add-to-bin-btn").html("Pas intéressé");
+    $("#add-to-favorites-btn").removeClass("activated");
+    $("#add-to-favorites-btn").removeClass("favori");
+  }
 }
 
 function displayMetierDetails(dat) {
@@ -621,22 +646,48 @@ function displayAttendus(key) {
   }
 }
 
-function buildAffinityCard(key, fav, type, affinite, cities, metiers) {
+function buildAffinityCard(
+  key,
+  fav,
+  type,
+  affinite,
+  cities,
+  metiers,
+  nodetails
+) {
   if (type == "formation")
-    return buildFormationAffinityCard(key, fav, affinite, cities, metiers);
-  else return buildMetierAffinityCard(key, fav, metiers);
+    return buildFormationAffinityCard(
+      key,
+      fav,
+      affinite,
+      cities,
+      metiers,
+      nodetails
+    );
+  else return buildMetierAffinityCard(key, fav, metiers, nodetails);
 }
 
-function buildFormationAffinityCard(key, fav, affinite, cities, metiers) {
+function buildFormationAffinityCard(
+  key,
+  fav,
+  affinite,
+  cities,
+  metiers,
+  nodetails
+) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
-          <div class="formation-card-header">
-            <div class="formation-card-header-type">FORMATION</div>
-            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
-            <div class="formation-card-header-sep"></div>
+          <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
               Taux d'affinité ${Math.trunc(100 * affinite)}%
             </div>
+            <div class="formation-card-header-sep"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
+          </div>
+          <div class="formation-card-header formation-card-header-nodetail">
+            <div class="formation-card-header-type">FORMATION</div>
+            <div class="formation-card-header-sep"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
           </div>
           <div class="card-formation-title">
             ${label}
@@ -650,6 +701,15 @@ function buildFormationAffinityCard(key, fav, affinite, cities, metiers) {
           <div class="card-metiers-list">
           </div>
         </div>`);
+  if (nodetails) {
+    $(".formation-card-header-affinity", $div).hide();
+    $(".card-geoloc", $div).hide();
+    $(".card-metiers-header", $div).hide();
+    $(".card-metiers-list", $div).hide();
+    $(".formation-card-header-detail", $div).hide();
+  } else {
+    $(".formation-card-header-nodetail", $div).hide();
+  }
   if (fav) {
     $(".icon-favorite", $div).show();
   } else {
@@ -691,23 +751,33 @@ function buildFormationAffinityCard(key, fav, affinite, cities, metiers) {
   }
   return $div;
 }
-function buildMetierAffinityCard(key, fav, formations) {
+function buildMetierAffinityCard(key, fav, formations, nodetails) {
   const label = data.getLabel(key);
   const $div = $(`        <div class="formation-card">
           <div class="formation-card-header">
             <div class="metier-card-header-type">METIER</div>
             <div class="formation-card-header-sep"></div>
+            <div class="metier-card-header-type fr-icon-heart-fill icon-favorite"></div>
           </div>
           <div class="card-metier-title">${label}</div>
+          <!--
           <div class="card-studies-level">
             <img src="img/arrow-dsfr.svg" alt="arrow" />
             A partir de Bac + ?
-          </div>
+          </div>-->
           <div class="card-metiers-header">
             ${formations.length} formations pour apprendre le métier
           </div>
         </div>
 `);
+  if (nodetails) {
+    $(".card-metiers-header", $div).hide();
+  }
+  if (fav) {
+    $(".icon-favorite", $div).show();
+  } else {
+    $(".icon-favorite", $div).hide();
+  }
 
   if (formations.length == 0) {
     $(".card-metiers-header", $div).empty();

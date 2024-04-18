@@ -517,6 +517,19 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   //line-height: 20px;
   /* 166.667% */
 }
+.icon-favorite {
+}
+.formation-card-header-sep {
+  flex-grow:1;
+}
+.formation-details-actions button {
+  margin-right: 16px;
+}
+
+.formation-details-actions .favori {
+  background-color: #ba3a34;
+}
+
 .metier-card-header-type {
   border-radius: 4px;
   //padding: 3px;

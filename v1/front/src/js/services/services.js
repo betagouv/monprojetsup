@@ -27,6 +27,7 @@ export const getProfile = profile_services.getProfile;
 export const updateProfile = profile_services.updateProfile;
 export const getMessages = profile_services.getMessages;
 export const addMessage = profile_services.addMessage;
+export const getSelection = profile_services.getSelection;
 
 /********************* SUGGESTIONS ******************* */
 

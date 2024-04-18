@@ -58,6 +58,7 @@ function init_main_nav() {
 async function updateRecherche() {
   let str = $("#search-784-input").val();
   if (str === null || str === undefined) str = "";
+  ui.clearAffinityCards();
   const msg = await app.doSearch(str);
   ui.showRechercheData(msg.details);
   $("#search-button").on("click", updateRecherche);
@@ -75,8 +76,9 @@ async function updateRecherche() {
   });
 }
 async function updateSelection() {
+  ui.clearAffinityCards();
   const msg = await app.getSelection();
-  ui.showRechercheData(msg.details);
+  ui.showFavoris(msg.details);
   $("#add-to-favorites-btn").on("click", function () {
     const id = $(this).attr("data-id");
     events.selectChoice(id, true);
@@ -119,10 +121,14 @@ const screen_exit_handlers = {};
 
 function enterScreen(screen) {
   if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
-    screen_enter_handlers[screen]().then(() => {
-      $("#nextButton").off().on("click", next);
-      $("#backButton").off().on("click", back);
-    });
+    screen_enter_handlers[screen]()
+      .catch((error) => {
+        console.error("Error in enterScreen", screen, error);
+      })
+      .then(() => {
+        $("#nextButton").off().on("click", next);
+        $("#backButton").off().on("click", back);
+      });
   } else {
     ui.showLandingScreen();
   }

@@ -44,3 +44,17 @@ export function addMessage(
     onSuccess
   );
 }
+
+export async function getSelection() {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "profile/favoris",
+      {},
+      (data) => {
+        resolve(data);
+      },
+      false,
+      (error) => reject(error)
+    );
+  });
+}

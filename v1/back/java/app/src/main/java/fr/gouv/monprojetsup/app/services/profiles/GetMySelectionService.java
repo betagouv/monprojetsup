@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.services.info.RechercheService.getDetails;
 
@@ -33,10 +34,12 @@ public class GetMySelectionService extends MyService<Server.BasicRequest, Recher
 
         Helpers.LOGGER.info("Serving profile with login: '" + req.login() + "'");
 
+        List<String> keys = profile.suggApproved().stream().map(SuggestionDTO::fl).toList();
+
         final @NotNull List<RechercheService.ResultatRecherche> suggestions = getDetails(
                 profile,
-                profile.suggApproved().stream().map(SuggestionDTO::fl).toList(),
-                Map.of()
+                keys,
+                keys.stream().collect(Collectors.toMap(k -> k, k -> 1.0))
         );
 
         return new RechercheService.Response(suggestions);

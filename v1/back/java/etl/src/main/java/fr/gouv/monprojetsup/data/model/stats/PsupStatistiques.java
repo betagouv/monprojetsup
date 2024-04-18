@@ -527,8 +527,13 @@ public class PsupStatistiques implements Serializable {
 
         public  boolean isLas(String fl) {
             if(lasToGeneric.containsKey(fl)) return true;
-            int code = Integer.parseInt(fl.substring(2));
-            return code >= LAS_CONSTANT;
+            if(!fl.startsWith(FILIERE_PREFIX)) return false;
+            try {
+                int code = Integer.parseInt(fl.substring(2));
+                return code >= LAS_CONSTANT;
+            }catch (NumberFormatException e) {
+                return false;
+            }
         }
 
         public Map<String,Set<String>> getGenericToLas() {

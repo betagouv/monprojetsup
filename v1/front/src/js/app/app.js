@@ -244,7 +244,7 @@ export async function doSearch(recherche) {
   );
 }
 
-export async function getSelection(recherche) {
+export async function getSelection() {
   return server.getSelection();
 }
 
