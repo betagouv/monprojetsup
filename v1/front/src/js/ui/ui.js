@@ -158,6 +158,9 @@ export async function showSelection() {
 export async function showRechercheScreen() {
   await showConnectedScreen("recherche");
 }
+export async function showProfileScreen() {
+  await showConnectedScreen("profile");
+}
 
 export function showRechercheData(data) {
   clearAffinityCards();
@@ -265,7 +268,7 @@ function displayFormationDetails(dat) {
     $("#add-to-favorites-btn").addClass("activated");
     $("#formation-details-header-nav-central-icon")
       .empty()
-      .append($(`<span class="fr-icon-heart-fill"> </span>`));
+      .append($(`<span class="fr-icon-heart-fill favori"> </span>`));
   } else {
     $("#add-to-favorites-btn").removeClass("activated");
     $("#formation-details-header-nav-central-icon")

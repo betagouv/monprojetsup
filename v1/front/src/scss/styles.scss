@@ -527,8 +527,13 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 }
 
 .formation-details-actions .favori {
-  background-color: #ba3a34;
-}
+  background: #FFECE7;
+    color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
+    ;}
+.fr-icon-heart-fill {
+  background: #FFECE7;
+    color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
+    ;}
 
 .metier-card-header-type {
   border-radius: 4px;
@@ -803,6 +808,91 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   flex-wrap: wrap;
 }
 
+
+/*********************************** BOARD **************************************************/
+#main-div-board {
+  background-color: $beige-gris-galet-950;
+}
+#board-div-entete {
+  margin-top: 48px;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 120px;
+}
+#main-div-board .bienvenue {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+#main-div-board .ravi {
+  color: var(--light-neutral-grey-50, #161616);
+  
+    /* 1.Titres/H1 - XL/Desktop */
+    font-family: Marianne;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 48px;
+    /* 120% */
+}
+#main-div-board .boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+#main-div-board .box {
+  display: flex;
+    padding: 48px 40px 32px 48px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 0 0;
+    align-self: stretch;
+    background-color: white;
+    margin-right: 32px;
+    margin-bottom: 32px;}
+
+    .set-screen {
+      cursor: pointer;
+    }
+
+/*********************************** PROFIL **************************************************/
+
+#main-div-profile {
+  background-color: $beige-gris-galet-950;
+  width: 100%;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  padding-left: 120px;
+  padding-right: 120px;
+  min-height: 800px;
+}
+
+#main-div-profile-container {
+  display: flex;
+  flex-direction: row;
+}
+#main-div-profile #profile-div-left {
+  background-color: white;
+  margin-right: 24px;
+  flex-grow: 1;
+}
+#main-div-profile #profile-div-right {
+  background-color: white;
+  flex-grow: 2;
+}
+
+/***********************************  OLD *****************************************************/
 .accordion-collapse {
   background-color: $accordion-button-color;
 }

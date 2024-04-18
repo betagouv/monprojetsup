@@ -16,6 +16,7 @@ const screens = [
   "board",
   "selection",
   "groupes",
+  "profil",
 ];
 
 export function setScreen(screen) {
@@ -48,9 +49,8 @@ function doTransition(old_screen, new_screen) {
 }
 
 function init_main_nav() {
-  $(".fr-nav__link").on("click", async function () {
-    const id = $(this).attr("id");
-    const screen = id.replace("nav-", "");
+  $(".set-screen").on("click", async function () {
+    const screen = $(this).attr("screen");
     setScreen(screen);
   });
 }
@@ -115,6 +115,10 @@ const screen_enter_handlers = {
   groupes: async () => {
     refreshGroupTab(false);
     ui.showGroupsTab();
+  },
+  profil: async () => {
+    await ui.showProfileScreen();
+    init_main_nav();
   },
 };
 const screen_exit_handlers = {};
