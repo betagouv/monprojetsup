@@ -229,9 +229,13 @@ function register_save_profile_handler() {
   $(".save-profile-button").on("click", function () {
     const category = $(this).attr("category");
     if (category === "scolarite") {
-      const classe = $("#profile-tab-scolarite-classe-select").val();
-      const bac = $("#profile-tab-scolarite-bac-select").val();
-      const eds = $("#profile-tab-scolarite-eds-select").val();
+      let classe = $("#profile-tab-scolarite-classe-select").val();
+      let bac = $("#profile-tab-scolarite-bac-select").val();
+      let eds = $("#profile-tab-scolarite-eds-select").val();
+      if (classe === null) classe = "";
+      if (bac === null) bac = "";
+      if (eds === null) eds = [];
+      console.log("save profile", category, classe, bac, eds);
     }
   });
 }

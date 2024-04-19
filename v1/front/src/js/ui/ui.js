@@ -126,6 +126,8 @@ async function injectProfileTab(tabName) {
       $bacSelect.append(`<option value="${key}">${value}</option>`);
     }
   }
+  if (tabName === "etudes") {
+  }
 }
 
 export function injectHtml() {
@@ -181,6 +183,7 @@ export async function showProfileScreen() {
   await showConnectedScreen("profile");
   //inject profile data
   await injectProfileTab("scolarite");
+  await injectProfileTab("etudes");
 }
 
 export function showRechercheData(data) {
