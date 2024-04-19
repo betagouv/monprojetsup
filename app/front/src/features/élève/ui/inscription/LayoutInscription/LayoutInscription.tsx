@@ -52,7 +52,7 @@ const LayoutInscription = () => {
                 <Suspense fallback={<AnimationChargement />}>
                   <Outlet />
                 </Suspense>
-                <hr />
+                <hr className="mt-12" />
                 <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
                   {étapePrécédente && (
                     <LienInterne

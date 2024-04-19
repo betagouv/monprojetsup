@@ -85,7 +85,7 @@ const SélecteurMultiple = ({
         </ul>
       )}
       {optionsSélectionnées.length > 0 && (
-        <div className="mb-8">
+        <>
           <p className="fr-text--xs mb-3">{texteOptionsSélectionnées}</p>
           <ul className="fr-tags-group list-none">
             {optionsSélectionnées.map((option) => (
@@ -98,7 +98,7 @@ const SélecteurMultiple = ({
               </li>
             ))}
           </ul>
-        </div>
+        </>
       )}
     </>
   );

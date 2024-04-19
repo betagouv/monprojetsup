@@ -16,8 +16,8 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     schémaValidation: scolaritéValidationSchema(bacs),
     àLaSoumissionDuFormulaireAvecSuccès,
   });
-
   const valeurBac = watch("bac");
+
   const { data: spécialités, refetch: récupérerSpécialitésPourUnBac } = useQuery(
     spécialitésPourUnBacQueryOptions(valeurBac),
   );
@@ -61,30 +61,35 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
       id={formId}
       onSubmit={mettreÀJourÉlève}
     >
-      <ListeDéroulante
-        label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
-        options={classeOptions}
-        registerHookForm={register("classe")}
-        status={erreurs.classe ? { type: "erreur", message: erreurs.classe.message } : undefined}
-      />
-      <ListeDéroulante
-        label={i18n.ÉLÈVE.SCOLARITÉ.BAC.LABEL}
-        options={bacOptions ?? []}
-        registerHookForm={register("bac")}
-        status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
-      />
-      {spécialités && spécialités.length > 0 && (
-        <SélecteurMultiple
-          auChangementOptionsSélectionnées={(valeursOptionsSélectionnées) =>
-            setValue(CHAMP_SPÉCIALITÉS, valeursOptionsSélectionnées)
-          }
-          description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
-          key={valeurBac}
-          label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
-          options={spécialitéOptions ?? []}
-          texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS_SÉLECTIONNÉES}
-          valeursOptionsSélectionnéesParDéfaut={getValues(CHAMP_SPÉCIALITÉS)}
+      <div className="grid grid-flow-row gap-8 md:grid-flow-col">
+        <ListeDéroulante
+          label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
+          options={classeOptions}
+          registerHookForm={register("classe")}
+          status={erreurs.classe ? { type: "erreur", message: erreurs.classe.message } : undefined}
         />
+        <ListeDéroulante
+          label={i18n.ÉLÈVE.SCOLARITÉ.BAC.LABEL}
+          options={bacOptions ?? []}
+          registerHookForm={register("bac")}
+          status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
+        />
+      </div>
+
+      {spécialités && spécialités.length > 0 && (
+        <div className="mt-12">
+          <SélecteurMultiple
+            auChangementOptionsSélectionnées={(valeursOptionsSélectionnées) =>
+              setValue(CHAMP_SPÉCIALITÉS, valeursOptionsSélectionnées)
+            }
+            description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
+            key={valeurBac}
+            label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
+            options={spécialitéOptions ?? []}
+            texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS_SÉLECTIONNÉES}
+            valeursOptionsSélectionnéesParDéfaut={getValues(CHAMP_SPÉCIALITÉS)}
+          />
+        </div>
       )}
     </form>
   );

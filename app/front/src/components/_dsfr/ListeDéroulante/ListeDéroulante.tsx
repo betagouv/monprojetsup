@@ -23,7 +23,7 @@ const ListeDéroulante = ({
   };
 
   return (
-    <div className={`fr-select-group ${classEnFonctionDuStatus().selectGroup}`}>
+    <div className={`fr-select-group ${classEnFonctionDuStatus().selectGroup} !mb-0`}>
       <label
         className="fr-label"
         htmlFor={`select-${id}`}

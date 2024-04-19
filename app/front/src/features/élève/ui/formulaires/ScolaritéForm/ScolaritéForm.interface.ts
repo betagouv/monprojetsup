@@ -1,5 +1,4 @@
-import { type scolaritéValidationSchema } from "./ScolaritéForm.validation";
-import { type z } from "zod";
+import { type ClasseÉlève } from "@/features/élève/domain/élève.interface";
 
 export type ScolaritéFormProps = {
   formId: string;
@@ -7,6 +6,6 @@ export type ScolaritéFormProps = {
 };
 
 export type ClasseOptions = Array<{
-  valeur: z.infer<typeof scolaritéValidationSchema>["classe"];
+  valeur: ClasseÉlève;
   label: string;
 }>;
