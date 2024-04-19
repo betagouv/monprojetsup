@@ -118,6 +118,8 @@ const screen_enter_handlers = {
   },
   profil: async () => {
     await ui.showProfileScreen();
+    //todo register save handlers
+    register_save_profile_handler();
     init_main_nav();
   },
 };
@@ -221,4 +223,15 @@ function validateInscription2() {
       password: mdp,
     });
   }
+}
+
+function register_save_profile_handler() {
+  $(".save-profile-button").on("click", function () {
+    const category = $(this).attr("category");
+    if (category === "scolarite") {
+      const classe = $("#profile-tab-scolarite-classe-select").val();
+      const bac = $("#profile-tab-scolarite-bac-select").val();
+      const eds = $("#profile-tab-scolarite-eds-select").val();
+    }
+  });
 }

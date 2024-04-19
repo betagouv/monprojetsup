@@ -35,6 +35,7 @@ import * as data from "./../data/data";
 import * as connect from "./account/connect";
 import * as bin from "./tabs/bin";
 import * as session from "../app/session";
+import * as params from "../config/params";
 
 //import * as bsp from bootstrap-show-password;
 
@@ -109,6 +110,24 @@ export async function showConnectedScreen(subscreen) {
   $(`#myTabContent`).html(html);
 }
 
+async function injectProfileTab(tabName) {
+  const html = await fetchData("profil/" + tabName);
+  const $div = $(`#tab-${tabName}-panel`).html(html);
+  if (tabName === "scolarite") {
+    //inject classes in select
+    const $classeSelect = $("#profile-tab-scolarite-classe-select", $div);
+    //add some options to the select $classeSelect
+    for (const [key, value] of Object.entries(params.classes)) {
+      $classeSelect.append(`<option value="${key}">${value}</option>`);
+    }
+    const $bacSelect = $("#profile-tab-scolarite-bac-select", $div);
+    //add some options to the select $classeSelect
+    for (const [key, value] of Object.entries(params.bacs)) {
+      $bacSelect.append(`<option value="${key}">${value}</option>`);
+    }
+  }
+}
+
 export function injectHtml() {
   const m = {
     "header.html": "header-placeholder",
@@ -160,6 +179,8 @@ export async function showRechercheScreen() {
 }
 export async function showProfileScreen() {
   await showConnectedScreen("profile");
+  //inject profile data
+  await injectProfileTab("scolarite");
 }
 
 export function showRechercheData(data) {

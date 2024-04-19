@@ -1,5 +1,32 @@
 export { params };
 
+export const classes = {
+  "": "Choisis une option",
+  sec: "Seconde Générale et Technologique",
+  secSTHR: "Seconde STHR",
+  secTMD: "Seconde TMD",
+  prem: "Première",
+  term: "Terminale",
+};
+
+export const bacs = {
+  "": "Je ne sais pas",
+  Générale: "Série Générale",
+  P: "Bac Pro",
+  PA: "Bac Pro Agricole",
+  S2TMD:
+    "Bac Techno S2TMD - Sciences et Techniques du Théâtre de la Musique et de la Danse",
+  ST2S: "Bac Techno ST2S - Sciences et technologies de la santé et du social",
+  STAV: "Bac Techno STAV - Sciences et Technologies de l\u0027agronomie et du vivant",
+  STD2A:
+    "Bac Techno STD2A - Sciences Technologiques du Design et des Arts Appliquées",
+  STHR: "Bac Techno STHR - Science et Techniques de l\u0027Hôtellerie et de la Restauration",
+  STI2D:
+    "Bac Techno STI2D - Sciences et Technologies de l\u0027Industrie et du Développement Durable",
+  STL: "Bac Techno STL - Sciences et technologie de laboratoire",
+  STMG: "Bac Techno STMG - Sciences et Technologies du Management et de la Gestion",
+};
+
 const params = {
   anneeStats: "2023",
   parcoursupCarteHTTPAdress:
@@ -56,14 +83,7 @@ const params = {
       type: "radio",
       category: "profil",
       placeholder: "Choisis...",
-      options: {
-        "": "Choisis une option",
-        sec: "Seconde Générale et Technologique",
-        secSTHR: "Seconde STHR",
-        secTMD: "Seconde TMD",
-        prem: "Première",
-        term: "Terminale",
-      },
+      options: classes,
     },
     {
       category: "profil",
@@ -75,23 +95,7 @@ const params = {
       group: "15",
       explain:
         "<p>Ton type de bac est utilisé pour te recommander en priorité les formations que les candidats de même type de bac ont intégrées l'année précédente, sans pour autant en exclure aucune.</p>",
-      options: {
-        "": "Je ne sais pas",
-        Générale: "Série Générale",
-        P: "Bac Pro",
-        PA: "Bac Pro Agricole",
-        S2TMD:
-          "Bac Techno S2TMD - Sciences et Techniques du Théâtre de la Musique et de la Danse",
-        ST2S: "Bac Techno ST2S - Sciences et technologies de la santé et du social",
-        STAV: "Bac Techno STAV - Sciences et Technologies de l\u0027agronomie et du vivant",
-        STD2A:
-          "Bac Techno STD2A - Sciences Technologiques du Design et des Arts Appliquées",
-        STHR: "Bac Techno STHR - Science et Techniques de l\u0027Hôtellerie et de la Restauration",
-        STI2D:
-          "Bac Techno STI2D - Sciences et Technologies de l\u0027Industrie et du Développement Durable",
-        STL: "Bac Techno STL - Sciences et technologie de laboratoire",
-        STMG: "Bac Techno STMG - Sciences et Technologies du Management et de la Gestion",
-      },
+      options: bacs,
     },
     {
       category: "profil",

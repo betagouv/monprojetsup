@@ -361,7 +361,7 @@ main {
 }
 
 #main-div-selection #explore-div-resultats-left {
-  background-color: var(--blue-france-125,#272747);
+  background-color: var(--light-decisions-background-background-open-blue-france, #E3E3FD);
   color: white;
 }
 .fr-fieldset__legend--regular2 {
@@ -890,6 +890,40 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 #main-div-profile #profile-div-right {
   background-color: white;
   flex-grow: 2;
+}
+
+.profile_tab {
+  //border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    background: var(--light-decisions-background-background-default-grey, #FFF);
+    display: flex;
+      padding: 56px 72px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+      align-self: stretch;
+}
+
+
+
+.profile_tab_title {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H4 - SM/Desktop */
+    font-family: Marianne;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    /* 133.333% */
+}
+.profile-tab-scolarite-container-top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.profile-tab-scolarite-container-top .fr-select-group {
+  margin-right: 32px;
 }
 
 /***********************************  OLD *****************************************************/
