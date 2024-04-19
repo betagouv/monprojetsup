@@ -32,8 +32,7 @@ class SuggestionsControllerz(
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService,
-    private val getAffiniteFormationsService: GetAffinitiesService,
-    private val sortMetiersByAffinityService: SortMetiersByAffinityService
+    private val getAffiniteFormationsService: GetAffinitiesService
 ) {
 
     @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
@@ -42,14 +41,6 @@ class SuggestionsControllerz(
         @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
     ): GetAffinitiesServiceDTO.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
-    }
-
-    @Operation(summary = "Trie une liste de métiers par affinité.")
-    @PostMapping("/affinite/metiers")
-    fun getAffiniteMetiers(
-        @RequestBody(required = true) request : SortMetiersByAffinityServiceDTO.Request
-    ): SortMetiersByAffinityServiceDTO.Response {
-        return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")

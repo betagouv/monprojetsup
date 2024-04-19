@@ -13,6 +13,7 @@ import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
 
 @Service
-public class RechercheService extends MyService<RechercheService.Request, RechercheService.Response> {
+public class SearchService extends MyService<SearchService.Request, SearchService.Response> {
 
     protected static boolean USE_LOCAL_URL = true;
 
@@ -36,7 +37,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     public static final String REMOTE_URL = "https://monprojetsup.fr/";
 
 
-    public RechercheService() {
+    public SearchService() {
         super(Request.class);
     }
 
@@ -79,7 +80,6 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
             @NotNull List<String> cities,
             @Schema(description = "statistiques 'admission")
             @NotNull StatsContainers.SimpleStatGroupParBac stats,
-
             @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
             @NotNull List<Explanation> explanations,
             @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante", example = "[\"met_129\",\"met_84\",\"met_5\"]"))
@@ -116,7 +116,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     }
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull RechercheService.Request req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull SearchService.Request req) throws Exception {
 
         Set<String> allKeys = ServerData.search(req.recherche);
 
@@ -131,42 +131,25 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
         */
 
         //equivalent d'un appel à /affinite/formations
-        final List<Affinity> affinites = getFormationsAffinities(
+        final Pair<List<Affinity>, List<String>> affinites = getAffinities(
                 req.profile
         );
         List<String> keys =
-                affinites.stream()
-                        .map(p -> p.key())
-                        .filter(key -> keysFormations.contains(key))
+                affinites.getLeft().stream()
+                        .map(Affinity::key)
+                        .filter(keysFormations::contains)
                         .toList();
 
-
-        //LOGGER.info("HAndling request " + req);
-        /*
-        final @NotNull Queue<String> keysm = new LinkedList<>(sortMetiersByAffinites(
-                req.profile,
-                keysMetiers
-        ));
-
-        List<String> keys = new ArrayList<>(keysf);
-
-         */
-        /*
-        while(!keysf.isEmpty() || !keysm.isEmpty()) {
-            if(!keysf.isEmpty()) keys.add(keysf.remove());
-            if(!keysm.isEmpty()) keys.add(keysm.remove());
-        }*/
-
-        List<String> keysPage = keys.stream().skip(req.pageNb * req.pageSize).limit(req.pageSize).toList();
+        List<String> keysPage = keys.stream().skip((long) req.pageNb * req.pageSize).limit(req.pageSize).toList();
 
         //LOGGER.info("HAndling request " + req);
         final @NotNull List<ResultatRecherche> suggestions = getDetails(
                 req.profile,
                 keysPage,
-                affinites.stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite))
+                affinites.getLeft().stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite))
         );
 
-        return new RechercheService.Response(suggestions);
+        return new SearchService.Response(suggestions);
     }
 
     /**
@@ -185,11 +168,11 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
     }
 
     //
-    static private List<Affinity> getFormationsAffinities(ProfileDTO profile) throws IOException, InterruptedException {
+    static private Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
         String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/formations", request);
         val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
-        return response.affinites();
+        return Pair.of(response.affinites(), response.metiers());
     }
 
     static private @NotNull List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsandExamples(
@@ -224,6 +207,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
      * @param pf        the profile
      * @param keys      the list of keys for which details are required
      * @param affinites the affinities
+     * @param right
      * @return the details
      */
     public static List<ResultatRecherche> getDetails(
@@ -234,6 +218,10 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
 
         List<ResultatRecherche> result = new ArrayList<>();
 
+        val eae = getExplanationsandExamples(pf, keys);
+        if(eae.size() != keys.size()) throw new RuntimeException("Error: " + eae.size() + " explanations for " + keys.size() + " request ");
+
+        int i = 0;
         for (String key : keys) {
             val fois = getGeographicInterests(
                     List.of(key),
@@ -248,9 +236,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
                     key
             );
 
-            val eae = getExplanationsandExamples(pf, List.of(key));
-            if(eae.size() != 1) throw new RuntimeException("Error: " + eae.size() + " explanations for " + key + " " + eae);
-            val eaee = eae.get(0);
+            val eaee = eae.get(i);
 
             result.add(
                     new ResultatRecherche(
@@ -265,6 +251,7 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
                             eaee.examples()
                     )
             );
+            i++;
         }
 
         return result;

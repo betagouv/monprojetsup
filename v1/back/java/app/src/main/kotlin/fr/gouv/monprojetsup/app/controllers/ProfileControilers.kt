@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
-import fr.gouv.monprojetsup.app.services.info.RechercheService
+import fr.gouv.monprojetsup.app.services.info.SearchService
 import fr.gouv.monprojetsup.app.services.profiles.*
 import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.*
@@ -22,7 +22,7 @@ class ProfileControilers(
     }
 
     @PostMapping("/favoris")
-    fun getSelection(@RequestBody request: Server.BasicRequest): RechercheService.Response {
+    fun getSelection(@RequestBody request: Server.BasicRequest): SearchService.Response {
         return getMySelectionService.handleRequestAndExceptions(request)
     }
 
