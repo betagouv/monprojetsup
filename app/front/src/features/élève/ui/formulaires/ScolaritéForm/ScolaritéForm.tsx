@@ -1,14 +1,26 @@
 import { type ClasseOptions, type ScolaritéFormProps } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
 import ListeDéroulante from "@/components/_dsfr/ListeDéroulante/ListeDéroulante";
+import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
+import { bacsQueryOptions, spécialitésPourUnBacQueryOptions } from "@/features/bac/ui/options";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ScolaritéFormProps) => {
-  const { register, erreurs, mettreÀJourÉlève } = useÉlèveForm({
-    schémaValidation: scolaritéValidationSchema,
+  const CHAMP_SPÉCIALITÉS = "spécialités";
+  const { data: bacs } = useSuspenseQuery(bacsQueryOptions);
+
+  const { register, watch, getValues, setValue, erreurs, mettreÀJourÉlève, dirtyFields } = useÉlèveForm({
+    schémaValidation: scolaritéValidationSchema(bacs),
     àLaSoumissionDuFormulaireAvecSuccès,
   });
+
+  const valeurBac = watch("bac");
+  const { data: spécialités, refetch: récupérerSpécialitésPourUnBac } = useQuery(
+    spécialitésPourUnBacQueryOptions(valeurBac),
+  );
 
   const classeOptions: ClasseOptions = [
     {
@@ -33,31 +45,49 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     },
   ];
 
+  const bacOptions = bacs?.map((bac) => ({ valeur: bac.id, label: bac.nom }));
+  const spécialitéOptions = spécialités?.map((spécialité) => ({ valeur: spécialité.id, label: spécialité.nom }));
+
+  useEffect(() => {
+    if (dirtyFields.bac) {
+      setValue(CHAMP_SPÉCIALITÉS, []);
+    }
+
+    récupérerSpécialitésPourUnBac();
+  }, [dirtyFields.bac, récupérerSpécialitésPourUnBac, setValue, valeurBac]);
+
   return (
     <form
       id={formId}
       onSubmit={mettreÀJourÉlève}
     >
       <ListeDéroulante
-        label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LÉGENDE}
+        label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
         options={classeOptions}
         registerHookForm={register("classe")}
         status={erreurs.classe ? { type: "erreur", message: erreurs.classe.message } : undefined}
       />
+      <ListeDéroulante
+        label={i18n.ÉLÈVE.SCOLARITÉ.BAC.LABEL}
+        options={bacOptions ?? []}
+        registerHookForm={register("bac")}
+        status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
+      />
+      {spécialités && spécialités.length > 0 && (
+        <SélecteurMultiple
+          auChangementOptionsSélectionnées={(valeursOptionsSélectionnées) =>
+            setValue(CHAMP_SPÉCIALITÉS, valeursOptionsSélectionnées)
+          }
+          description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
+          key={valeurBac}
+          label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
+          options={spécialitéOptions ?? []}
+          texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS_SÉLECTIONNÉES}
+          valeursOptionsSélectionnéesParDéfaut={getValues(CHAMP_SPÉCIALITÉS)}
+        />
+      )}
     </form>
   );
 };
 
 export default ScolaritéForm;
-
-// const { data: spécialités } = useQuery(spécialitésPourUnBacQueryOptions("Générale"));
-// {spécialités && (
-//   <SélecteurMultiple
-//     auChangementOptionsSélectionnées={(valeursOptionsSélectionnées) => console.log(valeursOptionsSélectionnées)}
-//     description="Commence à taper puis sélectionne des enseignements"
-//     label="Enseignements de spécialité (EDS) choisis ou envisagés"
-//     options={spécialités.map((spécialité) => ({ valeur: spécialité.id, label: spécialité.nom }))}
-//     texteOptionsSélectionnées="Enseignement(s) de spécialité sélectionné(s)"
-//     valeursOptionsSélectionnéesParDéfaut={["1061", "1063"]}
-//   />
-// )}

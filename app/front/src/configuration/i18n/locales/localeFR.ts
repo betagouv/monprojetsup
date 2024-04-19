@@ -73,7 +73,7 @@ export const localeFR = {
         TITRE: "Dis-nous en plus sur ta scolarité",
       },
       CLASSE: {
-        LÉGENDE: "Classe actuelle *",
+        LABEL: "Classe actuelle *",
         OPTIONS: {
           SECONDE: {
             LABEL: "Seconde Générale et Technologique",
@@ -92,6 +92,14 @@ export const localeFR = {
           },
         },
       },
+      BAC: {
+        LABEL: "Type de bac choisi ou envisagé",
+      },
+      SPÉCIALITÉS: {
+        LABEL: "Enseignements de spécialité (EDS) choisis ou envisagés",
+        DESCRIPTION: "Commence à taper puis sélectionne des enseignements",
+      },
+      SPÉCIALITÉS_SÉLECTIONNÉES: "Enseignement(s) de spécialité sélectionné(s)",
     },
     DOMAINES: {
       PARCOURS_INSCRIPTION: {

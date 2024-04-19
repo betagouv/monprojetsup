@@ -11,12 +11,15 @@ export const bacsQueryOptions = queryOptions({
   },
 });
 
-export const spécialitésPourUnBacQueryOptions = (bacId: Bac["id"]) =>
+export const spécialitésPourUnBacQueryOptions = (bacId?: Bac["id"]) =>
   queryOptions({
     queryKey: ["spécialités", bacId],
-    queryFn: async () => {
-      const spécialités = await dépendances.récupérerSpécialitésPourUnBacUseCase.run(bacId);
+    queryFn: async ({ queryKey }) => {
+      if (queryKey[1] === undefined) return [];
+
+      const spécialités = await dépendances.récupérerSpécialitésPourUnBacUseCase.run(queryKey[1]);
 
       return spécialités ?? [];
     },
+    enabled: false,
   });

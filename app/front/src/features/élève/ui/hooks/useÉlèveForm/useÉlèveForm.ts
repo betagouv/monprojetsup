@@ -11,7 +11,10 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    watch,
+    getValues,
+    setValue,
+    formState: { errors, dirtyFields },
   } = useForm<ÉlèveInformationsModifiables>({
     resolver: zodResolver(schémaValidation),
     defaultValues: queryClient.getQueryData(élèveQueryOptions.queryKey),
@@ -33,6 +36,10 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
 
   return {
     register,
+    watch,
+    getValues,
+    setValue,
+    dirtyFields,
     erreurs: errors,
     mettreÀJourÉlève: handleSubmit(mettreÀJourÉlève),
   };

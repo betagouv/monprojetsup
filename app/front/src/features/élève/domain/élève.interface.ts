@@ -2,6 +2,8 @@ export type Élève = {
   id: string;
   situation?: SituationÉlève;
   classe?: ClasseÉlève;
+  bac?: string;
+  spécialités?: string[];
 };
 
 export const situationÉlève = ["aucune_idee", "quelques_pistes", "projet_precis"] as const;

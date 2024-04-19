@@ -1,5 +1,6 @@
 import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
 import IndicateurÉtapes from "@/components/_dsfr/IndicateurÉtapes/IndicateurÉtapes";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
@@ -12,7 +13,7 @@ import {
   indexÉtapeActuelleÉtapesInscriptionÉlèveStore,
 } from "@/features/élève/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
 import { Outlet, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 const LayoutInscription = () => {
   const { définirÉtapeActuelle } = actionsÉtapesInscriptionÉlèveStore();
@@ -48,7 +49,9 @@ const LayoutInscription = () => {
                   </Titre>
                 </div>
                 <p className="fr-text--lg">{i18n.COMMUN.CHAMPS_OBLIGATOIRES}</p>
-                <Outlet />
+                <Suspense fallback={<AnimationChargement />}>
+                  <Outlet />
+                </Suspense>
                 <hr />
                 <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
                   {étapePrécédente && (

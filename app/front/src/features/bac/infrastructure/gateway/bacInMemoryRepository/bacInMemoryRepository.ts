@@ -4,12 +4,12 @@ import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.
 export class bacInMemoryRepository implements BacRepository {
   private BACS = [
     {
-      id: "Générale",
-      nom: "Série Générale",
-    },
-    {
       id: "NC",
       nom: "Je ne sais pas",
+    },
+    {
+      id: "Générale",
+      nom: "Série Générale",
     },
     {
       id: "P",
@@ -632,7 +632,11 @@ export class bacInMemoryRepository implements BacRepository {
   ];
 
   public async récupérerTous(): Promise<Bac[] | undefined> {
-    return this.BACS;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.BACS);
+      }, 500);
+    });
   }
 
   public async récupérerSpécialités(bacId: Bac["id"]): Promise<Spécialité[] | undefined> {
