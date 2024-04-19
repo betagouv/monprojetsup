@@ -39,7 +39,7 @@ const CarteFormation = ({ id, nom, métiersAccessibles, affinité, sélectionné
               <li key={métier.id}>
                 <Tag
                   libellé={métier.nom}
-                  taille="sm"
+                  taille="petit"
                 />
               </li>
             ))}
@@ -47,7 +47,7 @@ const CarteFormation = ({ id, nom, métiersAccessibles, affinité, sélectionné
               <li>
                 <Tag
                   libellé={`+${(métiersAccessibles.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}
-                  taille="sm"
+                  taille="petit"
                 />
               </li>
             )}

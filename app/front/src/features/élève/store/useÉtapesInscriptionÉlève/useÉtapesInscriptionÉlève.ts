@@ -15,9 +15,9 @@ const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>
       url: "/inscription/scolarite",
     },
     {
-      titreÉtape: i18n.ÉLÈVE.ASPIRATIONS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-      titre: i18n.ÉLÈVE.ASPIRATIONS.PARCOURS_INSCRIPTION.TITRE,
-      url: "/",
+      titreÉtape: i18n.ÉLÈVE.DOMAINES.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+      titre: i18n.ÉLÈVE.DOMAINES.PARCOURS_INSCRIPTION.TITRE,
+      url: "/inscription/domaines",
     },
     {
       titreÉtape: i18n.ÉLÈVE.TALENTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,

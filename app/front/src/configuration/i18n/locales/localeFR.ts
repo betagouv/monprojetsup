@@ -65,7 +65,6 @@ export const localeFR = {
             EMOJI: "🧐",
           },
         },
-        ERREUR_FORMULAIRE: "Veuillez sélectionner une option parmi la liste.",
       },
     },
     SCOLARITÉ: {
@@ -73,11 +72,31 @@ export const localeFR = {
         TITRE_ÉTAPE: "Ma scolarité",
         TITRE: "Dis-nous en plus sur ta scolarité",
       },
+      CLASSE: {
+        LÉGENDE: "Classe actuelle *",
+        OPTIONS: {
+          SECONDE: {
+            LABEL: "Seconde Générale et Technologique",
+          },
+          SECONDE_STHR: {
+            LABEL: "Seconde STHR",
+          },
+          SECONDE_TMD: {
+            LABEL: "Seconde TMD",
+          },
+          PREMIÈRE: {
+            LABEL: "Première",
+          },
+          TERMINALE: {
+            LABEL: "Terminale",
+          },
+        },
+      },
     },
-    ASPIRATIONS: {
+    DOMAINES: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes aspirations professionnelles",
-        TITRE: "As-tu déjà identifié des secteurs d’activité ?",
+        TITRE_ÉTAPE: "Mes domaines professionnels",
+        TITRE: "As-tu déjà identifié des domaines ?",
       },
     },
     TALENTS: {
@@ -111,6 +130,9 @@ export const localeFR = {
     MÉTIER: "Métier",
     TAUX_AFFINITÉ: "Taux d'affinité",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
+    ERREURS_FORMULAIRES: {
+      LISTE_OBLIGATOIRE: "Veuillez sélectionner une option parmi la liste.",
+    },
   },
   ACCESSIBILITÉ: {
     LIEN_EXTERNE: "ouvre un lien externe",
