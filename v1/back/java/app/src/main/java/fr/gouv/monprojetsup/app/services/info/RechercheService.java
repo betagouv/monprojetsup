@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.dto.*;
-import fr.gouv.monprojetsup.data.dto.GetFormationsAffinitiesServiceDTO.Affinity;
+import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO.Affinity;
 import fr.gouv.monprojetsup.data.model.Explanation;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -186,9 +186,9 @@ public class RechercheService extends MyService<RechercheService.Request, Recher
 
     //
     static private List<Affinity> getFormationsAffinities(ProfileDTO profile) throws IOException, InterruptedException {
-        val request = new GetFormationsAffinitiesServiceDTO.Request(profile);
+        val request = new GetAffinitiesServiceDTO.Request(profile);
         String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/formations", request);
-        val response = new Gson().fromJson(responseJson, GetFormationsAffinitiesServiceDTO.Response.class);
+        val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
         return response.affinites();
     }
 

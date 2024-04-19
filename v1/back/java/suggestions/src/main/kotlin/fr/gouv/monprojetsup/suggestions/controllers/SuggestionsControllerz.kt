@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.controllers
 
 import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.data.ServerData
-import fr.gouv.monprojetsup.data.dto.GetFormationsAffinitiesServiceDTO
+import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.data.dto.SortMetiersByAffinityServiceDTO
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
@@ -32,15 +32,15 @@ class SuggestionsControllerz(
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService,
-    private val getAffiniteFormationsService: GetFormationsAffinitiesService,
+    private val getAffiniteFormationsService: GetAffinitiesService,
     private val sortMetiersByAffinityService: SortMetiersByAffinityService
 ) {
 
     @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
     @PostMapping("/affinite/formations")
     fun getAffiniteFormations(
-        @RequestBody(required = true) request : GetFormationsAffinitiesServiceDTO.Request
-    ): GetFormationsAffinitiesServiceDTO.Response {
+        @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
+    ): GetAffinitiesServiceDTO.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
     }
 

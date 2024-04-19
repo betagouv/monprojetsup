@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
@@ -192,7 +193,7 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @NotNull Collection<String> cles, @NotNull Config cfg) {
+    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles, @NotNull Config cfg) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -200,7 +201,12 @@ public class AlgoSuggestions {
             return List.of();
         }
 
-        Set<String> clesFiltrees = new HashSet<>(cles);
+        final Set<String> clesFiltrees;
+        if(cles != null) {
+            clesFiltrees = new HashSet<>(cles);
+        } else {
+            clesFiltrees = new HashSet<>(edgesKeys.nodes().stream().filter(Helpers::isMetier).toList());
+        }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
         return  new AffinityEvaluator(pf, cfg).getCandidatesOrderedByPertinence(clesFiltrees);

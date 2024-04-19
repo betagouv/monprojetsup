@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class GetFormationsAffinitiesServiceDTO {
+public class GetAffinitiesServiceDTO {
     public record Request(
 
             @Schema(name = "profile", description = "Profil utilisé pour évaluer l'affinité.")
@@ -20,7 +20,6 @@ public class GetFormationsAffinitiesServiceDTO {
     public record Response(
             ResponseHeader header,
             @Schema(
-                    name = "affinites",
                     description =
                             """
                                Renvoie la liste des formations dans l'ordre d'affichage, ainsi que le score d'affinité, entre 0.0 et 1.0.
@@ -28,15 +27,26 @@ public class GetFormationsAffinitiesServiceDTO {
                                """,
                     required = true
             )
-            List<Affinity> affinites
+            List<Affinity> affinites,
+
+            @Schema(
+                    description =
+                            """
+                               Renvoie la liste des métiers dans l'ordre d'affichage.
+                               """,
+                    required = true
+            )
+            List<String> metiers
+
     ) {
 
-        public Response(@NotNull List<Pair<String, Double>> affinites) {
+        public Response(@NotNull List<Pair<String, Double>> affinities, @NotNull List<String> metiers) {
             this(
                     new ResponseHeader(),
-                    affinites.stream()
+                    affinities.stream()
                             .map(p -> new Affinity(p.getLeft(), p.getRight()))
-                            .toList()
+                            .toList(),
+                    metiers
             );
         }
 
