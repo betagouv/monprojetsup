@@ -348,6 +348,11 @@ export function updateProfileAndReloadUI(fadingOut, name, value, action) {
   }
 }
 
+export function updateProfile(name, value, action) {
+  console.log("Updating profile " + name + " " + value + " " + action);
+  server.updateProfile({ name: name, value: value, action: action }, () => {});
+}
+
 export function toTeacher() {
   server.switchRole("pp", postLoginHandler);
 }

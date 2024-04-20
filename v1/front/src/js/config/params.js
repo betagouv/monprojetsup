@@ -27,6 +27,20 @@ export const bacs = {
   STMG: "Bac Techno STMG - Sciences et Technologies du Management et de la Gestion",
 };
 
+export const apps = {
+  A: "Très intéressé(e)",
+  B: "Intéressé(e)",
+  C: "Indifférent(e)",
+  D: "Pas du tout intéressé(e)",
+};
+
+export const durees = {
+  court:
+    "Je m'intéresse en priorité aux formations courtes et rapidement professionnalisantes.",
+  long: "Je prévois de faire des études longues.",
+  indiff: "Je ne sais pas ou je n'ai pas de préférence",
+};
+
 const params = {
   anneeStats: "2023",
   parcoursupCarteHTTPAdress:
@@ -166,12 +180,7 @@ const params = {
       type: "radio",
       id: "duree",
       group: "60",
-      options: {
-        court:
-          "Je m'intéresse en priorité aux formations courtes et rapidement professionnalisantes.",
-        long: "Je prévois de faire des études longues.",
-        indiff: "Je ne sais pas ou je n'ai pas de préférence",
-      },
+      options: durees,
     },
     {
       category: "preferences",
@@ -215,12 +224,7 @@ const params = {
       type: "radio",
       id: "apprentissage",
       group: "90",
-      options: {
-        A: "Très intéressé(e)",
-        B: "Intéressé(e)",
-        C: "Indifférent(e)",
-        D: "Pas du tout intéressé(e)",
-      },
+      options: apps,
     },
   ],
   questions_account: [],

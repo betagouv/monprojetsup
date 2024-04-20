@@ -926,6 +926,57 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   margin-right: 32px;
 }
 
+.profile-cell-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+
+}
+.profile-cell {
+  display: flex;
+    padding: 4px 8px 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 16px;
+      background: var(--light-decisions-background-background-action-high-blue-france, #000091);
+}
+.profile-cell-label {
+  color: var(--light-decisions-text-text-inverted-blue-france, #F5F5FE);
+    text-align: center;
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+.profile-tab {
+  overflow: visible;
+}
+.autocomplete_group {
+  overflow: visible;
+  width: 100%;
+}
+.autocomplete_results {
+  overflow: visible;
+  padding-top: 32px;
+}
+.dropdown-menu-autocomplete {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background-color: #ccc;
+  justify-content: left ;
+  position: absolute;
+
+}
+.dropdown-item-autocomplete {
+
+}
 /***********************************  OLD *****************************************************/
 .accordion-collapse {
   background-color: $accordion-button-color;

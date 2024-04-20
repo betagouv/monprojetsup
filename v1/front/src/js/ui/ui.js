@@ -110,23 +110,24 @@ export async function showConnectedScreen(subscreen) {
   $(`#myTabContent`).html(html);
 }
 
+function injectInSelect($select, data) {
+  for (const [key, value] of Object.entries(data)) {
+    $select.append(`<option value="${key}">${value}</option>`);
+  }
+}
 async function injectProfileTab(tabName) {
   const html = await fetchData("profil/" + tabName);
   const $div = $(`#tab-${tabName}-panel`).html(html);
   if (tabName === "scolarite") {
-    //inject classes in select
-    const $classeSelect = $("#profile-tab-scolarite-classe-select", $div);
-    //add some options to the select $classeSelect
-    for (const [key, value] of Object.entries(params.classes)) {
-      $classeSelect.append(`<option value="${key}">${value}</option>`);
-    }
-    const $bacSelect = $("#profile-tab-scolarite-bac-select", $div);
-    //add some options to the select $classeSelect
-    for (const [key, value] of Object.entries(params.bacs)) {
-      $bacSelect.append(`<option value="${key}">${value}</option>`);
-    }
+    injectInSelect(
+      $("#profile-tab-scolarite-classe-select", $div),
+      params.classes
+    );
+    injectInSelect($("#profile-tab-scolarite-bac-select", $div), params.bacs);
   }
   if (tabName === "etudes") {
+    injectInSelect($("#profile-tab-etudes-duree-select", $div), params.durees);
+    injectInSelect($("#profile-tab-etudes-app-select", $div), params.apps);
   }
 }
 

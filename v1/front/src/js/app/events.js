@@ -67,20 +67,20 @@ const questionIdsTriggeringUIReloadWhenChanged = [];
 export function removeElementFromProfileList(id, elt) {
   const changed = data.removeFromListOrMap(id, elt);
   if (changed) {
-    app.updateProfileAndReloadUI(false, id, elt, "rem");
+    app.updateProfile(id, elt, "rem");
   }
 }
 
 export function addElementToProfileListHandler(id, elt) {
   const changed = data.addElementInBackOfProfileList(id, elt);
   if (changed) {
-    app.updateProfileAndReloadUI(false, id, elt, "add");
+    app.updateProfile(id, elt, "add");
   }
 }
 
 export function toggleProfileScoreHandler(key) {
   const selected = data.toggleScore(key);
-  app.updateProfileAndReloadUI(false, "scores", key, selected ? "add" : "rem");
+  app.updateProfile("scores", key, selected ? "add" : "rem");
   return selected;
 }
 
@@ -158,6 +158,11 @@ export function profileValueChangedHandler(id, dirty) {
   if (id == "bac" || id == "niveau") {
     tunnel.updateUI();
   }
+}
+export function profileValueChangedHandler2(id, dirty) {
+  const sanitized = DOMPurify.sanitize(dirty);
+  data.setProfileValue(id, sanitized);
+  app.updateProfile(id, sanitized, "add");
 }
 
 function resetStudentPasswordByTeacher(user) {
