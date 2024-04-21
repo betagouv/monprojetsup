@@ -125,6 +125,9 @@ export function getDomainesPro() {
 export function getPrenomNom() {
   return getProfileValue("prenom") + " " + getProfileValue("nom");
 }
+export function getPrenom() {
+  return getProfileValue("prenom");
+}
 export function getInterests() {
   return data.interestsGroups;
 }

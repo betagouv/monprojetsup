@@ -1,16 +1,28 @@
 <div id="main-div-board">
   <div id="board-div-entete">
     <div class="bienvenue">Bienvenue dans ton espace MPS</div>
-    <div class="ravi">Ravi de te voir connecté</div>
+    <div class="ravi">
+      Ravi de te voir connecté
+      <span class="ravi-div-prenom">Tom Dupont</span>&nbsp;<span>👋</span>
+    </div>
     <div class="boxes">
-      <div class="box">
-        Enrichis ton profil pour affiner les suggestions qui te sont proposées
+      <div class="box set-screen board-enrichis1" screen="profil">
+        <img src="img/profile-dsfr.svg" alt="profile" />
+        Enrichir mon profil pour affiner les suggestions qui me sont proposées
       </div>
       <div class="box set-screen" screen="recherche">
-        Explorer les formations
+        <img src="img/explorer-dsfr.svg" alt="explorer" />
+        <span class="welcome-explorer1">Explorer les formations</span>
+        <span class="welcome-explorer2"
+          >suggérées par MPS et en découvrir d'autres</span
+        >
       </div>
-      <div class="box set-screen" screen="selection">
+      <div class="box set-screen welcome-explorer1" screen="selection">
+        <div class="board-heart-container">
+          <div class="board-heart"><img src="img/heart.svg" alt="coeur" /></div>
+        </div>
         Consulter ma sélection
+        <span class="welcome-explorer2">de formations et métiers</span>
       </div>
     </div>
   </div>

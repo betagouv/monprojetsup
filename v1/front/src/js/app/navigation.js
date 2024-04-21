@@ -108,6 +108,7 @@ const screen_enter_handlers = {
   },
   board: async () => {
     await ui.showBoard();
+    $(".ravi-div-prenom").html(data.getPrenom());
     init_main_nav();
   },
   selection: async () => {
