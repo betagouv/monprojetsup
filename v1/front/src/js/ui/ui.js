@@ -161,10 +161,12 @@ function injectInMultiOptions($accordions_group, menus) {
 }
 
 async function injectProfileTab(tabName) {
+  console.log("Injecting profile tab " + tabName);
   const html = await fetchData("profil/" + tabName);
-  const $div = $(`#tab-${tabName}-panel`).html(html);
-  $(".profile-div-prenomnom").html(data.getPrenomNom());
-  $(".profile-div-email").html(session.getLogin());
+  console.log("Fetched " + tabName);
+  const $div = $(`#tab-${tabName}-panel`);
+  if ($div.length == 0) throw Error(`no div #tab-${tabName}-panel`);
+  $div.html(html);
   if (tabName === "scolarite") {
     injectInSelect(
       $("#profile-tab-scolarite-classe-select", $div),
@@ -190,6 +192,7 @@ async function injectProfileTab(tabName) {
     );
     updateMultiOptionsItemsStatus();
   }
+  console.log("Intitialized profile tab " + tabName);
 }
 
 export function updateMultiOptionsItemsStatus() {
@@ -262,6 +265,8 @@ export async function showProfileScreen() {
   await injectProfileTab("etudes");
   await injectProfileTab("domaines_pro");
   await injectProfileTab("interests");
+  $(".profile-div-prenomnom").html(data.getPrenomNom());
+  $(".profile-div-email").html(session.getLogin());
 }
 
 export function showWaitingMessage() {

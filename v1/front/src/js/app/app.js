@@ -167,6 +167,11 @@ export function postLoginHandler() {
   });
 }
 
+export async function getProfile() {
+  const msg = await server.getProfileAsync();
+  data.loadProfile(msg.profile);
+}
+
 function startNavigation() {
   const screen = session.getScreen();
   if (screen != undefined) {

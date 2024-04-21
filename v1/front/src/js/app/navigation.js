@@ -125,6 +125,7 @@ const screen_enter_handlers = {
     ui.showGroupsTab();
   },
   profil: async () => {
+    await app.getProfile();
     await ui.showProfileScreen();
     setUpAutoComplete("spe_classes", 0);
     setUpAutoComplete("geo_pref", 2);

@@ -58,3 +58,17 @@ export async function getSelection() {
     );
   });
 }
+
+export async function getProfileAsync() {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "profile/get",
+      {},
+      (data) => {
+        resolve(data);
+      },
+      false,
+      (error) => reject(error)
+    );
+  });
+}
