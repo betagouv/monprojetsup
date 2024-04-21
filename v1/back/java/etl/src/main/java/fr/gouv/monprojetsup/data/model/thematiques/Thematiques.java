@@ -11,9 +11,24 @@ public record Thematiques(
         Map<String,String> thematiques,
 
         Map<String,String> categories,
-        Map<String,String> parent
+        Map<String,String> parent,
+
+        List<Category> groupes
 
 ) {
+    public record Item (
+            String key,
+            String label,
+            String emoji
+    ) {
+    }
+
+    public record Category(
+            String label,
+            List<Item> items
+    ) {
+
+    }
 
     public static final Set<String> forceSingleton = Set.of(
             "T_ITM_1020", // "sciences humaines et sociales"
@@ -33,10 +48,16 @@ public record Thematiques(
 
 
     private Thematiques(@NotNull ThematiquesOnisep thematiques) {
-        this(new HashMap<>(), new HashMap<>(), new HashMap<>());
+        this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new ArrayList<>());
 
-        categories.clear();
         categories.putAll(thematiques.categories());
+
+        Map<String, Category> groupes = new HashMap<>();
+        thematiques.regroupements().forEach((s, regroupement) -> {
+            Category cat = groupes.computeIfAbsent(regroupement.groupe(), k -> new Category(k, new ArrayList<>()));
+            cat.items.add(new Item(s, regroupement.label(), regroupement.emoji()));
+        });
+        this.groupes.addAll(groupes.values());
 
         thematiques.thematiques().values().forEach(m -> {
             String cid = Constants.cleanup(m.id());

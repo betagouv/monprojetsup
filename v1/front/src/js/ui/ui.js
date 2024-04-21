@@ -115,9 +115,56 @@ function injectInSelect($select, data) {
     $select.append(`<option value="${key}">${value}</option>`);
   }
 }
+
+function injectInMultiOptions($accordions_group, menus) {
+  for (const menu of menus) {
+    let emoji1 = menu.emoji;
+    let emoji2 = "";
+    if (emoji1 === undefined || emoji1 == "") {
+      emoji1 = "";
+      for (const item of menu.items) {
+        if (item.emoji) {
+          emoji2 = emoji2 + "&nbsp;&nbsp;" + item.emoji;
+        }
+      }
+    }
+    const $menu = $(`      
+      <section class="fr-accordion multi-options-group">
+        <h3 class="fr-accordion__title muti-options-group-header">
+          <button
+            class="fr-accordion__btn "
+            aria-expanded="false"
+            aria-controls="accordion-${menu.key}"
+          >
+            <span class="multi-options-group-emojis">${emoji1}</span>
+            ${menu.label}
+            <span class="multi-options-group-emojis">${emoji2}</span>
+          </button>
+        </h3>
+        <div class="fr-collapse muti-options-group-content" id="accordion-${menu.key}">
+        <div class="multi-options-group-list">
+        </div>
+        </div>
+      </section>`);
+    const $ul = $(`.multi-options-group-list`, $menu);
+    for (const item of menu.items) {
+      const emoji2 = item.emoji ? item.emoji : "";
+      let key = item.key;
+      if (key === undefined) key = item.id;
+      if (key === undefined) continue;
+      $ul.append(
+        `<div class="multi-options-item multi-options-item_${key}" key="${key}"><span class="multi-options-item-emoji">${emoji2}</span>${item.label}</div>`
+      );
+    }
+    $accordions_group.append($menu);
+  }
+}
+
 async function injectProfileTab(tabName) {
   const html = await fetchData("profil/" + tabName);
   const $div = $(`#tab-${tabName}-panel`).html(html);
+  $(".profile-div-prenomnom").html(data.getPrenomNom());
+  $(".profile-div-email").html(session.getLogin());
   if (tabName === "scolarite") {
     injectInSelect(
       $("#profile-tab-scolarite-classe-select", $div),
@@ -128,6 +175,33 @@ async function injectProfileTab(tabName) {
   if (tabName === "etudes") {
     injectInSelect($("#profile-tab-etudes-duree-select", $div), params.durees);
     injectInSelect($("#profile-tab-etudes-app-select", $div), params.apps);
+  }
+  if (tabName === "domaines_pro") {
+    injectInMultiOptions(
+      $("#profile-items-domaines-pro", $div),
+      data.getDomainesPro()
+    );
+    updateMultiOptionsItemsStatus();
+  }
+  if (tabName === "interests") {
+    injectInMultiOptions(
+      $("#profile-items-interests", $div),
+      data.getInterests()
+    );
+    updateMultiOptionsItemsStatus();
+  }
+}
+
+export function updateMultiOptionsItemsStatus() {
+  //for every key in the profile, update the status of the corresponding item
+  //multi-options-item_${key}
+  const keys = data.getProfileKeys();
+  $(`.multi-options-item`).removeClass("selected");
+  for (const key of keys) {
+    const $divs = $(`.multi-options-item_${key}`);
+    if ($divs.length > 0) {
+      $divs.addClass("selected");
+    }
   }
 }
 
@@ -185,10 +259,18 @@ export async function showProfileScreen() {
   //inject profile data
   await injectProfileTab("scolarite");
   await injectProfileTab("etudes");
+  await injectProfileTab("domaines_pro");
+  await injectProfileTab("interests");
 }
 
+export function showWaitingMessage() {
+  $("#explore-div-wait").show();
+  $("#explore-div-resultats").hide();
+}
 export function showRechercheData(data) {
   clearAffinityCards();
+  $("#explore-div-wait").hide();
+  $("#explore-div-resultats").show();
   const nbResults = data.length;
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {
@@ -203,6 +285,9 @@ export function showRechercheData(data) {
 
 export function showFavoris(data) {
   clearAffinityCards();
+  $("#explore-div-wait").hide();
+  $("#explore-div-resultats").show();
+
   const nbResults = data.length;
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {

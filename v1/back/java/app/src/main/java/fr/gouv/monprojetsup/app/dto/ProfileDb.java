@@ -36,7 +36,6 @@ public record ProfileDb(
     public Collection<String> favoris() {
         return choices.values().stream()
                 .filter(s -> Objects.equals(s.status(), SUGG_APPROVED))
-                .sorted(Comparator.comparing(s -> s.date() == null ? "" : s.date()))
                 .map(SuggestionDTO::fl)
                 .collect(Collectors.toSet());
     }

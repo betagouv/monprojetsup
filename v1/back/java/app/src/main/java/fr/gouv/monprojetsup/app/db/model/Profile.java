@@ -42,7 +42,7 @@ public final class Profile {
     /** maps various things to integer interests chosen by the student.
      E.g. interets "T-ITM.1020" --> 5
      E.g. interests "T-IDEO2.4819" --> 3
-     E.g. metiers ids "MET.7776" --> 4
+     E.g. metiers keys "MET.7776" --> 4
      E.g. other keywords "innovations" --> 3
 
      Scores are in the interval [0,100].
@@ -169,6 +169,7 @@ public final class Profile {
             case "moygen": moygen = value; break;
             case "duree": duree = value; break;
             case "niveau": niveau = value; break;
+            case "scores":
             case "interests":
                 if(add) scores.put(value.replace(".","_"), 1);
                 else scores.remove(value.replace(".","_"));
@@ -198,8 +199,7 @@ public final class Profile {
                     } else {
                         SuggestionDTO current = choices.getOrDefault(fl, new SuggestionDTO(
                                 fl,
-                                suggestion.status(),
-                                suggestion.date()
+                                suggestion.status()
                                 )
                         );
                         choices.put(fl.replace(".", "_"),

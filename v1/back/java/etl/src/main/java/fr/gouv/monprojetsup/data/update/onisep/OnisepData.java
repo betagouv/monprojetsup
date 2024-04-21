@@ -14,12 +14,14 @@ import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.update.onisep.formations.Formations;
 import fr.gouv.monprojetsup.data.update.onisep.formations.FormationsAvecMetiers;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.update.rome.InteretsRome;
+import lombok.val;
 
 import java.io.IOException;
 import java.util.*;
@@ -85,7 +87,8 @@ public record OnisepData(
         Thematiques thematiques = Thematiques.load();
 
         InteretsOnisep interetsOnisep = Serialisation.fromJsonFile(DataSources.getSourceDataFilePath(DataSources.INTERETS_PATH), InteretsOnisep.class);
-        Interets interets = new Interets(interetsOnisep);
+        val groupes = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
+        Interets interets = new Interets(interetsOnisep, groupes);
 
         Edges edgesThematiquesFilieres = new Edges();
         Serialisation.fromJsonFile(

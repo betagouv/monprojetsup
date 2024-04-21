@@ -41,6 +41,18 @@ export const durees = {
   indiff: "Je ne sais pas ou je n'ai pas de préférence",
 };
 
+export const domaines = [
+  {
+    id: "st",
+    label: "Sciences et Technologies",
+    items: [
+      {
+        key: "elec",
+        label: "Electronique",
+      },
+    ],
+  },
+];
 const params = {
   anneeStats: "2023",
   parcoursupCarteHTTPAdress:

@@ -118,6 +118,17 @@ export function getSummary(key) {
   return null;
 }
 
+export function getDomainesPro() {
+  return data.domainesPro;
+}
+
+export function getPrenomNom() {
+  return getProfileValue("prenom") + " " + getProfileValue("nom");
+}
+export function getInterests() {
+  return data.interestsGroups;
+}
+
 export function getDescriptif(key) {
   const res = data.descriptifs[key];
   if (res === undefined) return "";
@@ -651,6 +662,21 @@ export function getScore(key) {
   return result === undefined ? 0 : result;
 }
 
+export function getProfileKeys() {
+  const result = [];
+  if (data.profile.scores !== undefined) {
+    for (const key in data.profile.scores) {
+      if (data.profile.scores[key] !== 0 && data.profile.scores[key] !== "0") {
+        result.push(key);
+      }
+    }
+  }
+  for (const key in data.profile.choices) {
+    if (data.profile.choices[key].status == SUGG_APPROVED) result.push(key);
+  }
+  return result;
+}
+
 export function isFavoris(key) {
   return (
     key in data.profile.choices &&
@@ -738,6 +764,25 @@ export function postLoad() {
 
   //create metiers to formatiosn
   createMetiersToFormations();
+
+  //select one id per Interest  groups
+  createKeysForGroups();
+}
+
+function createKeysForGroups() {
+  let i = 0;
+  for (const group of data.interestsGroups) {
+    group.key = "group_interest_" + i++;
+    for (const item of group.items) {
+      if (item.keys === undefined || item.keys.length == 0)
+        throw new Error("Empty group");
+      item.key = item.keys[0];
+    }
+  }
+  i = 0;
+  for (const group of data.domainesPro) {
+    group.key = "group_domaine_pro_" + i++;
+  }
 }
 
 function createMetiersToFormations() {

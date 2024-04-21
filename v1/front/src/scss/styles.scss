@@ -371,6 +371,10 @@ main {
   padding-top: 15px;
   margin-right: 15px;
 }
+#explore-div-wait {
+  padding: 100px;
+  margin: auto auto;
+}
 #explore-div-entete {
   padding-top: 20px;
   height: 100%;
@@ -885,11 +889,46 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 #main-div-profile #profile-div-left {
   background-color: white;
   margin-right: 24px;
-  flex-grow: 1;
+  //flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
 }
+#profile-div-left img {
+  display: block;
+    /* Make the image a block element */
+    margin: 0 auto;
+    /* Center the image horizontally */
+}
+.profile-div-prenomnom {
+color: var(--light-neutral-grey-50, #161616);
+  text-align: center;
+
+  /* 1.Titres/H3 - MD/Desktop */
+  font-family: Marianne;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px;
+  /* 128.571% */
+}
+.profile-div-email {
+color: var(--light-decisions-text-text-mention-grey, #666);
+  text-align: center;
+
+  /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 150% */
+}
+
 #main-div-profile #profile-div-right {
   background-color: white;
-  flex-grow: 2;
+  //flex-grow: 2;
 }
 
 .profile_tab {
@@ -976,6 +1015,83 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 }
 .dropdown-item-autocomplete {
 
+}
+/***********************************  DOMAINES PRO *****************************************************/
+.multi-options-item-emoji {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.multi-options-group-emojis {
+  font-size: 32px;
+  margin: 10px;
+}
+.muti-options-group {
+  margin-bottom: 36px;
+}
+
+.muti-options-group-header button {
+    font-family: Marianne;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border-radius: 16px 16px 0px 0px;
+}
+
+.fr-accordion__btn,
+.fr-accordion__btn:hover,
+.fr-accordion__btn:active,
+.fr-accordion__btn[aria-expanded="true"],
+.fr-accordion__btn:active[aria-expanded="true"],
+.fr-accordion__btn:hover[aria-expanded="true"]
+.fr-accordion__btn[aria-expanded="false"],
+.fr-accordion__btn:active[aria-expanded="false"],
+.fr-accordion__btn:hover[aria-expanded="false"] {
+  color: var(--light-decisions-background-background-default-grey, #FFF);
+  background-color:var(--light-decisions-artwork-artwork-major-blue-france, #000091);;
+}
+.multi-options-group-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.multi-options-item {
+  display: inline;
+    margin: 5px 5px;
+  flex-direction: row;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  background: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
+  cursor: pointer;
+  color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+  text-align: center;
+
+  /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 171.429% */
+}
+.multi-options-item.selected {
+  color: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
+    background: var(--light-decisions-text-text-action-high-blue-france, #000091);
+}
+
+.muti-options-group-header {
+  //background: var(--light-decisions-artwork-artwork-major-blue-france, #000091);
+  border: 1px solid #DDD;
+    border-radius: 16px 16px 0px 0px;
+}
+.muti-options-group-content {
+  border: 1px solid #DDD;
+  border-radius: 0px 0px 16px 16px;
 }
 /***********************************  OLD *****************************************************/
 .accordion-collapse {

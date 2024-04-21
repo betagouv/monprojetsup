@@ -108,8 +108,12 @@ public class AffinityEvaluator {
 
         //centres d'intérêts
         Set<String> nonZeroScores = new HashSet<>();
-        if(pf.interests() != null)
-            nonZeroScores.addAll(pf.interests());
+        if(pf.interests() != null) {
+            pf.interests().forEach(key -> {
+                nonZeroScores.add(key);
+                nonZeroScores.addAll(onisepData.interets().expansion().getOrDefault(key, Collections.emptyList()));
+            });
+        }
 
         //deprecated
         if(pf.scores() != null) {

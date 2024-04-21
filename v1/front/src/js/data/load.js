@@ -197,6 +197,8 @@ async function loadDatas(datas) {
         data.cities = jdata.cities.cities;
         data.tagsSources = jdata.sources.sources;
         data.interets = jdata.interets.interets;
+        data.interestsGroups = jdata.interets.groupes;
+        data.domainesPro = jdata.thematiques.groupes;
         data.thematiques = jdata.thematiques.thematiques;
         data.metiers = jdata.metiers.metiers;
         data.descriptifs = jdata.descriptifs.keyToDescriptifs;

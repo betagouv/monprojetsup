@@ -55,12 +55,15 @@ function init_main_nav() {
     const screen = $(this).attr("screen");
     setScreen(screen);
   });
+  $(".disconnect").on("click", async function () {
+    app.disconnect();
+  });
 }
 
 async function updateRecherche() {
   let str = $("#search-784-input").val();
   if (str === null || str === undefined) str = "";
-  ui.clearAffinityCards();
+  ui.showWaitingMessage();
   const msg = await app.doSearch(str);
   ui.showRechercheData(msg.details);
   $("#search-button").on("click", updateRecherche);
@@ -78,7 +81,7 @@ async function updateRecherche() {
   });
 }
 async function updateSelection() {
-  ui.clearAffinityCards();
+  ui.showWaitingMessage();
   const msg = await app.getSelection();
   ui.showFavoris(msg.details);
   $("#add-to-favorites-btn").on("click", function () {
@@ -122,13 +125,23 @@ const screen_enter_handlers = {
     await ui.showProfileScreen();
     setUpAutoComplete("spe_classes", 0);
     setUpAutoComplete("geo_pref", 2);
-
+    setUpMultiChoices();
     //todo register save handlers
     updateProfile();
     init_main_nav();
   },
 };
 const screen_exit_handlers = {};
+
+function setUpMultiChoices() {
+  //multi-options-item
+  $(".multi-options-item").on("click", function () {
+    const key = $(this).attr("key");
+    events.toggleProfileScoreHandler(key);
+    const selected = data.isSelected(key);
+    $(this).toggleClass("selected", selected);
+  });
+}
 
 function setUpAutoComplete(id, threshold) {
   autocomplete.setUpAutoComplete(

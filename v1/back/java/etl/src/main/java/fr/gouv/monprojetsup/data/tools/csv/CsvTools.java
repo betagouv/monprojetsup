@@ -39,12 +39,14 @@ public class CsvTools implements Closeable {
             int headerSize = header.length;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(String.valueOf(separator), -1);
-                if(values.length > 0 && values.length == headerSize) {
+                if(values.length == headerSize) {
                     Map<String,String> entry = new HashMap<>();
                     for(int i = 0; i < headerSize; i++) {
                         entry.put(header[i],values[i]);
                     }
                     data.add(entry);
+                } else {
+                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + line);
                 }
             }
         } catch (IOException ex) {
