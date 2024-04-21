@@ -141,4 +141,11 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    modules: [
+      "node_modules", // Default node_modules directory
+      path.resolve(__dirname, "src"), // Add the directory where dsfr.module.min.js is located
+      // Add other directories if needed
+    ],
+  },
 };
