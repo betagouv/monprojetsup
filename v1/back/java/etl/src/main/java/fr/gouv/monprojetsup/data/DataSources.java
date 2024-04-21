@@ -22,13 +22,13 @@ public class DataSources {
     public static final String METIERS_PATH = "ideo_metiers/ideo-metiers_onisep2.json";
     public static final String TYPES_FORMATIONS_ONISEP_PATH = "ideo_types_formations/types_formation1.json";
     public static final String THEMATIQUES_PATH = "items_thematiques/ideo-thematiques.json";
-    public static final String THEMATIQUES_REGROUPEMENTS_PATH = "items_thematiques/domaines pro MPS - Thématiques.tsv";
+    public static final String THEMATIQUES_REGROUPEMENTS_PATH = "items_thematiques/domaines_pro_MPS_-_Thematiques.tsv";
 
     public static final String THEMATIQUES_NOUVELLES_PATH = "items_thematiques/thematiques_nouvelles.json";
     public static final String THEMATIQUES_CATEGORIES_PATH = "items_thematiques/thematiques_categories.json";
     public static final String THEMATIQUES_REDIRECTIONS_PATH = "items_thematiques/thematiques_redirections.json";
     public static final String INTERETS_PATH = "items_centres_interets/centres_interets2.json";
-    public static final String INTERETS_GROUPES_PATH = "items_centres_interets/centres d'intérêts MPS - Feuille 1.tsv";
+    public static final String INTERETS_GROUPES_PATH = "items_centres_interets/centres_d_interets_MPS_-_Feuille_1.tsv";
     public static final String SECTEURS_PRO_PATH = "secteurs_pro/indexation_domaine.json";
 
     public static final String DOMAINES_PRO_PATH = "domaines_pro/domaines2.json";
