@@ -481,21 +481,12 @@ function getTags() {
 
 function updateSpecialitesOptions() {
   const niveau = getProfileValue("niveau");
-  let bac =
-    niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
-  if (!bac) bac = "";
+  let bac = getProfileValue("bac");
+  //  niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
+  if (!bac) bac = tousBacs;
+  if (!bac in data.specialitesParBac) bac = tousBacs;
   const optionsSpecialites = {}; //par defaut pas de specialites
-  if (bac == "") {
-    for (const [bac2, liste] of Object.entries(data.specialitesParBac)) {
-      if (!bac2 || bac2 == "") continue;
-      for (const id of liste) {
-        if (id in data.specialites) {
-          optionsSpecialites[id] =
-            "Série " + bac2 + " - " + data.specialites[id];
-        }
-      }
-    }
-  } else if (bac in data.specialitesParBac) {
+  if (bac in data.specialitesParBac) {
     const optionsSpecialitesIds = data.specialitesParBac[bac];
     for (const id of optionsSpecialitesIds) {
       if (id in data.specialites) {
@@ -854,7 +845,7 @@ export function getEDSData(grp) {
   return null;
 }
 
-function updateAutoComplete() {
+export function updateAutoComplete() {
   data.srcAutoComplete.geo_pref = data.cities;
   data.srcAutoComplete.motscles = Object.keys(data.tagsSources);
   data.srcAutoComplete.thematiques = data.thematiques;

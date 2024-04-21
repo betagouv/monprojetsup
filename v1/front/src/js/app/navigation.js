@@ -55,8 +55,10 @@ function init_main_nav() {
     const screen = $(this).attr("screen");
     setScreen(screen);
   });
+  $(".disconnect").show();
   $(".disconnect").on("click", async function () {
     app.disconnect();
+    $(".disconnect").hide();
   });
 }
 
@@ -145,7 +147,8 @@ function setUpMultiChoices() {
 }
 
 function setUpAutoComplete(id, threshold) {
-  autocomplete.setUpAutoComplete(
+  data.updateAutoComplete();
+  const show = autocomplete.setUpAutoComplete(
     id,
     (key, label, value) => {
       events.addElementToProfileListHandler(id, label);
@@ -163,6 +166,9 @@ function setUpAutoComplete(id, threshold) {
     },
     threshold
   );
+  if (id === "spe_classes") {
+    $("#autocomplete_group_spe_classes").toggle(show);
+  }
 }
 
 function autoCompleteFeedbackHandler(
@@ -314,6 +320,9 @@ function updateProfile() {
     const key = $(this).attr("key");
     const val = $(this).val();
     events.profileValueChangedHandler2(key, val);
+    if (key == "bac") {
+      setUpAutoComplete("spe_classes", 0);
+    }
   });
   /*
   $(".save-profile-button").on("click", function () {

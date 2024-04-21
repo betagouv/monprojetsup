@@ -17,6 +17,12 @@ export function setUpAutoComplete(
     return;
   }
   const itemsSource = sourceToItems(id);
+  if (itemsSource == null || itemsSource.length == 0) {
+    $(`#${id}_autocomplete`).hide();
+    return false;
+  } else {
+    $(`#${id}_autocomplete`).show();
+  }
   const ac = new Autocomplete(field, {
     source: itemsSource,
     label: "l",
@@ -43,6 +49,7 @@ export function setUpAutoComplete(
 
   updateAutoCompleteListItem(id, itemsSource);
   registerTrashItemHandlers(id, trashHandler, itemsSource);
+  return true;
 }
 
 function updateAutoCompleteListItem(id, itemsSource) {
@@ -71,8 +78,9 @@ function updateAutoCompleteListItem(id, itemsSource) {
         label="${label}"
         key="${key}"
         title="Supprimer"
+        href="#"
         >
-        <span class="fr-icon-close-line" aria-hidden="true"></span>
+        <span class="fr-icon-close-line" style="color:white" aria-hidden="true"></span>
         </a>`
     );
     l.push("</div> ");

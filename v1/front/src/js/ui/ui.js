@@ -232,6 +232,7 @@ export async function showConnectionScreen() {
 export async function showLandingScreen() {
   //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
+  $(".disconnect").hide();
   $("#landing-placeholder")
     .off()
     .on("click", () => {

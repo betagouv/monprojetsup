@@ -15,7 +15,7 @@ public class AnalyzeEDS {
         AttendusDetailles analyses = AttendusDetailles.getAttendusDetailles(
                 ServerData.backPsupData,
                 ServerData.statistiques,
-                SpecialitesLoader.load(),
+                SpecialitesLoader.load(ServerData.statistiques),
                 true,
                 true);
 

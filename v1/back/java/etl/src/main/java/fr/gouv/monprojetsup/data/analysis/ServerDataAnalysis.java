@@ -703,7 +703,7 @@ public class ServerDataAnalysis {
         Map<String, Attendus> eds = Attendus.getAttendus(
                 psupData,
                 data,
-                SpecialitesLoader.load(),
+                SpecialitesLoader.load(ServerData.statistiques),
                 false
         );
 

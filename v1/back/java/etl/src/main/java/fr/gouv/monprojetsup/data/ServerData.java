@@ -90,16 +90,12 @@ public class ServerData {
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
 
-        ServerData.specialites = SpecialitesLoader.load();
 
         ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
         ServerData.statistiques.removeSmallPopulations();
 
-        ServerData.statistiques =
-                Serialisation.fromZippedJson(
-                        DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-                        PsupStatistiques.class
-                );
+        ServerData.specialites = SpecialitesLoader.load(ServerData.statistiques);
+
         /* can be deleted afte rnext data update */
         ServerData.statistiques.rebuildMiddle50();
         ServerData.statistiques.createGroupAdmisStatistique(reverseFlGroups);

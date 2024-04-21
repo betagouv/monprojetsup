@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.update;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.cities.CitiesFront;
 import fr.gouv.monprojetsup.data.model.cities.CitiesLoader;
@@ -115,7 +116,7 @@ public class UpdateFrontData {
             LOGGER.info("Declared fields in ProfileDTO " + declaredfields);
 
             DataContainer answer = new DataContainer(
-                    SpecialitesLoader.load(),
+                    SpecialitesLoader.load(ServerData.statistiques),
                     CitiesLoader.loadCitiesFront(),
                     tags,
                     descriptifs,
@@ -277,7 +278,7 @@ public class UpdateFrontData {
         Map<String, Attendus> eds = Attendus.getAttendus(
                 psupData,
                 data,
-                SpecialitesLoader.load(),
+                SpecialitesLoader.load(ServerData.statistiques),
                 false
         );
         DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds);
