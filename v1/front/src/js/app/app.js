@@ -38,6 +38,22 @@ import * as nav from "../app/navigation";
 
 import { toast } from "../ui/animate/toasts";
 
+// Dynamically import the module script if the browser supports modules
+if ("es6Module" in document.createElement("script")) {
+  import("./../../dsfr.module.min.js")
+    .then((module) => {
+      // Module loaded successfully
+    })
+    .catch((error) => {
+      console.error("Error loading module:", error);
+    });
+} else {
+  // If the browser doesn't support modules, load the nomodule script
+  const script = document.createElement("script");
+  script.src = "../../dsfr.nomodule.min.js";
+  document.body.appendChild(script);
+}
+
 export {
   disconnect,
   serverErrorHandler,

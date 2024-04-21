@@ -14,6 +14,7 @@ module.exports = {
     validate: "./src/js/app/entrypoints/validate.js",
     reset_password: "./src/js/app/entrypoints/reset_password.js",
     legal: "./src/js/app/entrypoints/legal.js",
+    "dsfr.module.min": "./src/dsfr.module.min.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
