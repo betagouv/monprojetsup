@@ -177,7 +177,7 @@ public record PsupData(
 
         DureesEtudes duree,
 
-        /* les suggestions et filières */
+        /* les formations et filières */
         Formations formations,
 
         /* indexed by name, mapped to a list of object represented as a String -> String */
@@ -327,6 +327,7 @@ public record PsupData(
     public Map<String, String> getCorrespondances() {
         Map<Integer, Integer> flToFl = new HashMap<>();
 
+        //si un libellé de flAAA est un préfixe strict du libellé de flBBB alors flBBB est dans le groupe de flAAA
         addFormationsPrefixFomAnother(flToFl);
 
         Map<Integer, Integer> typeFormationToCapa
@@ -362,6 +363,7 @@ public record PsupData(
         );
 
 
+        //abstrcations automatiques de certains fl (filières) en fr (type de formation parcoursup) sur différents critères.
         typeFormationToCapa.forEach((fr, capa) -> {
             String name = formations.typesMacros.get(fr);
             long nb = typeFormationToNb.getOrDefault(fr, 2L);
@@ -474,5 +476,12 @@ public record PsupData(
         return result;
     }
 
+
+    public List<Map<String, String>> getJuryAdmission() {
+        if(!diversPsup().containsKey("c_jur_adm")) {
+            throw new RuntimeException("Missing data for jury admission");
+        }
+        return  diversPsup().get("c_jur_adm");
+    }
 
 }

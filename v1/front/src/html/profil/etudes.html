@@ -1,0 +1,61 @@
+<div class="profile_tab">
+  <div class="profile_tab_title">Mes études supérieures</div>
+  <div class="profile-tab-etudes-container-top">
+    <div class="fr-select-group">
+      <label class="fr-label" for="select">Durée des études</label>
+      <select
+        class="fr-select profile-select"
+        id="profile-tab-etudes-duree-select"
+        name="select"
+        key="duree"
+      >
+        <option value="" selected disabled hidden>
+          Sélectionner une option
+        </option>
+      </select>
+    </div>
+    <div class="fr-select-group">
+      <label class="fr-label" for="select">
+        Ton intérêt pour l'apprentissage</label
+      >
+      <select
+        class="fr-select profile-select"
+        id="profile-tab-etudes-app-select"
+        name="select"
+        key="apprentissage"
+      >
+        <option value="" selected disabled hidden>
+          Sélectionner une option
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="autocomplete_group">
+    <label class="fr-label" for="select"> Où souhaites-tu étudier?</label>
+    <input
+      class="fr-input"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"
+      aria-describedby="geo_pref_autocomplete-messages"
+      id="geo_pref_autocomplete"
+      name="geo_pref_autocomplete"
+      placeholder="Commencez à taper pour rechercher..."
+      type="text"
+    />
+
+    <div class="autocomplete_results" id="geo_pref_list"></div>
+  </div>
+
+  <!--
+  <div class="save-profile-div">
+    <button
+      class="fr-btn right save-profile-button"
+      title="Enregistrer"
+      category="etudes"
+    >
+      Enregistrer
+    </button>
+  </div>
+--></div>

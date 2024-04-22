@@ -137,7 +137,7 @@ public record ReferenceCases(
 
         protected static boolean USE_LOCAL_URL = true;
 
-        public static final String LOCAL_URL = "http://localhost:8005/";
+        public static final String LOCAL_URL = "http://localhost:8004/";
         public static final String REMOTE_URL = "https://monprojetsup.fr/";
 
         public static void useRemoteUrl(boolean useRemote) {

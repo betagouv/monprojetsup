@@ -88,6 +88,6 @@ public record Suggestion(
     }
 
     public SuggestionDTO toDTO() {
-        return new SuggestionDTO(fl, status, date);
+        return new SuggestionDTO(fl, status);
     }
 }

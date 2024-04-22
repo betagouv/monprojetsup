@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.app.services.profiles;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.WebServer;
@@ -25,7 +25,7 @@ public class UpdateProfileService extends MyService<UpdateProfileService.Request
             String token,
             @Nullable ProfileUpdateDTO update,
 
-            @Nullable ProfileDTO profile
+            @Nullable ProfileDb profile
 
     ) {
     }

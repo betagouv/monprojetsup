@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.app.dto;
 
 import fr.gouv.monprojetsup.common.Sanitizer;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 
 import java.util.*;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_APPROVED;
 
 
-public record ProfileDTO(
+public record ProfileDb(
         String login,
         String nom,
      String prenom,
@@ -39,8 +40,8 @@ public record ProfileDTO(
                 .collect(Collectors.toSet());
     }
 
-    public ProfileDTO sanitize() {
-        return new ProfileDTO(
+    public ProfileDb sanitize() {
+        return new ProfileDb(
                 login.replace("&#64;","@"),
                 Sanitizer.sanitize(nom),
                 Sanitizer.sanitize(prenom),
@@ -65,6 +66,21 @@ public record ProfileDTO(
                                 e -> Sanitizer.sanitize(e.getKey()),
                                 e -> e.getValue().sanitize()
                         ))
+        );
+    }
+
+    public ProfileDTO toDto() {
+        return new ProfileDTO(
+                Sanitizer.sanitize(niveau),
+                Sanitizer.sanitize(bac),
+                Sanitizer.sanitize(duree),
+                Sanitizer.sanitize(apprentissage),
+                geo_pref.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
+                spe_classes.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
+                scores.entrySet().stream().filter(e -> e.getValue() != null && e.getValue() > 0).map(Map.Entry::getKey).toList(),
+                Sanitizer.sanitize(moygen),
+                choices == null ? Collections.emptyList() : choices.values().stream().toList(),
+                Map.of()
         );
     }
 }

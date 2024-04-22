@@ -104,6 +104,10 @@ footer {
     }
 #main-placeholder {
 //  background-color: #f9f6f2;
+      background-image: url("../img/bg.svg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
 }
 .py-10px {
   padding-top: 10px;
@@ -303,10 +307,6 @@ main {
   margin-left: 0px;
 }
 .inscription-screen {
-      background-image: url("../img/bg.svg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
 }
 .tab-content {
   //background-color: $beige-gris-galet-950;
@@ -344,10 +344,25 @@ main {
     /* 150% */
 }
 .explore-header-tags {
-    align-items: flex-end;
-    justify-content: flex-end;
-    width: 40%;
-    min-width: 400px;
+    //align-items: flex-end;
+    //justify-content: flex-end;
+    //width: 40%;
+    //min-width: 400px;
+    margin-top: 50px;
+    //background-color: white;
+}
+.explore-header-tags input {
+  //align-items: flex-end;
+  //justify-content: flex-end;
+  //width: 40%;
+  //min-width: 400px;
+  //margin-top: 50px;
+  background-color: white;
+}
+
+#main-div-selection #explore-div-resultats-left {
+  background-color: var(--light-decisions-background-background-open-blue-france, #E3E3FD);
+  color: white;
 }
 .fr-fieldset__legend--regular2 {
 }
@@ -355,6 +370,10 @@ main {
   align-items: center;
   padding-top: 15px;
   margin-right: 15px;
+}
+#explore-div-wait {
+  padding: 100px;
+  margin: auto auto;
 }
 #explore-div-entete {
   padding-top: 20px;
@@ -402,6 +421,7 @@ main {
   height: 100%;
   align-items: flex-start;
 }
+#explore-div-resultats-left-noresult,
 #explore-div-resultats-left-entete {
   justify-content: center;
   align-items: center;
@@ -462,12 +482,10 @@ main {
 }
 
 .formation-card-header-type,
-.formation-details-header-type {
+.formation-details-header-type  {
   border-radius: 4px;
   //padding: 3px;
-  padding: 0px 6px;
-  background-color: #E7FAF6;
-  color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425, #297254);;
+  padding: 2px 6px;
   font-weight: 700;
   text-transform: uppercase;
     font-size: 12px;
@@ -486,10 +504,53 @@ main {
 .formation-details-header-nav-icon span {
   color: var(--light-decisions-text-action-high-blue-france, #000091);
 }
+.formation-card-header-type {
+  border-radius: 4px;
+  //padding: 3px;
+  padding: 2px 6px;
+  margin-right: 6px;
+color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425, #297254);
+  ;
+  background-color: #E7FAF6;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  //width: 100%;
+  //line-height: 20px;
+  /* 166.667% */
+}
+.icon-favorite {
+}
+.formation-card-header-sep {
+  flex-grow:1;
+}
+.formation-details-actions button {
+  margin-right: 16px;
+}
+
+.formation-details-actions .favori,
+.formation-details-actions .favori:hover
+ {
+  background: #FFECE7;
+    color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
+    pointer-events: none;
+    }
+
+        .fr-icon-heart-line {
+          cursor: pointer;
+        }
+.fr-icon-heart-fill {
+  background: #FFECE7;
+    color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
+    ;}
+
 .metier-card-header-type {
   border-radius: 4px;
   //padding: 3px;
-  padding: 0px 6px;
+  padding: 2px 6px;
+  margin-right: 6px;  
   background: #FFECE7;
   color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
   ;
@@ -758,6 +819,357 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   flex-wrap: wrap;
 }
 
+
+/*********************************** BOARD **************************************************/
+#main-div-board {
+  background-color: $beige-gris-galet-950;
+}
+#board-div-entete {
+  margin-top: 48px;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 120px;
+}
+#main-div-board .bienvenue {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+#main-div-board .ravi {
+  color: var(--light-neutral-grey-50, #161616);
+  
+    /* 1.Titres/H1 - XL/Desktop */
+    font-family: Marianne;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 48px;
+    /* 120% */
+
+    margin-bottom: 40px;
+}
+.welcome-explorer1 {
+  color: var(--light-decisions-text-text-title-blue-france, #000091);
+    text-align: center;
+    font-family: Marianne;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 30px;
+    /* 125% */
+}
+.welcome-explorer2 {
+  color: var(--light-decisions-text-text-default-grey, #3A3A3A);
+    text-align: center;
+  
+    /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+}
+.board-enrichis1 {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H4 - SM/Desktop */
+    color: var(--light-decisions-text-text-title-blue-france, #000091);
+      text-align: center;
+      font-family: Marianne;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 30px;
+      /* 125% */
+    /* 133.333% */
+
+    min-width: 500px;
+}
+.board-heart-container {
+  //padding: 10px;
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+}
+.board-heart {
+  //padding: 10px;
+  border-radius: 6px;
+  background: #FFE9E9;
+  display: flex;
+  width: 60px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+.board-heart img {
+  //margin: auto auto
+  justify-content: center;
+    align-items: center;
+}
+#main-div-board .boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#main-div-board .box {
+  display: flex;
+    padding: 48px 40px 32px 48px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 1 0 0;
+    align-self: stretch;
+    background-color: white;
+    margin-right: 32px;
+    margin-bottom: 32px;
+  
+    border-top: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+      border-right: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+      border-left: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+      background: var(--light-decisions-background-background-default-grey, #FFF);
+      border-bottom: 4px solid var(--light-decisions-border-border-plain-blue-france, #000091);
+  }
+
+    .set-screen {
+      cursor: pointer;
+    }
+
+/*********************************** PROFIL **************************************************/
+
+#main-div-profile {
+  background-color: $beige-gris-galet-950;
+  width: 100%;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  padding-left: 120px;
+  padding-right: 120px;
+  min-height: 800px;
+}
+
+#main-div-profile-container {
+  display: flex;
+  flex-direction: row;
+}
+#main-div-profile #profile-div-left {
+  background-color: white;
+  margin-right: 24px;
+  //flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+#profile-div-left img {
+  display: block;
+    /* Make the image a block element */
+    margin: 0 auto;
+    /* Center the image horizontally */
+}
+.profile-div-prenomnom {
+color: var(--light-neutral-grey-50, #161616);
+  text-align: center;
+
+  /* 1.Titres/H3 - MD/Desktop */
+  font-family: Marianne;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px;
+  /* 128.571% */
+}
+.profile-div-email {
+color: var(--light-decisions-text-text-mention-grey, #666);
+  text-align: center;
+
+  /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 150% */
+}
+
+#main-div-profile #profile-div-right {
+  background-color: white;
+  //flex-grow: 2;
+}
+
+.profile_tab {
+  //border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    background: var(--light-decisions-background-background-default-grey, #FFF);
+    display: flex;
+      padding: 56px 72px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+      align-self: stretch;
+}
+
+
+
+.profile_tab_title {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H4 - SM/Desktop */
+    font-family: Marianne;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    /* 133.333% */
+}
+.profile-tab-scolarite-container-top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.profile-tab-scolarite-container-top .fr-select-group {
+  margin-right: 32px;
+}
+
+.profile-cell-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+
+}
+.profile-cell {
+  display: flex;
+    padding: 4px 8px 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 16px;
+      background: var(--light-decisions-background-background-action-high-blue-france, #000091);
+}
+.profile-cell-label {
+  color: var(--light-decisions-text-text-inverted-blue-france, #F5F5FE);
+    text-align: center;
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+.profile-tab {
+  overflow: visible;
+}
+.autocomplete_group {
+  overflow: visible;
+  width: 100%;
+}
+.autocomplete_results {
+  overflow: visible;
+  padding-top: 32px;
+}
+.dropdown-menu-autocomplete {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background-color: #ccc;
+  justify-content: left ;
+  position: absolute;
+
+}
+.dropdown-item-autocomplete {
+
+}
+/***********************************  DOMAINES PRO *****************************************************/
+.multi-options-item-emoji {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.multi-options-group-emojis {
+  font-size: 32px;
+  margin: 10px;
+}
+.muti-options-group {
+  margin-bottom: 36px;
+}
+
+.muti-options-group-header button {
+    font-family: Marianne;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border-radius: 16px 16px 0px 0px;
+}
+
+.fr-accordion__btn,
+.fr-accordion__btn:hover,
+.fr-accordion__btn:active,
+.fr-accordion__btn[aria-expanded="true"],
+.fr-accordion__btn:active[aria-expanded="true"],
+.fr-accordion__btn:hover[aria-expanded="true"]
+.fr-accordion__btn[aria-expanded="false"],
+.fr-accordion__btn:active[aria-expanded="false"],
+.fr-accordion__btn:hover[aria-expanded="false"] {
+  color: var(--light-decisions-background-background-default-grey, #FFF);
+  background-color:var(--light-decisions-artwork-artwork-major-blue-france, #000091);;
+}
+.multi-options-group-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.multi-options-item {
+  display: inline;
+    margin: 5px 5px;
+  flex-direction: row;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  background: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
+  cursor: pointer;
+  color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+  text-align: center;
+
+  /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 171.429% */
+}
+.multi-options-item.selected {
+  color: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
+    background: var(--light-decisions-text-text-action-high-blue-france, #000091);
+}
+
+.muti-options-group-header {
+  //background: var(--light-decisions-artwork-artwork-major-blue-france, #000091);
+  border: 1px solid #DDD;
+    border-radius: 16px 16px 0px 0px;
+}
+.muti-options-group-content {
+  border: 1px solid #DDD;
+  border-radius: 0px 0px 16px 16px;
+}
+/***********************************  OLD *****************************************************/
 .accordion-collapse {
   background-color: $accordion-button-color;
 }

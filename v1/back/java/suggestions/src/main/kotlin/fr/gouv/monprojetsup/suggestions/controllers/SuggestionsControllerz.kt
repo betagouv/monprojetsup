@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.controllers
 
 import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.data.ServerData
-import fr.gouv.monprojetsup.data.dto.GetFormationsAffinitiesServiceDTO
+import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.data.dto.SortMetiersByAffinityServiceDTO
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
@@ -32,24 +32,15 @@ class SuggestionsControllerz(
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService,
-    private val getAffiniteFormationsService: GetFormationsAffinitiesService,
-    private val sortMetiersByAffinityService: SortMetiersByAffinityService
+    private val getAffiniteFormationsService: GetAffinitiesService
 ) {
 
-    @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
-    @PostMapping("/affinite/formations")
+    @Operation(summary = "Récupère la liste des formations et des métiers, classés par affinité.")
+    @PostMapping("/affinites")
     fun getAffiniteFormations(
-        @RequestBody(required = true) request : GetFormationsAffinitiesServiceDTO.Request
-    ): GetFormationsAffinitiesServiceDTO.Response {
+        @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
+    ): GetAffinitiesServiceDTO.Response {
         return getAffiniteFormationsService.handleRequestAndExceptions(request)
-    }
-
-    @Operation(summary = "Trie une liste de métiers par affinité.")
-    @PostMapping("/affinite/metiers")
-    fun getAffiniteMetiers(
-        @RequestBody(required = true) request : SortMetiersByAffinityServiceDTO.Request
-    ): SortMetiersByAffinityServiceDTO.Response {
-        return sortMetiersByAffinityService.handleRequestAndExceptions(request)
     }
 
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")

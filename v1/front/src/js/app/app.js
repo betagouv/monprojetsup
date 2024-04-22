@@ -35,6 +35,7 @@ import * as animate from "../ui/animate/animate";
 import * as dataload from "../data/load";
 import * as tunnel from "../ui/tunnel";
 import * as nav from "../app/navigation";
+import("./../../dsfr.module.min.js");
 
 import { toast } from "../ui/animate/toasts";
 
@@ -89,11 +90,11 @@ export function createAccount(data) {
   });
 }
 
-export function validateCodeAcces(accounTypen, accessGroupe, handler) {
+export function validateCodeAcces(accountType, accesGroupe, handler) {
   server.validateCodeAcces(
     {
-      type: accounTypen,
-      code: accesGroupe,
+      type: accountType,
+      accesGroupe: accesGroupe,
     },
     handler
   );
@@ -149,22 +150,26 @@ export function postLoginHandler() {
   });
 
   dataload.loadZippedData().then(() => {
-    server.updateAdminInfos((msg) => {
+    server.updateAdminInfos(async (msg) => {
       setAdminInfos(msg);
       ui.initPostData(session.getLogin(), msg.infos);
       const profileCompleteness = msg.infos.profileCompleteness;
       session.setProfileCompletenessLevel(profileCompleteness);
-      server.getProfile((msg) => {
-        data.loadProfile(msg.profile);
-        //ui.loadProfile();
-        startNavigation();
-      });
+      const msgp = await server.getProfileAsync();
+      data.loadProfile(msgp.profile);
+      nav.setScreen(profileCompleteness >= 2 ? "board" : "profil");
+      startNavigation();
     });
   });
 
   $(".nav-link").on("click", function (e) {
     logAction("tab click " + e.currentTarget.id);
   });
+}
+
+export async function getProfile() {
+  const msg = await server.getProfileAsync();
+  data.loadProfile(msg.profile);
 }
 
 function startNavigation() {
@@ -177,10 +182,9 @@ function startNavigation() {
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
-        const category = profileCompleteness == 0 ? "profil" : "preferences";
         nav.setScreen("inscription1");
       } else {
-        nav.setScreen("recherche");
+        nav.setScreen("board");
       }
     }
   }
@@ -242,6 +246,10 @@ export async function doSearch(recherche) {
     recherche,
     profile
   );
+}
+
+export async function getSelection() {
+  return server.getSelection();
 }
 
 export async function doSearchOld() {
@@ -312,6 +320,10 @@ function getSuggestionsLoadThemAndFadeIn() {
  * @param {*} value
  * @param {*} action
  */
+export function updateSuggestions(suggestions, handler = null) {
+  server.updateProfile({ suggestions: suggestions }, handler);
+}
+
 export function updateSuggestionsAndReloadUI(fadingOut, suggestions) {
   if (fadingOut) {
     animate.fadeOut(() => {
@@ -342,6 +354,11 @@ export function updateProfileAndReloadUI(fadingOut, name, value, action) {
       getSuggestionsLoadThemAndFadeIn();
     });
   }
+}
+
+export function updateProfile(name, value, action) {
+  console.log("Updating profile " + name + " " + value + " " + action);
+  server.updateProfile({ name: name, value: value, action: action }, () => {});
 }
 
 export function toTeacher() {

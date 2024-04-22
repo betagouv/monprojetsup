@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.app.db.model;
 
 import fr.gouv.monprojetsup.app.db.DBTools;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public final class Profile {
     /** maps various things to integer interests chosen by the student.
      E.g. interets "T-ITM.1020" --> 5
      E.g. interests "T-IDEO2.4819" --> 3
-     E.g. metiers ids "MET.7776" --> 4
+     E.g. metiers keys "MET.7776" --> 4
      E.g. other keywords "innovations" --> 3
 
      Scores are in the interval [0,100].
@@ -70,7 +70,19 @@ public final class Profile {
         this.ine = null;
     }
 
+    public Profile(String login, String nom, String prenom) {
+        this.login = login;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.bac = null;
+        this.duree = null;
+        this.apprentissage = null;
+        this.mention = null;
+        this.moygen = null;
+        this.niveau = null;//inconnu
+        this.ine = null;
 
+    }
 
 
     int isOk(String s) {
@@ -108,6 +120,10 @@ public final class Profile {
 
     public static Profile getNewProfile(String login) {
         return new Profile(normalizeUser(login));
+    }
+
+    public static Profile getNewProfile(String login, String nom, String prenom) {
+        return new Profile(normalizeUser(login), nom, prenom);
     }
 
 
@@ -169,6 +185,7 @@ public final class Profile {
             case "moygen": moygen = value; break;
             case "duree": duree = value; break;
             case "niveau": niveau = value; break;
+            case "scores":
             case "interests":
                 if(add) scores.put(value.replace(".","_"), 1);
                 else scores.remove(value.replace(".","_"));
@@ -198,8 +215,7 @@ public final class Profile {
                     } else {
                         SuggestionDTO current = choices.getOrDefault(fl, new SuggestionDTO(
                                 fl,
-                                suggestion.status(),
-                                suggestion.date()
+                                suggestion.status()
                                 )
                         );
                         choices.put(fl.replace(".", "_"),
@@ -214,7 +230,7 @@ public final class Profile {
 
     }
 
-    public void updateProfile(ProfileDTO p) {
+    public void updateProfile(ProfileDb p) {
         if(p.nom() != null) nom = p.nom();
         if(p.prenom() != null) prenom = p.prenom();
         if(p.bac() != null) bac = p.bac();
@@ -263,9 +279,9 @@ public final class Profile {
         return UUID.randomUUID().toString();
     }
 
-    public ProfileDTO toDTO() {
+    public ProfileDb toDTO() {
         removeDotsFromKeys();
-        return new ProfileDTO(
+        return new ProfileDb(
                 login,
                 nom,
                 prenom,

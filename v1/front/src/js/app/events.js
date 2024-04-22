@@ -67,35 +67,29 @@ const questionIdsTriggeringUIReloadWhenChanged = [];
 export function removeElementFromProfileList(id, elt) {
   const changed = data.removeFromListOrMap(id, elt);
   if (changed) {
-    app.updateProfileAndReloadUI(false, id, elt, "rem");
+    app.updateProfile(id, elt, "rem");
   }
 }
 
 export function addElementToProfileListHandler(id, elt) {
   const changed = data.addElementInBackOfProfileList(id, elt);
   if (changed) {
-    app.updateProfileAndReloadUI(false, id, elt, "add");
+    app.updateProfile(id, elt, "add");
   }
 }
 
 export function toggleProfileScoreHandler(key) {
   const selected = data.toggleScore(key);
-  app.updateProfileAndReloadUI(false, "scores", key, selected ? "add" : "rem");
+  app.updateProfile("interests", key, selected ? "add" : "rem");
   return selected;
 }
 
 /**/
 
-function changeSuggestionStatus(id, newStatus, silent) {
+export function changeSuggestionStatus(id, newStatus, handler = null) {
   //toast_accept(id);
   const [sugg, changed] = data.getOrCreateSugg(id, newStatus);
-  if (changed) {
-    ui.updateHearts(id, newStatus == data.SUGG_APPROVED);
-    app.updateSuggestionsAndReloadUI(!silent, [
-      { fl: sugg.fl, status: sugg.status },
-    ]);
-    ui.updateFavoris();
-  }
+  app.updateSuggestions([{ fl: sugg.fl, status: sugg.status }], handler);
   return changed;
 }
 
@@ -115,6 +109,7 @@ let tutoModalRefusedOpenedOnce = 0;
 export function selectChoice(id, silent) {
   const changed = changeSuggestionStatus(id, data.SUGG_APPROVED, silent);
   if (changed) {
+    /*
     if (++tutoModalOpenedOnce <= 2) {
       const label = data.getLabel(id);
       tunnel.openTutoModal(
@@ -126,6 +121,7 @@ export function selectChoice(id, silent) {
     }
     //toast.toast("", "Ajouté à ta sélection.");
     animate.animateHeart();
+    */
   }
   //todo someday update explanations for this id
   //possible: add one API request
@@ -158,6 +154,11 @@ export function profileValueChangedHandler(id, dirty) {
   if (id == "bac" || id == "niveau") {
     tunnel.updateUI();
   }
+}
+export function profileValueChangedHandler2(id, dirty) {
+  const sanitized = DOMPurify.sanitize(dirty);
+  data.setProfileValue(id, sanitized);
+  app.updateProfile(id, sanitized, "add");
 }
 
 function resetStudentPasswordByTeacher(user) {

@@ -1,0 +1,62 @@
+<div class="profile_tab">
+  <div class="profile_tab_title">Ma situation actuelle</div>
+  <div class="profile-tab-scolarite-container-top">
+    <div class="fr-select-group">
+      <label class="fr-label" for="select"> Classe actuelle</label>
+      <select
+        class="fr-select profile-select"
+        id="profile-tab-scolarite-classe-select"
+        name="select"
+        key="niveau"
+      >
+        <option value="" selected disabled hidden>
+          Sélectionner une option
+        </option>
+      </select>
+    </div>
+    <div class="fr-select-group">
+      <label class="fr-label" for="select">
+        Type de bac choisi ou envisagé</label
+      >
+      <select
+        class="fr-select profile-select"
+        id="profile-tab-scolarite-bac-select"
+        name="select"
+        key="bac"
+      >
+        <option value="" selected disabled hidden>
+          Sélectionner une option
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="autocomplete_group" id="autocomplete_group_spe_classes">
+    <label class="fr-label" for="select">
+      Enseignements de spécialité (EDS) choisis ou envisagés</label
+    >
+    <input
+      class="fr-input"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"
+      aria-describedby="spe_classes_autocomplete-messages"
+      id="spe_classes_autocomplete"
+      name="spe_classes_autocomplete"
+      placeholder="Commencez à taper pour rechercher..."
+      type="text"
+    />
+
+    <div class="autocomplete_results" id="spe_classes_list"></div>
+  </div>
+  <!--
+  <div class="save-profile-div">
+    <button
+      class="fr-btn right save-profile-button"
+      title="Enregistrer"
+      category="scolarite"
+    >
+      Enregistrer
+    </button>
+  </div>
+--></div>

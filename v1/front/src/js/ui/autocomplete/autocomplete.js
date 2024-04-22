@@ -13,10 +13,16 @@ export function setUpAutoComplete(
   // Autocomplete section : https://github.com/Honatas/bootstrap-4-autocomplete
   const field = document.getElementById(id + "_autocomplete");
   if (field === null) {
-    //  console.log("No container " + id + "_autocomplete");
+    console.log("No container " + id + "_autocomplete");
     return;
   }
   const itemsSource = sourceToItems(id);
+  if (itemsSource == null || itemsSource.length == 0) {
+    $(`#${id}_autocomplete`).hide();
+    return false;
+  } else {
+    $(`#${id}_autocomplete`).show();
+  }
   const ac = new Autocomplete(field, {
     source: itemsSource,
     label: "l",
@@ -43,6 +49,7 @@ export function setUpAutoComplete(
 
   updateAutoCompleteListItem(id, itemsSource);
   registerTrashItemHandlers(id, trashHandler, itemsSource);
+  return true;
 }
 
 function updateAutoCompleteListItem(id, itemsSource) {
@@ -52,7 +59,7 @@ function updateAutoCompleteListItem(id, itemsSource) {
   let l = [];
 
   l.push('<div class="container">');
-  l.push('<div class="row justify-content-md">');
+  l.push('<div class="profile-cell-container">');
   for (let item of liste) {
     let key = null;
     let label = null;
@@ -60,26 +67,20 @@ function updateAutoCompleteListItem(id, itemsSource) {
     label = item;
 
     if (label === null || label === undefined || label === "") continue;
-    l.push(
-      '<div class=" pill rounded-pill col col-md-auto interest p-2 m-1 ">'
-    );
+    l.push('<div class="profile-cell">');
 
-    l.push(`<span class="mx-1">`);
+    l.push(`<span class="profile-cell-label">`);
     l.push(label);
     l.push("</span>");
     l.push(
-      `<a class="btn trashItemIcon trashItem${id}" 
+      `
+      <a class="trashItem${id}" 
         label="${label}"
         key="${key}"
-
         title="Supprimer"
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
+        href="#"
         >
-        <h2>
-        <i class="bi bi-x-circle-fill">
-        </i>
-        </h2>
+        <span class="fr-icon-close-line" style="color:white" aria-hidden="true"></span>
         </a>`
     );
     l.push("</div> ");

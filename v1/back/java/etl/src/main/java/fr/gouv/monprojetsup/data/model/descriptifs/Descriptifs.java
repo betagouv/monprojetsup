@@ -233,21 +233,6 @@ public record Descriptifs(
             return error != null && error.startsWith("recherche");
         }
 
-        public List<String> getMetiers() {
-            if (presentation == null) return Collections.emptyList();
-            int idx = presentation.indexOf("Exemples de m");
-            if (idx > 0) {
-                return Arrays.stream(presentation.substring(idx)
-                                .split(";"))
-                        .map(String::trim)
-                        .toList();
-            }
-            if (metiers != null) {
-                return List.of(metiers);
-            }
-            return Collections.emptyList();
-        }
-
         public String getFrontRendering() {
             if(summary != null) return summary;
             StringBuilder b = new StringBuilder();

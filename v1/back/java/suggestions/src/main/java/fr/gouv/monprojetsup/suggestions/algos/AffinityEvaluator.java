@@ -50,6 +50,7 @@ public class AffinityEvaluator {
     private static final double ADMISSIBILITY_75 = 1.0;//at the 25 and 75 quartile
 
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
+    public static final boolean USE_BIN = false;
 
     private final boolean isInterestedinHealth;
     private final Set<String> rejected =  new HashSet<>();
@@ -108,8 +109,12 @@ public class AffinityEvaluator {
 
         //centres d'intérêts
         Set<String> nonZeroScores = new HashSet<>();
-        if(pf.interests() != null)
-            nonZeroScores.addAll(pf.interests());
+        if(pf.interests() != null) {
+            pf.interests().forEach(key -> {
+                nonZeroScores.add(key);
+                nonZeroScores.addAll(onisepData.interets().expansion().getOrDefault(key, Collections.emptyList()));
+            });
+        }
 
         //deprecated
         if(pf.scores() != null) {
@@ -144,7 +149,7 @@ public class AffinityEvaluator {
 
     /* the public entry points */
     public Double getAffinityEvaluation(String fl) {
-        if (rejected.contains(fl)) return Config.NO_MATCH_SCORE;
+        if (USE_BIN && rejected.contains(fl)) return Config.NO_MATCH_SCORE;
         return getScoreAndExplanation(fl, null, null);
     }
 
@@ -631,7 +636,15 @@ public class AffinityEvaluator {
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
-            Integer iMtCod = ServerData.codesSpecialites.get(s);
+            //Décodage soit par nom spécialité soit par code
+            Integer iMtCod = codesSpecialites.get(s);
+            if(iMtCod == null) {
+                try {
+                    iMtCod = Integer.parseInt(s);
+                } catch (NumberFormatException ignored) {
+                    //ignored
+                }
+            }
             if (iMtCod != null) {
                 Double stat = ServerData.statistiques.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {
@@ -687,6 +700,9 @@ public class AffinityEvaluator {
                     candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
                     candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
                 }
+            }
+            if(reverseFlGroups.containsKey(key)) {
+                candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
             }
         }
 

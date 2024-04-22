@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.app.db.model;
 
 import fr.gouv.monprojetsup.app.auth.Credential;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import lombok.AllArgsConstructor;
@@ -210,7 +210,7 @@ public final class User {
         pf.updateProfile(profile);
     }
 
-    public void updateProfile(ProfileDTO profile) {
+    public void updateProfile(ProfileDb profile) {
         pf.updateProfile(profile);
     }
 

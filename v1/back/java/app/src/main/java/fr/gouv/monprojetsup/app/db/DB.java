@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.model.*;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.log.ServerTrace;
@@ -152,7 +152,7 @@ public abstract class DB {
      * @return the profile
      * @throws UnknownUserException if the user is unknown
      */
-    public ProfileDTO getProfile(String login) throws UnknownUserException {
+    public ProfileDb getProfile(String login) throws UnknownUserException {
         return getUser(login).pf().toDTO();
     }
 
@@ -162,14 +162,14 @@ public abstract class DB {
         User user = getUser(login);
         ProfileUpdateDTO updatedProfile = unsanitizedProfile.sanitize();
         user.updateProfile(updatedProfile);
-        ProfileDTO pf = user.getProfile().toDTO();
+        ProfileDb pf = user.getProfile().toDTO();
         //LOGGER.info("updateUserField " + new Gson().toJson(pf));
         updateUserField(login, PF_FIELD, pf);
     }
 
     public void updateProfile(
             @NotNull String login,
-            @NotNull ProfileDTO unsanitizedProfile) throws UnknownUserException {
+            @NotNull ProfileDb unsanitizedProfile) throws UnknownUserException {
         User user = getUser(login);
         user.updateProfile(unsanitizedProfile.sanitize());
         updateUserField(login, PF_FIELD, user.getProfile().toDTO());
@@ -591,7 +591,7 @@ public abstract class DB {
      * @param memberLogin the member login
      * @return the profile
      */
-    public abstract ProfileDTO getGroupMemberProfile(String grpId, String memberLogin) throws ModelException;
+    public abstract ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws ModelException;
 
 
     /**

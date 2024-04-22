@@ -14,6 +14,7 @@ module.exports = {
     validate: "./src/js/app/entrypoints/validate.js",
     reset_password: "./src/js/app/entrypoints/reset_password.js",
     legal: "./src/js/app/entrypoints/legal.js",
+    "dsfr.module.min": "./src/dsfr.module.min.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -139,6 +140,13 @@ module.exports = {
           },
         ],
       },
+    ],
+  },
+  resolve: {
+    modules: [
+      "node_modules", // Default node_modules directory
+      path.resolve(__dirname, "src"), // Add the directory where dsfr.module.min.js is located
+      // Add other directories if needed
     ],
   },
 };

@@ -1,4 +1,5 @@
 import $ from "jquery";
+
 import * as events from "../../app/events";
 import * as data from "../../data/data";
 import * as autocomplete_pills from "../autocomplete/autocomplete_pills";
@@ -43,13 +44,20 @@ export function setupSearchBar($div, source) {
       }
     }
   }
+  const s = new Set();
   //on purpose we add an element and its generalization
-  tags = Object.fromEntries(
-    Object.entries(tags).map((pair) => [
-      pair[0],
-      [...new Set(pair[1].concat(data.convertKeysToGroups(pair[1]).groups))],
-    ])
-  );
+  const entries = [];
+  const newTags = {};
+  for (const [key, values] of Object.entries(tags)) {
+    const s = new Set(values);
+    const a = Array.from(s);
+    if (a == undefined) {
+      continue;
+    }
+    newTags[key] = a;
+    //entries.push([key, a]);
+  }
+  tags = newTags; //Object.fromEntries(entries);
 
   const $input = $("input", $div);
   const $pillsContainer = $(`.container-fluid`, $div);

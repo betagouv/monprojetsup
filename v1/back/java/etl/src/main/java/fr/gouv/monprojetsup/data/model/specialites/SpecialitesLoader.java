@@ -16,14 +16,18 @@ import static fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 public class SpecialitesLoader {
-    public static Specialites load() throws IOException {
+    public static Specialites load(PsupStatistiques statistiques) throws IOException {
 
         Specialites specs = fromJsonFile(DataSources.getSourceDataFilePath(DataSources.SPECIALITES_FILENAME), Specialites.class);
 
-        AdmisMatiereBacAnneeStats stats = fromZippedJson(
-                DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-                PsupStatistiques.class
-        ).admisMatiereBacAnneeStats;
+        if(statistiques == null) {
+            statistiques = fromZippedJson(
+                    DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
+                    PsupStatistiques.class
+            );
+        }
+
+        AdmisMatiereBacAnneeStats stats = statistiques.admisMatiereBacAnneeStats;
 
         if(specs.specialitesParBac().isEmpty()) {
             //on supprime des stats ce qui n'est pas des specialites
@@ -51,6 +55,10 @@ public class SpecialitesLoader {
                         .flatMap(e -> e.getValue().stream())
                         .collect(Collectors.toSet())
                 );
+        /* hack to fix data update bug  */
+        if(specs.specialitesParBac().get(TOUS_BACS_CODE).isEmpty()) {
+            specs.specialitesParBac().get(TOUS_BACS_CODE).addAll(specs.specialites().keySet());
+        }
         return specs;
     }
 

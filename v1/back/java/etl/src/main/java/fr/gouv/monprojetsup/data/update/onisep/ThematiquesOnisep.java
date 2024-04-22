@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,12 +15,20 @@ import java.util.Map;
 public record ThematiquesOnisep(
         Map<String,ThematiqueOnisep> thematiques,
         Map<String,String> categories,
-        Map<String,String> redirections
+        Map<String,String> redirections,
+        Map<String, Regroupement> regroupements
 ) {
     public ThematiquesOnisep() {
         this(
-                new HashMap<>(), new HashMap<>(), new HashMap<>()
+                new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>()
         );
+    }
+
+    public record Regroupement(
+            String label,
+            String groupe,
+            String emoji
+    ) {
     }
 
     public static ThematiquesOnisep load() throws IOException {
@@ -30,6 +39,17 @@ public record ThematiquesOnisep(
                 new TypeToken<List<ThematiqueOnisep>>(){}.getType()
         );
         thematiques.forEach(res::add);
+
+        String groupe = "";
+        for (Map<String, String> stringStringMap : CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH), '\t')) {
+            String id = stringStringMap.get("id").trim();
+            String regroupement = stringStringMap.get("regroupement").trim();
+            if(!regroupement.isEmpty()) groupe = regroupement;
+            String emoji = stringStringMap.get("Emojis");
+            String label = stringStringMap.get("label");
+            if(groupe.isEmpty()) throw new RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
+            res.add(id, label, groupe, emoji);
+        }
 
         List<ThematiquesOnisep.ThematiqueOnisep> thematiquesNouvelles = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_NOUVELLES_PATH),
@@ -61,6 +81,10 @@ public record ThematiquesOnisep(
         if(item.redirection != null && !item.redirection.isEmpty() && !item.redirection.equals("X")) {
             redirections.put(Constants.cleanup(item.id), Constants.cleanup(item.redirection));
         }
+    }
+
+    public void add(String id, String label, String groupe, String emoji) {
+        regroupements.put(id, new Regroupement(label, groupe, emoji));
     }
 
     public record ThematiqueOnisep(

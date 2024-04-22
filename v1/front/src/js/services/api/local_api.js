@@ -9,8 +9,8 @@ export function callAPI(serviceName, data, successHandler, errorHandler, type) {
     serviceName.startsWith("foi") ||
     serviceName.startsWith("affinite") ||
     serviceName.startsWith("explanations")
-      ? 8003
-      : 8002;
+      ? 8004
+      : 8006;
   const IPserver = "http://" + document.location.hostname + ":" + port;
   const API = "/api/1.2/";
   const url = IPserver + API + serviceName;

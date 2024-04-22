@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.data.update;
 
 import com.google.gson.GsonBuilder;
 import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.getDescriptif;
 
 public class UpdateScrapFormations {
 

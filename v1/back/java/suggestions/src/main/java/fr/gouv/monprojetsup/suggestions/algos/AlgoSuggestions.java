@@ -11,11 +11,11 @@ import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
+import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.suggestions.server.Log;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,8 +27,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
+import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
 import static java.lang.Math.*;
 
@@ -45,8 +47,10 @@ public class AlgoSuggestions {
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
 
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
-    private static final double LAX_TO_PASS_METIERS_PENALTY = 0.25;
+    private static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
+    //utilisé par suggestions
+    public static Map<String, Integer> codesSpecialites = new HashMap<>();
 
     protected static PsupStatistiques.LASCorrespondance lasCorrespondance;
 
@@ -94,9 +98,6 @@ public class AlgoSuggestions {
             );
         }
 
-        //LOGGER.info(filieresScores.size() + " filieres have a score > 0");
-
-
         /* seconde passe pour calculer des explications */
         List<Suggestion> filiereSuggs = getFilieresSuggestions(filieresScores, cfg);
 
@@ -117,7 +118,6 @@ public class AlgoSuggestions {
         if(metiersSuggestions.isEmpty()) {
             Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les interests des metiers à 0 sur le profil " + new Gson().toJson(pf.cleanupDates()));
         }
-        //LOGGER.info(metiersSuggestions.size() + " metiers details");
 
         List<Suggestion> answer = new ArrayList<>(
                 filiereSuggs.stream()
@@ -172,17 +172,20 @@ public class AlgoSuggestions {
         //computing maximal score for etalonnage
         double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
 
-        if(maxScore <= NO_MATCH_SCORE) return List.of();
+        if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
-        pf.suggRejected().forEach(suggestionDTO -> {
-            String fl = suggestionDTO.fl();
-            if(affnites.containsKey(fl)) {
-                affnites.put(fl, NO_MATCH_SCORE);
-            }
-        });
+        if(USE_BIN) {
+            pf.suggRejected().forEach(suggestionDTO -> {
+                String fl = suggestionDTO.fl();
+                if (affnites.containsKey(fl)) {
+                    affnites.put(fl, NO_MATCH_SCORE);
+                }
+            });
+        }
 
         //rounding to 6 digits
-        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
+        double finalMaxScore = maxScore;
+        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / finalMaxScore) * 10e6) / 10e6))));
         return affnites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight())).toList();
     }
 
@@ -194,7 +197,7 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @NotNull Collection<String> cles, @NotNull Config cfg) {
+    public static List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles, @NotNull Config cfg) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -202,7 +205,12 @@ public class AlgoSuggestions {
             return List.of();
         }
 
-        Set<String> clesFiltrees = new HashSet<>(cles);
+        final Set<String> clesFiltrees;
+        if(cles != null) {
+            clesFiltrees = new HashSet<>(cles);
+        } else {
+            clesFiltrees = new HashSet<>(edgesKeys.nodes().stream().filter(Helpers::isMetier).toList());
+        }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
         return  new AffinityEvaluator(pf, cfg).getCandidatesOrderedByPertinence(clesFiltrees);
@@ -230,17 +238,6 @@ public class AlgoSuggestions {
         }
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg);
 
-        /*
-    AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
-
-
-        List<DetailedSuggestion> result = new ArrayList<>();
-
-        keys.forEach(key -> {
-            affinityEvaluator.getExplanations(key);
-
-        val expls = affinityEvaluator.getExplanationsAndExamples(key);
-     */
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
     }
@@ -295,6 +292,8 @@ public class AlgoSuggestions {
 
         createGraph();
 
+        ServerData.specialites.specialites().forEach((iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod));
+
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
         bacsWithSpecialites.addAll(ServerData.specialites.specialitesParBac().keySet());
 
@@ -341,31 +340,16 @@ public class AlgoSuggestions {
         backPsupData.filActives().forEach(flcod -> edgesKeys.addNode(gFlCodToFrontId(flcod)));
 
 
-        Descriptifs descriptifs = UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
-        );
 
 
         /* intégration des relations étendues aux graphes */
-        Map<String, Set<String>> metiersVersFormations = onisepData.getExtendedMetiersVersFormations(
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance(),
-                descriptifs
-        );
-       String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
-       Set<String> lasKeys = ServerData.statistiques.getLASCorrespondance().lasToGeneric().keySet();
-
-        Set<String> metiersPass =
-                metiersVersFormations.entrySet().stream()
-                        .filter(e -> e.getValue().contains( passKey))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toSet());
+        Map<String, Set<String>> metiersVersFormations = ServerData.getMetiersVersFormations();
+        val metiersPass = ServerData.getMetiersPass(metiersVersFormations);
+        val lasCorr = ServerData.statistiques.getLASCorrespondance();
 
         metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasKeys.contains(fil) && metiersPass.contains(metier)) {
-                edgesKeys.put(metier, fil, true, LAX_TO_PASS_METIERS_PENALTY);
+            if(lasCorr.isLas(fil) && metiersPass.contains(metier)) {
+                edgesKeys.put(metier, fil, true, LASS_TO_PASS_METIERS_PENALTY);
                 /*last evolutiion was t extend metiers generation to all metiers of onisep
                         and to use this 0.25 coef. That pushes up PCSI on profile #1*/
 
@@ -377,8 +361,6 @@ public class AlgoSuggestions {
         edgesKeys.putAll(onisepData.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT);
         edgesKeys.putAll(onisepData.edgesFilieresThematiques());
         edgesKeys.putAll(onisepData.edgesThematiquesMetiers());
-
-
 
         //ajout des secteurs d'activité
         onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
@@ -418,11 +400,11 @@ public class AlgoSuggestions {
         LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 
         //LAS inheritance, oth from their mother licence and from PASS
-        Map<String, String> lasCorr = ServerData.statistiques.getLASCorrespondance().lasToGeneric();
-        edgesKeys.addEdgesFromMoreGenericItem(lasCorr, 1.0);
+        edgesKeys.addEdgesFromMoreGenericItem(lasCorr.lasToGeneric(), 1.0);
 
-        lasCorr.entrySet().forEach(e -> e.setValue(passKey));
-        edgesKeys.addEdgesFromMoreGenericItem(lasCorr, LAX_TO_PASS_METIERS_PENALTY);
+        val corr = new HashMap<>(lasCorr.lasToGeneric());
+        corr.entrySet().forEach(e -> e.setValue(Constants.gFlCodToFrontId(PASS_FL_COD)));
+        edgesKeys.addEdgesFromMoreGenericItem(corr, LASS_TO_PASS_METIERS_PENALTY);
 
         //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
         Set<String> filActives = backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toSet());
@@ -435,9 +417,9 @@ public class AlgoSuggestions {
                         .stream().map(Constants::gFlCodToFrontId)
                         .collect(Collectors.toSet())
         );
-        //on conserve les groupes
+        //on conserve les groupes en supprimant de la suppression
         toErase.removeAll(flGroups.values());
-        toErase.removeAll(lasCorr.keySet());
+        toErase.removeAll(lasCorr.lasToGeneric().keySet());
         edgesKeys.eraseNodes(toErase);
 
     }
@@ -453,7 +435,6 @@ public class AlgoSuggestions {
      * @return a map of pathes indexed by last node
      */
     public static Map<String,List<Path>> computePathesFrom(String n, int maxDistance) {
-        //noinspection DataFlowIssue
         Pair<String, Integer> key = Pair.of(n, maxDistance);
 
         Map<String,List<Path>> result = pathsFromDistances.get(key);

@@ -34,7 +34,7 @@ const data = {
   profile: {
     login: "",
     scores: {},
-    choices: {},
+    choices: [],
   },
   questions: params.questions,
   questions_account: params.questions_account,
@@ -87,9 +87,6 @@ function ensureMandatoryProfileFields() {
   if (data.profile === undefined) {
     data.profile = {};
   }
-  if (data.suggestions === undefined) {
-    data.suggestions = [];
-  }
   for (const mandatory_obj_field of [
     "scores",
     "interets",
@@ -116,6 +113,20 @@ export function getSummary(key) {
   if (res.summary) return res.summary;
   if (res.presentation) return res.presentation;
   return null;
+}
+
+export function getDomainesPro() {
+  return data.domainesPro;
+}
+
+export function getPrenomNom() {
+  return getProfileValue("prenom") + " " + getProfileValue("nom");
+}
+export function getPrenom() {
+  return getProfileValue("prenom");
+}
+export function getInterests() {
+  return data.interestsGroups;
 }
 
 export function getDescriptif(key) {
@@ -205,6 +216,11 @@ export function getAllGroupLabels(keySet) {
 }
 
 export function loadProfile(profile) {
+  if (profile.choices === undefined) {
+    profile.choices = [];
+  } else {
+    profile.choices = Object.values(profile.choices);
+  }
   data.profile = profile;
   ensureMandatoryProfileFields();
   //expand scores
@@ -248,11 +264,11 @@ export function getAnonymousProfile() {
 }
 
 function loadSuggestions(suggestions) {
-  data.suggestions = suggestions;
+  //data.suggestions = suggestions;
 }
 
 export function getNbSuggestionsWaiting() {
-  return data.suggestions === undefined ? 0 : data.suggestions.length;
+  return 0;
 }
 
 /* the stats depend on the bac of the user */
@@ -324,20 +340,8 @@ export function getUrls(gFlCod, autocomplete) {
   }
   if (urls.size > 0) {
     return Array.from(urls);
-  } else if (autocomplete) {
-    //on vérifie qu'on est pas sur un groupe
-    const result = [];
-    const uri = getDefaultUrl(gFlCod);
-    if (uri != null) {
-      result.push(encodeURI(uri));
-    }
-    const uri2 =
-      params.internetSearchHTTPAdress + encodeURI(getExtendedLabel(gFlCod));
-    result.push(uri2);
-    return result;
-  } else {
-    return [];
   }
+  return [];
 }
 
 /*
@@ -467,21 +471,12 @@ function getTags() {
 
 function updateSpecialitesOptions() {
   const niveau = getProfileValue("niveau");
-  let bac =
-    niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
-  if (!bac) bac = "";
+  let bac = getProfileValue("bac");
+  //  niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
+  if (!bac) bac = tousBacs;
+  if (!bac in data.specialitesParBac) bac = tousBacs;
   const optionsSpecialites = {}; //par defaut pas de specialites
-  if (bac == "") {
-    for (const [bac2, liste] of Object.entries(data.specialitesParBac)) {
-      if (!bac2 || bac2 == "") continue;
-      for (const id of liste) {
-        if (id in data.specialites) {
-          optionsSpecialites[id] =
-            "Série " + bac2 + " - " + data.specialites[id];
-        }
-      }
-    }
-  } else if (bac in data.specialitesParBac) {
+  if (bac in data.specialitesParBac) {
     const optionsSpecialitesIds = data.specialitesParBac[bac];
     for (const id of optionsSpecialitesIds) {
       if (id in data.specialites) {
@@ -550,17 +545,14 @@ export function getOrCreateSugg(key, newStatus) {
   let changed = true;
   ensureMandatoryProfileFields();
   let sugg = { fl: key, expl: [{ perso: {} }] }; //important do not include status
-  if (newStatus == SUGG_APPROVED) {
-    const suggs = data.suggestions.filter((s) => s.fl == key);
-    if (suggs.length > 0) {
-      sugg = suggs[0];
-    } else if (key in data.profile.choices) {
-      sugg = data.profile.choices[key];
-    }
+  const suggs = data.profile.choices.filter((s) => s.fl == key);
+  if (suggs.length > 0) {
+    sugg = suggs[0];
+  } else {
+    data.profile.choices.push(sugg);
   }
   changed = sugg.status === undefined || sugg.status !== newStatus;
   sugg.status = newStatus;
-  data.profile.choices[key] = sugg;
   return [sugg, changed];
 }
 
@@ -579,21 +571,6 @@ export function getSuggestionsApproved(profile) {
     (s) => s.status != null && s.status == SUGG_APPROVED
   );
 }
-/*
-export function getSuggestion(grpid) {
-  ensureMandatoryProfileFields();
-  let result = data.profile.choices[grpid];
-  if (result) return result;
-  for (const sugg of data.suggestions) {
-    if (
-      sugg.fl == grpid ||
-      (data.groupToKeys[sugg.fl] && data.groupToKeys[sugg.fl].includes(grpid))
-    ) {
-      return sugg;
-    }
-  }
-  return null;
-}*/
 
 function filterMap(m, f) {
   return Object.fromEntries(Object.entries(m).filter((e) => f(e[1])));
@@ -612,7 +589,7 @@ export function removeFromBin(id) {
 
 export function getSuggestionsWaiting() {
   ensureMandatoryProfileFields();
-  return data.suggestions;
+  return [];
 }
 
 function getNotes(topic) {
@@ -651,17 +628,36 @@ export function getScore(key) {
   return result === undefined ? 0 : result;
 }
 
+export function getProfileKeys() {
+  const result = [];
+  if (data.profile.scores !== undefined) {
+    for (const key in data.profile.scores) {
+      if (data.profile.scores[key] !== 0 && data.profile.scores[key] !== "0") {
+        result.push(key);
+      }
+    }
+  }
+  for (const sugg of data.profile.choices) {
+    if (sugg.status == SUGG_APPROVED) result.push(sugg.fl);
+  }
+  return result;
+}
+
 export function isFavoris(key) {
-  return (
-    key in data.profile.choices &&
-    data.profile.choices[key].status == SUGG_APPROVED
-  );
+  for (const sugg of data.profile.choices) {
+    if (sugg.fl === key && sugg.status === SUGG_APPROVED) {
+      return true;
+    }
+  }
+  return false;
 }
 export function isInBin(key) {
-  return (
-    key in data.profile.choices &&
-    data.profile.choices[key].status == SUGG_REJECTED
-  );
+  for (const sugg of data.profile.choices) {
+    if (sugg.fl === key && sugg.status === SUGG_REJECTED) {
+      return true;
+    }
+  }
+  return false;
 }
 export function isZeroScore(key) {
   if (data.profile.scores === undefined) return undefined;
@@ -738,6 +734,25 @@ export function postLoad() {
 
   //create metiers to formatiosn
   createMetiersToFormations();
+
+  //select one id per Interest  groups
+  createKeysForGroups();
+}
+
+function createKeysForGroups() {
+  let i = 0;
+  for (const group of data.interestsGroups) {
+    group.key = "group_interest_" + i++;
+    for (const item of group.items) {
+      if (item.keys === undefined || item.keys.length == 0)
+        throw new Error("Empty group");
+      item.key = item.keys[0];
+    }
+  }
+  i = 0;
+  for (const group of data.domainesPro) {
+    group.key = "group_domaine_pro_" + i++;
+  }
 }
 
 function createMetiersToFormations() {
@@ -806,7 +821,7 @@ export function getEDSData(grp) {
   return null;
 }
 
-function updateAutoComplete() {
+export function updateAutoComplete() {
   data.srcAutoComplete.geo_pref = data.cities;
   data.srcAutoComplete.motscles = Object.keys(data.tagsSources);
   data.srcAutoComplete.thematiques = data.thematiques;

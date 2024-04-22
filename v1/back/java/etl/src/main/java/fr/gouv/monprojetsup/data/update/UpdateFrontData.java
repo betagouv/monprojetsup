@@ -3,12 +3,12 @@ package fr.gouv.monprojetsup.data.update;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.analysis.eds.AnalyzeEDS;
+import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.cities.CitiesFront;
 import fr.gouv.monprojetsup.data.model.cities.CitiesLoader;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.model.eds.Attendus;
+import fr.gouv.monprojetsup.data.model.attendus.Attendus;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
@@ -116,7 +116,7 @@ public class UpdateFrontData {
             LOGGER.info("Declared fields in ProfileDTO " + declaredfields);
 
             DataContainer answer = new DataContainer(
-                    SpecialitesLoader.load(),
+                    SpecialitesLoader.load(ServerData.statistiques),
                     CitiesLoader.loadCitiesFront(),
                     tags,
                     descriptifs,
@@ -174,7 +174,8 @@ public class UpdateFrontData {
 
             Map<String, String> summaries = Serialisation.fromJsonFile(
                     DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH),
-                    new TypeToken<Map<String, String>>(){}.getType()
+                    new TypeToken<>() {
+                    }.getType()
             );
             descriptifs.inject(summaries);
 
@@ -274,10 +275,10 @@ public class UpdateFrontData {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });
 
-        Map<String, Attendus> eds = AnalyzeEDS.getEDSSimple(
+        Map<String, Attendus> eds = Attendus.getAttendus(
                 psupData,
                 data,
-                SpecialitesLoader.load(),
+                SpecialitesLoader.load(ServerData.statistiques),
                 false
         );
         DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds);

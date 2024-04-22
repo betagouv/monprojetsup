@@ -1,10 +1,8 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
-import fr.gouv.monprojetsup.app.services.profiles.AddMessageService
-import fr.gouv.monprojetsup.app.services.profiles.GetMessagesService
-import fr.gouv.monprojetsup.app.services.profiles.GetMyProfileService
-import fr.gouv.monprojetsup.app.services.profiles.UpdateProfileService
+import fr.gouv.monprojetsup.app.services.info.SearchService
+import fr.gouv.monprojetsup.app.services.profiles.*
 import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.*
 
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("$BASE_PATH/profile")
 class ProfileControilers(
     val getMyProfileService: GetMyProfileService,
+    val getMySelectionService: GetMySelectionService,
     val updateProfileService: UpdateProfileService,
     val addMessageService: AddMessageService,
     val getMessagesService: GetMessagesService
@@ -20,6 +19,11 @@ class ProfileControilers(
     @PostMapping("/get")
     fun getProfile(@RequestBody request: Server.BasicRequest): GetMyProfileService.Response {
         return getMyProfileService.handleRequestAndExceptions(request)
+    }
+
+    @PostMapping("/favoris")
+    fun getSelection(@RequestBody request: Server.BasicRequest): SearchService.Response {
+        return getMySelectionService.handleRequestAndExceptions(request)
     }
 
     @PostMapping("/update")

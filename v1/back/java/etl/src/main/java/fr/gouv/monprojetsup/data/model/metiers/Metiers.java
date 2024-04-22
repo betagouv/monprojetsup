@@ -3,6 +3,8 @@ package fr.gouv.monprojetsup.data.model.metiers;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.MetierOnisep;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,12 +61,24 @@ public record Metiers(
         return metiers.get(findMetierKey(metierLabel.trim()));
     }
 
-    public List<String> extractMetiersKeys(String substring) {
+    /**
+     * Extracts metiers from a string, separated by ,;:. or .
+     * @param substring
+     * @return list of (MET_xxx, original text, metier)
+     */
+    public List<Triple<String,String,Metier>> extractMetiers(String substring) {
         return Arrays.stream(substring.split("[;:,;.]"))
-                .map(s -> findMetierKey(s.trim()))
-                .filter(Objects::nonNull)
+                .map(String::trim)
+                .map(s -> Pair.of(findMetierKey(s),s))
+                .filter(p -> p.getLeft() != null)
+                .map(p -> Triple.of(p.getLeft(),p.getRight(), metiers.get(p.getLeft())))
                 .collect(Collectors.toList());
     }
+
+    public List<String> extractMetiersKeys(String substring) {
+        return extractMetiers(substring).stream().map(Triple::getLeft).collect(Collectors.toList());
+    }
+
 
     public void inject(MetiersScrapped other) {
         other.metiers().values().forEach(m -> {
@@ -81,6 +95,7 @@ public record Metiers(
             }
         });
     }
+
 
     public record Metier(
             String lib,

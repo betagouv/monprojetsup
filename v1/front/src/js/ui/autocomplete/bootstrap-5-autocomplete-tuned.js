@@ -25,7 +25,9 @@ export default class Autocomplete {
     field.setAttribute("data-bs-toggle", "dropdown");
     field.classList.add("dropdown-toggle");
 
-    const dropdown = ce(`<div class="dropdown-menu"></div>`);
+    const dropdown = ce(
+      `<div class="dropdown-menu dropdown-menu-autocomplete"></div>`
+    );
     if (this.options.dropdownClass)
       dropdown.classList.add(this.options.dropdownClass);
 
@@ -98,7 +100,7 @@ export default class Autocomplete {
     }
 
     return ce(
-      `<button type="button" class="dropdown-item" data-label="${item.label}" data-value="${item.value}" data-key="${item.key}">${label}</button>`
+      `<button type="button" class="dropdown-item dropdown-item-autocomplete" data-label="${item.label}" data-value="${item.value}" data-key="${item.key}">${label}</button>`
     );
   }
 
@@ -233,9 +235,7 @@ export default class Autocomplete {
         this.options.updateListHandler([]);
       }
       if (!this.options.maskList) {
-        const noresult = ce(
-          `<div class="text-danger dropdown-item">Aucun résultat</div>`
-        );
+        const noresult = ce(`<div class="dropdown-item">Aucun résultat</div>`);
         noresult.addEventListener("click", (e) => {
           this.field.value = "";
           this.dropdown.hide();
@@ -314,7 +314,9 @@ export default class Autocomplete {
               this.options.onSelectItems(stringSearch, liste);
             }
 
+            //this.dropdown.show();
             this.dropdown.hide();
+            this.field.click();
           });
         });
     }

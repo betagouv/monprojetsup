@@ -10,7 +10,7 @@ import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
 import fr.gouv.monprojetsup.app.dto.GroupDTO;
-import fr.gouv.monprojetsup.app.dto.ProfileDTO;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.ServerError;
 import fr.gouv.monprojetsup.app.log.ServerTrace;
 import fr.gouv.monprojetsup.app.server.WebServer;
@@ -697,7 +697,7 @@ public class DBMongo extends DB implements Closeable {
         }
 
         Credential cred = Credential.getNewCredential(data.password());
-        Profile pf = Profile.getNewProfile(login);
+        Profile pf = Profile.getNewProfile(login, data.nom(), data.prenom());
 
         String emailToken = confirmEmailOnAccountCreation ? RandomStringUtils.random(64, true, false) : null;
 
@@ -779,7 +779,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public ProfileDTO getGroupMemberProfile(String grpId, String memberLogin) throws DBExceptions.ModelException {
+    public ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws DBExceptions.ModelException {
         @NotNull Group group = findGroup(grpId);
         if (!group.hasMember(memberLogin)) {
             return null;

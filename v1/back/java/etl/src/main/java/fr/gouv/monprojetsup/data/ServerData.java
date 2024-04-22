@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
+import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
@@ -10,6 +11,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.update.BackEndData;
+import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
@@ -17,15 +19,16 @@ import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
@@ -41,6 +44,10 @@ public class ServerData {
     public static PsupStatistiques statistiques;
     public static OnisepData onisepData;
     public static JsonCarte carte;
+
+    /* la liste des filières groupées visibles dans le front */
+    public static final Set<String> filieresFront = new HashSet<>();
+
     public static TagsSources tagsSources;
 
     public static Map<String, Set<String>> liensSecteursMetiers;
@@ -50,7 +57,6 @@ public class ServerData {
     public static final Map<String, Set<String>> reverseFlGroups = new HashMap<>();
 
     public static Specialites specialites;
-    public static Map<String, Integer> codesSpecialites = new HashMap<>();
 
     //regroupement des filieres
     public static Map<String, String> flGroups = null;
@@ -73,7 +79,7 @@ public class ServerData {
      */
     public static synchronized void load() throws IOException {
 
-        if(dataLoaded) return;
+        if (dataLoaded) return;
 
         DataServerConfig.load();
 
@@ -84,17 +90,12 @@ public class ServerData {
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
 
-        ServerData.specialites = SpecialitesLoader.load();
-        ServerData.specialites.specialites().forEach((iMtCod, s) -> ServerData.codesSpecialites.put(s, iMtCod));
 
         ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
         ServerData.statistiques.removeSmallPopulations();
 
-        ServerData.statistiques =
-                Serialisation.fromZippedJson(
-                        DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-                        PsupStatistiques.class
-                );
+        ServerData.specialites = SpecialitesLoader.load(ServerData.statistiques);
+
         /* can be deleted afte rnext data update */
         ServerData.statistiques.rebuildMiddle50();
         ServerData.statistiques.createGroupAdmisStatistique(reverseFlGroups);
@@ -102,19 +103,75 @@ public class ServerData {
 
         ServerData.updateLabelsForDebug();
 
-        liensSecteursMetiers  = OnisepData.getSecteursVersMetiers(
+        liensSecteursMetiers = OnisepData.getSecteursVersMetiers(
                 onisepData.fichesMetiers(),
                 onisepData.formations().getFormationsDuSup()
         );
-        liensDomainesMetiers  = OnisepData.getDomainesVersMetiers(onisepData.metiers());
+        liensDomainesMetiers = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
         Distances.init();
 
+        filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toList()));
+        filieresFront.removeAll(flGroups.keySet());
+        filieresFront.addAll(flGroups.values());
+
         tagsSources = TagsSources.load(backPsupData.getCorrespondances());
+        val metiersVersFormations = getMetiersVersFormations();
+        filieresFront.forEach(filiere -> {
+            tagsSources.add(getLabel(filiere), filiere);
+            getMetiersAssocies(filiere, metiersVersFormations).forEach(
+                    metier -> {
+                        tagsSources.add(getLabel(metier), filiere);
+                    });
+        });
+
+        tagsSources.normalize();
+
+        Serialisation.toJsonFile("tagsSources.json", tagsSources, true);
 
         dataLoaded = true;
     }
 
+    private static Collection<String> getMetiersAssocies(String filiere, Map<String, Set<String>> metiersVersFormations) {
+        Set<String> result = new HashSet<>();
+        result.addAll(metiersVersFormations.entrySet().stream().filter(e -> e.getValue().contains(filiere)).map(Map.Entry::getKey).collect(Collectors.toSet()));
+        if(statistiques.getLASCorrespondance().isLas(filiere)) {
+            result.addAll(getMetiersAssocies(gFlCodToFrontId(PASS_FL_COD), metiersVersFormations));
+        }
+        if(reverseFlGroups.containsKey(filiere)) {
+            result.addAll(reverseFlGroups.get(filiere)
+                    .stream()
+                    .filter(f -> f != filiere)
+                    .flatMap(f -> getMetiersAssocies(f, metiersVersFormations).stream()).collect(Collectors.toSet()));
+        }
+        return result;
+    }
+
+    public static @NotNull Map<Pair<String,String>,List<String>> getAttendusParGroupes() {
+        Map<Pair<String,String>, List<String>> result = new HashMap<>();
+        backPsupData.filActives().forEach(gFlCod -> {
+            String key = Constants.gFlCodToFrontId(gFlCod);
+            String label = getDebugLabel(key);
+            if(label != null) {
+                val attendus = backPsupData.getAttendus(gFlCod);
+                val recoPrem = backPsupData.getRecoPremGeneriques(gFlCod);
+                val recoTerm = backPsupData.getRecoTermGeneriques(gFlCod);
+                if(attendus != null) {
+                    val p = Pair.of("attendus", attendus);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+                if(recoPrem != null) {
+                    val p = Pair.of("recoPrem", recoPrem);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+                if(recoTerm != null) {
+                    val p = Pair.of("recoTerm", recoTerm);
+                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+                }
+            }
+        });
+        return result;
+    }
     private static void loadBackEndData() throws IOException {
 
         BackEndData backendData = Serialisation.fromZippedJson(DataSources.getBackDataFilePath(), BackEndData.class);
@@ -317,15 +374,39 @@ public class ServerData {
 
         List<String> tags = Arrays.stream(
                 searchString.replaceAll("[-,_()]", " ").split(" ")
-        ).filter(s -> !s.isBlank()).toList();
+        )
+                .map(String::toLowerCase)
+                .map(w -> Normalizer.normalize(w, Normalizer.Form.NFD))
+                .filter(s -> !s.isBlank()).toList();
 
-        if(tags.isEmpty()) {
-            return tagsSources.sources().values().stream().flatMap(Set::stream).filter(s -> isFiliere(s)).collect(Collectors.toSet());
-        }
-        boolean allformationsandNoMetier = tags.isEmpty();
+        Set<String> result = tagsSources.getPrefixMatches(tags, filieresFront);
 
+        return result;
+    }
 
-        return tagsSources.getPrefixMatches(tags);
+    public static Map<String, Set<String>> getMetiersVersFormations() throws IOException {
+        Descriptifs descriptifs = UpdateFrontData.DataContainer.loadDescriptifs(
+                onisepData,
+                backPsupData.getCorrespondances(),
+                statistiques.getLASCorrespondance().lasToGeneric()
+        );
+
+        return onisepData.getExtendedMetiersVersFormations(
+                backPsupData.getCorrespondances(),
+                statistiques.getLASCorrespondance(),
+                descriptifs
+        );
+
+    }
+
+    public static Set<String> getMetiersPass(Map<String, Set<String>> metiersVersFormation) throws IOException {
+        String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
+
+        Set<String> metiersPass = metiersVersFormation.entrySet().stream()
+                .filter(e -> e.getValue().contains( passKey))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+        return metiersPass;
     }
 }
 

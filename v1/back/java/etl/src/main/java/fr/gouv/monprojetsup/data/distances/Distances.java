@@ -96,7 +96,7 @@ public class Distances {
     public static List<String> getCities(String flKey, Set<String> favorites) {
 
         List<Coords> cities = favorites.stream().flatMap(
-                cityName -> cityClientKeyToCities.getOrDefault(cityName,List.of()).stream()).distinct().toList();
+                cityName -> cityClientKeyToCities.getOrDefault(cityName, List.of()).stream()).distinct().toList();
         if (cities.isEmpty())
             return Collections.emptyList();
 
@@ -108,14 +108,12 @@ public class Distances {
                 .stream()
                 .filter(f -> f.lat != null)
                 .forEach(f -> {
-            Etablissement etablissement = ServerData.carte.etablissements.get( f.etablissement);
-            if(etablissement != null) {
-                String city = etablissement.getNm();
-                double distance = cities.stream().mapToDouble(c -> distance(c.gps_lat(), c.gps_lng(), f.lat, f.lng))
-                        .min().orElse(Double.MAX_VALUE);
-                citiesDistances.put(city, min(citiesDistances.getOrDefault(city, Double.MAX_VALUE), distance));
-            }
-        });
+                    double distance = cities.stream().mapToDouble(c -> distance(c.gps_lat(), c.gps_lng(), f.lat, f.lng))
+                            .min().orElse(Double.MAX_VALUE);
+                    if (f.commune != null && !f.commune.isEmpty()) {
+                        citiesDistances.put(f.commune, min(citiesDistances.getOrDefault(f.commune, Double.MAX_VALUE), distance));
+                    }
+                });
 
         return citiesDistances.keySet().stream().sorted(Comparator.comparing(citiesDistances::get)).toList();
     }

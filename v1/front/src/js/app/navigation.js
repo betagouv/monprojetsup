@@ -1,8 +1,11 @@
 import * as ui from "../ui/ui";
 import * as session from "./session";
 import * as app from "./app";
-
+import * as events from "../app/events";
 import $ from "jquery";
+import * as data from "./../data/data";
+import * as autocomplete from "./../ui/autocomplete/autocomplete";
+
 /** handles navigation between screens  */
 
 const screens = [
@@ -15,6 +18,7 @@ const screens = [
   "board",
   "selection",
   "groupes",
+  "profil",
 ];
 
 export function setScreen(screen) {
@@ -47,38 +51,82 @@ function doTransition(old_screen, new_screen) {
 }
 
 function init_main_nav() {
-  $("#header-navigation a").on("click", async function () {
-    const id = $(this).attr("id");
-    const screen = id.replace("nav-", "");
+  $(".set-screen").on("click", async function () {
+    const screen = $(this).attr("screen");
     setScreen(screen);
-    //await ui.showConnectedScreen(screen);
-    //init_main_nav();
+  });
+  $(".disconnect").show();
+  $(".disconnect").on("click", async function () {
+    app.disconnect();
+    $(".disconnect").hide();
   });
 }
+
+async function updateRecherche() {
+  let str = $("#search-784-input").val();
+  if (str === null || str === undefined) str = "";
+  ui.showWaitingMessage();
+  const msg = await app.doSearch(str);
+  ui.showRechercheData(msg.details);
+  $("#search-button").on("click", updateRecherche);
+  $("#search-784-input").on("keypress", function (event) {
+    // Check if the key pressed is Enter
+    if (event.key === "Enter") {
+      updateRecherche();
+    }
+  });
+
+  $("#add-to-favorites-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+      ui.updateFav(id)
+    );
+  });
+  $("#formation-details-header-nav-central-icon").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+      ui.updateFav(id)
+    );
+  });
+  $("#add-to-bin-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.changeSuggestionStatus(id, data.SUGG_REJECTED, () =>
+      ui.updateFav(id)
+    );
+  });
+}
+async function updateSelection() {
+  ui.showWaitingMessage();
+  const msg = await app.getSelection();
+  ui.showFavoris(msg.details);
+  $("#add-to-bin-btn").on("click", function () {
+    const id = $(this).attr("data-id");
+    events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+      ui.updateFav(id);
+      const msg = await app.getSelection();
+      ui.showFavoris(msg.details);
+    });
+  });
+}
+
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
-    $("#search-784-input").off("input");
-    $("#search-784-input").val("");
-
-    const msg = await app.doSearch("");
-    await ui.showRecherche(msg.details);
-
-    $("#search-784-input").on("input", async () => {
-      const str = $("#search-784-input").val();
-      const msg = await app.doSearch(str);
-      await ui.showRecherche(msg.details);
-    });
-
+    await ui.showRechercheScreen();
     init_main_nav();
+    $("#search-784-input").val("");
+    await updateRecherche();
   },
   board: async () => {
     await ui.showBoard();
+    const prenom = data.getPrenom();
+    $(".ravi-div-prenom").html(prenom);
     init_main_nav();
   },
   selection: async () => {
     await ui.showSelection();
     init_main_nav();
+    await updateSelection();
   },
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),
@@ -86,15 +134,91 @@ const screen_enter_handlers = {
     refreshGroupTab(false);
     ui.showGroupsTab();
   },
+  profil: async () => {
+    await app.getProfile();
+    await ui.showProfileScreen();
+    setUpAutoComplete("spe_classes", 0);
+    setUpAutoComplete("geo_pref", 2);
+    setUpMultiChoices();
+    //todo register save handlers
+    updateProfile();
+    init_main_nav();
+  },
 };
 const screen_exit_handlers = {};
 
+function setUpMultiChoices() {
+  //multi-options-item
+  $(".multi-options-item")
+    .off("click")
+    .on("click", function () {
+      const key = $(this).attr("key");
+      events.toggleProfileScoreHandler(key);
+      const selected = data.isSelected(key);
+      $(this).toggleClass("selected", selected);
+    });
+}
+
+function setUpAutoComplete(id, threshold) {
+  data.updateAutoComplete();
+  const show = autocomplete.setUpAutoComplete(
+    id,
+    (key, label, value) => {
+      events.addElementToProfileListHandler(id, label);
+    },
+    (key, label, value) => {
+      events.removeElementFromProfileList(id, value);
+    },
+    (resultNb, lookupLength, lookupLengthThreshold) => {
+      autoCompleteFeedbackHandler(
+        id,
+        resultNb,
+        lookupLength,
+        lookupLengthThreshold
+      );
+    },
+    threshold
+  );
+  if (id === "spe_classes") {
+    $("#autocomplete_group_spe_classes").toggle(show);
+  }
+}
+
+function autoCompleteFeedbackHandler(
+  id,
+  resultNb,
+  lookupLength,
+  lookupLengthThreshold
+) {
+  const feedbackDom = $(`#${id}_autocomplete_feedback`);
+  feedbackDom.removeClass("text-success");
+  feedbackDom.removeClass("text-warning");
+  feedbackDom.removeClass("text-danger");
+  if (resultNb == 0 && lookupLength == 0) {
+    feedbackDom.html("&nbsp;");
+  } else if (resultNb == 0 && lookupLength < lookupLengthThreshold) {
+    feedbackDom.addClass("text-warning");
+    feedbackDom.html("Mot trop court");
+  } else if (resultNb == 0 && lookupLength >= lookupLengthThreshold) {
+    feedbackDom.addClass("text-danger");
+    feedbackDom.html("Aucun résultat");
+  } else if (resultNb == 1) {
+    feedbackDom.html(`1 résultat`);
+  } else if (resultNb > 1) {
+    feedbackDom.html(`${resultNb} résultats`);
+  }
+}
+
 function enterScreen(screen) {
   if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
-    screen_enter_handlers[screen]().then(() => {
-      $("#nextButton").off().on("click", next);
-      $("#backButton").off().on("click", back);
-    });
+    screen_enter_handlers[screen]()
+      .catch((error) => {
+        console.error("Error in enterScreen", screen, error);
+      })
+      .then(() => {
+        $("#nextButton").off().on("click", next);
+        $("#backButton").off().on("click", back);
+      });
   } else {
     ui.showLandingScreen();
   }
@@ -183,4 +307,51 @@ function validateInscription2() {
       password: mdp,
     });
   }
+}
+
+function getSelectVal(id) {
+  const val = $(id).val();
+  if (val === null) return "";
+  return val;
+}
+function setSelectVal(id, val) {
+  $(id).val(val);
+}
+
+function updateProfile() {
+  const selects = {
+    niveau: "#profile-tab-scolarite-classe-select",
+    bac: "#profile-tab-scolarite-bac-select",
+    duree: "#profile-tab-etudes-duree-select",
+    apprentissage: "#profile-tab-etudes-app-select",
+  };
+  for (const key in selects) {
+    const id = selects[key];
+    setSelectVal(id, data.getProfileValue(key));
+  }
+  $(".profile-select").on("change", function () {
+    const key = $(this).attr("key");
+    const val = $(this).val();
+    events.profileValueChangedHandler2(key, val);
+    if (key == "bac") {
+      setUpAutoComplete("spe_classes", 0);
+    }
+  });
+  /*
+  $(".save-profile-button").on("click", function () {
+    const pf = {};
+    const category = $(this).attr("category");
+    if (category === "scolarite") {
+      const classe = getSelectVal("#profile-tab-scolarite-classe-select");
+      const bac = getSelectVal("#profile-tab-scolarite-bac-select");
+      events.profileValueChangedHandler2("niveau", classe);
+      events.profileValueChangedHandler2("bac", bac);
+    }
+    if (category === "etudes") {
+      const duree = getSelectVal("#profile-tab-etudes-duree-select");
+      const app = getSelectVal("#profile-tab-etudes-app-select");
+      events.profileValueChangedHandler2("duree", duree);
+      events.profileValueChangedHandler2("apprentissage", app);
+    }
+  });*/
 }

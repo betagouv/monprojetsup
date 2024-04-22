@@ -3,7 +3,7 @@ services:
   web:
     image: monprojetsup
     ports:
-      - "8005:8005"
+      - "8006:8006"
     volumes:
       - /Users/gimbert/Code/monprojetsup/back/java/docker/serverConfig.json:/serverConfig.json
       - /Users/gimbert/Code/monprojetsup/back/java/docker/suggestionsConfig.json:/suggestionsConfig.json

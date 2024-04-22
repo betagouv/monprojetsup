@@ -35,6 +35,7 @@ import * as data from "./../data/data";
 import * as connect from "./account/connect";
 import * as bin from "./tabs/bin";
 import * as session from "../app/session";
+import * as params from "../config/params";
 
 //import * as bsp from bootstrap-show-password;
 
@@ -109,6 +110,106 @@ export async function showConnectedScreen(subscreen) {
   $(`#myTabContent`).html(html);
 }
 
+function injectInSelect($select, data) {
+  for (const [key, value] of Object.entries(data)) {
+    $select.append(`<option value="${key}">${value}</option>`);
+  }
+}
+
+function injectInMultiOptions($accordions_group, menus) {
+  for (const menu of menus) {
+    let emoji1 = menu.emoji;
+    let emoji2 = "";
+    if (emoji1 === undefined || emoji1 == "") {
+      emoji1 = "";
+      for (const item of menu.items) {
+        if (item.emoji) {
+          emoji2 = emoji2 + "&nbsp;&nbsp;" + item.emoji;
+        }
+      }
+    }
+    const $menu = $(`      
+      <section class="fr-accordion multi-options-group">
+        <h3 class="fr-accordion__title muti-options-group-header">
+          <button
+            class="fr-accordion__btn "
+            aria-expanded="false"
+            aria-controls="accordion-${menu.key}"
+          >
+            <span class="multi-options-group-emojis">${emoji1}</span>
+            ${menu.label}
+            <span class="multi-options-group-emojis">${emoji2}</span>
+          </button>
+        </h3>
+        <div class="fr-collapse muti-options-group-content" id="accordion-${menu.key}">
+        <div class="multi-options-group-list">
+        </div>
+        </div>
+      </section>`);
+    const $ul = $(`.multi-options-group-list`, $menu);
+    for (const item of menu.items) {
+      const emoji2 = item.emoji ? item.emoji : "";
+      let key = item.key;
+      if (key === undefined) key = item.id;
+      if (key === undefined) continue;
+      $ul.append(
+        `<div class="multi-options-item multi-options-item_${key}" key="${key}"><span class="multi-options-item-emoji">${emoji2}</span>${item.label}</div>`
+      );
+    }
+    $accordions_group.append($menu);
+  }
+}
+
+async function injectProfileTab(tabName) {
+  console.log("Injecting profile tab " + tabName);
+  const html = await fetchData("profil/" + tabName);
+  console.log("Fetched " + tabName);
+  const $div = $(`#tab-${tabName}-panel`);
+  if ($div.length == 0) {
+    throw Error(`no div #tab-${tabName}-panel`);
+  }
+  $div.html(html);
+  if (tabName === "scolarite") {
+    injectInSelect(
+      $("#profile-tab-scolarite-classe-select", $div),
+      params.classes
+    );
+    injectInSelect($("#profile-tab-scolarite-bac-select", $div), params.bacs);
+  }
+  if (tabName === "etudes") {
+    injectInSelect($("#profile-tab-etudes-duree-select", $div), params.durees);
+    injectInSelect($("#profile-tab-etudes-app-select", $div), params.apps);
+  }
+  if (tabName === "domaines_pro") {
+    injectInMultiOptions(
+      $("#profile-items-domaines-pro", $div),
+      data.getDomainesPro()
+    );
+    updateMultiOptionsItemsStatus();
+  }
+  if (tabName === "interests") {
+    injectInMultiOptions(
+      $("#profile-items-interests", $div),
+      data.getInterests()
+    );
+    updateMultiOptionsItemsStatus();
+  }
+  console.log("Intitialized profile tab " + tabName);
+}
+
+export function updateMultiOptionsItemsStatus() {
+  //for every key in the profile, update the status of the corresponding item
+  //multi-options-item_${key}
+  const keys = data.getProfileKeys();
+  $(`.multi-options-item`).removeClass("selected");
+  for (const key of keys) {
+    const $divs = $(`.multi-options-item_${key}`);
+    if ($divs.length > 0) {
+      $divs.addClass("selected");
+    }
+  }
+}
+
 export function injectHtml() {
   const m = {
     "header.html": "header-placeholder",
@@ -136,6 +237,10 @@ export async function showConnectionScreen() {
 export async function showLandingScreen() {
   //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
+  $("#main-placeholder").css({
+    "background-image": 'url("../img/bg.svg")',
+  });
+  $(".disconnect").hide();
   $("#landing-placeholder")
     .off()
     .on("click", () => {
@@ -144,50 +249,168 @@ export async function showLandingScreen() {
 }
 
 export async function showInscriptionScreen1() {
-  await showSubScreen("inscription1");
+  return showSubScreen("inscription1");
 }
 export async function showInscriptionScreen2() {
-  await showSubScreen("inscription2");
+  return showSubScreen("inscription2");
 }
 export async function showBoard() {
-  await showConnectedScreen("board");
+  $("#main-placeholder").css({
+    "background-image": "none",
+  });
+
+  return showConnectedScreen("board");
 }
 export async function showSelection() {
-  await showConnectedScreen("selection");
+  return showConnectedScreen("selection");
+}
+export async function showRechercheScreen() {
+  await showConnectedScreen("recherche");
+}
+export async function showProfileScreen() {
+  $("#main-placeholder").css({
+    "background-image": "none",
+  });
+  await showConnectedScreen("profile");
+  //inject profile data
+  await injectProfileTab("scolarite");
+  await injectProfileTab("etudes");
+  await injectProfileTab("domaines_pro");
+  await injectProfileTab("interests");
+  $(".profile-div-prenomnom").html(data.getPrenomNom());
+  $(".profile-div-email").html(session.getLogin());
 }
 
-export async function showRecherche(data) {
-  await showConnectedScreen("recherche");
+export function showWaitingMessage() {
+  $("#explore-div-wait").show();
+  $("#explore-div-resultats").hide();
+}
+export function showRechercheData(data) {
   clearAffinityCards();
-  for (let i = 0; i < 20; i++) {
-    if (i >= data.length) break;
+  $("#explore-div-wait").hide();
+  $("#explore-div-resultats").show();
+  const nbResults = data.length;
+  $("#search-results-nb").html(nbResults);
+  for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
     if (i == 0) {
-      displayFormationDetails(dat);
+      displayItemDetails(dat, false);
     }
-    addAffinityCard(dat);
+    addAffinityCard(dat, false);
   }
+  //like and dislike handlers
 }
 
-function clearAffinityCards() {
-  $("#explore-div-resultats-left-liste").empty();
+export function showFavoris(data) {
+  clearAffinityCards();
+  $("#explore-div-wait").hide();
+  $("#explore-div-resultats").show();
+
+  const nbResults = data.length;
+  $("#search-results-nb").html(nbResults);
+  for (let i = 0; i < nbResults; i++) {
+    const dat = data[i];
+    if (i == 0) {
+      displayItemDetails(dat, true);
+    }
+    addAffinityCard(dat, true);
+  }
+  //like and dislike handlers
 }
-function addAffinityCard(dat) {
+
+export function clearAffinityCards() {
+  $("#explore-div-resultats-left-liste").empty();
+  $("#explore-div-resultats-right").hide();
+  $("#explore-div-resultats-left-noresult").show();
+  $("#explore-div-resultats-left-entete").hide();
+}
+function addAffinityCard(dat, nodetails) {
+  $("#explore-div-resultats-left-noresult").hide();
+  $("#explore-div-resultats-left-entete").show();
+
   const $div = buildAffinityCard(
     dat.key,
+    dat.fav,
     dat.type,
     dat.affinity,
     dat.cities,
-    dat.examples
+    dat.examples,
+    nodetails
   );
+  updateFav(dat.key);
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
-    displayFormationDetails(dat);
+    displayItemDetails(dat, nodetails);
   });
 }
 
-function displayFormationDetails(dat) {
+let currentKeyDisplayed = "";
+
+function displayItemDetails(dat, nodetails) {
   const key = dat.key;
+  const isMetier = data.isMetier(key);
+  if (isMetier) {
+    $(".explore-specific-formation").hide();
+    $(".explore-specific-metier").show();
+    displayMetierDetails(dat, nodetails);
+  } else {
+    $(".explore-specific-formation").show();
+    $(".explore-specific-metier").hide();
+    displayFormationDetails(dat, nodetails);
+  }
+  $("#add-to-favorites-btn").attr("data-id", key);
+  $("#add-to-bin-btn").attr("data-id", key);
+  $("#formation-details-header-nav-central-icon").attr("data-id", key);
+  currentKeyDisplayed = key;
+  updateFav(dat.key);
+}
+
+function displayMetierDetails(dat) {
+  $("#explore-div-resultats-right").show();
+  const key = dat.key;
+  //title
+  const label = data.getLabel(key);
+  $(".formation-details-title").html(label);
+  //summary
+  displaySummary(key);
+  //Explication
+  const devMode = false;
+  displayExplanations(dat.explanations, devMode);
+  //exemples
+  displayMetiers(dat.examples);
+}
+
+export function updateFav(key) {
+  const fav = data.isFavoris(key);
+  if (key == currentKeyDisplayed) {
+    if (fav) {
+      $("#add-to-favorites-btn").html("Ajouté à ma sélection");
+      $("#add-to-favorites-btn").addClass("activated");
+      $("#add-to-favorites-btn").addClass("favori");
+      $("#add-to-bin-btn").html("Plus intéressé");
+      $(`#formation-details-header-nav-central-icon`)
+        .removeClass("fr-icon-heart-line")
+        .addClass("fr-icon-heart-fill");
+    } else {
+      $("#add-to-favorites-btn").html("Ajouter à ma sélection");
+      $("#add-to-bin-btn").html("Pas intéressé");
+      $("#add-to-favorites-btn").removeClass("activated");
+      $("#add-to-favorites-btn").removeClass("favori");
+      $(`#formation-details-header-nav-central-icon`)
+        .removeClass("fr-icon-heart-fill")
+        .addClass("fr-icon-heart-line");
+    }
+  }
+  $(`.icon-favorite_${key}`).toggle(fav);
+}
+
+function displayFormationDetails(dat) {
+  $("#explore-div-resultats-right").show();
+
+  updateFav(dat.key);
+
+  const key = dat.key;
+
   //title
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
@@ -209,8 +432,10 @@ function displayFormationDetails(dat) {
 function displaySummary(key) {
   const summary = data.getSummary(key);
   if (summary && summary.length > 0) {
+    const cleanup = summary.replaceAll("h3", "p").replaceAll("h2", "p");
+
+    $(".formation-details-summary").html(cleanup);
     $(".formation-details-summary").show();
-    $(".formation-details-summary").html(summary);
   } else {
     $(".formation-details-summary").hide();
     $(".formation-details-summary").empty();
@@ -398,7 +623,7 @@ function displayExplanations(explications, detailed) {
       "fr-icon-arrow-right-up-line"
     );
   } else if (simis.length > 1) {
-    str.push(
+    addExplanation(
       `Cette formation est similaire à: <em>&quot;${simis.join(
         "&quot;,&quot;"
       )}</em>.</p>`,
@@ -559,15 +784,48 @@ function displayAttendus(key) {
   }
 }
 
-function buildAffinityCard(key, type, affinite, villes, metiers) {
+function buildAffinityCard(
+  key,
+  fav,
+  type,
+  affinite,
+  cities,
+  metiers,
+  nodetails
+) {
+  if (type == "formation")
+    return buildFormationAffinityCard(
+      key,
+      fav,
+      affinite,
+      cities,
+      metiers,
+      nodetails
+    );
+  else return buildMetierAffinityCard(key, fav, metiers, nodetails);
+}
+
+function buildFormationAffinityCard(
+  key,
+  fav,
+  affinite,
+  cities,
+  metiers,
+  nodetails
+) {
   const label = data.getLabel(key);
   const $div = $(`<div class="formation-card">
-          <div class="formation-card-header">
-            <div class="formation-card-header-type">FORMATION</div>
-            <div class="formation-card-header-sep"></div>
+          <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
               Taux d'affinité ${Math.trunc(100 * affinite)}%
             </div>
+            <div class="formation-card-header-sep"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite icon-favorite_${key}"></div>
+          </div>
+          <div class="formation-card-header formation-card-header-nodetail">
+            <div class="formation-card-header-type">FORMATION</div>
+            <div class="formation-card-header-sep"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite icon-favorite_${key}"></div>
           </div>
           <div class="card-formation-title">
             ${label}
@@ -581,18 +839,34 @@ function buildAffinityCard(key, type, affinite, villes, metiers) {
           <div class="card-metiers-list">
           </div>
         </div>`);
-  if (villes.length == 0) {
+  if (nodetails) {
+    $(".formation-card-header-affinity", $div).hide();
+    $(".card-geoloc", $div).hide();
+    $(".card-metiers-header", $div).hide();
+    $(".card-metiers-list", $div).hide();
+    $(".formation-card-header-detail", $div).hide();
+  } else {
+    $(".formation-card-header-nodetail", $div).hide();
+  }
+  if (fav) {
+    $(".icon-favorite", $div).show();
+  } else {
+    $(".icon-favorite", $div).hide();
+  }
+  if (cities.length == 0) {
     $(".card-geoloc", $div).empty();
   } else {
     for (let j = 0; j < 5; j++) {
-      if (j >= villes.length) break;
-      const ville = villes[j];
+      if (j >= cities.length) break;
+      const city = cities[j];
       $(".card-geoloc", $div).append(
-        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + ville
+        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
       );
     }
-    if (villes.length > 5) {
-      $(".card-geoloc", $div).append(`+${villes.length - 5}`);
+    if (cities.length > 5) {
+      $(".card-geoloc", $div).append(
+        `&nbsp;&middot;&nbsp;+${cities.length - 5}`
+      );
     }
   }
 
@@ -611,6 +885,39 @@ function buildAffinityCard(key, type, affinite, villes, metiers) {
         `<div class="card-metier">+${metiers.length - 5}</div>`
       );
   } else {
+    $(".card-metiers-header", $div).empty();
+  }
+  return $div;
+}
+function buildMetierAffinityCard(key, fav, formations, nodetails) {
+  const label = data.getLabel(key);
+  const $div = $(`        <div class="formation-card">
+          <div class="formation-card-header">
+            <div class="metier-card-header-type">METIER</div>
+            <div class="formation-card-header-sep"></div>
+            <div class="metier-card-header-type fr-icon-heart-fill icon-favorite"></div>
+          </div>
+          <div class="card-metier-title">${label}</div>
+          <!--
+          <div class="card-studies-level">
+            <img src="img/arrow-dsfr.svg" alt="arrow" />
+            A partir de Bac + ?
+          </div>-->
+          <div class="card-metiers-header">
+            ${formations.length} formations pour apprendre le métier
+          </div>
+        </div>
+`);
+  if (nodetails) {
+    $(".card-metiers-header", $div).hide();
+  }
+  if (fav) {
+    $(".icon-favorite", $div).show();
+  } else {
+    $(".icon-favorite", $div).hide();
+  }
+
+  if (formations.length == 0) {
     $(".card-metiers-header", $div).empty();
   }
   return $div;
