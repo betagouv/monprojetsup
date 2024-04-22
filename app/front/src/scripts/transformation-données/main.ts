@@ -154,6 +154,20 @@ const main = async () => {
 
   requêteSQL.push(insertFormations);
 
+  // Créer triple_affectation
+  const tripleAffectation = Object.entries(données.psupData.formations.formations).map(([tripleAffectationId, ta]) => {
+    return [`ta${tripleAffectationId}`, ta.libelle, ta.commune, ta.codeCommune, [ta.lat, ta.lng], `fl${ta.gFlCod}`];
+  });
+
+  const insertTripleAffectation = sqlHandler.générerInsert(
+    "triple_affectation",
+    ["id", "nom", "ville", "code_commune", "coordonnees_geographiques", "id_formation"],
+    tripleAffectation,
+  );
+
+  // requêteSQL.push(insertTripleAffectation);
+  sqlHandler.créerFichier("triple-affectation", insertTripleAffectation);
+
   // Créer bacs_specialites
   const bacsSpécialités = Object.entries(données.specialites.specialitesParBac).flatMap(([bacId, spécialitéIds]) =>
     spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId, spécialitéId.toString()]),
