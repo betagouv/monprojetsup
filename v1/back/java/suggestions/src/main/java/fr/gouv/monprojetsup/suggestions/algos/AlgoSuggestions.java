@@ -30,6 +30,7 @@ import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
+import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
 import static java.lang.Math.*;
 
@@ -171,17 +172,20 @@ public class AlgoSuggestions {
         //computing maximal score for etalonnage
         double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
 
-        if(maxScore <= NO_MATCH_SCORE) return List.of();
+        if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
-        pf.suggRejected().forEach(suggestionDTO -> {
-            String fl = suggestionDTO.fl();
-            if(affnites.containsKey(fl)) {
-                affnites.put(fl, NO_MATCH_SCORE);
-            }
-        });
+        if(USE_BIN) {
+            pf.suggRejected().forEach(suggestionDTO -> {
+                String fl = suggestionDTO.fl();
+                if (affnites.containsKey(fl)) {
+                    affnites.put(fl, NO_MATCH_SCORE);
+                }
+            });
+        }
 
         //rounding to 6 digits
-        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / maxScore) * 10e6) / 10e6))));
+        double finalMaxScore = maxScore;
+        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / finalMaxScore) * 10e6) / 10e6))));
         return affnites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight())).toList();
     }
 

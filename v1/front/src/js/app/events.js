@@ -86,16 +86,10 @@ export function toggleProfileScoreHandler(key) {
 
 /**/
 
-function changeSuggestionStatus(id, newStatus, silent) {
+export function changeSuggestionStatus(id, newStatus, handler = null) {
   //toast_accept(id);
   const [sugg, changed] = data.getOrCreateSugg(id, newStatus);
-  if (changed) {
-    ui.updateHearts(id, newStatus == data.SUGG_APPROVED);
-    app.updateSuggestionsAndReloadUI(!silent, [
-      { fl: sugg.fl, status: sugg.status },
-    ]);
-    //ui.updateFavoris();
-  }
+  app.updateSuggestions([{ fl: sugg.fl, status: sugg.status }], handler);
   return changed;
 }
 
@@ -115,6 +109,7 @@ let tutoModalRefusedOpenedOnce = 0;
 export function selectChoice(id, silent) {
   const changed = changeSuggestionStatus(id, data.SUGG_APPROVED, silent);
   if (changed) {
+    /*
     if (++tutoModalOpenedOnce <= 2) {
       const label = data.getLabel(id);
       tunnel.openTutoModal(
@@ -126,6 +121,7 @@ export function selectChoice(id, silent) {
     }
     //toast.toast("", "Ajouté à ta sélection.");
     animate.animateHeart();
+    */
   }
   //todo someday update explanations for this id
   //possible: add one API request

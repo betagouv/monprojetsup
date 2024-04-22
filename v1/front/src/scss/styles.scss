@@ -530,10 +530,17 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   margin-right: 16px;
 }
 
-.formation-details-actions .favori {
+.formation-details-actions .favori,
+.formation-details-actions .favori:hover
+ {
   background: #FFECE7;
     color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
-    ;}
+    pointer-events: none;
+    }
+
+        .fr-icon-heart-line {
+          cursor: pointer;
+        }
 .fr-icon-heart-fill {
   background: #FFECE7;
     color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);

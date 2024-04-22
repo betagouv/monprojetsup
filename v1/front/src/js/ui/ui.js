@@ -325,11 +325,14 @@ function addAffinityCard(dat, nodetails) {
     dat.examples,
     nodetails
   );
+  updateFav(dat.key);
   $("#explore-div-resultats-left-liste").append($div);
   $div.on("click", () => {
     displayItemDetails(dat, nodetails);
   });
 }
+
+let currentKeyDisplayed = "";
 
 function displayItemDetails(dat, nodetails) {
   const key = dat.key;
@@ -346,17 +349,8 @@ function displayItemDetails(dat, nodetails) {
   $("#add-to-favorites-btn").attr("data-id", key);
   $("#add-to-bin-btn").attr("data-id", key);
   $("#formation-details-header-nav-central-icon").attr("data-id", key);
-  if (dat.fav) {
-    $("#add-to-favorites-btn").html("Ajouté à ma sélection");
-    $("#add-to-favorites-btn").addClass("activated");
-    $("#add-to-favorites-btn").addClass("favori");
-    $("#add-to-bin-btn").html("Plus intéressé");
-  } else {
-    $("#add-to-favorites-btn").html("Ajouter à ma sélection");
-    $("#add-to-bin-btn").html("Pas intéressé");
-    $("#add-to-favorites-btn").removeClass("activated");
-    $("#add-to-favorites-btn").removeClass("favori");
-  }
+  currentKeyDisplayed = key;
+  updateFav(dat.key);
 }
 
 function displayMetierDetails(dat) {
@@ -374,23 +368,36 @@ function displayMetierDetails(dat) {
   displayMetiers(dat.examples);
 }
 
+export function updateFav(key) {
+  const fav = data.isFavoris(key);
+  if (key == currentKeyDisplayed) {
+    if (fav) {
+      $("#add-to-favorites-btn").html("Ajouté à ma sélection");
+      $("#add-to-favorites-btn").addClass("activated");
+      $("#add-to-favorites-btn").addClass("favori");
+      $("#add-to-bin-btn").html("Plus intéressé");
+      $(`#formation-details-header-nav-central-icon`)
+        .removeClass("fr-icon-heart-line")
+        .addClass("fr-icon-heart-fill");
+    } else {
+      $("#add-to-favorites-btn").html("Ajouter à ma sélection");
+      $("#add-to-bin-btn").html("Pas intéressé");
+      $("#add-to-favorites-btn").removeClass("activated");
+      $("#add-to-favorites-btn").removeClass("favori");
+      $(`#formation-details-header-nav-central-icon`)
+        .removeClass("fr-icon-heart-fill")
+        .addClass("fr-icon-heart-line");
+    }
+  }
+  $(`.icon-favorite_${key}`).toggle(fav);
+}
+
 function displayFormationDetails(dat) {
   $("#explore-div-resultats-right").show();
 
-  const key = dat.key;
-  const fav = dat.fav;
+  updateFav(dat.key);
 
-  if (fav) {
-    $("#add-to-favorites-btn").addClass("activated");
-    $("#formation-details-header-nav-central-icon")
-      .empty()
-      .append($(`<span class="fr-icon-heart-fill favori"> </span>`));
-  } else {
-    $("#add-to-favorites-btn").removeClass("activated");
-    $("#formation-details-header-nav-central-icon")
-      .empty()
-      .append($(`<span class="fr-icon-heart-line"> </span>`));
-  }
+  const key = dat.key;
 
   //title
   const label = data.getLabel(key);
@@ -801,12 +808,12 @@ function buildFormationAffinityCard(
               Taux d'affinité ${Math.trunc(100 * affinite)}%
             </div>
             <div class="formation-card-header-sep"></div>
-            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite icon-favorite_${key}"></div>
           </div>
           <div class="formation-card-header formation-card-header-nodetail">
             <div class="formation-card-header-type">FORMATION</div>
             <div class="formation-card-header-sep"></div>
-            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite"></div>
+            <div class="formation-card-header-type fr-icon-heart-fill icon-favorite icon-favorite_${key}"></div>
           </div>
           <div class="card-formation-title">
             ${label}

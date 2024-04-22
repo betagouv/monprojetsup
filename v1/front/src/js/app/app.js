@@ -322,6 +322,10 @@ function getSuggestionsLoadThemAndFadeIn() {
  * @param {*} value
  * @param {*} action
  */
+export function updateSuggestions(suggestions, handler = null) {
+  server.updateProfile({ suggestions: suggestions }, handler);
+}
+
 export function updateSuggestionsAndReloadUI(fadingOut, suggestions) {
   if (fadingOut) {
     animate.fadeOut(() => {

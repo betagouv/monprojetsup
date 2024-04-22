@@ -87,9 +87,6 @@ function ensureMandatoryProfileFields() {
   if (data.profile === undefined) {
     data.profile = {};
   }
-  if (data.suggestions === undefined) {
-    data.suggestions = [];
-  }
   for (const mandatory_obj_field of [
     "scores",
     "interets",
@@ -262,11 +259,11 @@ export function getAnonymousProfile() {
 }
 
 function loadSuggestions(suggestions) {
-  data.suggestions = suggestions;
+  //data.suggestions = suggestions;
 }
 
 export function getNbSuggestionsWaiting() {
-  return data.suggestions === undefined ? 0 : data.suggestions.length;
+  return 0;
 }
 
 /* the stats depend on the bac of the user */
@@ -338,20 +335,8 @@ export function getUrls(gFlCod, autocomplete) {
   }
   if (urls.size > 0) {
     return Array.from(urls);
-  } else if (autocomplete) {
-    //on vérifie qu'on est pas sur un groupe
-    const result = [];
-    const uri = getDefaultUrl(gFlCod);
-    if (uri != null) {
-      result.push(encodeURI(uri));
-    }
-    const uri2 =
-      params.internetSearchHTTPAdress + encodeURI(getExtendedLabel(gFlCod));
-    result.push(uri2);
-    return result;
-  } else {
-    return [];
   }
+  return [];
 }
 
 /*
@@ -555,17 +540,14 @@ export function getOrCreateSugg(key, newStatus) {
   let changed = true;
   ensureMandatoryProfileFields();
   let sugg = { fl: key, expl: [{ perso: {} }] }; //important do not include status
-  if (newStatus == SUGG_APPROVED) {
-    const suggs = data.suggestions.filter((s) => s.fl == key);
-    if (suggs.length > 0) {
-      sugg = suggs[0];
-    } else if (key in data.profile.choices) {
-      sugg = data.profile.choices[key];
-    }
+  const suggs = data.profile.choices.filter((s) => s.fl == key);
+  if (suggs.length > 0) {
+    sugg = suggs[0];
+  } else {
+    data.profile.choices.push(sugg);
   }
   changed = sugg.status === undefined || sugg.status !== newStatus;
   sugg.status = newStatus;
-  data.profile.choices[key] = sugg;
   return [sugg, changed];
 }
 
@@ -584,21 +566,6 @@ export function getSuggestionsApproved(profile) {
     (s) => s.status != null && s.status == SUGG_APPROVED
   );
 }
-/*
-export function getSuggestion(grpid) {
-  ensureMandatoryProfileFields();
-  let result = data.profile.choices[grpid];
-  if (result) return result;
-  for (const sugg of data.suggestions) {
-    if (
-      sugg.fl == grpid ||
-      (data.groupToKeys[sugg.fl] && data.groupToKeys[sugg.fl].includes(grpid))
-    ) {
-      return sugg;
-    }
-  }
-  return null;
-}*/
 
 function filterMap(m, f) {
   return Object.fromEntries(Object.entries(m).filter((e) => f(e[1])));
@@ -617,7 +584,7 @@ export function removeFromBin(id) {
 
 export function getSuggestionsWaiting() {
   ensureMandatoryProfileFields();
-  return data.suggestions;
+  return [];
 }
 
 function getNotes(topic) {
@@ -672,10 +639,12 @@ export function getProfileKeys() {
 }
 
 export function isFavoris(key) {
-  return (
-    key in data.profile.choices &&
-    data.profile.choices[key].status == SUGG_APPROVED
-  );
+  for (const sugg of data.profile.choices) {
+    if (sugg.fl === key && sugg.status === SUGG_APPROVED) {
+      return true;
+    }
+  }
+  return false;
 }
 export function isInBin(key) {
   return (

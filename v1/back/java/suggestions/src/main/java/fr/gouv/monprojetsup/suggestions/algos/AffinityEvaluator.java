@@ -50,6 +50,7 @@ public class AffinityEvaluator {
     private static final double ADMISSIBILITY_75 = 1.0;//at the 25 and 75 quartile
 
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
+    public static final boolean USE_BIN = false;
 
     private final boolean isInterestedinHealth;
     private final Set<String> rejected =  new HashSet<>();
@@ -148,7 +149,7 @@ public class AffinityEvaluator {
 
     /* the public entry points */
     public Double getAffinityEvaluation(String fl) {
-        if (rejected.contains(fl)) return Config.NO_MATCH_SCORE;
+        if (USE_BIN && rejected.contains(fl)) return Config.NO_MATCH_SCORE;
         return getScoreAndExplanation(fl, null, null);
     }
 

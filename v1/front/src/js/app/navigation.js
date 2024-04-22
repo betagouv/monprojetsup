@@ -69,34 +69,43 @@ async function updateRecherche() {
   const msg = await app.doSearch(str);
   ui.showRechercheData(msg.details);
   $("#search-button").on("click", updateRecherche);
+  $("#search-784-input").on("keypress", function (event) {
+    // Check if the key pressed is Enter
+    if (event.key === "Enter") {
+      updateRecherche();
+    }
+  });
+
   $("#add-to-favorites-btn").on("click", function () {
     const id = $(this).attr("data-id");
-    events.selectChoice(id, true);
+    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+      ui.updateFav(id)
+    );
   });
   $("#formation-details-header-nav-central-icon").on("click", function () {
     const id = $(this).attr("data-id");
-    events.selectChoice(id, true);
+    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+      ui.updateFav(id)
+    );
   });
   $("#add-to-bin-btn").on("click", function () {
     const id = $(this).attr("data-id");
-    events.rejectChoice(id, true);
+    events.changeSuggestionStatus(id, data.SUGG_REJECTED, () =>
+      ui.updateFav(id)
+    );
   });
 }
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
   ui.showFavoris(msg.details);
-  $("#add-to-favorites-btn").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.selectChoice(id, true);
-  });
-  $("#formation-details-header-nav-central-icon").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.selectChoice(id, true);
-  });
   $("#add-to-bin-btn").on("click", function () {
     const id = $(this).attr("data-id");
-    events.rejectChoice(id, true);
+    events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+      ui.updateFav(id);
+      const msg = await app.getSelection();
+      ui.showFavoris(msg.details);
+    });
   });
 }
 
