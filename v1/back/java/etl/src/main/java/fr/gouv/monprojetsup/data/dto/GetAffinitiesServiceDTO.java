@@ -22,8 +22,7 @@ public class GetAffinitiesServiceDTO {
             @Schema(
                     description =
                             """
-                               Renvoie la liste des formations dans l'ordre d'affichage, ainsi que le score d'affinité, entre 0.0 et 1.0.
-                               Précision 6 décimales. 
+                               Liste des formations dans l'ordre d'affichage, ainsi que le score d'affinité dans l'intervalle [0.0 , 1.0]. 
                                """,
                     required = true
             )
@@ -32,7 +31,7 @@ public class GetAffinitiesServiceDTO {
             @Schema(
                     description =
                             """
-                               Renvoie la liste des métiers dans l'ordre d'affichage.
+                               Liste des métiers dans l'ordre d'affichage, triés par affinité.
                                """,
                     required = true
             )
@@ -54,6 +53,13 @@ public class GetAffinitiesServiceDTO {
 
     public record Affinity(
             String key,
+            @Schema(
+                    description =
+                            """
+                               Score d'affinité entre 0.0 et 1.0. Précision 6 décimales.
+                               """,
+                    required = true
+            )
             double affinite
 
     ) {

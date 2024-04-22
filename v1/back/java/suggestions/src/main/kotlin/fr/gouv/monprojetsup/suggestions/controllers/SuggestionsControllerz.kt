@@ -35,8 +35,8 @@ class SuggestionsControllerz(
     private val getAffiniteFormationsService: GetAffinitiesService
 ) {
 
-    @Operation(summary = "Récupère la liste des formations, classées par affinité avec le profil.")
-    @PostMapping("/affinite/formations")
+    @Operation(summary = "Récupère la liste des formations et des métiers, classés par affinité.")
+    @PostMapping("/affinites")
     fun getAffiniteFormations(
         @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
     ): GetAffinitiesServiceDTO.Response {

@@ -123,14 +123,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         Set<String> keysFormations
                 = req.includeFormations ? allKeys.stream().filter(Helpers::isFiliere).collect(Collectors.toSet()) : Set.of();
 
-        /*
-        Set<String> keysMetiers
-                = req.includeMetiers
-                ? allKeys.stream().filter(Helpers::isMetier).collect(Collectors.toSet())
-                : Set.of();
-        */
-
-        //equivalent d'un appel à /affinite/formations
+        //equivalent d'un appel à /affinites
         final Pair<List<Affinity>, List<String>> affinites = getAffinities(
                 req.profile
         );
@@ -142,7 +135,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         List<String> keysPage = keys.stream().skip((long) req.pageNb * req.pageSize).limit(req.pageSize).toList();
 
-        //LOGGER.info("HAndling request " + req);
+        //LOGGER.info("handling request " + req);
         final @NotNull List<ResultatRecherche> suggestions = getDetails(
                 req.profile,
                 keysPage,
@@ -170,7 +163,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     //
     static private Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/formations", request);
+        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinites", request);
         val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
         return Pair.of(response.affinites(), response.metiers());
     }
