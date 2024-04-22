@@ -34,7 +34,7 @@ const data = {
   profile: {
     login: "",
     scores: {},
-    choices: {},
+    choices: [],
   },
   questions: params.questions,
   questions_account: params.questions_account,
@@ -216,6 +216,11 @@ export function getAllGroupLabels(keySet) {
 }
 
 export function loadProfile(profile) {
+  if (profile.choices === undefined) {
+    profile.choices = [];
+  } else {
+    profile.choices = Object.values(profile.choices);
+  }
   data.profile = profile;
   ensureMandatoryProfileFields();
   //expand scores
@@ -632,8 +637,8 @@ export function getProfileKeys() {
       }
     }
   }
-  for (const key in data.profile.choices) {
-    if (data.profile.choices[key].status == SUGG_APPROVED) result.push(key);
+  for (const sugg of data.profile.choices) {
+    if (sugg.status == SUGG_APPROVED) result.push(sugg.fl);
   }
   return result;
 }
@@ -647,10 +652,12 @@ export function isFavoris(key) {
   return false;
 }
 export function isInBin(key) {
-  return (
-    key in data.profile.choices &&
-    data.profile.choices[key].status == SUGG_REJECTED
-  );
+  for (const sugg of data.profile.choices) {
+    if (sugg.fl === key && sugg.status === SUGG_REJECTED) {
+      return true;
+    }
+  }
+  return false;
 }
 export function isZeroScore(key) {
   if (data.profile.scores === undefined) return undefined;

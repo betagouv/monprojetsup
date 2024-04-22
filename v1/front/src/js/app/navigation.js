@@ -149,12 +149,14 @@ const screen_exit_handlers = {};
 
 function setUpMultiChoices() {
   //multi-options-item
-  $(".multi-options-item").on("click", function () {
-    const key = $(this).attr("key");
-    events.toggleProfileScoreHandler(key);
-    const selected = data.isSelected(key);
-    $(this).toggleClass("selected", selected);
-  });
+  $(".multi-options-item")
+    .off("click")
+    .on("click", function () {
+      const key = $(this).attr("key");
+      events.toggleProfileScoreHandler(key);
+      const selected = data.isSelected(key);
+      $(this).toggleClass("selected", selected);
+    });
 }
 
 function setUpAutoComplete(id, threshold) {

@@ -165,7 +165,9 @@ async function injectProfileTab(tabName) {
   const html = await fetchData("profil/" + tabName);
   console.log("Fetched " + tabName);
   const $div = $(`#tab-${tabName}-panel`);
-  if ($div.length == 0) throw Error(`no div #tab-${tabName}-panel`);
+  if ($div.length == 0) {
+    throw Error(`no div #tab-${tabName}-panel`);
+  }
   $div.html(html);
   if (tabName === "scolarite") {
     injectInSelect(
