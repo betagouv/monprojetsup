@@ -235,6 +235,9 @@ export async function showConnectionScreen() {
 export async function showLandingScreen() {
   //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
+  $("#main-placeholder").css({
+    "background-image": 'url("../img/bg.svg")',
+  });
   $(".disconnect").hide();
   $("#landing-placeholder")
     .off()
@@ -250,6 +253,10 @@ export async function showInscriptionScreen2() {
   return showSubScreen("inscription2");
 }
 export async function showBoard() {
+  $("#main-placeholder").css({
+    "background-image": "none",
+  });
+
   return showConnectedScreen("board");
 }
 export async function showSelection() {
@@ -259,6 +266,9 @@ export async function showRechercheScreen() {
   await showConnectedScreen("recherche");
 }
 export async function showProfileScreen() {
+  $("#main-placeholder").css({
+    "background-image": "none",
+  });
   await showConnectedScreen("profile");
   //inject profile data
   await injectProfileTab("scolarite");

@@ -104,6 +104,10 @@ footer {
     }
 #main-placeholder {
 //  background-color: #f9f6f2;
+      background-image: url("../img/bg.svg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
 }
 .py-10px {
   padding-top: 10px;
@@ -303,10 +307,6 @@ main {
   margin-left: 0px;
 }
 .inscription-screen {
-      background-image: url("../img/bg.svg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
 }
 .tab-content {
   //background-color: $beige-gris-galet-950;

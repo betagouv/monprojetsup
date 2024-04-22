@@ -697,7 +697,7 @@ public class DBMongo extends DB implements Closeable {
         }
 
         Credential cred = Credential.getNewCredential(data.password());
-        Profile pf = Profile.getNewProfile(login);
+        Profile pf = Profile.getNewProfile(login, data.nom(), data.prenom());
 
         String emailToken = confirmEmailOnAccountCreation ? RandomStringUtils.random(64, true, false) : null;
 

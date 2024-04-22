@@ -70,7 +70,19 @@ public final class Profile {
         this.ine = null;
     }
 
+    public Profile(String login, String nom, String prenom) {
+        this.login = login;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.bac = null;
+        this.duree = null;
+        this.apprentissage = null;
+        this.mention = null;
+        this.moygen = null;
+        this.niveau = null;//inconnu
+        this.ine = null;
 
+    }
 
 
     int isOk(String s) {
@@ -108,6 +120,10 @@ public final class Profile {
 
     public static Profile getNewProfile(String login) {
         return new Profile(normalizeUser(login));
+    }
+
+    public static Profile getNewProfile(String login, String nom, String prenom) {
+        return new Profile(normalizeUser(login), nom, prenom);
     }
 
 

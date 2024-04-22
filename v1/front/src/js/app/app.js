@@ -90,11 +90,11 @@ export function createAccount(data) {
   });
 }
 
-export function validateCodeAcces(accounTypen, accessGroupe, handler) {
+export function validateCodeAcces(accountType, accesGroupe, handler) {
   server.validateCodeAcces(
     {
-      type: accounTypen,
-      code: accesGroupe,
+      type: accountType,
+      accesGroupe: accesGroupe,
     },
     handler
   );
@@ -150,16 +150,15 @@ export function postLoginHandler() {
   });
 
   dataload.loadZippedData().then(() => {
-    server.updateAdminInfos((msg) => {
+    server.updateAdminInfos(async (msg) => {
       setAdminInfos(msg);
       ui.initPostData(session.getLogin(), msg.infos);
       const profileCompleteness = msg.infos.profileCompleteness;
       session.setProfileCompletenessLevel(profileCompleteness);
-      server.getProfile((msg) => {
-        data.loadProfile(msg.profile);
-        //ui.loadProfile();
-        startNavigation();
-      });
+      const msgp = await server.getProfileAsync();
+      data.loadProfile(msgp.profile);
+      nav.setScreen(profileCompleteness >= 2 ? "board" : "profil");
+      startNavigation();
     });
   });
 
@@ -183,10 +182,9 @@ function startNavigation() {
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
-        const category = profileCompleteness == 0 ? "profil" : "preferences";
         nav.setScreen("inscription1");
       } else {
-        nav.setScreen("recherche");
+        nav.setScreen("board");
       }
     }
   }
