@@ -9,6 +9,10 @@ const Navigation = () => {
       href: "/",
     },
     {
+      titre: "Formations et métiers",
+      href: "/recherche",
+    },
+    {
       titre: "Inscription",
       href: "/inscription/projet",
     },

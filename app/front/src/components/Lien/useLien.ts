@@ -2,7 +2,7 @@ import { type useLienProps } from "./useLien.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { useMemo } from "react";
 
-const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargement }: useLienProps) => {
+const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargement, estUnTag }: useLienProps) => {
   const estLienExterne = useMemo(() => /^https?:\/\/|www\./imu.test(href), [href]);
   const estLienEmail = useMemo(() => /^mailto:/imu.test(href), [href]);
   const estLienTéléphone = useMemo(() => /^tel:/imu.test(href), [href]);
@@ -29,7 +29,13 @@ const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargem
   };
 
   const classEnFonctionDeEstUnTéléchargement = () => {
-    if (estUnTéléchargement) return `fr-link--download fr-link`;
+    if (estUnTéléchargement) return "fr-link--download";
+
+    return "";
+  };
+
+  const classEnFonctionDeEstUnTag = () => {
+    if (estUnTag) return `fr-tag ${taille === "petit" ? "fr-tag--sm" : ""}`;
 
     return "";
   };
@@ -46,7 +52,7 @@ const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargem
 
   return {
     ariaLabelFormaté: ariaLabelFormaté(),
-    classesCSS: `${classEnFonctionDeLaTaille()} ${classEnFonctionDeLIcône()} ${classEnFonctionDeEstUnTéléchargement()} ${classEnFonctionDeLaVariante()}`,
+    classesCSS: `${classEnFonctionDeLaTaille()} ${classEnFonctionDeLIcône()} ${classEnFonctionDeEstUnTéléchargement()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeEstUnTag()}`,
     target: estLienExterne ? "_blank" : "_self",
   };
 };

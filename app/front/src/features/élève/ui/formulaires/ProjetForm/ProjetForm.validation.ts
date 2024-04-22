@@ -4,7 +4,6 @@ import { z } from "zod";
 
 export const projetValidationSchema = z.object({
   situation: z.enum(situationÉlève, {
-    required_error: i18n.ÉLÈVE.PROJET.SITUATION.ERREUR_FORMULAIRE,
-    invalid_type_error: i18n.ÉLÈVE.PROJET.SITUATION.ERREUR_FORMULAIRE,
+    errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
   }),
 });

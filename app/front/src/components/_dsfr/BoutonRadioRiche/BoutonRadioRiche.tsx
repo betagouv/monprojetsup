@@ -16,7 +16,7 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
   return (
     <fieldset
       aria-labelledby="radio-rich-legend radio-rich-messages"
-      className={`fr-fieldset ${classEnFonctionDuStatus().fieldset}`}
+      className={`fr-fieldset ${classEnFonctionDuStatus().fieldset} !mb-0`}
       id={id}
       role="group"
     >

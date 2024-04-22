@@ -31,7 +31,7 @@ class TestHelper {
   };
 
   public messageErreurChampObligatoire = () => {
-    return this._page.getByText(i18n.ÉLÈVE.PROJET.SITUATION.ERREUR_FORMULAIRE);
+    return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE);
   };
 
   private _boutonSoumissionFormulaire = () => {

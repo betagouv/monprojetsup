@@ -1,7 +1,16 @@
 import { type LienExterneProps } from "./LienExterne.interface";
 import useLien from "@/components/Lien/useLien";
 
-const LienExterne = ({ children, ariaLabel, href, taille, variante, icône, estUnTéléchargement }: LienExterneProps) => {
+const LienExterne = ({
+  children,
+  ariaLabel,
+  href,
+  taille,
+  variante,
+  icône,
+  estUnTéléchargement,
+  estUnTag,
+}: LienExterneProps) => {
   const { ariaLabelFormaté, classesCSS, target } = useLien({
     ariaLabel,
     href,
@@ -9,6 +18,7 @@ const LienExterne = ({ children, ariaLabel, href, taille, variante, icône, estU
     variante,
     icône,
     estUnTéléchargement,
+    estUnTag,
   });
 
   return (

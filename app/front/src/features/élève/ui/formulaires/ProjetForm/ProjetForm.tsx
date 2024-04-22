@@ -1,28 +1,14 @@
-import { type ProjetFormInputs, type ProjetFormProps, type SituationOptions } from "./ProjetForm.interface";
+import { type ProjetFormProps, type SituationOptions } from "./ProjetForm.interface";
 import { projetValidationSchema } from "./ProjetForm.validation";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlève from "@/features/élève/ui/hooks/useÉlève";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 
-const ProjetForm = ({ valeursParDéfaut, àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFormProps) => {
-  const { mettreÀJourÉlève } = useÉlève();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ProjetFormInputs>({
-    resolver: zodResolver(projetValidationSchema),
-    defaultValues: {
-      situation: valeursParDéfaut?.situation,
-    },
+const ProjetForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFormProps) => {
+  const { register, erreurs, mettreÀJourÉlève } = useÉlèveForm({
+    schémaValidation: projetValidationSchema,
+    àLaSoumissionDuFormulaireAvecSuccès,
   });
-
-  const soumissionDuFormulaire: SubmitHandler<ProjetFormInputs> = async (données) => {
-    await mettreÀJourÉlève(données);
-    àLaSoumissionDuFormulaireAvecSuccès?.();
-  };
 
   const situationOptions: SituationOptions = [
     {
@@ -48,13 +34,13 @@ const ProjetForm = ({ valeursParDéfaut, àLaSoumissionDuFormulaireAvecSuccès, 
   return (
     <form
       id={formId}
-      onSubmit={handleSubmit(soumissionDuFormulaire)}
+      onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
         légende={i18n.ÉLÈVE.PROJET.SITUATION.LÉGENDE}
         options={situationOptions}
         registerHookForm={register("situation")}
-        status={errors.situation ? { type: "erreur", message: errors.situation.message } : undefined}
+        status={erreurs.situation ? { type: "erreur", message: erreurs.situation.message } : undefined}
       />
     </form>
   );
