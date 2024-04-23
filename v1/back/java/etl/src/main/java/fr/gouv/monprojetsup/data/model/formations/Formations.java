@@ -22,6 +22,7 @@ package fr.gouv.monprojetsup.data.model.formations;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -85,12 +86,28 @@ public class Formations  implements Serializable {
     }
 
     public void ajouterSiInconnu(Formations o) {
-        o.formations.forEach(this.formations::putIfAbsent);
+        o.formations.forEach((key, value) -> {
+                this.formations.putIfAbsent(key, value);
+        });
         o.filieres.forEach((gFlCod, f) -> {
             f.libellesGroupes.clear();
             this.filieres.putIfAbsent(gFlCod, f);
         });
+
         o.typesMacros.forEach(this.typesMacros::putIfAbsent);
         _groupesToFilieres.clear();
+
+        cleanup();
+    }
+
+    public void cleanup() {
+        formations.values().removeIf(f -> f.capacite <= 0);
+
+        Set<Integer> filieresActives = formations.values().stream().map(f -> f.gFlCod).collect(Collectors.toSet());
+        filieres.keySet().retainAll(filieresActives);
+
+        Set<Integer> typesMacrosActifs = filieres.values().stream().map(fil -> fil.gFrCod).collect(Collectors.toSet());
+        typesMacros.keySet().retainAll(typesMacrosActifs);
+
     }
 }
