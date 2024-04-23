@@ -69,8 +69,12 @@ services:
     ports:
       - ${APP_BACK_PORT}:${APP_BACK_PORT}
     volumes:
-      - ./app/back:/root/app
-    command: sh -c "mvn clean install spring-boot:run"
+      - ./app/back:/root/app  
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${APP_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${APP_DB_PASSWORD}
+    command: sh -c " mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.MonProjetSupApplicationKt"
 
   metabasedb:
     image: postgres:latest
@@ -104,3 +108,5 @@ services:
       MB_DB_PORT: ${METABASE_DB_PORT}
       MB_DB_USER: ${METABASE_DB_USER}
       MB_DB_PASS: ${METABASE_DB_PASSWORD}
+volumes:
+  backend-db-data:
