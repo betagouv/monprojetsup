@@ -305,6 +305,10 @@ public record PsupData(
         formations().formations.values().removeIf(
                 f -> !formations().filieres.containsKey(f.gFlCod)
         );
+
+        formations().cleanup();
+
+
     }
 
     public Map<Integer, Integer> getFormationsenAppAvecEquivalentSansApp() {

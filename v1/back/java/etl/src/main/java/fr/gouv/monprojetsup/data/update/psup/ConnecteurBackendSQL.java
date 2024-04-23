@@ -343,7 +343,6 @@ public class ConnecteurBackendSQL {
     private void recupererFormations(PsupData data) throws Exception {
 
             data.formations().ajouterSiInconnu(recupererFilieresEtFormations());
-
     }
 
     private Formations recupererFilieresEtFormations() throws SQLException {
