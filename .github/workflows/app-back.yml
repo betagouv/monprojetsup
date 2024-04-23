@@ -1,0 +1,26 @@
+name: App Backend
+
+on:
+  push:
+    branches:
+      - prod
+      - demo
+  pull_request:
+    paths:
+      - 'app/back/**'
+
+env:
+  WORKING_DIRECTORY: ./app/back
+
+jobs:
+
+  lint:
+    name: Run linters for code
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run lint command
+        run: mvn ktlint:format

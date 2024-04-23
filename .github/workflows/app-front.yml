@@ -6,6 +6,8 @@ on:
       - prod
       - demo
   pull_request:
+    paths:
+      - 'app/front/**'
 
 env:
   WORKING_DIRECTORY: ./app/front
