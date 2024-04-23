@@ -30,67 +30,67 @@ const main = async () => {
   }
 
   // Créer les spécialités
-  const spécialités = Object.entries(données.specialites.specialites).map(([id, label]) => [id, label]);
-  const insertSpécialités = sqlHandler.générerInsert("specialites", ["id", "label"], spécialités);
-  requêteSQL.push(insertSpécialités);
+  // const spécialités = Object.entries(données.specialites.specialites).map(([id, label]) => [id, label]);
+  // const insertSpécialités = sqlHandler.générerInsert("specialites", ["id", "label"], spécialités);
+  // requêteSQL.push(insertSpécialités);
 
   // Créer les matières
-  const matières = Object.entries(données.matieres).map(([id, label]) => [id, label]);
-  const insertMatières = sqlHandler.générerInsert("matieres", ["id", "label"], matières);
-  requêteSQL.push(insertMatières);
+  // const matières = Object.entries(données.matieres).map(([id, label]) => [id, label]);
+  // const insertMatières = sqlHandler.générerInsert("matieres", ["id", "label"], matières);
+  // requêteSQL.push(insertMatières);
 
   // Créer les thématiques
-  const thématiques = Object.entries(données.thematiques.thematiques).map(([id]) => [id, données.labels[id]]);
-  const insertThématiques = sqlHandler.générerInsert("thematiques", ["id", "label"], thématiques);
-  requêteSQL.push(insertThématiques);
+  // const thématiques = Object.entries(données.thematiques.thematiques).map(([id]) => [id, données.labels[id]]);
+  // const insertThématiques = sqlHandler.générerInsert("thematiques", ["id", "label"], thématiques);
+  // requêteSQL.push(insertThématiques);
 
   // Créer les intérêts
-  const intérêts = Object.entries(données.interets.interets).map(([id]) => [id, données.labels[id]]);
-  const insertIntêrets = sqlHandler.générerInsert("interets", ["id", "label"], intérêts);
-  requêteSQL.push(insertIntêrets);
+  // const intérêts = Object.entries(données.interets.interets).map(([id]) => [id, données.labels[id]]);
+  // const insertIntêrets = sqlHandler.générerInsert("interets", ["id", "label"], intérêts);
+  // requêteSQL.push(insertIntêrets);
 
   // Créer les secteurs
-  const secteurs = Object.entries(données.labels)
-    .filter(([id]) => id.startsWith("SEC_"))
-    .map(([id]) => [id, données.labels[id]]);
-  const insertSecteurs = sqlHandler.générerInsert("secteurs", ["id", "label"], secteurs);
-  requêteSQL.push(insertSecteurs);
+  // const secteurs = Object.entries(données.labels)
+  //   .filter(([id]) => id.startsWith("SEC_"))
+  //   .map(([id]) => [id, données.labels[id]]);
+  // const insertSecteurs = sqlHandler.générerInsert("secteurs", ["id", "label"], secteurs);
+  // requêteSQL.push(insertSecteurs);
 
   // Créer les bacs
-  const MOYENNE_GENERALE_CODE = "-1";
-  const bacs = [
-    { id: "", label: "Je ne sais pas" },
-    { id: "Générale", label: "Série Générale" },
-    { id: "P", label: "Bac Pro" },
-    { id: "PA", label: "Bac Pro Agricole" },
-    { id: "S2TMD", label: "Bac Techno S2TMD - Sciences et Techniques du Théâtre de la Musique et de la Danse" },
-    { id: "ST2S", label: "Bac Techno ST2S - Sciences et technologies de la santé et du social" },
-    { id: "STAV", label: "Bac Techno STAV - Sciences et Technologies de l\u0027agronomie et du vivant" },
-    { id: "STD2A", label: "Bac Techno STD2A - Sciences Technologiques du Design et des Arts Appliquées" },
-    { id: "STHR", label: "Bac Techno STHR - Science et Techniques de l\u0027Hôtellerie et de la Restauration" },
-    {
-      id: "STI2D",
-      label: "Bac Techno STI2D - Sciences et Technologies de l\u0027Industrie et du Développement Durable",
-    },
-    { id: "STL", label: "Bac Techno STL - Sciences et technologie de laboratoire" },
-    { id: "STMG", label: "Bac Techno STMG - Sciences et Technologies du Management et de la Gestion" },
-  ];
+  // const MOYENNE_GENERALE_CODE = "-1";
+  // const bacs = [
+  //   { id: "", label: "Je ne sais pas" },
+  //   { id: "Générale", label: "Série Générale" },
+  //   { id: "P", label: "Bac Pro" },
+  //   { id: "PA", label: "Bac Pro Agricole" },
+  //   { id: "S2TMD", label: "Bac Techno S2TMD - Sciences et Techniques du Théâtre de la Musique et de la Danse" },
+  //   { id: "ST2S", label: "Bac Techno ST2S - Sciences et technologies de la santé et du social" },
+  //   { id: "STAV", label: "Bac Techno STAV - Sciences et Technologies de l\u0027agronomie et du vivant" },
+  //   { id: "STD2A", label: "Bac Techno STD2A - Sciences Technologiques du Design et des Arts Appliquées" },
+  //   { id: "STHR", label: "Bac Techno STHR - Science et Techniques de l\u0027Hôtellerie et de la Restauration" },
+  //   {
+  //     id: "STI2D",
+  //     label: "Bac Techno STI2D - Sciences et Technologies de l\u0027Industrie et du Développement Durable",
+  //   },
+  //   { id: "STL", label: "Bac Techno STL - Sciences et technologie de laboratoire" },
+  //   { id: "STMG", label: "Bac Techno STMG - Sciences et Technologies du Management et de la Gestion" },
+  // ];
 
-  const bacsAvecInfosSupplémentaires = bacs.map((bac) => {
-    const statistiques = données.statsAdmis.parGroupe[""].parBac[bac.id].parMatiere[MOYENNE_GENERALE_CODE];
+  // const bacsAvecInfosSupplémentaires = bacs.map((bac) => {
+  //   const statistiques = données.statsAdmis.parGroupe[""].parBac[bac.id].parMatiere[MOYENNE_GENERALE_CODE];
 
-    const statsAdmission = {
-      moyenneGénérale: {
-        fréquencesCumulées: statistiques.frequencesCumulees,
-        répartition: statistiques.middle50,
-      },
-    };
+  //   const statsAdmission = {
+  //     moyenneGénérale: {
+  //       fréquencesCumulées: statistiques.frequencesCumulees,
+  //       répartition: statistiques.middle50,
+  //     },
+  //   };
 
-    return [bac.id === "" ? "NC" : bac.id, bac.label, statsAdmission];
-  });
+  //   return [bac.id === "" ? "NC" : bac.id, bac.label, statsAdmission];
+  // });
 
-  const insertBacs = sqlHandler.générerInsert("bacs", ["id", "label", "statsAdmission"], bacsAvecInfosSupplémentaires);
-  requêteSQL.push(insertBacs);
+  // const insertBacs = sqlHandler.générerInsert("bacs", ["id", "label", "statsAdmission"], bacsAvecInfosSupplémentaires);
+  // requêteSQL.push(insertBacs);
 
   // Créer les métiers
   const métiers = Object.entries(données.labels)
@@ -107,7 +107,7 @@ const main = async () => {
       ];
     });
 
-  const insertMétiers = sqlHandler.générerInsert("metiers", ["id", "label", "descriptif_general", "urls"], métiers);
+  const insertMétiers = sqlHandler.générerInsert("metier", ["id", "label", "descriptif_general", "urls"], métiers);
   requêteSQL.push(insertMétiers);
 
   // Créer les formations
@@ -138,7 +138,7 @@ const main = async () => {
     });
 
   const insertFormations = sqlHandler.générerInsert(
-    "formations",
+    "formation",
     [
       "id",
       "label",
@@ -160,7 +160,7 @@ const main = async () => {
   });
 
   const insertTripleAffectation = sqlHandler.générerInsert(
-    "triple_affectation",
+    "triplet_affectation",
     ["id", "nom", "commune", "code_commune", "coordonnees_geographiques", "id_formation"],
     tripleAffectation,
   );
@@ -168,16 +168,16 @@ const main = async () => {
   requêteSQL.push(insertTripleAffectation);
 
   // Créer bacs_specialites
-  const bacsSpécialités = Object.entries(données.specialites.specialitesParBac).flatMap(([bacId, spécialitéIds]) =>
-    spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId, spécialitéId.toString()]),
-  );
-  const insertBacsSpécialités = sqlHandler.générerInsert(
-    "bacs_specialites",
-    ["bac_id", "specialite_id"],
-    bacsSpécialités,
-    false,
-  );
-  requêteSQL.push(insertBacsSpécialités);
+  // const bacsSpécialités = Object.entries(données.specialites.specialitesParBac).flatMap(([bacId, spécialitéIds]) =>
+  //   spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId, spécialitéId.toString()]),
+  // );
+  // const insertBacsSpécialités = sqlHandler.générerInsert(
+  //   "bacs_specialites",
+  //   ["bac_id", "specialite_id"],
+  //   bacsSpécialités,
+  //   false,
+  // );
+  // requêteSQL.push(insertBacsSpécialités);
 
   // Créer metiers_formations
   const métiersFormations = Object.entries(données.liensMetiersFormations)
@@ -193,7 +193,7 @@ const main = async () => {
     .filter((métierFormation): métierFormation is string[] => métierFormation !== undefined);
 
   const insertMétiersFormations = sqlHandler.générerInsert(
-    "metiers_formations",
+    "join_metier_formation",
     ["metier_id", "formation_id"],
     métiersFormations,
     false,
@@ -201,21 +201,21 @@ const main = async () => {
   requêteSQL.push(insertMétiersFormations);
 
   // Créer metiers_secteurs
-  const métiersSecteurs = Object.entries(données.liensSecteursMetiers).flatMap(([secteurId, métierIds]) =>
-    métierIds
-      .map((métierId) => {
-        if (!données.labels[métierId]) return undefined;
-        return [secteurId, métierId];
-      })
-      .filter((métierSecteur): métierSecteur is string[] => métierSecteur !== undefined),
-  );
-  const insertMétiersSecteurs = sqlHandler.générerInsert(
-    "metiers_secteurs",
-    ["secteur_id", "metier_id"],
-    métiersSecteurs,
-    false,
-  );
-  requêteSQL.push(insertMétiersSecteurs);
+  // const métiersSecteurs = Object.entries(données.liensSecteursMetiers).flatMap(([secteurId, métierIds]) =>
+  //   métierIds
+  //     .map((métierId) => {
+  //       if (!données.labels[métierId]) return undefined;
+  //       return [secteurId, métierId];
+  //     })
+  //     .filter((métierSecteur): métierSecteur is string[] => métierSecteur !== undefined),
+  // );
+  // const insertMétiersSecteurs = sqlHandler.générerInsert(
+  //   "metiers_secteurs",
+  //   ["secteur_id", "metier_id"],
+  //   métiersSecteurs,
+  //   false,
+  // );
+  // requêteSQL.push(insertMétiersSecteurs);
 
   // Générer fichier final
   sqlHandler.créerFichier("insert", requêteSQL.join("\n"));
