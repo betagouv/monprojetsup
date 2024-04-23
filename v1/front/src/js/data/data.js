@@ -692,10 +692,12 @@ export function toggleScore(key) {
     data.profile.scores[key] !== "0";
   if (wasSelected) {
     delete data.profile.scores[key];
+    delete data.profile.interets[key];
   } else {
     data.profile.scores[key] = 1;
+    data.profile.interets[key] = 1;
   }
-  return data.profile.scores[key];
+  return !wasSelected;
 }
 
 //please do not use outside "load"
