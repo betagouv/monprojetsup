@@ -128,12 +128,20 @@ function injectInMultiOptions($accordions_group, menus) {
         }
       }
     }
+    let expand = false;
+    for (const item of menu.items) {
+      let key = item.key;
+      if (key === undefined) key = item.id;
+      if (data.isSelected(key)) {
+        expand = true;
+      }
+    }
     const $menu = $(`      
       <section class="fr-accordion multi-options-group">
         <h3 class="fr-accordion__title muti-options-group-header">
           <button
             class="fr-accordion__btn "
-            aria-expanded="false"
+            aria-expanded="${expand}"
             aria-controls="accordion-${menu.key}"
           >
             <span class="multi-options-group-emojis">${emoji1}</span>
