@@ -114,6 +114,28 @@ footer {
   padding-bottom: 10px;
 }
 
+.top-right-menu {
+  display: flex;
+    padding: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.monespace {
+  color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+    text-align: center;
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Medium */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 171.429% */
+    border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    text-decoration: none;
+}
+
 .dsfr-text-neutral {
   color: var(--light-neutral-grey-50, #161616);
 }
