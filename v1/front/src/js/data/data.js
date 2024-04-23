@@ -72,8 +72,6 @@ export function statNotesDivider() {
   return data.constants.PRECISION_PERCENTILES / 20;
 }
 
-const scoresFields = ["interets", "thematiques"];
-
 function init() {
   loadProfile({
     login: "",
@@ -223,27 +221,10 @@ export function loadProfile(profile) {
   }
   data.profile = profile;
   ensureMandatoryProfileFields();
-  //expand scores
-  for (const [key, score] of Object.entries(data.profile.scores)) {
-    //if key in index metiers...
-    for (const id of scoresFields) {
-      if (key in data[id]) {
-        data.profile[id][key] = score;
-        break;
-      }
-    }
-  }
   loadStats(profile.bac);
 }
 
 export function getProfile() {
-  for (const id of scoresFields) {
-    if (id in data.profile) {
-      for (const [key, score] of Object.entries(data.profile[id])) {
-        data.profile.scores[key] = score;
-      }
-    }
-  }
   return data?.profile;
 }
 
@@ -404,9 +385,6 @@ export function removeFromListOrMap(id, key) {
     }
     if (isObject(l) && l[key] !== undefined) {
       delete l[key];
-      if (scoresFields.includes(id) && key in data.profile.scores) {
-        delete data.profile.scores[key];
-      }
     }
   }
   return false;
@@ -625,7 +603,6 @@ export function getTagsSources() {
 export function getScore(key) {
   if (data.profile.scores === undefined) return undefined;
   let result = data.profile.scores[key];
-  if (result === undefined) result = data.profile.interets[key];
   return result === undefined ? 0 : result;
 }
 
@@ -692,10 +669,8 @@ export function toggleScore(key) {
     data.profile.scores[key] !== "0";
   if (wasSelected) {
     delete data.profile.scores[key];
-    delete data.profile.interets[key];
   } else {
     data.profile.scores[key] = 1;
-    data.profile.interets[key] = 1;
   }
   return !wasSelected;
 }
