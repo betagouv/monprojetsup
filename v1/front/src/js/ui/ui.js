@@ -248,7 +248,7 @@ export async function showLandingScreen() {
   $("#main-placeholder").css({
     "background-image": 'url("../img/bg.svg")',
   });
-  $(".disconnect").hide();
+  $(".visible-only-when-connected").hide();
   $("#landing-placeholder")
     .off()
     .on("click", () => {
@@ -286,6 +286,7 @@ export async function showProfileScreen() {
   await injectProfileTab("domaines_pro");
   await injectProfileTab("interests");
   $(".profile-div-prenomnom").html(data.getPrenomNom());
+  $(".prenomnom").html(data.getPrenomNom());
   $(".profile-div-email").html(session.getLogin());
 }
 

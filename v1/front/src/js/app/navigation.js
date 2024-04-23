@@ -55,11 +55,18 @@ function init_main_nav() {
     const screen = $(this).attr("screen");
     setScreen(screen);
   });
-  $(".disconnect").show();
+  $(".visible-only-when-connected").show();
   $(".disconnect").on("click", async function () {
     app.disconnect();
-    $(".disconnect").hide();
+    $(".visible-only-when-connected").hide();
   });
+  $(".recherche").on("click", async function () {
+    setScreen("recherche");
+  });
+  $(".monespace").on("click", async function () {
+    setScreen("profil");
+  });
+  $(".prenomnom").html(data.getPrenomNom());
 }
 
 async function updateRecherche() {
