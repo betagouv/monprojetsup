@@ -624,7 +624,8 @@ export function getTagsSources() {
 
 export function getScore(key) {
   if (data.profile.scores === undefined) return undefined;
-  const result = data.profile.scores[key];
+  let result = data.profile.scores[key];
+  if (result === undefined) result = data.profile.interets[key];
   return result === undefined ? 0 : result;
 }
 

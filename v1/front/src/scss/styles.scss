@@ -1104,8 +1104,18 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   font-size: 32px;
   margin: 10px;
 }
-.muti-options-group {
+.multi-options-group {
   margin-bottom: 36px;
+
+  border-radius: 16px;
+    border: 2px solid var(--light-decisions-background-background-alt-grey-hover, #DFDFDF);
+    background: #FFF;
+  //padding: 10px;
+}
+.muti-options-group-header,
+.muti-options-group-content {
+  border-radius: 16px;
+  border: none;
 }
 
 .muti-options-group-header button {
@@ -1115,8 +1125,9 @@ color: var(--light-decisions-text-text-mention-grey, #666);
     font-weight: 700;
     line-height: normal;
     border-radius: 16px 16px 0px 0px;
+    //border-radius: 16px 16px 0px 0px;
 }
-
+/*
 .fr-accordion__btn,
 .fr-accordion__btn:hover,
 .fr-accordion__btn:active,
@@ -1128,7 +1139,7 @@ color: var(--light-decisions-text-text-mention-grey, #666);
 .fr-accordion__btn:hover[aria-expanded="false"] {
   color: var(--light-decisions-background-background-default-grey, #FFF);
   background-color:var(--light-decisions-artwork-artwork-major-blue-france, #000091);;
-}
+}*/
 .multi-options-group-list {
   display: flex;
   flex-wrap: wrap;
@@ -1141,7 +1152,7 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   justify-content: center;
   align-items: center;
   gap: 4px;
-  border-radius: 16px;
+  //border-radius: 16px;
   background: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
   cursor: pointer;
   color: var(--light-decisions-text-text-action-high-blue-france, #000091);
@@ -1160,15 +1171,6 @@ color: var(--light-decisions-text-text-mention-grey, #666);
     background: var(--light-decisions-text-text-action-high-blue-france, #000091);
 }
 
-.muti-options-group-header {
-  //background: var(--light-decisions-artwork-artwork-major-blue-france, #000091);
-  border: 1px solid #DDD;
-    border-radius: 16px 16px 0px 0px;
-}
-.muti-options-group-content {
-  border: 1px solid #DDD;
-  border-radius: 0px 0px 16px 16px;
-}
 /***********************************  OLD *****************************************************/
 .accordion-collapse {
   background-color: $accordion-button-color;
