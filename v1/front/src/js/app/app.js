@@ -65,7 +65,7 @@ export function loginHandler(login, password) {
   } else {
     server.passwordLogin(login, password, async (msg) => {
       storeCredentialsAfterSuccesfulAuth(msg.data.login, password);
-      loginServerAnswerHandler(msg.data);
+      await loginServerAnswerHandler(msg.data);
     });
     //fakeLogin();
   }
@@ -81,13 +81,12 @@ export function oidcLogin(jwt) {
   }
 }
 
-export function createAccount(data) {
+export async function createAccount(data) {
   //toast("", "Demande de création de compte effectuée.");
   data.cguVersion = __VERSION__;
-  server.createAccount(data, async (msg) => {
-    storeCredentialsAfterSuccesfulAuth(data.login, data.password);
-    loginServerAnswerHandler(msg.data, data.login);
-  });
+  const msg = await server.createAccountAsync(data);
+  storeCredentialsAfterSuccesfulAuth(data.login, data.password);
+  await loginServerAnswerHandler(msg.data, data.login);
 }
 
 export function validateCodeAcces(accountType, accesGroupe, handler) {
@@ -123,19 +122,19 @@ export function storeCredentialsAfterSuccesfulAuth(login, password) {
   }
 }
 
-function loginServerAnswerHandler(data) {
+async function loginServerAnswerHandler(data) {
   if (data.validationRequired) {
     ui.showValidationRequiredMessage(data.login, data.validationMessage);
   } else if (data.token !== undefined) {
     session.setToken(data.login, data.token);
-    postLoginHandler();
+    await postLoginHandler();
   } else {
     frontErrorHandler("Réponse erronée du serveur", true);
   }
 }
 
 /* includes the token in all AJAX requests */
-export function postLoginHandler() {
+export async function postLoginHandler() {
   $(".front-feedback").html("").hide();
   $(".front-error").html("");
   $(".server-error").html("");
@@ -149,17 +148,15 @@ export function postLoginHandler() {
     },
   });
 
-  dataload.loadZippedData().then(() => {
-    server.updateAdminInfos(async (msg) => {
-      setAdminInfos(msg);
-      ui.initPostData(session.getLogin(), msg.infos);
-      const profileCompleteness = msg.infos.profileCompleteness;
-      session.setProfileCompletenessLevel(profileCompleteness);
-      const msgp = await server.getProfileAsync();
-      data.loadProfile(msgp.profile);
-      startNavigation();
-    });
-  });
+  await dataload.loadZippedData();
+  const msg = await server.updateAdminInfosAsync();
+  setAdminInfos(msg);
+  ui.initPostData(session.getLogin(), msg.infos);
+  const profileCompleteness = msg.infos.profileCompleteness;
+  session.setProfileCompletenessLevel(profileCompleteness);
+  const msgp = await server.getProfileAsync();
+  data.loadProfile(msgp.profile);
+  startNavigation();
 
   $(".nav-link").on("click", function (e) {
     logAction("tab click " + e.currentTarget.id);
@@ -183,8 +180,8 @@ function startNavigation() {
       if (profileCompleteness < 2) {
         nav.setScreen("inscription_tunnel_statut");
       } else {
-        nav.setScreen("inscription_tunnel_felicitations");
-        //nav.setScreen("board");
+        //nav.setScreen("inscription_tunnel_felicitations");
+        nav.setScreen("board");
       }
     }
   }
