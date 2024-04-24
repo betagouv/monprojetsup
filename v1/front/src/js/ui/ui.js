@@ -95,6 +95,15 @@ async function showScreen(screen, ph = null) {
   if (screen in screensHandlersInit) {
     screensHandlersInit[screen]();
   }
+  if (screen == "landing") {
+    $("#main-placeholder").css({
+      "background-image": 'url("../img/bg.svg")',
+    });
+  } else {
+    $("#main-placeholder").css({
+      "background-image": "none",
+    });
+  }
 }
 
 async function showSubScreen(subscreen) {
@@ -272,9 +281,6 @@ export async function showConnectionScreen() {
 export async function showLandingScreen() {
   //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
-  $("#main-placeholder").css({
-    "background-image": 'url("../img/bg.svg")',
-  });
   $(".visible-only-when-connected").hide();
   $(".visible-only-when-disconnected").show();
 
@@ -292,10 +298,6 @@ export async function showInscriptionScreen2() {
   return showSubScreen("inscription2");
 }
 export async function showBoard() {
-  $("#main-placeholder").css({
-    "background-image": "none",
-  });
-
   return showConnectedScreen("board");
 }
 export async function showSelection() {
@@ -305,10 +307,6 @@ export async function showRechercheScreen() {
   await showConnectedScreen("recherche");
 }
 export async function showProfileScreen() {
-  $("#main-placeholder").css({
-    "background-image": "none",
-  });
-
   await showConnectedScreen("profile");
   //inject profile data
   await injectProfileTabs(["scolarite", "etudes", "domaines_pro", "interests"]);
