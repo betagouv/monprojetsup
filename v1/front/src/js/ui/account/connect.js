@@ -38,6 +38,7 @@ export function init() {
   $("#createAccountButton")
     .off("click")
     .on("click", () => {
+      nav.setScreen(null);
       nav.setScreen("inscription1");
     });
 
