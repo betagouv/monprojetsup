@@ -42,5 +42,3 @@ class SecurityConfig {
         return source
     }
 }
-
-
