@@ -261,7 +261,7 @@ public record ReferenceCases(
     public void resumeCsv(String filename) throws IOException {
 
         try (CsvTools output = new CsvTools(filename, ',')) {
-            output.append(List.of(
+            output.appendHeaders(List.of(
                     "Nom",
                     "Profil",
                     "Goûts et compétences",//Intérets

@@ -53,7 +53,6 @@ let handlers = {
   showDetails: app.showDetails,
   startPreferencesTunnel: tunnel.startPreferencesTunnel,
   startProfileTunnel: tunnel.startProfileTunnel,
-  finishTunnel: app.finishTunnel,
   getFormationsOfInterest: app.getFormationsOfInterest,
   logUrlOpen: app.logUrlOpen,
   logAction: app.logAction,
@@ -89,7 +88,7 @@ export function toggleProfileScoreHandler(key) {
 export function changeSuggestionStatus(id, newStatus, handler = null) {
   //toast_accept(id);
   const [sugg, changed] = data.getOrCreateSugg(id, newStatus);
-  app.updateSuggestions([{ fl: sugg.fl, status: sugg.status }], handler);
+  //app.updateSuggestions([{ fl: sugg.fl, status: sugg.status }], handler);
   return changed;
 }
 
@@ -130,7 +129,7 @@ export function selectChoice(id, silent) {
 
 export function removeFromBinHandler(id, silent) {
   data.removeFromBin(id);
-  app.updateSuggestionsAndReloadUI(!silent, [{ fl: id, status: null }]);
+  //app.updateSuggestionsAndReloadUI(!silent, [{ fl: id, status: null }]);
   toast.toast("", "Cet élément n'est plus exclu des suggestions.");
 }
 
@@ -140,7 +139,7 @@ export function emptyBinHandler(silent) {
     return { fl: s.fl, status: null };
   });
   data.emptyBin();
-  app.updateSuggestionsAndReloadUI(!silent, suggsRemoved);
+  //app.updateSuggestionsAndReloadUI(!silent, suggsRemoved);
   toast.toast(
     "",
     "Corbeille vidée: plus aucun élèment n'est exclu des suggestions."
@@ -150,7 +149,7 @@ export function emptyBinHandler(silent) {
 export function profileValueChangedHandler(id, dirty) {
   const sanitized = DOMPurify.sanitize(dirty);
   data.setProfileValue(id, sanitized);
-  app.updateProfileAndReloadUI(false, id, sanitized, "add");
+  //app.updateProfileAndReloadUI(false, id, sanitized, "add");
   if (id == "bac" || id == "niveau") {
     tunnel.updateUI();
   }

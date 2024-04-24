@@ -128,7 +128,7 @@ public final class Group {
     }
 
     public Group miniGroup() {
-        return new Group(id, lycee, classe, admins, true, expeENSGroupe);
+        return new Group(id, lycee, classe, Set.of(), true, expeENSGroupe);
     }
 
 

@@ -261,28 +261,36 @@ public record OnisepData(
                 new TypeToken<List<Map<String,String>>>(){}.getType()
         );
 
-        metiersFormationsHeritage.forEach(stringStringMap -> {
-            /*{
+        try(CsvTools csvTools = new CsvTools("ajouts_heritage.csv", ',')) {
+            csvTools.appendHeaders(List.of("fl1","lib1","fl2","lib2"));
+            for (Map<String, String> stringStringMap : metiersFormationsHeritage) {/*{
                 "nom_filiere": "C.M.I - Acoustique et Vibrations",
                 "fl": "fl4073",
                 "nom_formation": "L1 - Acoustique et Vibrations"
                 }, */
-                    String fl = stringStringMap.get("fl");
-                    String formation = stringStringMap.get("nom_formation");
-                    String formationKey = DictApproxInversion.findKey(formation.toLowerCase(), dico);
+                String fl = stringStringMap.get("fl");
+                String lib1 = stringStringMap.get("nom_filiere");
+                String lib2 = stringStringMap.get("nom_formation");
+                String fl2 = DictApproxInversion.findKey(lib2.toLowerCase(), dico);
 //            String formationKey = filieres.findFormationKey(formation);
-                    if (formationKey == null) {
-                        unmatched.add(formation);
-                    } else {
-                        edgesMetiersFilieres
-                                .getPredecessors(formationKey)
-                                .keySet()
-                                .stream().filter(s -> isMetier(s))
-                                .forEach(s -> edgesMetiersFilieres.put(s, fl)
-                        );
-                    }
+                if (fl2 == null) {
+                    unmatched.add(lib2);
+                } else {
+                    csvTools.append(fl);
+                    csvTools.append(lib1);
+                    csvTools.append(fl2);
+                    csvTools.append(lib2);
+                    csvTools.newLine();
+                    edgesMetiersFilieres
+                            .getPredecessors(fl2)
+                            .keySet()
+                            .stream().filter(s -> isMetier(s))
+                            .forEach(s -> edgesMetiersFilieres.put(s, fl)
+                            );
                 }
-                );
+            }
+        }
+
 
 
 

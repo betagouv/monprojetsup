@@ -301,5 +301,5 @@ function endTunnel() {
       Math.max(currentProfileCompleteness, 2)
     );
   $(".profile-tab").prop("disabled", false);
-  handlers.finishTunnel(currentCategory);
+  //handlers.finishTunnel(currentCategory);
 }

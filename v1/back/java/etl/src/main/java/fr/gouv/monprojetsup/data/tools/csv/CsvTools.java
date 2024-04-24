@@ -90,7 +90,7 @@ public class CsvTools implements Closeable {
         }
     }
 
-    public void append(List<String> headers) throws IOException {
+    public void appendHeaders(List<String> headers) throws IOException {
         for(String h : headers) {
             append(h);
         }

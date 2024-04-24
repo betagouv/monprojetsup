@@ -155,7 +155,7 @@ public class DailyUserBehaviourAnalysis {
         copyFile(sourceFile, Path.of("data/" + filename + ".json"));
 
         try(CsvTools writer = new CsvTools(filename + ".csv", ',')) {
-            writer.append(List.of("Groupe", "User", "Durée (min)", "Evènements"));
+            writer.appendHeaders(List.of("Groupe", "User", "Durée (min)", "Evènements"));
             for (val entry : report.groupsBehaviours().entrySet()) {
                 String group = entry.getKey();
                 UsersBehaviourReport.GroupBehaviourReport stats = entry.getValue();
