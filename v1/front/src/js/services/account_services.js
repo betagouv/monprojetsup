@@ -47,13 +47,20 @@ export async function createAccountAsync(data) {
   });
 }
 
-export function validateCodeAcces(data, onSuccess = null) {
-  postToSpringService(
-    "public/account/validate",
-    { data: data },
-    onSuccess,
-    true
-  );
+export async function validateCodeAcces(data) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "public/account/validate",
+      { data: data },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 }
 
 export function sendResetPasswordEmail(email, onSuccess = null) {
@@ -63,7 +70,8 @@ export function sendResetPasswordEmail(email, onSuccess = null) {
       email: email,
     },
     onSuccess,
-    true
+    true,
+    (error) => reject(error)
   );
 }
 
