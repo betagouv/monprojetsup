@@ -74,7 +74,7 @@ async function doTransition(old_screen, new_screen) {
 
 function init_main_nav() {
   $(".set-screen")
-    .off("click")
+    .off()
     .on("click", async function () {
       const screen = $(this).attr("screen");
       $(this).attr("aria-current", true);
@@ -88,19 +88,19 @@ function init_main_nav() {
   );
 
   $(".disconnect")
-    .off("click")
+    .off()
     .on("click", async function () {
       app.disconnect();
       $(".visible-only-when-connected").hide();
       $(".visible-only-when-disconnected").show();
     });
   $(".recherche")
-    .off("click")
+    .off()
     .on("click", async function () {
       await setScreen("recherche");
     });
   $(".monespace")
-    .off("click")
+    .off()
     .on("click", async function () {
       await setScreen("profil");
     });
