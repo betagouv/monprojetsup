@@ -258,6 +258,10 @@ export function updateProfile(name, value, action) {
   server.updateProfile({ name: name, value: value, action: action }, () => {});
 }
 
+export function updateSuggestions(suggestions, handler = null) {
+  server.updateProfile({ suggestions: suggestions }, handler);
+}
+
 export function toTeacher() {
   server.switchRole("pp", postLoginHandler);
 }
