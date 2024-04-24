@@ -1206,9 +1206,44 @@ color: var(--light-decisions-text-text-mention-grey, #666);
 .accordion-body[excluded] {
   background-color: lightgray;
 }
-
-/* Style the tab */
-.nav-tabs {
+.inscription_tunnel_content {
+  display: flex;
+    padding: 48px 0px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+}
+.inscription_tunnel_content_radio_labels {
+  display: flex;
+  flex-direction: column;
+}
+.inscription_tunnel_content_radio_labels1 {
+  color: var(--light-decisions-text-text-label-grey, #161616);
+  
+    /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+}
+.inscription_tunnel_content_radio_labels2 {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  
+    /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+}
+.inscription_tunnel_content_radio_labels3 {
+    font-size: 32px;
+  }
+/* Style the tab */.nav-tabs {
   overflow: hidden;
   /*border: 1px solid #ccc;*/
   border: none;

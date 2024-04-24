@@ -43,6 +43,7 @@ import { Tab } from "bootstrap";
 import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
+import { setScreen } from "../app/navigation";
 
 export {
   initOnce,
@@ -108,6 +109,16 @@ export async function showConnectedScreen(subscreen) {
   $("#header-navigation a").removeAttr("aria-current");
   $(`#nav-${subscreen}`).attr("aria-current", true);
   const $div = $(`#myTabContent`);
+  if ($div.length == 0) throw Error("no myTabContent");
+  $div.html(html);
+}
+
+export async function showTunnelScreen(subscreen) {
+  await showSubScreen("inscription_tunnel");
+  const fromProfile = ["domaines_pro", "interests", "etudes", "scolarite"];
+  const prefix = fromProfile.includes(subscreen) ? "profil/" : "inscription/";
+  const html = await fetchData(prefix + subscreen);
+  const $div = $(`#myTabContent`);
   if ($div.length == 0) {
     throw Error("no myTabContent");
   }
@@ -172,16 +183,8 @@ function injectInMultiOptions($accordions_group, menus) {
   }
 }
 
-async function injectProfileTab(tabName) {
-  //console.log("Injecting profile tab " + tabName);
-  const html = await fetchData("profil/" + tabName);
-  //console.log("Fetched " + tabName);
-  let $div = $(`#tab-${tabName}-panel`);
-  while ($div.length == 0) {
-    //$div = $(`#tab-${tabName}-panel`);
-    throw Error(`no div #tab-${tabName}-panel`);
-  }
-  $div.html(html);
+export function setupSelects(tabName, divName) {
+  let $div = $(divName);
   if (tabName === "scolarite") {
     injectInSelect(
       $("#profile-tab-scolarite-classe-select", $div),
@@ -207,6 +210,19 @@ async function injectProfileTab(tabName) {
     );
     updateMultiOptionsItemsStatus();
   }
+}
+
+async function injectProfileTab(tabName) {
+  //console.log("Injecting profile tab " + tabName);
+  const html = await fetchData("profil/" + tabName);
+  //console.log("Fetched " + tabName);
+  let $div = $(`#tab-${tabName}-panel`);
+  while ($div.length == 0) {
+    //$div = $(`#tab-${tabName}-panel`);
+    throw Error(`no div #tab-${tabName}-panel`);
+  }
+  $div.html(html);
+  setupSelects(tabName, `#tab-${tabName}-panel`);
   //console.log("Intitialized profile tab " + tabName);
 }
 
