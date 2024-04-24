@@ -73,6 +73,7 @@ const SélecteurMultiple = ({
         <ul
           aria-live="polite"
           className="fr-tags-group mb-6 mt-2 list-none"
+          data-testid="suggérées"
         >
           {optionsSuggérées.map((option) => (
             <li key={option.valeur}>
@@ -87,7 +88,10 @@ const SélecteurMultiple = ({
       {optionsSélectionnées.length > 0 && (
         <>
           <p className="fr-text--xs mb-3">{texteOptionsSélectionnées}</p>
-          <ul className="fr-tags-group list-none">
+          <ul
+            className="fr-tags-group list-none"
+            data-testid="sélectionnées"
+          >
             {optionsSélectionnées.map((option) => (
               <li key={option.valeur}>
                 <TagCliquable

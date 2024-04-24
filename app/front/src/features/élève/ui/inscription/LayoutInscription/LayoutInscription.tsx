@@ -51,29 +51,29 @@ const LayoutInscription = () => {
                 <p className="fr-text--lg">{i18n.COMMUN.CHAMPS_OBLIGATOIRES}</p>
                 <Suspense fallback={<AnimationChargement />}>
                   <Outlet />
+                  <hr className="mt-12" />
+                  <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
+                    {étapePrécédente && (
+                      <LienInterne
+                        ariaLabel={i18n.COMMUN.RETOUR}
+                        href={étapePrécédente.url}
+                        variante="neutre"
+                      >
+                        <BoutonSquelette
+                          icône={{ position: "gauche", classe: "fr-icon-arrow-left-line" }}
+                          label={i18n.COMMUN.RETOUR}
+                          variante="secondaire"
+                        />
+                      </LienInterne>
+                    )}
+                    <Bouton
+                      formId={étapeActuelle?.url}
+                      icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
+                      label={i18n.COMMUN.CONTINUER}
+                      type="submit"
+                    />
+                  </div>
                 </Suspense>
-                <hr className="mt-12" />
-                <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
-                  {étapePrécédente && (
-                    <LienInterne
-                      ariaLabel={i18n.COMMUN.RETOUR}
-                      href={étapePrécédente.url}
-                      variante="neutre"
-                    >
-                      <BoutonSquelette
-                        icône={{ position: "gauche", classe: "fr-icon-arrow-left-line" }}
-                        label={i18n.COMMUN.RETOUR}
-                        variante="secondaire"
-                      />
-                    </LienInterne>
-                  )}
-                  <Bouton
-                    formId={étapeActuelle?.url}
-                    icône={{ position: "droite", classe: "fr-icon-arrow-right-line" }}
-                    label={i18n.COMMUN.CONTINUER}
-                    type="submit"
-                  />
-                </div>
               </div>
             </div>
           </div>
