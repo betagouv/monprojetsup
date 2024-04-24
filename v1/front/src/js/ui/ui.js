@@ -107,7 +107,11 @@ export async function showConnectedScreen(subscreen) {
   const html = await fetchData(subscreen);
   $("#header-navigation a").removeAttr("aria-current");
   $(`#nav-${subscreen}`).attr("aria-current", true);
-  $(`#myTabContent`).html(html);
+  const $div = $(`#myTabContent`);
+  if ($div.length == 0) {
+    throw Error("no myTabContent");
+  }
+  $div.html(html);
 }
 
 function injectInSelect($select, data) {
@@ -169,11 +173,12 @@ function injectInMultiOptions($accordions_group, menus) {
 }
 
 async function injectProfileTab(tabName) {
-  console.log("Injecting profile tab " + tabName);
+  //console.log("Injecting profile tab " + tabName);
   const html = await fetchData("profil/" + tabName);
-  console.log("Fetched " + tabName);
-  const $div = $(`#tab-${tabName}-panel`);
-  if ($div.length == 0) {
+  //console.log("Fetched " + tabName);
+  let $div = $(`#tab-${tabName}-panel`);
+  while ($div.length == 0) {
+    //$div = $(`#tab-${tabName}-panel`);
     throw Error(`no div #tab-${tabName}-panel`);
   }
   $div.html(html);
@@ -202,7 +207,7 @@ async function injectProfileTab(tabName) {
     );
     updateMultiOptionsItemsStatus();
   }
-  console.log("Intitialized profile tab " + tabName);
+  //console.log("Intitialized profile tab " + tabName);
 }
 
 export function updateMultiOptionsItemsStatus() {
@@ -279,6 +284,7 @@ export async function showProfileScreen() {
   $("#main-placeholder").css({
     "background-image": "none",
   });
+
   await showConnectedScreen("profile");
   //inject profile data
   await injectProfileTab("scolarite");
@@ -933,7 +939,7 @@ function buildMetierAffinityCard(key, fav, formations, nodetails) {
 }
 
 export const tabs = {
-  profile: "nav-profile-tab",
+  profile: "nav-profil-tab",
   preferences: "nav-preferences-tab",
   groups: "nav-groups-tab",
   account: "nav-account-tab",
@@ -1052,7 +1058,7 @@ function initOnce() {
       showFavorisTab();
     });
 
-  $("#nav-profile-tab")
+  $("#nav-profil-tab")
     .off("click")
     .on("click", (e) => {
       addToHistory(e);
