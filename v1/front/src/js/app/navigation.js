@@ -8,22 +8,48 @@ import * as autocomplete from "./../ui/autocomplete/autocomplete";
 
 /** handles navigation between screens  */
 
-const screens = [
-  "landing",
-  "connect",
-  "reset_password",
-  "inscription1",
-  "inscription2",
-  "recherche",
-  "board",
-  "selection",
-  "groupes",
-  "profil",
-];
+const screens = {
+  landing: {},
+  connect: {},
+  reset_password: {},
+  inscription1: { next: "inscription2", back: "landing" },
+  inscription2: { next: "inscription_tunnel_statut", back: "inscription1" },
+  recherche: {},
+  board: {},
+  selection: {},
+  groupes: {},
+  profil: {},
+  inscription_tunnel_statut: { next: "inscription_tunnel_scolarite" },
+  inscription_tunnel_scolarite: {
+    next: "inscription_tunnel_domaines_pro",
+    back: "inscription_tunnel_statut",
+  },
+  inscription_tunnel_domaines_pro: {
+    next: "inscription_tunnel_interests",
+    back: "inscription_tunnel_scolarite",
+  },
+  inscription_tunnel_interests: {
+    next: "inscription_tunnel_etudes", //inscription_tunnel_metiers
+    back: "inscription_tunnel_domaines_pro",
+  },
+  inscription_tunnel_metiers: {
+    next: "inscription_tunnel_etudes",
+    back: "inscription_tunnel_interests",
+  },
+  inscription_tunnel_etudes: {
+    next: "inscription_tunnel_felicitations", //"inscription_formations",
+    back: "inscription_tunnel_interests", //"inscription_tunnel_metiers",
+  },
+  inscription_tunnel_formations: {
+    next: "inscription_tunnel_felicitations",
+    back: "inscription_tunnel_etudes",
+  },
+  inscription_tunnel_felicitations: {},
+};
 
 export async function setScreen(screen) {
   console.log("setScreen", screen);
-  if (screens.includes(screen)) {
+  if (screen in screens) {
     let current_screen = session.getScreen();
     await doTransition(current_screen, screen);
     session.saveScreen(screen);
@@ -31,19 +57,13 @@ export async function setScreen(screen) {
   }
 }
 
-async function next() {
-  let current_screen = session.getScreen();
-  if (current_screen === "inscription1") {
-    validateInscription1();
-  } else if (current_screen === "inscription2") {
-    validateInscription2();
-  }
+function next(current_screen) {
+  if (!current_screen in screens) return undefined;
+  return screens[current_screen]?.next;
 }
-async function back() {
-  let current_screen = session.getScreen();
-  if (current_screen === "inscription2") {
-    await setScreen("inscription1");
-  }
+function back(current_screen) {
+  if (!current_screen in screens) return undefined;
+  return screens[current_screen]?.back;
 }
 
 async function doTransition(old_screen, new_screen) {
@@ -118,6 +138,18 @@ async function updateSelection() {
   });
 }
 
+function profileEditionSetup() {
+  setUpAutoComplete("spe_classes", 0);
+  setUpAutoComplete("geo_pref", 2);
+  setUpMultiChoices();
+  updateProfile();
+}
+
+function setUpInscription(screen) {
+  ui.setupSelects(screen, "#myTabContent");
+  profileEditionSetup();
+}
+
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
@@ -146,15 +178,48 @@ const screen_enter_handlers = {
   profil: async () => {
     await app.getProfile();
     await ui.showProfileScreen();
-    setUpAutoComplete("spe_classes", 0);
-    setUpAutoComplete("geo_pref", 2);
-    setUpMultiChoices();
-    //todo register save handlers
-    updateProfile();
+    profileEditionSetup();
     init_main_nav();
   },
+  inscription_tunnel_statut: async () => {
+    await ui.showTunnelScreen("statut");
+    setUpInscription("statut");
+  },
+  inscription_tunnel_scolarite: async () => {
+    await ui.showTunnelScreen("scolarite");
+    setUpInscription("scolarite");
+  },
+  inscription_tunnel_domaines_pro: async () => {
+    await ui.showTunnelScreen("domaines_pro");
+    setUpInscription("domaines_pro");
+  },
+  inscription_tunnel_interests: async () => {
+    await ui.showTunnelScreen("interests");
+    setUpInscription("interests");
+  },
+  inscription_tunnel_metiers: async () => {
+    await ui.showTunnelScreen("metiers");
+    setUpInscription("metiers");
+  },
+  inscription_tunnel_etudes: async () => {
+    await ui.showTunnelScreen("etudes");
+    setUpInscription("etudes");
+  },
+  inscription_tunnel_formations: async () => {
+    await ui.showTunnelScreen("formations");
+    setUpInscription("formations");
+  },
+  inscription_tunnel_felicitations: async () => {
+    await ui.showTunnelScreen("felicitations");
+    $("#discover_button").on("click", () => {
+      setScreen("board");
+    });
+  },
 };
-const screen_exit_handlers = {};
+const screen_exit_handlers = {
+  inscription1: () => validateInscription1(),
+  inscription2: () => validateInscription2(),
+};
 
 function setUpMultiChoices() {
   //multi-options-item
@@ -220,22 +285,30 @@ function autoCompleteFeedbackHandler(
 
 async function enterScreen(screen) {
   if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
-    await screen_enter_handlers[screen]()
-      .catch((error) => {
-        console.error("Error in enterScreen", screen, error);
-      })
-      .then(() => {
-        $("#nextButton").off().on("click", next);
-        $("#backButton").off().on("click", back);
-      });
+    await screen_enter_handlers[screen]();
+    const nextScreen = next(screen);
+    const backScreen = back(screen);
+    $("#nextButton").toggle(nextScreen !== undefined);
+    $("#backButton").toggle(backScreen !== undefined);
+    if (nextScreen)
+      $("#nextButton")
+        .off()
+        .on("click", async () => {
+          await setScreen(nextScreen);
+        });
+    if (backScreen)
+      $("#backButton")
+        .off()
+        .on("click", async () => {
+          await setScreen(backScreen);
+        });
   } else {
     ui.showLandingScreen();
   }
 }
-function exitScreen(screen) {
+async function exitScreen(screen) {
   if (screen in screen_exit_handlers) {
-    if (screen_exit_handlers[screen]) screen_exit_handlers[screen]().then();
-    return;
+    if (screen_exit_handlers[screen]) await screen_exit_handlers[screen]();
   }
   //default behaviour: None
 }
