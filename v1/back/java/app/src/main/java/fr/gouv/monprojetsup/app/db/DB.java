@@ -449,8 +449,6 @@ public abstract class DB {
         findOrCreateDemoGroup();
         assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup();
 
-
-
         List<Group> newGroups = computeMissingGroups(getLycees(), getAllGroups().stream().map(Group::getId).collect(Collectors.toSet()));
 
         newGroups.forEach(this::saveGroup);

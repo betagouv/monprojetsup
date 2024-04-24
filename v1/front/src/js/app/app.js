@@ -158,6 +158,8 @@ export async function postLoginHandler() {
   $(".nav-link").on("click", function (e) {
     logAction("tab click " + e.currentTarget.id);
   });
+
+  //ui.showValidationRequiredMessage(session.getLogin(), "bla bla");
 }
 
 export async function getProfile() {

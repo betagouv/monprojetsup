@@ -89,12 +89,12 @@ public class Groups {
     }
 
     @NotNull
-    public static synchronized Groups loadClassesCsvFile(String expeFilename) {
+    public static synchronized Groups loadClassesCsvFile(String expeFilename, char separator) {
         Groups ainjecter = new Groups();
         try {
             if(expeFilename == null) return ainjecter;
 
-        List<Map<String, String>> lines = CsvTools.readCSV(expeFilename, ';');
+        List<Map<String, String>> lines = CsvTools.readCSV(expeFilename, separator);
 
             Map<String, Lycee> lyceesIndexed = new HashMap<>();
             lines.forEach(m -> {
@@ -155,7 +155,7 @@ public class Groups {
 
     public synchronized Pair<List<Group>, List<Lycee>> loadGroupsToInjectFromCsvFile(String filename) {
         Pair<List<Group>, List<Lycee>> result = Pair.of(new ArrayList<>(), new ArrayList<>());
-        Groups aInjecter2 = loadClassesCsvFile(filename);
+        Groups aInjecter2 = loadClassesCsvFile(filename, ',');
         List<Lycee> newLycees = inject(aInjecter2).getRight();
         result.getRight().addAll(newLycees);
         aInjecter2.lycees.forEach(lycee -> lycee.getClasses().forEach(classe -> {
