@@ -109,6 +109,28 @@ footer {
         background-position: center;
         background-repeat: no-repeat;
 }
+.link_apprentissage {
+  color: var(--light-decisions-text-text-default-info, #0063CB);
+    font-family: Marianne;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+    text-decoration-line: underline;
+    
+}
+.profile_explanation {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  
+    /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+}
 .py-10px {
   padding-top: 10px;
   padding-bottom: 10px;

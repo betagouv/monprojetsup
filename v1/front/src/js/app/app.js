@@ -86,7 +86,7 @@ export async function createAccount(data) {
   data.cguVersion = __VERSION__;
   const msg = await server.createAccountAsync(data);
   storeCredentialsAfterSuccesfulAuth(data.login, data.password);
-  await loginServerAnswerHandler(msg.data, data.login);
+  return await loginServerAnswerHandler(msg.data, data.login);
 }
 
 export async function validateCodeAcces(accountType, accesGroupe) {
@@ -122,11 +122,15 @@ export function storeCredentialsAfterSuccesfulAuth(login, password) {
 async function loginServerAnswerHandler(data) {
   if (data.validationRequired) {
     ui.showValidationRequiredMessage(data.login, data.validationMessage);
+    nav.setScreen("landing");
+    return false;
   } else if (data.token !== undefined) {
     session.setToken(data.login, data.token);
     await postLoginHandler();
+    return true;
   } else {
     frontErrorHandler("Réponse erronée du serveur", true);
+    return false;
   }
 }
 
@@ -155,10 +159,6 @@ export async function postLoginHandler() {
   data.loadProfile(msgp.profile);
   startNavigation();
 
-  $(".nav-link").on("click", function (e) {
-    logAction("tab click " + e.currentTarget.id);
-  });
-
   //ui.showValidationRequiredMessage(session.getLogin(), "bla bla");
 }
 
@@ -169,7 +169,12 @@ export async function getProfile() {
 
 function startNavigation() {
   const screen = session.getScreen();
-  if (screen != undefined && !screen.includes("inscription")) {
+  if (
+    screen != undefined &&
+    screen != null &&
+    screen != "null" &&
+    !screen.includes("inscription")
+  ) {
     nav.setScreen(screen);
   } else {
     if (session.isAdminOrTeacher()) {
@@ -248,110 +253,6 @@ export async function getSelection() {
   return server.getSelection();
 }
 
-export async function doSearchOld() {
-  const profile = data.getAnonymousProfile();
-  const msg = await server.getFormationsAffinities(profile);
-  const affinites = msg.affinites;
-  const keys = [];
-  let i = 0;
-  for (i = 0; i < 20; i++) {
-    //horrible way to do that
-    if (i >= affinites.length) break;
-    const key = msg.affinites[i].key;
-    keys.push(key);
-  }
-
-  const msg2 = await server.getExplanations(keys, profile);
-  i = 0;
-  for (const explanations of msg2.liste) {
-    //todo  check key
-    if (explanations.key != keys[i]) {
-      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
-      break;
-    }
-    affinites[i].explanations = explanations;
-    i++;
-  }
-
-  //explanations
-  const msg3 = await server.getDetails(keys, profile);
-  i = 0;
-  for (const details of msg3.details) {
-    //todo  check key
-    if (details.key != keys[i]) {
-      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
-      break;
-    }
-    affinites[i].details = details;
-    i++;
-  }
-
-  return affinites;
-}
-
-function askProfileAndSuggestions(handler) {
-  server.getProfile((msg) => {
-    console.log(JSON.stringify(msg));
-    data.loadProfile(msg.profile);
-    //ui.loadProfile();
-    //ui.hideMainProfileTab();
-    server.getSuggestions(data.getAnonymousProfile(), (msg) => {
-      loadSuggestions(msg);
-      if (handler) handler();
-      //ui.showSuggestionsTab();
-    });
-  });
-}
-
-function getSuggestionsLoadThemAndFadeIn() {
-  server.getSuggestions(data.getAnonymousProfile(), (msg) => {
-    loadSuggestions(msg);
-    animate.fadeIn();
-  });
-}
-/**
- *
- * @param {*} fadingOut
- * @param {*} name
- * @param {*} value
- * @param {*} action
- */
-export function updateSuggestions(suggestions, handler = null) {
-  server.updateProfile({ suggestions: suggestions }, handler);
-}
-
-export function updateSuggestionsAndReloadUI(fadingOut, suggestions) {
-  if (fadingOut) {
-    animate.fadeOut(() => {
-      server.updateProfile({ suggestions: suggestions }, () => {
-        animate.scrollTop();
-        ui.loadProfile();
-        getSuggestionsLoadThemAndFadeIn();
-      });
-    });
-  } else {
-    server.updateProfile({ suggestions: suggestions }, () => {
-      getSuggestionsLoadThemAndFadeIn();
-    });
-  }
-}
-
-export function updateProfileAndReloadUI(fadingOut, name, value, action) {
-  if (fadingOut) {
-    animate.fadeOut(() => {
-      server.updateProfile({ name: name, value: value, action: action }, () => {
-        animate.scrollTop();
-        ui.loadProfile();
-        getSuggestionsLoadThemAndFadeIn();
-      });
-    });
-  } else {
-    server.updateProfile({ name: name, value: value, action: action }, () => {
-      getSuggestionsLoadThemAndFadeIn();
-    });
-  }
-}
-
 export function updateProfile(name, value, action) {
   console.log("Updating profile " + name + " " + value + " " + action);
   server.updateProfile({ name: name, value: value, action: action }, () => {});
@@ -366,7 +267,7 @@ export function toLyceen() {
 }
 
 function disconnect() {
-  $(".front-feedback").html("Vous êtes déconnecté(e).").show();
+  //$(".front-feedback").html("Vous êtes déconnecté(e).").show();
   $(".front-error").html("");
   $(".server-error").html("");
   session.clear();
@@ -551,11 +452,6 @@ function deleteUser(user) {
   server.deleteUser(user, showAdminTab);
 }
 
-function loadSuggestions(msg) {
-  data.loadSuggestions(msg.suggestions.suggestions);
-  ui.updateSuggestionsTab();
-}
-
 export function changeGroupStatus(group, status) {
   if (group !== null && status !== undefined) {
     server.changeGroupStatus(group, status, (msg) => {
@@ -649,7 +545,8 @@ export function logAction(action) {
 
 function disconnectAndShowFeedback(feedback) {
   disconnect();
-  $(".front-feedback").html(feedback).show();
+  ui.displayClientError(feedback);
+  //$(".front-feedback").html(feedback).show();
 }
 
 function commentChanged(topic, comment) {
@@ -684,26 +581,4 @@ export function newSearchCallback(obj) {
   const str = "searching '" + JSON.stringify(obj) + "'";
   console.log(str);
   server.trace(str);
-}
-
-export function finishTunnel(category) {
-  const profile = data.getProfile();
-  server.updateProfile(profile, () =>
-    server.getSuggestions(data.getAnonymousProfile(), () => {
-      if (category == "preferences") {
-        ui.hideMainProfileTab();
-        askProfileAndSuggestions(() => {
-          ui.showSuggestionsTab();
-          tunnel.openTutoModal(
-            "C'est parti pour l'exploration!",
-            "Tu as deux étapes à suivre. Dans la première étape tu vas explorer des thématiques et métiers, et dans la seconde partie tu vas explorer des formations ! Des suggestions te sont proposées mais libre à toi de naviguer dans la barre de recherche. "
-          );
-        });
-      } else if (category == "profil") {
-        //on va être soit sur du balisé si les préérences ne sont pas encore complètes,
-        //soit sinon on repart direct sur suggestions tab
-        postLoginHandler();
-      }
-    })
-  );
 }

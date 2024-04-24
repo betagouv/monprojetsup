@@ -81,7 +81,7 @@ public class AnalyzeData {
                 true);
 
         try(CsvTools csv = new CsvTools("metiers_sans_formations.csv",',')) {
-            csv.append(List.of("id", "label"));
+            csv.appendHeaders(List.of("id", "label"));
             metiersSansFormations.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(e -> {
@@ -118,7 +118,7 @@ public class AnalyzeData {
                 ));
 
         try(CsvTools csv = new CsvTools("formations_psup_sans_metiers.csv",',')) {
-            csv.append(List.of("id", "LIS_ID_ONI2","label"));
+            csv.appendHeaders(List.of("id", "LIS_ID_ONI2","label"));
             formationsSansMetiers.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(e -> {

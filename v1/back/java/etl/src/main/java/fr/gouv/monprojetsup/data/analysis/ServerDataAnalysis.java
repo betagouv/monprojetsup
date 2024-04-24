@@ -460,7 +460,7 @@ public class ServerDataAnalysis {
 
         try (CsvTools csv = new CsvTools("comparatif_actions_formations_psup_oni.csv", ',')) {
             //on lit la correspondance de JM
-            csv.append(
+            csv.appendHeaders(
                     List.of(
                             "CODEFORMATION (gFrCod)",
                             "LIBELLÉFORMATION (gFrLib)",
@@ -538,7 +538,7 @@ public class ServerDataAnalysis {
     private static void exportCentresDinteretsEtThemes() throws IOException {
         Interets interets = onisepData.interets();
         try(CsvTools csv = new CsvTools("centresInterets.csv",',')) {
-            csv.append(List.of("id", "label"));
+            csv.appendHeaders(List.of("id", "label"));
             interets.interets().entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(e -> {
@@ -553,7 +553,7 @@ public class ServerDataAnalysis {
         }
         Thematiques thematiques = onisepData.thematiques();
         try(CsvTools csv = new CsvTools("thematiques.csv",',')) {
-            csv.append(List.of("id", "label"));
+            csv.appendHeaders(List.of("id", "label"));
             thematiques.thematiques().entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(e -> {
@@ -572,7 +572,7 @@ public class ServerDataAnalysis {
     private static void exportAttendus() throws IOException {
         val attendus = getAttendusParGroupes();
         try(CsvTools csv = new CsvTools("attendus.csv",',')) {
-            csv.append(List.of("type", "énonce","formations"));
+            csv.appendHeaders(List.of("type", "énonce","formations"));
             attendus.forEach((stringStringPair, strings) -> {
                 try {
                     csv.append(stringStringPair.getLeft());
@@ -622,7 +622,7 @@ public class ServerDataAnalysis {
                 true
         );
         try(CsvTools moyennesCsvWriter = new CsvTools("moyennes.csv",',')) {
-            moyennesCsvWriter.append(List.of("filiere", "medianeMoyGen", "medianeMoyBac", "per25MoyGen", "per25MoyBac", "per75MoyGen", "per75MoyBac"));
+            moyennesCsvWriter.appendHeaders(List.of("filiere", "medianeMoyGen", "medianeMoyBac", "per25MoyGen", "per25MoyBac", "per75MoyGen", "per75MoyBac"));
             for (Map.Entry<String, Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>>> entry : moyennes.entrySet()) {
                 String k = entry.getKey();
                 Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>> v = entry.getValue();
@@ -715,7 +715,7 @@ public class ServerDataAnalysis {
                 eds);
 
         try (CsvTools csv = new CsvTools("resumesDescriptifsFormations.csv", ',')) {
-            csv.append(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
+            csv.appendHeaders(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
                     "url onisep",
                     "url psup",
                     "resume",
@@ -789,7 +789,7 @@ public class ServerDataAnalysis {
         }
 
         try (CsvTools csv = new CsvTools("metiersExtraitsDesDescriptifsformations.csv", ',')) {
-            csv.append(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
+            csv.appendHeaders(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
                     "métiers extraits des descriptifs (codes)",
                     "intitulé onisep",
                     "extrait du descriptif",

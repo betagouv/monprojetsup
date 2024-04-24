@@ -902,12 +902,10 @@ public class DBMongo extends DB implements Closeable {
                             .toList()
             );
             return result;
-        } else {//student only sees the list of admins, if he is in a group
+        } else {
             Group group = getGroup(login);
             if (group != null) {
                 result.groups().add(group.miniGroup().toDTO());
-                //on inject la donneé groupe ENS pour simplifier le travail côté front
-                config.setExpeENSGroup(group.getExpeENSGroupe());
             }
             return result;
         }

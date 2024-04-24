@@ -55,7 +55,6 @@ export async function setScreen(screen) {
   } else if (screen in screens) {
     let current_screen = session.getScreen();
     screen = await doTransition(current_screen, screen);
-    session.saveScreen(screen);
     $(`#nav-${screen}`).attr("aria-current", true);
     init_main_nav();
   }
@@ -72,25 +71,26 @@ function back(current_screen) {
 
 async function doTransition(old_screen, new_screen) {
   const result = await exitScreen(old_screen);
-  let screen = old_screen;
+  let screen = session.getScreen();
   if (result) {
     await enterScreen(new_screen);
     screen = new_screen;
+    app.logAction("doTransition " + old_screen + " --> " + new_screen);
+    session.saveScreen(screen);
   }
-
   const nextScreen = next(screen);
   const backScreen = back(screen);
   $("#nextButton").toggle(nextScreen !== undefined);
   $("#backButton").toggle(backScreen !== undefined);
   if (nextScreen)
     $("#nextButton")
-      .off()
+      .off("click")
       .on("click", async () => {
         await setScreen(nextScreen);
       });
   if (backScreen)
     $("#backButton")
-      .off()
+      .off("click")
       .on("click", async () => {
         await setScreen(backScreen);
       });
@@ -99,7 +99,7 @@ async function doTransition(old_screen, new_screen) {
 
 export function init_main_nav() {
   $(".set-screen")
-    .off()
+    .off("click")
     .on("click", async function () {
       const screen = $(this).attr("screen");
       $(this).attr("aria-current", true);
@@ -194,7 +194,7 @@ function profileEditionSetup() {
   setUpAutoComplete("spe_classes", 0);
   setUpAutoComplete("geo_pref", 2);
   setUpMultiChoices();
-  updateProfile();
+  setUpSelects();
 }
 
 function setUpInscription(screen) {
@@ -264,7 +264,7 @@ const screen_enter_handlers = {
   inscription_tunnel_felicitations: async () => {
     await ui.showTunnelScreen("felicitations");
     $("#discover_button")
-      .off("click")
+      .off()
       .on("click", () => {
         setScreen("board");
       });
@@ -278,7 +278,7 @@ const screen_exit_handlers = {
 function setUpMultiChoices() {
   //multi-options-item
   $(".multi-options-item")
-    .off("click")
+    .off()
     .on("click", function () {
       const key = $(this).attr("key");
       events.toggleProfileScoreHandler(key);
@@ -310,6 +310,46 @@ function setUpAutoComplete(id, threshold) {
   if (id === "spe_classes") {
     $("#autocomplete_group_spe_classes").toggle(show);
   }
+}
+
+function setUpSelects() {
+  const selects = {
+    niveau: "#profile-tab-scolarite-classe-select",
+    bac: "#profile-tab-scolarite-bac-select",
+    duree: "#profile-tab-etudes-duree-select",
+    apprentissage: "#profile-tab-etudes-app-select",
+  };
+  for (const key in selects) {
+    const id = selects[key];
+    setSelectVal(id, data.getProfileValue(key));
+  }
+  $(".profile-select")
+    .off()
+    .on("change", function () {
+      const key = $(this).attr("key");
+      const val = $(this).val();
+      events.profileValueChangedHandler2(key, val);
+      if (key == "bac") {
+        setUpAutoComplete("spe_classes", 0);
+      }
+    });
+  /*
+  $(".save-profile-button").on("click", function () {
+    const pf = {};
+    const category = $(this).attr("category");
+    if (category === "scolarite") {
+      const classe = getSelectVal("#profile-tab-scolarite-classe-select");
+      const bac = getSelectVal("#profile-tab-scolarite-bac-select");
+      events.profileValueChangedHandler2("niveau", classe);
+      events.profileValueChangedHandler2("bac", bac);
+    }
+    if (category === "etudes") {
+      const duree = getSelectVal("#profile-tab-etudes-duree-select");
+      const app = getSelectVal("#profile-tab-etudes-app-select");
+      events.profileValueChangedHandler2("duree", duree);
+      events.profileValueChangedHandler2("apprentissage", app);
+    }
+  });*/
 }
 
 function autoCompleteFeedbackHandler(
@@ -424,12 +464,10 @@ async function validateInscription2() {
     $("#champMdp-messages").html(
       `<p class="fr-alert fr-alert--error">Mot de passe non renseigné</p>`
     );
-  } else if (false && validEmailNeeded() && !isValidEmail(login)) {
-    toast("", "Renseignez une adresse email valide");
   } else {
     $("#champMdp").val("");
     $("#champMdp2").val("");
-
+    session.saveScreen(null);
     await app.createAccount({
       nom: nom,
       prenom: prenom,
@@ -438,7 +476,9 @@ async function validateInscription2() {
       accesGroupe: accessGroupe,
       password: mdp,
     });
+    return false;
   }
+  return false;
 }
 
 function getSelectVal(id) {
@@ -448,42 +488,4 @@ function getSelectVal(id) {
 }
 function setSelectVal(id, val) {
   $(id).val(val);
-}
-
-function updateProfile() {
-  const selects = {
-    niveau: "#profile-tab-scolarite-classe-select",
-    bac: "#profile-tab-scolarite-bac-select",
-    duree: "#profile-tab-etudes-duree-select",
-    apprentissage: "#profile-tab-etudes-app-select",
-  };
-  for (const key in selects) {
-    const id = selects[key];
-    setSelectVal(id, data.getProfileValue(key));
-  }
-  $(".profile-select").on("change", function () {
-    const key = $(this).attr("key");
-    const val = $(this).val();
-    events.profileValueChangedHandler2(key, val);
-    if (key == "bac") {
-      setUpAutoComplete("spe_classes", 0);
-    }
-  });
-  /*
-  $(".save-profile-button").on("click", function () {
-    const pf = {};
-    const category = $(this).attr("category");
-    if (category === "scolarite") {
-      const classe = getSelectVal("#profile-tab-scolarite-classe-select");
-      const bac = getSelectVal("#profile-tab-scolarite-bac-select");
-      events.profileValueChangedHandler2("niveau", classe);
-      events.profileValueChangedHandler2("bac", bac);
-    }
-    if (category === "etudes") {
-      const duree = getSelectVal("#profile-tab-etudes-duree-select");
-      const app = getSelectVal("#profile-tab-etudes-app-select");
-      events.profileValueChangedHandler2("duree", duree);
-      events.profileValueChangedHandler2("apprentissage", app);
-    }
-  });*/
 }

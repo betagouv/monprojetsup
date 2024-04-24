@@ -131,7 +131,20 @@ export async function showTunnelScreen(subscreen) {
   if ($div.length == 0) {
     throw Error("no myTabContent");
   }
+  const changes = {
+    scolarite: [[".profile_tab_title", "Dis-nous en plus sur ta scolarité"]],
+    domaines_pro: [
+      [".profile_tab_title", "Les domaines professionnels qui t'attirent"],
+    ],
+    interests: [[".profile_tab_title", "Plus tard, je voudrais ..."]],
+    etudes: [[".profile_tab_title", "À propos des études supérieures"]],
+  };
   $div.html(html);
+  if (subscreen in changes) {
+    for (const [selector, text] of changes[subscreen]) {
+      $(selector, $div).html(text);
+    }
+  }
 }
 
 function injectInSelect($select, data) {
@@ -261,6 +274,7 @@ export function injectHtml() {
     "rgpd_content.html": "rgpd-placeholder",
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
     "modals/validate_account.html": "validate_account-placeholder",
+    "modals/error.html": "error-placeholder",
   };
   for (const [file, id] of Object.entries(m)) {
     fetch("html/" + file)
@@ -1231,14 +1245,15 @@ function displayServerError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  $(".server-error").html("Erreur serveur: " + msgHtml + "<br><br><br><br>");
+  showErrorMessage("Erreur", msgHtml);
+  //$(".server-error").html("Erreur serveur: " + msgHtml + "<br><br><br><br>");
 }
 
 function displayClientError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  $(".front-error").html("Erreur client:<br> " + msgHtml);
+  showErrorMessage("Erreur", msgHtml);
 }
 
 //validationMessage
@@ -1247,7 +1262,14 @@ export function showValidationRequiredMessage(login, message) {
   $("#validationRequiredLogin").html(login);
   $("#validationRequiredMessage").html(message);
 
-  $("#validationRequiredModalButton").click();
+  $("#validationRequiredModalButton").trigger("click");
+}
+
+export function showErrorMessage(title, message) {
+  //show modal
+  $("#errorTitle").html(title);
+  $("#errorMessage").html(message);
+  $("#errorModalButton").trigger("click");
 }
 
 export function showResetPasswordMessageSent(email) {

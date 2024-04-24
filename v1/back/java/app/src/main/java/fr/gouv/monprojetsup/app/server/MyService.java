@@ -26,6 +26,10 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
 
     @Override
     public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+        return handleAnException(e, o, uri);
+    }
+
+    public static ErrorResponse handleAnException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,

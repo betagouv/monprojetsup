@@ -313,7 +313,7 @@ public class AnalyzeUserBehaviour {
         Map<String, Set<String>> suggestionsVues = new HashMap<>();
 
         try(CsvTools csv = new CsvTools(filename.replace("json","csv"), ',')) {
-            csv.append(List.of(
+            csv.appendHeaders(List.of(
                     "Lycée",
                     "Groupe",
                     "Date et heure",
@@ -392,7 +392,7 @@ public class AnalyzeUserBehaviour {
         LOGGER.info("Lycéens revenus " + retours.size());
 
         try(CsvTools csv = new CsvTools("lyceen" + filename.replace("json","csv"), ',')) {
-            csv.append(List.of(
+            csv.appendHeaders(List.of(
                     "lycéens",
                     "nb favoris",
                     "nb favoris formations",
@@ -416,7 +416,7 @@ public class AnalyzeUserBehaviour {
         }
 
         try(CsvTools csv = new CsvTools("lyceen_sugg_" + filename.replace("json","csv"), ',')) {
-            csv.append(List.of(
+            csv.appendHeaders(List.of(
                     "lycéens",
                     "nb favoris",
                     "nb favoris formations",
@@ -444,7 +444,7 @@ public class AnalyzeUserBehaviour {
         Set <String> lycees = Set.of("vaclav","graves","smdc_toulouse","bremonthier","libourne");
 
         try(CsvTools csv = new CsvTools("lyceen_non_ENS" + filename.replace("json","csv"), ',')) {
-            csv.append(List.of(
+            csv.appendHeaders(List.of(
                     "lycéens",
                     "nb favoris",
                     "nb favoris formations",

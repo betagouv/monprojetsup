@@ -24,9 +24,8 @@ public abstract class MyService<T,U> implements HttpHandler {
 
     protected abstract boolean isServerReady();
 
-    /* we synchronized it to avoid the strange bug */
     @Override
-    public synchronized void handle(@NotNull HttpExchange exchange) {
+    public void handle(@NotNull HttpExchange exchange) {
         T req = null;
         try {
             req = extractRequest(exchange);
