@@ -48,6 +48,7 @@ export const passwordLogin = account_services.passwordLogin;
 export const oidcLogin = account_services.oidcLogin;
 export const disconnect = account_services.disconnect;
 export const createAccount = account_services.createAccount;
+export const createAccountAsync = account_services.createAccountAsync;
 export const validateAccount = account_services.validateAccount;
 export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
@@ -56,6 +57,7 @@ export const joinGroup = account_services.joinGroup;
 
 /**************** TEACHER SERVICES ************* */
 export const updateAdminInfos = teacher_services.getAdminInfos;
+export const updateAdminInfosAsync = teacher_services.getAdminInfosAsync;
 export const getStudentProfile = teacher_services.getStudentProfile;
 export const getSelectedGroupDetails = teacher_services.getSelectedGroupDetails;
 export const switchRole = teacher_services.switchRole;

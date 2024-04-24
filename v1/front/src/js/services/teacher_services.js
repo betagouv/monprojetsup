@@ -4,6 +4,20 @@ export function getAdminInfos(onSuccess = null) {
   postToSpringService("teacher/groups/list", {}, onSuccess);
 }
 
+export async function getAdminInfosAsync() {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/groups/list",
+      {},
+      (data) => {
+        resolve(data);
+      },
+      false,
+      (error) => reject(error)
+    );
+  });
+}
+
 export function getSelectedGroupDetails(group, onSuccess = null) {
   postToSpringService(
     "teacher/groups/details",
