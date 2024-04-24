@@ -24,6 +24,21 @@ $(async function () {
     frontErrorHandler(errObj, true);
   };
 
+  window.onunhandledrejection = function (event) {
+    console.log("Unhandled rejection (promise):", event.promise);
+    console.log("Reason:", event.reason);
+
+    try {
+      //ui.displayClientError(event.reason);
+      server.sendError(event.reason);
+    } catch (e) {
+      //ignored
+    }
+
+    // Prevent the default handling of unhandled rejections
+    event.preventDefault();
+  };
+
   ui.injectHtml();
 
   /*
