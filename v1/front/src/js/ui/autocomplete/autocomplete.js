@@ -13,7 +13,7 @@ export function setUpAutoComplete(
   // Autocomplete section : https://github.com/Honatas/bootstrap-4-autocomplete
   const field = document.getElementById(id + "_autocomplete");
   if (field === null) {
-    console.log("No container " + id + "_autocomplete");
+    //console.log("No container " + id + "_autocomplete");
     return;
   }
   const itemsSource = sourceToItems(id);

@@ -212,17 +212,23 @@ export function setupSelects(tabName, divName) {
   }
 }
 
-async function injectProfileTab(tabName) {
-  //console.log("Injecting profile tab " + tabName);
-  const html = await fetchData("profil/" + tabName);
-  //console.log("Fetched " + tabName);
-  let $div = $(`#tab-${tabName}-panel`);
-  while ($div.length == 0) {
-    //$div = $(`#tab-${tabName}-panel`);
-    throw Error(`no div #tab-${tabName}-panel`);
+async function injectProfileTabs(tabNames) {
+  console.log("Injecting profile tab " + tabNames);
+  const htmls = {};
+  for (const tabName of tabNames) {
+    htmls[tabName] = await fetchData("profil/" + tabName);
   }
-  $div.html(html);
-  setupSelects(tabName, `#tab-${tabName}-panel`);
+
+  for (const tabName of tabNames) {
+    //console.log("Fetched " + tabName);
+    let $div = $(`#tab-${tabName}-panel`);
+    /*while ($div.length == 0) {
+    $div = $(`#tab-${tabName}-panel`);
+    //throw Error(`no div #tab-${tabName}-panel`);
+  }*/
+    $div.html(htmls[tabName]);
+    setupSelects(tabName, `#tab-${tabName}-panel`);
+  }
   //console.log("Intitialized profile tab " + tabName);
 }
 
@@ -270,6 +276,8 @@ export async function showLandingScreen() {
     "background-image": 'url("../img/bg.svg")',
   });
   $(".visible-only-when-connected").hide();
+  $(".visible-only-when-disconnected").show();
+
   $("#landing-placeholder")
     .off()
     .on("click", () => {
@@ -303,10 +311,7 @@ export async function showProfileScreen() {
 
   await showConnectedScreen("profile");
   //inject profile data
-  await injectProfileTab("scolarite");
-  await injectProfileTab("etudes");
-  await injectProfileTab("domaines_pro");
-  await injectProfileTab("interests");
+  await injectProfileTabs(["scolarite", "etudes", "domaines_pro", "interests"]);
   $(".profile-div-prenomnom").html(data.getPrenomNom());
   $(".prenomnom").html(data.getPrenomNom());
   $(".profile-div-email").html(session.getLogin());
