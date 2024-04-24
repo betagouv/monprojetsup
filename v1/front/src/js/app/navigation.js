@@ -73,22 +73,37 @@ async function doTransition(old_screen, new_screen) {
 }
 
 function init_main_nav() {
-  $(".set-screen").on("click", async function () {
-    const screen = $(this).attr("screen");
-    $(this).attr("aria-current", true);
-    await setScreen(screen);
-  });
+  $(".set-screen")
+    .off("click")
+    .on("click", async function () {
+      const screen = $(this).attr("screen");
+      $(this).attr("aria-current", true);
+      await setScreen(screen);
+    });
   $(".visible-only-when-connected").show();
-  $(".disconnect").on("click", async function () {
-    app.disconnect();
-    $(".visible-only-when-connected").hide();
-  });
-  $(".recherche").on("click", async function () {
-    await setScreen("recherche");
-  });
-  $(".monespace").on("click", async function () {
-    await setScreen("profil");
-  });
+  $(".visible-only-when-disconnected").hide();
+
+  $(".hidden-during-inscription").toggle(
+    !session.getScreen().includes("inscription")
+  );
+
+  $(".disconnect")
+    .off("click")
+    .on("click", async function () {
+      app.disconnect();
+      $(".visible-only-when-connected").hide();
+      $(".visible-only-when-disconnected").show();
+    });
+  $(".recherche")
+    .off("click")
+    .on("click", async function () {
+      await setScreen("recherche");
+    });
+  $(".monespace")
+    .off("click")
+    .on("click", async function () {
+      await setScreen("profil");
+    });
   $(".prenomnom").html(data.getPrenomNom());
 }
 
@@ -98,7 +113,7 @@ async function updateRecherche() {
   ui.showWaitingMessage();
   const msg = await app.doSearch(str);
   ui.showRechercheData(msg.details);
-  $("#search-button").on("click", updateRecherche);
+  $("#search-button").off("click").on("click", updateRecherche);
   $("#search-784-input").on("keypress", function (event) {
     // Check if the key pressed is Enter
     if (event.key === "Enter") {
@@ -106,37 +121,45 @@ async function updateRecherche() {
     }
   });
 
-  $("#add-to-favorites-btn").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-      ui.updateFav(id)
-    );
-  });
-  $("#formation-details-header-nav-central-icon").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-      ui.updateFav(id)
-    );
-  });
-  $("#add-to-bin-btn").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.changeSuggestionStatus(id, data.SUGG_REJECTED, () =>
-      ui.updateFav(id)
-    );
-  });
+  $("#add-to-favorites-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+        ui.updateFav(id)
+      );
+    });
+  $("#formation-details-header-nav-central-icon")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+        ui.updateFav(id)
+      );
+    });
+  $("#add-to-bin-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_REJECTED, () =>
+        ui.updateFav(id)
+      );
+    });
 }
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
   ui.showFavoris(msg.details);
-  $("#add-to-bin-btn").on("click", function () {
-    const id = $(this).attr("data-id");
-    events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
-      ui.updateFav(id);
-      const msg = await app.getSelection();
-      ui.showFavoris(msg.details);
+  $("#add-to-bin-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+        ui.updateFav(id);
+        const msg = await app.getSelection();
+        ui.showFavoris(msg.details);
+      });
     });
-  });
 }
 
 function profileEditionSetup() {
@@ -212,9 +235,11 @@ const screen_enter_handlers = {
   },
   inscription_tunnel_felicitations: async () => {
     await ui.showTunnelScreen("felicitations");
-    $("#discover_button").on("click", () => {
-      setScreen("board");
-    });
+    $("#discover_button")
+      .off("click")
+      .on("click", () => {
+        setScreen("board");
+      });
   },
 };
 const screen_exit_handlers = {
@@ -293,13 +318,13 @@ async function enterScreen(screen) {
     $("#backButton").toggle(backScreen !== undefined);
     if (nextScreen)
       $("#nextButton")
-        .off()
+        .off("click")
         .on("click", async () => {
           await setScreen(nextScreen);
         });
     if (backScreen)
       $("#backButton")
-        .off()
+        .off("click")
         .on("click", async () => {
           await setScreen(backScreen);
         });
