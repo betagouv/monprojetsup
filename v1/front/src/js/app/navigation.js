@@ -72,7 +72,7 @@ async function doTransition(old_screen, new_screen) {
   await enterScreen(new_screen);
 }
 
-function init_main_nav() {
+export function init_main_nav() {
   $(".set-screen")
     .off()
     .on("click", async function () {
@@ -83,9 +83,12 @@ function init_main_nav() {
   $(".visible-only-when-connected").show();
   $(".visible-only-when-disconnected").hide();
 
-  $(".hidden-during-inscription").toggle(
-    !session.getScreen().includes("inscription")
-  );
+  const screen = session.getScreen();
+  if (screen) {
+    $(".hidden-during-inscription").toggle(!screen.includes("inscription"));
+  } else {
+    $(".hidden-during-inscription").show();
+  }
 
   $(".disconnect")
     .off()
