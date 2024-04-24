@@ -5,6 +5,7 @@ import * as events from "../app/events";
 import $ from "jquery";
 import * as data from "./../data/data";
 import * as autocomplete from "./../ui/autocomplete/autocomplete";
+import { sanitize } from "dompurify";
 
 /** handles navigation between screens  */
 
@@ -49,9 +50,11 @@ const screens = {
 
 export async function setScreen(screen) {
   console.log("setScreen", screen);
-  if (screen in screens) {
+  if (screen == null) {
+    session.saveScreen(null);
+  } else if (screen in screens) {
     let current_screen = session.getScreen();
-    await doTransition(current_screen, screen);
+    screen = await doTransition(current_screen, screen);
     session.saveScreen(screen);
     $(`#nav-${screen}`).attr("aria-current", true);
     init_main_nav();
@@ -68,8 +71,30 @@ function back(current_screen) {
 }
 
 async function doTransition(old_screen, new_screen) {
-  await exitScreen(old_screen);
-  await enterScreen(new_screen);
+  const result = await exitScreen(old_screen);
+  let screen = old_screen;
+  if (result) {
+    await enterScreen(new_screen);
+    screen = new_screen;
+  }
+
+  const nextScreen = next(screen);
+  const backScreen = back(screen);
+  $("#nextButton").toggle(nextScreen !== undefined);
+  $("#backButton").toggle(backScreen !== undefined);
+  if (nextScreen)
+    $("#nextButton")
+      .off()
+      .on("click", async () => {
+        await setScreen(nextScreen);
+      });
+  if (backScreen)
+    $("#backButton")
+      .off()
+      .on("click", async () => {
+        await setScreen(backScreen);
+      });
+  return screen;
 }
 
 export function init_main_nav() {
@@ -246,7 +271,7 @@ const screen_enter_handlers = {
   },
 };
 const screen_exit_handlers = {
-  inscription1: () => validateInscription1(),
+  inscription1: async () => await validateInscription1(),
   inscription2: async () => await validateInscription2(),
 };
 
@@ -315,37 +340,27 @@ function autoCompleteFeedbackHandler(
 async function enterScreen(screen) {
   if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
     await screen_enter_handlers[screen]();
-    const nextScreen = next(screen);
-    const backScreen = back(screen);
-    $("#nextButton").toggle(nextScreen !== undefined);
-    $("#backButton").toggle(backScreen !== undefined);
-    if (nextScreen)
-      $("#nextButton")
-        .off("click")
-        .on("click", async () => {
-          await setScreen(nextScreen);
-        });
-    if (backScreen)
-      $("#backButton")
-        .off("click")
-        .on("click", async () => {
-          await setScreen(backScreen);
-        });
   } else {
     ui.showLandingScreen();
   }
 }
 async function exitScreen(screen) {
   if (screen in screen_exit_handlers) {
-    if (screen_exit_handlers[screen]) await screen_exit_handlers[screen]();
+    if (screen_exit_handlers[screen]) {
+      const result = await screen_exit_handlers[screen]();
+      return result;
+    }
   }
+  return true;
   //default behaviour: None
 }
 
 let accounType = null;
 let accessGroupe = null;
 
-function validateInscription1() {
+async function validateInscription1() {
+  $(".fr-messages-group").empty();
+
   accessGroupe = $("#inputCreateAccountCodeAcces").val();
   const lyceen = $("#radio-create-account-lyceen").is(":checked");
   const pp = $("#radio-create-account-prof").is(":checked");
@@ -354,16 +369,22 @@ function validateInscription1() {
     $("#inscription1-messages").html(
       `<p class="fr-alert fr-alert--error">Veuillez choisir un type de compte</p>`
     );
+    return false;
   } else if (accessGroupe == null || accessGroupe.length <= 0) {
-    $("#inscription1-messages").html(
+    $("#inscription1-messages2").html(
       `<p class="fr-alert fr-alert--error">Veuillez indiquer un code d'accès</p>`
     );
-  } else {
-    //récupérer type de compte et mot de passe
-    app.validateCodeAcces(accounType, accessGroupe, async () => {
-      await setScreen("inscription2");
-    });
+    return false;
+  } //récupérer type de compte et mot de passe
+  const msg = await app.validateCodeAcces(accounType, accessGroupe);
+  if (!msg.ok) {
+    $("#inscription1-messages2").html(
+      `<p class="fr-alert fr-alert--error">Le code d'accès '${sanitize(
+        accessGroupe
+      )}' est erroné</p>`
+    );
   }
+  return msg.ok;
 }
 
 async function validateInscription2() {

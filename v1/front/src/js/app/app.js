@@ -89,14 +89,11 @@ export async function createAccount(data) {
   await loginServerAnswerHandler(msg.data, data.login);
 }
 
-export function validateCodeAcces(accountType, accesGroupe, handler) {
-  server.validateCodeAcces(
-    {
-      type: accountType,
-      accesGroupe: accesGroupe,
-    },
-    handler
-  );
+export async function validateCodeAcces(accountType, accesGroupe) {
+  return server.validateCodeAcces({
+    type: accountType,
+    accesGroupe: accesGroupe,
+  });
 }
 
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
