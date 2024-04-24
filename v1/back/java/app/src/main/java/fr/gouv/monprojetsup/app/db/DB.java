@@ -138,11 +138,12 @@ public abstract class DB {
         updateUserField(user.login(), EMAIL_CONFIRMATION_TOKEN_FIELD, null);
     }
 
-    public void rejectUserCreation(@NotNull String login) {
+    public void rejectUserCreation(@NotNull String login) throws EmptyUserNameException, UnknownUserException {
         login = normalizeUser(login);
         updateUserField(login, REQUIRE_ADMIN_CONFIRMATION_FIELD, true);
         updateUserField(login, LYCEES_FIELD, Set.of());
         forgetUserInGroups(login);
+        deleteUser(login);
     }
 
     /**
