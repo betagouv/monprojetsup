@@ -157,7 +157,6 @@ export function postLoginHandler() {
       session.setProfileCompletenessLevel(profileCompleteness);
       const msgp = await server.getProfileAsync();
       data.loadProfile(msgp.profile);
-      nav.setScreen(profileCompleteness >= 2 ? "board" : "profil");
       startNavigation();
     });
   });
@@ -174,7 +173,7 @@ export async function getProfile() {
 
 function startNavigation() {
   const screen = session.getScreen();
-  if (screen != undefined) {
+  if (screen != undefined && !screen.includes("inscription")) {
     nav.setScreen(screen);
   } else {
     if (session.isAdminOrTeacher()) {
@@ -182,9 +181,10 @@ function startNavigation() {
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
-        nav.setScreen("inscription1");
+        nav.setScreen("inscription_tunnel_statut");
       } else {
-        nav.setScreen("board");
+        nav.setScreen("inscription_tunnel_felicitations");
+        //nav.setScreen("board");
       }
     }
   }
