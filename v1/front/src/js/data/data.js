@@ -452,7 +452,7 @@ function updateSpecialitesOptions() {
   let bac = getProfileValue("bac");
   //  niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
   if (!bac) bac = tousBacs;
-  if (!bac in data.specialitesParBac) bac = tousBacs;
+  if (!(bac in data.specialitesParBac)) bac = tousBacs;
   const optionsSpecialites = {}; //par defaut pas de specialites
   if (bac in data.specialitesParBac) {
     const optionsSpecialitesIds = data.specialitesParBac[bac];

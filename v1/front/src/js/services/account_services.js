@@ -33,6 +33,20 @@ export function createAccount(data, onSuccess = null) {
   postToSpringService("public/account/create", { data: data }, onSuccess, true);
 }
 
+export async function createAccountAsync(data) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "public/account/create",
+      { data: data },
+      (data) => {
+        resolve(data);
+      },
+      true,
+      (error) => reject(error)
+    );
+  });
+}
+
 export function validateCodeAcces(data, onSuccess = null) {
   postToSpringService(
     "public/account/validate",

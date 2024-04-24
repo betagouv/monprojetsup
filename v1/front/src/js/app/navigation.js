@@ -54,6 +54,7 @@ export async function setScreen(screen) {
     await doTransition(current_screen, screen);
     session.saveScreen(screen);
     $(`#nav-${screen}`).attr("aria-current", true);
+    init_main_nav();
   }
 }
 
@@ -218,7 +219,7 @@ const screen_enter_handlers = {
 };
 const screen_exit_handlers = {
   inscription1: () => validateInscription1(),
-  inscription2: () => validateInscription2(),
+  inscription2: async () => await validateInscription2(),
 };
 
 function setUpMultiChoices() {
@@ -337,7 +338,7 @@ function validateInscription1() {
   }
 }
 
-function validateInscription2() {
+async function validateInscription2() {
   //const accounType = $("#createAccountSelectType").val();
   const nom = $("#champNom").val();
   const prenom = $("#champPrenom").val();
@@ -380,7 +381,7 @@ function validateInscription2() {
     $("#champMdp").val("");
     $("#champMdp2").val("");
 
-    app.createAccount({
+    await app.createAccount({
       nom: nom,
       prenom: prenom,
       type: accounType,
