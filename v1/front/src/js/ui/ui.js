@@ -260,6 +260,7 @@ export function injectHtml() {
     "footer.html": "footer-placeholder",
     "rgpd_content.html": "rgpd-placeholder",
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
+    "modals/validate_account.html": "validate_account-placeholder",
   };
   for (const [file, id] of Object.entries(m)) {
     fetch("html/" + file)
@@ -1245,8 +1246,8 @@ export function showValidationRequiredMessage(login, message) {
   //show modal
   $("#validationRequiredLogin").html(login);
   $("#validationRequiredMessage").html(message);
-  const myModal = new Modal(document.getElementById("validationRequiredModal"));
-  myModal.show();
+
+  $("#validationRequiredModalButton").click();
 }
 
 export function showResetPasswordMessageSent(email) {
