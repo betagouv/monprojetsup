@@ -21,16 +21,17 @@ const screens = [
   "profil",
 ];
 
-export function setScreen(screen) {
+export async function setScreen(screen) {
   console.log("setScreen", screen);
   if (screens.includes(screen)) {
     let current_screen = session.getScreen();
-    doTransition(current_screen, screen);
+    await doTransition(current_screen, screen);
     session.saveScreen(screen);
+    $(`#nav-${screen}`).attr("aria-current", true);
   }
 }
 
-export function next() {
+async function next() {
   let current_screen = session.getScreen();
   if (current_screen === "inscription1") {
     validateInscription1();
@@ -38,22 +39,23 @@ export function next() {
     validateInscription2();
   }
 }
-export function back() {
+async function back() {
   let current_screen = session.getScreen();
   if (current_screen === "inscription2") {
-    setScreen("inscription1");
+    await setScreen("inscription1");
   }
 }
 
-function doTransition(old_screen, new_screen) {
-  exitScreen(old_screen);
-  enterScreen(new_screen);
+async function doTransition(old_screen, new_screen) {
+  await exitScreen(old_screen);
+  await enterScreen(new_screen);
 }
 
 function init_main_nav() {
   $(".set-screen").on("click", async function () {
     const screen = $(this).attr("screen");
-    setScreen(screen);
+    $(this).attr("aria-current", true);
+    await setScreen(screen);
   });
   $(".visible-only-when-connected").show();
   $(".disconnect").on("click", async function () {
@@ -61,10 +63,10 @@ function init_main_nav() {
     $(".visible-only-when-connected").hide();
   });
   $(".recherche").on("click", async function () {
-    setScreen("recherche");
+    await setScreen("recherche");
   });
   $(".monespace").on("click", async function () {
-    setScreen("profil");
+    await setScreen("profil");
   });
   $(".prenomnom").html(data.getPrenomNom());
 }
@@ -216,9 +218,9 @@ function autoCompleteFeedbackHandler(
   }
 }
 
-function enterScreen(screen) {
+async function enterScreen(screen) {
   if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
-    screen_enter_handlers[screen]()
+    await screen_enter_handlers[screen]()
       .catch((error) => {
         console.error("Error in enterScreen", screen, error);
       })
@@ -256,8 +258,8 @@ function validateInscription1() {
     );
   } else {
     //récupérer type de compte et mot de passe
-    app.validateCodeAcces(accounType, accessGroupe, () => {
-      setScreen("inscription2");
+    app.validateCodeAcces(accounType, accessGroupe, async () => {
+      await setScreen("inscription2");
     });
   }
 }
