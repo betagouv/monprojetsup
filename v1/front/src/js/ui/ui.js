@@ -1070,6 +1070,9 @@ function initOnce() {
     });
   };
 
+  $(".visible-only-when-connected").hide();
+  $(".visible-only-when-disconnected").show();
+
   $("#show-favoris-button")
     .off("click")
     .on("click", function (e) {
