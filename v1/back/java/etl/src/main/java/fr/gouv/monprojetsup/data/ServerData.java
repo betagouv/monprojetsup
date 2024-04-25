@@ -118,7 +118,13 @@ public class ServerData {
         tagsSources = TagsSources.load(backPsupData.getCorrespondances());
         val metiersVersFormations = getMetiersVersFormations();
         filieresFront.forEach(filiere -> {
-            tagsSources.add(getLabel(filiere), filiere);
+            String label = getLabel(filiere);
+            if(label !=  null) {
+                tagsSources.add(label, filiere);
+                if (label.contains("L1")) {
+                    tagsSources.add("licence", filiere);
+                }
+            }
             getMetiersAssocies(filiere, metiersVersFormations).forEach(
                     metier -> {
                         tagsSources.add(getLabel(metier), filiere);
@@ -248,10 +254,7 @@ public class ServerData {
     ************************* HELPERS to get labels associated with a key ***********************
      */
     public static String getLabel(String key) {
-        return ServerData.statistiques.labels.getOrDefault(
-                key,
-                ServerData.statistiques.nomsFilieres.get(key)
-        );
+        return getLabel(key, ServerData.statistiques.nomsFilieres.get(key));
     }
 
     public static String getDebugLabel(String key) {
@@ -370,7 +373,7 @@ public class ServerData {
 
     }
 
-    public static Set<String> search(String searchString) {
+    public static Map<String, Integer> search(String searchString) {
 
         List<String> tags = Arrays.stream(
                 searchString.replaceAll("[-,_()]", " ").split(" ")
@@ -379,9 +382,8 @@ public class ServerData {
                 .map(w -> Normalizer.normalize(w, Normalizer.Form.NFD))
                 .filter(s -> !s.isBlank()).toList();
 
-        Set<String> result = tagsSources.getPrefixMatches(tags, filieresFront);
+        return tagsSources.getScores(tags, filieresFront);
 
-        return result;
     }
 
     public static Map<String, Set<String>> getMetiersVersFormations() throws IOException {
@@ -408,5 +410,7 @@ public class ServerData {
                 .collect(Collectors.toSet());
         return metiersPass;
     }
+
+
 }
 

@@ -69,9 +69,11 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             @Schema(description = "clé", example = "fl2014")
             @NotNull String key,
             @Schema(description = "fait partie des favoris")
-            @NotNull boolean fav,
+            boolean fav,
             @Schema(description = "affinite entre 0.0 et 1.0, arrondie à 6 décimales", example = "0.8")
             double affinity,
+            @Schema(description = "score de recherche", example = "2")
+            int searchScore,
             @Schema(description = "type", example = "formation", allowableValues = {"formation", "metier"})
             @NotNull String type,
             @ArraySchema(arraySchema = @Schema(description = "formations d'intérêt", example = "[\"ta201\",\"ta123\"]"))
@@ -86,6 +88,9 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             @NotNull List<String> examples
 
     ) {
+        public double sortScore() {
+            return 100 * searchScore + affinity;
+        }
     }
     public record Response(
             ResponseHeader header,
@@ -118,10 +123,10 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     @Override
     protected @NotNull Response handleRequest(@NotNull SearchService.Request req) throws Exception {
 
-        Set<String> allKeys = ServerData.search(req.recherche);
+        Map<String, Integer> searchScores = ServerData.search(req.recherche);
 
         Set<String> keysFormations
-                = req.includeFormations ? allKeys.stream().filter(Helpers::isFiliere).collect(Collectors.toSet()) : Set.of();
+                = req.includeFormations ? searchScores.keySet().stream().filter(Helpers::isFiliere).collect(Collectors.toSet()) : Set.of();
 
         //equivalent d'un appel à /affinites
         final Pair<List<Affinity>, List<String>> affinites = getAffinities(
@@ -135,40 +140,26 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         List<String> keysPage = keys.stream().skip((long) req.pageNb * req.pageSize).limit(req.pageSize).toList();
 
-        //LOGGER.info("handling request " + req);
         final @NotNull List<ResultatRecherche> suggestions = getDetails(
                 req.profile,
                 keysPage,
-                affinites.getLeft().stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite))
+                affinites.getLeft().stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite)),
+                searchScores
         );
 
         return new SearchService.Response(suggestions);
     }
 
-    /**
-     * Sort metiers by affinities
-     *
-     * @param profile    the profile
-     * @param keysMetiers the keys of the metiers
-     * @return the sorted list of metiers
-     */
-    static private List<String> sortMetiersByAffinites(ProfileDTO profile, Set<String> keysMetiers) throws IOException, InterruptedException {
-        if(keysMetiers.isEmpty()) return List.of();
-        val request = new SortMetiersByAffinityServiceDTO.Request(profile, keysMetiers.stream().toList());
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinite/metiers", request);
-        val response = new Gson().fromJson(responseJson, SortMetiersByAffinityServiceDTO.Response.class);
-        return response.clesTriees();
-    }
-
     //
-    static private Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
+    private static Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
         String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinites", request);
         val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
         return Pair.of(response.affinites(), response.metiers());
     }
 
-    static private @NotNull List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsandExamples(
+    @NotNull
+    private static List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsandExamples(
             ProfileDTO profile,
             List<String> keys)
             throws IOException, InterruptedException {
@@ -197,17 +188,17 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     /**
      * Get all details about some formations
      *
-     * @param pf        the profile
-     * @param keys      the list of keys for which details are required
-     * @param affinites the affinities
-     * @param right
+     * @param pf           the profile
+     * @param keys         the list of keys for which details are required
+     * @param affinites    the affinities
+     * @param searchScores the search scores
      * @return the details
      */
     public static List<ResultatRecherche> getDetails(
             ProfileDTO pf,
             List<String> keys,
-            @NotNull Map<String, Double> affinites
-    ) throws IOException, InterruptedException {
+            @NotNull Map<String, Double> affinites,
+            Map<String, Integer> searchScores) throws IOException, InterruptedException {
 
         List<ResultatRecherche> result = new ArrayList<>();
 
@@ -236,6 +227,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                             key,
                             pf.isFavori(key),
                             affinites.getOrDefault(key, 0.0),
+                            searchScores.getOrDefault(key, 0),
                             Helpers.isFiliere(key) ? "formation" : "metier",
                             fois,
                             cities,
@@ -246,6 +238,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             );
             i++;
         }
+
+        result.sort(Comparator.comparing(ResultatRecherche::sortScore).reversed());
 
         return result;
 
