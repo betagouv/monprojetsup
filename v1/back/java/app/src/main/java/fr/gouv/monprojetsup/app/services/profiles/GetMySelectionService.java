@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.services.info.SearchService.getDetails;
@@ -37,8 +38,8 @@ public class GetMySelectionService extends MyService<Server.BasicRequest, Search
         final @NotNull List<SearchService.ResultatRecherche> suggestions = getDetails(
                 profile,
                 keys,
-                keys.stream().collect(Collectors.toMap(k -> k, k -> 1.0))
-        );
+                keys.stream().collect(Collectors.toMap(k -> k, k -> 1.0)),
+                Map.of());
 
         return new SearchService.Response(suggestions);
     }

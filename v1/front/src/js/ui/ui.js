@@ -334,7 +334,7 @@ export function showWaitingMessage() {
   $("#explore-div-wait").show();
   $("#explore-div-resultats").hide();
 }
-export function showRechercheData(data) {
+export function showRechercheData(data, showAffinities) {
   clearAffinityCards();
   $("#explore-div-wait").hide();
   $("#explore-div-resultats").show();
@@ -347,6 +347,7 @@ export function showRechercheData(data) {
     }
     addAffinityCard(dat, false);
   }
+  $(".formation-card-header-affinity").toggle(showAffinities);
   //like and dislike handlers
 }
 

@@ -140,7 +140,8 @@ async function updateRecherche() {
   if (str === null || str === undefined) str = "";
   ui.showWaitingMessage();
   const msg = await app.doSearch(str);
-  ui.showRechercheData(msg.details);
+  const showAffinities = str == "";
+  ui.showRechercheData(msg.details, showAffinities);
   $("#search-button").off("click").on("click", updateRecherche);
   $("#search-784-input").on("keypress", function (event) {
     // Check if the key pressed is Enter
