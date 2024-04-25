@@ -30,6 +30,10 @@ record ExplanationTag(List<Path> pathes) {
 
 }
 
+record ExplanationSearch(String word) {
+
+}
+
 record ExplanationTagShort(List<String> ns) {
 
     public static ExplanationTagShort fromPathes(@Nullable Collection<Path> pathes) {
@@ -122,6 +126,7 @@ public class Explanation {
     @Nullable ExplanationDebug debug;
     @Nullable ExplanationSpecialites spec;
     @Nullable ExplanationInteretTags interets;
+    @Nullable ExplanationSearch search;
 
     public static @NotNull List<Explanation> merge(@Nullable List<Explanation> explanations) {
         if(explanations == null) return Collections.emptyList();

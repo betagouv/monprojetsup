@@ -8,12 +8,9 @@ import lombok.val;
 import java.io.IOException;
 import java.text.Normalizer;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile;
 
 @Slf4j
@@ -71,23 +68,49 @@ public record TagsSources(
 
     }
 
-    public Set<String> getPrefixMatches(List<String> tags, Set<String> candidates) {
+    public Map<String,Integer> getScores(List<String> tags, Set<String> candidates) {
 
-        Set<String> result = new HashSet<>(candidates);
+        Map<String,Integer> result = new HashMap<>();
 
         for(String tag : tags) {
 
             String cleanTag = normalize(tag);
 
+            candidates.forEach(candidate -> {
+                String label = ServerData.getLabel(candidate);
+                if(label != null) {
+                    String cleanLabel = normalize(label);
+                    if(cleanLabel.contains(cleanTag)) {
+                        result.put(candidate, result.getOrDefault(candidate, 0) + 4);
+                    }
+                } else {
+                    int i = 0;
+                }
 
-            Set<String> finalResult = result;
+            });
 
-            result  = sources.entrySet().stream()
-                    .filter(e -> e.getKey().contains(cleanTag))
-                    .flatMap(e -> e.getValue().stream())
-                    .filter(key -> finalResult.contains(key))
-                    .collect(Collectors.toSet());
+            for (Map.Entry<String, Set<String>> entry : sources.entrySet()) {
+                String k = entry.getKey();
+                Set<String> value = entry.getValue();
+                int score = 0;
+                if (k.startsWith(cleanTag)) score = 2;
+                else if(k.contains(cleanTag)) score = 1;
+                if(score > 0) {
+                    for (String candidate : value) {
+                        if (candidates.contains(candidate)) {
+                            result.put(candidate, result.getOrDefault(candidate, 0) + score);
+                        }
+                    }
+                }
+            }
         }
+
+        ServerData.reverseFlGroups.forEach((flGroup, fls) -> {
+            int score = fls.stream().map(fl -> result.getOrDefault(fl, 0)).reduce(0, Integer::max);
+            score = Math.max(result.getOrDefault(flGroup, 0), score);
+            result.put(flGroup, score);
+        });
+
         return result;
     }
 

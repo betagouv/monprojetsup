@@ -516,11 +516,9 @@ function serverErrorHandler(error) {
   console.error(msg);
   disconnect();
   if (error.status === 0) {
-    $(".front-feedback")
-      .html(
-        "Echec: le serveur n'est pas joignable, veuillez SVP vérifier votre connexion internet."
-      )
-      .show();
+    ui.displayServerError(
+      "le serveur n'est pas joignable, veuillez SVP vérifier votre connexion internet."
+    );
   } else {
     ui.displayServerError(msg);
   }
