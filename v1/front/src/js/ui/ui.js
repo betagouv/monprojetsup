@@ -467,7 +467,8 @@ export function updateFav(key) {
 }
 
 function displayFormationDetails(dat) {
-  $("#explore-div-resultats-right").show();
+  const $div = $("#explore-div-resultats-right");
+  $div.show();
 
   updateFav(dat.key);
 
@@ -476,10 +477,14 @@ function displayFormationDetails(dat) {
   //title
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
-  //summary
-  displaySummary(key);
+  //cities
+  addGeoloctoDiv(dat.cities, $div);
   //links
   displayUrls(key, dat.fois);
+  //summary
+  displaySummary(key);
+  //diplome
+  displayDiplome(dat.diplome);
   //stats
   displayStats(dat.stats.stats);
   //Explication
@@ -504,22 +509,39 @@ function displaySummary(key) {
   }
 }
 
+function displayDiplome(diplome) {
+  if (diplome === undefined || diplome === "") {
+    $("#tabpanel-le-diplome").hide();
+  } else {
+    $("#tabpanel-le-diplome").show().html(diplome);
+  }
+}
+
 function displayUrls(subkey, forsOfInterest) {
   const urls = [...data.getUrls(subkey, true)];
   const label = data.getExtendedLabel(subkey);
-  let found = urls.length > 0;
   if (data.isFiliere(subkey)) {
     let uri = data.getParcoursupSearchAdress([subkey], label, forsOfInterest);
     uri = uri.replace("'", " "); //this caracter is ok in uris but not in html
-    urls.push(uri);
-    found = true;
+    $("#formation-details-link-psup")
+      .empty()
+      .append(
+        `<div class="formation-details-link">
+          <a href="${uri}" target="_psup"
+            >${getUrlLabel(uri)}<img
+              src="img/link-dsfr.svg"
+              alt="lien vers le site"
+          /></a>
+        </div>
+        `
+      );
   }
 
-  $(".formation-details-links").empty();
+  $("#formation-details-links-other").empty();
   for (const url of urls) {
-    $(".formation-details-links").append(
+    $("#formation-details-links-other").append(
       `<div class="formation-details-link">
-          <a href="${url}"
+          <a href="${url}" target="_onisep"
             >${getUrlLabel(url)}<img
               src="img/link-dsfr.svg"
               alt="lien vers le site"
@@ -532,13 +554,13 @@ function displayUrls(subkey, forsOfInterest) {
 
 function getUrlLabel(url) {
   if (url.includes("onisep") || url.includes("terminales")) {
-    return "Plus d'infos sur Onisep";
+    return "Lire la suite";
   }
   if (url.includes("pole")) {
-    return "Plus d'infos sur France Travail";
+    return "Plus de détails";
   }
   if (url.includes("parcoursup")) {
-    return "Plus d'infos sur Parcoursup";
+    return "Plus de détails sur Parcoursup";
   }
   return "Plus d'infos";
 }
@@ -553,14 +575,18 @@ function format(x, nbDigits) {
     .replace(",", ".");
 }
 
-function displayStats(stats) {
-  if (stats == null || stats == undefined || !(data.tousBacs in stats)) {
-    $(".formation-details-stats-bloc").hide();
+function displayStats(statsAll) {
+  if (
+    statsAll == null ||
+    statsAll == undefined ||
+    !(data.tousBacs in statsAll)
+  ) {
+    $(".formation-details-stats-moyenne").hide();
   } else {
-    $(".formation-details-stats-bloc").show();
+    $(".formation-details-stats-moyenne").show();
     const nbAdmis = [];
     let total = -1;
-    for (const o of Object.entries(stats)) {
+    for (const o of Object.entries(statsAll)) {
       const nb = o[1].nbAdmis;
       let bac = o[0];
       if (bac == data.tousBacs) {
@@ -597,28 +623,108 @@ function displayStats(stats) {
           `
         );
       }
-      $(".formation-details-stats-bloc").show();
+      $(".formation-details-stats-moyenne").show();
     } else {
-      $(".formation-details-stats-bloc").hide();
+      $(".formation-details-stats-moyenne").hide();
     }
+  }
+  const bac = data.getProfileValue("bac");
+  const niveau = data.getProfileValue("niveau");
+  const showNotes = niveau == "prem" || niveau == "term";
 
-    /*
-    <div class="formation-details-stats-bacs">
-          Répartition par filières
-          <div class="formation-details-stats-bac-badge">Générale 89%</div>
-          <div class="formation-details-stats-bac-badge">Pro 3.7%</div>
-          <div class="formation-details-stats-bac-badge">STMG 3.3%</div>
-          <div class="formation-details-stats-bac-badge">STI2D 1%</div>
-        </div>
-    */
+  const o = data.getStats(statsAll, bac);
+  const stats = o.stats;
+  const statsBac = o.statsBac;
+  const statsTousBacs = o.statsTousBacs;
+  if ((showNotes && statsTousBacs) || statsBac) {
+    const $div = getStatsScolDiv(bac, statsTousBacs, statsBac);
+    $(".formation-details-stats-moy-admis").empty().append($div);
   }
 }
 
-function addExplanation(msg, icon = "fr-icon-success-line") {
+function notGood(stats) {
+  const result =
+    stats == null ||
+    stats === undefined ||
+    ((stats.statsScol === undefined ||
+      stats.statsScol[data.moyGenIndex()] === undefined) &&
+      (stats.nbAdmis === undefined || stats.nbAdmis < 10));
+  return result;
+}
+
+function getStatsScolDiv(bac, statsTousBacs, statsBac) {
+  const highlight = false;
+  let stats = statsBac;
+  let serie = data.ppBac(bac);
+  let qualifSerieBac = "";
+  if (notGood(stats)) {
+    stats = statsTousBacs;
+    if (notGood(stats)) {
+      return $("");
+    } else if (bac != "") {
+      serie = "Toutes";
+      qualifSerieBac = " (toutes séries de bacs confondues) ";
+    }
+  } else {
+    qualifSerieBac =
+      serie != ""
+        ? " (série '" + serie + "')"
+        : " (toutes séries de bacs confondues)";
+  }
+  const stat = stats.statsScol[data.moyGenIndex()];
+
+  $(".stats_serie_bac").html(qualifSerieBac);
+  const $div = getStatsScolLine(stat);
+
+  return $div;
+}
+
+function getStatsScolLine(stat) {
+  const note5 = stat.rangEch5 / data.statNotesDivider();
+  const note25 = stat.rangEch25 / data.statNotesDivider();
+  const note75 = stat.rangEch75 / data.statNotesDivider();
+  const note95 = stat.rangEch95 / data.statNotesDivider();
+  const ratio = 2 + (note95 - note5);
+  const lower = note5 - 1;
+  const per5 = (100 * (note5 - lower)) / ratio;
+  const per25 = (100 * (note25 - lower)) / ratio;
+  const per75 = (100 * (note75 - lower)) / ratio;
+  const per95 = (100 * (note95 - lower)) / ratio;
+
+  return $(`
+    <ol class="stats-bar mt-3">
+    <span class="stats-bar-step out" style=";width:${per5}%"> 
+      <span class="stats-bar-step-label stats"><span class="note">${note5}</span><span class="survingt">/20</span></span>
+    </span>
+
+    <span class="stats-bar-step" style="width:${per25 - per5}%"> 
+    <span style="position: relative; top:8px" class="mt-2 stats-bar-step-pct"><b>20%</b></span> 
+    <span class="stats-bar-step-label stats"><span class="note">${note25}</span><span class="survingt">/20</span></span>
+    </span>
+
+    <span class="stats-bar-step is-mediane" style="width:${per75 - per25}%">  
+    <span style="position: relative; top:8px" class="mt-2 stats-bar-step-pct-mediane"><b>50%</b></span> 
+    <span class="stats-bar-step-label stats"><span class="note">${note75}</span><span class="survingt">/20</span></span>
+    </span>
+
+        <span class="stats-bar-step " style="width:${per95 - per75}%">  
+    <span style="position: relative; top:8px" class="mt-2 stats-bar-step-pct"><b>20%</b></span> 
+    <span class="stats-bar-step-label stats"><span class="note">${note95}</span><span class="survingt">/20</span></span>
+    </span>
+
+    <span class="stats-bar-step out"  style="width:${100 - per95}%">
+    </span>
+
+    </ol>
+    </li>`);
+}
+
+function addExplanation(msg, icon = "fr-icon-hashtag") {
   $(".formation-details-reasons").append(
     `
     <div class="formation-details-reason ">
-    <span class="formation-details-reason-icon ${icon}" aria-hidden="true"></span>${msg}</div>`
+    <div class="formation-details-reason-icon ${icon}" aria-hidden="true">
+    </div><div>${msg}</div></div>`
   );
 }
 
@@ -666,11 +772,12 @@ function displayExplanations(explications, detailed) {
         }
       }
     }
-    let msg = `Une ou plusieurs formations de ce type sont situées à proximité de `;
+    let msg = "";
+
     for (const [city, dist] of Object.entries(villeToDist)) {
-      msg = msg + ` ${city} (${dist < 1 ? "moins de 1 " : dist}km)`;
+      msg =
+        msg + `A proximité de ${city} (${dist < 1 ? "moins de 1 " : dist}km).`;
     }
-    msg = msg + ".";
     addExplanation(msg, "fr-icon-map-pin-2-line");
   }
 
@@ -765,13 +872,15 @@ function addExplanation2(expl) {
     }
     const msgs = [];
     //msgs.push(`<p>En lien avec tes choix et ta sélection:</p>`);
-    msgs.push(`<div class="formation-details-tags">`);
+    msgs.push(`<span class="formation-details-tags">`);
+    let first = true;
     for (const label of labels) {
-      msgs.push(
-        `<div  class="formation-details-exemple-metier">${label}</div>`
-      );
+      if (!first) msgs.push(", ");
+      msgs.push(`<b class="formation-details-lien-choix">${label}</b>`);
+      first = false;
     }
-    msgs.push("</div>");
+    msgs.push(".");
+    msgs.push("</span>");
     addExplanation("En lien avec tes choix " + msgs.join(""));
   } else if (expl.bac) {
     addExplanation(
@@ -832,16 +941,21 @@ function displayMetiers(metiers) {
 
 function displayAttendus(key) {
   const d = data.getEDSData(key);
-  $("#accordion-attendus").empty();
-  $("#accordion-eds").empty();
+
   if (d) {
     const label = d.label;
     const eds = d.eds;
     if (eds.attendus) {
-      $("#accordion-attendus").html(eds.attendus);
+      $("#formation-details-attendus").show();
+      $("#formation-details-attendus-details").html(eds.attendus);
+    } else {
+      $("#formation-details-attendus").hide();
     }
     if (eds.recoEDS) {
+      $("#tabpanel-les-conseils").show();
       $("#accordion-eds").html(eds.recoEDS);
+    } else {
+      $("#tabpanel-les-conseils").hide();
     }
   }
 }
@@ -892,11 +1006,10 @@ function buildFormationAffinityCard(
           <div class="card-formation-title">
             ${label}
           </div>
-          <div class="card-geoloc">
-            <img src="img/loc.svg" alt="geo" />
-          </div>
+          <span class="card-geoloc fr-icon-map-pin-2-fill">            
+          </span>
           <div class="card-metiers-header">
-            Exemples de métiers accessibles après cette formation
+            Parmi les métiers accessibles après cette formation
           </div>
           <div class="card-metiers-list">
           </div>
@@ -915,22 +1028,7 @@ function buildFormationAffinityCard(
   } else {
     $(".icon-favorite", $div).hide();
   }
-  if (cities.length == 0) {
-    $(".card-geoloc", $div).empty();
-  } else {
-    for (let j = 0; j < 5; j++) {
-      if (j >= cities.length) break;
-      const city = cities[j];
-      $(".card-geoloc", $div).append(
-        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
-      );
-    }
-    if (cities.length > 5) {
-      $(".card-geoloc", $div).append(
-        `&nbsp;&middot;&nbsp;+${cities.length - 5}`
-      );
-    }
-  }
+  addGeoloctoDiv(cities, $div);
 
   if (metiers.length > 0) {
     $(".card-metiers-list", $div).empty();
@@ -985,6 +1083,26 @@ function buildMetierAffinityCard(key, fav, formations, nodetails) {
   return $div;
 }
 
+function addGeoloctoDiv(cities, $div) {
+  if (cities.length == 0) {
+    $(".card-geoloc", $div).empty();
+    $(".card-geoloc", $div).hide();
+  } else {
+    for (let j = 0; j < 5; j++) {
+      if (j >= cities.length) break;
+      const city = cities[j];
+      $(".card-geoloc", $div).append(
+        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
+      );
+    }
+    if (cities.length > 5) {
+      $(".card-geoloc", $div).append(
+        `&nbsp;&middot;&nbsp;+${cities.length - 5}`
+      );
+    }
+    $(".card-geoloc", $div).show();
+  }
+}
 export const tabs = {
   profile: "nav-profil-tab",
   preferences: "nav-preferences-tab",
