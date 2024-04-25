@@ -132,12 +132,24 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         final Pair<List<Affinity>, List<String>> affinites = getAffinities(
                 req.profile
         );
+
+        //calcul des cores de tri
+        Map<String, Double> sortScores
+                = affinites.getLeft().stream().collect(
+                        Collectors.toMap(
+                            Affinity::key,
+                            aff -> aff.getSortScore(searchScores.getOrDefault(aff.key(), 0))
+                        )
+        );
+
+        //tri des clés
         List<String> keys =
                 affinites.getLeft().stream()
+                        .sorted(Comparator.comparing(aff -> - sortScores.getOrDefault(aff.key(), 0.0)))
                         .map(Affinity::key)
-                        .filter(keysFormations::contains)
                         .toList();
 
+        //calcul des clés de la page
         List<String> keysPage = keys.stream().skip((long) req.pageNb * req.pageSize).limit(req.pageSize).toList();
 
         final @NotNull List<ResultatRecherche> suggestions = getDetails(
@@ -238,8 +250,6 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             );
             i++;
         }
-
-        result.sort(Comparator.comparing(ResultatRecherche::sortScore).reversed());
 
         return result;
 
