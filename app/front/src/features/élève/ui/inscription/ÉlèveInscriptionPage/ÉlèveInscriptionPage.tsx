@@ -35,7 +35,7 @@ const ÉlèveInscriptionPage = () => {
       case "/inscription/scolarite":
         return <ScolaritéForm {...propsFormulaire} />;
       case "/inscription/domaines":
-        return <DomainesForm />;
+        return <DomainesForm {...propsFormulaire} />;
       default:
         return null;
     }

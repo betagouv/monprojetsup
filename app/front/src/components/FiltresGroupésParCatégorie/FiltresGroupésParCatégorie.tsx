@@ -1,0 +1,67 @@
+import { type FiltresGroupésParCatégorieProps } from "./FiltresGroupésParCatégorie.interface";
+import TagFiltre from "@/components/_dsfr/TagFiltre/TagFiltre";
+import * as Accordion from "@radix-ui/react-accordion";
+
+const FiltresGroupésParCatégorie = ({ catégories }: FiltresGroupésParCatégorieProps) => {
+  return (
+    <Accordion.Root
+      className="grid gap-6"
+      type="multiple"
+    >
+      {catégories.map((catégorie) => (
+        <Accordion.Item
+          className=""
+          key={catégorie.nom}
+          value={catégorie.nom}
+        >
+          <Accordion.Header
+            asChild
+            className="w-full rounded-2xl border-solid border-[--border-default-grey] px-8 py-4 text-left hover:border-[--background-open-blue-france-active] hover:!bg-[--background-open-blue-france] aria-expanded:rounded-b-none"
+          >
+            <Accordion.Trigger className="group grid grid-flow-col items-center justify-between">
+              <h2 className="fr-h6 mb-0">
+                <span
+                  aria-hidden
+                  className="pr-4"
+                >
+                  {catégorie.emoji}
+                </span>{" "}
+                {catégorie.nom}
+              </h2>
+              <svg
+                className="transition-all duration-200 group-aria-expanded:rotate-180"
+                fill="none"
+                height="8"
+                viewBox="0 0 14 8"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M6.99974 2.828L2.04974 7.778L0.635742 6.364L6.99974 0L13.3637 6.364L11.9497 7.778L6.99974 2.828Z"
+                  fill="#CFCFCF"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </Accordion.Trigger>
+          </Accordion.Header>
+          <Accordion.Content className="border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
+            <p className="fr-text--sm mb-4 text-[--text-mention-grey]">N’hésite pas à préciser certaines catégories</p>
+            <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
+              {catégorie.filtres.map((filtre) => (
+                <li key={filtre.id}>
+                  <TagFiltre
+                    auClic={() => {}}
+                    libellé={filtre.nom}
+                  />
+                </li>
+              ))}
+            </ul>
+          </Accordion.Content>
+        </Accordion.Item>
+      ))}
+    </Accordion.Root>
+  );
+};
+
+export default FiltresGroupésParCatégorie;
