@@ -51,7 +51,7 @@
           <div class="card-formation-title">
             DEUST - Bureautique et Communication Multimedia
           </div>
-          <div class="card-geoloc">
+          <div class="card-geoloc fr-icon-map-pin-fill">
             <img src="img/loc.svg" alt="geo" />
             Paris &middot; Bordeaux &middot; Noisy-le-grand &middot; Corté
             &middot; +8
@@ -197,48 +197,175 @@
       <div class="formation-details-title">
         DEUST - Bureautique et Communication Multimedia
       </div>
-      <div class="formation-details-summary">
-        Les DEUST se préparent en 2 ans après le bac, à l'université. Ils visent
-        une insertion professionnelle directe. De nombreuses spécialités de
-        DEUST sont proposées par les universités dans différents secteurs
-        d'activité. Après un DEUST, il est possible de poursuivre des études en
-        licence professionnelle.
+      <div class="formation-details-sub-title fr-icon-group-fill">
+        <span class="formation-details-stats-bloc-nb-admis">xxx</span>
+        lycéens ont intégré cette formation en 2023
       </div>
-      <div class="formation-details-links">
-        <div class="formation-details-link">
-          <a href="parcoursup.fr"
-            >L'offre de formation sur Parcoursup<img
-              src="img/link-dsfr.svg"
-              alt="lien vers le site"
-          /></a>
-        </div>
-        <div class="formation-details-link">
-          <a href="onisep.fr"
-            >Plus d'infos sur Onisep
-            <img src="img/link-dsfr.svg" alt="lien vers le site" />
-          </a>
+      <div class="card-geoloc-formation-details-container">
+        <div class="fr-icon-map-pin-2-fill"></div>
+        <div>
+          <span class="card-geoloc card-geoloc-formation-details"> </span>
+          <div class="formation-details-links">
+            <div
+              class="formation-details-link"
+              id="formation-details-link-psup"
+            ></div>
+          </div>
         </div>
       </div>
-      <div class="formation-details-stats-bloc explore-specific-formation">
-        <div class="formation-details-sub-title">
-          <span class="formation-details-stats-bloc-nb-admis">xxx</span>
-          lycéens ont intégré cette formation cette année
+
+      <div class="fr-tabs fr-tabs-formation-details explore-specific-formation">
+        <ul
+          class="fr-tabs__list"
+          role="tablist"
+          aria-label="[A modifier | nom du système d'onglet]"
+        >
+          <li role="presentation">
+            <button
+              id="tabpanel-la-formation"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
+              tabindex="0"
+              role="tab"
+              aria-selected="true"
+              aria-controls="tabpanel-la-formation"
+            >
+              La formation
+            </button>
+          </li>
+          <li role="presentation">
+            <button
+              id="tabpanel-le-diplome"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tabpanel-le-diplome"
+            >
+              Le diplôme
+            </button>
+          </li>
+          <li role="presentation">
+            <button
+              id="tabpanel-les-criteres"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tabpanel-les-criteres"
+            >
+              Les critères d'admission
+            </button>
+          </li>
+          <li role="presentation">
+            <button
+              id="tabpanel-les-conseils"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tabpanel-les-conseils"
+            >
+              Nos conseils
+            </button>
+          </li>
+        </ul>
+        <div
+          id="tabpanel-la-formation"
+          class="fr-tabs__panel fr-tabs__panel--selected"
+          role="tabpanel"
+          aria-labelledby="tabpanel-la-formation"
+          tabindex="0"
+        >
+          <!-- données de test -->
+          <div class="formation-details-summary"></div>
+          <div
+            class="formation-details-link"
+            id="formation-details-links-other"
+          ></div>
         </div>
-        <div class="formation-details-stats-bacs">
-          Répartition par filières
-          <span class="formation-details-stats-bacs-repartition">
-            <div class="formation-details-stats-bac-badge">Générale 89%</div>
-            <div class="formation-details-stats-bac-badge">Pro 3.7%</div>
-            <div class="formation-details-stats-bac-badge">STMG 3.3%</div>
-            <div class="formation-details-stats-bac-badge">STI2D 1%</div>
-          </span>
+        <div
+          id="tabpanel-le-diplome"
+          class="fr-tabs__panel"
+          role="tabpanel"
+          aria-labelledby="tabpanel-le-diplome"
+          tabindex="0"
+        >
+          <!-- données de test -->
+          <p>Contenu 2</p>
+        </div>
+        <div
+          id="tabpanel-les-criteres"
+          class="fr-tabs__panel"
+          role="tabpanel"
+          aria-labelledby="tabpanel-les-criteres"
+          tabindex="0"
+        >
+          <!-- données de test -->
+          <div class="formation-details-stats-bacs bloc">
+            <div class="formation-details-attendus-label">
+              Répartition par séries de bacs
+            </div>
+            <span class="formation-details-stats-bacs-repartition"> </span>
+          </div>
+          <div class="formation-details-grille-analyse bloc">
+            <div class="formation-details-attendus-label">
+              Les principaux points examinés dans les candidatures
+            </div>
+            <div class="formation-details-grille-analyse-details">
+              Les notes comptent beaucoup / peu / pas.
+            </div>
+          </div>
+          <div class="formation-details-stats-moyenne bloc">
+            <div class="formation-details-attendus-label">
+              Moyenne générale des lycéens admis
+              <span class="stats_serie_bac"></span>
+            </div>
+            <div class="formation-details-stats-moy-admis"></div>
+          </div>
+
+          <div id="formation-details-attendus bloc">
+            <div class="formation-details-attendus-label">
+              Attendus pour intégrer cette formation
+            </div>
+            <div id="formation-details-attendus-details"></div>
+          </div>
+        </div>
+        <div
+          id="tabpanel-les-conseils"
+          class="fr-tabs__panel"
+          role="tabpanel"
+          aria-labelledby="tabpanel-les-conseils"
+          tabindex="0"
+        >
+          <!-- données de test -->
+          <div id="accordion-eds"></div>
+        </div>
+      </div>
+
+      <div class="formation-details-exemples-metiers">
+        <div
+          class="formation-details-exemples-libelle explore-specific-formation"
+        >
+          Exemples de métiers accessibles après cette formation
+        </div>
+        <div class="formation-details-exemples-libelle explore-specific-metier">
+          Exemples de formations pour accéder à ce métier
+        </div>
+        <div class="formation-details-exemples-metiers-container">
+          <div class="formation-details-exemple-metier">Designer graphique</div>
+          <div class="formation-details-exemple-metier">Chef de projet</div>
+          <div class="formation-details-exemple-metier">Graphiste</div>
+          <div class="formation-details-exemple-metier">Responsable web</div>
+          <div class="formation-details-exemple-metier">+4</div>
         </div>
       </div>
       <div class="formation-details-pourquoi">
-        <div class="formation-details-sub-title explore-specific-formation">
+        <div
+          class="formation-details-exemples-libelle explore-specific-formation"
+        >
           Pourquoi cette formation pourrait te plaire
         </div>
-        <div class="formation-details-sub-title explore-specific-metier">
+        <div class="formation-details-exemples-libelle explore-specific-metier">
           Pourquoi ce métier pourrait te plaire
         </div>
         <div class="formation-details-reasons">
@@ -264,71 +391,6 @@
             <img src="img/hashtag-dsfr.svg" alt="icon-hashtag" /><b
               >Je suis fort en langues</b
             >
-          </div>
-        </div>
-      </div>
-      <div class="formation-details-exemples-metiers">
-        <div class="formation-details-sub-title explore-specific-formation">
-          Exemples de métiers accessibles après cette formation
-        </div>
-        <div class="formation-details-sub-title explore-specific-metier">
-          Exemples de formations pour accéder à ce métier
-        </div>
-        <div class="formation-details-exemples-metiers-container">
-          <div class="formation-details-exemple-metier">Designer graphique</div>
-          <div class="formation-details-exemple-metier">Chef de projet</div>
-          <div class="formation-details-exemple-metier">Graphiste</div>
-          <div class="formation-details-exemple-metier">Responsable web</div>
-          <div class="formation-details-exemple-metier">+4</div>
-        </div>
-      </div>
-      <div
-        class="formation-details-foldable-container fr-accordions-group-no explore-specific-formation"
-      >
-        <div class="formation-details-foldable fr-accordion">
-          <h3 class="fr-accordion__title">
-            <button
-              class="fr-accordion__btn"
-              aria-expanded="false"
-              aria-controls="accordion-attendus"
-              id="accordion-attendus-buttton"
-            >
-              Pré-requis pour intégrer la formation
-            </button>
-          </h3>
-          <div class="fr-collapse" id="accordion-attendus">ipsum lorent</div>
-        </div>
-        <div class="formation-details-foldable fr-accordion">
-          <h3 class="fr-accordion__title">
-            <button
-              class="fr-accordion__btn"
-              aria-expanded="false"
-              aria-controls="accordion-eds"
-              id="accordion-eds-buttton"
-            >
-              Conseils sur le parcours au lycée
-            </button>
-          </h3>
-          <div class="fr-collapse" id="accordion-eds">ipsum lorent</div>
-        </div>
-        <div class="formation-details-foldable fr-accordion">
-          <h3 class="fr-accordion__title">
-            <button
-              class="fr-accordion__btn"
-              aria-expanded="false"
-              aria-controls="accordion-1048"
-            >
-              Examen des candidatures
-            </button>
-          </h3>
-          <div class="fr-collapse" id="accordion-1048">
-            Les notes comptent beaucoup / peu / pas. Moyennes des admis.
-            <div class="formation-details-stats-moyenne">
-              <div class="formation-details-sub-title">
-                Moyenne générale des lycéens admis
-              </div>
-            </div>
-            <hr class="formation-details-stats-sep" />
           </div>
         </div>
       </div>
