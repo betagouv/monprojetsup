@@ -658,6 +658,14 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     /* 133.333% */
 }
 
+.card-geoloc-formation-details-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-geoloc-formation-details-container .fr-icon-map-pin-2-fill {
+  margin-right: 5px;
+}
 .card-geoloc {
   color: var(--light-decisions-text-text-mention-grey, #666);
     font-family: Marianne;
@@ -744,18 +752,37 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   margin-bottom: -2px;
   
 }
+
+.fr-tabs-formation-details {
+  //border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    background: var(--light-decisions-background-background-default-grey, #FFF);
+    margin-bottom: 48px;
+}
+
+
 .formation-details-sub-title {
-  color: var(--light-decisions-text-text-title-grey, #161616);
-    /* 2.Corps de texte/LG - Texte article/Desktop & Mobile - Bold */
+  color: var(--light-decisions-text-text-mention-grey, #666);
     font-family: Marianne;
-    font-size: 18px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 28px;
-    /* 155.556% */
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+}
+.formation-details-exemples-libelle {
+    color: var(--light-decisions-border-border-action-high-grey, #161616);
+    
+      /* 2.Corps de texte/XL - Chapô/Desktop & Mobile - Bold */
+      font-family: Marianne;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 32px;
+      /* 160% */
 }
 .formation-details-stats-bacs {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   color: var(--light-decisions-border-border-action-high-grey, #161616);
     font-family: Marianne;
@@ -789,9 +816,50 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 }
 .formation-details-pourquoi {
     margin-bottom: 40px;
+        border-top: 1px solid #DDD;
+          border-right: 1px solid #DDD;
+          border-bottom: 1px solid #DDD;
+          border-left: 4px solid var(--light-options-illustration-color-850-active-green-menthe-850-active, #4F9D91);
+
+          padding: 24px 32px 32px 32px ;
+}
+#tabpanel-les-criteres .bloc {
+  margin-bottom: 24px;
 }
 
+.stats-bar-step-label .survingt {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    text-transform: uppercase;
+}
+.stats-bar-step-label .note {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    /* 142.857% */
+    text-transform: uppercase;
+}
+.formation-details-attendus-label {
+  color: var(--light-decisions-border-border-action-high-grey, #161616);
+  
+    /* 2.Corps de texte/XL - Chapô/Desktop & Mobile - Bold */
+    font-family: Marianne;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
 
+    margin-bottom: 12px;    /* 160% */
+    /* 142.857% */
+
+}
 .formation-details-reasons {
   display: flex;
   flex-wrap: wrap;
@@ -804,9 +872,12 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+
     /* 125% */
 }
 .formation-details-reason {
+  display: flex;
+  flex-direction: row;
   margin-bottom: 16px;
 }
 .formation-details-reason-icon {
@@ -814,25 +885,56 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 }
 
 .formation-details-tags{
-    display: flex;
+    display: wrap;
     flex-wrap: wrap;
     margin-bottom: 16px;
+    overflow-wrap: break-word;
   }
-
-.formation-details-exemples-metiers-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
+.formation-details-lien-choix {
+    overflow-wrap: break-word;
+  color: var(--light-decisions-border-border-action-high-grey, #161616);
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    /* 125% */
 }
 
 .formation-details-sub-title {
   margin-bottom: 16px;
 }
 
+.formation-details-exemples-metiers-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
 .formation-details-exemple-metier {
+
+    align-items: center;
+
+border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    padding: 4px 12px;
+    margin: 5px 5px 0px 0px;;
+    
+    background: var(--light-decisions-background-background-default-grey, #FFF);
+
+      color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+        text-align: center;
+      
+        /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Medium */
+        font-family: Marianne;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px;
+        /* 171.429% */
+  /*
     margin-left: 8px;
       margin-bottom: 16px;
-    /* 166.667% */
     border-radius: 16px;
       background: #E3E3FD;
 
@@ -841,14 +943,12 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 
       color: var(--light-decisions-artwork-artwork-major-blue-france, #000091);
         text-align: center;
-      
-        /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+
         font-family: Marianne;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
-        line-height: 24px;
-        /* 171.429% */
+        line-height: 24px;*/
 }
 
 .formation-details-foldable-container {
@@ -1584,19 +1684,30 @@ fieldset[disabled] .btn-primary.active {
   text-align: center;
   position: relative;
   width: 100%;
-  background-color: $stats-color !important;
+  background: var(--light-options-illustration-color-925-hover-green-menthe-925-hover, #6ED5C5);
   height: 0.5em;
   margin-left: 1px;
   margin-right: 1px;
+}
+
+.is-mediane {
+  background-color: var(--light-options-illustration-color-850-active-green-menthe-850-active, #4F9D91);
+  ;
+}
+
+.stats-bar-step-pct-mediane {
+  color: var(--light-options-illustration-color-850-active-green-menthe-850-active, #4F9D91);
+  ;
+}
+.stats-bar-step-pct {
+  color: var(--light-options-illustration-color-925-hover-green-menthe-925-hover, #6ED5C5);
 }
 
 .out{
   background-color: lightgray !important;
 }
 
-.is-mediane {
-  background-color: $myPurpleStrong !important;
-}
+
 
 .stats-bar-step-label {
   display: block;
@@ -1694,12 +1805,6 @@ fieldset[disabled] .btn-primary.active {
   background: lightgray;
 }
 
-.stats {
-  color: black;
-  font-weight: bold;
-  background: $stats-color;
-  border: none;
-}
 
 //FOR CODEPEN FORMATTING
 .wrapper {

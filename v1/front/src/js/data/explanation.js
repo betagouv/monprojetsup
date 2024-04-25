@@ -29,7 +29,7 @@ function getHTMLExplanations(explications, detailed) {
         }
       }
     }
-    let msg = `<p>Une ou plusieurs formations de ce type sont situées à proximité de `;
+    let msg = `<p>Une ou plusieurs formations à proximité de `;
     for (const [city, dist] of Object.entries(villeToDist)) {
       msg = msg + ` ${city} (${dist}km)`;
     }
