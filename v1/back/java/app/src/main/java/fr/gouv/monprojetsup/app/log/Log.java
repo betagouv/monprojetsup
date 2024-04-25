@@ -54,7 +54,8 @@ public class Log {
          }
     }
 
-    public static void logTrace(@NotNull String origin, @NotNull String trace) {
+    public static void logTrace(@NotNull String origin, @Nullable String trace) {
+        if(trace == null) trace = "";
         WebServer.LOGGER.info(origin + " - " + trace);
         @Nullable DB db = WebServer.db();
         if(db != null) {
