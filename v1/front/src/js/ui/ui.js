@@ -153,7 +153,17 @@ function injectInSelect($select, data) {
   }
 }
 
+function compareAlphanumeric(a, b) {
+  // Convert both values to strings
+  let strA = String(a.label);
+  let strB = String(b.label);
+
+  // Use localeCompare to perform alphanumeric comparison
+  return strA.localeCompare(strB, undefined, { numeric: true });
+}
+
 function injectInMultiOptions($accordions_group, menus) {
+  menus = menus.sort(compareAlphanumeric);
   for (const menu of menus) {
     let emoji1 = menu.emoji;
     let emoji2 = "";
@@ -166,7 +176,9 @@ function injectInMultiOptions($accordions_group, menus) {
       }
     }
     let expand = false;
-    for (const item of menu.items) {
+    const items = menu.items.sort(compareAlphanumeric);
+
+    for (const item of items) {
       let key = item.key;
       if (key === undefined) key = item.id;
       if (data.isSelected(key)) {
