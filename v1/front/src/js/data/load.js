@@ -93,6 +93,9 @@ async function loadDatas(datas) {
         data.metiersToFormations = jdata.liensMetiersFormations;
         data.secteursToMetiers = jdata.liensSecteursMetiers;
         data.eds = jdata.eds;
+        data.grillesAnalyseCandidatures = jdata.grillesAnalyseCandidatures;
+        data.grillesAnalyseCandidaturesLabels =
+          jdata.grillesAnalyseCandidaturesLabels;
         data.profileFields = new Set(jdata.profileFields);
 
         loaded_log("tags");

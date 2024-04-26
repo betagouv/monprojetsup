@@ -1,8 +1,10 @@
 package fr.gouv.monprojetsup.data.update.psup;
 
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.parcoursup.carte.algos.tools.Paire;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.SIM_FIL_MAX_WEIGHT;
+import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
 record FormationsSimilairesParBac(
@@ -232,10 +235,7 @@ public record PsupData(
     public @Nullable String getRecoScoGeneriques(Integer gFlCod, String key) {
         List<Map<String, String>> dataFl = diversPsup().getOrDefault("g_fil_att_con", new ArrayList<>());
         Optional<Map<String, String>> entry = dataFl.stream().filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString())).findAny();
-        if (entry.isPresent()) {
-            return entry.get().get("G_FL_CON_LYC_" + key);
-        }
-        return null;
+        return entry.map(stringStringMap -> stringStringMap.get("G_FL_CON_LYC_" + key)).orElse(null);
     }
 
     public @Nullable String getAttendus(Integer gFlCod) {
@@ -243,10 +243,7 @@ public record PsupData(
         Optional<Map<String, String>> entry = dataFl.stream()
                 .filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString()))
                 .findAny();
-        if (entry.isPresent()) {
-            return entry.get().get("G_FL_DES_ATT");
-        }
-        return null;
+        return entry.map(stringStringMap -> stringStringMap.get("G_FL_DES_ATT")).orElse(null);
     }
 
     private Map<String, List<String>> getRecoScoSpecifiques(Set<String> juryCodes, String key) {
@@ -488,4 +485,86 @@ public record PsupData(
         return  diversPsup().get("c_jur_adm");
     }
 
+    public Map<String, GrilleAnalyse> getGrillesAnalyseCandidatures() {
+        //maj de sintitulés
+        if(diversPsup.containsKey("c_jur_adm_comments")) {
+            val comments = diversPsup.get("c_jur_adm_comments");
+            for(val com : comments) {
+                if(com.containsKey("COLUMN_NAME")) {
+                    val name = com.get("COLUMN_NAME");
+                    val comment = com.get("COMMENTS");
+                    if(
+                            name != null
+                                    && name.startsWith("C_JA_CGV_")
+                                    && comment != null) {
+                        String shortKey = name.substring("C_JA_CGV_".length());
+                        if(GrilleAnalyse.labels.containsKey(shortKey)) {
+                            int i = comment.indexOf(":");
+                            if (i > 0) {
+                                String commentCleaned = comment.substring(i+1).trim();
+                                GrilleAnalyse.labels.put(shortKey, commentCleaned);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(diversPsup.containsKey("a_rec_grp") && diversPsup.containsKey("c_jur_adm")) {
+            val arec = diversPsup.get("a_rec_grp");
+            Map<Integer, Set<Integer>> juryToFils = new HashMap<>();
+            arec.forEach(m -> {
+                if(m.containsKey("C_JA_COD") && m.containsKey("G_TA_COD")) {
+                    int cja = Integer.parseInt(m.get("C_JA_COD"));
+                    int gta = Integer.parseInt(m.get("G_TA_COD"));
+                    val form = formations.formations.get(gta);
+                    if(form != null) {
+                        int fl = form.gFlCod;
+                        if(form.isLAS() && fl < LAS_CONSTANT) {
+                            fl += LAS_CONSTANT;
+                        }
+                        juryToFils.computeIfAbsent(cja, z -> new HashSet<>()).add(fl);
+                    }
+                }
+            });
+
+            val jurys = diversPsup.get("c_jur_adm");
+            Map<Integer, Map<String, List<Integer>>> filToPctsListe = new HashMap<>();
+            jurys.forEach(m -> {
+                if(m.containsKey("C_JA_COD")) {
+                    int cja = Integer.parseInt(m.get("C_JA_COD"));
+                    if(juryToFils.containsKey(cja)) {
+                        for (val key : GrilleAnalyse.labels.keySet()) {
+                            String fullKey = "C_JA_CGV_" + key + "_PRC";
+                            String pctStr = m.getOrDefault(fullKey, "0");
+                            int pct = Integer.parseInt(pctStr);
+                            juryToFils.get(cja).forEach(fl -> {
+                                filToPctsListe.computeIfAbsent(
+                                        fl,
+                                        z -> new HashMap<>()
+                                ).computeIfAbsent(
+                                        key,
+                                        z -> new ArrayList<>()
+                                ).add(pct);
+                            });
+                        }
+                    }
+                }
+            });
+
+            Map<String, GrilleAnalyse> result = new HashMap<>();
+            filToPctsListe.forEach((fl, m) -> {
+                Map<String, Integer> pcts = new HashMap<>();
+                m.forEach((key, list) -> {
+                    if(!list.isEmpty()) {
+                        int sum = list.stream().mapToInt(z -> z).sum();
+                        pcts.put(key, sum / list.size());
+                    }
+                });
+                GrilleAnalyse grille = new GrilleAnalyse(pcts);
+                result.put(gFlCodToFrontId(fl), grille);
+            });
+            return result;
+        }
+        return Map.of();
+    }
 }
