@@ -76,7 +76,7 @@ export function addElementToProfileListHandler(id, key, label) {
   } else {
     const changed = data.addElementInBackOfProfileList(id, label);
     if (changed) {
-      app.updateProfile(id, elt, "add");
+      app.updateProfile(id, label, "add");
     }
   }
 }
