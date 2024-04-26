@@ -153,6 +153,14 @@ function injectInSelect($select, data) {
   }
 }
 
+function removeJeVeux(label) {
+  if (label.startsWith("Je veux ") || label.startsWith("je veux ")) {
+    return label.substring(8);
+  } else {
+    return label;
+  }
+}
+
 function compareAlphanumeric(a, b) {
   // Convert both values to strings
   let strA = String(a.label);
@@ -194,11 +202,13 @@ function injectInMultiOptions($accordions_group, menus) {
             aria-controls="accordion-${menu.key}"
           >
             <span class="multi-options-group-emojis">${emoji1}</span>
-            ${menu.label}
+            ${removeJeVeux(menu.label)}
             <span class="multi-options-group-emojis">${emoji2}</span>
           </button>
         </h3>
-        <div class="fr-collapse muti-options-group-content" id="accordion-${menu.key}">
+        <div class="fr-collapse muti-options-group-content" id="accordion-${
+          menu.key
+        }">
         <div class="multi-options-group-list">
         </div>
         </div>
@@ -210,7 +220,9 @@ function injectInMultiOptions($accordions_group, menus) {
       if (key === undefined) key = item.id;
       if (key === undefined) continue;
       $ul.append(
-        `<div class="multi-options-item multi-options-item_${key}" key="${key}"><span class="multi-options-item-emoji">${emoji2}</span>${item.label}</div>`
+        `<div class="multi-options-item multi-options-item_${key}" key="${key}"><span class="multi-options-item-emoji">${emoji2}</span>${removeJeVeux(
+          item.label
+        )}</div>`
       );
     }
     $accordions_group.append($menu);
