@@ -70,10 +70,14 @@ export function removeElementFromProfileList(id, elt) {
   }
 }
 
-export function addElementToProfileListHandler(id, elt) {
-  const changed = data.addElementInBackOfProfileList(id, elt);
-  if (changed) {
-    app.updateProfile(id, elt, "add");
+export function addElementToProfileListHandler(id, key, label) {
+  if (id == "metiers" || id == "formations") {
+    changeSuggestionStatus(key, data.SUGG_APPROVED);
+  } else {
+    const changed = data.addElementInBackOfProfileList(id, label);
+    if (changed) {
+      app.updateProfile(id, elt, "add");
+    }
   }
 }
 

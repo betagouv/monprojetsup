@@ -1213,7 +1213,13 @@ color: var(--light-decisions-text-text-mention-grey, #666);
 }
 
 
-
+.fr-radio-group-horizontal {
+  display: wrap;
+  flex-direction: row;
+}
+.profile_tab .autocomplete_group {
+  margin-top: 40px;
+}
 .profile_tab_title {
   color: var(--light-decisions-text-text-title-grey, #161616);
   
@@ -1224,6 +1230,17 @@ color: var(--light-decisions-text-text-mention-grey, #666);
     font-weight: 700;
     line-height: 32px;
     /* 133.333% */
+}
+.profile_tab_subtitle {
+  color: var(--light-text-label-grey, #161616);
+  
+    /* 2.Corps de texte/LG - Texte article/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    /* 155.556% */
 }
 .profile-tab-scolarite-container-top {
   display: flex;

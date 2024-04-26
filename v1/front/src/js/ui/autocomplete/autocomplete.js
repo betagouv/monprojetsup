@@ -54,7 +54,7 @@ export function setUpAutoComplete(
 }
 
 export function updateAutoCompleteListItem(id, trashHandler) {
-  const liste = data.getListFromProfile(id);
+  const liste = data.getLabelsListFromProfile(id);
   if (liste === undefined) return;
 
   const $container = $(
