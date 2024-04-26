@@ -283,11 +283,12 @@ export function injectHtml() {
   const m = {
     "header.html": "header-placeholder",
     "footer.html": "footer-placeholder",
-    "rgpd_content.html": "rgpd-placeholder",
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
     "modals/validate_account.html": "validate_account-placeholder",
     "modals/error.html": "error-placeholder",
     "modals/metier.html": "metier-placeholder",
+    "modals/rgpd.html": "rgpd-modal-placeholder",
+    "rgpd_content.html": "rgpd-placeholder",
   };
   for (const [file, id] of Object.entries(m)) {
     fetch("html/" + file)

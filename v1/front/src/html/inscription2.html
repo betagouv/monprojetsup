@@ -4,10 +4,9 @@
       class="fr-icon-arrow-right-line fr-icon--lg"
       aria-hidden="true"
     ></span>
-    Créons ensemble votre profil
+    Créons ensemble ton profil
   </h2>
   <form action="">
-    <legend class="fr-fieldset__legend">Mon Profil</legend>
     <div class="fr-fieldset__element">
       <div class="fr-input-group">
         <label class="fr-label" for="champNom"> Nom </label>
@@ -114,6 +113,29 @@
           aria-live="polite"
         ></div>
       </div>
+    </div>
+    <div class="fr-fieldset__element">
+      <input
+        name="checkbox-rgpd"
+        id="checkbox-rgpd"
+        type="checkbox"
+        aria-describedby="checkbox-rgpd-messages"
+      />
+      <label class="fr-label" for="checkbox-rgpd">
+        J’accepte les
+        <a href="#" data-fr-opened="false" aria-controls="rgpdModal"
+          >conditions générales d'utilisation de MonProjetSup</a
+        >
+        et sa politique de
+        <a href="#" data-fr-opened="false" aria-controls="rgpdModal"
+          >gestion des données personnelles</a
+        >
+      </label>
+      <div
+        class="fr-messages-group"
+        id="checkbox-rgpd-messages"
+        aria-live="assertive"
+      ></div>
     </div>
   </form>
   <div class="button-container">
