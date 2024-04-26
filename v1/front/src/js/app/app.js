@@ -99,6 +99,7 @@ export async function validateCodeAcces(accountType, accesGroupe) {
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
   //https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/store
   // Check if the browser supports password credentials (and the Credential Management API)
+  if (session.isAnonymous()) return;
   if ("PasswordCredential" in window) {
     let credential = new PasswordCredential({
       id: login,
