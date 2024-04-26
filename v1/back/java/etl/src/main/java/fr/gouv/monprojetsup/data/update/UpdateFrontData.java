@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.cities.CitiesFront;
 import fr.gouv.monprojetsup.data.model.cities.CitiesLoader;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
@@ -61,6 +62,8 @@ public class UpdateFrontData {
             Map<String, Set<String>> liensSecteursMetiers,
             Map<DomainePro, Set<String>> liensDomainesMetiers,
             Map<String, Attendus> eds,
+            Map<String, GrilleAnalyse> grillesAnalyseCandidatures,
+            Map<String, String> grillesAnalyseCandidaturesLabels,
             List<String> profileFields
     ) {
 
@@ -69,8 +72,9 @@ public class UpdateFrontData {
                 OnisepData onisepData,
                 Map<String, String> liensOnisep,
                 PsupStatistiques.LASCorrespondance lasCorrespondance,
-                Map<String, Attendus> eds
-        ) throws IOException {
+                Map<String, Attendus> eds,
+                Map<String, GrilleAnalyse> grilles,
+                Map<String, String> labels) throws IOException {
 
             LOGGER.info("Calcul des correspondance");
             Map<String, String> groups = psupData.getCorrespondances();
@@ -145,6 +149,8 @@ public class UpdateFrontData {
                     liensSecteursMetiers,
                     liensDomainesMetiers,
                     eds,
+                    grilles,
+                    labels,
                     declaredfields
             );
 
@@ -281,7 +287,9 @@ public class UpdateFrontData {
                 SpecialitesLoader.load(ServerData.statistiques),
                 false
         );
-        DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds);
+        Map<String, GrilleAnalyse> grilles = GrilleAnalyse.getGrilles(psupData);
+
+        DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds, grilles, GrilleAnalyse.labels);
 
         LOGGER.info("Mise à jour de " + DataSources.getFrontSrcPath());
         try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(Path.of(DataSources.getFrontSrcPath())))) {

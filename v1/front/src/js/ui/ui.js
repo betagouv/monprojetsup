@@ -494,6 +494,8 @@ function displayFormationDetails(dat) {
   displayMetiers(dat.examples);
   //attendus
   displayAttendus(key);
+  //grille analyse
+  displayGrilleAnalyseCandidatures(key);
 }
 
 function displaySummary(key) {
@@ -960,6 +962,33 @@ function displayAttendus(key) {
   }
 }
 
+function displayGrilleAnalyseCandidatures(key) {
+  let d = data.getGrilleAnalyseCandidatures(key);
+  if (d === undefined || d === null) d = {};
+  const l = data.getGrilleAnalyseCandidaturesLabels();
+  const liste = [];
+  for (const [key, value] of Object.entries(d)) {
+    if (value >= 10) {
+      const label = l[key];
+      if (label) {
+        liste.push([label, value]);
+      }
+    }
+  }
+  liste.sort((x, y) => y[1] - x[1]);
+  if (liste.length > 0) {
+    $(".formation-details-grille-analyse").show();
+    $(".formation-details-grille-analyse-list").empty();
+    for (const [label, value] of liste) {
+      $(".formation-details-grille-analyse-list").append(
+        `<div class="fr-icon-check-line formation-details-grille-analyse-item">${label} (${value}%)</div>`
+      );
+    }
+  } else {
+    $(".formation-details-grille-analyse").hide();
+  }
+}
+
 function buildAffinityCard(
   key,
   fav,
@@ -1084,6 +1113,7 @@ function buildMetierAffinityCard(key, fav, formations, nodetails) {
 }
 
 function addGeoloctoDiv(cities, $div) {
+  $(".card-geoloc", $div).empty();
   if (cities.length == 0) {
     $(".card-geoloc", $div).empty();
     $(".card-geoloc", $div).hide();

@@ -44,7 +44,7 @@ public class UpdateBackData {
         );
 
         LOGGER.info("Enregistrement des données dans " + DataSources.getBackDataFilePath());
-        BackEndData data = new BackEndData(psupData, onisepData, cities, romeData, carte);
+        BackEndData data = new BackEndData(psupData, onisepData, cities, carte);
 
         Serialisation.toZippedJson(DataSources.getBackDataFilePath(), data, true);
 

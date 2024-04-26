@@ -827,6 +827,36 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   margin-bottom: 24px;
 }
 
+.formation-details-grille-analyse-details {
+  display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;}
+.formation-details-grille-analyse-details-liste {
+  display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.formation-details-grille-analyse-details-liste .fr-icon-check-line {
+  color: #4F9D91;
+}
+.formation-details-grille-analyse-item {
+  display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+
+    color: var(--light-decisions-border-border-action-high-grey, #161616);
+    
+      /* 2.Corps de texte/LG - Texte article/Desktop & Mobile - Medium */
+      font-family: Marianne;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 28px;
+      /* 155.556% */
+
+}
+
 .stats-bar-step-label .survingt {
   color: var(--light-decisions-text-text-mention-grey, #666);
     font-family: Marianne;
