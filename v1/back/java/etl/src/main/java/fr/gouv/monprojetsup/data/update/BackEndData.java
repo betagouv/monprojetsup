@@ -10,7 +10,6 @@ public record BackEndData(
         PsupData psupData,
         OnisepData onisepData,
         CitiesBack cities,
-        RomeData romeData,
         JsonCarte carte) {
 
 }

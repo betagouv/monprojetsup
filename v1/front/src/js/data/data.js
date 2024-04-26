@@ -801,6 +801,14 @@ export function getEDSData(grp) {
   return null;
 }
 
+export function getGrilleAnalyseCandidatures(key) {
+  return data?.grillesAnalyseCandidatures[key]?.pcts;
+}
+
+export function getGrilleAnalyseCandidaturesLabels() {
+  return data?.grillesAnalyseCandidaturesLabels;
+}
+
 export function updateAutoComplete() {
   data.srcAutoComplete.geo_pref = data.cities;
   data.srcAutoComplete.motscles = Object.keys(data.tagsSources);

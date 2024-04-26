@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.attendus.Attendus;
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
@@ -707,12 +708,16 @@ public class ServerDataAnalysis {
                 false
         );
 
+        Map<String, GrilleAnalyse> grilles = GrilleAnalyse.getGrilles(psupData);
         UpdateFrontData.DataContainer data2 = UpdateFrontData.DataContainer.load(
                 psupData,
                 onisepData,
                 urls,
                 data.getLASCorrespondance(),
-                eds);
+                eds,
+                grilles,
+                GrilleAnalyse.labels
+        );
 
         try (CsvTools csv = new CsvTools("resumesDescriptifsFormations.csv", ',')) {
             csv.appendHeaders(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
