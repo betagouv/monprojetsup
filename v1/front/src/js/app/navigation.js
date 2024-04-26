@@ -38,7 +38,7 @@ const screens = {
     back: "inscription_tunnel_interests",
   },
   inscription_tunnel_etudes: {
-    next: "inscription_tunnel_felicitations", //"inscription_formations",
+    next: "inscription_tunnel_formations",
     back: "inscription_tunnel_metiers",
   },
   inscription_tunnel_formations: {
@@ -212,7 +212,8 @@ async function updateSelection() {
 
 function profileEditionSetup() {
   setUpAutoComplete("spe_classes", 0);
-  setUpAutoComplete("metiers", 0);
+  setUpAutoComplete("metiers", 2);
+  setUpAutoComplete("formations", 2);
   setUpAutoComplete("geo_pref", 2);
   setUpMultiChoices();
   setUpSelects();
@@ -221,7 +222,7 @@ function profileEditionSetup() {
 function setUpInscription(screen) {
   ui.setupSelects(screen, "#myTabContent");
   profileEditionSetup();
-  if (screen == "metiers") {
+  if (screen == "metiers" || screen == "formations") {
     $(".profile_tab .autocomplete_group").hide();
     $(".metier-toggler")
       .off()
