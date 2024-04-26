@@ -150,14 +150,6 @@ async function updateRecherche() {
     }
   });
 
-  $("#add-to-favorites-btn")
-    .off("click")
-    .on("click", function () {
-      const id = $(this).attr("data-id");
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-        ui.updateFav(id)
-      );
-    });
   $("#formation-details-header-nav-central-icon")
     .off("click")
     .on("click", function () {
@@ -166,7 +158,20 @@ async function updateRecherche() {
         ui.updateFav(id)
       );
     });
-  $("#add-to-bin-btn")
+  $(".add-to-favorites-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+
+      $(this).html("Ajouté à ma sélection");
+      $(this).addClass("activated");
+      $(this).addClass("favori");
+
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+        ui.updateFav(id)
+      );
+    });
+  $(".add-to-bin-btn")
     .off("click")
     .on("click", function () {
       const id = $(this).attr("data-id");
@@ -179,7 +184,21 @@ async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
   ui.showFavoris(msg.details);
-  $("#add-to-bin-btn")
+  $(".add-to-favorites-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+
+      $(this).html("Ajouté à ma sélection");
+      $(this).addClass("activated");
+      $(this).addClass("favori");
+
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+        ui.updateFav(id)
+      );
+    });
+
+  $(".add-to-bin-btn")
     .off("click")
     .on("click", function () {
       const id = $(this).attr("data-id");
