@@ -822,8 +822,8 @@ function displayExplanations(explications, detailed) {
 }
 
 export function clearAutoComplete(id) {
-  $(`#${id}_autocomplete`).empty();
-  const $container = $(`.autoCompleteItemsContainer_${id}`);
+  $(`#${id}_autocomplete`).val("");
+  const $container = $(`#autoCompleteItemsContainer_${id}`);
   $container.empty();
 }
 
@@ -831,7 +831,7 @@ export function updateAutoCompleteItemsListe(id, listeItems) {
   console.log("");
   const $container = $(`#autoCompleteItemsContainer_${id}`);
   $container.empty();
-  const liste = data.getListFromProfile(id);
+  const liste = data.getLabelsListFromProfile(id);
   if (liste === undefined) return;
   for (const elt of listeItems) {
     if (!liste.includes(elt.label)) {

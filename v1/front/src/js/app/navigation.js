@@ -30,7 +30,7 @@ const screens = {
     back: "inscription_tunnel_scolarite",
   },
   inscription_tunnel_interests: {
-    next: "inscription_tunnel_etudes", //inscription_tunnel_metiers
+    next: "inscription_tunnel_metiers",
     back: "inscription_tunnel_domaines_pro",
   },
   inscription_tunnel_metiers: {
@@ -39,7 +39,7 @@ const screens = {
   },
   inscription_tunnel_etudes: {
     next: "inscription_tunnel_felicitations", //"inscription_formations",
-    back: "inscription_tunnel_interests", //"inscription_tunnel_metiers",
+    back: "inscription_tunnel_metiers",
   },
   inscription_tunnel_formations: {
     next: "inscription_tunnel_felicitations",
@@ -212,6 +212,7 @@ async function updateSelection() {
 
 function profileEditionSetup() {
   setUpAutoComplete("spe_classes", 0);
+  setUpAutoComplete("metiers", 0);
   setUpAutoComplete("geo_pref", 2);
   setUpMultiChoices();
   setUpSelects();
@@ -220,6 +221,16 @@ function profileEditionSetup() {
 function setUpInscription(screen) {
   ui.setupSelects(screen, "#myTabContent");
   profileEditionSetup();
+  if (screen == "metiers") {
+    $(".profile_tab .autocomplete_group").hide();
+    $(".metier-toggler")
+      .off()
+      .on("click", function () {
+        $(".profile_tab .autocomplete_group").toggle(
+          $("#radio-rich-metier-identifie").is(":checked")
+        );
+      });
+  }
 }
 
 const screen_enter_handlers = {
@@ -312,12 +323,19 @@ function setUpAutoComplete(id, threshold) {
 
   const addHandler = (key, label, value) => {
     ui.clearAutoComplete(id);
-    events.addElementToProfileListHandler(id, label);
+    events.addElementToProfileListHandler(id, key, label);
   };
 
   const trashHandler = (label) => {
     ui.clearAutoComplete(id);
-    events.removeElementFromProfileList(id, label);
+    if (id == "metiers" || id == "formations") {
+      const sugg = data.getApprovedSuggestionWithLabel(label);
+      if (sugg != undefined && sugg != null) {
+        events.changeSuggestionStatus(sugg.fl, data.SUGG_REJECTED);
+      }
+    } else {
+      events.removeElementFromProfileList(id, label);
+    }
   };
 
   const feedbackHandler = (resultNb, lookupLength, lookupLengthThreshold) =>
@@ -333,7 +351,8 @@ function setUpAutoComplete(id, threshold) {
     $(`.autoCompleteItem`).on("click", function () {
       const key = $(this).attr("key");
       const label = $(this).attr("label");
-      events.addElementToProfileListHandler(id, label);
+      addHandler(key, label);
+      //events.addElementToProfileListHandler(id, key, label);
       $(this).remove();
       autocomplete.updateAutoCompleteListItem(id, trashHandler);
     });

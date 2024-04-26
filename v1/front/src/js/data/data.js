@@ -352,7 +352,39 @@ function getProfileValue(id) {
   return data.profile[id];
 }
 
-export function getListFromProfile(id) {
+function getFavorisMetiersLabels() {
+  const result = [];
+  for (const sugg of data.profile.choices) {
+    if (sugg.status == SUGG_APPROVED && isMetier(sugg.fl)) {
+      const label = getLabel(sugg.fl);
+      if (label !== undefined && label !== null) {
+        result.push(label);
+      }
+    }
+  }
+  return result;
+}
+
+function getFavorisFormationsLabels() {
+  const result = [];
+  for (const sugg of data.profile.choices) {
+    if (sugg.status == SUGG_APPROVED && isFiliere(sugg.fl)) {
+      const label = getLabel(sugg.fl);
+      if (label !== undefined && label !== null) {
+        result.push(label);
+      }
+    }
+  }
+  return result;
+}
+
+export function getLabelsListFromProfile(id) {
+  if (id == "metiers") {
+    return getFavorisMetiersLabels();
+  }
+  if (id == "formations") {
+    return getFavorisFormationsLabels();
+  }
   const val = getProfileValue(id);
   return val;
 }
@@ -373,18 +405,26 @@ function setProfileValue(id, value) {
 function isObject(l) {
   return l !== null && l !== undefined && typeof l == "object";
 }
-export function removeFromListOrMap(id, key) {
+export function getApprovedSuggestionWithLabel(label) {
+  for (const sugg of getSuggestionsApproved()) {
+    if (getLabel(sugg.fl) == label) {
+      return sugg;
+    }
+  }
+  return null;
+}
+export function removeFromListOrMap(id, value) {
   const l = data.profile[id];
   if (l !== undefined) {
     if (Array.isArray(l)) {
-      const index = l.indexOf(key);
+      const index = l.indexOf(value);
       if (index >= 0) {
         l.splice(index, 1);
         return true;
       }
     }
-    if (isObject(l) && l[key] !== undefined) {
-      delete l[key];
+    if (isObject(l) && l[value] !== undefined) {
+      delete l[value];
     }
   }
   return false;
@@ -811,6 +851,12 @@ export function getGrilleAnalyseCandidaturesLabels() {
 
 export function updateAutoComplete() {
   data.srcAutoComplete.geo_pref = data.cities;
+  data.srcAutoComplete.metiers = Object.fromEntries(
+    Object.entries(data.labels).filter(([key, _]) => isMetier(key))
+  );
+  data.srcAutoComplete.formations = Object.fromEntries(
+    Object.entries(data.labels).filter(([key, _]) => isFiliere(key))
+  );
   data.srcAutoComplete.motscles = Object.keys(data.tagsSources);
   data.srcAutoComplete.thematiques = data.thematiques;
   updateSpecialitesOptions();
