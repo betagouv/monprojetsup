@@ -369,4 +369,5 @@ public final class Group {
     public boolean isExpeENSGroup() {
         return  expeENSGroupe != null && !expeENSGroupe.isEmpty();
     }
+
 }

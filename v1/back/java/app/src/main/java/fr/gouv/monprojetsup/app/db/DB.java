@@ -47,6 +47,8 @@ public abstract class DB {
     public static final String DEFAULT_SUPERUSER = "hugo.gimbert@gmail.com";
     public static final String LYCEE_DEMO = "LyceeDemo";
     public static final String CLASSE_DEMO = "PremiereDemo";
+    public static final String LYCEE_ANO = "LyceeAno";
+    public static final String CLASSE_ANO = "ClasseAno";
     private static final Logger LOGGER = Logger.getLogger(DB.class.getName());
     /**
      * authantication module.
@@ -208,6 +210,9 @@ public abstract class DB {
         return Group.lyceeToGroupId(LYCEE_DEMO, CLASSE_DEMO);
     }
 
+    protected String getAnoGroupId() {
+        return Group.lyceeToGroupId(LYCEE_ANO, CLASSE_ANO);
+    }
 
 
 
@@ -442,12 +447,37 @@ public abstract class DB {
             return createNewGroup(LYCEE_DEMO, CLASSE_DEMO);
         }
     }
+    public @NotNull Group findOrCreateAnonymousGroup() throws ModelException {
+        try {
+            Group group = findGroup(getDemoGroupId());
+            group.setRegistrationToken("anonymous");
+            return group;
+        } catch (UnknownGroupException e) {
+            Lycee lycDemo = new Lycee(LYCEE_ANO, LYCEE_ANO + " (lycée fictif)",
+                    List.of(new Classe(CLASSE_ANO, CLASSE_ANO + " (classe fictive)",
+                            Classe.Niveau.terminale,
+                            false,
+                            false,
+                            "G"
+                            ,"")
+                    ),
+                    new HashSet<>()
+            );
+            saveLycee(lycDemo);
+            Group group = createNewGroup(LYCEE_ANO, CLASSE_ANO);
+            group.setRegistrationToken("anonymous");
+            return group;
+        }
+    }
 
 
     protected synchronized void init(Set<String> admins) throws DBExceptions.ModelException {
         setSuperAdminUserTypes(admins);
 
         findOrCreateDemoGroup();
+        Group ano = findOrCreateAnonymousGroup();
+        saveGroup(ano);
+
         assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup();
 
         List<Group> newGroups = computeMissingGroups(getLycees(), getAllGroups().stream().map(Group::getId).collect(Collectors.toSet()));
