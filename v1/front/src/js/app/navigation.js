@@ -309,23 +309,43 @@ function setUpMultiChoices() {
 
 function setUpAutoComplete(id, threshold) {
   data.updateAutoComplete();
+
+  const addHandler = (key, label, value) => {
+    ui.clearAutoComplete(id);
+    events.addElementToProfileListHandler(id, label);
+  };
+
+  const trashHandler = (label) => {
+    ui.clearAutoComplete(id);
+    events.removeElementFromProfileList(id, label);
+  };
+
+  const feedbackHandler = (resultNb, lookupLength, lookupLengthThreshold) =>
+    autoCompleteFeedbackHandler(
+      id,
+      resultNb,
+      lookupLength,
+      lookupLengthThreshold
+    );
+
+  const updateListHandler = (listeItems) => {
+    ui.updateAutoCompleteItemsListe(id, listeItems);
+    $(`.autoCompleteItem`).on("click", function () {
+      const key = $(this).attr("key");
+      const label = $(this).attr("label");
+      events.addElementToProfileListHandler(id, label);
+      $(this).remove();
+      autocomplete.updateAutoCompleteListItem(id, trashHandler);
+    });
+  };
+
   const show = autocomplete.setUpAutoComplete(
     id,
-    (key, label, value) => {
-      events.addElementToProfileListHandler(id, label);
-    },
-    (key, label, value) => {
-      events.removeElementFromProfileList(id, value);
-    },
-    (resultNb, lookupLength, lookupLengthThreshold) => {
-      autoCompleteFeedbackHandler(
-        id,
-        resultNb,
-        lookupLength,
-        lookupLengthThreshold
-      );
-    },
-    threshold
+    addHandler,
+    trashHandler,
+    feedbackHandler,
+    threshold,
+    updateListHandler
   );
   if (id === "spe_classes") {
     $("#autocomplete_group_spe_classes").toggle(show);

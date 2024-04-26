@@ -821,6 +821,27 @@ function displayExplanations(explications, detailed) {
   }
 }
 
+export function clearAutoComplete(id) {
+  $(`#${id}_autocomplete`).empty();
+  const $container = $(`.autoCompleteItemsContainer_${id}`);
+  $container.empty();
+}
+
+export function updateAutoCompleteItemsListe(id, listeItems) {
+  console.log("");
+  const $container = $(`#autoCompleteItemsContainer_${id}`);
+  $container.empty();
+  const liste = data.getListFromProfile(id);
+  if (liste === undefined) return;
+  for (const elt of listeItems) {
+    if (!liste.includes(elt.label)) {
+      $container.append(
+        `<div class="autoCompleteItem" key="${elt.key}" label="${elt.label}"><span class="autoCompleteItemLabel">${elt.label}</span></div>`
+      );
+    }
+  }
+}
+
 function addExplanation2(expl) {
   const giveDetailsFlag = false; //keep it for later
   let str = [];
