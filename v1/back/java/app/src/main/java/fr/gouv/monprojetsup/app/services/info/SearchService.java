@@ -125,14 +125,14 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         Map<String, Integer> searchScores = ServerData.search(req.recherche);
 
-        Set<String> keysFormations
-                = req.includeFormations ? searchScores.keySet().stream().filter(Helpers::isFiliere).collect(Collectors.toSet()) : Set.of();
-
         //equivalent d'un appel à /affinites
         final Pair<List<Affinity>, List<String>> affinites = getAffinities(
                 req.profile
         );
 
+        if(!req.recherche.trim().isEmpty()) {
+            affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
+        }
         //calcul des cores de tri
         Map<String, Double> sortScores
                 = affinites.getLeft().stream().collect(

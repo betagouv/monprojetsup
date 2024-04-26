@@ -527,8 +527,10 @@ public record PsupData(
                 }
             });
 
+            val corr = getCorrespondances();
+
             val jurys = diversPsup.get("c_jur_adm");
-            Map<Integer, Map<String, List<Integer>>> filToPctsListe = new HashMap<>();
+            Map<String, Map<String, List<Integer>>> filToPctsListe = new HashMap<>();
             jurys.forEach(m -> {
                 if(m.containsKey("C_JA_COD")) {
                     int cja = Integer.parseInt(m.get("C_JA_COD"));
@@ -538,13 +540,25 @@ public record PsupData(
                             String pctStr = m.getOrDefault(fullKey, "0");
                             int pct = Integer.parseInt(pctStr);
                             juryToFils.get(cja).forEach(fl -> {
+                                String flStr = gFlCodToFrontId(fl);
                                 filToPctsListe.computeIfAbsent(
-                                        fl,
+                                        flStr,
                                         z -> new HashMap<>()
                                 ).computeIfAbsent(
                                         key,
                                         z -> new ArrayList<>()
                                 ).add(pct);
+                                if(corr.containsKey(flStr)) {
+                                    val flgr = corr.get(flStr);
+                                    filToPctsListe.computeIfAbsent(
+                                            flgr,
+                                            z -> new HashMap<>()
+                                    ).computeIfAbsent(
+                                            key,
+                                            z -> new ArrayList<>()
+                                    ).add(pct);
+                                }
+
                             });
                         }
                     }
@@ -561,7 +575,7 @@ public record PsupData(
                     }
                 });
                 GrilleAnalyse grille = new GrilleAnalyse(pcts);
-                result.put(gFlCodToFrontId(fl), grille);
+                result.put(fl, grille);
             });
             return result;
         }

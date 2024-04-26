@@ -108,7 +108,9 @@ public record TagsSources(
         ServerData.reverseFlGroups.forEach((flGroup, fls) -> {
             int score = fls.stream().map(fl -> result.getOrDefault(fl, 0)).reduce(0, Integer::max);
             score = Math.max(result.getOrDefault(flGroup, 0), score);
-            result.put(flGroup, score);
+            if(score > 0) {
+                result.put(flGroup, score);
+            }
         });
 
         return result;

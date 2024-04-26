@@ -981,7 +981,7 @@ function displayGrilleAnalyseCandidatures(key) {
     $(".formation-details-grille-analyse-list").empty();
     for (const [label, value] of liste) {
       $(".formation-details-grille-analyse-list").append(
-        `<div class="fr-icon-check-line formation-details-grille-analyse-item">${label} (${value}%)</div>`
+        `<span class="fr-icon-check-line formation-details-grille-analyse-item">${label} (${value}%)</span>`
       );
     }
   } else {
