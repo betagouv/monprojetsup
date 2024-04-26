@@ -1296,6 +1296,7 @@ function initOnce() {
       addToHistory(e);
       showAccountTab();
     });
+  $(".hidden-modal-button").hide();
   //deprecated suggestions.initOnce();
 
   //
