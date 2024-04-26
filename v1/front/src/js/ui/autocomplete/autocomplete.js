@@ -8,7 +8,8 @@ export function setUpAutoComplete(
   addHandler,
   trashHandler,
   feedbackHandler,
-  threshold
+  threshold,
+  updateListHandler = null
 ) {
   // Autocomplete section : https://github.com/Honatas/bootstrap-4-autocomplete
   const field = document.getElementById(id + "_autocomplete");
@@ -38,69 +39,54 @@ export function setUpAutoComplete(
           addHandler(item.key, item.label, item.value);
         }
       }
-      updateAutoCompleteListItem(id, itemsSource);
-      registerTrashItemHandlers(id, trashHandler, itemsSource);
+      updateAutoCompleteListItem(id, trashHandler);
     },
     feedbackHandler: feedbackHandler,
     highlightClass: "text-danger",
     threshold: threshold !== undefined ? threshold : 2,
     maximumItems: 0,
+    updateListHandler: updateListHandler,
+    maskList: true,
   });
 
-  updateAutoCompleteListItem(id, itemsSource);
-  registerTrashItemHandlers(id, trashHandler, itemsSource);
+  updateAutoCompleteListItem(id, trashHandler);
   return true;
 }
 
-function updateAutoCompleteListItem(id, itemsSource) {
+export function updateAutoCompleteListItem(id, trashHandler) {
   const liste = data.getListFromProfile(id);
   if (liste === undefined) return;
 
+  const $container = $(
+    `<div class="container">
+    <div class="profile-cell-container">
+    </div>
+    </div>`
+  );
+
   let l = [];
 
-  l.push('<div class="container">');
-  l.push('<div class="profile-cell-container">');
   for (let item of liste) {
-    let key = null;
-    let label = null;
-
-    label = item;
-
+    let label = item;
     if (label === null || label === undefined || label === "") continue;
-    l.push('<div class="profile-cell">');
-
-    l.push(`<span class="profile-cell-label">`);
-    l.push(label);
-    l.push("</span>");
-    l.push(
-      `
-      <a class="trashItem${id}" 
-        label="${label}"
-        key="${key}"
-        title="Supprimer"
-        href="#"
-        >
-        <span class="fr-icon-close-line" style="color:white" aria-hidden="true"></span>
-        </a>`
-    );
-    l.push("</div> ");
+    const $cell = $(`
+      <div class="profile-cell">
+        <span class="profile-cell-label"><span>${label}</span>
+          <span class="trashItem fr-icon-close-line" 
+            label="${label}"
+            title="Supprimer"
+            >
+          </span>
+        </span>
+      </div>`);
+    $(".trashItem", $cell).on("click", function (event) {
+      trashHandler(label);
+      updateAutoCompleteListItem(id, trashHandler);
+      event.preventDefault();
+    });
+    $(".profile-cell-container", $container).append($cell);
   }
-
-  l.push("</div>");
-  l.push("</div> ");
-  $("#" + id + "_list").html(l.join(""));
-}
-
-function registerTrashItemHandlers(id, trashHandler, itemsSource) {
-  if (trashHandler) {
-    $(`.trashItem${id}`)
-      .off("click")
-      .on("click", function () {
-        const value = $(this).attr("label");
-        const key = $(this).attr("key");
-        trashHandler(key, id, value);
-        updateAutoCompleteListItem(id, itemsSource);
-        registerTrashItemHandlers(id, trashHandler, itemsSource);
-      });
-  }
+  $("#" + id + "_list")
+    .empty()
+    .append($container);
 }
