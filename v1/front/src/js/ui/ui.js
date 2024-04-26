@@ -526,9 +526,7 @@ function displaySummary(key) {
   const summary = data.getSummary(key);
   if (summary && summary.length > 0) {
     const cleanup = summary.replaceAll("h3", "p").replaceAll("h2", "p");
-
     $(".formation-details-summary").html(cleanup);
-    $(".formation-details-summary").show();
   } else {
     $(".formation-details-summary").hide();
     $(".formation-details-summary").empty();
