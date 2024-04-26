@@ -1,13 +1,13 @@
 import Head from "@/components/_layout/Head/Head";
-import {
-  étapeActuelleÉtapesInscriptionÉlèveStore,
-  étapeSuivanteÉtapesInscriptionÉlèveStore,
-} from "@/features/élève/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import { élèveQueryOptions } from "@/features/élève/ui/options";
+import {
+  étapeActuelleÉtapesInscriptionÉlèveStore,
+  étapeSuivanteÉtapesInscriptionÉlèveStore,
+} from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 

@@ -11,8 +11,8 @@ import {
   étapePrécédenteÉtapesInscriptionÉlèveStore,
   étapesÉtapesInscriptionÉlèveStore,
   indexÉtapeActuelleÉtapesInscriptionÉlèveStore,
-} from "@/features/élève/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
-import { Outlet, useRouterState } from "@tanstack/react-router";
+} from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
+import { Outlet, ScrollRestoration, useRouterState } from "@tanstack/react-router";
 import { Suspense, useEffect } from "react";
 
 const LayoutInscription = () => {
@@ -50,6 +50,7 @@ const LayoutInscription = () => {
                 </div>
                 <p className="fr-text--lg">{i18n.COMMUN.CHAMPS_OBLIGATOIRES}</p>
                 <Suspense fallback={<AnimationChargement />}>
+                  <ScrollRestoration />
                   <Outlet />
                   <hr className="mt-12" />
                   <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>
