@@ -2,9 +2,9 @@ import { i18n } from "../src/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
 class TestHelper {
-  public CENTRE_INTÊRET_VOYAGER = "Je veux voyager";
+  public CENTRE_INTÊRET_VOYAGER = "Voyager";
 
-  public CENTRE_INTÊRET_BRICOLER = "Je veux bricoler";
+  public CENTRE_INTÊRET_BRICOLER = "Bricoler";
 
   public CATÉGORIE_DÉCOUVRIR_MONDE = "Découvrir le monde";
 
