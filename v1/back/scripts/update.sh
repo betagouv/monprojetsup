@@ -1,5 +1,5 @@
 git pull
-mvn compile exec:java -f../pom.xml -DskipTests=true -Dexec.mainClass=fr.gouv.monprojetsup.data.update.UpdateMonProjetSupData
+mvn compile exec:java -f../etl/pom.xml -DskipTests=true -Dexec.mainClass=fr.gouv.monprojetsup.data.update.UpdateMonProjetSupData
 mvn -f ../pom.xml -P standalone -DskipTests=true compile install
 pushd ../../../front/
 npm run build
