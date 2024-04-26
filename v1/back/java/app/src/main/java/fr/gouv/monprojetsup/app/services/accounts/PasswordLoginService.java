@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
+import fr.gouv.monprojetsup.app.db.model.User;
 import fr.gouv.monprojetsup.common.server.ServerStartingException;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
@@ -9,7 +10,10 @@ import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jose4j.lang.StringUtil;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class PasswordLoginService extends MyService<PasswordLoginService.Request, PasswordLoginService.Response> {
@@ -70,7 +74,23 @@ public class PasswordLoginService extends MyService<PasswordLoginService.Request
         }*/
 
         Log.logTrace(req.login,  " loggin in");
-        LoginAnswer answer = WebServer.db().authenticate(req.login(), req.password());
+        String login = req.login;
+        String password = req.password;
+        if(req.login().equals("anonymous") && req.password().equals("anonymous")) {
+            login = "__anonymous__" + UUID.randomUUID();
+            password = UUID.randomUUID().toString();
+            WebServer.db().createAccount(new CreateAccountService.CreateAccountRequest(
+                    User.UserTypes.lyceen,
+                    login,
+                    password,
+                    "anonymous",
+                    "anonymous",
+                    "Anonyme",
+                    "Testeur"
+                    )
+            );
+        }
+        LoginAnswer answer = WebServer.db().authenticate(login, password);
         Log.logTrace(req.login,  " logged in");
         return new Response(answer);
     }

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
+import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.model.User;
 import fr.gouv.monprojetsup.app.server.MyService;
@@ -46,6 +47,9 @@ public class CreateAccountService extends MyService<CreateAccountService.Request
 
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
+        if(req.data.accesGroupe.equals("anonymous")) {
+            throw new DBExceptions.UnknownGroupException();
+        }
         PasswordLoginService.LoginAnswer answer = WebServer.db().createAccount(req.data);
         return new Response(answer);
     }

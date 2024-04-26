@@ -524,6 +524,10 @@ function serverErrorHandler(error) {
   }
 }
 
+export function setAnonymousSession(ano) {
+  session.setAnonymous(ano);
+}
+
 export function frontErrorHandler(error, severe) {
   error.login = session.getLogin();
   const msg = JSON.stringify(error);

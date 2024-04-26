@@ -1,6 +1,4 @@
 import $ from "jquery";
-import { toast } from "./../animate/toasts";
-import { Modal } from "bootstrap";
 import * as nav from "../../app/navigation";
 
 import * as app from "../../app/app";
@@ -38,8 +36,16 @@ export function init() {
   $("#createAccountButton")
     .off("click")
     .on("click", () => {
+      app.setAnonymousSession(false);
       nav.setScreen(null);
       nav.setScreen("inscription1");
+    });
+
+  $("#anonymousNavButton")
+    .off("click")
+    .on("click", () => {
+      app.setAnonymousSession(true);
+      app.loginHandler("anonymous", "anonymous");
     });
 
   $("#login-button")
@@ -48,6 +54,7 @@ export function init() {
       const login = $("#champEmail").val();
       const password = $("#champMotDePasse").val();
       $("#champMotDePasse").val("");
+      app.setAnonymousSession(false);
       app.loginHandler(login, password);
     });
 }

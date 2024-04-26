@@ -287,6 +287,7 @@ export function injectHtml() {
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
     "modals/validate_account.html": "validate_account-placeholder",
     "modals/error.html": "error-placeholder",
+    "modals/metier.html": "metier-placeholder",
   };
   for (const [file, id] of Object.entries(m)) {
     fetch("html/" + file)
@@ -420,8 +421,8 @@ function displayItemDetails(dat, nodetails) {
     $(".explore-specific-metier").hide();
     displayFormationDetails(dat, nodetails);
   }
-  $("#add-to-favorites-btn").attr("data-id", key);
-  $("#add-to-bin-btn").attr("data-id", key);
+  $(".formation-details-actions .add-to-favorites-btn").attr("data-id", key);
+  $(".formation-details-actions .add-to-bin-btn").attr("data-id", key);
   $("#formation-details-header-nav-central-icon").attr("data-id", key);
   currentKeyDisplayed = key;
   updateFav(dat.key);
@@ -442,22 +443,31 @@ function displayMetierDetails(dat) {
   displayMetiers(dat.examples);
 }
 
+function updateFavDiv(fav, $div) {
+  if (fav) {
+    $(".add-to-favorites-btn", $div).html("Ajouté à ma sélection");
+    $(".add-to-favorites-btn", $div).addClass("activated");
+    $(".add-to-favorites-btn", $div).addClass("favori");
+    $(".add-to-bin-btn", $div).html("Plus intéressé");
+    $(".add-to-bin-btn", $div).show();
+  } else {
+    $(".add-to-favorites-btn", $div).html("Ajouter à ma sélection");
+    $(".add-to-favorites-btn", $div).removeClass("activated");
+    $(".add-to-favorites-btn", $div).removeClass("favori");
+    $(".add-to-bin-btn", $div).html("Pas intéressé");
+    $(".add-to-bin-btn", $div).hide();
+  }
+}
+
 export function updateFav(key) {
   const fav = data.isFavoris(key);
   if (key == currentKeyDisplayed) {
+    updateFavDiv(fav, $("#explore-div-resultats-right"));
     if (fav) {
-      $("#add-to-favorites-btn").html("Ajouté à ma sélection");
-      $("#add-to-favorites-btn").addClass("activated");
-      $("#add-to-favorites-btn").addClass("favori");
-      $("#add-to-bin-btn").html("Plus intéressé");
       $(`#formation-details-header-nav-central-icon`)
         .removeClass("fr-icon-heart-line")
         .addClass("fr-icon-heart-fill");
     } else {
-      $("#add-to-favorites-btn").html("Ajouter à ma sélection");
-      $("#add-to-bin-btn").html("Pas intéressé");
-      $("#add-to-favorites-btn").removeClass("activated");
-      $("#add-to-favorites-btn").removeClass("favori");
       $(`#formation-details-header-nav-central-icon`)
         .removeClass("fr-icon-heart-fill")
         .addClass("fr-icon-heart-line");
@@ -539,9 +549,9 @@ function displayUrls(subkey, forsOfInterest) {
       );
   }
 
-  $("#formation-details-links-other").empty();
+  $(".formation-details-links-other").empty();
   for (const url of urls) {
-    $("#formation-details-links-other").append(
+    $(".formation-details-links-other").append(
       `<div class="formation-details-link">
           <a href="${url}" target="_onisep"
             >${getUrlLabel(url)}<img
@@ -934,9 +944,14 @@ function displayMetiers(metiers) {
       if (j >= metiers.length) break;
       const metier = metiers[j];
       const labelMetier = data.getLabel(metier);
-      $(".formation-details-exemples-metiers-container").append(
-        `<div class="formation-details-exemple-metier">${labelMetier}</div>`
+      const $button = $(
+        `<button key="${metier}" class="formation-details-exemple-metier">${labelMetier}</button>`
       );
+      $(".formation-details-exemples-metiers-container").append($button);
+      $button.on("click", () => {
+        showMetierDetails(metier);
+      });
+      //showMetierDetails(label, descriptif, url)
     }
   }
 }
@@ -1424,6 +1439,30 @@ export function showValidationRequiredMessage(login, message) {
   $("#validationRequiredMessage").html(message);
 
   $("#validationRequiredModalButton").trigger("click");
+}
+
+export function showMetierDetails(metier) {
+  const label = data.getLabel(metier);
+  const descriptif = data.getSummary(metier);
+  const urls = data.getUrls(metier);
+  const fav = data.isFavoris(metier);
+
+  //show modal
+  $("#metierLabel").html(label);
+  if (descriptif !== null) {
+    $("#metierDescriptif").html(descriptif);
+  } else {
+    $("#metierDescriptif").empty();
+  }
+  $("#metierUrl").hide();
+  for (const url of urls) {
+    $("#metierUrl").show().attr("href", url);
+  }
+  $("#metierModal .add-to-favorites-btn").attr("data-id", metier);
+  $("#metierModal .add-to-bin-btn").attr("data-id", metier);
+
+  updateFavDiv(fav, $("#metierModal"));
+  $("#metierModalButton").trigger("click");
 }
 
 export function showErrorMessage(title, message) {

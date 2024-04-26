@@ -39,14 +39,27 @@ function setRole(roleStr) {
   sessionStorage["role"] = role;
 }
 
+export function setAnonymous(ano) {
+  if (ano) {
+    sessionStorage["ano"] = "1";
+  } else {
+    sessionStorage["ano"] = "0";
+  }
+}
+function isAnonymous() {
+  const ano = sessionStorage["ano"];
+  return ano !== undefined && ano === "1";
+}
+
 function getRole() {
   return sessionStorage["role"];
 }
 
+/*
 function isAnonymous() {
   const login = getLogin();
   return login !== undefined && login.includes(anonymousLogin);
-}
+}*/
 
 function isAdminOrTeacher() {
   const role = getRole();

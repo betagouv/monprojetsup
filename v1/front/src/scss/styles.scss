@@ -574,8 +574,8 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
   margin-right: 16px;
 }
 
-.formation-details-actions .favori,
-.formation-details-actions .favori:hover
+.add-to-favorites-btn.favori,
+.add-to-favorites-btn.favori:hover
  {
   background: #FFECE7;
     color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
@@ -590,6 +590,9 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     color: var(--dark-options-illustration-color-100-hover-pink-macaron-100-hover, #84423E);
     ;}
 
+    .metierDetailsButtons {
+      margin-top: 32px;
+    }
 .metier-card-header-type {
   border-radius: 4px;
   //padding: 3px;
@@ -726,10 +729,10 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     /* 150% */
     margin-bottom: 12px;
 }
-.formation-details-links {
+.formation-details-link {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 .formation-details-stats-sep {
   color : #dddddd;
@@ -839,6 +842,22 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 .formation-details-grille-analyse-details-liste .fr-icon-check-line {
   color: #4F9D91;
 }
+#metierModal #metierUrl {
+  border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+  color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+    text-align: center;
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Medium */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 171.429% */
+    text-decoration: none;
+    padding: 5px;
+}
+
 .formation-details-grille-analyse-item {
   display: flex;
     flex-direction: row;
