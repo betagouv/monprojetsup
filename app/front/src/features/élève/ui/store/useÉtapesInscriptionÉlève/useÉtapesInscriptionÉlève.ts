@@ -27,7 +27,7 @@ const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>
     {
       titreÉtape: i18n.ÉLÈVE.MÉTIERS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
       titre: i18n.ÉLÈVE.MÉTIERS.PARCOURS_INSCRIPTION.TITRE,
-      url: "/",
+      url: "/inscription/metiers",
     },
     {
       titreÉtape: i18n.ÉLÈVE.ÉTUDES.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,

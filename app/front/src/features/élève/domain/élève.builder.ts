@@ -1,12 +1,17 @@
-import { type Élève, type SituationÉlève } from "./élève.interface";
+import { type ClasseÉlève, type Élève, type SituationÉlève } from "./élève.interface";
 
 export class ÉlèveBuilder {
   private élève: Élève;
 
   public constructor() {
     this.élève = {
-      id: "1234",
+      id: "123",
       situation: undefined,
+      classe: undefined,
+      bac: undefined,
+      spécialités: undefined,
+      domaines: undefined,
+      centresIntêrets: undefined,
     };
   }
 
@@ -17,6 +22,31 @@ export class ÉlèveBuilder {
 
   public avecSituation(situation: SituationÉlève): ÉlèveBuilder {
     this.élève.situation = situation;
+    return this;
+  }
+
+  public avecClasse(classe: ClasseÉlève): ÉlèveBuilder {
+    this.élève.classe = classe;
+    return this;
+  }
+
+  public avecBac(bac: string): ÉlèveBuilder {
+    this.élève.bac = bac;
+    return this;
+  }
+
+  public avecSpécialités(spécialités: string[]): ÉlèveBuilder {
+    this.élève.spécialités = spécialités;
+    return this;
+  }
+
+  public avecDomaines(domaines: string[]): ÉlèveBuilder {
+    this.élève.domaines = domaines;
+    return this;
+  }
+
+  public avecCentresIntêrets(centresIntêrets: string[]): ÉlèveBuilder {
+    this.élève.centresIntêrets = centresIntêrets;
     return this;
   }
 

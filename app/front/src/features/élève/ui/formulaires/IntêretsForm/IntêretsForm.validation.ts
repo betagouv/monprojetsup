@@ -1,5 +1,5 @@
 import { z } from "zod";
 
-export const intêretsValidationSchema = z.object({
-  intêrets: z.string().array().optional(),
+export const centresIntêretsValidationSchema = z.object({
+  centresIntêrets: z.string().array().optional(),
 });

@@ -1,6 +1,7 @@
 import Head from "@/components/_layout/Head/Head";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
+import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import { élèveQueryOptions } from "@/features/élève/ui/options";
@@ -39,6 +40,8 @@ const ÉlèveInscriptionPage = () => {
         return <DomainesForm {...propsFormulaire} />;
       case "/inscription/interets":
         return <IntêretsForm {...propsFormulaire} />;
+      case "/inscription/metiers":
+        return <MétiersForm {...propsFormulaire} />;
       default:
         return null;
     }

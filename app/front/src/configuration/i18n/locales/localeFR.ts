@@ -118,6 +118,20 @@ export const localeFR = {
         TITRE_ÉTAPE: "Les métiers qui m'inspirent",
         TITRE: "As-tu déjà quelques idées de métiers ?",
       },
+      SITUATION: {
+        LÉGENDE: "Mon avancement *",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Pas pour l’instant",
+            DESCRIPTION: "Ce n'est pas grave, MPS est là pour t'accompagner.",
+            EMOJI: "🤔",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai identifié un ou plusieurs métiers",
+            EMOJI: "🙂",
+          },
+        },
+      },
     },
     ÉTUDES: {
       PARCOURS_INSCRIPTION: {
