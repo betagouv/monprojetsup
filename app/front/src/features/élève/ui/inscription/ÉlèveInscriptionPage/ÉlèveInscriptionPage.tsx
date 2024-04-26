@@ -4,6 +4,7 @@ import {
   étapeSuivanteÉtapesInscriptionÉlèveStore,
 } from "@/features/élève/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
+import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import { élèveQueryOptions } from "@/features/élève/ui/options";
@@ -36,6 +37,8 @@ const ÉlèveInscriptionPage = () => {
         return <ScolaritéForm {...propsFormulaire} />;
       case "/inscription/domaines":
         return <DomainesForm {...propsFormulaire} />;
+      case "/inscription/interets":
+        return <IntêretsForm {...propsFormulaire} />;
       default:
         return null;
     }

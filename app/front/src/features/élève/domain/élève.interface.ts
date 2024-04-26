@@ -4,6 +4,7 @@ export type Élève = {
   classe?: ClasseÉlève;
   bac?: string;
   spécialités?: string[];
+  domaines?: string[];
 };
 
 export const situationÉlève = ["aucune_idee", "quelques_pistes", "projet_precis"] as const;

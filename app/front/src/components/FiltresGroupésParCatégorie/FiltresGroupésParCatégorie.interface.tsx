@@ -7,4 +7,6 @@ export type FiltresGroupésParCatégorieProps = {
       nom: string;
     }>;
   }>;
+  filtreIdsSélectionnésParDéfaut?: string[];
+  auChangementFiltresSélectionnés: (filtreIdsSélectionnés: string[]) => void;
 };

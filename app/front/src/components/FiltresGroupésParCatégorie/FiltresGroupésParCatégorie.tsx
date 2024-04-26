@@ -1,16 +1,49 @@
 import { type FiltresGroupésParCatégorieProps } from "./FiltresGroupésParCatégorie.interface";
 import TagFiltre from "@/components/_dsfr/TagFiltre/TagFiltre";
+import { i18n } from "@/configuration/i18n/i18n";
 import * as Accordion from "@radix-ui/react-accordion";
+import { useEffect, useState } from "react";
 
-const FiltresGroupésParCatégorie = ({ catégories }: FiltresGroupésParCatégorieProps) => {
+const FiltresGroupésParCatégorie = ({
+  catégories,
+  auChangementFiltresSélectionnés,
+  filtreIdsSélectionnésParDéfaut,
+}: FiltresGroupésParCatégorieProps) => {
+  const [filtreIdsSélectionnés, setFiltreIdsSélectionnés] = useState(filtreIdsSélectionnésParDéfaut ?? []);
+
+  const supprimerFiltreIdSélectionné = (filtreId: string) => {
+    const nouveauxFiltreIdsSélectionnés = filtreIdsSélectionnés.filter(
+      (filtreIdSélectionné) => filtreIdSélectionné !== filtreId,
+    );
+    setFiltreIdsSélectionnés(nouveauxFiltreIdsSélectionnés);
+  };
+
+  const ajouterFiltreIdSélectionné = (filtreId: string) => {
+    const nouveauxFiltreIdsSélectionnés = [...filtreIdsSélectionnés, filtreId];
+    setFiltreIdsSélectionnés(nouveauxFiltreIdsSélectionnés);
+  };
+
+  const auChangementAppuieDUnFiltre = (estAppuyé: boolean, filtreId: string) => {
+    if (estAppuyé) ajouterFiltreIdSélectionné(filtreId);
+    else supprimerFiltreIdSélectionné(filtreId);
+  };
+
+  const catégoriesOuvertesParDéfaut = catégories
+    .filter((catégorie) => catégorie.filtres.some((filtre) => filtreIdsSélectionnés.includes(filtre.id)))
+    .map((catégorie) => catégorie.nom);
+
+  useEffect(() => {
+    auChangementFiltresSélectionnés(filtreIdsSélectionnés);
+  }, [auChangementFiltresSélectionnés, filtreIdsSélectionnés]);
+
   return (
     <Accordion.Root
       className="grid gap-6"
+      defaultValue={catégoriesOuvertesParDéfaut}
       type="multiple"
     >
       {catégories.map((catégorie) => (
         <Accordion.Item
-          className=""
           key={catégorie.nom}
           value={catégorie.nom}
         >
@@ -46,12 +79,13 @@ const FiltresGroupésParCatégorie = ({ catégories }: FiltresGroupésParCatégo
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content className="border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
-            <p className="fr-text--sm mb-4 text-[--text-mention-grey]">N’hésite pas à préciser certaines catégories</p>
+            <p className="fr-text--sm mb-4 text-[--text-mention-grey]">{i18n.COMMUN.PRÉCISER_CATÉGORIES}</p>
             <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
               {catégorie.filtres.map((filtre) => (
                 <li key={filtre.id}>
                   <TagFiltre
-                    auClic={() => {}}
+                    appuyéParDéfaut={filtreIdsSélectionnés.includes(filtre.id)}
+                    auClic={(estAppuyé) => auChangementAppuieDUnFiltre(estAppuyé, filtre.id)}
                     libellé={filtre.nom}
                   />
                 </li>

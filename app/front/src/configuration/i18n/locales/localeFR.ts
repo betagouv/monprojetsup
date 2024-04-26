@@ -107,10 +107,10 @@ export const localeFR = {
         TITRE: "As-tu déjà identifié des domaines ?",
       },
     },
-    TALENTS: {
+    INTÊRETS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes petits talents",
-        TITRE: "Parlons un peu de toi. Tu dirais que tu es ...",
+        TITRE_ÉTAPE: "Mes centres d'intêrets",
+        TITRE: "Plus tard, je voudrais ...",
       },
     },
     MÉTIERS: {
@@ -138,6 +138,7 @@ export const localeFR = {
     MÉTIER: "Métier",
     TAUX_AFFINITÉ: "Taux d'affinité",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
+    PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
     ERREURS_FORMULAIRES: {
       LISTE_OBLIGATOIRE: "Veuillez sélectionner une option parmi la liste.",
     },

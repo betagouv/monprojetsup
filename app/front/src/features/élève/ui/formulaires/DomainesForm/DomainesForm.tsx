@@ -8,7 +8,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: DomainesFormProps) => {
   const { data: catégoriesDomainesProfessionnels } = useSuspenseQuery(catégoriesDomainesProfessionnelsQueryOptions);
 
-  const { mettreÀJourÉlève } = useÉlèveForm({
+  const { setValue, mettreÀJourÉlève, getValues } = useÉlèveForm({
     schémaValidation: domainesValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
@@ -24,7 +24,11 @@ const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Domaine
       id={formId}
       onSubmit={mettreÀJourÉlève}
     >
-      <FiltresGroupésParCatégorie catégories={filtresGroupésParCatégories} />
+      <FiltresGroupésParCatégorie
+        auChangementFiltresSélectionnés={(filtreIdsSélectionnés) => setValue("domaines", filtreIdsSélectionnés)}
+        catégories={filtresGroupésParCatégories}
+        filtreIdsSélectionnésParDéfaut={getValues("domaines")}
+      />
     </form>
   );
 };
