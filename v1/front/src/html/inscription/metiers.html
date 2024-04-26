@@ -1,0 +1,94 @@
+<div class="profile_tab">
+  <div class="profile_tab_title">As-tu déjà quelques idées de métiers ?</div>
+  <div class="profile_tab_subtitle">
+    Pas de panique, c’est simplement pour comprendre comment MPS peut t’aider.
+  </div>
+  <div class="profile-tab-etudes-container-top"></div>
+  <fieldset
+    class="fr-fieldset"
+    id="radio-rich"
+    aria-labelledby="radio-rich-legend radio-rich-messages"
+  >
+    <legend
+      class="fr-fieldset__legend--regular fr-fieldset__legend"
+      id="radio-rich-legend"
+    >
+      Mon avancement
+    </legend>
+    <div class="fr-radio-group-horizontal">
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="fr-radio-group fr-radio-rich">
+          <input
+            type="radio"
+            id="radio-rich-metier-identifie"
+            name="radio-rich"
+            class="metier-toggler"
+          />
+          <label class="fr-label" for="radio-rich-metier-identifie">
+            <div class="inscription_tunnel_content_radio_labels">
+              <div class="inscription_tunnel_content_radio_labels1">
+                J’ai identifié un ou plusieurs métiers
+              </div>
+            </div>
+          </label>
+          <div class="fr-radio-rich__img">
+            <div class="inscription_tunnel_content_radio_labels3">🙂</div>
+          </div>
+        </div>
+      </div>
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="fr-radio-group fr-radio-rich">
+          <input
+            type="radio"
+            id="radio-rich-2"
+            name="radio-rich"
+            class="metier-toggler"
+          />
+          <label class="fr-label" for="radio-rich-2">
+            <div class="inscription_tunnel_content_radio_labels">
+              <div class="inscription_tunnel_content_radio_labels1">
+                Pas pour l’instant
+              </div>
+              <div class="inscription_tunnel_content_radio_labels2">
+                Ce n'est pas grave, MPS est là pour t'accompagner.
+              </div>
+            </div>
+          </label>
+          <div class="fr-radio-rich__img">
+            <div class="inscription_tunnel_content_radio_labels3">🤔</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fr-messages-group"
+      id="radio-rich-messages"
+      aria-live="assertive"
+    ></div>
+  </fieldset>
+  <div class="autocomplete_group">
+    <label class="fr-label" for="select">Métiers envisagés</label>
+    <div class="profile_explanation">
+      Commence à taper puis ajoute en favoris les métiers qui pourraient
+      t’intéresser
+    </div>
+    <input
+      class="fr-input"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"
+      autocomplete="off"
+      aria-describedby="metiers_autocomplete-messages"
+      id="metiers_autocomplete"
+      name="metiers_autocomplete"
+      placeholder="Commencez à taper pour rechercher..."
+      type="text"
+    />
+    <div
+      id="autoCompleteItemsContainer_metiers"
+      class="autoCompleteItemsContainer"
+    ></div>
+
+    <div class="autocomplete_results" id="metiers_list"></div>
+  </div>
+</div>
