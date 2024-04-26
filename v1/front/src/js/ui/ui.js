@@ -295,6 +295,7 @@ export function injectHtml() {
       .then((response) => response.text())
       .then((html) => {
         $(`#${id}`).html(html);
+        $(".hidden-modal-button").hide();
       });
   }
 }
