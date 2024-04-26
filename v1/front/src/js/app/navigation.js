@@ -454,6 +454,7 @@ async function validateInscription2() {
   const identifiant = $("#champIdentifiant").val();
   const mdp = $("#champMdp").val();
   const mdp2 = $("#champMdp2").val();
+  const rgpd = $("#checkbox-rgpd").is(":checked");
 
   const pattern = /^[a-zA-Z0-9+_.\-@]+$/;
 
@@ -483,6 +484,10 @@ async function validateInscription2() {
   } else if (mdp === undefined || mdp === null || mdp.length == 0) {
     $("#champMdp-messages").html(
       `<p class="fr-alert fr-alert--error">Mot de passe non renseigné</p>`
+    );
+  } else if (!rgpd) {
+    $("#checkbox-rgpd-messages").html(
+      `<p class="fr-alert fr-alert--error">Vous devez accepter les conditions d'utilisation</p>`
     );
   } else {
     $("#champMdp").val("");
