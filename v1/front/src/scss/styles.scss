@@ -130,6 +130,7 @@ footer {
     font-weight: 400;
     line-height: 20px;
     /* 166.667% */
+    margin-bottom: 8px;
 }
 .py-10px {
   padding-top: 10px;
@@ -1234,34 +1235,6 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   margin-right: 32px;
 }
 
-.profile-cell-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 16px;
-
-}
-.profile-cell {
-  display: flex;
-    padding: 4px 8px 4px 12px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    border-radius: 16px;
-      background: var(--light-decisions-background-background-action-high-blue-france, #000091);
-}
-.profile-cell-label {
-  color: var(--light-decisions-text-text-inverted-blue-france, #F5F5FE);
-    text-align: center;
-  
-    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
-    font-family: Marianne;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    /* 171.429% */
-}
 .profile-tab {
   overflow: visible;
 }
@@ -1269,10 +1242,72 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   overflow: visible;
   width: 100%;
 }
+.autoCompleteItemsContainer {
+  margin-top: 32px;
+  display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;}
+
+.autoCompleteItem {
+  display: flex;
+    padding: 4px 8px 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 16px;
+    background: var(--light-decisions-background-background-action-low-blue-france, #E3E3FD);
+    cursor: pointer;
+    
+}
+        .autoCompleteItemLabel {
+          color: var(--light-decisions-text-text-action-high-blue-france, #000091);
+          text-align: center;
+    
+          /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+          font-family: Marianne;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 24px;
+          /* 171.429% */
+        }
 .autocomplete_results {
   overflow: visible;
   padding-top: 32px;
 }
+.profile-cell-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+
+}
+
+.profile-cell {
+  display: flex;
+  padding: 4px 8px 4px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  background: var(--light-decisions-background-background-action-high-blue-france, #000091);
+  cursor: default;
+}
+
+.profile-cell-label {
+  color: var(--light-decisions-text-text-inverted-blue-france, #F5F5FE);
+  text-align: center;
+
+  /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 171.429% */
+}
+
 .dropdown-menu-autocomplete {
   display: flex;
   flex-direction: column;
@@ -1479,6 +1514,10 @@ color: var(--light-decisions-text-text-mention-grey, #666);
 
 .trashItemIcon {
   color: $trashItemIconColor;
+}
+
+.trashItem  {
+  cursor: pointer;
 }
 
 
