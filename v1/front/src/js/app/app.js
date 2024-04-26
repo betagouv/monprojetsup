@@ -183,7 +183,7 @@ function startNavigation() {
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
-        nav.setScreen("inscription_tunnel_metiers");
+        nav.setScreen("inscription_tunnel_statut");
       } else {
         //nav.setScreen("inscription_tunnel_felicitations");
         nav.setScreen("board");
