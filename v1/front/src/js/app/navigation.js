@@ -57,6 +57,7 @@ export async function setScreen(screen) {
     screen = await doTransition(current_screen, screen);
     $(`#nav-${screen}`).attr("aria-current", true);
     init_main_nav();
+    ui.hideNiveauInformation(data.getProfileValue("niveau"));
   }
 }
 

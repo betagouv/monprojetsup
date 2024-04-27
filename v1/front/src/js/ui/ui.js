@@ -183,6 +183,13 @@ export async function showTunnelScreen(subscreen) {
   }
 }
 
+export function hideNiveauInformation(niveau) {
+  if (niveau === undefined || niveau === null || niveau === "") {
+    niveau = "term";
+  }
+  $(".premiere-only").toggle(niveau === "term" || niveau === "prem");
+  $(".terminale-only").toggle(niveau === "term");
+}
 function injectInSelect($select, data) {
   for (const [key, value] of Object.entries(data)) {
     $select.append(`<option value="${key}">${value}</option>`);
