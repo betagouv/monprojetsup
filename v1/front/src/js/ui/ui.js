@@ -95,21 +95,20 @@ async function showScreen(screen, ph = null) {
   if (screen in screensHandlersInit) {
     screensHandlersInit[screen]();
   }
-  if (screen == "landing") {
-    $("#main-placeholder").css({
-      "background-image": 'url("../img/bg.svg")',
-    });
-  } else {
-    $("#main-placeholder").css({
-      "background-image": "none",
-    });
-  }
+  $("#main-placeholder").css({
+    "background-image": "none",
+  });
 }
 
 async function showSubScreen(subscreen) {
   await showScreen("main");
   const html = await fetchData(subscreen);
   $(`#sub-placeholder`).html(html);
+  if (subscreen == "inscription_tunnel") {
+    $("#main-placeholder").css({
+      "background-image": 'url("../img/bg.svg")',
+    });
+  }
 }
 
 export async function showConnectedScreen(subscreen) {
@@ -122,6 +121,25 @@ export async function showConnectedScreen(subscreen) {
   $div.html(html);
 }
 
+const tunnelScreens = [
+  "statut",
+  "scolarite",
+  "domaines_pro",
+  "interests",
+  "metiers",
+  "etudes",
+  "formations",
+];
+const tunnelScreensTitles = [
+  "Mon projet supérieur",
+  "Ma scolarité",
+  "Mes domaines professionnels",
+  "Mes centres d'intérêt",
+  "Les métiers qui m’inspirent",
+  "Mes études supérieures",
+  "Les études ou cursus",
+  "Inscripion terminée",
+];
 export async function showTunnelScreen(subscreen) {
   await showSubScreen("inscription_tunnel");
   const fromProfile = ["domaines_pro", "interests", "etudes", "scolarite"];
@@ -144,6 +162,24 @@ export async function showTunnelScreen(subscreen) {
     for (const [selector, text] of changes[subscreen]) {
       $(selector, $div).html(text);
     }
+  }
+  const nbSteps = tunnelScreens.length;
+  $(".inscription_progress_steps").empty();
+  $(".inscription_progress_bar").toggle(subscreen != "felicitations");
+  $("#steps_total").html(nbSteps);
+  for (const idx in tunnelScreens) {
+    const screen = tunnelScreens[idx];
+    const active = screen == subscreen;
+    if (active) {
+      const nextIdx = 1 + parseInt(idx);
+      $("#steps_idx").html(nextIdx);
+      $("#step_title").html(tunnelScreensTitles[idx]);
+      $("#next_step_title").html(tunnelScreensTitles[nextIdx]);
+    }
+    $(".inscription_progress_steps").append(
+      `<div class="progress_step ${active ? "active" : ""}"></div>`
+    );
+    //
   }
 }
 
