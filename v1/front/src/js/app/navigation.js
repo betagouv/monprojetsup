@@ -218,6 +218,7 @@ function profileEditionSetup() {
   setUpAutoComplete("geo_pref", 2);
   setUpMultiChoices();
   setUpSelects();
+  setUpScolarite();
 }
 
 function setUpInscription(screen) {
@@ -233,8 +234,98 @@ function setUpInscription(screen) {
         );
       });
   }
+  if (screen == "scolarite") {
+    setUpScolarite();
+  }
 }
 
+function setUpScolarite() {
+  updateAutoEvaluationFeedback();
+  $("#fr-range--step-moyenne-disable").on("change", () => {
+    const checked = $("#fr-range--step-moyenne-disable").is(":checked");
+    $("#fr-range--step-moyenne").toggle(!checked);
+    $("#range-moyenne-generale-messages").toggle(!checked);
+    sendMoyenneDebounced(checked ? "" : null);
+  });
+  $("#range-moyenne-generale").on("change", () => {
+    sendMoyenneDebounced(null);
+    updateAutoEvaluationFeedback();
+  });
+}
+
+function sendMoyenneDebounced(val) {
+  debounce(() => sendMoyenne(val), 1000)();
+}
+function sendMoyenne(val) {
+  if (val === null) val = $("#range-moyenne-generale").val();
+  console.log("Sending moyenne '" + val + "'");
+  events.profileValueChangedHandler("moyenne", val);
+}
+function debounce(func, delay) {
+  let timeoutId;
+
+  return function () {
+    const context = this;
+    const args = arguments;
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
+export function updateAutoEvaluationFeedback() {
+  const value = $("#range-moyenne-generale").val();
+  const id = "range-moyenne-generale-messages";
+  if (!value) {
+    $(`#${id}`).hide();
+    return;
+  }
+  $(`#${id}`).show();
+  const feedback_node = $("#" + id);
+
+  const bac = data.getProfileValue("bac");
+  let typeBacStr = "";
+  if (bac !== undefined && bac != "") {
+    typeBacStr = " de série de Bac '" + data.ppBac(bac) + "'";
+  }
+  typeBacStr = "";
+
+  if (feedback_node) {
+    if (value === undefined || value === "") {
+      feedback_node.html("");
+    }
+    // Feedback (https://rschmacker.github.io/files/JMP.pdf)
+    // TODO: load grades distribution.
+    else {
+      const index40 = Math.max(0, Math.round(2 * value));
+      const isMoyGen = true;
+      const stats = data.getPercentilesMoyGen40();
+      const centile = stats ? stats[index40] : undefined;
+      //const percentile = percentilesMoyGen40[index40];
+      if (centile !== undefined) {
+        const name = isMoyGen ? "moyenne générale" : "moyenne au bac";
+        const formatted = format(centile, 0);
+        feedback_node.html(
+          `
+          Cette année, ${formatted} des élèves de terminale ${typeBacStr} admis dans une formation
+           sur Parcoursup avaient une ${name} de ${value} ou moins.`
+        );
+      } else {
+        feedback_node.html("");
+      }
+    }
+  }
+}
+
+function format(x, nbDigits) {
+  return new Intl.NumberFormat("fr-FR", {
+    maximumFractionDigits: nbDigits,
+    style: "percent",
+    roundingMode: "floor",
+  }).format(x);
+}
 const screen_enter_handlers = {
   landing: async () => await ui.showLandingScreen(),
   recherche: async () => {
@@ -392,6 +483,10 @@ function setUpSelects() {
       events.profileValueChangedHandler2(key, val);
       if (key == "bac") {
         setUpAutoComplete("spe_classes", 0);
+        updateAutoEvaluationFeedback();
+      }
+      if (key == "niveau") {
+        ui.hideNiveauInformation(val);
       }
     });
   /*
