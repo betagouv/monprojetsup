@@ -42,17 +42,55 @@
     </div>
   </div>
 
-  <div class="autocomplete_group">
-    <label class="fr-label" for="select"> Où souhaites-tu étudier?</label>
+  <fieldset
+    class="fr-fieldset"
+    aria-labelledby="radio-inline-legend radio-inline-messages"
+  >
+    <legend
+      class="fr-fieldset__legend--regular fr-fieldset__legend"
+      id="radio-inline-legend"
+    >
+      Où souhaites-tu étudier?
+    </legend>
+    <div class="fr-fieldset__element fr-fieldset__element--inline">
+      <div class="fr-radio-group">
+        <input
+          type="radio"
+          id="aucune_ville_en_tete"
+          name="radio-inline"
+          class="radio-inline-villes"
+          checked
+        />
+        <label class="fr-label" for="aucune_ville_en_tete"> Aucune idée </label>
+      </div>
+    </div>
+    <div class="fr-fieldset__element fr-fieldset__element--inline">
+      <div class="fr-radio-group">
+        <input
+          class="radio-inline-villes"
+          type="radio"
+          id="quelques_villes_en_tete"
+          name="radio-inline"
+        />
+        <label class="fr-label" for="quelques_villes_en_tete">
+          J’ai quelques villes en tête
+        </label>
+      </div>
+    </div>
+  </fieldset>
+  <div class="autocomplete_group" id="villes_autocomplete_group">
+    <div class="profile_explanation">
+      Commence à taper puis sélectionne des villes.
+    </div>
     <input
       class="fr-input"
       spellcheck="false"
       autocapitalize="off"
       autocorrect="off"
+      autocomplete="off"
       aria-describedby="geo_pref_autocomplete-messages"
       id="geo_pref_autocomplete"
       name="geo_pref_autocomplete"
-      placeholder="Commencez à taper pour rechercher..."
       type="text"
     />
     <div
