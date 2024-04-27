@@ -34,28 +34,47 @@
     <label class="fr-label">
       Estimation de ta moyenne actuelle
       <span class="fr-hint-text"
-        >Texte de description additionnel, valeur de 0 à 100.</span
+        >Ton auto-évaluation est utilisée pour te recommander en priorité les
+        formations auxquelles tu as les meilleures chances d'accéder, sans pour
+        autant en exclure aucune.</span
       >
     </label>
-    <div class="fr-range fr-range--sm">
+    <div class="fr-range fr-range--sm fr-range--step" id="fr-range--step-moyenne">
       <span class="fr-range__output">14</span>
       <input
         id="range-moyenne-generale"
         name="range-moyenne-generale"
         type="range"
         aria-labelledby="range-moyenne-generale-label"
-        max="20"
+        max="19.5"
         value="14"
+        step=".5"
         aria-describedby="range-moyenne-generale-messages"
       />
       <span class="fr-range__min" aria-hidden="true">0</span>
-      <span class="fr-range__max" aria-hidden="true">20</span>
+      <span class="fr-range__max" aria-hidden="true">19.5</span>
+    </div>
+    <div class="fr-fieldset__element">
+        <div class="fr-checkbox-group">
+            <input id="fr-range--step-moyenne-disable" name="fr-range--step-moyenne-disable"  type="checkbox" aria-describedby="fr-range--step-moyenne-disable-messages">
+            <label class="fr-label" for="fr-range--step-moyenne-disable">
+                Je n'en ai aucune idée
+            </label>
+            <div class="fr-messages-group" id="fr-range--step-moyenne-disable-messages" aria-live="assertive">
+            </div>
+        </div>
     </div>
     <div
       class="fr-messages-group"
-      id="range-moyenne-generale-messages"
+      
       aria-live="polite"
-    ></div>
+    >
+    <div
+    class="fr-alert fr-alert--info"
+    id="range-moyenne-generale-messages">
+
+    </div>
+  </div>
   </div>
   <div class="autocomplete_group" id="autocomplete_group_spe_classes">
     <label class="fr-label" for="select">
