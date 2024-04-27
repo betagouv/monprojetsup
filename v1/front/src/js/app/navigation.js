@@ -215,11 +215,30 @@ function profileEditionSetup() {
   setUpAutoComplete("spe_classes", 0);
   setUpAutoComplete("metiers", 2);
   setUpAutoComplete("formations", 2);
-  setUpAutoComplete("geo_pref", 2);
+
+  const geo_prefs = data.getProfileValue("geo_pref");
+  const showVilles = geo_prefs !== undefined && geo_prefs.length > 0;
+  if (showVilles) $("#quelques_villes_en_tete").attr("checked", true);
+  else $("#aucune_ville_en_tete").attr("checked", true);
+  setUpVilles();
+  $(".radio-inline-villes").on("change", () => {
+    setUpVilles();
+  });
+
   setUpMultiChoices();
   setUpSelects();
   setUpScolarite();
   $("#range-moyenne-generale").val(data.getProfileValue("moygen"));
+}
+
+function setUpVilles() {
+  const showVilles = $("#quelques_villes_en_tete").is(":checked");
+  $("#villes_autocomplete_group").toggle(showVilles);
+  if (showVilles) {
+    setUpAutoComplete("geo_pref", 2);
+  } else {
+    events.clearProfileList("geo_pref");
+  }
 }
 
 function setUpInscription(screen) {

@@ -174,7 +174,8 @@ public final class Profile {
         }
     }
 
-    private void setValue(@NotNull String name, String value, boolean add) {
+    private void setValue(@NotNull String name, String value, boolean add, boolean clear) {
+        if( (add || !clear) && value == null) throw new RuntimeException("Value is null for " + name);
         //LOGGER.info("Setting " + name + " to " + value + " for " + login + " add=" + add);
         switch (name) {
             case "nom": nom = value; break;
@@ -188,10 +189,18 @@ public final class Profile {
             case "scores":
             case "interests":
                 if(add) scores.put(value.replace(".","_"), 1);
+                else if(clear) scores.clear();
                 else scores.remove(value.replace(".","_"));
                 break;
-            case "geo_pref": if(add) geo_pref.add(value); else geo_pref.remove(value); break;
-            case "spe_classes": if(add) spe_classes.add(value); else spe_classes.remove(value); break;
+            case "geo_pref":
+                if(add) geo_pref.add(value);
+                else if(clear) geo_pref.clear();
+                else geo_pref.remove(value);
+                break;
+            case "spe_classes":
+                if(add) spe_classes.add(value);
+                else if(clear) spe_classes.clear();
+                else spe_classes.remove(value); break;
             case "ine": ine = value; break;
             default:
         }
@@ -203,7 +212,8 @@ public final class Profile {
 
         if(update.name() != null) {
             boolean add = Objects.equals(update.action(), "add");
-            this.setValue(update.name(), update.value(), add);
+            boolean clear = Objects.equals(update.action(), "clear");
+            this.setValue(update.name(), update.value(), add, clear);
         }
         if(update.suggestions() != null) {
             update.suggestions().forEach(suggestion -> {
