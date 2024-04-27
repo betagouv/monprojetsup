@@ -1,15 +1,37 @@
 <div class="fr-container fr-container--fluid inscription-screen">
-  <div id="myTabContent" class="inscription_content"></div>
-  <div class="button-container">
-    <button
-      aria-controls="modal-create-account"
-      class="fr-btn fr-btn--secondary left"
-      id="backButton"
-    >
-      Retour
-    </button>
-    <button class="fr-btn right" id="nextButton" title="Continuer">
-      Continuer
-    </button>
+  <div id="progressBar" class="inscription_progress_bar">
+    <div class="inscription_step">
+      Etape <span id="steps_idx">1</span> sur <span id="steps_total">7</span>
+    </div>
+    <div class="inscription_title">
+      <span id="step_title">Mon Projet Supérieur</span>
+    </div>
+    <div class="inscription_progress_steps">
+      <div class="progress_step active"></div>
+      <div class="progress_step"></div>
+      <div class="progress_step"></div>
+      <div class="progress_step"></div>
+      <div class="progress_step"></div>
+      <div class="progress_step"></div>
+      <div class="progress_step"></div>
+    </div>
+    <div class="inscription_next_step_label">
+      Etape suivante: <span id="next_step_title">Ma scolarité</span>
+    </div>
+  </div>
+  <div class="inscription_content">
+    <div id="myTabContent"></div>
+    <div class="button-container">
+      <button
+        aria-controls="modal-create-account"
+        class="fr-btn fr-btn--secondary left"
+        id="backButton"
+      >
+        <span class="fr-icon-arrow-left-line"></span>&nbsp; Retour
+      </button>
+      <button class="fr-btn right" id="nextButton" title="Continuer">
+        Continuer&nbsp;<span class="fr-icon-arrow-right-line"></span>
+      </button>
+    </div>
   </div>
 </div>
