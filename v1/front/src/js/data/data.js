@@ -429,6 +429,11 @@ export function removeFromListOrMap(id, value) {
   }
   return false;
 }
+export function clearList(id) {
+  if (data.profile[id] == []) return false;
+  data.profile[id] = [];
+  return true;
+}
 
 export function addElementInBackOfProfileList(id, x) {
   return addElementInProfileList(id, x, false, [x]);

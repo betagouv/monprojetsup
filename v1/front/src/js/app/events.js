@@ -70,6 +70,13 @@ export function removeElementFromProfileList(id, elt) {
   }
 }
 
+export function clearProfileList(id) {
+  const changed = data.clearList(id);
+  if (changed) {
+    app.updateProfile(id, null, "clear");
+  }
+}
+
 export function addElementToProfileListHandler(id, key, label) {
   if (id == "metiers" || id == "formations") {
     changeSuggestionStatus(key, data.SUGG_APPROVED);
