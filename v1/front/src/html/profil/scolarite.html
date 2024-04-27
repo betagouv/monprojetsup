@@ -30,7 +30,33 @@
       </select>
     </div>
   </div>
-
+  <div class="fr-range-group terminale-only" id="range-2246-group">
+    <label class="fr-label">
+      Estimation de ta moyenne actuelle
+      <span class="fr-hint-text"
+        >Texte de description additionnel, valeur de 0 à 100.</span
+      >
+    </label>
+    <div class="fr-range fr-range--sm">
+      <span class="fr-range__output">14</span>
+      <input
+        id="range-moyenne-generale"
+        name="range-moyenne-generale"
+        type="range"
+        aria-labelledby="range-moyenne-generale-label"
+        max="20"
+        value="14"
+        aria-describedby="range-moyenne-generale-messages"
+      />
+      <span class="fr-range__min" aria-hidden="true">0</span>
+      <span class="fr-range__max" aria-hidden="true">20</span>
+    </div>
+    <div
+      class="fr-messages-group"
+      id="range-moyenne-generale-messages"
+      aria-live="polite"
+    ></div>
+  </div>
   <div class="autocomplete_group" id="autocomplete_group_spe_classes">
     <label class="fr-label" for="select">
       Spécialités (EDS) choisies ou envisagées.
