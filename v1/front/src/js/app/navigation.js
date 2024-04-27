@@ -219,6 +219,7 @@ function profileEditionSetup() {
   setUpMultiChoices();
   setUpSelects();
   setUpScolarite();
+  $("#range-moyenne-generale").val(data.getProfileValue("moygen"));
 }
 
 function setUpInscription(screen) {
@@ -259,7 +260,7 @@ function sendMoyenneDebounced(val) {
 function sendMoyenne(val) {
   if (val === null) val = $("#range-moyenne-generale").val();
   console.log("Sending moyenne '" + val + "'");
-  events.profileValueChangedHandler("moyenne", val);
+  events.profileValueChangedHandler2("moygen", val);
 }
 function debounce(func, delay) {
   let timeoutId;
