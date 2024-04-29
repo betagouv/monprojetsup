@@ -98,8 +98,8 @@ export const localeFR = {
       SPÉCIALITÉS: {
         LABEL: "Enseignements de spécialité (EDS) choisis ou envisagés",
         DESCRIPTION: "Commence à taper puis sélectionne des enseignements",
+        SÉLECTIONNÉS: "Enseignement(s) de spécialité sélectionné(s)",
       },
-      SPÉCIALITÉS_SÉLECTIONNÉES: "Enseignement(s) de spécialité sélectionné(s)",
     },
     DOMAINES: {
       PARCOURS_INSCRIPTION: {

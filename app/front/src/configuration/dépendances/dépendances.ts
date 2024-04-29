@@ -1,7 +1,8 @@
 import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.interface";
 import { bacInMemoryRepository } from "@/features/bac/infrastructure/gateway/bacInMemoryRepository/bacInMemoryRepository";
+import { RechercherSpécialitésPourUnBacUseCase } from "@/features/bac/usecase/RechercherSpécialitésPourUnBac";
 import { RécupérerBacsUseCase } from "@/features/bac/usecase/RécupérerBacs";
-import { RécupérerSpécialitésPourUnBacUseCase } from "@/features/bac/usecase/RécupérerSpécialitésPourUnBac";
+import { RécupérerSpécialitésUseCase } from "@/features/bac/usecase/RécupérerSpécialités";
 import { type CentreIntêretRepository } from "@/features/centreIntêret/infrastructure/centreIntêretRepository.interface";
 import { centreIntêretInMemoryRepository } from "@/features/centreIntêret/infrastructure/gateway/centreIntêretInMemoryRepository/centreIntêretInMemoryRepository";
 import { RécupérerCentresIntêretsGroupésParCatégorieUseCase } from "@/features/centreIntêret/usecase/RécupérerCentresIntêretsGroupésParCatégorie";
@@ -53,7 +54,9 @@ export class Dépendances {
 
   public readonly récupérerBacsUseCase: RécupérerBacsUseCase;
 
-  public readonly récupérerSpécialitésPourUnBacUseCase: RécupérerSpécialitésPourUnBacUseCase;
+  public readonly récupérerSpécialitésUseCase: RécupérerSpécialitésUseCase;
+
+  public readonly rechercherSpécialitésPourUnBacUseCase: RechercherSpécialitésPourUnBacUseCase;
 
   public readonly récupérerDomainesProfessionnelsGroupésParCatégorieUseCase: RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase;
 
@@ -75,7 +78,8 @@ export class Dépendances {
     this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
     this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
-    this.récupérerSpécialitésPourUnBacUseCase = new RécupérerSpécialitésPourUnBacUseCase(this._bacRepository);
+    this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);
+    this.rechercherSpécialitésPourUnBacUseCase = new RechercherSpécialitésPourUnBacUseCase(this._bacRepository);
     this.récupérerDomainesProfessionnelsGroupésParCatégorieUseCase =
       new RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase(this._domaineProfessionnelRepository);
     this.récupérerCentresIntêretsGroupésParCatégorieUseCase = new RécupérerCentresIntêretsGroupésParCatégorieUseCase(

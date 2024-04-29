@@ -1,14 +1,16 @@
 export type SélecteurMultipleProps = {
   label: string;
   texteOptionsSélectionnées: string;
-  options: SélecteurMultipleOption[];
+  optionsSuggérées: SélecteurMultipleOption[];
+  auChangementOptionsSélectionnées: (optionsSélectionnées: SélecteurMultipleOption[]) => void;
+  àLaRechercheDUneOption: (recherche: string) => void;
+  rechercheMétiersEnCours: boolean;
   description?: string;
   status?: {
     type: "désactivé" | "erreur" | "succès";
     message?: string;
   };
-  valeursOptionsSélectionnéesParDéfaut?: Array<SélecteurMultipleOption["valeur"]>;
-  auChangementOptionsSélectionnées?: (valeursOptionsSélectionnées: Array<SélecteurMultipleOption["valeur"]>) => void;
+  optionsSélectionnéesParDéfaut?: SélecteurMultipleOption[];
 };
 
 export type SélecteurMultipleOption = {

@@ -1,6 +1,6 @@
 import { type SituationMétiersOptions, type useMétiersFormArgs } from "./MétiersForm.interface";
 import { métiersValidationSchema } from "./MétiersForm.validation";
-import { type SélecteurMultipleAvecAppelHttpOption } from "@/components/SélecteurMultipleAvecAppelHttp/SélecteurMultipleAvecAppelHttp.interface";
+import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type MétierAperçu } from "@/features/métier/domain/métier.interface";
@@ -48,7 +48,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     }
   }, [setValue, valeurSituationMétiers]);
 
-  const auChangementDesMétiersSélectionnés = (métiersSélectionnés: SélecteurMultipleAvecAppelHttpOption[]) => {
+  const auChangementDesMétiersSélectionnés = (métiersSélectionnés: SélecteurMultipleOption[]) => {
     setValue(
       "métiers",
       métiersSélectionnés.map((métier) => métier.valeur),

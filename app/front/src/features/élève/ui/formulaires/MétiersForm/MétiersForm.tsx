@@ -1,7 +1,7 @@
 import { type MétiersFormProps } from "./MétiersForm.interface";
 import useMétiersForm from "./useMétiersForm";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
-import SélecteurMultipleAvecAppelHttp from "@/components/SélecteurMultipleAvecAppelHttp/SélecteurMultipleAvecAppelHttp";
+import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: MétiersFormProps) => {
@@ -31,7 +31,7 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
       />
       {valeurSituationMétiers === "quelques_pistes" && métiersSélectionnésParDéfaut && (
         <div className="mt-12">
-          <SélecteurMultipleAvecAppelHttp
+          <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesMétiersSélectionnés}
             description={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.DESCRIPTION}
             label={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL}
