@@ -1564,9 +1564,13 @@ color: var(--light-decisions-text-text-mention-grey, #666);
     line-height: 20px;
     /* 166.667% */
 }
+
 .inscription_tunnel_content_radio_labels3 {
     font-size: 32px;
   }
+    .inscription_tunnel_content_radio_labels3 .icon-img {
+      max-width: 32px;
+    }
 
 
 /* Style the tab */.nav-tabs {
