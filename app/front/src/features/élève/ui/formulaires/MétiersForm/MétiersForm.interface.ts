@@ -6,9 +6,13 @@ export type MétiersFormProps = {
   àLaSoumissionDuFormulaireAvecSuccès?: () => void;
 };
 
-export type SituationOptions = Array<{
+export type SituationMétiersOptions = Array<{
   valeur: z.infer<typeof métiersValidationSchema>["situationMétiers"];
   label: string;
   description?: string;
   pictogramme: string;
 }>;
+
+export type useMétiersFormArgs = {
+  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+};

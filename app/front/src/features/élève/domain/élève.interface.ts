@@ -7,6 +7,7 @@ export type Élève = {
   domaines?: string[];
   centresIntêrets?: string[];
   situationMétiers?: SituationMétiersÉlève;
+  métiers?: string[];
 };
 
 export const situationÉlève = ["aucune_idee", "quelques_pistes", "projet_precis"] as const;

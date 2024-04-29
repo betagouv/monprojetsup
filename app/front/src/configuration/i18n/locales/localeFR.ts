@@ -132,11 +132,22 @@ export const localeFR = {
           },
         },
       },
+      MÉTIERS_ENVISAGÉS: {
+        LABEL: "Métiers envisagés",
+        DESCRIPTION: "Commence à taper puis ajoute en favoris les métiers qui pourraient t’intéresser",
+        SÉLECTIONNÉS: "Métiers sélectionné(s)",
+      },
     },
     ÉTUDES: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes futures études",
         TITRE: "À propos des études supérieures",
+      },
+    },
+    FORMATIONS: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Les études ou cursus",
+        TITRE: "Y a-t-il des études ou des cursus qui t'attirent ?",
       },
     },
   },

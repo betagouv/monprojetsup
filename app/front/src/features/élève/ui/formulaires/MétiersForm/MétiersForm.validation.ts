@@ -6,4 +6,5 @@ export const métiersValidationSchema = z.object({
   situationMétiers: z.enum(situationMétiersÉlève, {
     errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
   }),
+  métiers: z.string().array().optional(),
 });

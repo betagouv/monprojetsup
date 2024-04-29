@@ -1,5 +1,6 @@
 import Head from "@/components/_layout/Head/Head";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
+import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
 import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
 import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
@@ -30,7 +31,7 @@ const ÉlèveInscriptionPage = () => {
     àLaSoumissionDuFormulaireAvecSuccès,
   };
 
-  const formulaireÀAfficher = () => {
+  const composantÀAfficher = () => {
     switch (étapeActuelle?.url) {
       case "/inscription/projet":
         return <ProjetForm {...propsFormulaire} />;
@@ -42,6 +43,8 @@ const ÉlèveInscriptionPage = () => {
         return <IntêretsForm {...propsFormulaire} />;
       case "/inscription/metiers":
         return <MétiersForm {...propsFormulaire} />;
+      case "/inscription/etude":
+        return <ÉtudeForm {...propsFormulaire} />;
       default:
         return null;
     }
@@ -50,7 +53,7 @@ const ÉlèveInscriptionPage = () => {
   return (
     <>
       <Head title={étapeActuelle.titreÉtape} />
-      {formulaireÀAfficher()}
+      {composantÀAfficher()}
     </>
   );
 };

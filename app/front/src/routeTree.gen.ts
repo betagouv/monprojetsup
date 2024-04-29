@@ -19,11 +19,16 @@ import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_i
 import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
 import { Route as InscriptionInscriptionMetiersIndexImport } from './routes/_inscription/inscription/metiers/index'
 import { Route as InscriptionInscriptionInteretsIndexImport } from './routes/_inscription/inscription/interets/index'
+import { Route as InscriptionInscriptionFormationsIndexImport } from './routes/_inscription/inscription/formations/index'
+import { Route as InscriptionInscriptionEtudeIndexImport } from './routes/_inscription/inscription/etude/index'
 import { Route as InscriptionInscriptionDomainesIndexImport } from './routes/_inscription/inscription/domaines/index'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const InscriptionInscriptionConfirmationIndexLazyImport = createFileRoute(
+  '/_inscription/inscription/confirmation/',
+)()
 
 // Create/Update Routes
 
@@ -43,6 +48,16 @@ const RechercheIndexRoute = RechercheIndexImport.update({
 } as any).lazy(() =>
   import('./routes/recherche/index.lazy').then((d) => d.Route),
 )
+
+const InscriptionInscriptionConfirmationIndexLazyRoute =
+  InscriptionInscriptionConfirmationIndexLazyImport.update({
+    path: '/inscription/confirmation/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/confirmation/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const InscriptionInscriptionScolariteIndexRoute =
   InscriptionInscriptionScolariteIndexImport.update({
@@ -84,6 +99,26 @@ const InscriptionInscriptionInteretsIndexRoute =
     ),
   )
 
+const InscriptionInscriptionFormationsIndexRoute =
+  InscriptionInscriptionFormationsIndexImport.update({
+    path: '/inscription/formations/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/formations/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const InscriptionInscriptionEtudeIndexRoute =
+  InscriptionInscriptionEtudeIndexImport.update({
+    path: '/inscription/etude/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/etude/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 const InscriptionInscriptionDomainesIndexRoute =
   InscriptionInscriptionDomainesIndexImport.update({
     path: '/inscription/domaines/',
@@ -114,6 +149,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionInscriptionDomainesIndexImport
       parentRoute: typeof InscriptionImport
     }
+    '/_inscription/inscription/etude/': {
+      preLoaderRoute: typeof InscriptionInscriptionEtudeIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/formations/': {
+      preLoaderRoute: typeof InscriptionInscriptionFormationsIndexImport
+      parentRoute: typeof InscriptionImport
+    }
     '/_inscription/inscription/interets/': {
       preLoaderRoute: typeof InscriptionInscriptionInteretsIndexImport
       parentRoute: typeof InscriptionImport
@@ -130,6 +173,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionInscriptionScolariteIndexImport
       parentRoute: typeof InscriptionImport
     }
+    '/_inscription/inscription/confirmation/': {
+      preLoaderRoute: typeof InscriptionInscriptionConfirmationIndexLazyImport
+      parentRoute: typeof InscriptionImport
+    }
   }
 }
 
@@ -139,10 +186,13 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   InscriptionRoute.addChildren([
     InscriptionInscriptionDomainesIndexRoute,
+    InscriptionInscriptionEtudeIndexRoute,
+    InscriptionInscriptionFormationsIndexRoute,
     InscriptionInscriptionInteretsIndexRoute,
     InscriptionInscriptionMetiersIndexRoute,
     InscriptionInscriptionProjetIndexRoute,
     InscriptionInscriptionScolariteIndexRoute,
+    InscriptionInscriptionConfirmationIndexLazyRoute,
   ]),
   RechercheIndexRoute,
 ])

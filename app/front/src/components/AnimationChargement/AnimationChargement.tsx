@@ -1,4 +1,15 @@
+import { useEffect, useState } from "react";
+
 const AnimationChargement = () => {
+  const [peutApparaitre, setPeutApparaitre] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPeutApparaitre(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!peutApparaitre) return null;
+
   return (
     <div className="my-10 text-center">
       <svg

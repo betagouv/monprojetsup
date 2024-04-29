@@ -32,7 +32,17 @@ const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>
     {
       titreÉtape: i18n.ÉLÈVE.ÉTUDES.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
       titre: i18n.ÉLÈVE.ÉTUDES.PARCOURS_INSCRIPTION.TITRE,
-      url: "/",
+      url: "/inscription/etude",
+    },
+    {
+      titreÉtape: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+      titre: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE,
+      url: "/inscription/formations",
+    },
+    {
+      titreÉtape: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+      titre: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE,
+      url: "/inscription/confirmation",
     },
   ],
   indexÉtapeActuelle: undefined,
