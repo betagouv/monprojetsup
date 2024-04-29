@@ -24,8 +24,8 @@ class TestHelper {
     await this._boutonRetour().click();
   };
 
-  public renseignerCorrectementLeFormulaire = async ({ classeActuelle: string }) => {
-    await this.renseignerChampClasseActuelle(string);
+  public renseignerCorrectementLeFormulaire = async ({ classeActuelle }: { classeActuelle: string }) => {
+    await this.renseignerChampClasseActuelle(classeActuelle);
   };
 
   public renseignerChampClasseActuelle = async (optionLabel: string) => {
@@ -105,7 +105,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
     });
     await testhelper.soumettreLeFormulaire();
 
-    // // THEN
+    // THEN
     expect(page.url()).toContain(testhelper.urlPageSuivante);
   });
 

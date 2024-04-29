@@ -19,12 +19,13 @@ const SélecteurMultipleAvecAppelHttp = ({
   àLaRechercheDUneOption,
   rechercheMétiersEnCours,
 }: SélecteurMultipleAvecAppelHttpProps) => {
+  const [recherche, setRecherche] = useState<string>();
   const [optionsAffichées, setOptionsAffichées] = useState<SélecteurMultipleAvecAppelHttpOption[]>([]);
   const [optionsSélectionnées, setOptionsSélectionnées] = useState<SélecteurMultipleAvecAppelHttpOption[]>(
     optionsSélectionnéesParDéfaut ?? [],
   );
 
-  const debouncedSetRecherche = useDebounceCallback(àLaRechercheDUneOption, 150);
+  const debouncedSetRecherche = useDebounceCallback(setRecherche, 150);
 
   const supprimerOptionSélectionnée = (optionÀSupprimer: SélecteurMultipleAvecAppelHttpOption) => {
     const nouvellesOptionsSélectionnées = optionsSélectionnées.filter(
@@ -39,6 +40,10 @@ const SélecteurMultipleAvecAppelHttp = ({
     setOptionsSélectionnées(nouvellesOptionsSélectionnées);
     auChangementOptionsSélectionnées(nouvellesOptionsSélectionnées);
   };
+
+  useEffect(() => {
+    if (recherche) àLaRechercheDUneOption(recherche);
+  }, [recherche, àLaRechercheDUneOption]);
 
   useEffect(() => {
     const optionsÀAfficher = optionsSuggérées.filter(
@@ -60,6 +65,7 @@ const SélecteurMultipleAvecAppelHttp = ({
       {rechercheMétiersEnCours ? (
         <AnimationChargement />
       ) : (
+        recherche &&
         optionsAffichées.length > 0 && (
           <ul
             aria-live="polite"
