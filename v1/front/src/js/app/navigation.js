@@ -368,8 +368,8 @@ const screen_enter_handlers = {
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () => await ui.showInscriptionScreen2(),
   groupes: async () => {
-    refreshGroupTab(false);
-    ui.showGroupsTab();
+    //refreshGroupTab();
+    ui.showGroupsTab2();
   },
   profil: async () => {
     await app.getProfile();

@@ -438,6 +438,13 @@ export function showFavoris(data) {
   //like and dislike handlers
 }
 
+export function showGroupsTab2() {
+  /*
+  $("#profile").hide();
+  showTab("groups");
+  group.reloadTab();*/
+}
+
 export function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
   $("#explore-div-resultats-right").hide();
