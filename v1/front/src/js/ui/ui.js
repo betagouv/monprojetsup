@@ -137,7 +137,7 @@ const tunnelScreensTitles = [
   "Mes centres d'intérêt",
   "Les métiers qui m’inspirent",
   "Mes études supérieures",
-  "Les études ou cursus",
+  "Les formations post-bac",
   "Inscripion terminée",
 ];
 export async function showTunnelScreen(subscreen) {
