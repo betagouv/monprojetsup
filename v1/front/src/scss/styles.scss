@@ -1447,6 +1447,15 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   padding-bottom: 5px;
   
 }
+.multi-options-instructions {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+}
 .multi-options-group-emojis {
   font-size: 32px;
   margin: 10px;

@@ -198,7 +198,9 @@ function injectInSelect($select, data) {
 
 function removeJeVeux(label) {
   if (label.startsWith("Je veux ") || label.startsWith("je veux ")) {
-    return label.substring(8);
+    const answer = label.substring(8);
+    if (answer == "") return "";
+    return answer.charAt(0).toUpperCase() + answer.slice(1);
   } else {
     return label;
   }
@@ -252,6 +254,7 @@ function injectInMultiOptions($accordions_group, menus) {
         <div class="fr-collapse muti-options-group-content" id="accordion-${
           menu.key
         }">
+        <div class"multi-options-instructions">Sélectionne la ou les catégories qui t'intéressent</div>
         <div class="multi-options-group-list">
         </div>
         </div>
