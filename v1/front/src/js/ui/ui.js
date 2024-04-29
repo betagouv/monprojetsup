@@ -184,6 +184,7 @@ export async function showTunnelScreen(subscreen) {
   if (subscreen === "statut") {
     const icons = [
       ["egg", "poussin", "poussin2"],
+      ["monocle", "openstreetmap", "dart"],
       ["poussin", "openstreetmap", "dart"],
     ];
     const j = Math.round(icons.length * Math.random());
