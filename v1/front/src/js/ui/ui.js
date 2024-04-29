@@ -181,6 +181,16 @@ export async function showTunnelScreen(subscreen) {
     );
     //
   }
+  if (subscreen === "statut") {
+    const icons = [
+      ["egg", "poussin", "poussin2"],
+      ["poussin", "openstreetmap", "dart"],
+    ];
+    const j = Math.round(icons.length * Math.random());
+    for (const i of [0, 1, 2]) {
+      $(`#icon-img-idea${i}`).attr("src", `img/${icons[j][i]}.png`);
+    }
+  }
 }
 
 export function hideNiveauInformation(niveau) {
