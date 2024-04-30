@@ -187,7 +187,8 @@ export async function showTunnelScreen(subscreen) {
       ["monocle", "openstreetmap", "dart"],
       ["poussin", "openstreetmap", "dart"],
     ];
-    const j = Math.round(icons.length * Math.random());
+    const sec = new Date().getSeconds();
+    const j = Math.round(sec % icons.length);
     for (const i of [0, 1, 2]) {
       $(`#icon-img-idea${i}`).attr("src", `img/${icons[j][i]}.png`);
     }
