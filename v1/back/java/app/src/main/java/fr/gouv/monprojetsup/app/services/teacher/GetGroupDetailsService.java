@@ -34,8 +34,13 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
             int profileComplete,
             int likes,
             int bins,
-            String msg,
-            int health /* 0 ok 1 medium 2 bad */
+            int health,
+            /* 0 ok 1 medium 2 bad */
+            int profileCompletenessPercent,
+            String reflexionStatus,
+            int nbFormationsFavoris,
+            int nbMetiersFavoris,
+            String duration
     ) {
         public StudentDetails sanitize() {
             return new StudentDetails(
@@ -44,8 +49,12 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
                     profileComplete,
                     likes,
                     bins,
-                    Sanitizer.sanitize(msg),
-                    health
+                    health,
+                    profileCompletenessPercent,
+                    Sanitizer.sanitize(reflexionStatus),
+                    nbFormationsFavoris,
+                    nbMetiersFavoris,
+                    Sanitizer.sanitize(duration)
             );
         }
     }

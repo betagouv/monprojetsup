@@ -65,6 +65,10 @@ function isAdminOrTeacher() {
   const role = getRole();
   return role === Roles.admin || role === Roles.teacher;
 }
+export function isStudent() {
+  const role = getRole();
+  return role === Roles.student;
+}
 function isAdmin() {
   return getRole() === Roles.admin;
 }

@@ -7,13 +7,25 @@
     aria-label="Menu principal"
   >
     <ul class="fr-nav__list">
-      <li class="fr-nav__item">
+      <li class="fr-nav__item student-only">
         <a
           id="nav-board"
           class="fr-nav__link set-screen"
           href="#"
           target="_self"
           screen="board"
+          aria-current="true"
+        >
+          Tableau de bord</a
+        >
+      </li>
+      <li class="fr-nav__item teacher-only">
+        <a
+          id="nav-groupes"
+          class="fr-nav__link set-screen"
+          href="#"
+          target="_self"
+          screen="groupes"
           aria-current="true"
         >
           Tableau de bord</a
@@ -29,7 +41,7 @@
           >Explorer les formations</a
         >
       </li>
-      <li class="fr-nav__item">
+      <li class="fr-nav__item student-only">
         <a
           id="nav-selection"
           class="fr-nav__link set-screen"
@@ -39,7 +51,7 @@
           >Consulter ma sélection</a
         >
       </li>
-      <li class="fr-nav__item">
+      <li class="fr-nav__item student-only">
         <a
           id="nav-profil"
           class="fr-nav__link set-screen"

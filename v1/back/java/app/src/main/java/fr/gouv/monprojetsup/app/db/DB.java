@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.accounts.PasswordLoginService;
 import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
+import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -254,8 +255,13 @@ public abstract class DB {
                 level,
                 likes,
                 dislikes,
-                msg,
-                health);
+                health,
+                pf.getCompletenessPercent(),
+                pf.getStatut(),
+                pf.nbFormationsFavoris(),
+                pf.nbMetiersFavoris(),
+                pf.getDuree()
+        );
     }
 
 
