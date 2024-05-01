@@ -48,6 +48,7 @@ const screens = {
   inscription_tunnel_felicitations: {},
   inscription_tunnel_felicitations_teacher: {},
   groupes: {},
+  profil_teacher: {},
 };
 
 export async function setScreen(screen) {
@@ -84,9 +85,7 @@ async function doTransition(old_screen, new_screen) {
     session.saveScreen(screen);
   }
   ui.displayNextAndBAckButtons(next(screen), back(screen));
-  $(".student-only").toggle(session.isStudent());
-  $(".teacher-only").toggle(session.isAdminOrTeacher());
-  $(".admin-only").toggle(session.isAdmin());
+  ui.setRoleVisibility();
   return screen;
 }
 
@@ -123,9 +122,14 @@ export function init_main_nav() {
   $(".monespace")
     .off()
     .on("click", async function () {
-      await setScreen("profil");
+      if (session.isAdminOrTeacher()) {
+        await setScreen("profil_teacher");
+      } else {
+        await setScreen("profil");
+      }
     });
   $(".prenomnom").html(data.getPrenomNom());
+  ui.setRoleVisibility();
 }
 
 async function updateRecherche() {
@@ -360,15 +364,20 @@ const screen_enter_handlers = {
   inscription1: async () => await ui.showInscriptionScreen1(),
   inscription2: async () =>
     await ui.showInscriptionScreen2(session.isAdminOrTeacher()),
-  groupes: async () => {
-    //refreshGroupTab();
-    ui.showGroupsTab2();
-  },
   profil: async () => {
     await app.getProfile();
     await ui.showProfileScreen();
     profileEditionSetup();
     init_main_nav();
+  },
+  profil_teacher: async () => {
+    await ui.showTeacherProfileScreen();
+    $("#basculer_mode_lyceen")
+      .off()
+      .on("click", () => {
+        setScreen(null);
+        app.toLyceen();
+      });
   },
   inscription_tunnel_statut: async () => {
     await ui.showTunnelScreen("statut");
@@ -416,12 +425,45 @@ const screen_enter_handlers = {
   },
   groupes: async () => {
     await ui.showGroupesScreen();
+    await updateGroupesScreen();
   },
 };
+
 const screen_exit_handlers = {
   inscription1: async () => await validateInscription1(),
   inscription2: async () => await validateInscription2(),
 };
+
+async function updateGroupesScreen() {
+  //ask for the list of groups
+  const infos = await app.updateAdminInfos();
+  ui.updateGroupsList(infos.groups);
+  $(".group_select")
+    .off()
+    .on("click", () => {
+      const group_id = $(this).attr("group_id");
+      session.setSelectedGroup(group_id);
+      showGroup(group_id);
+    });
+
+  const curGroup = session.getSelectedGroup();
+  await showGroup(curGroup);
+}
+async function showGroup(group_id) {
+  if (group_id == null || group_id == undefined) return;
+  const details = await app.getGroupDetails(group_id);
+  ui.setStudentDetails(details);
+  $(".student_selection_button")
+    .off()
+    .on("click", () => {
+      const login = $(this).attr("login");
+    });
+  $(".student_profile_button")
+    .off()
+    .on("click", () => {
+      const login = $(this).attr("login");
+    });
+}
 
 function setUpMultiChoices() {
   //multi-options-item
@@ -506,13 +548,14 @@ function setUpSelects() {
     const id = radios[key];
     setRadioVal(id, data.getProfileValue(key));
   }
-  $("#profile-tab-statut input")
+  $(".profile_radio")
     .off()
     .on("change", function () {
-      const val = $(this).attr("val");
+      const key = $(this).attr("key");
+      const val = $(this).attr("value");
       const ischecked = $(this).is(":checked");
       if (ischecked) {
-        events.profileValueChangedHandler2("statut", val);
+        events.profileValueChangedHandler2(key, val);
       }
     });
   $(".profile-select")

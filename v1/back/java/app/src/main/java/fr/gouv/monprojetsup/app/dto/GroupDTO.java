@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.app.dto;
 
+import fr.gouv.monprojetsup.app.db.model.Classe;
+
 import java.util.Set;
 
 public record GroupDTO(
@@ -7,7 +9,6 @@ public record GroupDTO(
         String id,
         String lycee,
         String classe,
-        Set<String> admins,
         Set<String> members,
         Set<String> waiting,
         String registrationToken,

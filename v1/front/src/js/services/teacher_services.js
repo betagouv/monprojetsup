@@ -9,9 +9,7 @@ export async function getAdminInfosAsync() {
     postToSpringService(
       "teacher/groups/list",
       {},
-      (data) => {
-        resolve(data);
-      },
+      (data) => resolve(data),
       false,
       (error) => reject(error)
     );
@@ -26,6 +24,20 @@ export function getSelectedGroupDetails(group, onSuccess = null) {
     },
     onSuccess
   );
+}
+
+export async function getSelectedGroupDetailsAsync(group) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/groups/details",
+      {
+        groupId: group,
+      },
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
 }
 
 export function addGroupMember(group, name, add, onSuccess = null) {

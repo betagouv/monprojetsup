@@ -60,6 +60,8 @@ export const updateAdminInfos = teacher_services.getAdminInfos;
 export const updateAdminInfosAsync = teacher_services.getAdminInfosAsync;
 export const getStudentProfile = teacher_services.getStudentProfile;
 export const getSelectedGroupDetails = teacher_services.getSelectedGroupDetails;
+export const getSelectedGroupDetailsAsync =
+  teacher_services.getSelectedGroupDetailsAsync;
 export const switchRole = teacher_services.switchRole;
 export const addGroupMember = teacher_services.addGroupMember;
 export const resetStudentPasswordByTeacher =

@@ -34,6 +34,7 @@ const data = {
   profile: {
     login: "",
     scores: {},
+    interests: [],
     choices: [],
   },
   questions: params.questions,
@@ -85,12 +86,7 @@ function ensureMandatoryProfileFields() {
   if (data.profile === undefined) {
     data.profile = {};
   }
-  for (const mandatory_obj_field of [
-    "scores",
-    "interets",
-    "thematiques",
-    "choices",
-  ]) {
+  for (const mandatory_obj_field of ["scores", "thematiques", "choices"]) {
     if (data.profile[mandatory_obj_field] === undefined) {
       data.profile[mandatory_obj_field] = {};
     }

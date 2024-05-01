@@ -432,6 +432,12 @@ export async function showProfileScreen() {
   $(".prenomnom").html(data.getPrenomNom());
   $(".profile-div-email").html(session.getLogin());
 }
+export async function showTeacherProfileScreen() {
+  await showConnectedScreen("profile_teacher");
+  $(".profile-div-prenomnom").html(data.getPrenomNom());
+  $(".prenomnom").html(data.getPrenomNom());
+  $(".profile-div-email").html(session.getLogin());
+}
 
 export function showWaitingMessage() {
   $("#explore-div-wait").show();
@@ -538,6 +544,152 @@ function displayMetierDetails(dat) {
   displayExplanations(dat.explanations, devMode);
   //exemples
   displayMetiers(dat.examples);
+}
+
+export function updateGroupsList(groups) {
+  const $div = $(".nav_teacher #header-navigation .fr-nav__list").empty();
+  for (const group of groups) {
+    addGroupEntry(group, $div);
+  }
+}
+function addGroupEntry(group, $div) {
+  const li = `
+        <li class="fr-nav__item">
+          <a
+            class="fr-nav__link group_select"
+            href="#"
+            target="_self"
+            aria-current="page"
+            group_id="${group.id}"
+            >${group.name}</a
+          >
+        </li>
+    `;
+  $div.append(li);
+}
+
+export function setStudentDetails(details) {
+  $("#nb_students_connected").html(details.nb_students_connected);
+  const $div = $(".eleves_tiles_container").empty();
+  let nb = 0;
+  let nb_students_connected = 0;
+  let nb_students_completed = 0;
+  let nb_students_selected = 0;
+
+  const niveau = details.niveau;
+
+  for (const student of details.students) {
+    addStudentTile(student, $div);
+    nb++;
+    nb_students_connected++;
+    if (student.profileCompletenessPercent == 100) nb_students_completed++;
+    if (
+      (niveau == "seconde" &&
+        student.nbFormationsFavoris + student.nbMetiersFavoris > 0) ||
+      student.nbFormationsFavoris > 3
+    )
+      nb_students_selected++;
+  }
+  if (nb == 0) nb = 1;
+  const nbStudentsTotal = details.students.length;
+  $("#nb_students_connected").html(nb_students_connected);
+  $("#pct_students_connected").html(
+    Math.round((100 * nb_students_connected) / nb) + "%"
+  );
+  $("#nb_students_completed").html(nb_students_completed);
+  $("#pct_students_completed").html(
+    Math.round((100 * nb_students_completed) / nb) + "%"
+  );
+  $("#nb_students_selected").html(nb_students_selected);
+  $("#pct_students_selected").html(
+    Math.round((100 * nb_students_selected) / nb) + "%"
+  );
+  //objectif_annee
+
+  if (niveau === "seconde") {
+    $("#objectif_annee").html(
+      "Un objectif en classe de seconde est la sélection d’au moins une formation ou un métier"
+    );
+    $("#nb_students_selected_objectif").html("une formation ou un métier");
+    $("#en_quelques_chiffres_stat3").show();
+  } else if (niveau === "premiere") {
+    $("#objectif_annee").html(
+      "Un objectif en classe de première est la sélection d’au moins 3 formations, et une réflexion sur les attendus des formations"
+    );
+    $("#nb_students_selected_objectif").html("trois formations");
+    $("#en_quelques_chiffres_stat3").show();
+  } else if (niveau === "terminale") {
+    $("#objectif_annee").html(
+      "Un objectif en classe de terminale est la sélection d’au moins 3 formations, et la sélection de voeux Parcoursup associés"
+    );
+    $("#nb_students_selected_objectif").html("trois formations");
+    $("#en_quelques_chiffres_stat3").show();
+  } else {
+    $("#objectif_annee").html();
+    $("#en_quelques_chiffres_stat3").hide();
+  }
+}
+function addStudentTile(student, $div) {
+  let statut = "A quelques pistes au sujet de son orientation";
+  if (student.reflexionStatus !== undefined) {
+    if (student.reflexionStatus == "0") {
+      statut = "N'a pas encore d'idée au sujet de son orientation"; //Je n'ai pas encore d’idée
+    }
+    if (student.reflexionStatus == "1") {
+      statut = "A quelques pistes au sujet de son orientation"; //Je n'ai pas encore d’idée
+    }
+    if (student.reflexionStatus == "2") {
+      statut = "A un projet précis"; //Je n'ai pas encore d’idée
+    }
+  }
+  let nbFormations = "";
+  if (student.nbFormationsFavoris == "0") {
+    nbFormations = `<span class="eleve_tile_nb_formations">Aucune formation</span>
+            sélectionnée`;
+  } else if (student.nbFormationsFavoris == "1") {
+    nbFormations = `<span class="eleve_tile_nb_formations">1 formation</span>
+            sélectionnée`;
+  } else {
+    nbFormations = `<span class="eleve_tile_nb_formations">${student.nbFormationsFavoris} formations</span>
+            sélectionnées`;
+  }
+  let nbMetiers = "";
+  if (student.nbMetiersFavoris == "0") {
+    nbMetiers = `<span class="eleve_tile_nb_metiers">Aucun métier</span>
+            sélectionné`;
+  } else if (student.nbMetiersFavoris == "1") {
+    nbMetiers = `<span class="eleve_tile_nb_metiers">1 métier</span>
+            sélectionné`;
+  } else {
+    nbMetiers = `<span class="eleve_tile_nb_metiers">${student.nbMetiersFavoris} métiers</span>
+            sélectionnés`;
+  }
+  const $tile = $(`
+        <div class="eleves_tile">
+          <div class="eleves_tile_name">${student.name}</div>
+          <div class="eleves_tile_percent_senetence">
+            Profil complété à <span class="eleve_tile_percent">${student.profileCompletenessPercent}%</span>
+          </div>
+          <div class="eleves_tile_pistes">
+            ${statut}
+          </div>
+          <div class="eleves_tile_formations">
+            <span class="fr-icon-award-line"></span>
+            ${nbFormations}
+          </div>
+          <div class="eleves_tile_formations">
+            <span class="fr-icon-briefcase-line"></span>
+            ${nbMetiers}
+          </div>
+          <div class="eleves_tile_buttons">
+            <button login="${student.login}" class="fr-btn student_selection_button" title="sa sélection">Sa sélection</button>
+            <div class="sep"></div>
+            <button login="${student.login}" class="fr-btn fr-btn--secondary student_profile_button" title="son profil">
+              Son profil
+            </button>
+          </div>
+        </div>`);
+  $div.append($tile);
 }
 
 function updateFavDiv(fav, $div) {
@@ -1474,6 +1626,12 @@ export function showDetails(grpid, stats, explanations, exemples) {
 }
 
 let hideFormations = false;
+
+export function setRoleVisibility() {
+  $(".student-only").toggle(session.isStudent());
+  $(".teacher-only").toggle(session.isAdminOrTeacher());
+  $(".admin-only").toggle(session.isAdmin());
+}
 
 function loadGroupsInfo() {
   const infos = session.getCachedAdminInfos();
