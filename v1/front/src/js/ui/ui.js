@@ -56,7 +56,6 @@ export {
 };
 
 const screens = ["landing", "loading", "connect", "connected"];
-const connected_screens = ["recherche", "board", "selection"];
 
 const screensHandlersInit = {
   connect: () => connect.init(),
@@ -195,6 +194,22 @@ export async function showTunnelScreen(subscreen) {
   }
 }
 
+export function displayNextAndBAckButtons(nextScreen, backScreen) {
+  $("#nextButton").toggle(nextScreen !== undefined);
+  $("#backButton").toggle(backScreen !== undefined);
+  if (nextScreen)
+    $("#nextButton")
+      .off("click")
+      .on("click", async () => {
+        await setScreen(nextScreen);
+      });
+  if (backScreen)
+    $("#backButton")
+      .off("click")
+      .on("click", async () => {
+        await setScreen(backScreen);
+      });
+}
 export function hideNiveauInformation(niveau) {
   if (niveau === undefined || niveau === null || niveau === "") {
     niveau = "term";
@@ -392,13 +407,16 @@ export async function showLandingScreen() {
 }
 
 export async function showInscriptionScreen1() {
-  return showSubScreen("inscription1");
+  showSubScreen("inscription1");
 }
 export async function showInscriptionScreen2() {
-  return showSubScreen("inscription2");
+  showSubScreen("inscription2");
 }
 export async function showBoard() {
   return showConnectedScreen("board");
+}
+export async function showGroupesScreen() {
+  return showConnectedScreen("groupes");
 }
 export async function showSelection() {
   return showConnectedScreen("selection");

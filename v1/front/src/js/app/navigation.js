@@ -46,6 +46,8 @@ const screens = {
     back: "inscription_tunnel_etudes",
   },
   inscription_tunnel_felicitations: {},
+  inscription_tunnel_felicitations_teacher: {},
+  groupes: {},
 };
 
 export async function setScreen(screen) {
@@ -63,6 +65,8 @@ export async function setScreen(screen) {
 
 function next(current_screen) {
   if (!current_screen in screens) return undefined;
+  if (current_screen == "inscription2" && session.isAdminOrTeacher())
+    return "inscription_tunnel_felicitations_teacher";
   return screens[current_screen]?.next;
 }
 function back(current_screen) {
@@ -79,22 +83,10 @@ async function doTransition(old_screen, new_screen) {
     app.logAction("doTransition " + old_screen + " --> " + new_screen);
     session.saveScreen(screen);
   }
-  const nextScreen = next(screen);
-  const backScreen = back(screen);
-  $("#nextButton").toggle(nextScreen !== undefined);
-  $("#backButton").toggle(backScreen !== undefined);
-  if (nextScreen)
-    $("#nextButton")
-      .off("click")
-      .on("click", async () => {
-        await setScreen(nextScreen);
-      });
-  if (backScreen)
-    $("#backButton")
-      .off("click")
-      .on("click", async () => {
-        await setScreen(backScreen);
-      });
+  ui.displayNextAndBAckButtons(next(screen), back(screen));
+  $(".student-only").toggle(session.isStudent());
+  $(".teacher-only").toggle(session.isAdminOrTeacher());
+  $(".admin-only").toggle(session.isAdmin());
   return screen;
 }
 
@@ -366,7 +358,8 @@ const screen_enter_handlers = {
     await updateSelection();
   },
   inscription1: async () => await ui.showInscriptionScreen1(),
-  inscription2: async () => await ui.showInscriptionScreen2(),
+  inscription2: async () =>
+    await ui.showInscriptionScreen2(session.isAdminOrTeacher()),
   groupes: async () => {
     //refreshGroupTab();
     ui.showGroupsTab2();
@@ -412,6 +405,17 @@ const screen_enter_handlers = {
       .on("click", () => {
         setScreen("board");
       });
+  },
+  inscription_tunnel_felicitations_teacher: async () => {
+    await ui.showTunnelScreen("felicitations_teacher");
+    $("#discover_button")
+      .off()
+      .on("click", () => {
+        setScreen("groupes");
+      });
+  },
+  groupes: async () => {
+    await ui.showGroupesScreen();
   },
 };
 const screen_exit_handlers = {
@@ -495,6 +499,22 @@ function setUpSelects() {
     const id = selects[key];
     setSelectVal(id, data.getProfileValue(key));
   }
+  const radios = {
+    statut: "#profile-tab-statut",
+  };
+  for (const key in radios) {
+    const id = radios[key];
+    setRadioVal(id, data.getProfileValue(key));
+  }
+  $("#profile-tab-statut input")
+    .off()
+    .on("change", function () {
+      const val = $(this).attr("val");
+      const ischecked = $(this).is(":checked");
+      if (ischecked) {
+        events.profileValueChangedHandler2("statut", val);
+      }
+    });
   $(".profile-select")
     .off()
     .on("change", function () {
@@ -508,6 +528,20 @@ function setUpSelects() {
       if (key == "niveau") {
         ui.hideNiveauInformation(val);
       }
+      $(".profile-option")
+        .off()
+        .on("change", function () {
+          const key = $(this).attr("key");
+          const val = $(this).val();
+          events.profileValueChangedHandler2(key, val);
+          if (key == "bac") {
+            setUpAutoComplete("spe_classes", 0);
+            updateAutoEvaluationFeedback();
+          }
+          if (key == "niveau") {
+            ui.hideNiveauInformation(val);
+          }
+        });
     });
   /*
   $(".save-profile-button").on("click", function () {
@@ -669,4 +703,7 @@ function getSelectVal(id) {
 }
 function setSelectVal(id, val) {
   $(id).val(val);
+}
+function setRadioVal(id, val) {
+  $("#radio_" + id + "_" + val).prop("checked", true);
 }

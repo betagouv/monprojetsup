@@ -41,6 +41,7 @@ class TeacherControllers(
         return getStudentProfileService.handleRequestAndExceptions(request)
     }
 
+
     @PostMapping("/student/resetPassword")
     fun resetStudentPassword(@RequestBody request: ResetUserPasswordService.Request): ResetUserPasswordService.Response {
         return resetStudentPasswordService.handleRequestAndExceptions(request)

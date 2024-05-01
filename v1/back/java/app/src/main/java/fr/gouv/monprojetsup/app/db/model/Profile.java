@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
+import static fr.gouv.monprojetsup.data.Helpers.*;
 import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_APPROVED;
 import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_REJECTED;
 
@@ -35,6 +36,7 @@ public final class Profile {
     private String ine;
     private String bac;
     private String duree;
+    private String statut;
     private String apprentissage;
     private Set<String> geo_pref = new HashSet<>();
     private Set<String> spe_classes= new HashSet<>();
@@ -98,12 +100,22 @@ public final class Profile {
     @Transient
     public int getCompletenessPercent() {
         int result;
-        result = isOk(bac);
-        result += isOk(duree);
-        result += isOk(apprentissage);
-        result += isOk(geo_pref);
-        result += isOk(spe_classes);
-        return result * 100 / 5;
+        int criterieNb = 0;
+        result = isOk(bac); criterieNb++;
+        result += isOk(duree); criterieNb++;
+        result += isOk(apprentissage); criterieNb++;
+        result += isOk(geo_pref); criterieNb++;
+        result += isOk(spe_classes); criterieNb++;
+        result += hasAtLeastOneProfesionalDomain() ? 1 : 0; criterieNb++;
+        result += hasAtLEastOneInterest() ? 1 : 0; criterieNb++;
+        return result * 100 / criterieNb;
+    }
+
+    private boolean hasAtLeastOneProfesionalDomain() {
+        return scores.entrySet().stream().anyMatch(e -> e.getValue() > 0 && isTheme(e.getKey()));
+    }
+    private boolean hasAtLEastOneInterest() {
+        return scores.entrySet().stream().anyMatch(e -> e.getValue() > 0 && isInteret(e.getKey()));
     }
 
     @Transient
@@ -186,6 +198,7 @@ public final class Profile {
             case "moygen": moygen = value; break;
             case "duree": duree = value; break;
             case "niveau": niveau = value; break;
+            case "statut": statut = value; break;
             case "scores":
             case "interests":
                 if(add) scores.put(value.replace(".","_"), 1);
@@ -348,4 +361,10 @@ public final class Profile {
         DBTools.removeDotsFromKeys(choices);
     }
 
+    public int nbFormationsFavoris() {
+        return (int) choices.values().stream().filter(s -> s.status() == SUGG_APPROVED && isFiliere(s.fl())).count();
+    }
+    public int nbMetiersFavoris() {
+        return (int) choices.values().stream().filter(s -> s.status() == SUGG_APPROVED && isMetier(s.fl())).count();
+    }
 }
