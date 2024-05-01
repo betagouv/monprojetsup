@@ -1,8 +1,5 @@
 package fr.gouv.monprojetsup.app.db;
 
-import fr.gouv.monprojetsup.common.Sanitizer;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.model.*;
@@ -17,7 +14,9 @@ import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.accounts.PasswordLoginService;
 import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
-import lombok.val;
+import fr.gouv.monprojetsup.common.Sanitizer;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -167,7 +166,6 @@ public abstract class DB {
         ProfileUpdateDTO updatedProfile = unsanitizedProfile.sanitize();
         user.updateProfile(updatedProfile);
         ProfileDb pf = user.getProfile().toDTO();
-        //LOGGER.info("updateUserField " + new Gson().toJson(pf));
         updateUserField(login, PF_FIELD, pf);
     }
 
@@ -206,23 +204,13 @@ public abstract class DB {
     }
 
 
-
-    protected String getDemoGroupId() {
-        return Group.lyceeToGroupId(LYCEE_DEMO, CLASSE_DEMO);
-    }
-
     protected String getAnoGroupId() {
         return Group.lyceeToGroupId(LYCEE_ANO, CLASSE_ANO);
     }
 
-
-
-    protected void saveGroups(List<Group> changed) {
-        for (Group g : changed) {
-            saveGroup(g);
-        }
+    protected String getDemoGroupId() {
+        return Group.lyceeToGroupId(LYCEE_DEMO, CLASSE_DEMO);
     }
-
 
     protected List<GetGroupDetailsService.StudentDetails> getMemberDetails(Set<String> members) {
         return getUsers(members).stream()
@@ -237,17 +225,8 @@ public abstract class DB {
         String name = pf.getName();
         int level = pf.getCompletenessPercent();
         int health = 0;
-        String msg = "";
-        if(level < 70) {
-            msg += "Profil " + level + "%. ";
-            health++;
-        }
         int likes = pf.suggApproved().size();
         int dislikes = pf.suggRejected().size();
-        if(likes == 0) {
-            health++;
-            msg += "Aucun favori.";
-        }
         /* rq: pas de contisions sur le ratio accepté / rejeté */
         return new GetGroupDetailsService.StudentDetails(
                 user.login(),
@@ -455,12 +434,12 @@ public abstract class DB {
     }
     public @NotNull Group findOrCreateAnonymousGroup() throws ModelException {
         try {
-            Group group = findGroup(getDemoGroupId());
+            Group group = findGroup(getAnoGroupId());
             group.setRegistrationToken("anonymous");
             return group;
         } catch (UnknownGroupException e) {
-            Lycee lycDemo = new Lycee(LYCEE_ANO, LYCEE_ANO + " (lycée fictif)",
-                    List.of(new Classe(CLASSE_ANO, CLASSE_ANO + " (classe fictive)",
+            Lycee lycDemo = new Lycee(LYCEE_ANO, LYCEE_ANO + " (fictif)",
+                    List.of(new Classe(CLASSE_ANO, CLASSE_ANO + " (fictive)",
                             Classe.Niveau.terminale,
                             false,
                             false,
@@ -480,15 +459,24 @@ public abstract class DB {
     protected synchronized void init(Set<String> admins) throws DBExceptions.ModelException {
         setSuperAdminUserTypes(admins);
 
-        findOrCreateDemoGroup();
+        Group demo = findOrCreateDemoGroup();
+        if(demo.getNiveau() == null) {
+            demo.setNiveau(Classe.Niveau.premiere);
+            saveGroup(demo);
+        }
         Group ano = findOrCreateAnonymousGroup();
-        saveGroup(ano);
+        if(ano.getNiveau() == null) {
+            ano.setNiveau(Classe.Niveau.terminale);
+            saveGroup(ano);
+        }
 
         assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup();
 
         List<Group> newGroups = computeMissingGroups(getLycees(), getAllGroups().stream().map(Group::getId).collect(Collectors.toSet()));
 
         newGroups.forEach(this::saveGroup);
+
+        setGroupsNiveaux();
 
         List<Group> allGroups = getAllGroups();
 
@@ -501,6 +489,8 @@ public abstract class DB {
         }
 
     }
+
+    protected abstract void setGroupsNiveaux();
 
     public abstract List<Group> getAllGroups();
 

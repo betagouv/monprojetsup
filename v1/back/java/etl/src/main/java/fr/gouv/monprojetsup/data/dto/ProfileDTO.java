@@ -30,8 +30,11 @@ public record ProfileDTO(
 
         //replaced by interests
         @Schema(name = "deprecated", description = "deprecated", required = false)
-        @Deprecated Map<String,Integer> scores
-) {
+        @Deprecated Map<String,Integer> scores,
+        @Schema(name = "statut", description = "statut de réflexion 0/1/2", example = "0", required = false)
+        String statut
+
+        ) {
 
     /*
     public ProfileDTO(fr.gouv.monprojetsup.app.dto.ProfileDTO dto) {
@@ -82,7 +85,8 @@ public record ProfileDTO(
                 interests,
                 moygen,
                 cleanupDates(choices),
-                scores
+                scores,
+                statut
                 );
     }
 

@@ -32,6 +32,7 @@ public final class Group {
     public static final String REGISTRATION_TOKEN_FIELD = "registrationToken";
     public static final String ADMIN_REGISTRATION_TOKEN_FIELD = "adminToken";
     public static final String EXPE_ENS_GROUPE_FIELD = "expeENSGroupe";
+    public static final String NIVEAU_FIELD = "niveau";
 
     private @NotNull String name;
 
@@ -39,6 +40,8 @@ public final class Group {
 
     private @NotNull String lycee;
     private @NotNull String classe;
+
+    private @Nullable Classe.Niveau niveau;
 
     private @NotNull Set<String> admins = new HashSet<>();
     private @NotNull Set<String> members = new HashSet<>();
@@ -64,6 +67,7 @@ public final class Group {
     ) {
         this.name = lyceeToGroupName(lycee, classe);
         this.lycee = lycee.getId();
+        this.niveau = classe.niveau();
         this.classe = classe.index();
         this.id = lyceeToGroupId(lycee, classe);
         this.admins.addAll(admins);
@@ -74,22 +78,14 @@ public final class Group {
 
 
     /* used to create mini group */
-    public Group(@NotNull String id, @NotNull String lycee, @NotNull String classe, @NotNull Set<String> admins, boolean isOpenedForNewMembers) {
+    public Group(String id, String lycee, String classe, Set<String> admins, boolean isOpenedForNewMembers, String expeENSGroupe) {
         this.id = id;
         this.name = DB.lyceeToGroupName(lycee, classe);
         this.lycee = lycee;
+        this.niveau = null;
         this.classe = classe;
         this.admins.addAll(admins);
         this.isOpenedForNewMembers = isOpenedForNewMembers;
-    }
-
-    public Group(String id, String lycee, String classe, Set<String> admins, boolean b, String expeENSGroupe) {
-        this(id, lycee, classe, admins, b);
-        this.expeENSGroupe = expeENSGroupe;
-    }
-
-    public Group(Lycee lycee, Classe classe, String login, Set<String> admins, boolean contains, boolean contains1, boolean b, String expeENSGroupe) {
-        this(lycee, classe, login, admins, contains, contains1, b);
         this.expeENSGroupe = expeENSGroupe;
     }
 
@@ -106,6 +102,7 @@ public final class Group {
         this.id = lyceeToGroupId(lycee, classe);
         this.lycee = lycee.getId();
         this.classe = classe.index();
+        this.niveau = classe.niveau();
     }
 
     public static Group getNewGroup(String lycee, String sid) {
@@ -113,20 +110,6 @@ public final class Group {
     }
     public static Group getNewGroup(Lycee lycee, Classe classe) {
         return new Group(lycee, classe);
-    }
-
-
-
-    public static GroupDTO miniGroup(Lycee lycee, Classe classe, String login, Group group) {
-        return new Group(
-                lycee,
-                classe,
-                login,
-                group.admins(),
-                group.members.contains(login),
-                group.waiting.contains(login),
-                true,
-                group.expeENSGroupe).toDTO();
     }
 
     public Group miniGroup() {
@@ -339,7 +322,6 @@ public final class Group {
                 id,
                 lycee,
                 classe,
-                admins,
                 members,
                 waiting,
                 registrationToken,

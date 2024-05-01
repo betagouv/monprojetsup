@@ -152,7 +152,7 @@ export async function postLoginHandler() {
 
   await dataload.loadZippedData();
   const msg = await server.updateAdminInfosAsync();
-  setAdminInfos(msg);
+  setAdminInfos(msg.infos);
   ui.initPostData(session.getLogin(), msg.infos);
   const profileCompleteness = msg.infos.profileCompleteness;
   session.setProfileCompletenessLevel(profileCompleteness);
@@ -282,30 +282,43 @@ function disconnect() {
   ui.showLandingScreen();
 }
 
-function setAdminInfos(msg) {
-  if (msg === undefined || msg.infos === undefined) {
+export async function updateAdminInfos() {
+  const msg = await server.updateAdminInfosAsync();
+  if (msg == undefined || msg.infos === undefined) {
     frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
-  } else {
-    session.setRole(msg.infos.role);
-    if (
-      msg.infos.groups &&
-      msg.infos.groups.length > 0 &&
-      !session.isAdminOrTeacher()
-    ) {
-      const myGroup = msg.infos.groups[0];
-      console.log("Autoselecting group " + myGroup.name);
-      session.setSelectedGroup(myGroup.id);
-      session.setSingleGroupFlag(true);
-      session.setGroupInfo(myGroup);
-    } else {
-      session.setSingleGroupFlag(false);
-    }
-    session.setNoGroupOpenFlag(
-      msg.infos.openGroups === undefined || msg.infos.openGroups.length == 0
-    );
-    session.setAdminInfos(msg.infos);
+  }
+  const infos = msg.infos;
+  setAdminInfos(infos);
+  return infos;
+}
 
-    ui.loadGroupsInfo();
+function setAdminInfos(infos) {
+  session.setRole(infos.role);
+  if (infos.groups && infos.groups.length > 0 && !session.isAdminOrTeacher()) {
+    const myGroup = infos.groups[0];
+    console.log("Autoselecting group " + myGroup.name);
+    session.setSelectedGroup(myGroup.id);
+    session.setSingleGroupFlag(true);
+    session.setGroupInfo(myGroup);
+  } else {
+    session.setSingleGroupFlag(false);
+  }
+  session.setNoGroupOpenFlag(
+    infos.openGroups === undefined || infos.openGroups.length == 0
+  );
+  session.setAdminInfos(infos);
+
+  setCurrentGroupIfNeeded(infos);
+}
+function setCurrentGroupIfNeeded(infos) {
+  //ensures a current group is selected
+  const curGroup = session.getSelectedGroup();
+  if (
+    (curGroup === undefined || curGroup === null) &&
+    infos.groups &&
+    infos.groups.length > 0
+  ) {
+    session.setSelectedGroup(infos.groups[0].id);
   }
 }
 
@@ -330,6 +343,11 @@ function refreshGroupTab(force_update = false) {
   } else {
     server.updateAdminInfos(showSelectGroupTab);
   }
+}
+
+export async function getGroupDetails(groupId) {
+  const msg = await server.getSelectedGroupDetailsAsync(groupId);
+  return msg.details;
 }
 
 export function addTransitionToHistory(tabName, data) {

@@ -38,7 +38,7 @@ public class SwitchRoleService extends MyService<SwitchRoleService.Request, Serv
         WebServer.db().switchTemporarilyToLyceenUserType(req.login, !pp);
 
         String userMessage = pp ? "Vous êtes repassé en mode référent"
-                : "Vous êtes temporairement passé en mode lycéen.";
+                : "Vous êtes temporairement passé en mode lycéen, jusqu'à la prochaine déconnexion.";
 
         return new Server.BasicResponse(
                 new ResponseHeader(userMessage)
