@@ -179,6 +179,7 @@ footer {
       background: var(--light-decisions-background-background-default-grey, #FFF);
 
       padding: 40px 48px;
+      margin-bottom: 40px;
 }
 .en_quelques_chiffres_teacher .title {
   color: var(--light-neutral-grey-50, #161616);
@@ -272,6 +273,86 @@ color: var(--light-decisions-text-text-default-grey, #3A3A3A);
     line-height: 36px;
     /* 128.571% */
     margin-bottom: 16px;
+}
+.current_group_teacher_eleves {
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.suivez_avancement_title {
+  color: var(--light-neutral-grey-50, #161616);
+  
+    /* 1.Titres/H2 - LG/Desktop */
+    font-family: Marianne;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+    /* 125% */
+
+    margin-bottom: 40px;
+}
+.eleves_tiles_container {
+    display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-gap: 24px;
+      grid-auto-flow: dense;
+      width: 100%;
+}
+.eleves_tile {
+  padding: 24px;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
+    background: var(--light-decisions-background-background-default-grey, #FFF);
+    display: flex;
+    flex-direction: column;
+}
+.eleves_tile_name {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H6 - XXS/Desktop */
+    font-family: Marianne;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 28px;
+    /* 140% */
+    margin-bottom: 12px;
+}
+.eleves_tile_percent_senetence {
+  overflow: hidden;
+    color: var(--light-decisions-text-text-default-grey, #3A3A3A);
+    text-overflow: ellipsis;
+  
+    /* 2.Corps de texte/SM - Texte détail/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+        margin-bottom: 12px;
+}
+.eleve_tile_percent, .eleve_tile_nb_formations {
+  color: var(--light-decisions-background-background-flat-warning, #B34000);
+}
+.eleves_tile_pistes {
+  color: var(--light-decisions-text-text-mention-grey, #666);
+    font-family: Marianne;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+        margin-bottom: 12px;
+}
+.eleves_tile_formations {
+  margin-bottom: 20px;
+}
+.eleves_tile_buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .profile_explanation {
   color: var(--light-decisions-text-text-mention-grey, #666);

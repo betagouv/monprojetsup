@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.services.teacher;
 
+import fr.gouv.monprojetsup.app.db.model.Classe;
 import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.DB;
@@ -68,7 +69,9 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
             Set<String> admins,
             List<String> moderationList,
 
-            String expeENSGroup
+            String expeENSGroup,
+
+            Classe.Niveau niveau
     ) {
 
         public GroupDetails sanitize() {
@@ -80,7 +83,8 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
                     students.stream().map(StudentDetails::sanitize).toList(),
                     admins.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
                     moderationList.stream().map(Sanitizer::sanitize).toList(),
-                    Sanitizer.sanitize(expeENSGroup)
+                    Sanitizer.sanitize(expeENSGroup),
+                    niveau
                     );
         }
     }

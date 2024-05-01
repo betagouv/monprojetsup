@@ -25,7 +25,8 @@ public record ProfileDb(
     String mention,
      String moygen,
 
-     Map<String, SuggestionDTO> choices
+     Map<String, SuggestionDTO> choices,
+        String statut
 ) {
 
     /**
@@ -65,7 +66,8 @@ public record ProfileDb(
                         .collect(Collectors.toMap(
                                 e -> Sanitizer.sanitize(e.getKey()),
                                 e -> e.getValue().sanitize()
-                        ))
+                        )),
+                Sanitizer.sanitize(statut)
         );
     }
 
@@ -80,7 +82,9 @@ public record ProfileDb(
                 scores.entrySet().stream().filter(e -> e.getValue() != null && e.getValue() > 0).map(Map.Entry::getKey).toList(),
                 Sanitizer.sanitize(moygen),
                 choices == null ? Collections.emptyList() : choices.values().stream().toList(),
-                Map.of()
+                Map.of(),
+                statut
+
         );
     }
 }

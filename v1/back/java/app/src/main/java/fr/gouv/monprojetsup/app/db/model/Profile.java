@@ -318,7 +318,8 @@ public final class Profile {
                 scores,
                 mention,
                 moygen,
-                choices
+                choices,
+                statut
         ).sanitize();
     }
 

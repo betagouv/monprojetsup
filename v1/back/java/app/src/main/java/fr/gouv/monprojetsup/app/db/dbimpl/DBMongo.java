@@ -485,6 +485,11 @@ public class DBMongo extends DB implements Closeable {
         users.forEach(this::saveUser);
     }
 
+    public void saveGroups(List<Group> groups) {
+        // saves all groups in the db
+        groups.forEach(this::saveGroup);
+    }
+
     public synchronized void reinitTreatmentGroupRegistrationCodes() {
         //get all groups from db whose expeENSGroupe is T
         List<Group> testGroups = collection(GROUPS_COLL_NAME).find(eq(Group.EXPE_ENS_GROUPE_FIELD, "T"))
@@ -791,9 +796,37 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
+    public void setGroupsNiveaux() {
+        //find all groups whose filed niveau is null
+        List<Group> groups = collection(GROUPS_COLL_NAME).find(eq(NIVEAU_FIELD, null))
+                .map(doc -> new Gson().fromJson(doc.toJson(), Group.class))
+                .into(new ArrayList<>());
+        groups.forEach(this::setNiveau);
+    }
+
+    private void setNiveau(Group group) {
+        Classe.Niveau niveau = group.getNiveau();
+        List<Group> updated = new ArrayList<>();
+        if(niveau == null && group.getLycee() != null && group.getClasse() != null) {
+            try {
+                val lycee = findLycee(group.getLycee());
+                val classe = lycee.getClasses().stream().filter(c -> c.index().equals(group.getClasse())).findFirst().orElse(null);
+                if(classe != null) {
+                    niveau = classe.niveau();
+                    group.setNiveau(niveau);
+                    saveGroup(group);
+                }
+            } catch (DBExceptions.UnknownGroupException ignored) {
+                //nothing to do
+            }
+        }
+    }
+    @Override
     public GetGroupDetailsService.GroupDetails getGroupDetails(String groupId) throws DBExceptions.ModelException {
         @NotNull Group group = findGroup(groupId);
         List<GetGroupDetailsService.StudentDetails> students = getMemberDetails(group.members());
+
+        Classe.Niveau niveau = group.getNiveau();
 
         return new GetGroupDetailsService.GroupDetails(
                 group.getName(),
@@ -803,7 +836,8 @@ public class DBMongo extends DB implements Closeable {
                 students,
                 group.admins(),
                 group.membersWaiting().stream().toList(),
-                group.getExpeENSGroupe()
+                group.getExpeENSGroupe(),
+                niveau
         );
     }
 
@@ -898,10 +932,11 @@ public class DBMongo extends DB implements Closeable {
             val groups = getGroupsWithAdmin(login);
             result.groups().addAll(groups.stream().map(Group::toDTO).toList());
 
-            List<GroupDTO> groupsOfLycee = getGroupsOfLycee(lyceesUser).stream().map(Group::toDTO).toList();
+            List<Group> groupsOfLycee = getGroupsOfLycee(lyceesUser).stream().toList();
             result.openGroups().addAll(
                     groupsOfLycee.stream()
                             .filter(g -> !g.admins().contains(login))
+                            .map(Group::toDTO)
                             .toList()
             );
             return result;

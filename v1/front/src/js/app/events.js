@@ -90,7 +90,7 @@ export function addElementToProfileListHandler(id, key, label) {
 
 export function toggleProfileScoreHandler(key) {
   const selected = data.toggleScore(key);
-  app.updateProfile("scores", key, selected ? "add" : "rem");
+  app.updateProfile("interests", key, selected ? "add" : "rem");
   return selected;
 }
 
