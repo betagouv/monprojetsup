@@ -52,6 +52,8 @@ public final class Group {
 
     private boolean isOpenedForNewMembers;
 
+    private GroupDTO.StatsGroup statsGroup= new GroupDTO.StatsGroup(0,0,0,0);
+
     public Group(Lycee lycee,
                  Classe classe,
                  String login,
@@ -343,7 +345,8 @@ public final class Group {
                 registrationToken,
                 adminToken,
                 isOpenedForNewMembers,
-                expeENSGroupe
+                expeENSGroupe,
+                statsGroup
         );
     }
 

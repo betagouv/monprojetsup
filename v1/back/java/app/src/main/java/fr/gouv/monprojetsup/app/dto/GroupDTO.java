@@ -14,6 +14,16 @@ public record GroupDTO(
         String adminToken,
         boolean isOpenedForNewMembers,
 
-        String expeENSGroup
+        String expeENSGroup,
+
+        StatsGroup stats
 ) {
+
+    public record StatsGroup(
+            int nStudents,
+            int nbConnected,
+            int nbProfileOk,
+            int nbObjectiveCompleted
+            ) {
+    }
 }

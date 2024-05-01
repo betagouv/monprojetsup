@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import fr.gouv.monprojetsup.app.db.model.*;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.DB;
@@ -17,6 +18,7 @@ import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
+import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -893,7 +895,8 @@ public class DBMongo extends DB implements Closeable {
             return result;
         } else if (role == User.Role.TEACHER) {
             //find groups with admin login
-            result.groups().addAll(getGroupsWithAdmin(login).stream().map(Group::toDTO).toList());
+            val groups = getGroupsWithAdmin(login);
+            result.groups().addAll(groups.stream().map(Group::toDTO).toList());
 
             List<GroupDTO> groupsOfLycee = getGroupsOfLycee(lyceesUser).stream().map(Group::toDTO).toList();
             result.openGroups().addAll(
