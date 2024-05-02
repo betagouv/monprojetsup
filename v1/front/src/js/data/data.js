@@ -755,12 +755,9 @@ export function postLoad() {
 
   //create metiers to formatiosn
   createMetiersToFormations();
-
-  //select one id per Interest  groups
-  createKeysForGroups();
 }
 
-function createKeysForGroups() {
+export function createKeysForGroups() {
   let i = 0;
   for (const group of data.interestsGroups) {
     group.key = "group_interest_" + i++;

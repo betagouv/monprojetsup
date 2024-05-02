@@ -244,6 +244,7 @@ function compareAlphanumeric(a, b) {
 
 function injectInMultiOptions($accordions_group, menus) {
   menus = menus.sort(compareAlphanumeric);
+  let menuid = Math.round(10000 * Math.random());
   for (const menu of menus) {
     let emoji1 = menu.emoji;
     let emoji2 = "";
@@ -264,6 +265,10 @@ function injectInMultiOptions($accordions_group, menus) {
       if (data.isSelected(key)) {
         expand = true;
       }
+    }
+    if (menu.key === undefined) {
+      let i = 0;
+      i++;
     }
     const $menu = $(`      
       <section class="fr-accordion multi-options-group">
