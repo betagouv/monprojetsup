@@ -44,6 +44,7 @@ import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
 import { setScreen } from "../app/navigation";
+import { trace } from "../services/services";
 
 export {
   initOnce,
@@ -513,6 +514,8 @@ function addAffinityCard(dat, nodetails) {
     $div.on("click", () => {
       displayItemDetails(dat, nodetails);
     });
+  } else {
+    console.log("null formation " + dat.key);
   }
 }
 
@@ -522,13 +525,13 @@ function displayItemDetails(dat, nodetails) {
   const key = dat.key;
   const isMetier = data.isMetier(key);
   if (isMetier) {
+    displayMetierDetails(dat, nodetails);
     $(".explore-specific-formation").hide();
     $(".explore-specific-metier").show();
-    displayMetierDetails(dat, nodetails);
   } else {
+    displayFormationDetails(dat, nodetails);
     $(".explore-specific-formation").show();
     $(".explore-specific-metier").hide();
-    displayFormationDetails(dat, nodetails);
   }
   $(".formation-details-actions .add-to-favorites-btn").attr("data-id", key);
   $(".formation-details-actions .add-to-bin-btn").attr("data-id", key);
@@ -777,7 +780,7 @@ function displaySummary(key) {
   const summary = data.getSummary(key);
   if (summary && summary.length > 0) {
     const cleanup = summary.replaceAll("h3", "p").replaceAll("h2", "p");
-    $(".formation-details-summary").html(cleanup);
+    $(".formation-details-summary").show().html(cleanup);
   } else {
     $(".formation-details-summary").hide();
     $(".formation-details-summary").empty();
