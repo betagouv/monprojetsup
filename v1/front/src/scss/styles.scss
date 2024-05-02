@@ -1613,6 +1613,10 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   overflow: visible;
   width: 100%;
 }
+.input-autocomplete {
+  margin-bottom: 20px;
+}
+
 .autoCompleteItemsContainer {
   //margin-top: 32px;
   display: flex;
@@ -1621,7 +1625,7 @@ color: var(--light-decisions-text-text-mention-grey, #666);
     gap: 16px;}
 
 .autoCompleteItem {
-  margin-top: 32px;
+  //margin-top: 32px;
   display: flex;
     padding: 4px 8px 4px 12px;
     justify-content: center;
@@ -1646,7 +1650,7 @@ color: var(--light-decisions-text-text-mention-grey, #666);
         }
 .autocomplete_results {
   overflow: visible;
-  padding-top: 32px;
+  padding-top: 12px;
 }
 .profile-cell-container {
   display: flex;
