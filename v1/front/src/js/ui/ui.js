@@ -267,8 +267,7 @@ function injectInMultiOptions($accordions_group, menus) {
       }
     }
     if (menu.key === undefined) {
-      let i = 0;
-      i++;
+      menu.key = menuid++; //this should not be necessary because already loaded in postLoad... fishy...
     }
     const $menu = $(`      
       <section class="fr-accordion multi-options-group">
@@ -856,6 +855,7 @@ function displayStats(statsAll) {
     !(data.tousBacs in statsAll)
   ) {
     $(".formation-details-stats-moyenne").hide();
+    $("#formation-details-stats-bloc-nb-admis-div").hide();
   } else {
     $(".formation-details-stats-moyenne").show();
     const nbAdmis = [];
@@ -899,6 +899,7 @@ function displayStats(statsAll) {
       }
       $(".formation-details-stats-moyenne").show();
     } else {
+      $("#formation-details-stats-bloc-nb-admis-div").hide();
       $(".formation-details-stats-moyenne").hide();
     }
   }
