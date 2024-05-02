@@ -7754,10 +7754,6 @@ export class métierInMemoryRepository implements MétierRepository {
     },
   ];
 
-  public async récupérerTous(): Promise<Métier[] | undefined> {
-    return [this.MÉTIERS[0], this.MÉTIERS[1]];
-  }
-
   public async rechercher(recherche: string): Promise<MétierAperçu[] | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {

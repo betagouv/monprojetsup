@@ -1,6 +1,7 @@
 import Head from "@/components/_layout/Head/Head";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
+import FormationsForm from "@/features/élève/ui/formulaires/FormationsForm/FormationsForm";
 import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
 import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
@@ -45,6 +46,10 @@ const ÉlèveInscriptionPage = () => {
         return <MétiersForm {...propsFormulaire} />;
       case "/inscription/etude":
         return <ÉtudeForm {...propsFormulaire} />;
+      case "/inscription/formations":
+        return <FormationsForm {...propsFormulaire} />;
+      case "/inscription/confirmation":
+        return "Confirmation";
       default:
         return null;
     }

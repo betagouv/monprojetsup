@@ -143,11 +143,66 @@ export const localeFR = {
         TITRE_ÉTAPE: "Mes futures études",
         TITRE: "À propos des études supérieures",
       },
+      DURÉE_ETUDES: {
+        LABEL: "Durée des études",
+        DESCRIPTION: "Temps d’études que tu envisages après le bac",
+        OPTIONS: {
+          OPTIONS_OUVERTES: {
+            LABEL: "Je garde mes options ouvertes",
+          },
+          COURTE: {
+            LABEL: "Courte - 3 ans ou moins",
+          },
+          LONGUE: {
+            LABEL: "Longue - 5 ans ou plus",
+          },
+          AUCUNE_IDÉE: {
+            LABEL: "Aucune idée pour le moment",
+          },
+        },
+      },
+      ALTERNANCE: {
+        LABEL: "Ton intérêt pour un cursus en alternance",
+        DESCRIPTION: "Formations alternant scolarité et pratique en entreprise",
+        OPTIONS: {
+          PAS_INTÉRESSÉ: {
+            LABEL: "Pas du tout intéressé(e)",
+          },
+          INDIFFÉRENT: {
+            LABEL: "Indifférent(e)",
+          },
+          INTÉRESSÉ: {
+            LABEL: "Intéressé(e)",
+          },
+          TRÈS_INTÉRESSÉ: {
+            LABEL: "Très intéressé(e)",
+          },
+        },
+      },
     },
     FORMATIONS: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Les études ou cursus",
         TITRE: "Y a-t-il des études ou des cursus qui t'attirent ?",
+      },
+      SITUATION: {
+        LÉGENDE: "Mon avancement *",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Pas pour l’instant",
+            DESCRIPTION: "Ce n'est pas grave, MPS est là pour t'accompagner.",
+            EMOJI: "🤔",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai déjà identifié une ou plusieurs formations post-bac",
+            EMOJI: "🙂",
+          },
+        },
+      },
+      FORMATIONS_ENVISAGÉES: {
+        LABEL: "Formations envisagées",
+        DESCRIPTION: "Commence à taper puis ajoute en favoris les formations qui pourraient t’intéresser",
+        SÉLECTIONNÉES: "Formations sélectionnée(s)",
       },
     },
   },

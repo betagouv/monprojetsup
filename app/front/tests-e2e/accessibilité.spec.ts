@@ -9,6 +9,7 @@ const pages = [
   "/inscription/interets",
   "/inscription/metiers",
   "/inscription/etude",
+  "/inscription/formations",
 ];
 
 for (const testedPage of pages) {

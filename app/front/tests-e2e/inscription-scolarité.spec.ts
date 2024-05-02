@@ -225,7 +225,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
-      await expect(testhelper.champClasseActuelle()).toHaveValue("première");
+      await expect(testhelper.champClasseActuelle()).toHaveValue("premiere");
       await expect(testhelper.champBac()).toHaveValue("Générale");
       await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(2);
       await expect(testhelper.boutonSpécialitéSélectionnée(testhelper.ARTS_PLASTIQUES)).toBeVisible();

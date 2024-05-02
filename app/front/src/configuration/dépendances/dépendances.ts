@@ -16,12 +16,12 @@ import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJ
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerÉlève";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
-import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations";
+import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
+import { RécupérerAperçusFormationsUseCase } from "@/features/formation/usecase/RécupérerAperçusFormations";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
 import { RécupérerAperçusMétiersUseCase } from "@/features/métier/usecase/RécupérerAperçusMétiers";
-import { RécupérerMétiersUseCase } from "@/features/métier/usecase/RécupérerMétiers";
 
 export class Dépendances {
   private static instance: Dépendances;
@@ -44,13 +44,13 @@ export class Dépendances {
 
   public readonly récupérerÉlèveUseCase: RécupérerÉlèveUseCase;
 
-  public readonly récupérerFormationsUseCase: RécupérerFormationsUseCase;
-
-  public readonly récupérerMétiersUseCase: RécupérerMétiersUseCase;
-
   public readonly récupérerAperçusMétiersUseCase: RécupérerAperçusMétiersUseCase;
 
   public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
+
+  public readonly récupérerAperçusFormationsUseCase: RécupérerAperçusFormationsUseCase;
+
+  public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
   public readonly récupérerBacsUseCase: RécupérerBacsUseCase;
 
@@ -73,10 +73,10 @@ export class Dépendances {
     this.créerÉlèveUseCase = new CréerÉlèveUseCase(this._élèveRepository);
     this.mettreÀJourÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
-    this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
-    this.récupérerMétiersUseCase = new RécupérerMétiersUseCase(this._métierRepository);
     this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
+    this.récupérerAperçusFormationsUseCase = new RécupérerAperçusFormationsUseCase(this._formationRepository);
+    this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
     this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
     this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);
     this.rechercherSpécialitésPourUnBacUseCase = new RechercherSpécialitésPourUnBacUseCase(this._bacRepository);

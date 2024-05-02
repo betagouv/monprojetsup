@@ -1,5 +1,6 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type FormationAperçu } from "@/features/formation/domain/formation.interface";
 
 export type FormationRepository = {
-  récupérerToutes: () => Promise<Formation[] | undefined>;
+  rechercher: (recherche: string) => Promise<FormationAperçu[] | undefined>;
+  récupérerAperçus: (formationIds: Array<FormationAperçu["id"]>) => Promise<FormationAperçu[] | undefined>;
 };

@@ -48,7 +48,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
             label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
             optionsSuggérées={spécialitésSuggérées}
             optionsSélectionnéesParDéfaut={spécialitésSélectionnéesParDéfaut}
-            rechercheMétiersEnCours={rechercheSpécialitéEnCours}
+            rechercheSuggestionsEnCours={rechercheSpécialitéEnCours}
             texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.SÉLECTIONNÉS}
             àLaRechercheDUneOption={àLaRechercheDUneSpécialité}
           />

@@ -14,7 +14,7 @@ const SélecteurMultiple = ({
   optionsSélectionnéesParDéfaut,
   auChangementOptionsSélectionnées,
   àLaRechercheDUneOption,
-  rechercheMétiersEnCours,
+  rechercheSuggestionsEnCours,
 }: SélecteurMultipleProps) => {
   const [recherche, setRecherche] = useState<string>();
   const [optionsAffichées, setOptionsAffichées] = useState<SélecteurMultipleOption[]>([]);
@@ -25,11 +25,11 @@ const SélecteurMultiple = ({
   const debouncedSetRecherche = useDebounceCallback(setRecherche, 400);
 
   const statusChampDeSaisie = useMemo(() => {
-    if (recherche && optionsSuggérées.length === 0 && !rechercheMétiersEnCours)
+    if (recherche && optionsSuggérées.length === 0 && !rechercheSuggestionsEnCours)
       return { type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT };
 
     return undefined;
-  }, [optionsSuggérées, recherche, rechercheMétiersEnCours]);
+  }, [optionsSuggérées, recherche, rechercheSuggestionsEnCours]);
 
   const supprimerOptionSélectionnée = (optionÀSupprimer: SélecteurMultipleOption) => {
     const nouvellesOptionsSélectionnées = optionsSélectionnées.filter(
@@ -68,7 +68,7 @@ const SélecteurMultiple = ({
         label={label}
         status={statusChampDeSaisie}
       />
-      {rechercheMétiersEnCours ? (
+      {rechercheSuggestionsEnCours ? (
         <AnimationChargement />
       ) : (
         recherche &&

@@ -78,7 +78,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
       label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.SECONDE_TMD.LABEL,
     },
     {
-      valeur: "première",
+      valeur: "premiere",
       label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL,
     },
     {

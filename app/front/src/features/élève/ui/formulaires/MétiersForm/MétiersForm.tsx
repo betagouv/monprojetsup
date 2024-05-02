@@ -37,7 +37,7 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
             label={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL}
             optionsSuggérées={métiersSuggérés}
             optionsSélectionnéesParDéfaut={métiersSélectionnésParDéfaut}
-            rechercheMétiersEnCours={rechercheMétiersEnCours}
+            rechercheSuggestionsEnCours={rechercheMétiersEnCours}
             texteOptionsSélectionnées={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.SÉLECTIONNÉS}
             àLaRechercheDUneOption={àLaRechercheDUnMétier}
           />
