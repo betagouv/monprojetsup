@@ -1238,20 +1238,22 @@ function displayAttendus(key) {
   const d = data.getEDSData(key);
 
   if (d) {
-    const label = d.label;
     const eds = d.eds;
-    if (eds.attendus) {
+    if (eds.attendus !== undefined && eds.attendus != "") {
       $("#formation-details-attendus").show();
       $("#formation-details-attendus-details").html(eds.attendus);
     } else {
       $("#formation-details-attendus").hide();
     }
-    if (eds.recoEDS) {
-      $("#tabpanel-les-conseils").show();
+    if (eds.recoEDS !== undefined && eds.recoEDS != "") {
+      $("#tabpanel-les-conseils-li").show();
       $("#accordion-eds").html(eds.recoEDS);
     } else {
-      $("#tabpanel-les-conseils").hide();
+      $("#tabpanel-les-conseils-li").hide();
     }
+  } else {
+    $("#formation-details-attendus").hide();
+    $("#tabpanel-les-conseils-li").hide();
   }
 }
 
