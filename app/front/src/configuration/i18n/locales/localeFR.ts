@@ -158,6 +158,7 @@ export const localeFR = {
     FERMER: "Fermer",
     CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
     CONTINUER: "Continuer",
+    RECHERCHER: "Rechercher",
     RETOUR: "Retour",
     FORMATION: "Formation",
     MÉTIER: "Métier",
@@ -165,7 +166,8 @@ export const localeFR = {
     SÉLECTIONNER_OPTION: "Sélectionner une option",
     PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
     ERREURS_FORMULAIRES: {
-      LISTE_OBLIGATOIRE: "Veuillez sélectionner une option parmi la liste.",
+      AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
+      LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
     },
   },
   ACCESSIBILITÉ: {

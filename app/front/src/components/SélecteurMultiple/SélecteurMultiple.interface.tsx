@@ -6,10 +6,6 @@ export type SélecteurMultipleProps = {
   àLaRechercheDUneOption: (recherche: string) => void;
   rechercheMétiersEnCours: boolean;
   description?: string;
-  status?: {
-    type: "désactivé" | "erreur" | "succès";
-    message?: string;
-  };
   optionsSélectionnéesParDéfaut?: SélecteurMultipleOption[];
 };
 

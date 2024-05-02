@@ -8,4 +8,5 @@ export type ChampDeSaisieProps = {
   icône?: string;
   auChangement?: React.ChangeEventHandler<HTMLInputElement>;
   registerHookForm?: {};
+  estChampDeRecherche?: boolean;
 };

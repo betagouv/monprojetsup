@@ -39,7 +39,7 @@ class TestHelper {
   };
 
   public champMétiersEnvisagés = () => {
-    return this._page.getByRole("textbox", { name: i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL });
+    return this._page.getByRole("searchbox", { name: i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL });
   };
 
   public listeDesSuggestionsMétiers = () => {
@@ -60,6 +60,10 @@ class TestHelper {
 
   public messageErreurChampObligatoire = () => {
     return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE);
+  };
+
+  public messageErreurAucunRésultat = () => {
+    return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT);
   };
 
   private _boutonSoumissionFormulaire = () => {
@@ -164,6 +168,21 @@ test.describe("Inscription élève - Métiers", () => {
       // THEN
       await expect(testhelper.listeDesSuggestionsMétiers().getByRole("listitem")).toHaveCount(7);
       await expect(testhelper.listeDesMétiersSélectionnés().getByRole("listitem")).toHaveCount(1);
+    });
+
+    test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
+      // GIVEN
+      const testhelper = new TestHelper(page);
+      await testhelper.naviguerVersLaPage();
+
+      // WHEN
+      await testhelper.renseignerCorrectementLeFormulaire({
+        situation: i18n.ÉLÈVE.MÉTIERS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
+      });
+      await testhelper.renseignerChampMétiersEnvisagés("blablablabla");
+
+      // THEN
+      await expect(testhelper.messageErreurAucunRésultat()).toBeVisible();
     });
   });
 

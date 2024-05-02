@@ -65,11 +65,15 @@ class TestHelper {
   };
 
   public champSpécialités = () => {
-    return this._page.getByRole("textbox", { name: i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL });
+    return this._page.getByRole("searchbox", { name: i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL });
   };
 
   public messageErreurChampObligatoire = () => {
     return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE);
+  };
+
+  public messageErreurAucunRésultat = () => {
+    return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT);
   };
 
   private _boutonSoumissionFormulaire = () => {
@@ -166,6 +170,19 @@ test.describe("Inscription élève - Ma scolarité", () => {
       // THEN
       await expect(testhelper.listeDesSuggestionsSpécialités().getByRole("listitem")).toHaveCount(2);
       await expect(testhelper.listeDesSpécialitésSélectionnées().getByRole("listitem")).toHaveCount(1);
+    });
+
+    test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
+      // GIVEN
+      const testhelper = new TestHelper(page);
+      await testhelper.naviguerVersLaPage();
+
+      // WHEN
+      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampSpécialités("blablablabla");
+
+      // THEN
+      await expect(testhelper.messageErreurAucunRésultat()).toBeVisible();
     });
   });
 

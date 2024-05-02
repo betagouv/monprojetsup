@@ -2,7 +2,8 @@ import { type SélecteurMultipleOption, type SélecteurMultipleProps } from "./S
 import ChampDeSaisie from "@/components/_dsfr/ChampDeSaisie/ChampDeSaisie";
 import TagCliquable from "@/components/_dsfr/TagCliquable/TagCliquable";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
-import { useEffect, useState } from "react";
+import { i18n } from "@/configuration/i18n/i18n";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
 const SélecteurMultiple = ({
@@ -10,7 +11,6 @@ const SélecteurMultiple = ({
   texteOptionsSélectionnées,
   optionsSuggérées,
   description,
-  status,
   optionsSélectionnéesParDéfaut,
   auChangementOptionsSélectionnées,
   àLaRechercheDUneOption,
@@ -22,7 +22,14 @@ const SélecteurMultiple = ({
     optionsSélectionnéesParDéfaut ?? [],
   );
 
-  const debouncedSetRecherche = useDebounceCallback(setRecherche, 250);
+  const debouncedSetRecherche = useDebounceCallback(setRecherche, 400);
+
+  const statusChampDeSaisie = useMemo(() => {
+    if (recherche && optionsSuggérées.length === 0 && !rechercheMétiersEnCours)
+      return { type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT };
+
+    return undefined;
+  }, [optionsSuggérées, recherche, rechercheMétiersEnCours]);
 
   const supprimerOptionSélectionnée = (optionÀSupprimer: SélecteurMultipleOption) => {
     const nouvellesOptionsSélectionnées = optionsSélectionnées.filter(
@@ -50,14 +57,16 @@ const SélecteurMultiple = ({
 
     setOptionsAffichées(optionsÀAfficher);
   }, [optionsSuggérées, optionsSélectionnées]);
+
   return (
     <>
       <ChampDeSaisie
         auChangement={(événement) => debouncedSetRecherche(événement.target.value ?? undefined)}
         description={description}
+        estChampDeRecherche
         icône="fr-icon-search-line"
         label={label}
-        status={status}
+        status={statusChampDeSaisie}
       />
       {rechercheMétiersEnCours ? (
         <AnimationChargement />
