@@ -709,6 +709,10 @@ main {
     font-weight: 500;
     /* 142.857% */
 }
+.no-pointer {
+  cursor: default !important;
+  /* Override any existing cursor styles */
+}
 #explore-div-resultats-left-entete2 {
   color: var(--light-decisions-text-text-title-grey, #161616);
     text-align: center;
