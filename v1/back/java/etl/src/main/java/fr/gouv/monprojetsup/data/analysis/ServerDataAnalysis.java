@@ -231,14 +231,15 @@ public class ServerDataAnalysis {
         Map<String, Theme> indexTheme = new HashMap<>();
         ServerData.onisepData.thematiques().thematiques().forEach((s, s2) -> indexTheme.computeIfAbsent(s, z -> new Theme(s, s2)));
         Set<String> roots = new HashSet<>(indexTheme.keySet());
-        ServerData.onisepData.thematiques().parent().forEach((s, s2) -> {
+        ServerData.onisepData.thematiques().parents().forEach((s, l) ->
+        l.forEach(s2 -> {
             Theme t = indexTheme.get(Constants.cleanup(s));
             roots.remove(Constants.cleanup(s));
             Theme t2 = indexTheme.get(Constants.cleanup(s2));
             if (t2 != null) {
                 t2.sons.add(t);
             }
-        });
+        }));
         List<Theme> forest = indexTheme.entrySet().stream().filter(e -> roots.contains(e.getKey())).map(Map.Entry::getValue).toList();
         List<Theme> orphans = forest.stream().filter(n -> n.sons.isEmpty()).toList();
         Map<String, Long> racines = forest.stream()

@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { getData, postLoad, loadProfile } from "./data";
+import { getData, postLoad, createKeysForGroups } from "./data";
 import * as jszip from "jszip";
 import * as jsziputils from "./jszip-utils.min";
 
@@ -97,6 +97,9 @@ async function loadDatas(datas) {
         data.grillesAnalyseCandidaturesLabels =
           jdata.grillesAnalyseCandidaturesLabels;
         data.profileFields = new Set(jdata.profileFields);
+
+        //select one id per Interest  groups
+        createKeysForGroups();
 
         loaded_log("tags");
         data2Loaded = true;
