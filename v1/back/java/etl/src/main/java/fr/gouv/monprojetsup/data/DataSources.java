@@ -38,6 +38,8 @@ public class DataSources {
     public static final String ONISEP_DESCRIPTIFS_FORMATIONS_PATH = "onisep_scrap/descriptifs.json";
     public static final String ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH = "onisep_scrap/summaries.json";
     public static final String ONISEP_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
+
+    public static final String RESUMES_MPS_PATH = "mps/Tableau résumé descriptifs formations - tout -V2.tsv";
     /* Onisep LG */
     public static final String THEMATIQUES_FORMATIONS_PAIRES_PATH = "indexation_psup_thematiques/ideo_thematiques_cod.json";
 

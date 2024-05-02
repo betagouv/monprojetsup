@@ -108,6 +108,12 @@ export function getSummary(key) {
   if (res.presentation) return res.presentation;
   return null;
 }
+export function getSummaryFormation(key) {
+  const res = data.descriptifs[key];
+  if (res === undefined) return "";
+  if (res.summaryFormation) return res.summaryFormation;
+  return null;
+}
 
 export function getDomainesPro() {
   return data.domainesPro;
