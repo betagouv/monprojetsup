@@ -1614,13 +1614,14 @@ color: var(--light-decisions-text-text-mention-grey, #666);
   width: 100%;
 }
 .autoCompleteItemsContainer {
-  margin-top: 32px;
+  //margin-top: 32px;
   display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;}
 
 .autoCompleteItem {
+  margin-top: 32px;
   display: flex;
     padding: 4px 8px 4px 12px;
     justify-content: center;
