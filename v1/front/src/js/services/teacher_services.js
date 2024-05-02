@@ -72,6 +72,34 @@ export function getStudentProfile(curGroup, curStudent, onSuccess = null) {
     onSuccess
   );
 }
+export function getStudentProfileAsync(curGroup, curStudent) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/student/profile",
+      {
+        groupId: curGroup,
+        memberLogin: curStudent,
+      },
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
+}
+export function getStudentSelection(curGroup, curStudent) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/student/selection",
+      {
+        groupId: curGroup,
+        memberLogin: curStudent,
+      },
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
+}
 
 export function resetStudentPassword(user, onSuccess = null) {
   postToSpringService(

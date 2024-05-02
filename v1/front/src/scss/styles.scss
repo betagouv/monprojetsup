@@ -701,13 +701,26 @@ main {
   display: flex;
   //height: 100%;
   margin-top: 48px;
-  margin-bottom: 16px;
+  
   color: var(--light-decisions-text-text-mention-grey, #666);
     text-align: left;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     /* 142.857% */
+}
+#explore-div-resultats-left-entete2 {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+    text-align: center;
+  
+    /* 1.Titres/H3 - MD/Desktop */
+    font-family: Marianne;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 36px;
+    /* 128.571% */
+    margin-bottom: 16px;
 }
 .formation-card {
   display: flex;

@@ -455,13 +455,32 @@ async function showGroup(group_id) {
   ui.setStudentDetails(details);
   $(".student_selection_button")
     .off()
-    .on("click", () => {
-      const login = $(this).attr("login");
+    .on("click", async (event) => {
+      const login = event.currentTarget.getAttribute("login");
+      if (login !== undefined) {
+        await ui.showSelection();
+        const selection = await app.getStudentSelection(login);
+        const name = event.currentTarget.getAttribute("name");
+        ui.showFavoris(selection);
+        init_main_nav();
+        $("#explore-div-entete").hide();
+        $("#explore-div-resultats-left-entete2").html(
+          `La sélection de ${name == null ? login : name}`
+        );
+        $("#formation-details-header-nav-central-icon").hide();
+      }
     });
   $(".student_profile_button")
     .off()
-    .on("click", () => {
-      const login = $(this).attr("login");
+    .on("click", async (event) => {
+      const login = event.currentTarget.getAttribute("login");
+      const name = event.currentTarget.getAttribute("name");
+      const profile = await app.getStudentProfile(login);
+      data.loadProfile(profile);
+      await ui.showProfileScreen();
+      init_main_nav();
+      profileEditionSetup();
+      $("#explore-div-entete").show().html(`Le profil de ${name}`);
     });
 }
 
