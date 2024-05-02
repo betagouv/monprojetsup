@@ -97,10 +97,19 @@ public class Distances {
 
         List<Coords> cities = favorites.stream().flatMap(
                 cityName -> cityClientKeyToCities.getOrDefault(cityName, List.of()).stream()).distinct().toList();
-        if (cities.isEmpty())
-            return Collections.emptyList();
 
         val formations = getFormationsFromFil(flKey);
+
+        if (cities.isEmpty()) {
+            val l = new ArrayList<>(formations);
+            Collections.shuffle(l);
+            return l
+                    .stream()
+                    .map(f -> f.commune)
+                    .filter(Objects::nonNull)
+                    .toList();
+
+        }
 
         Map<String, Double> citiesDistances = new HashMap<>();
 
