@@ -212,7 +212,7 @@ export function displayNextAndBAckButtons(nextScreen, backScreen) {
 }
 export function hideNiveauInformation(niveau) {
   if (niveau === undefined || niveau === null || niveau === "") {
-    niveau = "term";
+    niveau = "sec";
   }
   $(".premiere-only").toggle(niveau === "term" || niveau === "prem");
   $(".terminale-only").toggle(niveau === "term");
