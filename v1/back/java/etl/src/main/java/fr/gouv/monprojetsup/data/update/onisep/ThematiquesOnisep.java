@@ -5,9 +5,11 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,18 +17,20 @@ import java.util.Map;
 public record ThematiquesOnisep(
         Map<String,ThematiqueOnisep> thematiques,
         Map<String,String> categories,
-        Map<String,String> redirections,
+        List<Pair<String,String>> redirections,
         Map<String, Regroupement> regroupements
 ) {
     public ThematiquesOnisep() {
         this(
-                new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>()
+                new HashMap<>(), new HashMap<>(), new ArrayList<>(), new HashMap<>()
         );
     }
 
     public record Regroupement(
             String label,
             String groupe,
+
+            String emojiGroupe,
             String emoji
     ) {
     }
@@ -41,14 +45,18 @@ public record ThematiquesOnisep(
         thematiques.forEach(res::add);
 
         String groupe = "";
+        String emojig = "";
         for (Map<String, String> stringStringMap : CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH), '\t')) {
             String id = stringStringMap.get("id").trim();
             String regroupement = stringStringMap.get("regroupement").trim();
             if(!regroupement.isEmpty()) groupe = regroupement;
+            String emojiGroupe = stringStringMap.get("Emoji");
+            if(!emojiGroupe.isEmpty()) emojig = emojiGroupe;
             String emoji = stringStringMap.get("Emojis");
             String label = stringStringMap.get("label");
             if(groupe.isEmpty()) throw new RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
-            res.add(id, label, groupe, emoji);
+            if(emojig.isEmpty()) throw new RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
+            res.add(id, label, groupe, emojig, emoji);
         }
 
         List<ThematiquesOnisep.ThematiqueOnisep> thematiquesNouvelles = Serialisation.fromJsonFile(
@@ -79,12 +87,12 @@ public record ThematiquesOnisep(
             categories.put(Constants.cleanup(item.id), item.categorie);
         }
         if(item.redirection != null && !item.redirection.isEmpty() && !item.redirection.equals("X")) {
-            redirections.put(Constants.cleanup(item.id), Constants.cleanup(item.redirection));
+            redirections.add(Pair.of(Constants.cleanup(item.id), Constants.cleanup(item.redirection)));
         }
     }
 
-    public void add(String id, String label, String groupe, String emoji) {
-        regroupements.put(id, new Regroupement(label, groupe, emoji));
+    public void add(String id, String label, String groupe, String emojiGroupe, String emoji) {
+        regroupements.put(id, new Regroupement(label, groupe, emojiGroupe, emoji));
     }
 
     public record ThematiqueOnisep(

@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.model.thematiques;
 
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.update.onisep.ThematiquesOnisep;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ public record Thematiques(
         Map<String,String> thematiques,
 
         Map<String,String> categories,
-        Map<String,String> parent,
+        Map<String,List<String>> parents,
 
         List<Category> groupes
 
@@ -25,26 +26,12 @@ public record Thematiques(
 
     public record Category(
             String label,
+            String emoji,
+
             List<Item> items
     ) {
 
     }
-
-    public static final Set<String> forceSingleton = Set.of(
-            "T_ITM_1020", // "sciences humaines et sociales"
-            "T_ITM_917" //"lettres - langues"
-    );
-
-    public static final Map<String, List<String>> replaceBy = Map.of(
-            "T_ITM_832", List.of("T_ITM_1067","T_ITM_PERSO7") // "automatismes" -->  "électronique" et "industrie"
-    );
-
-    public static final Set<String> delete = Set.of(
-            "T_ITM_1173",//"formations généralistes ou polyvalentes"
-            "T_ITM_1340", // "hôtellerie - restauration"
-            "T_ITM_793",//fonction production
-            "T_ITM_1063"//recherche
-    );
 
 
     private Thematiques(@NotNull ThematiquesOnisep thematiques) {
@@ -54,26 +41,28 @@ public record Thematiques(
 
         Map<String, Category> groupes = new HashMap<>();
         thematiques.regroupements().forEach((s, regroupement) -> {
-            Category cat = groupes.computeIfAbsent(regroupement.groupe(), k -> new Category(k, new ArrayList<>()));
+            val key = regroupement.groupe();
+            val emoji = regroupement.emojiGroupe();
+            Category cat = groupes.computeIfAbsent(key, k -> new Category(key, emoji, new ArrayList<>()));
             cat.items.add(new Item(s, regroupement.label(), regroupement.emoji()));
         });
         this.groupes.addAll(groupes.values());
 
         thematiques.thematiques().values().forEach(m -> {
             String cid = Constants.cleanup(m.id());
-            if(!delete.contains( cid)) {
                 this.thematiques.put(cid, m.nom());
                 String cpar = m.parent() != null ? Constants.cleanup(m.parent()) : null;
-                if (cpar != null
-                        && !forceSingleton.contains(cpar)
-                        && !delete.contains(cpar)
-                ) {
-                    this.parent.put(cid, cpar);
-                }
-            }
+                if (cpar != null)
+                    addParent(cid, cpar);
         });
 
-        thematiques.redirections().forEach((s, s2) -> this.parent.put(Constants.cleanup(s), Constants.cleanup(s2)));
+        thematiques.redirections().forEach(
+                p -> addParent(p.getLeft(),p.getRight())
+        );
+    }
+
+    private void addParent(String child, String parent) {
+        parents.computeIfAbsent(child, z -> new ArrayList<>()).add(parent);
     }
 
     public static Thematiques load() throws IOException {
@@ -84,15 +73,12 @@ public record Thematiques(
     public @NotNull List<String> representatives(String item) {
         if (item == null) return Collections.emptyList();
         item = Constants.cleanup(item);
-        if (replaceBy.containsKey(item)) {
-            return replaceBy.get(item).stream().flatMap(it -> representatives(it).stream()).toList();
-        }
-        if (parent.containsKey(item)) return representatives(parent.get(item));
+        if (parents.containsKey(item)) return parents.get(item).stream().flatMap(parent -> representatives(parent).stream()).toList();
         return categories.containsKey(item) ? List.of(item) : Collections.emptyList();
     }
 
     public void retainAll(Set<String> themesUsed) {
         thematiques.keySet().retainAll(themesUsed);
-        parent.clear();
+        parents.clear();
     }
 }

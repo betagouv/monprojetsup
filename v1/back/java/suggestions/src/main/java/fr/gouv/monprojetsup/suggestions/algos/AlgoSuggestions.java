@@ -11,7 +11,6 @@ import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.server.Log;
 import lombok.Getter;
@@ -27,7 +26,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
 import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
@@ -381,7 +379,7 @@ public class AlgoSuggestions {
         });
 
         //ajout taxonomie thèmes (aujourd'hui plate)
-        onisepData.thematiques().parent().forEach(edgesKeys::put);
+        onisepData.thematiques().parents().forEach(edgesKeys::put);
 
         //ajout des correspondances de groupes
         flGroups.forEach((s, s2) -> edgesKeys.put(s,s2,true,1.0));
