@@ -59,6 +59,8 @@ export const joinGroup = account_services.joinGroup;
 export const updateAdminInfos = teacher_services.getAdminInfos;
 export const updateAdminInfosAsync = teacher_services.getAdminInfosAsync;
 export const getStudentProfile = teacher_services.getStudentProfile;
+export const getStudentProfileAsync = teacher_services.getStudentProfileAsync;
+export const getStudentSelection = teacher_services.getStudentSelection;
 export const getSelectedGroupDetails = teacher_services.getSelectedGroupDetails;
 export const getSelectedGroupDetailsAsync =
   teacher_services.getSelectedGroupDetailsAsync;
