@@ -507,11 +507,13 @@ function addAffinityCard(dat, nodetails) {
     dat.examples,
     nodetails
   );
-  updateFav(dat.key);
-  $("#explore-div-resultats-left-liste").append($div);
-  $div.on("click", () => {
-    displayItemDetails(dat, nodetails);
-  });
+  if ($div !== null) {
+    updateFav(dat.key);
+    $("#explore-div-resultats-left-liste").append($div);
+    $div.on("click", () => {
+      displayItemDetails(dat, nodetails);
+    });
+  }
 }
 
 let currentKeyDisplayed = "";
@@ -1320,7 +1322,7 @@ function buildFormationAffinityCard(
   nodetails
 ) {
   const label = data.getLabel(key);
-  if (label === undefined || label === null) return;
+  if (label === undefined || label === null) return null;
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
