@@ -37,8 +37,8 @@ export const apps = {
 export const durees = {
   court:
     "Je m'intéresse en priorité aux formations courtes et rapidement professionnalisantes.",
-  long: "Je prévois de faire des études longues.",
-  indiff: "Je ne sais pas ou je n'ai pas de préférence.",
+  long: "J'ai envie de faire des études longues.",
+  indiff: "Je ne sais pas encore, je garde toutes mes options ouvertes.",
 };
 
 export const domaines = [
