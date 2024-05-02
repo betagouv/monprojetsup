@@ -1320,6 +1320,7 @@ function buildFormationAffinityCard(
   nodetails
 ) {
   const label = data.getLabel(key);
+  if (label === undefined || label === null) return;
   const $div = $(`<div class="formation-card">
           <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
