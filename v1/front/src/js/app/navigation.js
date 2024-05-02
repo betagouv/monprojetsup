@@ -130,6 +130,9 @@ export function init_main_nav() {
     });
   $(".prenomnom").html(data.getPrenomNom());
   ui.setRoleVisibility();
+  $(".visible-only-when-favoris").toggle(
+    session.isStudent() && data.getSuggestionsApproved().length > 0
+  );
 }
 
 async function updateRecherche() {
