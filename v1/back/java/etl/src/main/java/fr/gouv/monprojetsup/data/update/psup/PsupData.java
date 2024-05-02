@@ -296,6 +296,7 @@ public record PsupData(
         Collection<Integer> formationsEnAppAvecEquivalentSansApp = getFormationsenAppAvecEquivalentSansApp().values();
 
         filActives.removeAll(formationsEnAppAvecEquivalentSansApp);
+        filActives.retainAll(formations().filieres.keySet());
 
         formations().filieres.keySet().retainAll(filActives);
 
@@ -469,6 +470,7 @@ public record PsupData(
         Map<String, String> corr = getCorrespondances();
         result.addAll(
                 filActives.stream()
+                        .filter(flcod -> formations.filieres.containsKey(flcod))
                         .map(flcod -> gFlCodToFrontId(flcod))
                         .filter(key -> !corr.containsKey(key) || corr.get(key).equals(key))
                         .collect(Collectors.toSet())

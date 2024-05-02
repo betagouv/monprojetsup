@@ -391,7 +391,7 @@ public class ConnecteurBackendSQL {
                 "G_EA_COD_AFF," +
                 "C_GP_COD," +
                 "G_TA_COD, " +
-                "G_Ti_COD, " +
+                "G_TI_COD, " +
                 "G_AA_LIB," +
                 "G_AA_COD, " +
                 "capa, " +
