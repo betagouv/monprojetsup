@@ -329,6 +329,18 @@ function showSelectGroupTab(msg) {
   }
 }
 
+export async function getStudentSelection(login) {
+  const curGroup = session.getSelectedGroup();
+  const msg = await server.getStudentSelection(curGroup, login);
+  return msg.details;
+}
+
+export async function getStudentProfile(login) {
+  const curGroup = session.getSelectedGroup();
+  const msg = await server.getStudentProfileAsync(curGroup, login);
+  return msg.profile;
+}
+
 function refreshGroupTab(force_update = false) {
   const curGroup = session.getSelectedGroup();
   const curStudent = session.getSelectedStudent();

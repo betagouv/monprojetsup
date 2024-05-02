@@ -582,16 +582,17 @@ export function setStudentDetails(details) {
     addStudentTile(student, $div);
     nb++;
     nb_students_connected++;
-    if (student.profileCompletenessPercent == 100) nb_students_completed++;
+    if (student.profileCompletenessPercent == "100") nb_students_completed++;
     if (
       (niveau == "seconde" &&
-        student.nbFormationsFavoris + student.nbMetiersFavoris > 0) ||
+        parseInt(student.nbFormationsFavoris) +
+          parseInt(student.nbMetiersFavoris) >
+          0) ||
       student.nbFormationsFavoris > 3
     )
       nb_students_selected++;
   }
   if (nb == 0) nb = 1;
-  const nbStudentsTotal = details.students.length;
   $("#nb_students_connected").html(nb_students_connected);
   $("#pct_students_connected").html(
     Math.round((100 * nb_students_connected) / nb) + "%"
@@ -682,13 +683,16 @@ function addStudentTile(student, $div) {
             ${nbMetiers}
           </div>
           <div class="eleves_tile_buttons">
-            <button login="${student.login}" class="fr-btn student_selection_button" title="sa sélection">Sa sélection</button>
+            <button login="${student.login}" name="${student.name}" class="fr-btn student_selection_button" title="sa sélection">Sa sélection</button>
             <div class="sep"></div>
-            <button login="${student.login}" class="fr-btn fr-btn--secondary student_profile_button" title="son profil">
+            <button login="${student.login}" name="${student.name}" class="fr-btn fr-btn--secondary student_profile_button" title="son profil">
               Son profil
             </button>
           </div>
         </div>`);
+  const nb =
+    parseInt(student.nbFormationsFavoris) + parseInt(student.nbMetiersFavoris);
+  if (nb == 0) $(".student_selection_button", $tile).hide();
   $div.append($tile);
 }
 
@@ -709,25 +713,31 @@ function updateFavDiv(fav, $div) {
 }
 
 export function updateFav(key) {
-  const fav = data.isFavoris(key);
-  if (key == currentKeyDisplayed) {
-    updateFavDiv(fav, $("#explore-div-resultats-right"));
-    if (fav) {
-      $(`#formation-details-header-nav-central-icon`)
-        .removeClass("fr-icon-heart-line")
-        .addClass("fr-icon-heart-fill");
-    } else {
-      $(`#formation-details-header-nav-central-icon`)
-        .removeClass("fr-icon-heart-fill")
-        .addClass("fr-icon-heart-line");
+  if (session.isAdminOrTeacher()) {
+  } else {
+    const fav = data.isFavoris(key);
+    if (key == currentKeyDisplayed) {
+      updateFavDiv(fav, $("#explore-div-resultats-right"));
+      if (fav) {
+        $(`#formation-details-header-nav-central-icon`)
+          .removeClass("fr-icon-heart-line")
+          .addClass("fr-icon-heart-fill");
+      } else {
+        $(`#formation-details-header-nav-central-icon`)
+          .removeClass("fr-icon-heart-fill")
+          .addClass("fr-icon-heart-line");
+      }
     }
+    $(`.icon-favorite_${key}`).toggle(fav);
   }
-  $(`.icon-favorite_${key}`).toggle(fav);
 }
 
 function displayFormationDetails(dat) {
   const $div = $("#explore-div-resultats-right");
   $div.show();
+
+  $(".formation-details-actions").toggle(session.isStudent());
+  $(".formation-details-header-nav").toggle(session.isStudent());
 
   updateFav(dat.key);
 
@@ -1335,7 +1345,7 @@ function buildFormationAffinityCard(
   } else {
     $(".formation-card-header-nodetail", $div).hide();
   }
-  if (fav) {
+  if (fav && session.isStudent()) {
     $(".icon-favorite", $div).show();
   } else {
     $(".icon-favorite", $div).hide();
@@ -1383,7 +1393,7 @@ function buildMetierAffinityCard(key, fav, formations, nodetails) {
   if (nodetails) {
     $(".card-metiers-header", $div).hide();
   }
-  if (fav) {
+  if (fav && session.isStudent()) {
     $(".icon-favorite", $div).show();
   } else {
     $(".icon-favorite", $div).hide();
