@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
@@ -25,6 +26,7 @@ import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.update.rome.RomeData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import lombok.val;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -37,6 +39,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Descriptif.setSummaries;
+import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Descriptif.setSummary;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 
@@ -190,17 +194,45 @@ public class UpdateFrontData {
 
             descriptifs.injectFichesMetiers(fichesMetiers);
             descriptifs.injectDomainesPro(onisepData.domainesWeb());
+            /* article actuel ok
+            String passKey = gFlCodToFrontId(PASS_FL_COD);
+            Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(passKey);
+            descriptifs.keyToDescriptifs().put(passKey, addToDescriptif(PAS_LAS_TEXT, desc));
+            */
+
+            val lines = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),'\t');
+            String keyFlFr = null;
+            String keyDescFormation = null;
+            String keyDescFiliere = null;
+            for (val line : lines) {
+                if(keyFlFr == null) {
+                    keyFlFr = line.keySet().stream().filter(k -> k.contains("groupe")).findAny().orElse(null);
+                    keyDescFormation = line.keySet().stream().filter(k -> k.contains("resume formation")).findAny().orElse(null);
+                    keyDescFiliere = line.keySet().stream().filter(k -> k.contains("résumé spécialité")).findAny().orElse(null);
+                    if (keyFlFr == null || keyDescFormation == null || keyDescFiliere == null) throw new IllegalStateException("No key found in " + lines);
+                }
+                String flfrcod = line.get(keyFlFr);
+                String descForm = line.get(keyDescFormation);
+                String descFiliere = line.get(keyDescFiliere);
+                if(descFiliere != null && !descFiliere.isBlank()) {
+                    descriptifs.keyToDescriptifs().put(
+                            flfrcod,
+                            setSummaries(
+                                    descriptifs.keyToDescriptifs().get(flfrcod),
+                                    descForm,
+                                    descFiliere
+                            )
+                    );
+                }
+            }
+
             descriptifs.injectGroups(groups);
             descriptifs.injectLas(lasCorrespondance);//in this order after groups
             lasCorrespondance.keySet().forEach(key -> {
                 Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(key);
                 descriptifs.keyToDescriptifs().put(key, Descriptifs.Descriptif.addToDescriptif(PAS_LAS_TEXT, desc));
             });
-            /* article actuel ok
-            String passKey = gFlCodToFrontId(PASS_FL_COD);
-            Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(passKey);
-            descriptifs.keyToDescriptifs().put(passKey, addToDescriptif(PAS_LAS_TEXT, desc));
-            */
+
             return  descriptifs;
         }
 

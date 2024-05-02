@@ -4,7 +4,9 @@ package fr.gouv.monprojetsup.data.model.descriptifs;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public record Descriptifs(
     }
 
     public void injectGroups(Map<String, String> groups) {
-        Map<String, List<String>> groupsToItems = groups.keySet().stream().collect(Collectors.groupingBy(k -> groups.get(k)));
+        Map<String, List<String>> groupsToItems = groups.keySet().stream().collect(Collectors.groupingBy(groups::get));
         Map<String, Descriptif> urlToDesc = new HashMap<>();
         keyToDescriptifs.values().forEach(desc -> {
             if(desc.error == null || desc.error.isEmpty()) {
@@ -82,9 +84,9 @@ public record Descriptifs(
 
         missingGroupsToUrls.forEach((s, urls) -> {
             List<Descriptif> descriptifs = urls.stream()
-                    .map(url -> urlToDesc.get(url))
-                    .filter(d -> d!= null)
-                    .collect(Collectors.toList());
+                    .map(urlToDesc::get)
+                    .filter(Objects::nonNull)
+                    .toList();
             Descriptif desc = mergeDescriptifs(descriptifs);
             keyToDescriptifs.put(s, desc);
         });
@@ -141,19 +143,25 @@ public record Descriptifs(
             String presentation,
             String poursuite,
             String metiers,
-            @NotNull String url,
+            @Nullable String url,
             String error,
             @NotNull String type,
 
             List<String> multiUrls,
 
-            String summary
+            String summary,
+            String summaryFormation
     ) {
 
 
         public Descriptif(String presentation, String url, String type) {
-            this(presentation, null, null, url, null, type, null, null);
+            this(presentation, null, null, url, null, type, null, null, null);
         }
+
+        public Descriptif(String summary, String summaryFormation, String url, String type) {
+            this(null, null, null, url, null, type, null, summary, summaryFormation);
+        }
+
 
         public static Descriptif addToDescriptif(String addendum, Descriptif o) {
             if(o == null) {
@@ -170,13 +178,14 @@ public record Descriptifs(
                     o.error,
                     "addendum + " + o.type,
                     o.multiUrls,
-                    o.summary
+                    o.summary,
+                    o.summaryFormation
             );
         }
 
         public static Descriptif mergeDescriptifs(List<Descriptif> descriptifs) {
             if(descriptifs.isEmpty()) {
-                return new Descriptif("",null,null,null,"empty merge", "error", null, null);
+                return new Descriptif("",null,null,null,"empty merge", "error", null, null, null);
             } else if(descriptifs.size() == 1) {
                 return descriptifs.get(0);
             }
@@ -196,8 +205,11 @@ public record Descriptifs(
                     .filter(d -> d != null && !d.isEmpty())
                     .reduce((s, s2) -> s + "<br/>" + s2
                     ).orElse(null);
+            String summariesFormations = descriptifs.stream().map(d -> d.summaryFormation)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .findAny().orElse(null);
             List<String> urls = descriptifs.stream().map(d -> d.url).filter(u -> u != null && !u.isEmpty()).distinct().collect(Collectors.toList());
-            return new Descriptif(presentation, poursuite, metiers, urls.isEmpty() ? null : urls.get(0), null, "merge", urls, summaries);
+            return new Descriptif(presentation, poursuite, metiers, urls.isEmpty() ? null : urls.get(0), null, "merge", urls, summaries, summariesFormations);
         }
 
         public static Descriptif setSummary(Descriptif o, String summary) {
@@ -212,7 +224,29 @@ public record Descriptifs(
                         o.error,
                         o.type,
                         o.multiUrls,
-                        summary
+                        summary,
+                        null
+                );
+            }
+        }
+        public static Descriptif setSummaries(
+                Descriptif o,
+                String summaryFormation,
+                String summaryFiliere
+        ) {
+            if(o == null) {
+                return new Descriptif(summaryFormation,summaryFiliere,null, "summary");
+            } else {
+                return new Descriptif(
+                        o.presentation,
+                        o.poursuite,
+                        o.metiers,
+                        o.url,
+                        o.error,
+                        o.type,
+                        o.multiUrls,
+                        summaryFiliere,
+                        summaryFormation
                 );
             }
         }
@@ -253,7 +287,7 @@ public record Descriptifs(
     }
 
     public static Descriptif getError(String error, @NotNull String url) {
-        return new Descriptif(null, null, null, url, error, "error", null, null);
+        return new Descriptif(null, null, null, url, error, "error", null, null, null);
     }
 
     public static Descriptif getDescriptif(List<String> psTextxs, @NotNull String url, @NotNull String type) {
@@ -277,11 +311,11 @@ public record Descriptifs(
                 presentation.append(s);
             }
         }
-        return new Descriptif(presentation.toString(), poursuite, metiers, url, null, type, null, null);
+        return new Descriptif(presentation.toString(), poursuite, metiers, url, null, type, null, null, null);
     }
 
     public static Descriptifs.Descriptif getDescriptif(String html, @NotNull String url, @NotNull String type) {
-        return new Descriptifs.Descriptif(html, null, null, url, null, type, null, null);
+        return new Descriptifs.Descriptif(html, null, null, url, null, type, null, null, null);
     }
 
 

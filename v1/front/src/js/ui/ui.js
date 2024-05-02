@@ -762,7 +762,7 @@ function displayFormationDetails(dat) {
   //summary
   displaySummary(key);
   //diplome
-  displayDiplome(dat.diplome);
+  displayDiplome(key);
   //stats
   displayStats(dat.stats.stats);
   //Explication
@@ -782,16 +782,19 @@ function displaySummary(key) {
     const cleanup = summary.replaceAll("h3", "p").replaceAll("h2", "p");
     $(".formation-details-summary").show().html(cleanup);
   } else {
-    $(".formation-details-summary").hide();
-    $(".formation-details-summary").empty();
+    $(".formation-details-summary").empty().hide();
   }
 }
 
-function displayDiplome(diplome) {
-  if (diplome === undefined || diplome === "") {
-    $("#tabpanel-le-diplome").hide();
+function displayDiplome(key) {
+  const diplome = data.getSummaryFormation(key);
+  if (diplome && diplome.length > 0) {
+    const cleanup = diplome.replaceAll("h3", "p").replaceAll("h2", "p");
+    $(".formation-details-diplome").show().html(cleanup);
+    $("#tabpanel-le-diplome").show();
   } else {
-    $("#tabpanel-le-diplome").show().html(diplome);
+    $(".formation-details-diplome").empty().hide();
+    $("#tabpanel-le-diplome").hide();
   }
 }
 
