@@ -481,6 +481,14 @@ async function showGroup(group_id) {
       init_main_nav();
       profileEditionSetup();
       $("#explore-div-entete").show().html(`Le profil de ${name}`);
+      $("select").prop("disabled", true);
+      $("input").prop("disabled", true);
+      $(".fr-input").hide();
+      $(".trashItem").hide();
+      $(".profile_explanation").hide();
+      $(".fr-hint-text").hide();
+      $("#range-moyenne-generale-messages").hide();
+      $(".multi-options-item").off().addClass("no-pointer");
     });
 }
 
