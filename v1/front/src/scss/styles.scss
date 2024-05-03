@@ -620,22 +620,6 @@ main {
     flex-grow: 1;
     /* 150% */
 }
-.explore-header-tags {
-    //align-items: flex-end;
-    //justify-content: flex-end;
-    //width: 40%;
-    //min-width: 400px;
-    margin-top: 50px;
-    //background-color: white;
-}
-.explore-header-tags input {
-  //align-items: flex-end;
-  //justify-content: flex-end;
-  //width: 40%;
-  //min-width: 400px;
-  //margin-top: 50px;
-  background-color: white;
-}
 
 #main-div-selection #explore-div-resultats-left {
   background-color: var(--light-decisions-background-background-open-blue-france, #E3E3FD);
@@ -670,41 +654,102 @@ main {
   //box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
   padding-left: 0px;
   margin-left: 0px;
-
+background-color: $beige-gris-galet-950;
   height: min-content;
+}
+#main-div-selection #explore-div-resultats {
+background: #E3E3FD;
 }
 #explore-div-resultats-left {
   flex: 4;  
-  background-color: $beige-gris-galet-950;
   //min-height: 60vh;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
-  overflow: auto;
-  max-height: 120vh;
+  //box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
   align-items: flex-start;
+}
+
+.explore-header-tags {
+  background-color: $beige-gris-galet-950;
+  margin-top: 50px;
+}
+#explore-div-resultats-left-label {
+  color: var(--dark-options-illustration-color-75-hover-beige-gris-galet-75-hover, #443D36);
+    text-align: center;
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+    padding-top: 24px;
+    padding-bottom: 24px;
+    background-color: $beige-gris-galet-950;
+    width: 100%;
+}
+#explore-div-resultats-left-label a {
+  color: var(--light-decisions-border-border-action-high-blue-france, #000091);
+    text-align: center;
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+    //text-decoration-line: underline;
+}
+#explore-div-resultats-left-label a span {
+margin-right: -8px;
+margin-left: -8px
+}
+
+#explore-div-resultats-left-liste {
+  overflow: auto;
+    max-height: 80vh;
+    background-color: $beige-gris-galet-950;
       padding-left: 6vw;
         padding-right: 3vw;
-  
-}
+      }
+#main-div-selection         #explore-div-resultats-left-liste {
+background: #E3E3FD;
+         }
+
 #explore-div-resultats-right {
   flex: 5;
   background-color: white;
+
+  box-shadow: 2px 2px 6px 2px rgba(0, 0, 18, 0.16);
   //var(--light-decisions-text-text-disabled-grey, #929292);
   min-height: 50vh;
   padding-top: 48px;
   padding-left: 8%;
   padding-right: 12%;
-  margin-bottom: 56px;
+  padding-bottom: 56px;
 
   height: 100%;
   align-items: flex-start;
 }
-#explore-div-resultats-left-noresult,
+#header-search {
+  width: 100%;
+  background: #FFF;
+  
+    /* Light/Decisions/shadow/raised */
+    //box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
+
+    display: flex;
+      padding: 48px 3vw 48px 6vw;
+      flex-direction: row;
+      align-items: center;
+      //gap: 10px;
+      position: sticky;
+        /* Fixed position */
+        
+}
 #explore-div-resultats-left-entete {
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-direction: column;
   //height: 100%;
-  margin-top: 48px;
+  //margin-top: 48px;
   
   color: var(--light-decisions-text-text-mention-grey, #666);
     text-align: left;
@@ -713,11 +758,27 @@ main {
     font-weight: 500;
     /* 142.857% */
 }
+#explore-div-resultats-left-entete-selection {
+  justify-content: center;
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H2 - LG/Desktop */
+    font-family: Marianne;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+    /* 125% */
+          padding-left: 6vw;
+            padding-right: 3vw;
+            padding-top: 40px;
+            padding-bottom: 24px;
+}
 .no-pointer {
   cursor: default !important;
   /* Override any existing cursor styles */
 }
-#explore-div-resultats-left-entete2 {
+#explore-div-resultats-left-entete-prof {
   color: var(--light-decisions-text-text-title-grey, #161616);
     text-align: center;
   
@@ -2022,28 +2083,6 @@ fieldset[disabled] .btn-primary.active {
   max-width: 200px;
   max-height: 100px;
 }
-.search-button {
-  padding-right: 0px !important;
-  /* Remove default padding */
-}
-
-.search-button span {
-  display: inline-flex;
-  white-space: nowrap;
-  transition: width 0.5s, padding-right 0.45s;
-  /* Transition width and padding to avoid "popping" */
-  overflow: hidden;
-  padding-left: 5px;
-  /* Add default button padding */
-}
-
-.search-button:hover span,
-.search-button:focus span {
-  width: 90%;
-  /* how far the text can expand, adjust based on content */
-  padding-right: 10px !important;
-  /* Adds spacing on the right of the text when expanded */
-}
 
 .nav-link {
   color: $myBleuMarine;
@@ -2250,28 +2289,6 @@ fieldset[disabled] .btn-primary.active {
 }
 
 
-.btn-success {
-  background-color: $myBleuMarine !important;
-  color: white !important;
-  font-weight: bold !important;
-}
-.btn-primary {
-  background-color: $myBleuMarine !important;
-  color: white !important;
-  font-weight: bold !important;
-}
-/*
-.modal-content,
-.question,
-.search_bar,
-.accordion-item
- {
-  color: $myBleuMarine !important;
-  background: white;
-  border: solid $myBleuMarine !important;
-    border-width: 2px !important;
-    border-radius: 10px !important;
-}*/
 
 .accordion-button,
 .accordion-body {
@@ -2280,9 +2297,6 @@ fieldset[disabled] .btn-primary.active {
     border : 0;
 }
 
-.btn-no-event {
-  pointer-events:none;
-}
 
 .sugg-list-excluded {
   background: lightgray;

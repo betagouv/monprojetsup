@@ -467,7 +467,7 @@ async function showGroup(group_id) {
         ui.showFavoris(selection);
         init_main_nav();
         $("#explore-div-entete").hide();
-        $("#explore-div-resultats-left-entete2").html(
+        $("#explore-div-resultats-left-entete-prof").html(
           `La sélection de ${name == null ? login : name}`
         );
         $("#formation-details-header-nav-central-icon").hide();
