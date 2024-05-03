@@ -33,7 +33,6 @@ describe("HttpClient", () => {
         body: undefined,
         headers: {
           "content-type": "application/json",
-          authorization: "",
         },
       });
       expect(logger.error).not.toHaveBeenCalled();
@@ -58,7 +57,6 @@ describe("HttpClient", () => {
         body: undefined,
         headers: {
           "content-type": "application/json",
-          authorization: "",
         },
       });
       expect(logger.error).toHaveBeenCalledWith({
@@ -88,7 +86,6 @@ describe("HttpClient", () => {
         body: undefined,
         headers: {
           "content-type": "application/json",
-          authorization: "",
         },
       });
       expect(logger.error).toHaveBeenCalledWith({

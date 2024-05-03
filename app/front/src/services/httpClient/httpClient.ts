@@ -5,7 +5,7 @@ export class HttpClient implements IHttpClient {
   public constructor(private readonly _logger: ILogger) {}
 
   public fetch = async <O extends {}>(options: HttpClientOptions): Promise<O | undefined> => {
-    const { endpoint, method, body, contentType, authorization, headers } = options;
+    const { endpoint, method, body, contentType, headers } = options;
 
     try {
       const response = await fetch(endpoint, {
@@ -13,7 +13,6 @@ export class HttpClient implements IHttpClient {
         body: JSON.stringify(body),
         headers: {
           "content-type": contentType ?? "application/json",
-          authorization: authorization ?? "",
           ...headers,
         },
       });

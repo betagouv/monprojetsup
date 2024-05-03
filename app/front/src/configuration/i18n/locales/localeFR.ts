@@ -179,6 +179,22 @@ export const localeFR = {
           },
         },
       },
+      SITUATION_VILLES: {
+        LÉGENDE: "Où souhaites-tu étudier ? *",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Aucune idée",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai quelques villes en tête",
+          },
+        },
+      },
+      VILLES_ENVISAGÉES: {
+        LABEL: "Villes envisagées",
+        DESCRIPTION: "Commence à taper puis ajoute en favoris les villes qui pourraient t’intéresser",
+        SÉLECTIONNÉES: "Villes sélectionnée(s)",
+      },
     },
     FORMATIONS: {
       PARCOURS_INSCRIPTION: {
