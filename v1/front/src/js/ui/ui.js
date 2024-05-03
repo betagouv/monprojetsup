@@ -496,7 +496,7 @@ export function clearAffinityCards() {
   $("#explore-div-resultats-left-entete").hide();
 }
 function addAffinityCard(dat, nodetails) {
-  $("#explore-div-resultats-left-noresult").hide();
+  $("#explore-div-resultats-left-noresult").empty().hide();
   $("#explore-div-resultats-left-entete").show();
 
   const $div = buildAffinityCard(
