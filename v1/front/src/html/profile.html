@@ -12,7 +12,7 @@
           <li role="presentation">
             <button
               id="tab-scolarite"
-              class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
               tabindex="0"
               role="tab"
               aria-selected="true"
@@ -24,7 +24,7 @@
           <li role="presentation">
             <button
               id="tab-etudes"
-              class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
               tabindex="-1"
               role="tab"
               aria-selected="false"
@@ -36,7 +36,7 @@
           <li role="presentation">
             <button
               id="tab-domaines_pro"
-              class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
               tabindex="-1"
               role="tab"
               aria-selected="false"
@@ -48,13 +48,25 @@
           <li role="presentation">
             <button
               id="tab-interests"
-              class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
               tabindex="-1"
               role="tab"
               aria-selected="false"
               aria-controls="tab-interests-panel"
             >
               Centres d'intérêts
+            </button>
+          </li>
+          <li role="presentation">
+            <button
+              id="tab-corbeille"
+              class="fr-tabs__tab fr-icon-recycle-fill fr-tabs__tab--icon-left"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-corbeille-panel"
+            >
+              Corbeille
             </button>
           </li>
           <!--
@@ -102,6 +114,21 @@
           role="tabpanel"
           aria-labelledby="tab-interests"
         ></div>
+        <div
+          id="tab-corbeille-panel"
+          class="fr-tabs__panel"
+          role="tabpanel"
+          aria-labelledby="tab-corbeille"
+        >
+          <div class="profile_tab_title">
+            Les formations que je ne veux plus voir
+          </div>
+          <div class="profile_tab_subtitle">
+            Tu as changé d'avis? Alors tu peux recycler les formations de la
+            corbeille
+          </div>
+          <div class="bin-container profile-cell-container"></div>
+        </div>
         <!--
         <div
           id="tab-parametres-panel"
