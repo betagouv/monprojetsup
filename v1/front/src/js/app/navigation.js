@@ -154,9 +154,10 @@ async function updateRecherche() {
     .off("click")
     .on("click", function () {
       const id = $(this).attr("data-id");
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-        ui.updateFav(id)
-      );
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
+        ui.updateFav(id);
+        init_main_nav();
+      });
     });
   $(".add-to-favorites-btn")
     .off("click")
@@ -167,17 +168,20 @@ async function updateRecherche() {
       $(this).addClass("activated");
       $(this).addClass("favori");
 
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-        ui.updateFav(id)
-      );
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
+        ui.updateFav(id);
+        init_main_nav();
+      });
     });
   $(".add-to-bin-btn")
     .off("click")
     .on("click", function () {
       const id = $(this).attr("data-id");
-      events.changeSuggestionStatus(id, data.SUGG_REJECTED, () =>
-        ui.updateFav(id)
-      );
+      events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+        ui.updateFav(id);
+        init_main_nav();
+        await updateRecherche();
+      });
     });
 }
 async function updateSelection() {
@@ -208,6 +212,30 @@ async function updateSelection() {
         ui.showFavoris(msg.details);
       });
     });
+}
+
+function fillInBin() {
+  const $div = $(".bin-container").empty();
+  const rejected = data.getSuggestionsRejected();
+  for (const sugg of rejected) {
+    const label = data.getLabel(sugg.fl);
+    const $cell = $(`
+      <div class="profile-cell">
+        <span class="profile-cell-label"><span>${label}</span>
+          <span class="recycleItem fr-icon-recycle-fill" 
+            label="${label}"
+            title="Recycler"
+            >
+          </span>
+        </span>
+      </div>`);
+    $(".recycleItem", $cell).on("click", function (event) {
+      data.removeFromBin(sugg.fl);
+      fillInBin();
+      event.preventDefault();
+    });
+    $div.append($cell);
+  }
 }
 
 function profileEditionSetup() {
@@ -371,6 +399,7 @@ const screen_enter_handlers = {
     await app.getProfile();
     await ui.showProfileScreen();
     profileEditionSetup();
+    fillInBin();
     init_main_nav();
   },
   profil_teacher: async () => {

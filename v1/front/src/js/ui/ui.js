@@ -711,13 +711,13 @@ function updateFavDiv(fav, $div) {
     $(".add-to-favorites-btn", $div).addClass("activated");
     $(".add-to-favorites-btn", $div).addClass("favori");
     $(".add-to-bin-btn", $div).html("Plus intéressé");
-    $(".add-to-bin-btn", $div).show();
+    //$(".add-to-bin-btn", $div).show();
   } else {
     $(".add-to-favorites-btn", $div).html("Ajouter à ma sélection");
     $(".add-to-favorites-btn", $div).removeClass("activated");
     $(".add-to-favorites-btn", $div).removeClass("favori");
-    $(".add-to-bin-btn", $div).html("Pas intéressé");
-    $(".add-to-bin-btn", $div).hide();
+    $(".add-to-bin-btn", $div).html("Ne plus voir");
+    //$(".add-to-bin-btn", $div).hide();
   }
 }
 
