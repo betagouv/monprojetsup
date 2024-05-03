@@ -138,12 +138,12 @@ export const localeFR = {
         SÉLECTIONNÉS: "Métiers sélectionné(s)",
       },
     },
-    ÉTUDES: {
+    ÉTUDE: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes futures études",
         TITRE: "À propos des études supérieures",
       },
-      DURÉE_ETUDES: {
+      DURÉE_ÉTUDES: {
         LABEL: "Durée des études",
         DESCRIPTION: "Temps d’études que tu envisages après le bac",
         OPTIONS: {

@@ -63,49 +63,49 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
   const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions = [
     {
       valeur: "options_ouvertes",
-      label: i18n.ÉLÈVE.ÉTUDES.DURÉE_ETUDES.OPTIONS.OPTIONS_OUVERTES.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.OPTIONS_OUVERTES.LABEL,
     },
     {
       valeur: "courte",
-      label: i18n.ÉLÈVE.ÉTUDES.DURÉE_ETUDES.OPTIONS.COURTE.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.COURTE.LABEL,
     },
     {
       valeur: "longue",
-      label: i18n.ÉLÈVE.ÉTUDES.DURÉE_ETUDES.OPTIONS.LONGUE.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.LONGUE.LABEL,
     },
     {
       valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.ÉTUDES.DURÉE_ETUDES.OPTIONS.AUCUNE_IDÉE.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.AUCUNE_IDÉE.LABEL,
     },
   ];
 
   const alternanceOptions: AlternanceOptions = [
     {
       valeur: "pas_interesse",
-      label: i18n.ÉLÈVE.ÉTUDES.ALTERNANCE.OPTIONS.PAS_INTÉRESSÉ.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.PAS_INTÉRESSÉ.LABEL,
     },
     {
       valeur: "indifferent",
-      label: i18n.ÉLÈVE.ÉTUDES.ALTERNANCE.OPTIONS.INDIFFÉRENT.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.INDIFFÉRENT.LABEL,
     },
     {
       valeur: "interesse",
-      label: i18n.ÉLÈVE.ÉTUDES.ALTERNANCE.OPTIONS.INTÉRESSÉ.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.INTÉRESSÉ.LABEL,
     },
     {
       valeur: "tres_interesse",
-      label: i18n.ÉLÈVE.ÉTUDES.ALTERNANCE.OPTIONS.TRÈS_INTÉRESSÉ.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.TRÈS_INTÉRESSÉ.LABEL,
     },
   ];
 
   const situationVillesOptions: SituationVillesOptions = [
     {
       valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.ÉTUDES.SITUATION_VILLES.OPTIONS.AUCUNE_IDÉE.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.AUCUNE_IDÉE.LABEL,
     },
     {
       valeur: "quelques_pistes",
-      label: i18n.ÉLÈVE.ÉTUDES.SITUATION_VILLES.OPTIONS.QUELQUES_PISTES.LABEL,
+      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.QUELQUES_PISTES.LABEL,
     },
   ];
 
