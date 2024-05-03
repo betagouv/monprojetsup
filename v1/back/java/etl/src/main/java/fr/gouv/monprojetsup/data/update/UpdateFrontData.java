@@ -223,6 +223,14 @@ public class UpdateFrontData {
                                     descFiliere
                             )
                     );
+                } else if(descForm != null && !descForm.isBlank()) {
+                    descriptifs.keyToDescriptifs().put(
+                            flfrcod,
+                            setSummary(
+                                    descriptifs.keyToDescriptifs().get(flfrcod),
+                                    descForm
+                            )
+                    );
                 }
             }
 
