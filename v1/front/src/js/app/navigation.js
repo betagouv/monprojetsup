@@ -435,6 +435,8 @@ const screen_enter_handlers = {
 const screen_exit_handlers = {
   inscription1: async () => await validateInscription1(),
   inscription2: async () => await validateInscription2(),
+  inscription_tunnel_domaines_pro: validateDomainePro,
+  inscription_tunnel_scolarite: validateEDS,
 };
 
 async function updateGroupesScreen() {
@@ -708,6 +710,30 @@ async function validateInscription1() {
     );
   }
   return msg.ok;
+}
+
+function validateDomainePro() {
+  const result = data.getNbDomainesPro() > 0;
+  if (!result) {
+    $("#domaine-pro-messages").html(
+      `<p class="fr-alert fr-alert--error">Sélectionne au moins un domaine professionnel pour compléter ton profil!</p>`
+    );
+  }
+  return result;
+}
+
+function validateEDS() {
+  let result = true;
+  const niveau = data.getProfileValue("niveau");
+  if (niveau == "term" || niveau == "prem") {
+    result = data.getNbEDS() >= 2;
+    if (!result) {
+      $("#scolarite-messages").html(
+        `<p class="fr-alert fr-alert--error">Sélectionne au moins deux spécialités afin de compléter ton profil!</p>`
+      );
+    }
+  }
+  return result;
 }
 
 async function validateInscription2() {

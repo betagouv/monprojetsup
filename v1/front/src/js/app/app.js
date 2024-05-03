@@ -179,13 +179,16 @@ function startNavigation() {
     nav.setScreen(screen);
   } else {
     if (session.isAdminOrTeacher()) {
+      nav.setScreen(null);
       nav.setScreen("groupes");
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
+        nav.setScreen(null);
         nav.setScreen("inscription_tunnel_statut");
       } else {
         //nav.setScreen("inscription_tunnel_felicitations");
+        nav.setScreen(null);
         nav.setScreen("board");
       }
     }
