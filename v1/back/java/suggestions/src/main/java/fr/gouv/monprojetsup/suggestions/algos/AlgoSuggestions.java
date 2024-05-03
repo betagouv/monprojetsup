@@ -47,6 +47,7 @@ public class AlgoSuggestions {
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     private static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
+    private static final double MAX_AFFINITY_PERCENT = 0.90;
     //utilisé par suggestions
     public static Map<String, Integer> codesSpecialites = new HashMap<>();
 
@@ -168,7 +169,7 @@ public class AlgoSuggestions {
 
 
         //computing maximal score for etalonnage
-        double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
+        double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0) / MAX_AFFINITY_PERCENT;
 
         if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
