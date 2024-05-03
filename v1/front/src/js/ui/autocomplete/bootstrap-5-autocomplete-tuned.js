@@ -170,12 +170,13 @@ export default class Autocomplete {
       stringSearch.length < this.options.threshold
     ) {
       this.dropdown.hide();
-      if (this.options.feedbackHandler)
+      if (this.options.feedbackHandler) {
         this.options.feedbackHandler(
           0,
           stringSearch.length,
           this.options.threshold
         );
+      }
       if (this.options.updateListHandler) {
         this.options.updateListHandler([]);
       }
@@ -231,6 +232,13 @@ export default class Autocomplete {
     //on se restreint aux matches préfixes si possible
 
     if (itemsToSort === undefined || itemsToSort.length == 0) {
+      if (this.options.feedbackHandler) {
+        this.options.feedbackHandler(
+          0,
+          stringSearch.length,
+          this.options.threshold
+        );
+      }
       if (this.options.updateListHandler) {
         this.options.updateListHandler([]);
       }
@@ -324,12 +332,13 @@ export default class Autocomplete {
     if (this.options.updateListHandler) {
       this.options.updateListHandler(itemsToShow, lookups);
     }
-    if (this.options.feedbackHandler)
+    if (this.options.feedbackHandler) {
       this.options.feedbackHandler(
-        items.childNodes.length,
+        itemsToShow.length,
         stringSearch.length,
         this.options.threshold
       );
+    }
 
     return items.childNodes.length;
   }

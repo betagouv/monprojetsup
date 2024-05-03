@@ -683,7 +683,7 @@ function autoCompleteFeedbackHandler(
     feedbackDom.html("Mot trop court");
   } else if (resultNb == 0 && lookupLength >= lookupLengthThreshold) {
     feedbackDom.addClass("text-danger");
-    feedbackDom.html("Aucun résultat");
+    feedbackDom.html(`<p class="fr-alert fr-alert--error">Aucun résultat</p>`);
   } else if (resultNb == 1) {
     feedbackDom.html(`1 résultat`);
   } else if (resultNb > 1) {
