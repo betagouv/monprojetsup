@@ -568,6 +568,17 @@ export function getSuggestionsYes() {
     .map((s) => s.fl);
 }
 
+export function getNbDomainesPro() {
+  let nb = 0;
+  for (const [key, val] of Object.entries(data.profile.scores)) {
+    if (val > 0 && isTheme(key)) nb++;
+  }
+  return nb;
+}
+export function getNbEDS() {
+  return data.profile.spe_classes ? data.profile.spe_classes.length : 0;
+}
+
 export function getOrCreateSugg(key, newStatus) {
   let changed = true;
   ensureMandatoryProfileFields();
