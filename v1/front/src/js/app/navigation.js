@@ -88,7 +88,9 @@ async function doTransition(old_screen, new_screen) {
     app.logAction("doTransition " + old_screen + " --> " + new_screen);
     session.saveScreen(screen);
   }
-  ui.displayNextAndBAckButtons(next(screen), back(screen));
+  const nextScreen = next(screen);
+  const backScreen = back(screen);
+  ui.displayNextAndBAckButtons(nextScreen, backScreen);
   $("#nextButton")
     .off("click")
     .on("click", async () => {
