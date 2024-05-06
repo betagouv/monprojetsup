@@ -11,9 +11,10 @@ import { sanitize } from "dompurify";
 
 const screens = {
   landing: { next: "connect" },
+  landing_redir: {},
   connect: {},
   reset_password: {},
-  inscription1: { next: "inscription2", back: "landing" },
+  inscription1: { next: "inscription2", back: "landing_redir" },
   inscription2: { next: "inscription_tunnel_statut", back: "inscription1" },
   recherche: {},
   board: {},
@@ -22,7 +23,7 @@ const screens = {
   profil: {},
   inscription_tunnel_statut: {
     next: "inscription_tunnel_scolarite",
-    back: "landing",
+    back: "landing_redir",
   },
   inscription_tunnel_scolarite: {
     next: "inscription_tunnel_domaines_pro",
@@ -382,12 +383,17 @@ function format(x, nbDigits) {
 }
 const screen_enter_handlers = {
   landing: async () => {
+    //location.reload();
     await ui.showLandingScreen();
     $("#landing-placeholder")
       .off()
       .on("click", async () => {
         setScreen("connect");
       });
+  },
+  landing_redir: () => {
+    app.disconnect();
+    location.reload();
   },
   connect: async () => {
     await ui.showConnectionScreen();
