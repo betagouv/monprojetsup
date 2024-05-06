@@ -429,6 +429,7 @@ const screen_enter_handlers = {
               .on("click", async (event) => {
                 const login = $("#sendResetPasswordEmailInputEmail").val();
                 $("#sendResetPasswordEmailInputEmail-messages").empty();
+                $("#sendResetPasswordEmailInputEmail-messages2").empty();
                 if (
                   login === null ||
                   login === undefined ||
@@ -443,8 +444,11 @@ const screen_enter_handlers = {
                   );
                 } else {
                   app.sendResetPasswordEmail(login);
-                  $("#passwordReinitializedButton").trigger("click");
-                  $("#resetConfirmationModalEmail").html(login);
+                  //$("#passwordReinitializedButton").trigger("click");
+                  //$("#resetConfirmationModalEmail").html(login);
+                  $("#sendResetPasswordEmailInputEmail-messages2").html(
+                    `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
+                  );
                 }
                 event.preventDefault();
               });
