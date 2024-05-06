@@ -31,7 +31,6 @@ import * as server from "../services/services";
 import * as session from "./session";
 import * as data from "../data/data";
 import * as ui from "../ui/ui";
-import * as animate from "../ui/animate/animate";
 import * as dataload from "../data/load";
 import * as tunnel from "../ui/tunnel";
 import * as nav from "../app/navigation";
@@ -123,7 +122,7 @@ export function storeCredentialsAfterSuccesfulAuth(login, password) {
 async function loginServerAnswerHandler(data) {
   if (data.validationRequired) {
     ui.showValidationRequiredMessage(data.login, data.validationMessage);
-    nav.setScreen("landing");
+    await nav.initScreen("landing");
     return false;
   } else if (data.token !== undefined) {
     session.setToken(data.login, data.token);
@@ -135,6 +134,9 @@ async function loginServerAnswerHandler(data) {
   }
 }
 
+export async function showLandingScreen() {
+  await nav.initScreen("landing");
+}
 /* includes the token in all AJAX requests */
 export async function postLoginHandler() {
   $(".front-feedback").html("").hide();
@@ -158,7 +160,7 @@ export async function postLoginHandler() {
   session.setProfileCompletenessLevel(profileCompleteness);
   const msgp = await server.getProfileAsync();
   data.loadProfile(msgp.profile);
-  await startNavigation();
+  await nav.startNavigation();
 
   //ui.showValidationRequiredMessage(session.getLogin(), "bla bla");
 }
@@ -166,33 +168,6 @@ export async function postLoginHandler() {
 export async function getProfile() {
   const msg = await server.getProfileAsync();
   data.loadProfile(msg.profile);
-}
-
-async function startNavigation() {
-  const screen = session.getScreen();
-  if (
-    screen != undefined &&
-    screen != null &&
-    screen != "null" &&
-    !screen.includes("inscription")
-  ) {
-    await nav.setScreen(screen);
-  } else {
-    if (session.isAdminOrTeacher()) {
-      await nav.setScreen(null);
-      await nav.setScreen("groupes");
-    } else {
-      const profileCompleteness = session.getProfileCompletenessLevel();
-      if (profileCompleteness < 2) {
-        await nav.setScreen(null);
-        await nav.setScreen("inscription_tunnel_statut");
-      } else {
-        //nav.setScreen("inscription_tunnel_felicitations");
-        await nav.setScreen(null);
-        await nav.setScreen("board");
-      }
-    }
-  }
 }
 
 export async function askFormationsDetails() {
@@ -531,9 +506,7 @@ export function showAdminTab(msg) {
 }
 
 export function sendResetPasswordEmail(email) {
-  server.sendResetPasswordEmail(email, () => {
-    ui.showResetPasswordMessageSent(email);
-  });
+  server.sendResetPasswordEmail(email);
 }
 
 function serverErrorHandler(error) {
