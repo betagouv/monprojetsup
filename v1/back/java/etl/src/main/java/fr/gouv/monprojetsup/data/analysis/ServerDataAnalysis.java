@@ -136,10 +136,11 @@ public class ServerDataAnalysis {
                     out.write("<br/>" + System.lineSeparator());
                     out.write("<br/>" + System.lineSeparator());
                     out.write("<br/>" + System.lineSeparator());
-                    out.write("<h3>Original</h3><p>" + descriptif.presentation().length() + " caractères</p>");
+                    out.write("<h3>Original</h3><p>"
+                            + (descriptif.presentation() != null ? descriptif.presentation().length()  : 0) + " caractères</p>");
                     out.write("<br/>" + System.lineSeparator());
                     out.write("<br/>" + System.lineSeparator());
-                    out.write(descriptif.presentation());
+                    out.write(descriptif.presentation() != null ? descriptif.presentation()  : "");
                     out.write("<br/>" + System.lineSeparator());
                     out.write("<br/>" + System.lineSeparator());
                     out.write("<br/>" + System.lineSeparator());
@@ -728,15 +729,19 @@ public class ServerDataAnalysis {
                     "attendus",
                     "recommandations sur le parcours au lycée"));
 
+            val lasCorr = statistiques.getLASCorrespondance();
             for (String flStr : filieresFront) {
-                if (statistiques.getLASCorrespondance().isLas(flStr)) {
+
+                if (lasCorr.isLas(flStr)) {
                     continue;
                 }
                 String label2 = getLabel(flStr, flStr);
                 if (label2.contains("apprentissage") || label2.contains("LAS")) {
                     continue;
                 }
-
+                if(flStr.equals("fl490024")) {
+                    int i = 0;
+                }
                 csv.append(flStr);
                 csv.append(label2);
 
