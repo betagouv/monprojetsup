@@ -52,11 +52,12 @@ $(async function () {
     // Send the ID token to your server for validation.
   };*/
 
-  window.history.pushState(
-    null,
-    null,
-    window.location.pathname + window.location.search
-  );
+  const urlParams = new URLSearchParams(window.location.search);
+  const login = urlParams.has("login"); // false
+  const inscription = urlParams.has("inscription"); // false
+  const anonyme = urlParams.has("anonyme"); // false
+
+  window.history.pushState(null, null, window.location.pathname);
   window.addEventListener(`popstate`, onBackButtonEvent);
 
   /* Step 0: init
@@ -74,10 +75,6 @@ $(async function () {
 
   /* Step3: trying automatic reconnection based on session cookie */
   const loggedIn = session.isLoggedIn();
-  const urlParams = new URLSearchParams(window.location.search);
-  const login = urlParams.has("login"); // false
-  const inscription = urlParams.has("inscription"); // false
-  const anonyme = urlParams.has("anonyme"); // false
   if (login) {
     if (loggedIn) disconnect();
     await showLogin();
