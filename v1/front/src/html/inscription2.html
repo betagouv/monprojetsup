@@ -20,7 +20,7 @@
         <input
           class="fr-input"
           spellcheck="false"
-          autocomplete="username"
+          autocomplete="name"
           autocapitalize="off"
           autocorrect="off"
           aria-describedby="champNom-messages"
@@ -41,7 +41,7 @@
         <input
           class="fr-input"
           spellcheck="false"
-          autocomplete="username"
+          autocomplete="given-name"
           autocapitalize="off"
           autocorrect="off"
           aria-describedby="champPrenom-messages"
@@ -67,7 +67,7 @@
         <input
           class="fr-input"
           spellcheck="false"
-          autocomplete="username"
+          autocomplete="email"
           autocapitalize="off"
           autocorrect="off"
           aria-describedby="champIdentifiant-messages"
@@ -83,7 +83,7 @@
       </div>
     </div>
     <div class="fr-fieldset__element">
-      <div class="fr-input-group">
+      <div class="fr-password">
         <label class="fr-label" for="champMdp">Mot de passe</label>
         <div class="fr-input-wrap">
           <input
@@ -91,8 +91,30 @@
             aria-describedby="champMdp-messages"
             id="champMdp"
             name="champMdp"
+            autocomplete="new-password"
             for="password-1138-input"
+            type="password"
           />
+          <div
+            class="fr-messages-group"
+            id="champMdp-messages"
+            aria-live="polite"
+          ></div>
+        </div>
+        <div
+          class="fr-messages-group"
+          id="password-1138-input-messages"
+          aria-live="assertive"
+        >
+          <p class="fr-message" id="password-1138-input-message">
+            Votre mot de passe doit contenir :
+          </p>
+          <p
+            class="fr-message fr-message--info"
+            id="password-1138-input-message-info"
+          >
+            8 caractères minimum
+          </p>
         </div>
         <div
           class="fr-password__checkbox fr-checkbox-group fr-checkbox-group--sm"
@@ -115,36 +137,6 @@
             aria-live="assertive"
           ></div>
         </div>
-        <div
-          class="fr-messages-group"
-          id="password-1138-input-messages"
-          aria-live="assertive"
-        >
-          <p class="fr-message" id="password-1138-input-message">
-            Votre mot de passe doit contenir :
-          </p>
-          <p
-            class="fr-message fr-message--info"
-            id="password-1138-input-message-info"
-          >
-            12 caractères minimum
-          </p>
-          <p
-            class="fr-message fr-message--info"
-            id="password-1138-input-message-info-1"
-          >
-            1 caractère spécial minimum
-          </p>
-          <p
-            class="fr-message fr-message--info"
-            id="password-1138-input-message-info-2"
-          >
-            1 chiffre minimum
-          </p>
-        </div>
-        <div
-          class="fr-password__checkbox fr-checkbox-group fr-checkbox-group--sm"
-        ></div>
       </div>
     </div>
     <div class="fr-fieldset__element">
@@ -157,6 +149,8 @@
           aria-describedby="champMdp2-messages"
           id="champMdp2"
           name="champMdp2"
+          autocomplete="new-password"
+          type="password"
         />
         <div
           class="fr-messages-group"

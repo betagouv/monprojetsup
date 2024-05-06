@@ -785,16 +785,20 @@ async function validateInscription2() {
 
   const pattern = /^[a-zA-Z0-9+_.\-@]+$/;
 
+  $("#champPrenom-messages").empty();
+  $("#champNom-messages").empty();
   $("#champIdentifiant-messages").empty();
   $("#champMdp-messages").empty();
   $("#champMdp2-messages").empty();
-  if (mdp != mdp2) {
-    $("#champMdp2-messages").html(
-      `<p class="fr-alert fr-alert--error">Les mots de passe ne sont pas identiques.</p>`
+  //champPrenom-messages
+  //champNom-messages
+  if (nom === undefined || nom === null || nom.length == 0) {
+    $("#champNom-messages").html(
+      `<p class="fr-alert fr-alert--error">Nom non renseigné</p>`
     );
-  } else if (mdp == accessGroupe) {
-    $("#champMdp-messages").html(
-      `<p class="fr-alert fr-alert--error">Le mot de passe (privé et personnel) doit être différent du code d'accès au groupe (public).</p>`
+  } else if (prenom === undefined || prenom === null || prenom.length == 0) {
+    $("#champPrenom-messages").html(
+      `<p class="fr-alert fr-alert--error">Prénom non renseigné</p>`
     );
   } else if (
     identifiant === undefined ||
@@ -804,21 +808,33 @@ async function validateInscription2() {
     $("#champIdentifiant-messages").html(
       `<p class="fr-alert fr-alert--error">Identifiant non renseigné</p>`
     );
-  } else if (!pattern.test(identifiant)) {
+  } else if (!session.isAdminOrTeacher() && !pattern.test(identifiant)) {
     $("#champIdentifiant-messages").html(
       `<p class="fr-alert fr-alert--error">Les identifiants autorisés ne comportent que des lettres, des chiffres et les symboles +_.-@</p>`
+    );
+  } else if (session.isAdminOrTeacher() && !isValidEmail(identifiant)) {
+    $("#champIdentifiant-messages").html(
+      `<p class="fr-alert fr-alert--error">Veuillez indiquer une adresse email valide.</p>`
     );
   } else if (mdp === undefined || mdp === null || mdp.length == 0) {
     $("#champMdp-messages").html(
       `<p class="fr-alert fr-alert--error">Mot de passe non renseigné</p>`
     );
+  } else if (mdp === undefined || mdp === null || mdp.length < 8) {
+    $("#champMdp-messages").html(
+      `<p class="fr-alert fr-alert--error">Le mot de passe doit contenir au minimum 8 caractères</p>`
+    );
+  } else if (mdp == accessGroupe) {
+    $("#champMdp-messages").html(
+      `<p class="fr-alert fr-alert--error">Le mot de passe (privé et personnel) doit être différent du code d'accès au groupe (public).</p>`
+    );
+  } else if (mdp != mdp2) {
+    $("#champMdp2-messages").html(
+      `<p class="fr-alert fr-alert--error">Les mots de passe ne sont pas identiques.</p>`
+    );
   } else if (!rgpd) {
     $("#checkbox-rgpd-messages").html(
       `<p class="fr-alert fr-alert--error">Vous devez accepter les conditions d'utilisation</p>`
-    );
-  } else if (session.isAdminOrTeacher() && !isValidEmail(identifiant)) {
-    $("#champIdentifiant-messages").html(
-      `<p class="fr-alert fr-alert--error">Veuillez indiquer une adresse email valide.</p>`
     );
   } else {
     $("#champMdp").val("");
