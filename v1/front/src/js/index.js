@@ -11,6 +11,10 @@ import {
   onBackButtonEvent,
   oidcLogin,
   showLandingScreen,
+  showLogin,
+  showInscription,
+  showAnonymous,
+  disconnect,
 } from "./app/app";
 
 $(async function () {
@@ -48,7 +52,11 @@ $(async function () {
     // Send the ID token to your server for validation.
   };*/
 
-  window.history.pushState(null, null, window.location.pathname);
+  window.history.pushState(
+    null,
+    null,
+    window.location.pathname + window.location.search
+  );
   window.addEventListener(`popstate`, onBackButtonEvent);
 
   /* Step 0: init
@@ -65,7 +73,21 @@ $(async function () {
   $("#version_appli").html("Version " + __VERSION__);
 
   /* Step3: trying automatic reconnection based on session cookie */
-  if (session.isLoggedIn()) {
+  const loggedIn = session.isLoggedIn();
+  const urlParams = new URLSearchParams(window.location.search);
+  const login = urlParams.has("login"); // false
+  const inscription = urlParams.has("inscription"); // false
+  const anonyme = urlParams.has("anonyme"); // false
+  if (login) {
+    if (loggedIn) disconnect();
+    await showLogin();
+  } else if (inscription) {
+    if (loggedIn) disconnect();
+    await showInscription();
+  } else if (anonyme) {
+    if (loggedIn) disconnect();
+    await showAnonymous();
+  } else if (loggedIn) {
     await postLoginHandler();
   } else {
     await showLandingScreen();
