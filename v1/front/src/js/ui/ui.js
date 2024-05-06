@@ -104,7 +104,7 @@ async function showSubScreen(subscreen) {
   await showScreen("main");
   const html = await fetchData(subscreen);
   $(`#sub-placeholder`).html(html);
-  if (subscreen == "inscription_tunnel") {
+  if (subscreen.startsWith("inscription")) {
     $("#main-placeholder").css({
       "background-image": 'url("../img/bg.svg")',
     });
@@ -412,10 +412,10 @@ export async function showLandingScreen() {
 }
 
 export async function showInscriptionScreen1() {
-  showSubScreen("inscription1");
+  return showSubScreen("inscription1");
 }
 export async function showInscriptionScreen2() {
-  showSubScreen("inscription2");
+  return showSubScreen("inscription2");
 }
 export async function showBoard() {
   return showConnectedScreen("board");

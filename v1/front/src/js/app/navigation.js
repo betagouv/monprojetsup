@@ -737,6 +737,8 @@ async function validateInscription1() {
         accessGroupe
       )}' est erroné</p>`
     );
+  } else {
+    if (pp) session.setRole("TEACHER");
   }
   return msg.ok;
 }
