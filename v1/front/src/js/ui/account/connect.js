@@ -52,8 +52,8 @@ export function init() {
     .off("click")
     .on("click", function () {
       const login = $("#champEmail").val();
-      const password = $("#password-1144").val();
-      $("#password-1144").val("");
+      const password = $("#password-1144-input").val();
+      $("#password-1144-input").val("");
       app.setAnonymousSession(false);
       app.loginHandler(login, password);
     });
