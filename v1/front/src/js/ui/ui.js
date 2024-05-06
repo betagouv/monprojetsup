@@ -379,8 +379,6 @@ export async function showConnectionScreen() {
 export async function showLandingScreen() {
   //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
-  $(".visible-only-when-connected").hide();
-  $(".visible-only-when-disconnected").show();
 }
 
 export async function showInscriptionScreen1() {
