@@ -89,6 +89,12 @@ $(async function () {
     await showAnonymous();
   } else if (loggedIn) {
     await postLoginHandler();
+  } else if (
+    window.host == "beta.monprojetsup.fr" ||
+    window.host == "www.monprojetsup.fr"
+  ) {
+    //back to wp homepage
+    window.location.replace("https://monprojetsup.fr");
   } else {
     await showLandingScreen();
   }
