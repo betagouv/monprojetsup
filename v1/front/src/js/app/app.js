@@ -134,10 +134,23 @@ async function loginServerAnswerHandler(data) {
   }
 }
 
+export async function showLogin() {
+  setAnonymousSession(false);
+  await nav.initScreen("connect");
+}
+
+export async function showAnonymous() {
+  setAnonymousSession(true);
+  loginHandler("anonymous", "anonymous");
+}
+
+export async function showInscription() {
+  setAnonymousSession(false);
+  await nav.initScreen("inscription1");
+}
+
 export async function showLandingScreen() {
   await nav.initScreen("landing");
-  $(".visible-only-when-connected").hide();
-  $(".visible-only-when-disconnected").show();
 }
 /* includes the token in all AJAX requests */
 export async function postLoginHandler() {
