@@ -618,7 +618,8 @@ export async function startNavigation() {
     screen != undefined &&
     screen != null &&
     screen != "null" &&
-    !screen.includes("inscription")
+    !screen.includes("inscription") &&
+    !screen.includes("landing")
   ) {
     await setScreen(screen);
   } else {
