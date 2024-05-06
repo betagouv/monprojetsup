@@ -767,6 +767,13 @@ function validateEDS() {
   return result;
 }
 
+const validEmailRegex =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+function isValidEmail(login) {
+  return login.match(validEmailRegex);
+}
+
 async function validateInscription2() {
   //const accounType = $("#createAccountSelectType").val();
   const nom = $("#champNom").val();
@@ -808,6 +815,10 @@ async function validateInscription2() {
   } else if (!rgpd) {
     $("#checkbox-rgpd-messages").html(
       `<p class="fr-alert fr-alert--error">Vous devez accepter les conditions d'utilisation</p>`
+    );
+  } else if (session.isAdminOrTeacher() && !isValidEmail(identifiant)) {
+    $("#champIdentifiant-messages").html(
+      `<p class="fr-alert fr-alert--error">Veuillez indiquer une adresse email valide.</p>`
     );
   } else {
     $("#champMdp").val("");
