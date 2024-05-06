@@ -232,6 +232,35 @@ export const localeFR = {
         CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
       },
     },
+    TABLEAU_DE_BORD: {
+      TITRE_PAGE: "Tableau de bord",
+      TITRE: "Bienvenue dans ton espace MPS",
+      MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
+      CARTES: {
+        SUGGESTIONS: {
+          TITRE: "Explore les suggestions de formations post-bac",
+          SOUS_TITRE: "d'après tes préférences et découvres-en d'autres",
+        },
+        FAVORIS: {
+          TITRE: "Consulte les formations post-bac que tu as sélectionnées",
+          SOUS_TITRE: "et consolide tes futurs voeux pour Parcoursup",
+        },
+        PROFIL: {
+          TITRE: "Enrichis ton profil pour améliorer les suggestions",
+          SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
+        },
+      },
+      TÉMOIGNAGE: {
+        AUTEUR: "Charlotte",
+        RÔLE: "De l'équipe MPS",
+        SECONDE:
+          "Ton objectif d'ici la fin de l'année : avoir ajouté au moins une formation ou un métier dans ta sélection personnelle. Tu peux évidemment en ajouter plus (et dans différents domaines), si tu le souhaites !",
+        PREMIÈRE:
+          "Ton orientation se construit dans le temps : il est important que tu sélectionnes plusieurs formations post-bac possibles - et surtout, que tu te renseignes concernant les attendus pour pouvoir te préparer !",
+        TERMINALE:
+          "Il est temps de réaliser concrètement tes projets ! Pour chaque formation post-bac sur MPS dans laquelle tu te projettes, tu devrais avoir au moins 3 favoris sur Parcoursup.",
+      },
+    },
   },
   PAGE_ACCUEIL: {
     TITLE: pages.ACCUEIL,

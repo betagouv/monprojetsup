@@ -13,5 +13,10 @@ export type TitreProps = {
     | "display--xs"
     | "display--md"
     | "display--lg"
-    | "display--xl";
+    | "display--xl"
+    | "text--lead"
+    | "text--lg"
+    | "text"
+    | "text--sm"
+    | "text--xs";
 };

@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as InscriptionImport } from './routes/_inscription'
+import { Route as EleveTableauDeBordIndexImport } from './routes/eleve/tableau-de-bord/index'
 import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_inscription/inscription/scolarite/index'
 import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
 import { Route as InscriptionInscriptionMetiersIndexImport } from './routes/_inscription/inscription/metiers/index'
@@ -25,9 +26,6 @@ import { Route as InscriptionInscriptionDomainesIndexImport } from './routes/_in
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
-const EleveTableauDeBordIndexLazyImport = createFileRoute(
-  '/eleve/tableau-de-bord/',
-)()
 const InscriptionInscriptionConfirmationIndexLazyImport = createFileRoute(
   '/_inscription/inscription/confirmation/',
 )()
@@ -44,13 +42,12 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const EleveTableauDeBordIndexLazyRoute =
-  EleveTableauDeBordIndexLazyImport.update({
-    path: '/eleve/tableau-de-bord/',
-    getParentRoute: () => rootRoute,
-  } as any).lazy(() =>
-    import('./routes/eleve/tableau-de-bord/index.lazy').then((d) => d.Route),
-  )
+const EleveTableauDeBordIndexRoute = EleveTableauDeBordIndexImport.update({
+  path: '/eleve/tableau-de-bord/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/eleve/tableau-de-bord/index.lazy').then((d) => d.Route),
+)
 
 const InscriptionInscriptionConfirmationIndexLazyRoute =
   InscriptionInscriptionConfirmationIndexLazyImport.update({
@@ -145,7 +142,7 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof rootRoute
     }
     '/eleve/tableau-de-bord/': {
-      preLoaderRoute: typeof EleveTableauDeBordIndexLazyImport
+      preLoaderRoute: typeof EleveTableauDeBordIndexImport
       parentRoute: typeof rootRoute
     }
     '/_inscription/inscription/domaines/': {
@@ -197,7 +194,7 @@ export const routeTree = rootRoute.addChildren([
     InscriptionInscriptionScolariteIndexRoute,
     InscriptionInscriptionConfirmationIndexLazyRoute,
   ]),
-  EleveTableauDeBordIndexLazyRoute,
+  EleveTableauDeBordIndexRoute,
 ])
 
 /* prettier-ignore-end */

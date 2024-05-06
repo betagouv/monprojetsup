@@ -11,7 +11,7 @@ const ConfirmationInscription = () => {
       <Head title={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE} />
       <div className="fr-py-3w fr-px-2w fr-py-md-6w fr-px-md-8w text-center">
         <img
-          alt="MPS"
+          alt=""
           className="mb-4 w-[140px]"
           src={confirmationSVG}
         />
