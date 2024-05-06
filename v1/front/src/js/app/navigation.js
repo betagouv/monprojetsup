@@ -397,62 +397,67 @@ const screen_enter_handlers = {
       .off()
       .on("click", async () => {
         await ui.showConnectionScreen();
-        $("#createAccountButton")
-          .off("click")
-          .on("click", async () => {
-            app.setAnonymousSession(false);
-            await initScreen("inscription1");
-          });
+        if (window.location.hostname.startsWith("beta")) {
+          app.setAnonymousSession(true);
+          app.loginHandler("anonymous", "anonymous");
+        } else {
+          $("#createAccountButton")
+            .off("click")
+            .on("click", async () => {
+              app.setAnonymousSession(false);
+              await initScreen("inscription1");
+            });
 
-        $("#anonymousNavButton")
-          .off("click")
-          .on("click", () => {
-            app.setAnonymousSession(true);
-            app.loginHandler("anonymous", "anonymous");
-          });
+          $("#anonymousNavButton")
+            .off("click")
+            .on("click", () => {
+              app.setAnonymousSession(true);
+              app.loginHandler("anonymous", "anonymous");
+            });
 
-        $("#login-button")
-          .off("click")
-          .on("click", function () {
-            const login = $("#champEmail").val();
-            const password = $("#password-1144-input").val();
-            $("#password-1144-input").val("");
-            app.setAnonymousSession(false);
-            app.loginHandler(login, password);
-          });
-        $("#oubli_mdp_button")
-          .off("click")
-          .on("click", function () {
-            $("#oubliMdpButton").trigger("click");
-            $("#sendResetPasswordEmail")
-              .off()
-              .on("click", async (event) => {
-                const login = $("#sendResetPasswordEmailInputEmail").val();
-                $("#sendResetPasswordEmailInputEmail-messages").empty();
-                $("#sendResetPasswordEmailInputEmail-messages2").empty();
-                if (
-                  login === null ||
-                  login === undefined ||
-                  login.length == 0
-                ) {
-                  $("#sendResetPasswordEmailInputEmail-messages").html(
-                    '<p class="fr-alert fr-alert--error">Préciser le login</p>'
-                  );
-                } else if (!isValidEmail(login)) {
-                  $("#sendResetPasswordEmailInputEmail-messages").html(
-                    `<p class="fr-alert fr-alert--error">Préciser une adresse email valide</p>`
-                  );
-                } else {
-                  app.sendResetPasswordEmail(login);
-                  //$("#passwordReinitializedButton").trigger("click");
-                  //$("#resetConfirmationModalEmail").html(login);
-                  $("#sendResetPasswordEmailInputEmail-messages2").html(
-                    `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
-                  );
-                }
-                event.preventDefault();
-              });
-          });
+          $("#login-button")
+            .off("click")
+            .on("click", function () {
+              const login = $("#champEmail").val();
+              const password = $("#password-1144-input").val();
+              $("#password-1144-input").val("");
+              app.setAnonymousSession(false);
+              app.loginHandler(login, password);
+            });
+          $("#oubli_mdp_button")
+            .off("click")
+            .on("click", function () {
+              $("#oubliMdpButton").trigger("click");
+              $("#sendResetPasswordEmail")
+                .off()
+                .on("click", async (event) => {
+                  const login = $("#sendResetPasswordEmailInputEmail").val();
+                  $("#sendResetPasswordEmailInputEmail-messages").empty();
+                  $("#sendResetPasswordEmailInputEmail-messages2").empty();
+                  if (
+                    login === null ||
+                    login === undefined ||
+                    login.length == 0
+                  ) {
+                    $("#sendResetPasswordEmailInputEmail-messages").html(
+                      '<p class="fr-alert fr-alert--error">Préciser le login</p>'
+                    );
+                  } else if (!isValidEmail(login)) {
+                    $("#sendResetPasswordEmailInputEmail-messages").html(
+                      `<p class="fr-alert fr-alert--error">Préciser une adresse email valide</p>`
+                    );
+                  } else {
+                    app.sendResetPasswordEmail(login);
+                    //$("#passwordReinitializedButton").trigger("click");
+                    //$("#resetConfirmationModalEmail").html(login);
+                    $("#sendResetPasswordEmailInputEmail-messages2").html(
+                      `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
+                    );
+                  }
+                  event.preventDefault();
+                });
+            });
+        }
       });
   },
   recherche: async () => {
