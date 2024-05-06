@@ -136,6 +136,8 @@ async function loginServerAnswerHandler(data) {
 
 export async function showLandingScreen() {
   await nav.initScreen("landing");
+  $(".visible-only-when-connected").hide();
+  $(".visible-only-when-disconnected").show();
 }
 /* includes the token in all AJAX requests */
 export async function postLoginHandler() {

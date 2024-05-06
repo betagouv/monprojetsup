@@ -53,7 +53,7 @@ const screens = {
 
 export async function initScreen(screen) {
   session.saveScreen(null);
-  setScreen(screen);
+  return setScreen(screen);
 }
 async function setScreen(screen) {
   console.log("setScreen", screen);
