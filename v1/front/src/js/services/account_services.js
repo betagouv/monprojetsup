@@ -70,8 +70,7 @@ export function sendResetPasswordEmail(email, onSuccess = null) {
       email: email,
     },
     onSuccess,
-    true,
-    (error) => reject(error)
+    true
   );
 }
 

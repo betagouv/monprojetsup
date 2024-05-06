@@ -32,7 +32,6 @@ import * as suggestions from "./tabs/exploration";
 import * as notes from "./notes/notes";
 import * as details from "./details/detailsModal";
 import * as data from "./../data/data";
-import * as connect from "./account/connect";
 import * as bin from "./tabs/bin";
 import * as session from "../app/session";
 import * as params from "../config/params";
@@ -43,8 +42,6 @@ import { Tab } from "bootstrap";
 import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
-import { setScreen } from "../app/navigation";
-import { trace } from "../services/services";
 
 export {
   initOnce,
@@ -57,10 +54,6 @@ export {
 };
 
 const screens = ["landing", "loading", "connect", "connected"];
-
-const screensHandlersInit = {
-  connect: () => connect.init(),
-};
 
 async function fetchData(screen) {
   return new Promise((resolve, reject) => {
@@ -92,9 +85,6 @@ async function showScreen(screen, ph = null) {
 
   const html = await fetchData(screen);
   $div.html(html);
-  if (screen in screensHandlersInit) {
-    screensHandlersInit[screen]();
-  }
   $("#main-placeholder").css({
     "background-image": "none",
   });
@@ -198,18 +188,6 @@ export async function showTunnelScreen(subscreen) {
 export function displayNextAndBAckButtons(nextScreen, backScreen) {
   $("#nextButton").toggle(nextScreen !== undefined);
   $("#backButton").toggle(backScreen !== undefined);
-  if (nextScreen)
-    $("#nextButton")
-      .off("click")
-      .on("click", async () => {
-        await setScreen(nextScreen);
-      });
-  if (backScreen)
-    $("#backButton")
-      .off("click")
-      .on("click", async () => {
-        await setScreen(backScreen);
-      });
 }
 export function hideNiveauInformation(niveau) {
   if (niveau === undefined || niveau === null || niveau === "") {
@@ -403,12 +381,6 @@ export async function showLandingScreen() {
   await showScreen("landing", "landing-placeholder");
   $(".visible-only-when-connected").hide();
   $(".visible-only-when-disconnected").show();
-
-  $("#landing-placeholder")
-    .off()
-    .on("click", () => {
-      showConnectionScreen();
-    });
 }
 
 export async function showInscriptionScreen1() {

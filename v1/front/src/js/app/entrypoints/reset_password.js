@@ -30,7 +30,6 @@ import "../../../scss/styles.scss";
 import $ from "jquery";
 import * as ui from "./../../ui/ui";
 import { setNewPassword } from "../../services/services";
-import { toast } from "../../ui/animate/toasts";
 import { frontErrorHandler, storeCredentialsAfterSuccesfulAuth } from "../app";
 
 /* the new $( document ).ready( handler ), see https://api.jquery.com/ready/ */
@@ -71,18 +70,26 @@ $(async function () {
 
   $("#sendNewPasssword")
     .off("click")
-    .on("click", () => {
+    .on("click", (event) => {
       const newPassword = $("#inputPassword").val();
-      $(this).prop("disabled", true);
-      setNewPassword(email, newPassword, token, (msg) => {
-        storeCredentialsAfterSuccesfulAuth(email, newPassword);
-        toast("", "Votre nouveau mot de passe a bien été pris en compte.");
-        $("#beforePasswordChange").hide();
-        $("#afterPasswordChange").show();
-        sleep(2000).then(() => {
-          window.location.replace("https://monprojetsup.fr/index.html");
+      if (newPassword == null || newPassword.length < 8) {
+        $("#champMdp-messages").html(
+          `<p class="fr-alert fr-alert--error">Le mot de passe doit contenir au minimum huit caractères</p>`
+        );
+      } else {
+        setNewPassword(email, newPassword, token, (msg) => {
+          storeCredentialsAfterSuccesfulAuth(email, newPassword);
+          $("#beforePasswordChange").hide();
+          $("#afterPasswordChange").show();
+          $("#redirectadresse").attr("href", window.location.origin);
+
+          sleep(2000).then(() => {
+            //showLandingScreen();
+            window.location.replace(window.location.origin);
+          });
         });
-      });
+      }
+      event.preventDefault();
     });
 });
 
