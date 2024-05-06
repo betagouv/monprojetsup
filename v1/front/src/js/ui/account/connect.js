@@ -35,10 +35,10 @@ export function init() {
 
   $("#createAccountButton")
     .off("click")
-    .on("click", () => {
+    .on("click", async () => {
       app.setAnonymousSession(false);
-      nav.setScreen(null);
-      nav.setScreen("inscription1");
+      await nav.setScreen(null);
+      await nav.setScreen("inscription1");
     });
 
   $("#anonymousNavButton")
