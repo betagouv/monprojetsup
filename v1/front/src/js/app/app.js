@@ -158,7 +158,7 @@ export async function postLoginHandler() {
   session.setProfileCompletenessLevel(profileCompleteness);
   const msgp = await server.getProfileAsync();
   data.loadProfile(msgp.profile);
-  startNavigation();
+  await startNavigation();
 
   //ui.showValidationRequiredMessage(session.getLogin(), "bla bla");
 }
@@ -168,7 +168,7 @@ export async function getProfile() {
   data.loadProfile(msg.profile);
 }
 
-function startNavigation() {
+async function startNavigation() {
   const screen = session.getScreen();
   if (
     screen != undefined &&
@@ -176,20 +176,20 @@ function startNavigation() {
     screen != "null" &&
     !screen.includes("inscription")
   ) {
-    nav.setScreen(screen);
+    await nav.setScreen(screen);
   } else {
     if (session.isAdminOrTeacher()) {
-      nav.setScreen(null);
-      nav.setScreen("groupes");
+      await nav.setScreen(null);
+      await nav.setScreen("groupes");
     } else {
       const profileCompleteness = session.getProfileCompletenessLevel();
       if (profileCompleteness < 2) {
-        nav.setScreen(null);
-        nav.setScreen("inscription_tunnel_statut");
+        await nav.setScreen(null);
+        await nav.setScreen("inscription_tunnel_statut");
       } else {
         //nav.setScreen("inscription_tunnel_felicitations");
-        nav.setScreen(null);
-        nav.setScreen("board");
+        await nav.setScreen(null);
+        await nav.setScreen("board");
       }
     }
   }

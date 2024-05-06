@@ -4,18 +4,6 @@ import { Modal } from "bootstrap";
 
 import * as app from "../../app/app";
 
-function validEmailNeeded() {
-  const selected = $("#createAccountSelectType").find(":selected").val();
-  return selected !== "lyceen";
-}
-
-const validEmailRegex =
-  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-function isValidEmail(login) {
-  return login.match(validEmailRegex);
-}
-
 export function init() {
   $(".disconnectButton")
     .off("click")
