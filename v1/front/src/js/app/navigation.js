@@ -118,13 +118,6 @@ export function init_main_nav() {
       await setScreen(screen);
     });
 
-  const screen = session.getScreen();
-  if (screen) {
-    $(".hidden-during-inscription").toggle(!screen.includes("inscription"));
-  } else {
-    $(".hidden-during-inscription").show();
-  }
-
   $(".disconnect")
     .off()
     .on("click", async function () {
@@ -147,10 +140,6 @@ export function init_main_nav() {
       }
     });
   $(".prenomnom").html(data.getPrenomNom());
-  ui.setRoleVisibility();
-  $(".visible-only-when-favoris").toggle(
-    session.isStudent() && data.getSuggestionsApproved().length > 0
-  );
 }
 
 async function updateRecherche() {
@@ -805,6 +794,14 @@ async function enterScreen(screen) {
   const loggedIn = session.isLoggedIn();
   $(".visible-only-when-connected").toggle(loggedIn);
   $(".visible-only-when-disconnected").toggle(!loggedIn);
+  ui.setRoleVisibility();
+  if (loggedIn) {
+    $(".hidden-during-inscription").toggle(!screen.includes("inscription"));
+  }
+
+  $(".visible-only-when-favoris").toggle(
+    loggedIn && session.isStudent() && data.getSuggestionsApproved().length > 0
+  );
 }
 async function exitScreen(screen, new_screen) {
   if (
