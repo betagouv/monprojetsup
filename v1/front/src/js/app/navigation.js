@@ -51,7 +51,11 @@ const screens = {
   profil_teacher: {},
 };
 
-export async function setScreen(screen) {
+export async function initScreen(screen) {
+  session.saveScreen(null);
+  setScreen(screen);
+}
+async function setScreen(screen) {
   console.log("setScreen", screen);
   if (screen == null) {
     session.saveScreen(null);
@@ -85,6 +89,17 @@ async function doTransition(old_screen, new_screen) {
     session.saveScreen(screen);
   }
   ui.displayNextAndBAckButtons(next(screen), back(screen));
+  $("#nextButton")
+    .off("click")
+    .on("click", async () => {
+      await setScreen(nextScreen);
+    });
+  $("#backButton")
+    .off("click")
+    .on("click", async () => {
+      await setScreen(backScreen);
+    });
+
   ui.setRoleVisibility();
   return screen;
 }
@@ -374,7 +389,66 @@ function format(x, nbDigits) {
   }).format(x);
 }
 const screen_enter_handlers = {
-  landing: async () => await ui.showLandingScreen(),
+  landing: async () => {
+    await ui.showLandingScreen();
+    $("#landing-placeholder")
+      .off()
+      .on("click", async () => {
+        await ui.showConnectionScreen();
+        $("#createAccountButton")
+          .off("click")
+          .on("click", async () => {
+            app.setAnonymousSession(false);
+            await initScreen("inscription1");
+          });
+
+        $("#anonymousNavButton")
+          .off("click")
+          .on("click", () => {
+            app.setAnonymousSession(true);
+            app.loginHandler("anonymous", "anonymous");
+          });
+
+        $("#login-button")
+          .off("click")
+          .on("click", function () {
+            const login = $("#champEmail").val();
+            const password = $("#password-1144-input").val();
+            $("#password-1144-input").val("");
+            app.setAnonymousSession(false);
+            app.loginHandler(login, password);
+          });
+        $("#oubli_mdp_button")
+          .off("click")
+          .on("click", function () {
+            $("#oubliMdpButton").trigger("click");
+            $("#sendResetPasswordEmail")
+              .off()
+              .on("click", async (event) => {
+                const login = $("#sendResetPasswordEmailInputEmail").val();
+                $("#sendResetPasswordEmailInputEmail-messages").empty();
+                if (
+                  login === null ||
+                  login === undefined ||
+                  login.length == 0
+                ) {
+                  $("#sendResetPasswordEmailInputEmail-messages").html(
+                    '<p class="fr-alert fr-alert--error">Préciser le login</p>'
+                  );
+                } else if (!isValidEmail(login)) {
+                  $("#sendResetPasswordEmailInputEmail-messages").html(
+                    `<p class="fr-alert fr-alert--error">Préciser une adresse email valide</p>`
+                  );
+                } else {
+                  app.sendResetPasswordEmail(login);
+                  $("#passwordReinitializedButton").trigger("click");
+                  $("#resetConfirmationModalEmail").html(login);
+                }
+                event.preventDefault();
+              });
+          });
+      });
+  },
   recherche: async () => {
     await ui.showRechercheScreen();
     init_main_nav();
@@ -406,8 +480,8 @@ const screen_enter_handlers = {
     await ui.showTeacherProfileScreen();
     $("#basculer_mode_lyceen")
       .off()
-      .on("click", () => {
-        setScreen(null);
+      .on("click", async () => {
+        await setScreen(null);
         app.toLyceen();
       });
   },
@@ -443,16 +517,16 @@ const screen_enter_handlers = {
     await ui.showTunnelScreen("felicitations");
     $("#discover_button")
       .off()
-      .on("click", () => {
-        setScreen("board");
+      .on("click", async () => {
+        await setScreen("board");
       });
   },
   inscription_tunnel_felicitations_teacher: async () => {
     await ui.showTunnelScreen("felicitations_teacher");
     $("#discover_button")
       .off()
-      .on("click", () => {
-        setScreen("groupes");
+      .on("click", async () => {
+        await setScreen("groupes");
       });
   },
   groupes: async () => {
@@ -536,6 +610,29 @@ function setUpMultiChoices() {
       const selected = data.isSelected(key);
       $(this).toggleClass("selected", selected);
     });
+}
+
+export async function startNavigation() {
+  const screen = session.getScreen();
+  if (
+    screen != undefined &&
+    screen != null &&
+    screen != "null" &&
+    !screen.includes("inscription")
+  ) {
+    await setScreen(screen);
+  } else {
+    if (session.isAdminOrTeacher()) {
+      await initScreen("groupes");
+    } else {
+      const profileCompleteness = session.getProfileCompletenessLevel();
+      if (profileCompleteness < 2) {
+        await initScreen("inscription_tunnel_statut");
+      } else {
+        await initScreen("board");
+      }
+    }
+  }
 }
 
 function setUpAutoComplete(id, threshold) {

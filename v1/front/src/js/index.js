@@ -10,6 +10,7 @@ import {
   frontErrorHandler,
   onBackButtonEvent,
   oidcLogin,
+  showLandingScreen,
 } from "./app/app";
 
 $(async function () {
@@ -65,10 +66,9 @@ $(async function () {
 
   /* Step3: trying automatic reconnection based on session cookie */
   if (session.isLoggedIn()) {
-    postLoginHandler();
+    await postLoginHandler();
   } else {
-    //ui.showConnectionScreen();
-    ui.showLandingScreen();
+    await showLandingScreen();
   }
 });
 
