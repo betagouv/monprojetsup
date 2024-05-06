@@ -49,7 +49,7 @@ const FiltresGroupésParCatégorie = ({
         >
           <Accordion.Header
             asChild
-            className="w-full rounded-2xl border-solid border-[--border-default-grey] px-8 py-4 text-left hover:border-[--background-open-blue-france-active] hover:!bg-[--background-open-blue-france] aria-expanded:rounded-b-none"
+            className="w-full rounded-2xl border border-solid border-[--border-default-grey] px-8 py-4 text-left hover:border-[--background-open-blue-france-active] hover:!bg-[--background-open-blue-france] aria-expanded:rounded-b-none"
           >
             <Accordion.Trigger className="group grid grid-flow-col items-center justify-between">
               <h2 className="fr-h6 mb-0">
@@ -78,7 +78,7 @@ const FiltresGroupésParCatégorie = ({
               </svg>
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Content className="border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
+          <Accordion.Content className="border border-t-0 border-solid border-[--border-default-grey] p-8 pt-6">
             <p className="fr-text--sm mb-4 text-[--text-mention-grey]">{i18n.COMMUN.PRÉCISER_CATÉGORIES}</p>
             <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
               {catégorie.filtres.map((filtre) => (

@@ -25,6 +25,9 @@ import { Route as InscriptionInscriptionDomainesIndexImport } from './routes/_in
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const EleveTableauDeBordIndexLazyImport = createFileRoute(
+  '/eleve/tableau-de-bord/',
+)()
 const InscriptionInscriptionConfirmationIndexLazyImport = createFileRoute(
   '/_inscription/inscription/confirmation/',
 )()
@@ -40,6 +43,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const EleveTableauDeBordIndexLazyRoute =
+  EleveTableauDeBordIndexLazyImport.update({
+    path: '/eleve/tableau-de-bord/',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/eleve/tableau-de-bord/index.lazy').then((d) => d.Route),
+  )
 
 const InscriptionInscriptionConfirmationIndexLazyRoute =
   InscriptionInscriptionConfirmationIndexLazyImport.update({
@@ -133,6 +144,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
+    '/eleve/tableau-de-bord/': {
+      preLoaderRoute: typeof EleveTableauDeBordIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/_inscription/inscription/domaines/': {
       preLoaderRoute: typeof InscriptionInscriptionDomainesIndexImport
       parentRoute: typeof InscriptionImport
@@ -182,6 +197,7 @@ export const routeTree = rootRoute.addChildren([
     InscriptionInscriptionScolariteIndexRoute,
     InscriptionInscriptionConfirmationIndexLazyRoute,
   ]),
+  EleveTableauDeBordIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */

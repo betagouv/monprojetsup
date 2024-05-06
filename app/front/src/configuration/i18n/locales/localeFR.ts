@@ -221,6 +221,17 @@ export const localeFR = {
         SÉLECTIONNÉES: "Formations sélectionnée(s)",
       },
     },
+    CONFIRMATION_INSCRIPTION: {
+      TITRE_PAGE: "Inscription terminée",
+      TITRE: "Félicitations",
+      SOUS_TITRE: "Ton inscription est terminée 👌",
+      CONTENU: "N’hésite pas à enrichir ton profil pour trouver plus facilement ta voie.",
+      BOUTON_ACTION: "Découvre ton espace MPS",
+      BANDEAU: {
+        TITRE: "Besoin d’aide pour t’orienter ?",
+        CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
+      },
+    },
   },
   PAGE_ACCUEIL: {
     TITLE: pages.ACCUEIL,

@@ -10,7 +10,7 @@ class TestHelper extends InscriptionTestHelper {
   public SECONDE_VILLE = "Brestot";
 
   public constructor(protected _page: Page) {
-    super(_page, "/inscription/formations", "/inscription/etude");
+    super(_page, "/inscription/etude", "/inscription/formations");
   }
 
   public champDuréeÉtudesPrévue = () => {

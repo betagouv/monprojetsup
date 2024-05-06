@@ -2,8 +2,11 @@ import logoMPS from "@/assets/logo/logo-mps.svg";
 import Navigation from "@/components/_layout/Navigation/Navigation";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
+import { useRouterState } from "@tanstack/react-router";
 
 const Entête = () => {
+  const router = useRouterState();
+
   return (
     <header
       className="fr-header"
@@ -59,7 +62,7 @@ const Entête = () => {
           </div>
         </div>
       </div>
-      <Navigation />
+      {!router.location.pathname.includes("/inscription/") && <Navigation />}
     </header>
   );
 };

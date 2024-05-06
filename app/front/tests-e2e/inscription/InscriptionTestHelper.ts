@@ -4,8 +4,8 @@ import { type Page } from "@playwright/test";
 export class InscriptionTestHelper {
   public constructor(
     protected _page: Page,
-    public readonly urlPageSuivante: string,
     private readonly urlPageCourante: string,
+    public readonly urlPageSuivante: string,
   ) {}
 
   protected _boutonSoumissionFormulaire = () => {
