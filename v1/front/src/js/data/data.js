@@ -610,19 +610,14 @@ export function getSuggestionsApproved(profile) {
   );
 }
 
-function filterMap(m, f) {
-  return Object.fromEntries(Object.entries(m).filter((e) => f(e[1])));
-}
-
 export function emptyBin() {
-  data.profile.choices = filterMap(
-    data.profile.choices,
+  data.profile.choices = data.profile.choices.filter(
     (s) => s.status == null || s.status != SUGG_REJECTED
   );
 }
 
 export function removeFromBin(id) {
-  data.profile.choices = filterMap(data.profile.choices, (s) => s.fl != id);
+  data.profile.choices = data.profile.choices.filter((s) => s.fl != id);
 }
 
 export function getSuggestionsWaiting() {
