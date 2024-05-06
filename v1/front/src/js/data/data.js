@@ -500,6 +500,7 @@ function updateSpecialitesOptions() {
   //  niveau == "term" || niveau == "prem" ? getProfileValue("bac") : tousBacs;
   if (!bac) bac = tousBacs;
   const specialites = data.specialitesParBac;
+  specialites["P"] = [];
   if (specialites === undefined) return;
   if (!(bac in specialites)) bac = tousBacs;
   const optionsSpecialites = {}; //par defaut pas de specialites
