@@ -888,10 +888,9 @@ function displayStats(statsAll) {
   const showNotes = niveau == "prem" || niveau == "term";
 
   const o = data.getStats(statsAll, bac);
-  const stats = o.stats;
   const statsBac = o.statsBac;
   const statsTousBacs = o.statsTousBacs;
-  if ((showNotes && statsTousBacs) || statsBac) {
+  if (showNotes && (statsTousBacs || statsBac)) {
     const $div = getStatsScolDiv(bac, statsTousBacs, statsBac);
     $(".formation-details-stats-moy-admis").empty().append($div);
   }
