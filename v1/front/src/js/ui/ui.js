@@ -1627,7 +1627,7 @@ export function showDetails(grpid, stats, explanations, exemples) {
 let hideFormations = false;
 
 export function setRoleVisibility() {
-  $(".student-only").toggle(session.isStudent());
+  $(".student-only").toggle(!session.isAdminOrTeacher());
   $(".teacher-only").toggle(session.isAdminOrTeacher());
   $(".admin-only").toggle(session.isAdmin());
 }
