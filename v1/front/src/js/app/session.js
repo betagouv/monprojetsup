@@ -33,6 +33,8 @@ function setRole(roleStr) {
       role = Roles.admin;
       break;
     case "TEACHER":
+    case "teacher":
+    case "pp":
       role = Roles.teacher;
       break;
   }
