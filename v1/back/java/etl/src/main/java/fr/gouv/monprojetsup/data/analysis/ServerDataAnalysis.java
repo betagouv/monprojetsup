@@ -36,17 +36,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
 import static fr.gouv.monprojetsup.data.ServerData.*;
+import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.RESUME_FORMATION_MPS_HEADER;
+import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.RESUME_FORMATION_V1;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 /**
@@ -105,6 +102,7 @@ public class ServerDataAnalysis {
 
         /* *** items sans descriptis  ****/
         Descriptifs desc = UpdateFrontData.DataContainer.loadDescriptifs(ServerData.onisepData, flGroups, statistiques.getLASCorrespondance().lasToGeneric());
+        /*
         Set<Integer> lasses = backPsupData.las();
         List<String> filieresAffichees = backPsupData.filActives().stream()
                 .filter(f -> !lasses.contains(f))
@@ -158,7 +156,7 @@ public class ServerDataAnalysis {
             }
             out.write("Total: " + index + " résumés produits.");
         }
-
+        */
 
         outputMetiersSansDescriptifs(desc);
 
@@ -721,13 +719,27 @@ public class ServerDataAnalysis {
                 GrilleAnalyse.labels
         );
 
+        val headers =List.of(
+                "code filière ou groupe (glcod)",
+                "intitulé web",
+                "code type formation",
+                "intitule type formation",
+                "url onisep",
+                "URL corrections",
+                "url psup",
+                RESUME_FORMATION_V1,
+                RESUME_FORMATION_MPS_HEADER,
+                "résumé spécialité",
+                "Liens supplémentaires",
+                "Retours à Onisep",
+                "attendus",
+                "recommandations sur le parcours au lycée");
+        Set<String> processed = new HashSet<>();
+
         try (CsvTools csv = new CsvTools("resumesDescriptifsFormations.csv", ',')) {
-            csv.appendHeaders(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
-                    "url onisep",
-                    "url psup",
-                    "resume",
-                    "attendus",
-                    "recommandations sur le parcours au lycée"));
+            csv.appendHeaders(
+                    headers
+            );
 
             val lasCorr = statistiques.getLASCorrespondance();
             for (String flStr : filieresFront) {
@@ -739,12 +751,16 @@ public class ServerDataAnalysis {
                 if (label2.contains("apprentissage") || label2.contains("LAS")) {
                     continue;
                 }
-                if(flStr.equals("fl490024")) {
-                    int i = 0;
-                }
+                //"code filière ou groupe (glcod)",
                 csv.append(flStr);
+
+                processed.add(flStr);
+
+                //"intitulé web",
                 csv.append(label2);
 
+                //"code type formation",
+                //"intitule type formation",
                 int code = Integer.parseInt(flStr.substring(2));
                 if (flStr.startsWith("fr")) {
                     csv.append(flStr);
@@ -762,33 +778,64 @@ public class ServerDataAnalysis {
 
                 val listeFilieres = reverseFlGroups.getOrDefault(flStr, Set.of(flStr));
 
-                //liens onisep (distaincts)
-                csv.append(
-                        listeFilieres
-                                .stream().map(s -> data.liensOnisep.getOrDefault(s, ""))
-                                .filter(s -> !s.isEmpty())
-                                .distinct()
-                                .collect(Collectors.joining("\n"))
-                );
+                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
 
+                Map<String, String> mpsData = (descriptif == null) ? Map.of() : descriptif.getMpsData();
+
+                List<String> listeUrls = new ArrayList<>();
+
+                //"url onisep",
+                csv.append(
+                            listeFilieres
+                                    .stream().map(s -> data.liensOnisep.getOrDefault(s, ""))
+                                    .filter(s -> !s.isEmpty())
+                                    .map(s -> Descriptifs.toAvenirs(s))
+                                    .distinct()
+                                    .collect(Collectors.joining("\n"))
+
+
+                    );
+
+                //"URL corrections",
+                csv.append(mpsData.getOrDefault("URL corrections", ""));
+
+                // "url psup",
                 csv.append("https://dossier.parcoursup.fr/Candidat/carte?search=" + listeFilieres
                         .stream()
                                 .distinct()
                         .map(fl -> fl + "x").collect(Collectors.joining("%20")));
 
-                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
-
-                if (descriptif != null) {
-                    csv.append(descriptif.getFrontRendering());
+                //"résumé formation V1",
+                if(mpsData.containsKey(RESUME_FORMATION_V1)) {
+                    csv.append(mpsData.getOrDefault(RESUME_FORMATION_V1, ""));
+                } else if (descriptif != null) {
+                    String summary = descriptif.getFrontRendering();
+                    csv.append(summary);
                 } else {
                     csv.append("");
                 }
+
+                //                    "résumé formation VLauriane",
+                csv.append(mpsData.getOrDefault(RESUME_FORMATION_MPS_HEADER, ""));
+
+                //                    "résumé spécialité"",
+                csv.append(mpsData.getOrDefault("résumé spécialité", ""));
+
+                //                    "Liens supplémentaires"",
+                csv.append(mpsData.getOrDefault("Liens supplémentaires", ""));
+
+                //                    "Retours à Onisep",
+                csv.append(mpsData.getOrDefault("Retours à Onisep", ""));
+
+                //                    "attendus",
                 csv.append(listeFilieres.stream()
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().attendus() != null)
                         .map(p -> getLabel(p.getLeft()) + "\n" + p.getRight().attendus())
                         .filter(o ->  o!= null && !o.isBlank()).distinct()
                         .collect(Collectors.joining("\n\n****    cas multiple    ****\n\n")));
+
+                //                    "recommandations sur le parcours au lycée");
                 csv.append(listeFilieres.stream()
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().recoEDS() != null)
@@ -799,7 +846,24 @@ public class ServerDataAnalysis {
             }
         }
 
-        try (CsvTools csv = new CsvTools("metiersExtraitsDesDescriptifsformations.csv", ',')) {
+        try (CsvTools csv = new CsvTools("resumesDescriptifsFormationsSkipped.csv", ',')) {
+            csv.appendHeaders(
+                    headers
+            );
+            for (Map.Entry<String, Descriptifs.Descriptif> entry : data2.descriptifs().keyToDescriptifs().entrySet()) {
+                String s = entry.getKey();
+                if(processed.contains(s)) continue;
+                val desc = entry.getValue();
+                if(!desc.isViable()) continue;
+                val mpsData = desc.getMpsData();
+                if(!mpsData.containsKey(RESUME_FORMATION_MPS_HEADER) && !mpsData.containsKey("résumé spécialité")) continue;
+                for (String h : headers) {
+                    csv.append(mpsData.getOrDefault(h, ""));
+                }
+            }
+
+        }
+            try (CsvTools csv = new CsvTools("metiersExtraitsDesDescriptifsformations.csv", ',')) {
             csv.appendHeaders(List.of("code filière ou groupe (glcod)", "intitulé web", "code type formation", "intitule type formation",
                     "métiers extraits des descriptifs (codes)",
                     "intitulé onisep",

@@ -281,14 +281,14 @@ public class UpdateFrontData {
             if(url != null && !url.isEmpty()) {
                 if(url.contains("www.terminales2022-2023.fr")) {
                     if(url.contains("www.terminales2022-2023.fr/http/redirections/formation/slug/")) {
-                        url = url.replace(
+                        url =  url.replace(
                                 "www.terminales2022-2023.fr",
                                 "www.onisep.fr");
                     } else {
                         return;//we skip those broken urls
                     }
                 }
-                url = url.replace("www.onisep.fr", "explorer-avenirs.onisep.fr");
+                url = Descriptifs.toAvenirs(url);
                 urls.computeIfAbsent(cleanup(key), z -> new HashSet<>()).add(url);
             }
         }
@@ -359,7 +359,7 @@ public class UpdateFrontData {
 
         LOGGER.info("Ajout des liens metiers");
         val urls = new HashMap<String, String>();
-        data.liensOnisep.forEach((key, value) -> urls.put(key, value.replace("www.onisep.fr", "explorer-avenirs.onisep.fr")));
+        data.liensOnisep.forEach((key, value) -> urls.put(key, Descriptifs.toAvenirs(value)));
         onisepData.metiers().metiers().forEach((s, metier) -> {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });
