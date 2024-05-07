@@ -451,6 +451,7 @@ public abstract class DB {
             saveLycee(lycDemo);
             Group group = createNewGroup(LYCEE_ANO, CLASSE_ANO);
             group.setRegistrationToken("anonymous");
+            saveGroup(group);
             return group;
         }
     }
