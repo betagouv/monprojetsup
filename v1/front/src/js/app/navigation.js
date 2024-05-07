@@ -732,6 +732,8 @@ function setUpSelects() {
       if (key == "niveau") {
         ui.hideNiveauInformation(val);
       }
+      ui.updateMultiOptionsItemsStatus(data.getDomainesPro());
+      ui.updateMultiOptionsItemsStatus(data.getInterests());
       $(".profile-option")
         .off()
         .on("change", function () {

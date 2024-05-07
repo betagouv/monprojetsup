@@ -235,16 +235,6 @@ function injectInMultiOptions($accordions_group, menus) {
         }
       }
     }
-    let expand = false;
-    const items = menu.items.sort(compareAlphanumeric);
-
-    for (const item of items) {
-      let key = item.key;
-      if (key === undefined) key = item.id;
-      if (data.isSelected(key)) {
-        expand = true;
-      }
-    }
     if (menu.key === undefined) {
       menu.key = menuid++; //this should not be necessary because already loaded in postLoad... fishy...
     }
@@ -252,8 +242,9 @@ function injectInMultiOptions($accordions_group, menus) {
       <section class="fr-accordion multi-options-group">
         <h3 class="fr-accordion__title muti-options-group-header">
           <button
-            class="fr-accordion__btn "
-            aria-expanded="${expand}"
+            class="fr-accordion__btn"
+            id="fr-accordion__btn_${menu.key}"
+            aria-expanded="false"
             aria-controls="accordion-${menu.key}"
           >
             <span class="multi-options-group-emojis">${emoji1}</span>
@@ -303,14 +294,14 @@ export function setupSelects(tabName, divName) {
       $("#profile-items-domaines-pro", $div),
       data.getDomainesPro()
     );
-    updateMultiOptionsItemsStatus();
+    updateMultiOptionsItemsStatus(data.getDomainesPro());
   }
   if (tabName === "interests") {
     injectInMultiOptions(
       $("#profile-items-interests", $div),
       data.getInterests()
     );
-    updateMultiOptionsItemsStatus();
+    updateMultiOptionsItemsStatus(data.getInterests());
   }
 }
 
@@ -334,7 +325,7 @@ async function injectProfileTabs(tabNames) {
   //console.log("Intitialized profile tab " + tabName);
 }
 
-export function updateMultiOptionsItemsStatus() {
+export function updateMultiOptionsItemsStatus(menus) {
   //for every key in the profile, update the status of the corresponding item
   //multi-options-item_${key}
   const keys = data.getProfileKeys();
@@ -344,6 +335,18 @@ export function updateMultiOptionsItemsStatus() {
     if ($divs.length > 0) {
       $divs.addClass("selected");
     }
+  }
+  for (const menu of menus) {
+    let expand = false;
+    for (const item of menu.items) {
+      let key = item.key;
+      if (key === undefined) key = item.id;
+      if (data.isSelected(key)) {
+        expand = true;
+        break;
+      }
+    }
+    $(`#fr-accordion__btn_${menu.key}`).attr("aria-expanded", expand);
   }
 }
 
