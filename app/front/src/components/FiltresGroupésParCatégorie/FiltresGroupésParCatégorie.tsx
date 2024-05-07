@@ -62,7 +62,7 @@ const FiltresGroupésParCatégorie = ({
                 {catégorie.nom}
               </h2>
               <svg
-                className="transition-all duration-200 group-aria-expanded:rotate-180"
+                className="rotate-180 transition-all duration-200 group-aria-expanded:rotate-0"
                 fill="none"
                 height="8"
                 viewBox="0 0 14 8"
