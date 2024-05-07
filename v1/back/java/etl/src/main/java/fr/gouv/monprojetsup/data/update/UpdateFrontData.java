@@ -5,11 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.model.attendus.Attendus;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.cities.CitiesFront;
 import fr.gouv.monprojetsup.data.model.cities.CitiesLoader;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.model.attendus.Attendus;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
@@ -25,7 +26,6 @@ import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.update.rome.RomeData;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 
 import java.io.IOException;
@@ -39,8 +39,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Descriptif.setSummaries;
-import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Descriptif.setSummary;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 
@@ -200,38 +198,73 @@ public class UpdateFrontData {
             descriptifs.keyToDescriptifs().put(passKey, addToDescriptif(PAS_LAS_TEXT, desc));
             */
 
-            val lines = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),'\t');
+            val lines = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), '\t');
             String keyFlFr = null;
             String keyDescFormation = null;
             String keyDescFiliere = null;
+            String keyTypeFor = "code type formation";
+
+            Map<String, String> resumesTypesformations = new HashMap<>();
+
+            if (lines.isEmpty()) {
+                throw new IllegalStateException("No data in " + DataSources.RESUMES_MPS_PATH);
+            }
+            val line0 = lines.get(0);
+            keyFlFr = line0.keySet().stream().filter(k -> k.contains("groupe")).findAny().orElse(null);
+            keyDescFormation = line0.keySet().stream().filter(k -> k.contains("formation VLauriane")).findAny().orElse(null);
+            keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("spécialité")).findAny().orElse(null);
+
+            val keyUrlCorrection = line0.keySet().stream().filter(k -> k.contains("URL corrections")).findAny().orElse(null);
+
+            val keyUrlSupplementaire = line0.keySet().stream().filter(k -> k.contains("Liens supplémentaires")).findAny().orElse(null);
+
+            val keyRetoursOnisep = line0.keySet().stream().filter(k -> k.contains("Onisep")).findAny().orElse(null);
+
+            if (keyFlFr == null || keyDescFormation == null || keyDescFiliere == null || keyUrlSupplementaire == null || keyUrlCorrection == null || keyRetoursOnisep == null)
+                throw new IllegalStateException("No key found in " + line0);
+
             for (val line : lines) {
-                if(keyFlFr == null) {
-                    keyFlFr = line.keySet().stream().filter(k -> k.contains("groupe")).findAny().orElse(null);
-                    keyDescFormation = line.keySet().stream().filter(k -> k.contains("resume formation")).findAny().orElse(null);
-                    keyDescFiliere = line.keySet().stream().filter(k -> k.contains("résumé spécialité")).findAny().orElse(null);
-                    if (keyFlFr == null || keyDescFormation == null || keyDescFiliere == null) throw new IllegalStateException("No key found in " + lines);
+                val frCod = line.get(keyTypeFor);
+                val descFormation = line.getOrDefault(keyDescFormation, "");
+                if (!descFormation.isBlank()) {
+                    resumesTypesformations.put(frCod,descFormation);
                 }
-                String flfrcod = line.get(keyFlFr);
-                String descForm = line.get(keyDescFormation);
+            }
+
+            for (val line : lines) {
+                String flfrcod = line.getOrDefault(keyFlFr, "");
+                if(flfrcod.isBlank()) throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
+
+                String frcod = line.getOrDefault(keyTypeFor, "");
+
+                String descForm = line.getOrDefault(keyDescFormation, "");
+                if (descForm.isBlank()) {
+                    descForm = resumesTypesformations.getOrDefault(frcod, "");
+                }
                 String descFiliere = line.get(keyDescFiliere);
-                if(descFiliere != null && !descFiliere.isBlank()) {
-                    descriptifs.keyToDescriptifs().put(
-                            flfrcod,
-                            setSummaries(
-                                    descriptifs.keyToDescriptifs().get(flfrcod),
-                                    descForm,
-                                    descFiliere
-                            )
-                    );
-                } else if(descForm != null && !descForm.isBlank()) {
-                    descriptifs.keyToDescriptifs().put(
-                            flfrcod,
-                            setSummary(
-                                    descriptifs.keyToDescriptifs().get(flfrcod),
-                                    descForm
-                            )
-                    );
+
+                var descriptif = descriptifs.keyToDescriptifs().computeIfAbsent(flfrcod, z -> new Descriptifs.Descriptif(line));
+                if(descriptif.getMultiUrls() == null) descriptif.setMultiUrls(new HashSet<>());
+
+                if (!descFiliere.isBlank()) {
+                    descriptif.setSummary(descFiliere);
+                    descriptif.setSummaryFormation(descForm);
+                } else if (!descForm.isBlank()) {
+                    descriptif.setSummary(descForm);
                 }
+
+                val urlSupplementaire = line.getOrDefault(keyUrlSupplementaire, "");
+                if(!urlSupplementaire.isBlank()) {
+                    descriptif.getMultiUrls().addAll(Arrays.stream(urlSupplementaire.split("\n")).map(String::trim).toList());
+                }
+
+                val urlCorrection = line.getOrDefault(keyUrlCorrection, "");
+                if(!urlCorrection.isBlank()) {
+                    descriptif.setCorrectedUrl(true);
+                    descriptif.getMultiUrls().addAll(Arrays.stream(urlCorrection.split("\n")).map(String::trim).toList());
+                }
+
+                descriptif.setMpsData(line);
             }
 
             descriptifs.injectGroups(groups);
@@ -241,7 +274,7 @@ public class UpdateFrontData {
                 descriptifs.keyToDescriptifs().put(key, Descriptifs.Descriptif.addToDescriptif(PAS_LAS_TEXT, desc));
             });
 
-            return  descriptifs;
+            return descriptifs;
         }
 
         private void addUrl(String key, String url) {
@@ -255,8 +288,13 @@ public class UpdateFrontData {
                         return;//we skip those broken urls
                     }
                 }
+                url = url.replace("www.onisep.fr", "explorer-avenirs.onisep.fr");
                 urls.computeIfAbsent(cleanup(key), z -> new HashSet<>()).add(url);
             }
+        }
+
+        private void clearUrls(String key) {
+            urls.remove(cleanup(key));
         }
 
         public void updateUrls(OnisepData onisepData, Map<String, String> liensOnisep, Map<String, String> lasCorrespondance) {
@@ -276,8 +314,12 @@ public class UpdateFrontData {
             });
             onisepData.domainesWeb().domaines().forEach(domainePro -> addUrl(cleanup(domainePro.id()), domainePro.url()));
             descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
-                addUrl(key, descriptif.url());
-                List<String> urls = descriptif.multiUrls();
+                if(descriptif.isCorrectedUrl()) {
+                    clearUrls(key);
+                } else {
+                    addUrl(key, descriptif.url());
+                }
+                Collection<String> urls = descriptif.multiUrls();
                 if(urls != null) {
                     urls.forEach(url2 -> addUrl(key, url2));
                 }
@@ -287,7 +329,6 @@ public class UpdateFrontData {
                 addUrl(keyLas, URL_ARTICLE_PAS_LAS);
                 urls.getOrDefault(keyGen, Collections.emptySet()).forEach(s -> addUrl(keyLas, s));
             });
-            urls.forEach((key, urls) -> urls.removeIf(url -> url.contains("www.terminales2022-2023.fr")));
         }
     }
 
@@ -317,7 +358,8 @@ public class UpdateFrontData {
         data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
 
         LOGGER.info("Ajout des liens metiers");
-        Map<String,String> urls = new HashMap<>(data.liensOnisep);
+        val urls = new HashMap<String, String>();
+        data.liensOnisep.forEach((key, value) -> urls.put(key, value.replace("www.onisep.fr", "explorer-avenirs.onisep.fr")));
         onisepData.metiers().metiers().forEach((s, metier) -> {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });

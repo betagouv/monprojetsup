@@ -394,6 +394,11 @@ const screen_enter_handlers = {
   landing_redir: () => {
     app.disconnect();
     location.reload();
+    $("#landing-placeholder")
+      .off()
+      .on("click", async () => {
+        setScreen("connect");
+      });
   },
   connect: async () => {
     await ui.showConnectionScreen();
