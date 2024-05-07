@@ -287,6 +287,7 @@ public class UpdateFrontData {
                 addUrl(keyLas, URL_ARTICLE_PAS_LAS);
                 urls.getOrDefault(keyGen, Collections.emptySet()).forEach(s -> addUrl(keyLas, s));
             });
+            urls.forEach((key, urls) -> urls.removeIf(url -> url.contains("www.terminales2022-2023.fr")));
         }
     }
 
