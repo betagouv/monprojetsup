@@ -436,6 +436,7 @@ public abstract class DB {
         try {
             Group group = findGroup(getAnoGroupId());
             group.setRegistrationToken("anonymous");
+            saveGroup(group);
             return group;
         } catch (UnknownGroupException e) {
             Lycee lycDemo = new Lycee(LYCEE_ANO, LYCEE_ANO + " (fictif)",
