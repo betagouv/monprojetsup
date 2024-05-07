@@ -150,16 +150,18 @@ async function updateRecherche() {
   const msg = await app.doSearch(str);
   const showAffinities = str == "";
   ui.showRechercheData(msg.details, showAffinities);
-  $("#search-button").off("click").on("click", updateRecherche);
-  $("#search-784-input").on("keypress", function (event) {
-    // Check if the key pressed is Enter
-    if (event.key === "Enter") {
-      updateRecherche();
-    }
-  });
+  $("#search-button").off().on("click", updateRecherche);
+  $("#search-784-input")
+    .off()
+    .on("keypress", function (event) {
+      // Check if the key pressed is Enter
+      if (event.key === "Enter") {
+        updateRecherche();
+      }
+    });
 
   $("#formation-details-header-nav-central-icon")
-    .off("click")
+    .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
       events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
@@ -168,7 +170,7 @@ async function updateRecherche() {
       });
     });
   $(".add-to-favorites-btn")
-    .off("click")
+    .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
 

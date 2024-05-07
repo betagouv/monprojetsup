@@ -426,6 +426,16 @@ export function showRechercheData(data, showAffinities) {
   $("#explore-div-wait").hide();
   $("#explore-div-resultats").show();
   const nbResults = data.length;
+  const noResults = nbResults == 0;
+  $("#explore-div-resultats-left-noresult").toggle(noResults);
+  $("#explore-div-resultats-right").css(
+    "visibility",
+    noResults ? "hidden" : "visible"
+  );
+  $("#explore-div-resultats-left-label").toggle(!noResults);
+  $("#explore-div-resultats-left-entete").show();
+  $("#explore-div-resultats-left-noresult").toggle(noResults);
+
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
@@ -464,14 +474,8 @@ export function showGroupsTab2() {
 
 export function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
-  $("#explore-div-resultats-right").hide();
-  $("#explore-div-resultats-left-noresult").show();
-  $("#explore-div-resultats-left-entete").hide();
 }
 function addAffinityCard(dat, nodetails) {
-  $("#explore-div-resultats-left-noresult").empty().hide();
-  $("#explore-div-resultats-left-entete").show();
-
   const $div = buildAffinityCard(
     dat.key,
     dat.fav,
