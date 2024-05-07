@@ -57,6 +57,30 @@
           <div class="profile_explanation">
             Ce code vous a été préalablement communiqué pour accéder à MPS
           </div>
+          <div class="fr-fieldset__element">
+            <div class="fr-checkbox-group">
+              <input
+                name="checkboxes-noaccesscode"
+                id="checkboxes-noaccesscode"
+                type="checkbox"
+                aria-describedby="checkboxes-noaccesscode-messages"
+              />
+              <label class="fr-label" for="checkboxes-noaccesscode">
+                Je n'ai pas reçu de code d'accès
+              </label>
+              <div
+                class="fr-messages-group"
+                id="checkboxes-1-messages"
+                aria-live="assertive"
+              ></div>
+            </div>
+            <div
+              class="fr-messages-group"
+              id="createAccount-code-acces-messages"
+              aria-live="polite"
+            ></div>
+          </div>
+
           <input
             class="fr-input"
             aria-describedby="createAccount-messages"
@@ -66,12 +90,8 @@
             autocomplete="off"
             autocapitalize="off"
             autocorrect="off"
+            placeholder="Tapez votre code d'accès..."
           />
-          <div
-            class="fr-messages-group"
-            id="createAccount-code-acces-messages"
-            aria-live="polite"
-          ></div>
         </div>
       </div>
       <div
@@ -88,6 +108,9 @@
       id="backButton"
     >
       Retour
+    </button>
+    <button class="fr-btn right" id="nextButtonAnonymous" title="Continuer">
+      Continuer sans code d'accès
     </button>
     <button class="fr-btn right" id="nextButton" title="Continuer">
       Continuer
