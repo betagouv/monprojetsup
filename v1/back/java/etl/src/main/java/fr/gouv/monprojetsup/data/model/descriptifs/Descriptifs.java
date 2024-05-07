@@ -18,8 +18,23 @@ public record Descriptifs(
     Map<String, Descriptif> keyToDescriptifs
 ) {
 
+    private static final String EXPLORER_AVENIRS_URL = "https://explorer-avenirs.onisep.fr";
+    private static final String ONISEP_URL1 = "http://www.onisep.fr";
+    private static final String ONISEP_URL2 = "https://www.onisep.fr";
+    public static final String RESUME_FORMATION_MPS_HEADER = "résumé formation VLauriane";
+    public static final String RESUME_FORMATION_V1 = "résumé formation V1";
     public Descriptifs() {
         this(new HashMap<>());
+    }
+
+    public static String toAvenirs(String s) {
+        if(s == null) return null;
+        return s
+                .replace(
+                "www.terminales2022-2023.fr","www.onisep.fr")
+                .replace(ONISEP_URL1,EXPLORER_AVENIRS_URL)
+                .replace(ONISEP_URL2,EXPLORER_AVENIRS_URL)
+                ;
     }
 
     public void injectFichesMetiers(FichesMetierOnisep fiches) {
