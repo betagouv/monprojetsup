@@ -89,10 +89,14 @@ export async function createAccount(data) {
 }
 
 export async function validateCodeAcces(accountType, accesGroupe) {
-  return server.validateCodeAcces({
+  const answer = await server.validateCodeAcces({
     type: accountType,
     accesGroupe: accesGroupe,
   });
+  if (answer) {
+    session.setRole(accountType);
+  }
+  return answer;
 }
 
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
