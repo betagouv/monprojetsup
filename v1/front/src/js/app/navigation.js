@@ -467,7 +467,34 @@ const screen_enter_handlers = {
     init_main_nav();
     await updateSelection();
   },
-  inscription1: async () => await ui.showInscriptionScreen1(),
+  inscription1: async () => {
+    await ui.showInscriptionScreen1();
+    $("#nextButtonAnonymous").hide();
+
+    $("#checkboxes-noaccesscode")
+      .off()
+      .on("change", function () {
+        const isChecked = $(this).is(":checked");
+        $("#inputCreateAccountCodeAcces").toggle(!isChecked);
+        $("#nextButtonAnonymous").toggle(isChecked);
+        $("#nextButton").toggle(!isChecked);
+        if (isChecked) {
+          $("#inscription1-messages2").html(`<p
+        class="fr-alert fr-alert--info"
+      >Sans code d'accès vous ne pouvez pas créer de compte mais vous pouvez tout de même tester le site (en mode lycéen).</p>`);
+        } else {
+          $("#inscription1-messages2").empty();
+        }
+        if (isChecked) {
+          $("#nextButtonAnonymous")
+            .off()
+            .on("click", async () => {
+              app.setAnonymousSession(true);
+              app.loginHandler("anonymous", "anonymous");
+            });
+        }
+      });
+  },
   inscription2: async () =>
     await ui.showInscriptionScreen2(session.isAdminOrTeacher()),
   profil: async () => {
