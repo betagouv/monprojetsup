@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
 import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -155,8 +156,8 @@ public abstract class DB {
      * @return the profile
      * @throws UnknownUserException if the user is unknown
      */
-    public ProfileDb getProfile(String login) throws UnknownUserException {
-        return getUser(login).pf().toDTO();
+    public @NotNull ProfileDb getProfile(String login) throws UnknownUserException {
+        return getUser(login).pf().toDbo();
     }
 
     public void updateProfile(
@@ -165,7 +166,7 @@ public abstract class DB {
         User user = getUser(login);
         ProfileUpdateDTO updatedProfile = unsanitizedProfile.sanitize();
         user.updateProfile(updatedProfile);
-        ProfileDb pf = user.getProfile().toDTO();
+        ProfileDb pf = user.getProfile().toDbo();
         updateUserField(login, PF_FIELD, pf);
     }
 
@@ -174,7 +175,7 @@ public abstract class DB {
             @NotNull ProfileDb unsanitizedProfile) throws UnknownUserException {
         User user = getUser(login);
         user.updateProfile(unsanitizedProfile.sanitize());
-        updateUserField(login, PF_FIELD, user.getProfile().toDTO());
+        updateUserField(login, PF_FIELD, user.getProfile().toDbo());
     }
 
 
@@ -686,7 +687,7 @@ public abstract class DB {
 
     public abstract boolean hasRightToAddAdmin(String login, String groupId, String groupAdminLogin, boolean addAdmin) throws UnknownGroupException;
 
-    protected boolean isSuperadmin(String login) {
+    public boolean isSuperAdmin(String login) {
         return WebServer.config().getAdmins().contains(normalizeUser(login));
     }
 
@@ -695,6 +696,14 @@ public abstract class DB {
     public abstract List<ServerTrace> getTraces();
 
     public abstract void validateCode(UserTypes type, String accesGroupe) throws WrongAccessCodeException;
+
+    public void setTeacherFeedback(@NotNull String author, @NotNull String studentLogin,@NotNull  String key, @NotNull  String type,@Nullable String content) throws DBExceptions.UnknownUserException {
+        User user = getUser(studentLogin);
+        val pf = user.pf();
+        pf.setTeacherFeedback(author, key, type, content);
+        updateUserField(studentLogin, PF_FIELD, pf.toDbo());
+    }
+
 }
 
 

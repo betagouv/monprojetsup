@@ -141,9 +141,19 @@ function setSelectedStudent(student) {
     sessionStorage.student = student;
   }
 }
+export function setSelectedStudentName(studentName) {
+  if (studentName == null) {
+    delete sessionStorage.studentName;
+  } else {
+    sessionStorage.studentName = studentName;
+  }
+}
 
 function getSelectedStudent() {
   return sessionStorage.student;
+}
+export function getSelectedStudentName() {
+  return sessionStorage.studentName;
 }
 
 function clear() {

@@ -68,6 +68,7 @@ export const switchRole = teacher_services.switchRole;
 export const addGroupMember = teacher_services.addGroupMember;
 export const resetStudentPasswordByTeacher =
   teacher_services.resetStudentPassword;
+export const setTeacherFeedback = teacher_services.setTeacherFeedback;
 
 /************** ADMIN ********************* */
 

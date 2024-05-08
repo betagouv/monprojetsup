@@ -1333,9 +1333,17 @@ function buildFormationAffinityCard(
           <div class="teacher-div">
           <hr/>
             <div class="teacher-actions-div">
-              <button class="fr-btn btn-teacher-ok" key="${key}">👍  Soutenir ce choix</button>
-              <button class="fr-btn fr-btn--secondary btn-teacher-discuss" key="${key}">
-                <span class="fr-icon-chat-3-fill" aria-hidden="true"></span>
+              <button 
+                id="btn-teacher-ok_${key}"
+                class="fr-btn fr-btn--secondary btn-teacher-ok" key="${key}">
+                <span class="fr-icon-thumb-up-fill" aria-hidden="true"></span>
+                &nbsp;
+                Soutenir ce choix
+              </button>
+              <button 
+                id="btn-teacher-discuss_${key}"
+                class="fr-btn fr-btn--secondary btn-teacher-discuss " key="${key}">
+                <span class="fr-icon-question-answer-fill" aria-hidden="true"></span>
                 &nbsp;
                 Proposer d'en discuter
               </button>
@@ -1397,6 +1405,47 @@ function buildFormationAffinityCard(
   }
   return $div;
 }
+
+export function setTeacherOpinion(key, opinion) {
+  let setOk =
+    opinion === "ok" &&
+    !$(`#btn-teacher-ok_${key}`).hasClass("activeTeacherFeedback");
+  let setDiscuss =
+    opinion === "discuss" &&
+    !$(`#btn-teacher-discuss_${key}`).hasClass("activeTeacherFeedback");
+  $(`#btn-teacher-ok_${key}`).toggle(!setDiscuss);
+  $(`#btn-teacher-discuss_${key}`).toggle(!setOk);
+  if (setOk) {
+    $(`#btn-teacher-ok_${key}`)
+      .addClass("activeTeacherFeedback")
+      .html("👍 &nbsp; Vous soutenez ce choix");
+  } else {
+    $(`#btn-teacher-ok_${key}`).removeClass("activeTeacherFeedback")
+      .html(`<span class="fr-icon-thumb-up-fill" aria-hidden="true"></span>
+                &nbsp;
+                Soutenir ce choix`);
+  }
+  if (setDiscuss) {
+    $(`#btn-teacher-discuss_${key}`)
+      .addClass("activeTeacherFeedback")
+      .html(
+        `<span class="fr-icon-question-answer-fill" aria-hidden="true"></span>
+              &nbsp; Vous proposez d'en discuter`
+      );
+  } else {
+    $(`#btn-teacher-discuss_${key}`)
+      .removeClass("activeTeacherFeedback")
+      .html(
+        `<span class="fr-icon-question-answer-fill" aria-hidden="true"></span>
+              &nbsp; Proposer d'en discuter`
+      );
+  }
+}
+
+export function setTeacherComment(key, comment) {
+  $(`#input-teacher-comment_${key}`).val(comment);
+}
+
 function buildMetierAffinityCard(key, fav, formations, nodetails) {
   const label = data.getLabel(key);
   const $div = $(`        <div class="formation-card">
@@ -1452,6 +1501,7 @@ function addGeoloctoDiv(cities, $div) {
     $(".card-geoloc", $div).show();
   }
 }
+
 export const tabs = {
   profile: "nav-profil-tab",
   preferences: "nav-preferences-tab",

@@ -24,9 +24,6 @@ public class GetStudentProfileService extends MyService<GetStudentProfileService
     public record Request(
             @NotNull String login,
             @NotNull String token,
-
-            @NotNull String groupId,
-
             @NotNull String memberLogin
     ) {
     }
@@ -43,10 +40,14 @@ public class GetStudentProfileService extends MyService<GetStudentProfileService
 
         DB.authenticator.tokenAuthenticate(req.login, req.token);
 
-        if(!WebServer.db().isAdminOfGroup(req.login, req.groupId)) {
+        if(!WebServer.db().isAdminOfUser(req.login, req.memberLogin)) {
             throw new DBExceptions.UserInputException.ForbiddenException();
         }
-        @Nullable ProfileDb p = WebServer.db().getGroupMemberProfile(req.groupId, req.memberLogin).sanitize();
+
+        @Nullable ProfileDb p = WebServer.db().getProfile(req.memberLogin).sanitize();
+        if(!WebServer.db().isSuperAdmin(req.login)) {
+            p.retours().removeIf(r -> !r.author().equals(req.login));
+        }
         @Nullable Map<String, StatsContainers.DetailFiliere> stats = p != null ? ServerData.getGroupStats(p.bac(), p.favoris()) : null;
 
         return new Response(new ResponseHeader(), p, stats);
