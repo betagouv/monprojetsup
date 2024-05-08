@@ -1348,7 +1348,7 @@ function buildFormationAffinityCard(
           </div>
         </div>`);
   if (session.isAdminOrTeacher()) {
-    $(".formation-card", $div).append(`
+    $div.append(`
               <div class="teacher-div teacher-only">
           <hr/>
             <div class="teacher-actions-div">
