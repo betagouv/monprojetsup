@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.app.services.info;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.Helpers;
@@ -85,7 +86,10 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
             @NotNull List<Explanation> explanations,
             @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante", example = "[\"met_129\",\"met_84\",\"met_5\"]"))
-            @NotNull List<String> examples
+            @NotNull List<String> examples,
+
+            @ArraySchema(arraySchema = @Schema(description = "retours", allOf = ProfileDb.Retour.class))
+            @NotNull List<ProfileDb.Retour> retours
 
     ) {
         public double sortScore() {
@@ -245,7 +249,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                             cities,
                             stats,
                             eaee.explanations(),
-                            eaee.examples()
+                            eaee.examples(),
+                            new ArrayList<>()
                     )
             );
             i++;

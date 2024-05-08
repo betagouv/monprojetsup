@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -166,7 +167,7 @@ public final class Profile {
         } else if((prenom == null || prenom.isEmpty())){
             return nom;
         } else {
-            return prenom + " " + nom.toUpperCase(Locale.ROOT);
+            return prenom + " " + nom;
         }
     }
 
@@ -358,7 +359,7 @@ public final class Profile {
         if(retours == null) retours = new ArrayList<>();
         retours.removeIf(r -> r.author().equals(author) && r.key().equals(key) && r.type().equals(type));
         if(content != null) {
-            retours.add(new ProfileDb.Retour(author, type, key, content));
+            retours.add(new ProfileDb.Retour(author, type, key, content, LocalDate.now().toString()));
         }
     }
 

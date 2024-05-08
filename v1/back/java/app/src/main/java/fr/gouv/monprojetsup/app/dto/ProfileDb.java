@@ -5,6 +5,8 @@ import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,13 +34,14 @@ public record ProfileDb(
 ) {
 
 
-    public record Retour(String author, String type, String key, String content) {
+    public record Retour(String author, String type, String key, String content, String date) {
         public Retour sanitize() {
             return new Retour(
                     Sanitizer.sanitize(author),
                     Sanitizer.sanitize(type),
                     Sanitizer.sanitize(key),
-                    Sanitizer.sanitize(content)
+                    Sanitizer.sanitize(content),
+                    date == null ? LocalDate.now().toString() : Sanitizer.sanitize(date)
             );
         }
     }

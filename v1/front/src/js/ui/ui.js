@@ -496,6 +496,21 @@ function addAffinityCard(dat, nodetails) {
   } else {
     console.log("null formation " + dat.key);
   }
+  const retours = {};
+  for (const o of dat.retours) {
+    const author = o.author;
+    let retour = retours[author];
+    if (retour === undefined) retour = {};
+    if (o.type === "comment") {
+      retour.date = o.date;
+      retour.comment = o.content;
+    }
+    if (o.type === "opinion") retour.opinion = o.content;
+    retours[author] = retour;
+  }
+  for (const [author, retour] of Object.entries(retours)) {
+    addRetour(dat.key, author, retour.opinion, retour.comment, retour.date);
+  }
 }
 
 let currentKeyDisplayed = "";
@@ -1307,7 +1322,8 @@ function buildFormationAffinityCard(
 ) {
   const label = data.getLabel(key);
   if (label === undefined || label === null) return null;
-  const $div = $(`<div class="formation-card">
+  const $div = $(`
+        <div class="formation-card">
           <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
               Taux d'affinité ${Math.trunc(100 * affinite)}%
@@ -1330,7 +1346,10 @@ function buildFormationAffinityCard(
           </div>
           <div class="card-metiers-list">
           </div>
-          <div class="teacher-div">
+        </div>`);
+  if (session.isAdminOrTeacher()) {
+    $(".formation-card", $div).append(`
+              <div class="teacher-div teacher-only">
           <hr/>
             <div class="teacher-actions-div">
               <button 
@@ -1368,8 +1387,17 @@ function buildFormationAffinityCard(
               </button>
             </div>
           </div>
-        </div>`);
-  $(".teacher-div").toggle(session.isAdminOrTeacher());
+`);
+  }
+  if (session.isStudent()) {
+    const $retours =
+      $(`<div id="retours-div_${key}" class="retours-div student-only">
+              <hr/>
+              </div>`).hide();
+    //hidden by default, willbe shonw only if any comment
+    $div.append($retours);
+  }
+
   if (nodetails) {
     $(".formation-card-header-affinity", $div).hide();
     $(".card-geoloc", $div).hide();
@@ -1404,6 +1432,69 @@ function buildFormationAffinityCard(
     $(".card-metiers-header", $div).empty();
   }
   return $div;
+}
+
+export function addRetour(key, author, opinion, comment, dateStr) {
+  const $retour = $(`
+    <div class="retour">
+
+    </div>
+  `);
+  if (opinion === "ok") {
+    $retour.append(`
+      <div class="retour-opinion-div">
+        👍
+        &nbsp;${author} soutient ton choix  
+        </div>`);
+  }
+  if (opinion === "discuss") {
+    $retour.append(`
+      <div class="retour-opinion-div">        
+        💬
+        &nbsp;À discuter avec ${author}  
+        </div>`);
+  }
+  if (comment !== null && comment !== undefined && comment !== "") {
+    $retour.append(`
+    <div class="retour-comment-div">
+      <div class="retour-comment-icon">
+        <img src="img/comment.svg" alt="commentaire" />
+      </div>
+      <div class="retour-comment-content">
+        &laquo;&nbsp;${comment}&nbsp;&raquo;
+      </div>
+    </div>`);
+    if (dateStr !== null && dateStr !== undefined && dateStr !== "") {
+      const date = new Date(dateStr);
+      // Tableaux pour les noms des mois et des jours
+      const mois = [
+        "janvier",
+        "février",
+        "mars",
+        "avril",
+        "mai",
+        "juin",
+        "juillet",
+        "août",
+        "septembre",
+        "octobre",
+        "novembre",
+        "décembre",
+      ];
+
+      // Extraire les composants de la date
+      const jour = date.getDate();
+      const moisIndex = date.getMonth();
+      const annee = date.getFullYear();
+      const dateFormatee =
+        "Posté le " + jour + " " + mois[moisIndex] + " " + annee;
+      $(".retour-comment-div", $retour).append(`
+        <div class="retour-comment-date">
+        ${dateFormatee}  
+        </div>`);
+    }
+  }
+  $(`#retours-div_${key}`).append($retour).show();
 }
 
 export function setTeacherOpinion(key, opinion) {
