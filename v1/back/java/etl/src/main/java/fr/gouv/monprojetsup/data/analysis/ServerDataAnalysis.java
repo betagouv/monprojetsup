@@ -856,7 +856,7 @@ public class ServerDataAnalysis {
                 val desc = entry.getValue();
                 if(!desc.isViable()) continue;
                 val mpsData = desc.getMpsData();
-                if(!mpsData.containsKey(RESUME_FORMATION_MPS_HEADER) && !mpsData.containsKey("résumé spécialité")) continue;
+                if(mpsData == null || !mpsData.containsKey(RESUME_FORMATION_MPS_HEADER) && !mpsData.containsKey("résumé spécialité")) continue;
                 for (String h : headers) {
                     csv.append(mpsData.getOrDefault(h, ""));
                 }

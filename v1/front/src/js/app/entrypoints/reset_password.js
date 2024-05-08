@@ -34,7 +34,7 @@ import { frontErrorHandler, storeCredentialsAfterSuccesfulAuth } from "../app";
 
 /* the new $( document ).ready( handler ), see https://api.jquery.com/ready/ */
 $(async function () {
-  window.onerror = function (msg, url, line, columnNo, error) {
+  window.onerror = async function (msg, url, line, columnNo, error) {
     const errObj = {
       msg: msg,
       url: url,
@@ -42,7 +42,7 @@ $(async function () {
       columnNo: columnNo,
       error: error,
     };
-    frontErrorHandler(errObj, true);
+    await frontErrorHandler(errObj, true);
   };
 
   ui.injectHtml();

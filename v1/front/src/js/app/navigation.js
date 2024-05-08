@@ -19,7 +19,6 @@ const screens = {
   recherche: {},
   board: {},
   selection: {},
-  groupes: {},
   profil: {},
   inscription_tunnel_statut: {
     next: "inscription_tunnel_scolarite",
@@ -53,6 +52,187 @@ const screens = {
   inscription_tunnel_felicitations_teacher: {},
   groupes: {},
   profil_teacher: {},
+};
+
+const screen_enter_handlers = {
+  landing: async () => await displayLandingScreen(),
+  landing_redir: async () => {
+    await app.disconnect();
+    location.reload();
+  },
+  connect: async () => {
+    await ui.showConnectionScreen();
+    $("#createAccountButton")
+      .off("click")
+      .on("click", async () => {
+        app.setAnonymousSession(false);
+        await initScreen("inscription1");
+      });
+
+    $("#anonymousNavButton")
+      .off("click")
+      .on("click", () => {
+        app.setAnonymousSession(true);
+        app.loginHandler("anonymous", "anonymous");
+      });
+
+    $("#login-button")
+      .off("click")
+      .on("click", function () {
+        const login = $("#champEmail").val();
+        const password = $("#password-1144-input").val();
+        $("#password-1144-input").val("");
+        app.setAnonymousSession(false);
+        app.loginHandler(login, password);
+      });
+    $("#oubli_mdp_button")
+      .off("click")
+      .on("click", function () {
+        $("#oubliMdpButton").trigger("click");
+        $("#sendResetPasswordEmail")
+          .off()
+          .on("click", async (event) => {
+            const login = $("#sendResetPasswordEmailInputEmail").val();
+            $("#sendResetPasswordEmailInputEmail-messages").empty();
+            $("#sendResetPasswordEmailInputEmail-messages2").empty();
+            if (login === null || login === undefined || login.length == 0) {
+              $("#sendResetPasswordEmailInputEmail-messages").html(
+                '<p class="fr-alert fr-alert--error">Préciser le login</p>'
+              );
+            } else if (!isValidEmail(login)) {
+              $("#sendResetPasswordEmailInputEmail-messages").html(
+                `<p class="fr-alert fr-alert--error">Préciser une adresse email valide</p>`
+              );
+            } else {
+              app.sendResetPasswordEmail(login);
+              //$("#passwordReinitializedButton").trigger("click");
+              //$("#resetConfirmationModalEmail").html(login);
+              $("#sendResetPasswordEmailInputEmail-messages2").html(
+                `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
+              );
+            }
+            event.preventDefault();
+          });
+      });
+  },
+  recherche: async () => {
+    await ui.showRechercheScreen();
+    init_main_nav();
+    $("#search-784-input").val("");
+    await updateRecherche();
+  },
+  board: async () => {
+    await ui.showBoard();
+    const prenom = data.getPrenom();
+    $(".ravi-div-prenom").html(prenom);
+    init_main_nav();
+  },
+  selection: async () => {
+    await ui.showSelection();
+    init_main_nav();
+    await updateSelection();
+  },
+  inscription1: async () => {
+    await ui.showInscriptionScreen1();
+    $("#nextButtonAnonymous").hide();
+
+    $("#checkboxes-noaccesscode")
+      .off()
+      .on("change", function () {
+        const isChecked = $(this).is(":checked");
+        $("#inputCreateAccountCodeAcces").toggle(!isChecked);
+        $("#nextButtonAnonymous").toggle(isChecked);
+        $("#nextButton").toggle(!isChecked);
+        if (isChecked) {
+          $("#inscription1-messages2").html(`<p
+        class="fr-alert fr-alert--info"
+      >Sans code d'accès vous ne pouvez pas créer de compte mais vous pouvez tout de même tester le site (en mode lycéen).</p>`);
+        } else {
+          $("#inscription1-messages2").empty();
+        }
+        if (isChecked) {
+          $("#nextButtonAnonymous")
+            .off()
+            .on("click", async () => {
+              app.setAnonymousSession(true);
+              app.loginHandler("anonymous", "anonymous");
+            });
+        }
+      });
+  },
+  inscription2: async () =>
+    await ui.showInscriptionScreen2(session.isAdminOrTeacher()),
+  profil: async () => {
+    await app.getProfile();
+    await ui.showProfileScreen();
+    profileEditionSetup();
+    fillInBin();
+    init_main_nav();
+  },
+  profil_teacher: async () => {
+    await ui.showTeacherProfileScreen();
+    $("#basculer_mode_lyceen")
+      .off()
+      .on("click", async () => {
+        await setScreen(null);
+        app.toLyceen();
+      });
+  },
+  inscription_tunnel_statut: async () => {
+    await ui.showTunnelScreen("statut");
+    setUpInscription("statut");
+  },
+  inscription_tunnel_scolarite: async () => {
+    await ui.showTunnelScreen("scolarite");
+    setUpInscription("scolarite");
+  },
+  inscription_tunnel_domaines_pro: async () => {
+    await ui.showTunnelScreen("domaines_pro");
+    setUpInscription("domaines_pro");
+  },
+  inscription_tunnel_interests: async () => {
+    await ui.showTunnelScreen("interests");
+    setUpInscription("interests");
+  },
+  inscription_tunnel_metiers: async () => {
+    await ui.showTunnelScreen("metiers");
+    setUpInscription("metiers");
+  },
+  inscription_tunnel_etudes: async () => {
+    await ui.showTunnelScreen("etudes");
+    setUpInscription("etudes");
+  },
+  inscription_tunnel_formations: async () => {
+    await ui.showTunnelScreen("formations");
+    setUpInscription("formations");
+  },
+  inscription_tunnel_felicitations: async () => {
+    await ui.showTunnelScreen("felicitations");
+    $("#discover_button")
+      .off()
+      .on("click", async () => {
+        await setScreen("board");
+      });
+  },
+  inscription_tunnel_felicitations_teacher: async () => {
+    await ui.showTunnelScreen("felicitations_teacher");
+    $("#discover_button")
+      .off()
+      .on("click", async () => {
+        await setScreen("groupes");
+      });
+  },
+  groupes: async () => {
+    await ui.showGroupesScreen();
+    await updateGroupesScreen();
+  },
+};
+
+const screen_exit_handlers = {
+  inscription1: async () => await validateInscription1(),
+  inscription2: async () => await validateInscription2(),
+  inscription_tunnel_domaines_pro: validateDomainePro,
+  inscription_tunnel_scolarite: validateEDS,
 };
 
 export async function initScreen(screen) {
@@ -108,6 +288,39 @@ async function doTransition(old_screen, new_screen) {
 
   ui.setRoleVisibility();
   return screen;
+}
+
+async function enterScreen(screen) {
+  if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
+    await screen_enter_handlers[screen]();
+  } else {
+    await displayLandingScreen();
+  }
+  const loggedIn = session.isLoggedIn();
+  $(".visible-only-when-connected").toggle(loggedIn);
+  $(".visible-only-when-disconnected").toggle(!loggedIn);
+  ui.setRoleVisibility();
+  if (loggedIn) {
+    $(".hidden-during-inscription").toggle(!screen.includes("inscription"));
+  }
+
+  $(".visible-only-when-favoris").toggle(
+    loggedIn && session.isStudent() && data.getSuggestionsApproved().length > 0
+  );
+}
+async function exitScreen(screen, new_screen) {
+  if (
+    screen in screen_exit_handlers &&
+    screen in screens &&
+    new_screen !== screens[screen].back
+  ) {
+    if (screen_exit_handlers[screen]) {
+      const result = await screen_exit_handlers[screen]();
+      return result;
+    }
+  }
+  return true;
+  //default behaviour: None
 }
 
 export function init_main_nav() {
@@ -383,199 +596,15 @@ function format(x, nbDigits) {
     roundingMode: "floor",
   }).format(x);
 }
-const screen_enter_handlers = {
-  landing: async () => {
-    //location.reload();
-    await ui.showLandingScreen();
-    $("#landing-placeholder")
-      .off()
-      .on("click", async () => {
-        setScreen("connect");
-      });
-  },
-  landing_redir: () => {
-    app.disconnect();
-    location.reload();
-    $("#landing-placeholder")
-      .off()
-      .on("click", async () => {
-        setScreen("connect");
-      });
-  },
-  connect: async () => {
-    await ui.showConnectionScreen();
-    $("#createAccountButton")
-      .off("click")
-      .on("click", async () => {
-        app.setAnonymousSession(false);
-        await initScreen("inscription1");
-      });
 
-    $("#anonymousNavButton")
-      .off("click")
-      .on("click", () => {
-        app.setAnonymousSession(true);
-        app.loginHandler("anonymous", "anonymous");
-      });
-
-    $("#login-button")
-      .off("click")
-      .on("click", function () {
-        const login = $("#champEmail").val();
-        const password = $("#password-1144-input").val();
-        $("#password-1144-input").val("");
-        app.setAnonymousSession(false);
-        app.loginHandler(login, password);
-      });
-    $("#oubli_mdp_button")
-      .off("click")
-      .on("click", function () {
-        $("#oubliMdpButton").trigger("click");
-        $("#sendResetPasswordEmail")
-          .off()
-          .on("click", async (event) => {
-            const login = $("#sendResetPasswordEmailInputEmail").val();
-            $("#sendResetPasswordEmailInputEmail-messages").empty();
-            $("#sendResetPasswordEmailInputEmail-messages2").empty();
-            if (login === null || login === undefined || login.length == 0) {
-              $("#sendResetPasswordEmailInputEmail-messages").html(
-                '<p class="fr-alert fr-alert--error">Préciser le login</p>'
-              );
-            } else if (!isValidEmail(login)) {
-              $("#sendResetPasswordEmailInputEmail-messages").html(
-                `<p class="fr-alert fr-alert--error">Préciser une adresse email valide</p>`
-              );
-            } else {
-              app.sendResetPasswordEmail(login);
-              //$("#passwordReinitializedButton").trigger("click");
-              //$("#resetConfirmationModalEmail").html(login);
-              $("#sendResetPasswordEmailInputEmail-messages2").html(
-                `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
-              );
-            }
-            event.preventDefault();
-          });
-      });
-  },
-  recherche: async () => {
-    await ui.showRechercheScreen();
-    init_main_nav();
-    $("#search-784-input").val("");
-    await updateRecherche();
-  },
-  board: async () => {
-    await ui.showBoard();
-    const prenom = data.getPrenom();
-    $(".ravi-div-prenom").html(prenom);
-    init_main_nav();
-  },
-  selection: async () => {
-    await ui.showSelection();
-    init_main_nav();
-    await updateSelection();
-  },
-  inscription1: async () => {
-    await ui.showInscriptionScreen1();
-    $("#nextButtonAnonymous").hide();
-
-    $("#checkboxes-noaccesscode")
-      .off()
-      .on("change", function () {
-        const isChecked = $(this).is(":checked");
-        $("#inputCreateAccountCodeAcces").toggle(!isChecked);
-        $("#nextButtonAnonymous").toggle(isChecked);
-        $("#nextButton").toggle(!isChecked);
-        if (isChecked) {
-          $("#inscription1-messages2").html(`<p
-        class="fr-alert fr-alert--info"
-      >Sans code d'accès vous ne pouvez pas créer de compte mais vous pouvez tout de même tester le site (en mode lycéen).</p>`);
-        } else {
-          $("#inscription1-messages2").empty();
-        }
-        if (isChecked) {
-          $("#nextButtonAnonymous")
-            .off()
-            .on("click", async () => {
-              app.setAnonymousSession(true);
-              app.loginHandler("anonymous", "anonymous");
-            });
-        }
-      });
-  },
-  inscription2: async () =>
-    await ui.showInscriptionScreen2(session.isAdminOrTeacher()),
-  profil: async () => {
-    await app.getProfile();
-    await ui.showProfileScreen();
-    profileEditionSetup();
-    fillInBin();
-    init_main_nav();
-  },
-  profil_teacher: async () => {
-    await ui.showTeacherProfileScreen();
-    $("#basculer_mode_lyceen")
-      .off()
-      .on("click", async () => {
-        await setScreen(null);
-        app.toLyceen();
-      });
-  },
-  inscription_tunnel_statut: async () => {
-    await ui.showTunnelScreen("statut");
-    setUpInscription("statut");
-  },
-  inscription_tunnel_scolarite: async () => {
-    await ui.showTunnelScreen("scolarite");
-    setUpInscription("scolarite");
-  },
-  inscription_tunnel_domaines_pro: async () => {
-    await ui.showTunnelScreen("domaines_pro");
-    setUpInscription("domaines_pro");
-  },
-  inscription_tunnel_interests: async () => {
-    await ui.showTunnelScreen("interests");
-    setUpInscription("interests");
-  },
-  inscription_tunnel_metiers: async () => {
-    await ui.showTunnelScreen("metiers");
-    setUpInscription("metiers");
-  },
-  inscription_tunnel_etudes: async () => {
-    await ui.showTunnelScreen("etudes");
-    setUpInscription("etudes");
-  },
-  inscription_tunnel_formations: async () => {
-    await ui.showTunnelScreen("formations");
-    setUpInscription("formations");
-  },
-  inscription_tunnel_felicitations: async () => {
-    await ui.showTunnelScreen("felicitations");
-    $("#discover_button")
-      .off()
-      .on("click", async () => {
-        await setScreen("board");
-      });
-  },
-  inscription_tunnel_felicitations_teacher: async () => {
-    await ui.showTunnelScreen("felicitations_teacher");
-    $("#discover_button")
-      .off()
-      .on("click", async () => {
-        await setScreen("groupes");
-      });
-  },
-  groupes: async () => {
-    await ui.showGroupesScreen();
-    await updateGroupesScreen();
-  },
-};
-
-const screen_exit_handlers = {
-  inscription1: async () => await validateInscription1(),
-  inscription2: async () => await validateInscription2(),
-  inscription_tunnel_domaines_pro: validateDomainePro,
-  inscription_tunnel_scolarite: validateEDS,
-};
+async function displayLandingScreen() {
+  await ui.showLandingScreen();
+  $("#landing-placeholder")
+    .off()
+    .on("click", async () => {
+      setScreen("connect");
+    });
+}
 
 async function updateGroupesScreen() {
   //ask for the list of groups
@@ -825,39 +854,6 @@ function autoCompleteFeedbackHandler(
   } else if (resultNb > 1) {
     feedbackDom.html(`${resultNb} résultats`);
   }
-}
-
-async function enterScreen(screen) {
-  if (screen in screen_enter_handlers && screen_enter_handlers[screen]) {
-    await screen_enter_handlers[screen]();
-  } else {
-    ui.showLandingScreen();
-  }
-  const loggedIn = session.isLoggedIn();
-  $(".visible-only-when-connected").toggle(loggedIn);
-  $(".visible-only-when-disconnected").toggle(!loggedIn);
-  ui.setRoleVisibility();
-  if (loggedIn) {
-    $(".hidden-during-inscription").toggle(!screen.includes("inscription"));
-  }
-
-  $(".visible-only-when-favoris").toggle(
-    loggedIn && session.isStudent() && data.getSuggestionsApproved().length > 0
-  );
-}
-async function exitScreen(screen, new_screen) {
-  if (
-    screen in screen_exit_handlers &&
-    screen in screens &&
-    new_screen !== screens[screen].back
-  ) {
-    if (screen_exit_handlers[screen]) {
-      const result = await screen_exit_handlers[screen]();
-      return result;
-    }
-  }
-  return true;
-  //default behaviour: None
 }
 
 let accounType = null;
