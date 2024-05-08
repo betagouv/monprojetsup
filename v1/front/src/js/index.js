@@ -76,13 +76,13 @@ $(async function () {
   /* Step3: trying automatic reconnection based on session cookie */
   const loggedIn = session.isLoggedIn();
   if (login) {
-    if (loggedIn) disconnect();
+    if (loggedIn) await disconnect();
     await showLogin();
   } else if (inscription) {
-    if (loggedIn) disconnect();
+    if (loggedIn) await disconnect();
     await showInscription();
   } else if (anonyme) {
-    if (loggedIn) disconnect();
+    if (loggedIn) await disconnect();
     await showAnonymous();
   } else if (loggedIn) {
     await postLoginHandler();

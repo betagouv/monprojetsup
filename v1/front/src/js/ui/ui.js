@@ -380,7 +380,6 @@ export async function showConnectionScreen() {
 }
 
 export async function showLandingScreen() {
-  //$(".body").addClass("landing");
   await showScreen("landing", "landing-placeholder");
 }
 
@@ -1696,10 +1695,7 @@ export function updateFavoris() {
 }
 
 function displayServerError(msg) {
-  const msgHtml = msg
-    .replaceAll("\\n", "<br>")
-    .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  showErrorMessage("Erreur", msgHtml);
+  showErrorMessage("Erreur du serveur", msg);
   //$(".server-error").html("Erreur serveur: " + msgHtml + "<br><br><br><br>");
 }
 
@@ -1707,7 +1703,7 @@ function displayClientError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  showErrorMessage("Erreur", msgHtml);
+  showErrorMessage("Erreur du client", msg);
 }
 
 //validationMessage
@@ -1745,8 +1741,11 @@ export function showMetierDetails(metier) {
 
 export function showErrorMessage(title, message) {
   //show modal
+  const msgHtml = message
+    .replaceAll("\\n", "<br>")
+    .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
   $("#errorTitle").html(title);
-  $("#errorMessage").html(message);
+  $("#errorMessage").html(msgHtml);
   $("#errorModalButton").trigger("click");
 }
 

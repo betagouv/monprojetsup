@@ -52,15 +52,15 @@ export {
 
 /* the new $( document ).ready( handler ), see https://api.jquery.com/ready/ */
 
-export function loginHandler(login, password) {
+export async function loginHandler(login, password) {
   if (login === undefined || login === null || login.length == 0) {
-    frontErrorHandler({ msg: "Email non renseigné" }, false);
+    await frontErrorHandler({ msg: "Email non renseigné" }, false);
   } else if (
     password === undefined ||
     password === null ||
     password.length == 0
   ) {
-    frontErrorHandler({ msg: "Mot de passe non renseigné" }, false);
+    await frontErrorHandler({ msg: "Mot de passe non renseigné" }, false);
   } else {
     server.passwordLogin(login, password, async (msg) => {
       storeCredentialsAfterSuccesfulAuth(msg.data.login, password);
@@ -70,9 +70,9 @@ export function loginHandler(login, password) {
   }
 }
 
-export function oidcLogin(jwt) {
+export async function oidcLogin(jwt) {
   if (!jwt) {
-    frontErrorHandler({ msg: "Jeton JWT erroné" }, false);
+    await frontErrorHandler({ msg: "Jeton JWT erroné" }, false);
   } else {
     server.oidcLogin(jwt, async (msg) => {
       loginServerAnswerHandler(msg.data);
@@ -133,7 +133,7 @@ async function loginServerAnswerHandler(data) {
     await postLoginHandler();
     return true;
   } else {
-    frontErrorHandler("Réponse erronée du serveur", true);
+    await frontErrorHandler("Réponse erronée du serveur", true);
     return false;
   }
 }
@@ -207,7 +207,7 @@ export async function askFormationsDetails() {
   for (const explanations of msg2.liste) {
     //todo  check key
     if (explanations.key != keys[i]) {
-      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      await frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
       break;
     }
     affinites[i].explanations = explanations;
@@ -220,7 +220,7 @@ export async function askFormationsDetails() {
   for (const details of msg3.details) {
     //todo  check key
     if (details.key != keys[i]) {
-      frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+      await frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
       break;
     }
     affinites[i].details = details;
@@ -268,7 +268,7 @@ export function toLyceen() {
   server.switchRole("lyceen", postLoginHandler);
 }
 
-function disconnect() {
+async function disconnect() {
   //$(".front-feedback").html("Vous êtes déconnecté(e).").show();
   $(".front-error").html("");
   $(".server-error").html("");
@@ -276,13 +276,13 @@ function disconnect() {
   if (session.isLoggedIn()) server.disconnect();
   data.init();
   //ui.showConnectionScreen();
-  ui.showLandingScreen();
+  await showLandingScreen();
 }
 
 export async function updateAdminInfos() {
   const msg = await server.updateAdminInfosAsync();
   if (msg == undefined || msg.infos === undefined) {
-    frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
+    await frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
   }
   const infos = msg.infos;
   setAdminInfos(infos);
@@ -528,8 +528,8 @@ export function sendResetPasswordEmail(email) {
   server.sendResetPasswordEmail(email);
 }
 
-function serverErrorHandler(error) {
-  var msg = "";
+async function serverErrorHandler(error) {
+  let msg = "";
   if (error.status === 0) {
     msg = "Le serveur n'est pas joignable";
   } else if (error.status == 404) {
@@ -540,7 +540,7 @@ function serverErrorHandler(error) {
     msg = JSON.stringify(error);
   }
   console.error(msg);
-  disconnect();
+  await disconnect();
   if (error.status === 0) {
     ui.displayServerError(
       "le serveur n'est pas joignable, veuillez SVP vérifier votre connexion internet."
@@ -554,11 +554,11 @@ export function setAnonymousSession(ano) {
   session.setAnonymous(ano);
 }
 
-export function frontErrorHandler(error, severe) {
+export async function frontErrorHandler(error, severe) {
   error.login = session.getLogin();
   const msg = JSON.stringify(error);
   console.error(msg);
-  disconnect();
+  await disconnect();
   if (severe) {
     ui.displayClientError(msg);
     server.sendError(msg);
@@ -575,8 +575,8 @@ export function logAction(action) {
   server.trace("front " + action);
 }
 
-function disconnectAndShowFeedback(feedback) {
-  disconnect();
+async function disconnectAndShowFeedback(feedback) {
+  await disconnect();
   ui.displayClientError(feedback);
   //$(".front-feedback").html(feedback).show();
 }

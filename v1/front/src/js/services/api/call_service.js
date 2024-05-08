@@ -2,7 +2,6 @@ import { callAPI } from "./local_api";
 
 import {
   serverErrorHandler,
-  frontErrorHandler,
   disconnectAndShowFeedback,
   showToast,
 } from "../../app/app";
@@ -95,7 +94,7 @@ function callService(
   callAPI(
     service_name,
     toSendJson,
-    (answer, textStatus, jqXHR) => {
+    async (answer, textStatus, jqXHR) => {
       const status = answer.header.status;
 
       //const crsf = jqXHR["X-CSRF-TOKEN"];
@@ -120,16 +119,16 @@ function callService(
         if (onError != null) onError(answer.header.error);
 
         if (answer.header.status == 1) {
-          serverErrorHandler(answer.header.error);
+          await serverErrorHandler(answer.header.error);
         } else {
-          disconnectAndShowFeedback(answer.header.error);
+          await disconnectAndShowFeedback(answer.header.error);
         }
       }
     },
-    (xhr, status, error) => {
+    async (xhr, status, error) => {
       console.log("client <-xx " + service_name + " xxx server  :-(");
       if (onError != null) onError(xhr);
-      serverErrorHandler(xhr);
+      await serverErrorHandler(xhr);
     },
     type
   );
