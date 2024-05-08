@@ -704,6 +704,15 @@ public abstract class DB {
         updateUserField(studentLogin, PF_FIELD, pf.toDbo());
     }
 
+    public String getUserName(String author)
+    {
+        try {
+            val pf = getUser(author).pf();
+            return pf.getName();
+        } catch (UnknownUserException e) {
+            return author;
+        }
+    }
 }
 
 
