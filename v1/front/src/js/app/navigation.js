@@ -19,7 +19,9 @@ const screens = {
   recherche: {},
   board: {},
   selection: {},
+  student_selection: {},
   profil: {},
+  student_profile: {},
   inscription_tunnel_statut: {
     next: "inscription_tunnel_scolarite",
     back: "landing_redir",
@@ -132,6 +134,24 @@ const screen_enter_handlers = {
     init_main_nav();
     await updateSelection();
   },
+  student_selection: async () => {
+    const login = session.getSelectedStudent();
+    if (login === null || login === undefined) {
+      return setScreen("groupes");
+    }
+    await ui.showSelection();
+    const msg = await app.getStudentSelection(login);
+    const selection = msg.details;
+    const name = session.getSelectedStudentName();
+    ui.showFavoris(selection);
+    init_main_nav();
+    $("#explore-div-entete").hide();
+    $("#explore-div-resultats-left-entete-prof").html(
+      `La sélection de ${name == null ? login : name}`
+    );
+    $("#formation-details-header-nav-central-icon").hide();
+    await updateStudentRetours(msg.retours);
+  },
   inscription1: async () => {
     await ui.showInscriptionScreen1();
     $("#nextButtonAnonymous").hide();
@@ -168,6 +188,26 @@ const screen_enter_handlers = {
     profileEditionSetup();
     fillInBin();
     init_main_nav();
+  },
+  student_profile: async () => {
+    const login = session.getSelectedStudent();
+    if (login === null || login === undefined) {
+      return setScreen("groupes");
+    }
+    const profile = await app.getStudentProfile(login);
+    data.loadProfile(profile);
+    await ui.showProfileScreen();
+    init_main_nav();
+    profileEditionSetup();
+    $("#explore-div-entete").show().html(`Le profil de ${name}`);
+    $("select").prop("disabled", true);
+    $("input").prop("disabled", true);
+    $(".fr-input").hide();
+    $(".trashItem").hide();
+    $(".profile_explanation").hide();
+    $(".fr-hint-text").hide();
+    $("#range-moyenne-generale-messages").hide();
+    $(".multi-options-item").off().addClass("no-pointer");
   },
   profil_teacher: async () => {
     await ui.showTeacherProfileScreen();
@@ -239,11 +279,54 @@ export async function initScreen(screen) {
   session.saveScreen(null);
   return setScreen(screen);
 }
+
+async function updateStudentRetours(retoursListe) {
+  const retoursByKey = {};
+  for (const retour of retoursListe) {
+    const key = retour.key;
+    let retours = retoursByKey[key];
+    if (retours === undefined) retours = {};
+    retours[retour.type] = retour.content;
+    retoursByKey[key] = retours;
+  }
+  for (const [key, value] of Object.entries(retoursByKey)) {
+    if ("opinion" in value) {
+      ui.setTeacherOpinion(key, value.opinion);
+    }
+    if ("comment" in value) {
+      ui.setTeacherComment(key, value.comment);
+    }
+  }
+  if (session.isAdminOrTeacher()) {
+    $(".btn-teacher-ok")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+        await app.setTeacherOpinion(key, "ok");
+        ui.setTeacherOpinion(key, "ok");
+      });
+    $(".btn-teacher-discuss")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+        await app.setTeacherOpinion(key, "discuss");
+        ui.setTeacherOpinion(key, "discuss");
+      });
+    $(".btn-teacher-send-comment")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+        const comment = $(`#input-teacher-comment_${key}`).val();
+        await app.setTeacherComment(key, comment);
+      });
+  }
+}
+
 async function setScreen(screen) {
   console.log("setScreen", screen);
   if (screen == null) {
     session.saveScreen(null);
-  } else if (screen in screens) {
+  } else if (screen in screens || screen in screen_enter_handlers) {
     let current_screen = session.getScreen();
     screen = await doTransition(current_screen, screen);
     $(`#nav-${screen}`).attr("aria-current", true);
@@ -258,6 +341,7 @@ function next(current_screen) {
     return "inscription_tunnel_felicitations_teacher";
   return screens[current_screen]?.next;
 }
+
 function back(current_screen) {
   if (!current_screen in screens) return undefined;
   return screens[current_screen]?.back;
@@ -308,6 +392,7 @@ async function enterScreen(screen) {
     loggedIn && session.isStudent() && data.getSuggestionsApproved().length > 0
   );
 }
+
 async function exitScreen(screen, new_screen) {
   if (
     screen in screen_exit_handlers &&
@@ -406,25 +491,8 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
-  if (session.isAdminOrTeacher()) {
-    $(".btn-teacher-ok")
-      .off()
-      .on("click", async function () {
-        const key = $(this).attr("key");
-      });
-    $(".btn-teacher-discuss")
-      .off()
-      .on("click", async function () {
-        const key = $(this).attr("key");
-      });
-    $(".btn-teacher-send-comment")
-      .off()
-      .on("click", async function () {
-        const key = $(this).attr("key");
-        const comment = $(`#input-teacher-comment_${key}`).val();
-      });
-  }
 }
+
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
@@ -544,11 +612,13 @@ function setUpScolarite() {
 function sendMoyenneDebounced(val) {
   debounce(() => sendMoyenne(val), 1000)();
 }
+
 function sendMoyenne(val) {
   if (val === null) val = $("#range-moyenne-generale").val();
   console.log("Sending moyenne '" + val + "'");
   events.profileValueChangedHandler2("moygen", val);
 }
+
 function debounce(func, delay) {
   let timeoutId;
 
@@ -632,13 +702,14 @@ async function updateGroupesScreen() {
     .off()
     .on("click", () => {
       const group_id = $(this).attr("group_id");
-      session.setSelectedGroup(group_id);
+      app.setSelectedGroup(group_id);
       showGroup(group_id);
     });
 
   const curGroup = session.getSelectedGroup();
   await showGroup(curGroup);
 }
+
 async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
@@ -647,38 +718,21 @@ async function showGroup(group_id) {
     .off()
     .on("click", async (event) => {
       const login = event.currentTarget.getAttribute("login");
-      if (login !== undefined) {
-        await ui.showSelection();
-        const selection = await app.getStudentSelection(login);
-        const name = event.currentTarget.getAttribute("name");
-        ui.showFavoris(selection);
-        init_main_nav();
-        $("#explore-div-entete").hide();
-        $("#explore-div-resultats-left-entete-prof").html(
-          `La sélection de ${name == null ? login : name}`
-        );
-        $("#formation-details-header-nav-central-icon").hide();
-      }
+      if (login === undefined || login === null) return;
+      const name = event.currentTarget.getAttribute("name");
+      session.setSelectedStudent(login);
+      session.setSelectedStudentName(name);
+      setScreen("student_selection");
     });
   $(".student_profile_button")
     .off()
     .on("click", async (event) => {
       const login = event.currentTarget.getAttribute("login");
+      if (login === undefined || login === null) return;
       const name = event.currentTarget.getAttribute("name");
-      const profile = await app.getStudentProfile(login);
-      data.loadProfile(profile);
-      await ui.showProfileScreen();
-      init_main_nav();
-      profileEditionSetup();
-      $("#explore-div-entete").show().html(`Le profil de ${name}`);
-      $("select").prop("disabled", true);
-      $("input").prop("disabled", true);
-      $(".fr-input").hide();
-      $(".trashItem").hide();
-      $(".profile_explanation").hide();
-      $(".fr-hint-text").hide();
-      $("#range-moyenne-generale-messages").hide();
-      $(".multi-options-item").off().addClass("no-pointer");
+      session.setSelectedStudent(login);
+      session.setSelectedStudentName(name);
+      setScreen("student_profile");
     });
 }
 
@@ -1023,9 +1077,11 @@ function getSelectVal(id) {
   if (val === null) return "";
   return val;
 }
+
 function setSelectVal(id, val) {
   $(id).val(val);
 }
+
 function setRadioVal(id, val) {
   $("#radio_" + id + "_" + val).prop("checked", true);
 }

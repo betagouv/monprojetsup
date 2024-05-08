@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
 import java.util.*;
@@ -27,6 +28,8 @@ public final class Profile {
     private static final int PROFILE_COMPLETENESS_LEVEL_PREFS = 1;
     public static final int PROFILE_COMPLETENESS_LEVEL_OK = 2;
 
+    public static final String RETOURS_FIELD = "retours";
+
     private static final Logger LOGGER = Logger.getLogger(Profile.class.getSimpleName());
 
     private String login;
@@ -40,6 +43,7 @@ public final class Profile {
     private String apprentissage;
     private Set<String> geo_pref = new HashSet<>();
     private Set<String> spe_classes= new HashSet<>();
+    private List<ProfileDb.Retour> retours = new ArrayList<>();
 
     /** maps various things to integer interests chosen by the student.
      E.g. interets "T-ITM.1020" --> 5
@@ -58,6 +62,8 @@ public final class Profile {
     @NotNull private Map<String, List<Message>> msgs = new HashMap<>();
     /* the choices of the student, indexed by key */
     @NotNull private Map<String, SuggestionDTO> choices = new HashMap<>();
+
+
 
     public Profile(String login) {
         this.login = login;
@@ -119,19 +125,10 @@ public final class Profile {
     }
 
     @Transient
-    public boolean isIncomplete() {
-        return isOk(nom) == 0 || isOk(prenom) == 0 || isOk(niveau) == 0 || choices.isEmpty();
-    }
-
-    @Transient
     public int getProfileCompleteness() {
         if(isOk(nom) == 0 || isOk(prenom) == 0 || isOk(niveau) == 0) return PROFILE_COMPLETENESS_LEVEL_PROFILE;
         if(choices.isEmpty() && scores.isEmpty()) return PROFILE_COMPLETENESS_LEVEL_PREFS;
         return PROFILE_COMPLETENESS_LEVEL_OK;
-    }
-
-    public static Profile getNewProfile(String login) {
-        return new Profile(normalizeUser(login));
     }
 
     public static Profile getNewProfile(String login, String nom, String prenom) {
@@ -139,21 +136,8 @@ public final class Profile {
     }
 
 
-
-    public void addMessage(String topic, Message msg) {
-        if (msgs == null) {
-            msgs = new HashMap<>();
-        }
-        List<Message> msgss = this.msgs.computeIfAbsent(topic, z -> new ArrayList<>());
-        msgss.add(msg);
-    }
-
     public String login() {
         return normalizeUser(login);
-    }
-
-    public String bac() {
-        return bac;
     }
 
     @Transient
@@ -302,7 +286,7 @@ public final class Profile {
         return UUID.randomUUID().toString();
     }
 
-    public ProfileDb toDTO() {
+    public ProfileDb toDbo() {
         removeDotsFromKeys();
         return new ProfileDb(
                 login,
@@ -319,7 +303,8 @@ public final class Profile {
                 mention,
                 moygen,
                 choices,
-                statut
+                statut,
+                new ArrayList<>(retours)
         ).sanitize();
     }
 
@@ -368,4 +353,13 @@ public final class Profile {
     public int nbMetiersFavoris() {
         return (int) choices.values().stream().filter(s -> s.status() == SUGG_APPROVED && isMetier(s.fl())).count();
     }
+
+    public void setTeacherFeedback( @NotNull String author,@NotNull String key, @NotNull String type, @Nullable String content) {
+        if(retours == null) retours = new ArrayList<>();
+        retours.removeIf(r -> r.author().equals(author) && r.key().equals(key) && r.type().equals(type));
+        if(content != null) {
+            retours.add(new ProfileDb.Retour(author, type, key, content));
+        }
+    }
+
 }

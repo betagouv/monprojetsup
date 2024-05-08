@@ -40,6 +40,23 @@ export async function getSelectedGroupDetailsAsync(group) {
   });
 }
 
+export async function setTeacherFeedback(studentLogin, key, type, content) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/student/feedback",
+      {
+        studentLogin: studentLogin,
+        key: key,
+        type: type,
+        content: content,
+      },
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
+}
+
 export function addGroupMember(group, name, add, onSuccess = null) {
   postToSpringService(
     "teacher/groups/add",
@@ -72,12 +89,11 @@ export function getStudentProfile(curGroup, curStudent, onSuccess = null) {
     onSuccess
   );
 }
-export function getStudentProfileAsync(curGroup, curStudent) {
+export function getStudentProfileAsync(curStudent) {
   return new Promise((resolve, reject) => {
     postToSpringService(
       "teacher/student/profile",
       {
-        groupId: curGroup,
         memberLogin: curStudent,
       },
       (data) => resolve(data),

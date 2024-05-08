@@ -279,6 +279,26 @@ async function disconnect() {
   await showLandingScreen();
 }
 
+export async function setTeacherOpinion(key, opinion) {
+  await server.setTeacherFeedback(
+    //studentLogin, key, type, content
+    session.getSelectedStudent(),
+    key,
+    "opinion",
+    opinion
+  );
+}
+
+export async function setTeacherComment(key, comment) {
+  await server.setTeacherFeedback(
+    //studentLogin, key, type, content
+    session.getSelectedStudent(),
+    key,
+    "comment",
+    comment
+  );
+}
+
 export async function updateAdminInfos() {
   const msg = await server.updateAdminInfosAsync();
   if (msg == undefined || msg.infos === undefined) {
@@ -328,13 +348,11 @@ function showSelectGroupTab(msg) {
 
 export async function getStudentSelection(login) {
   const curGroup = session.getSelectedGroup();
-  const msg = await server.getStudentSelection(curGroup, login);
-  return msg.details;
+  return server.getStudentSelection(curGroup, login);
 }
 
 export async function getStudentProfile(login) {
-  const curGroup = session.getSelectedGroup();
-  const msg = await server.getStudentProfileAsync(curGroup, login);
+  const msg = await server.getStudentProfileAsync(login);
   return msg.profile;
 }
 
@@ -425,7 +443,6 @@ function setSelectedGroup(group) {
     curStudent: null,
   });
   session.setSelectedGroup(group);
-  refreshGroupTab(false);
 }
 
 function setSelectedStudent(student) {
@@ -434,7 +451,6 @@ function setSelectedStudent(student) {
     curStudent: student,
   });
   session.setSelectedStudent(student);
-  refreshGroupTab(false);
 }
 
 export function setGroupAdmin(group, user, add) {

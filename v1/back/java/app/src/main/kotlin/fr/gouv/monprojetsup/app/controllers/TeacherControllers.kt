@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.app.BASE_PATH
 import fr.gouv.monprojetsup.app.services.info.SearchService
 import fr.gouv.monprojetsup.app.services.teacher.*
 import fr.gouv.monprojetsup.common.server.Server
+import fr.gouv.monprojetsup.common.server.Server.BasicResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,6 +21,7 @@ class TeacherControllers(
     private val switchRoleService: SwitchRoleService,
     private val setGroupMemberService: SetGroupMemberService,
     private val resetStudentPasswordService: ResetUserPasswordService,
+    private val setStudentFeedbackService: SetStudentFeedbackService
 ) {
 
 
@@ -43,8 +45,13 @@ class TeacherControllers(
         return getStudentProfileService.handleRequestAndExceptions(request)
     }
 
+    @PostMapping("/student/feedback")
+    fun setStudentFeedback(@RequestBody request: SetStudentFeedbackService.Request): BasicResponse {
+        return setStudentFeedbackService.handleRequestAndExceptions(request)
+    }
+
     @PostMapping("/student/selection")
-    fun getStudentSelection(@RequestBody request: GetStudentProfileService.Request): SearchService.Response {
+    fun getStudentSelection(@RequestBody request: GetStudentProfileService.Request): GetStudentSelectionService.Response {
         return getStudentSelectionService.handleRequestAndExceptions(request)
     }
 

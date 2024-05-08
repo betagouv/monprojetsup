@@ -4,13 +4,11 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import fr.gouv.monprojetsup.app.db.model.*;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
-import fr.gouv.monprojetsup.app.dto.GroupDTO;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.ServerError;
 import fr.gouv.monprojetsup.app.log.ServerTrace;
@@ -238,7 +236,7 @@ public class DBMongo extends DB implements Closeable {
     @Override
     public void resetUserPassword(@NotNull String login, @NotNull String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Credential cred = Credential.getNewCredential(password);
-        setUserField(login, "cr", new Document("salt", cred.salt()).append("hash", cred.hash()));
+        setUserField(login, CR_FIELD, new Document("salt", cred.salt()).append("hash", cred.hash()));
     }
 
     /** gets the element with id login from collection USERS */
@@ -606,7 +604,7 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     public boolean isAdminOfGroup(String login, String groupId) throws DBExceptions.ModelException {
-        if (isSuperadmin(login)) return true;
+        if (isSuperAdmin(login)) return true;
         @NotNull Group group = findGroup(groupId);
         return group.hasAdmin(login);
     }
@@ -614,7 +612,7 @@ public class DBMongo extends DB implements Closeable {
     @Override
     public boolean isAdminOfUser(String login, String user) throws DBExceptions.UnknownUserException {
         login = normalizeUser(login);
-        if (isSuperadmin(login)) return true;
+        if (isSuperAdmin(login)) return true;
         //finds groups whose members contain user and admins contain login
         return existsGroupWithSpecifiedUserAndAdmin(login, user);
     }
@@ -658,6 +656,7 @@ public class DBMongo extends DB implements Closeable {
             findGroupWithAdminAccessCode(code);
         }
     }
+
 
     @Override
     public synchronized void createNewUser(
@@ -792,7 +791,7 @@ public class DBMongo extends DB implements Closeable {
             return null;
         }
         User p = getUser(memberLogin);
-        return p.pf().toDTO();
+        return p.pf().toDbo();
     }
 
     @Override
@@ -983,7 +982,7 @@ public class DBMongo extends DB implements Closeable {
         login = normalizeUser(login);
         groupAdminLogin = normalizeUser(groupAdminLogin);
 
-        if(isSuperadmin(login)) return true;
+        if(isSuperAdmin(login)) return true;
 
         if(!Objects.equals(login, groupAdminLogin))  return false;
 
