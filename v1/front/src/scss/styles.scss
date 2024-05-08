@@ -780,6 +780,53 @@ background: #E3E3FD;
   background: #E3E3FD;
 
 }
+
+.retour-opinion-div {
+  //padding-top: 24px;
+  padding-bottom: 24px;
+color: var(--light-decisions-text-text-title-grey, #161616);
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+
+}
+.retour-comment-div {
+      border-left: 1px solid #ccc;
+        /* Specify the style of the vertical separator */
+        padding-left: 10px;
+        /* Add padding to space content from the separator */
+}
+
+.retour-comment-icon {
+  align-items: start;
+  margin-bottom: 8px;
+
+}
+.retour-comment-content {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+    font-family: Marianne;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    /* 157.143% */
+
+}
+.retour-comment-date {
+  margin-top: 16px;
+color: var(--light-decisions-text-text-mention-grey, #666);
+
+  /* 2.Corps de texte/XS - Texte mention/Desktop & Mobile - Regular */
+  font-family: Marianne;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 166.667% */
+}
 .no-pointer {
   cursor: default !important;
   /* Override any existing cursor styles */
