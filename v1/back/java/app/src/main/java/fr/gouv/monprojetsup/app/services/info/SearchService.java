@@ -98,7 +98,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                     name = "details",
                     description =
                             """
-                               Permet de récupérer des détails sur une liste de formations, en fonction d'un profil.
+                               Détails sur une liste de formations, en fonction d'un profil.
                                Chaque détail inclut:
                                * des explications sur les éléments de proximité entre le profil et la formation
                                * des exemples de métiers associées, triés par affinité décroissante
@@ -108,7 +108,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                                """,
                     required = true
             )
-            List<ResultatRecherche> details
+            @NotNull List<ResultatRecherche> details
     ) {
 
         public Response(@NotNull List<ResultatRecherche>  suggestions) {

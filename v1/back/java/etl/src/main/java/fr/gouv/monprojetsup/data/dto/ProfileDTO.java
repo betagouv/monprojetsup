@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.gouv.monprojetsup.common.Sanitizer;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -9,33 +10,32 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
 
-        @Schema(name = "niveau", description = "classe actuelle", example = "term", required = false, allowableValues = {"", "sec", "secSTHR", "secTMD", "prem", "term"})
+        @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "secSTHR", "secTMD", "prem", "term"})
         String niveau,
-        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", required = false, allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
+        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
         String bac,
-        @Schema(name = "duree", description = "durée envisagée des études", example = "long", required = false, allowableValues = {"", "court", "long", "indiff"})
+        @Schema(name = "duree", description = "durée envisagée des études", example = "long", allowableValues = {"", "court", "long", "indiff"})
         String duree,
-        @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", required = false, allowableValues = {"", "A", "B", "C", "D"})
+        @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]"))
         Set<String> geo_pref,
-        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
         Set<String> spe_classes,
-        @ArraySchema(arraySchema = @Schema(name = "interests", description = "centres d'intérêt", example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\", \"T_ROME_2092381917\", \"T_IDEO2_4812\"]", required = false))
+        @ArraySchema(arraySchema = @Schema(name = "interests", description = "centres d'intérêt", example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\", \"T_ROME_2092381917\", \"T_IDEO2_4812\"]"))
         List<String> interests,
-        @Schema(name = "moygen", description = "moyenne générale scolaire estimée en terminale", example = "14", required = false)
+        @Schema(description = "moyenne générale scolaire estimée en terminale", example = "14")
         String moygen,
-        @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité", required = false))
+        @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
         List<SuggestionDTO> choices,
 
         //replaced by interests
-        @Schema(name = "deprecated", description = "deprecated", required = false)
+        @Schema(name = "deprecated", description = "deprecated")
         @Deprecated Map<String,Integer> scores,
-        @Schema(name = "statut", description = "statut de réflexion 0/1/2", example = "0", required = false)
+        @Schema(description = "statut de réflexion 0/1/2", example = "0")
         String statut
 
-        ) {
-
+) {
     /*
     public ProfileDTO(fr.gouv.monprojetsup.app.dto.ProfileDTO dto) {
         this(

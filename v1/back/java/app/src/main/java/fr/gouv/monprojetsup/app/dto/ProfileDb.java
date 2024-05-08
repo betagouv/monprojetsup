@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.app.dto;
 
+import fr.gouv.monprojetsup.app.db.model.Profile;
 import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
@@ -26,8 +27,21 @@ public record ProfileDb(
      String moygen,
 
      Map<String, SuggestionDTO> choices,
-        String statut
+        String statut,
+        List<Retour> retours
 ) {
+
+
+    public record Retour(String author, String type, String key, String content) {
+        public Retour sanitize() {
+            return new Retour(
+                    Sanitizer.sanitize(author),
+                    Sanitizer.sanitize(type),
+                    Sanitizer.sanitize(key),
+                    Sanitizer.sanitize(content)
+            );
+        }
+    }
 
     /**
      * Return all groups ok, including fl and fr
@@ -67,7 +81,10 @@ public record ProfileDb(
                                 e -> Sanitizer.sanitize(e.getKey()),
                                 e -> e.getValue().sanitize()
                         )),
-                Sanitizer.sanitize(statut)
+                Sanitizer.sanitize(statut),
+                 new ArrayList<>(retours == null ? Collections.emptyList() : retours.stream()
+                        .map(Retour::sanitize)
+                        .toList())
         );
     }
 
@@ -84,7 +101,8 @@ public record ProfileDb(
                 choices == null ? Collections.emptyList() : choices.values().stream().toList(),
                 Map.of(),
                 statut
-
         );
     }
+
+
 }
