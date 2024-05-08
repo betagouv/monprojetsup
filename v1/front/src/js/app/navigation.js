@@ -406,6 +406,24 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
+  if (session.isAdminOrTeacher()) {
+    $(".btn-teacher-ok")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+      });
+    $(".btn-teacher-discuss")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+      });
+    $(".btn-teacher-send-comment")
+      .off()
+      .on("click", async function () {
+        const key = $(this).attr("key");
+        const comment = $(`#input-teacher-comment_${key}`).val();
+      });
+  }
 }
 async function updateSelection() {
   ui.showWaitingMessage();

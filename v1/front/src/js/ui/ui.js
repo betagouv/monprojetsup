@@ -88,6 +88,7 @@ async function showScreen(screen, ph = null) {
   $("#main-placeholder").css({
     "background-image": "none",
   });
+  setRoleVisibility();
 }
 
 async function showSubScreen(subscreen) {
@@ -99,6 +100,7 @@ async function showSubScreen(subscreen) {
       "background-image": 'url("../img/bg.svg")',
     });
   }
+  setRoleVisibility();
 }
 
 export async function showConnectedScreen(subscreen) {
@@ -109,6 +111,7 @@ export async function showConnectedScreen(subscreen) {
   const $div = $(`#myTabContent`);
   if ($div.length == 0) throw Error("no myTabContent");
   $div.html(html);
+  setRoleVisibility();
 }
 
 const tunnelScreens = [
@@ -1327,7 +1330,38 @@ function buildFormationAffinityCard(
           </div>
           <div class="card-metiers-list">
           </div>
+          <div class="teacher-div">
+          <hr/>
+            <div class="teacher-actions-div">
+              <button class="fr-btn btn-teacher-ok" key="${key}">👍  Soutenir ce choix</button>
+              <button class="fr-btn fr-btn--secondary btn-teacher-discuss" key="${key}">
+                <span class="fr-icon-chat-3-fill" aria-hidden="true"></span>
+                &nbsp;
+                Proposer d'en discuter
+              </button>
+            </div>
+            <div class="teacher-comment-div">
+              <div class="teacher-comment-div-label">Commentaire</div>
+              <div class="teacher-comment-div-comment">
+              <input 
+              id="input-teacher-comment_${key}"
+              class="fr-input input-teacher-comment"
+                    spellcheck="true"
+                    autocapitalize="off"
+                    autocorrect="on"
+                    type="text"
+                    >
+                    </input>
+              <button 
+              class="fr-btn fr-btn--secondary fr-icon-send-plane-fill btn-teacher-send-comment" 
+              key="${key}"
+              aria-hidden="true"
+              >
+              </button>
+            </div>
+          </div>
         </div>`);
+  $(".teacher-div").toggle(session.isAdminOrTeacher());
   if (nodetails) {
     $(".formation-card-header-affinity", $div).hide();
     $(".card-geoloc", $div).hide();
