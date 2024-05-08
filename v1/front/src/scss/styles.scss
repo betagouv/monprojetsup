@@ -791,7 +791,7 @@ background: #E3E3FD;
     font-weight: 700;
     line-height: 36px;
     /* 128.571% */
-    margin-bottom: 16px;
+    margin-top: 16px;    margin-bottom: 16px;
 }
 .formation-card {
   display: flex;
@@ -804,10 +804,10 @@ background: #E3E3FD;
     margin-top: 0px;
   margin-bottom: 24px;
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 18, 0.16);
-  padding-top: 3%;
-  padding-bottom: 3%;  
-  padding-left: 5%;
-    padding-right: 5%;
+  padding-top: 32px;
+  padding-bottom: 32px;  
+  padding-left: 32px;
+    padding-right: 24px;
     cursor: pointer;
   }
 .horizontal-container {
@@ -1032,6 +1032,42 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
     /* 166.667% */
 }
 
+.teacher-div {
+  cursor: default ;
+}
+.teacher-div hr {
+  margin-top: 16px;
+
+}
+.teacher-actions-div {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.teacher-comment-div-comment {
+  display: flex;
+  flex-direction: row;
+}
+
+.teacher-comment-div-label {
+  margin-bottom: 8px;
+  color: var(--light-decisions-text-text-label-grey, #161616);
+  
+    /* 2.Corps de texte/MD - Texte standard/Desktop & Mobile - Regular */
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+}
+.teacher-comment-div {
+  margin-bottom: 16px;
+}
+
+.input-teacher-comment {
+  margin-right: 16px;
+}
 .formation-details-summary {
   color: var(--light-decisions-text-text-default-grey, #3A3A3A);
     font-family: Marianne;
