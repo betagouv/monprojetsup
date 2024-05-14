@@ -16,13 +16,12 @@ import java.util.Map;
 
 public record ThematiquesOnisep(
         Map<String,ThematiqueOnisep> thematiques,
-        Map<String,String> categories,
         List<Pair<String,String>> redirections,
         Map<String, Regroupement> regroupements
 ) {
     public ThematiquesOnisep() {
         this(
-                new HashMap<>(), new HashMap<>(), new ArrayList<>(), new HashMap<>()
+                new HashMap<>(), new ArrayList<>(), new HashMap<>()
         );
     }
 
@@ -64,13 +63,7 @@ public record ThematiquesOnisep(
                 new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
         );
         thematiquesNouvelles.forEach(res::add);
-
-        List<ThematiquesOnisep.ThematiqueOnisep> thematiquesCategories = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_CATEGORIES_PATH),
-                new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
-        );
-        thematiquesCategories.forEach(res::add);
-
+        
         List<ThematiquesOnisep.ThematiqueOnisep> thematiquesRedirections = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REDIRECTIONS_PATH),
                 new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
@@ -82,9 +75,6 @@ public record ThematiquesOnisep(
     public void add(ThematiqueOnisep item) {
         if(item.nom != null && !item.nom.isEmpty()) {
             thematiques.put(Constants.cleanup(item.id), item);
-        }
-        if(item.categorie != null && !item.categorie.isEmpty()) {
-            categories.put(Constants.cleanup(item.id), item.categorie);
         }
         if(item.redirection != null && !item.redirection.isEmpty() && !item.redirection.equals("X")) {
             redirections.add(Pair.of(Constants.cleanup(item.id), Constants.cleanup(item.redirection)));
@@ -100,7 +90,6 @@ public record ThematiquesOnisep(
             String nom,
             String parent,
 
-            String categorie,
             String redirection
     ) {
 
