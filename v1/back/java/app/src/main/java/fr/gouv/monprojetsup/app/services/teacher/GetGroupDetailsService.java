@@ -103,7 +103,7 @@ public class GetGroupDetailsService extends MyService<GetGroupDetailsService.Req
             throw new RuntimeException("opération réservée aux admins de groupe");
         }
 
-        GroupDetails details = WebServer.db().getGroupDetails(sanitize(req.groupId));
+        GroupDetails details = WebServer.db().getGroupDetails(req.groupId);
         return new Response(new ResponseHeader(), details.sanitize());
     }
 
