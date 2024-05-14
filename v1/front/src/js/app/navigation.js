@@ -539,7 +539,7 @@ function fillInBin() {
         </span>
       </div>`);
     $(".recycleItem", $cell).on("click", function (event) {
-      data.removeFromBin(sugg.fl);
+      app.removeFromBin(sugg.fl);
       fillInBin();
       event.preventDefault();
     });
