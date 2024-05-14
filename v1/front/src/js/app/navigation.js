@@ -700,10 +700,10 @@ async function updateGroupesScreen() {
   ui.updateGroupsList(infos.groups);
   $(".group_select")
     .off()
-    .on("click", () => {
-      const group_id = $(this).attr("group_id");
+    .on("click", async (event) => {
+      const group_id = event.currentTarget.getAttribute("group_id");
       app.setSelectedGroup(group_id);
-      showGroup(group_id);
+      await showGroup(group_id);
     });
 
   const curGroup = session.getSelectedGroup();
@@ -713,6 +713,8 @@ async function updateGroupesScreen() {
 async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
+  $(".group_select").attr("aria-current", false);
+  $(`#group_select_${group_id.replace(" ", "_")}`).attr("aria-current", "page");
   ui.setStudentDetails(details);
   $(".student_selection_button")
     .off()
