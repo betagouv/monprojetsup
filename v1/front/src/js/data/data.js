@@ -559,6 +559,7 @@ export function getQuestions(category) {
   }
 }
 
+export const SUGG_WAITING = 0;
 export const SUGG_APPROVED = 1;
 export const SUGG_REJECTED = 2;
 

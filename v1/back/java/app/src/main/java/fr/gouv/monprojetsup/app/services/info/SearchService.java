@@ -137,6 +137,10 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         if(!req.recherche.trim().isEmpty()) {
             affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
         }
+
+        val bin = req.profile.bin();
+        affinites.getLeft().removeIf(aff -> bin.contains(aff.key()));
+        
         //calcul des cores de tri
         Map<String, Double> sortScores
                 = affinites.getLeft().stream().collect(
