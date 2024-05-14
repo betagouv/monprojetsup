@@ -256,6 +256,11 @@ export function updateProfile(name, value, action) {
   server.updateProfile({ name: name, value: value, action: action }, () => {});
 }
 
+export function removeFromBin(key) {
+  data.removeFromBin(key);
+  updateSuggestions([{ fl: key, status: data.SUGG_WAITING }]);
+}
+
 export function updateSuggestions(suggestions, handler = null) {
   server.updateProfile({ suggestions: suggestions }, handler);
 }

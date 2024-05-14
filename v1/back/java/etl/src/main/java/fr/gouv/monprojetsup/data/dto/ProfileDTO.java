@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
@@ -97,5 +98,10 @@ public record ProfileDTO(
     public boolean isFavori(String key) {
         if (choices == null) return false;
         return choices.stream().anyMatch(s -> s.fl().equals(key) && s.status().equals(SuggestionDTO.SUGG_APPROVED));
+    }
+
+    public Set<String> bin() {
+        if(choices == null) return Set.of();
+        return choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).map(SuggestionDTO::fl).collect(Collectors.toSet());
     }
 }

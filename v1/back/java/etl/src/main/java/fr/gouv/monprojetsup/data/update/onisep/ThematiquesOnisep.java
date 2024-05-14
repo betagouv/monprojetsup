@@ -63,7 +63,7 @@ public record ThematiquesOnisep(
                 new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
         );
         thematiquesNouvelles.forEach(res::add);
-        
+
         List<ThematiquesOnisep.ThematiqueOnisep> thematiquesRedirections = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REDIRECTIONS_PATH),
                 new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
