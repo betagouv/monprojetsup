@@ -138,8 +138,19 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
         }
 
-        val bin = req.profile.bin();
-        affinites.getLeft().removeIf(aff -> bin.contains(aff.key()));
+        //fallback if no answer
+        if(affinites.getLeft().isEmpty()) {
+            searchScores.keySet().forEach(s -> {
+                affinites.getLeft().add(new Affinity(s, 0.05));
+            });
+        }
+
+        Set<String> here = affinites.getLeft().stream().map(Affinity::key).collect(Collectors.toSet());
+            ServerData.filieresFront.forEach(s -> {
+                if(!here.contains(s)) {
+                    affinites.getLeft().add(new Affinity(s, 0.001));
+                }
+            });
 
         //calcul des cores de tri
         Map<String, Double> sortScores
