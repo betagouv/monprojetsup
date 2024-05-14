@@ -140,7 +140,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         val bin = req.profile.bin();
         affinites.getLeft().removeIf(aff -> bin.contains(aff.key()));
-        
+
         //calcul des cores de tri
         Map<String, Double> sortScores
                 = affinites.getLeft().stream().collect(

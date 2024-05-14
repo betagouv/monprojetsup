@@ -40,15 +40,6 @@ public record Thematiques(
     private Thematiques(@NotNull ThematiquesOnisep thematiques) {
         this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new ArrayList<>());
 
-        Map<String, Category> groupes = new HashMap<>();
-        thematiques.regroupements().forEach((s, regroupement) -> {
-            val key = regroupement.groupe();
-            val emoji = regroupement.emojiGroupe();
-            Category cat = groupes.computeIfAbsent(key, k -> new Category(key, emoji, new ArrayList<>()));
-            cat.items.add(new Item(s, regroupement.label(), regroupement.emoji()));
-        });
-        this.groupes.addAll(groupes.values());
-
         thematiques.thematiques().values().forEach(m -> {
             String cid = Constants.cleanup(m.id());
                 this.thematiques.put(cid, m.nom());
@@ -60,6 +51,18 @@ public record Thematiques(
         thematiques.redirections().forEach(
                 p -> addParent(p.getLeft(),p.getRight())
         );
+
+        Map<String, Category> groupes = new HashMap<>();
+        thematiques.regroupements().forEach((s, regroupement) -> {
+            val key = regroupement.groupe();
+            val emoji = regroupement.emojiGroupe();
+            Category cat = groupes.computeIfAbsent(key, k -> new Category(key, emoji, new ArrayList<>()));
+            cat.items.add(new Item(s, regroupement.label(), regroupement.emoji()));
+            //maj des labels au passage
+            this.thematiques.put(s, regroupement.label());
+        });
+        this.groupes.addAll(groupes.values());
+
     }
 
     private void addParent(String child, String parent) {

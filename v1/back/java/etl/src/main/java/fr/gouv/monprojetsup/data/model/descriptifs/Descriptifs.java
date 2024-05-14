@@ -154,6 +154,14 @@ public record Descriptifs(
         }
     }
 
+    public Descriptif get(String key) {
+        return keyToDescriptifs.get(key);
+    }
+
+    public void push(Descriptifs descriptifs) {
+        this.keyToDescriptifs.putAll(descriptifs.keyToDescriptifs);
+    }
+
 
     @Data
     public static final class Descriptif {
