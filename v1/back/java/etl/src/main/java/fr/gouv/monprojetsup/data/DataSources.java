@@ -25,7 +25,6 @@ public class DataSources {
     public static final String THEMATIQUES_REGROUPEMENTS_PATH = "items_thematiques/domaines_pro_MPS_-_Thematiques.tsv";
 
     public static final String THEMATIQUES_NOUVELLES_PATH = "items_thematiques/thematiques_nouvelles.json";
-    public static final String THEMATIQUES_CATEGORIES_PATH = "items_thematiques/thematiques_categories.json";
     public static final String THEMATIQUES_REDIRECTIONS_PATH = "items_thematiques/thematiques_redirections.json";
     public static final String INTERETS_PATH = "items_centres_interets/centres_interets2.json";
     public static final String INTERETS_GROUPES_PATH = "items_centres_interets/centres_d_interets_MPS_-_Feuille_1.tsv";

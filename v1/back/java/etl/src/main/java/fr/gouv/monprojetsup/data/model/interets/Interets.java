@@ -21,6 +21,14 @@ public record Interets(
         Map<String, List<String>> expansion
 ) {
 
+    /* we avoid changing labels of groupes alreaduy existing */
+    public void put(String key, String label) {
+        key = Constants.cleanup(key);
+        String finalKey = key;
+        label = groupes.stream().flatMap(g -> g.items.stream()).filter(g -> g.keys.contains(finalKey)).findFirst().map(g -> g.label).orElse(label);
+        interets.put(key, label);
+    }
+
     public record Item(
             Set<String> keys,
             String label,
@@ -87,9 +95,17 @@ public record Interets(
         });
         this.groupes.addAll(fromMap(groupes));
         this.groupes.forEach(
-                g -> g.items.forEach(
+                g -> g.items.stream().forEach(
                         item -> item.keys().forEach(
-                                i -> expansion.computeIfAbsent(i, k -> new ArrayList<>()).addAll(item.keys))));
+                                i ->
+                                {
+                                    expansion.computeIfAbsent(i, k -> new ArrayList<>()).addAll(item.keys);
+                                    //maj du libellé
+                                    this.interets.put(Constants.cleanup(i), item.label());
+                                }
+                        )
+                )
+        );
     }
 
     public static String getKey(InteretsRome.Item m) {
