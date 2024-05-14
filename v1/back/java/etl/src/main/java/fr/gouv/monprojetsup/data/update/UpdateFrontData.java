@@ -58,8 +58,8 @@ public class UpdateFrontData {
             Interets interets,
             Map<String, Set<String>> urls,
             Map<String, String> groups,
-            Map<String,List<String>> labelsTypes,
-            Map<String,String> constants, //stats nationales sur moyenne générale et moyennes au bac
+            Map<String, List<String>> labelsTypes,
+            Map<String, String> constants, //stats nationales sur moyenne générale et moyennes au bac
             Map<String, Set<String>> liensMetiersFormations,
             Map<String, Set<String>> liensSecteursMetiers,
             Map<DomainePro, Set<String>> liensDomainesMetiers,
@@ -95,8 +95,8 @@ public class UpdateFrontData {
 
             Map<String, Set<String>> liensSecteursMetiers
                     = onisepData.getSecteursVersMetiers(
-                            onisepData.fichesMetiers(),
-                            onisepData.formations().getFormationsDuSup()
+                    onisepData.fichesMetiers(),
+                    onisepData.formations().getFormationsDuSup()
             );
 
             Map<DomainePro, Set<String>> liensDomainesMetiers
@@ -168,6 +168,15 @@ public class UpdateFrontData {
                 Map<String, String> groups,
                 Map<String, String> lasCorrespondance
         ) throws IOException {
+            return loadDescriptifs(onisepData, groups, lasCorrespondance, true);
+        }
+
+        public static Descriptifs loadDescriptifs(
+                OnisepData onisepData,
+                Map<String, String> groups,
+                Map<String, String> lasCorrespondance,
+                boolean includeMpsData
+        ) throws IOException {
             LOGGER.info("Chargement des fiches metiers");
             FichesMetierOnisep fichesMetiers = FichesMetierOnisep.load();
             fichesMetiers.metiers().metier().removeIf(fiche ->
@@ -175,10 +184,11 @@ public class UpdateFrontData {
                             || !onisepData.metiers().metiers().containsKey(cleanup(fiche.identifiant()))
             );
 
-            Descriptifs descriptifs = Serialisation.fromJsonFile(
-                    DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH),
-                    Descriptifs.class
-            );
+            Descriptifs descriptifs =
+                    Serialisation.fromJsonFile(
+                            DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH),
+                            Descriptifs.class
+                    );
 
             Map<String, String> summaries = Serialisation.fromJsonFile(
                     DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH),
@@ -198,6 +208,21 @@ public class UpdateFrontData {
             descriptifs.keyToDescriptifs().put(passKey, addToDescriptif(PAS_LAS_TEXT, desc));
             */
 
+            if (includeMpsData) {
+                addMpsdescriptifs(descriptifs);
+            }
+
+            descriptifs.injectGroups(groups);
+            descriptifs.injectLas(lasCorrespondance);//in this order after groups
+            lasCorrespondance.keySet().forEach(key -> {
+                Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(key);
+                descriptifs.keyToDescriptifs().put(key, Descriptifs.Descriptif.addToDescriptif(PAS_LAS_TEXT, desc));
+            });
+
+            return descriptifs;
+        }
+
+        private static void addMpsdescriptifs(Descriptifs descriptifs) {
             val lines = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), '\t');
             String keyFlFr = null;
             String keyDescFormation = null;
@@ -227,13 +252,13 @@ public class UpdateFrontData {
                 val frCod = line.get(keyTypeFor);
                 val descFormation = line.getOrDefault(keyDescFormation, "");
                 if (!descFormation.isBlank()) {
-                    resumesTypesformations.put(frCod,descFormation);
+                    resumesTypesformations.put(frCod, descFormation);
                 }
             }
 
             for (val line : lines) {
                 String flfrcod = line.getOrDefault(keyFlFr, "");
-                if(flfrcod.isBlank()) throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
+                if (flfrcod.isBlank()) throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
 
                 String frcod = line.getOrDefault(keyTypeFor, "");
 
@@ -244,7 +269,7 @@ public class UpdateFrontData {
                 String descFiliere = line.get(keyDescFiliere);
 
                 var descriptif = descriptifs.keyToDescriptifs().computeIfAbsent(flfrcod, z -> new Descriptifs.Descriptif(line));
-                if(descriptif.getMultiUrls() == null) descriptif.setMultiUrls(new HashSet<>());
+                if (descriptif.getMultiUrls() == null) descriptif.setMultiUrls(new HashSet<>());
 
                 if (!descFiliere.isBlank()) {
                     descriptif.setSummary(descFiliere);
@@ -254,34 +279,25 @@ public class UpdateFrontData {
                 }
 
                 val urlSupplementaire = line.getOrDefault(keyUrlSupplementaire, "");
-                if(!urlSupplementaire.isBlank()) {
+                if (!urlSupplementaire.isBlank()) {
                     descriptif.getMultiUrls().addAll(Arrays.stream(urlSupplementaire.split("\n")).map(String::trim).toList());
                 }
 
                 val urlCorrection = line.getOrDefault(keyUrlCorrection, "");
-                if(!urlCorrection.isBlank()) {
+                if (!urlCorrection.isBlank()) {
                     descriptif.setCorrectedUrl(true);
                     descriptif.getMultiUrls().addAll(Arrays.stream(urlCorrection.split("\n")).map(String::trim).toList());
                 }
 
                 descriptif.setMpsData(line);
             }
-
-            descriptifs.injectGroups(groups);
-            descriptifs.injectLas(lasCorrespondance);//in this order after groups
-            lasCorrespondance.keySet().forEach(key -> {
-                Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(key);
-                descriptifs.keyToDescriptifs().put(key, Descriptifs.Descriptif.addToDescriptif(PAS_LAS_TEXT, desc));
-            });
-
-            return descriptifs;
         }
 
         private void addUrl(String key, String url) {
-            if(url != null && !url.isEmpty()) {
-                if(url.contains("www.terminales2022-2023.fr")) {
-                    if(url.contains("www.terminales2022-2023.fr/http/redirections/formation/slug/")) {
-                        url =  url.replace(
+            if (url != null && !url.isEmpty()) {
+                if (url.contains("www.terminales2022-2023.fr")) {
+                    if (url.contains("www.terminales2022-2023.fr/http/redirections/formation/slug/")) {
+                        url = url.replace(
                                 "www.terminales2022-2023.fr",
                                 "www.onisep.fr");
                     } else {
@@ -299,7 +315,7 @@ public class UpdateFrontData {
 
         public void updateUrls(OnisepData onisepData, Map<String, String> liensOnisep, Map<String, String> lasCorrespondance) {
             urls.clear();
-            for (Map.Entry<String, String> entry :  liensOnisep.entrySet()) {
+            for (Map.Entry<String, String> entry : liensOnisep.entrySet()) {
                 String key = entry.getKey();
                 String s2 = entry.getValue();
                 addUrl(key, s2);
@@ -314,13 +330,13 @@ public class UpdateFrontData {
             });
             onisepData.domainesWeb().domaines().forEach(domainePro -> addUrl(cleanup(domainePro.id()), domainePro.url()));
             descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
-                if(descriptif.isCorrectedUrl()) {
+                if (descriptif.isCorrectedUrl()) {
                     clearUrls(key);
                 } else {
                     addUrl(key, descriptif.url());
                 }
                 Collection<String> urls = descriptif.multiUrls();
-                if(urls != null) {
+                if (urls != null) {
                     urls.forEach(url2 -> addUrl(key, url2));
                 }
             });
@@ -345,11 +361,12 @@ public class UpdateFrontData {
         PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
         psupData.cleanup();
 
-        LOGGER.info("Chargement des données ROME");
-        RomeData romeData = RomeData.load();
 
         LOGGER.info("Chargement des données Onisep");
         final OnisepData onisepData = OnisepData.fromFiles();
+
+        LOGGER.info("Chargement des données ROME");
+        RomeData romeData = RomeData.load();
 
         LOGGER.info("Insertion des données ROME dans les données Onisep");
         onisepData.insertRomeData(romeData.centresInterest()); //before updateLabels

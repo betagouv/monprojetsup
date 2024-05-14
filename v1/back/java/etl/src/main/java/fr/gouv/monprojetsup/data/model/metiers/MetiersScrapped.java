@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.model.metiers;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,10 @@ public record MetiersScrapped(Map<String, MetierScrap> metiers) {
 
     public MetiersScrapped() {
         this(new HashMap<>());
+    }
+
+    public @Nullable MetierScrap get(String key) {
+        return metiers.get(key);
     }
 
     public record MetierScrap(

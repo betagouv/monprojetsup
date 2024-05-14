@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +61,7 @@ public record ThematiquesOnisep(
 
         List<ThematiquesOnisep.ThematiqueOnisep> thematiquesNouvelles = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_NOUVELLES_PATH),
-                new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>(){}.getType()
+                new TypeToken<List<ThematiquesOnisep.ThematiqueOnisep>>() {}.getType()
         );
         thematiquesNouvelles.forEach(res::add);
 
@@ -74,7 +75,18 @@ public record ThematiquesOnisep(
 
     public void add(ThematiqueOnisep item) {
         if(item.nom != null && !item.nom.isEmpty()) {
-            thematiques.put(Constants.cleanup(item.id), item);
+            String kid = Constants.cleanup(item.id);
+            if(!thematiques.containsKey(kid)) {
+                thematiques.put(kid, item);
+            } else {
+                val them = thematiques.get(kid);
+                thematiques.put(kid, new ThematiqueOnisep(
+                        kid,
+                        them.nom,
+                        item.parent,
+                        item.redirection
+                ));
+            }
         }
         if(item.redirection != null && !item.redirection.isEmpty() && !item.redirection.equals("X")) {
             redirections.add(Pair.of(Constants.cleanup(item.id), Constants.cleanup(item.redirection)));

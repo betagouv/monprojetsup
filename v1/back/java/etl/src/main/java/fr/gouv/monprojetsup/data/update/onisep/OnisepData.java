@@ -355,7 +355,7 @@ public record OnisepData(
             if (!l.isEmpty()) {
                 String key = Interets.getKey(item);
                 //ajout de l'intérêt
-                interets().interets().put(key, item.libelle_centre_interet());
+                interets().put(key, item.libelle_centre_interet());
                 //ajout des arètes
                 l.forEach(metier -> edgesInteretsMetiers.put(
                         key,

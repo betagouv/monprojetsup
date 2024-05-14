@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.DataSources.ONISEP_FICHES_METIERS;
 import static fr.gouv.monprojetsup.data.DataSources.getSourceDataFilePath;
+import static fr.gouv.monprojetsup.data.model.tags.TagsSources.normalize;
 
 public record FichesMetierOnisep(
         FicheMetierOnisepContainer metiers
@@ -67,6 +68,11 @@ public record FichesMetierOnisep(
                 .filter(m -> m.secteurs_activite.hasDomain(key))
                 .map(m -> m.identifiant)
                 .collect(Collectors.toSet());
+    }
+
+    public @Nullable FicheMetierOnisep get(String dkey) {
+        String key = Constants.cleanup(dkey);
+        return metiers.metier.stream().filter(m -> Constants.cleanup(m.identifiant).equals(key)).findFirst().orElse(null);
     }
 
     public record FicheMetierOnisepContainer(List<FicheMetierOnisep> metier) {
