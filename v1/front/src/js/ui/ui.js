@@ -1809,6 +1809,10 @@ export function setRoleVisibility() {
   $(".student-only").toggle(!session.isAdminOrTeacher());
   $(".teacher-only").toggle(session.isAdminOrTeacher());
   $(".admin-only").toggle(session.isAdmin());
+  if (session.isAdminOrTeacher()) {
+    const st = session.getSelectedStudent();
+    $(".teacher-div").toggle(st !== undefined);
+  }
 }
 
 function loadGroupsInfo() {
