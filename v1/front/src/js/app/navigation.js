@@ -716,7 +716,7 @@ async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
   $(".group_select").attr("aria-current", false);
-  $(`#group_select_${group_id.replace(" ", "_").replace(".", "_")}`).attr(
+  $(`#group_select_${group_id.replaceAll(" ", "_").replaceAll(".", "_")}`).attr(
     "aria-current",
     "page"
   );
