@@ -31,13 +31,14 @@ public record Thematiques(
             List<Item> items
     ) {
 
+        public boolean contains(String item) {
+            return items.stream().anyMatch(i -> i.key.equals(item));
+        }
     }
 
 
     private Thematiques(@NotNull ThematiquesOnisep thematiques) {
         this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new ArrayList<>());
-
-        categories.putAll(thematiques.categories());
 
         Map<String, Category> groupes = new HashMap<>();
         thematiques.regroupements().forEach((s, regroupement) -> {
@@ -70,11 +71,12 @@ public record Thematiques(
         return new Thematiques(thematiquesOnisep);
     }
 
-    public @NotNull List<String> representatives(String item) {
-        if (item == null) return Collections.emptyList();
-        item = Constants.cleanup(item);
+    public @NotNull List<String> representatives(String dirtyItem) {
+        if (dirtyItem == null) return Collections.emptyList();
+        final String item = Constants.cleanup(dirtyItem);
         if (parents.containsKey(item)) return parents.get(item).stream().flatMap(parent -> representatives(parent).stream()).toList();
-        return categories.containsKey(item) ? List.of(item) : Collections.emptyList();
+        if(groupes.stream().anyMatch(g -> g.contains(item))) return List.of(item);
+        return Collections.emptyList();
     }
 
     public void retainAll(Set<String> themesUsed) {
