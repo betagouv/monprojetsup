@@ -560,6 +560,7 @@ function addGroupEntry(group, $div) {
         <li class="fr-nav__item">
           <a
             class="fr-nav__link group_select"
+            id="group_select_${group.id.replace(" ", "_")}"
             href="#"
             target="_self"
             aria-current="page"
