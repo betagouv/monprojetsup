@@ -118,6 +118,7 @@ const screen_enter_handlers = {
       });
   },
   recherche: async () => {
+    session.setSelectedStudent(null);
     await ui.showRechercheScreen();
     init_main_nav();
     $("#search-784-input").val("");
@@ -448,6 +449,7 @@ async function updateRecherche() {
   const msg = await app.doSearch(str);
   const showAffinities = str == "";
   ui.showRechercheData(msg.details, showAffinities);
+
   $("#search-button").off().on("click", updateRecherche);
   $("#search-784-input")
     .off()
