@@ -69,6 +69,7 @@ public class Groups {
             current.init();
             current.setIsOpenedForNewMembers(true);
         }
+        current.setExpeENSGroupe(classe.expeENSGroup());
         return current;
     }
 

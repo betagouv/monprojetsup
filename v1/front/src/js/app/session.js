@@ -193,37 +193,12 @@ export function getCachedAdminInfos() {
   return JSON.parse(sessionStorage.adminInfos);
 }
 
-/*
-function isEvalENS() {
-  const infos = getCachedAdminInfos();
-  if (infos?.config) {
-    return infos.config.evalENS;
-  } else {
-    return false;
-  }
-}*/
-
 export function hideFormations() {
   return false;
-  /*
-  try {
-    const infos = getCachedAdminInfos();
-    return (
-      infos?.config &&
-      infos.config.evalENS &&
-      (infos.config.expeENSGroup === undefined ||
-        infos.config.expeENSGroup !== "T")
-    );
-  } catch (e) {
-    return undefined;
-  }*/
 }
 
 export function isExpeENS() {
   return false;
-  /*
-  const infos = getCachedAdminInfos();
-  return infos?.config?.evalENS;*/
 }
 
 export function isExpeENSTest() {
@@ -232,6 +207,11 @@ export function isExpeENSTest() {
   const infos = getCachedAdminInfos();
   return infos?.config?.evalENS && infos.config.expeENSGroup === "T";
   */
+}
+
+export function getConfig() {
+  const infos = getCachedAdminInfos();
+  return infos?.config;
 }
 
 export function showMinimalStats() {
