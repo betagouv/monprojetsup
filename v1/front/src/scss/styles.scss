@@ -1591,7 +1591,34 @@ background: var(--light-background-default-grey, #FFF);
       /* 125% */
     /* 133.333% */
 
-    min-width: 500px;
+    min-width: 300px;
+}
+.box-next {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.board-enrichis2 {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  flex-direction: row;
+}
+.board-enrichis3 {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+    color: var(--light-decisions-text-text-title-grey, #161616);
+    
+      /* 1.Titres/H4 - SM/Desktop */
+      color: var(--light-decisions-text-text-title-blue-france, #000091);
+      text-align: center;
+      font-family: Marianne;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 30px;
+      padding: 24px;
 }
 .board-heart-container {
   //padding: 10px;

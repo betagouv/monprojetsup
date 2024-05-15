@@ -57,28 +57,9 @@ public final class Group {
 
     private GroupDTO.StatsGroup statsGroup= new GroupDTO.StatsGroup(0,0,0,0);
 
-    public Group(Lycee lycee,
-                 Classe classe,
-                 String login,
-                 Set<String> admins,
-                 boolean isMember,
-                 boolean isWaiting,
-                 boolean isOpenedForNewMembers
-    ) {
-        this.name = lyceeToGroupName(lycee, classe);
-        this.lycee = lycee.getId();
-        this.niveau = classe.niveau();
-        this.classe = classe.index();
-        this.id = lyceeToGroupId(lycee, classe);
-        this.admins.addAll(admins);
-        if(isMember) this.members.add(login);
-        if(isWaiting) this.waiting.add(login);
-        this.isOpenedForNewMembers = isOpenedForNewMembers;
-    }
-
 
     /* used to create mini group */
-    public Group(String id, String lycee, String classe, Set<String> admins, boolean isOpenedForNewMembers, String expeENSGroupe) {
+    public Group(@NotNull String id, @NotNull String lycee, @NotNull String classe, Set<String> admins, boolean isOpenedForNewMembers, String config) {
         this.id = id;
         this.name = DB.lyceeToGroupName(lycee, classe);
         this.lycee = lycee;
@@ -86,7 +67,7 @@ public final class Group {
         this.classe = classe;
         this.admins.addAll(admins);
         this.isOpenedForNewMembers = isOpenedForNewMembers;
-        this.expeENSGroupe = expeENSGroupe;
+        this.expeENSGroupe = config;
     }
 
     private Group(@NotNull String lycee, @NotNull String sid) {
@@ -139,13 +120,8 @@ public final class Group {
         return waiting.stream().map(User::normalizeUser).collect(Collectors.toSet());
     }
 
-    public void remove(String user) {
-        admins.remove(normalizeUser(user));
-        members.remove(normalizeUser(user));
-    }
-
     /**
-     * @param openGroup
+     * @param openGroup true if the group should be opened for new members
      * @return true if the group was changed
      */
     public boolean setIsOpenedForNewMembers(boolean openGroup) {
@@ -214,13 +190,6 @@ public final class Group {
         login = normalizeUser(login);
         waiting.remove(login);
         admins.add(login);
-    }
-
-    public void removeMember(String login) {
-        login = normalizeUser(login);
-        members.remove(login);
-        admins.remove(login);
-        waiting.remove(login);
     }
 
 
