@@ -673,6 +673,18 @@ background: #E3E3FD;
   background-color: $beige-gris-galet-950;
   margin-top: 50px;
 }
+#explore-div-resultats-left-noresult {
+  text-align: center;
+  display: flex;
+    padding: 56px 100px;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    align-self: stretch;
+    border: 1px solid #DDD;
+      background: var(--light-decisions-background-background-default-grey, #FFF);
+
+}
 #explore-div-resultats-left-label {
   color: var(--dark-options-illustration-color-75-hover-beige-gris-galet-75-hover, #443D36);
     text-align: center;
@@ -1620,7 +1632,22 @@ background: var(--light-background-default-grey, #FFF);
       line-height: 30px;
       padding: 24px;
 }
-.board-heart-container {
+.board-enrichis4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--light-decisions-text-text-title-grey, #161616);
+
+  /* 1.Titres/H4 - SM/Desktop */
+  color: var(--light-decisions-text-text-title-blue-france, #000091);
+  text-align: center;
+  font-family: Marianne;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+  padding: 24px;
+}.board-heart-container {
   //padding: 10px;
     display: flex;
       justify-content: center;

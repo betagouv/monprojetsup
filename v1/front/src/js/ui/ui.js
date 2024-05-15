@@ -455,9 +455,16 @@ export function showRechercheData(data, showAffinities) {
 export function showFavoris(data) {
   clearAffinityCards();
   $("#explore-div-wait").hide();
-  $("#explore-div-resultats").show();
-
   const nbResults = data.length;
+  $("#explore-div-resultats").show();
+  const noResults = nbResults == 0;
+
+  $("#explore-div-resultats-left-noresult").toggle(noResults);
+  $("#explore-div-resultats-left-entete-selection").html(
+    noResults ? "" : "Ma sélection"
+  );
+  $("#explore-div-resultats-right").toggle(!noResults);
+
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
@@ -466,6 +473,7 @@ export function showFavoris(data) {
     }
     addAffinityCard(dat, true);
   }
+
   //like and dislike handlers
 }
 
