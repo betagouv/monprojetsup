@@ -134,23 +134,27 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                 req.profile
         );
 
+        //fallback if no answer
+        if (affinites.getLeft().isEmpty()) {
+            searchScores.keySet().forEach(s -> {
+                affinites.getLeft().add(new Affinity(s, 0.05));
+            });
+        }
+
         if(!req.recherche.trim().isEmpty()) {
             affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
-            //fallback if no answer
-            if (affinites.getLeft().isEmpty()) {
-                searchScores.keySet().forEach(s -> {
-                    affinites.getLeft().add(new Affinity(s, 0.05));
-                });
-            }
         }
 
 
-        Set<String> here = affinites.getLeft().stream().map(Affinity::key).collect(Collectors.toSet());
+        //if no keyword, always results
+        if(req.recherche.trim().isEmpty()) {
+            Set<String> here = affinites.getLeft().stream().map(Affinity::key).collect(Collectors.toSet());
             ServerData.filieresFront.forEach(s -> {
-                if(!here.contains(s)) {
+                if (!here.contains(s)) {
                     affinites.getLeft().add(new Affinity(s, 0.001));
                 }
             });
+        }
 
         //calcul des cores de tri
         Map<String, Double> sortScores
