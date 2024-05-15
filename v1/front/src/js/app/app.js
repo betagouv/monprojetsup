@@ -325,6 +325,11 @@ function setAdminInfos(infos) {
   } else {
     session.setSingleGroupFlag(false);
   }
+  if (infos.groups && infos.groups.length > 0 && session.isAdminOrTeacher()) {
+    const myGroup = infos.groups[0];
+    session.setGroupInfo(myGroup);
+  }
+
   session.setNoGroupOpenFlag(
     infos.openGroups === undefined || infos.openGroups.length == 0
   );
