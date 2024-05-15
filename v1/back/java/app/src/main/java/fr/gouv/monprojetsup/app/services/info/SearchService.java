@@ -136,14 +136,14 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         if(!req.recherche.trim().isEmpty()) {
             affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
+            //fallback if no answer
+            if (affinites.getLeft().isEmpty()) {
+                searchScores.keySet().forEach(s -> {
+                    affinites.getLeft().add(new Affinity(s, 0.05));
+                });
+            }
         }
 
-        //fallback if no answer
-        if(affinites.getLeft().isEmpty()) {
-            searchScores.keySet().forEach(s -> {
-                affinites.getLeft().add(new Affinity(s, 0.05));
-            });
-        }
 
         Set<String> here = affinites.getLeft().stream().map(Affinity::key).collect(Collectors.toSet());
             ServerData.filieresFront.forEach(s -> {

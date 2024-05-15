@@ -541,6 +541,16 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
+  $(".remove-from-favoris-btn")
+    .off("click")
+    .on("click", function (event) {
+      const id = event.currentTarget.getAttribute("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
+        ui.updateFav(id);
+        init_main_nav();
+        await updateRecherche();
+      });
+    });
 }
 
 async function updateSelection() {
@@ -567,6 +577,16 @@ async function updateSelection() {
     .on("click", function () {
       const id = $(this).attr("data-id");
       events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+        ui.updateFav(id);
+        const msg = await app.getSelection();
+        ui.showFavoris(msg.details);
+      });
+    });
+  $(".remove-from-favoris-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
         ui.updateFav(id);
         const msg = await app.getSelection();
         ui.showFavoris(msg.details);

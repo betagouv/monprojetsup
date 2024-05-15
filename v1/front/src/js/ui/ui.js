@@ -539,6 +539,7 @@ function displayItemDetails(dat, nodetails) {
   }
   $(".formation-details-actions .add-to-favorites-btn").attr("data-id", key);
   $(".formation-details-actions .add-to-bin-btn").attr("data-id", key);
+  $(".formation-details-actions .remove-from-favoris-btn").attr("data-id", key);
   $("#formation-details-header-nav-central-icon").attr("data-id", key);
   currentKeyDisplayed = key;
   updateFav(dat.key);
@@ -717,13 +718,16 @@ function updateFavDiv(fav, $div) {
     $(".add-to-favorites-btn", $div).html("Ajouté à ma sélection");
     $(".add-to-favorites-btn", $div).addClass("activated");
     $(".add-to-favorites-btn", $div).addClass("favori");
-    $(".add-to-bin-btn", $div).html("Plus intéressé");
-    //$(".add-to-bin-btn", $div).show();
+    $(".remove-from-favoris-btn", $div).html("Plus intéressé");
+    $(".add-to-bin-btn", $div).hide();
+    $(".remove-from-favoris-btn", $div).show();
   } else {
     $(".add-to-favorites-btn", $div).html("Ajouter à ma sélection");
     $(".add-to-favorites-btn", $div).removeClass("activated");
     $(".add-to-favorites-btn", $div).removeClass("favori");
     $(".add-to-bin-btn", $div).html("Ne plus voir");
+    $(".add-to-bin-btn", $div).show();
+    $(".remove-from-favoris-btn", $div).hide();
     //$(".add-to-bin-btn", $div).hide();
   }
 }
@@ -1925,6 +1929,7 @@ export function showMetierDetails(metier) {
     $("#metierUrl").show().attr("href", url);
   }
   $("#metierModal .add-to-favorites-btn").attr("data-id", metier);
+  $("#metierModal .remove-from-favoris-btn").attr("data-id", metier);
   $("#metierModal .add-to-bin-btn").attr("data-id", metier);
 
   updateFavDiv(fav, $("#metierModal"));

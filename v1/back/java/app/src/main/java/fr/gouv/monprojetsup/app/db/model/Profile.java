@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
 import static fr.gouv.monprojetsup.data.Helpers.*;
-import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_APPROVED;
-import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_REJECTED;
+import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.*;
 
 @Data
 @AllArgsConstructor
@@ -218,7 +217,7 @@ public final class Profile {
                 String fl = suggestion.fl();
                 if(fl != null) {
                     Integer status = suggestion.status();
-                    if (status == null) {
+                    if (status == null || status == SUGG_PENDING) {
                         choices.remove(fl);
                     } else {
                         SuggestionDTO current = choices.getOrDefault(fl, new SuggestionDTO(
