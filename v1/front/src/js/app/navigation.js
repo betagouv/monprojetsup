@@ -546,6 +546,7 @@ async function updateRecherche() {
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
+
   ui.showFavoris(msg.details);
   $(".add-to-favorites-btn")
     .off("click")
