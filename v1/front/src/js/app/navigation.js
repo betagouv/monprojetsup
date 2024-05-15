@@ -128,6 +128,7 @@ const screen_enter_handlers = {
     await ui.showBoard();
     const prenom = data.getPrenom();
     $(".ravi-div-prenom").html(prenom);
+    $("#opinionButton").attr("href", getUrlOpinionTally());
     init_main_nav();
   },
   selection: async () => {
@@ -273,8 +274,51 @@ const screen_exit_handlers = {
   inscription1: async () => await validateInscription1(),
   inscription2: async () => await validateInscription2(),
   inscription_tunnel_domaines_pro: validateDomainePro,
+  inscription_tunnel_interests: validateInterests,
   inscription_tunnel_scolarite: validateEDS,
 };
+
+function getUrlOpinionTally() {
+  const groupInfo = session.getGroupInfo();
+  const group = groupInfo.expeENSGroup;
+  const params = {
+    login: session.getLogin(),
+    group: group,
+    classe: groupInfo.classe,
+    lycee: groupInfo.lycee,
+    role: session.getRole(),
+    nb_fav: data.getSuggestionsYes().length,
+    nb_bin: data.getSuggestionsRejected().length,
+    nb_int: data.getNbCentresInterets(),
+    nb_dom_pro: data.getNbDomainesPro(),
+  };
+
+  for (const key of ["statut", "niveau", "bac"]) {
+    params[key] = data.getProfileValue(key);
+  }
+  params.projet = params.statut;
+  delete params.statut;
+
+  let url = "https://tally.so/r/3jBYD1";
+  if (group == "elus") url = "https://tally.so/r/3xd2aE";
+  if (group == "quanti3" && session.isStudent())
+    url = "https://tally.so/r/3jBYD1";
+  if (group == "quanti3" && session.isAdminOrTeacher())
+    url = "https://tally.so/r/w8d6Wk";
+  /*Tests MAI 2024 · Questionnaire lycéen·nes élu·e·s	https://tally.so/r/3xd2aE	Les élu·e·s (lycées agricoles et hors lycées agricoles)	login_elus
+    expeENSGroupe "elus"
+Tests mai 2024 · Questionnaire lycéen·nes tous lycées	https://tally.so/r/3jBYD1	Tous les autres lycéen·nes des lycées testeurs (N-A, Idf)	login_eleves
+  //"expeENSGroupe": "quanti3",
+Tests MAI 2024 · Questionnaire équipes pédagogiques	https://tally.so/r/w8d6Wk	Tous les proviseurs, PP et Psy-EN testeurs (N-A, Idf)	login_peda
+  //  //"expeENSGroupe": "quanti3",
+*/
+  let first = true;
+  for (const [key, value] of Object.entries(params)) {
+    url = `${url}${first ? "?" : "&"}${key}=${encodeURIComponent(value)}`;
+    first = false;
+  }
+  return url;
+}
 
 export async function initScreen(screen) {
   session.saveScreen(null);
@@ -974,6 +1018,15 @@ function validateDomainePro() {
   if (!result) {
     $("#domaine-pro-messages").html(
       `<p class="fr-alert fr-alert--error">Sélectionne au moins un domaine professionnel pour compléter ton profil!</p>`
+    );
+  }
+  return result;
+}
+function validateInterests() {
+  const result = data.getNbCentresInterets() > 0;
+  if (!result) {
+    $("#interests-messages").html(
+      `<p class="fr-alert fr-alert--error">Sélectionne au moins un centre d'intérêts pour compléter ton profil!</p>`
     );
   }
   return result;

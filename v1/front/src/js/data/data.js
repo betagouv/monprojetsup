@@ -159,6 +159,9 @@ export function isFiliere(key) {
 export function isTheme(key) {
   return startsWith(key, data.labelsTypes.theme);
 }
+export function isCentresInterets(key) {
+  return startsWith(key, data.labelsTypes.interest);
+}
 export function isSecteur(key) {
   return startsWith(key, data.labelsTypes.secteur);
 }
@@ -574,6 +577,13 @@ export function getNbDomainesPro() {
   let nb = 0;
   for (const [key, val] of Object.entries(data.profile.scores)) {
     if (val > 0 && isTheme(key)) nb++;
+  }
+  return nb;
+}
+export function getNbCentresInterets() {
+  let nb = 0;
+  for (const [key, val] of Object.entries(data.profile.scores)) {
+    if (val > 0 && isCentresInterets(key)) nb++;
   }
   return nb;
 }

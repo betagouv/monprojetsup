@@ -434,7 +434,9 @@ export function showRechercheData(data, showAffinities) {
     "visibility",
     noResults ? "hidden" : "visible"
   );
-  $("#explore-div-resultats-left-label").toggle(!noResults);
+  $("#explore-div-resultats-left-label").toggle(
+    !noResults && session.isStudent()
+  );
   $("#explore-div-resultats-left-entete").show();
   $("#explore-div-resultats-left-noresult").toggle(noResults);
 
