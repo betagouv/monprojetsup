@@ -300,7 +300,8 @@ function getUrlOpinionTally() {
   delete params.statut;
 
   let url = "https://tally.so/r/3jBYD1";
-  if (group == "elus") url = "https://tally.so/r/3xd2aE";
+  if (group == "elus" || session.isAnonymous())
+    url = "https://tally.so/r/3xd2aE";
   if (session.isAdminOrTeacher()) url = "https://tally.so/r/w8d6Wk";
   /*Tests MAI 2024 · Questionnaire lycéen·nes élu·e·s	https://tally.so/r/3xd2aE	Les élu·e·s (lycées agricoles et hors lycées agricoles)	login_elus
     expeENSGroupe "elus"
