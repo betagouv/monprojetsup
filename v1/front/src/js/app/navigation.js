@@ -371,20 +371,20 @@ async function updateStudentRetours(retoursListe) {
   }
 }
 
-export async function setScreen(screen, doNotUpdateHistory = false) {
+export async function setScreen(screen, updateHistory = true) {
   console.log("setScreen", screen);
   if (screen == null) {
     session.saveScreen(null);
   } else if (screen in screens || screen in screen_enter_handlers) {
     let current_screen = session.getScreen();
     screen = await doTransition(current_screen, screen);
-    if (screen !== current_screen && !doNotUpdateHistory)
+    if (screen !== current_screen && updateHistory) {
       app.addTransitionToHistory(screen, {
         curGroup: session.getSelectedGroup(),
         curStudent: session.getSelectedStudent(),
         curSearch: session.getCurrentSearch(),
       });
-    $(`#nav-${screen}`).attr("aria-current", false);
+    }
     init_main_nav();
     ui.hideNiveauInformation(data.getProfileValue("niveau"));
   }
@@ -464,11 +464,15 @@ async function exitScreen(screen, new_screen) {
 }
 
 export function init_main_nav() {
+  let current_screen = session.getScreen();
+  $(`.set-screen`).attr("aria-current", false);
+  $(`#nav-${current_screen}`).attr("aria-current", true);
+
   $(".set-screen")
     .off("click")
     .on("click", async function () {
       const screen = $(this).attr("screen");
-      $(this).attr("aria-current", true);
+      //$(this).attr("aria-current", true);
       await setScreen(screen);
     });
 
