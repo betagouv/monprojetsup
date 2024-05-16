@@ -67,6 +67,22 @@ const ÉlèveInscriptionPage = () => {
     }
   };
 
+  const préambuleÀAfficher = () => {
+    switch (étapeActuelle?.url) {
+      case "/inscription/domaines":
+        return i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN;
+      case "/inscription/interets":
+        return i18n.ÉLÈVE.INTÊRETS.SÉLECTIONNE_AU_MOINS_UN;
+      default:
+        return (
+          <>
+            {i18n.COMMUN.CHAMPS_MARQUÉS_DU_SYMBOLE} <span className="text-[--artwork-minor-red-marianne]">*</span>{" "}
+            {i18n.COMMUN.SONT_OBLIGATOIRES}
+          </>
+        );
+    }
+  };
+
   return (
     <>
       <Head title={étapeActuelle.titreÉtape} />
@@ -77,7 +93,7 @@ const ÉlèveInscriptionPage = () => {
         />
       </div>
       <div className="fr-py-3w fr-px-2w fr-py-md-6w fr-px-md-8w">
-        <div className="*:mb-0">
+        <div className="*:mb-2">
           <Titre
             niveauDeTitre="h1"
             styleDeTitre="h2"
@@ -85,7 +101,7 @@ const ÉlèveInscriptionPage = () => {
             {étapeActuelle?.titre}
           </Titre>
         </div>
-        <p className="fr-text--lg">{i18n.COMMUN.CHAMPS_OBLIGATOIRES}</p>
+        <p className="fr-text--lg mb-12">{préambuleÀAfficher()}</p>
         <Suspense fallback={<AnimationChargement />}>
           <ScrollRestoration />
           {composantÀAfficher()}

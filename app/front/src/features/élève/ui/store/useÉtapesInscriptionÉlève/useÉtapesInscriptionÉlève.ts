@@ -40,8 +40,8 @@ const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>
       url: "/inscription/formations",
     },
     {
-      titreÉtape: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-      titre: i18n.ÉLÈVE.FORMATIONS.PARCOURS_INSCRIPTION.TITRE,
+      titreÉtape: i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE,
+      titre: i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE,
       url: "/inscription/confirmation",
     },
   ],

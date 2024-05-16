@@ -35,19 +35,21 @@ const Entête = () => {
                     src={logoMPS}
                   />
                 </div>
-                <div className="fr-header__navbar">
-                  <button
-                    aria-controls="navigation-modal"
-                    aria-haspopup="menu"
-                    className="fr-btn--menu fr-btn"
-                    data-fr-opened="false"
-                    id="navigation-burger-button"
-                    title={i18n.NAVIGATION.MAIN_NAVIGATION}
-                    type="button"
-                  >
-                    {i18n.NAVIGATION.MAIN_NAVIGATION}
-                  </button>
-                </div>
+                {!router.location.pathname.includes("/inscription/") && (
+                  <div className="fr-header__navbar">
+                    <button
+                      aria-controls="navigation-modal"
+                      aria-haspopup="menu"
+                      className="fr-btn--menu fr-btn"
+                      data-fr-opened="false"
+                      id="navigation-burger-button"
+                      title={i18n.NAVIGATION.MAIN_NAVIGATION}
+                      type="button"
+                    >
+                      {i18n.NAVIGATION.MAIN_NAVIGATION}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="fr-header__service">
                 <LienInterne

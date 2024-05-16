@@ -23,11 +23,13 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
   return (
     <form
       id={formId}
+      noValidate
       onSubmit={mettreÀJourÉlève}
     >
       <div className="grid grid-flow-row gap-8 md:grid-flow-col">
         <ListeDéroulante
           label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
+          obligatoire
           options={classeOptions}
           registerHookForm={register("classe")}
           status={erreurs.classe ? { type: "erreur", message: erreurs.classe.message } : undefined}

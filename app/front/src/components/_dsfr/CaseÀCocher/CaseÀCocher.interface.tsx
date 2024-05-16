@@ -10,5 +10,6 @@ export type CaseÀCocherProps = {
     type: "désactivé" | "erreur" | "succès";
     message?: string;
   };
+  obligatoire?: boolean;
   registerHookForm?: {};
 };

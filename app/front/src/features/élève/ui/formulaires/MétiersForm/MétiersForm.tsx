@@ -21,10 +21,13 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
   return (
     <form
       id={formId}
+      noValidate
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
+        description={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
         légende={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
+        obligatoire
         options={situationMétiersOptions}
         registerHookForm={register("situationMétiers")}
         status={erreurs.situationMétiers ? { type: "erreur", message: erreurs.situationMétiers.message } : undefined}

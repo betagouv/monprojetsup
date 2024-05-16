@@ -42,6 +42,10 @@ class TestHelper {
     return this._page.getByRole("button", { name: nomDuCentreIntêret, exact: true });
   };
 
+  public messageErreurAuMoinsUnIntêret = () => {
+    return this._page.locator("#intêrets-message").getByText(i18n.ÉLÈVE.INTÊRETS.SÉLECTIONNE_AU_MOINS_UN);
+  };
+
   private _boutonSoumissionFormulaire = () => {
     return this._page.getByRole("button", { name: i18n.COMMUN.CONTINUER });
   };
@@ -52,6 +56,18 @@ class TestHelper {
 }
 
 test.describe("Inscription élève - Mes centres intêrets", () => {
+  test("L'élève doit choisir au moins un centre d'intêret", async ({ page }) => {
+    // GIVEN
+    const testhelper = new TestHelper(page);
+    await testhelper.naviguerVersLaPage();
+
+    // WHEN
+    await testhelper.soumettreLeFormulaire();
+
+    // THEN
+    await expect(testhelper.messageErreurAuMoinsUnIntêret()).toBeVisible();
+  });
+
   test("Je peux sélectionner des centres intêrets", async ({ page }) => {
     // GIVEN
     const testhelper = new TestHelper(page);
@@ -83,15 +99,17 @@ test.describe("Inscription élève - Mes centres intêrets", () => {
     ).toBe("false");
   });
 
-  test("Je peux passer à l'étape suivante sans rien renseigner", async ({ page }) => {
+  test("Si au moins un centre d'intêret est renseigné, passage à l'étape suivante", async ({ page }) => {
     // GIVEN
     const testhelper = new TestHelper(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
+    await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_DÉCOUVRIR_MONDE);
+    await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
     await testhelper.soumettreLeFormulaire();
 
-    // // THEN
+    // THEN
     expect(page.url()).toContain(testhelper.urlPageSuivante);
   });
 

@@ -1,7 +1,14 @@
 import { type BoutonRadioProps } from "./BoutonRadio.interface";
 import { useId } from "react";
 
-const BoutonRadio = ({ légende, description, options, status, registerHookForm }: BoutonRadioProps) => {
+const BoutonRadio = ({
+  légende,
+  description,
+  options,
+  status,
+  obligatoire = false,
+  registerHookForm,
+}: BoutonRadioProps) => {
   const id = useId();
   const légendeId = useId();
 
@@ -25,7 +32,7 @@ const BoutonRadio = ({ légende, description, options, status, registerHookForm 
         className="fr-fieldset__legend--regular fr-fieldset__legend"
         id={légendeId}
       >
-        {légende}
+        {légende} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </legend>
       <div className="fr-grid-row">
@@ -39,6 +46,7 @@ const BoutonRadio = ({ légende, description, options, status, registerHookForm 
                 disabled={status?.type === "désactivé"}
                 id={option.valeur}
                 name={id}
+                required={obligatoire ?? false}
                 type="radio"
                 value={option.valeur}
                 {...registerHookForm}
@@ -59,14 +67,11 @@ const BoutonRadio = ({ légende, description, options, status, registerHookForm 
         className="fr-messages-group"
         id="radio-status-messages"
       >
-        {status && ["erreur", "succès"].includes(status.type) && (
-          <p
-            className={`fr-message ${classEnFonctionDuStatus().message}`}
-            id="radio-status-message"
-          >
-            {status.message}
-          </p>
-        )}
+        <div id="radio-status-message">
+          {status && ["erreur", "succès"].includes(status.type) && (
+            <p className={`fr-message ${classEnFonctionDuStatus().message}`}>{status.message}</p>
+          )}
+        </div>
       </div>
     </fieldset>
   );

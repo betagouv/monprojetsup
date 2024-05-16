@@ -47,22 +47,22 @@ export const localeFR = {
         TITRE: "As-tu déjà un projet d’études supérieures ?",
       },
       SITUATION: {
-        LÉGENDE: "Ma situation *",
+        LÉGENDE: "Ma situation",
         OPTIONS: {
           AUCUNE_IDÉE: {
-            LABEL: "Je n'ai encore aucune idée",
-            DESCRIPTION: "Ca tombe bien, MPS est là pour ça.",
-            EMOJI: "😇",
+            LABEL: "Je n'ai pas encore d’idée",
+            DESCRIPTION: "Ça tombe bien, MPS te présente des idées d'études selon ton profil.",
+            EMOJI: "🥚",
           },
           QUELQUES_PISTES: {
             LABEL: "J’ai déjà quelques pistes d’orientation",
             DESCRIPTION: "Super, MPS va t’aider à affiner ton projet post-bac.",
-            EMOJI: "🤔",
+            EMOJI: "🐣",
           },
           PROJET_PRÉCIS: {
             LABEL: "J'ai déjà un projet précis",
-            DESCRIPTION: "Formidable, explorons tes options ensemble.",
-            EMOJI: "🧐",
+            DESCRIPTION: "Formidable, explorons les différentes possibilités ensemble.",
+            EMOJI: "🐥",
           },
         },
       },
@@ -73,7 +73,7 @@ export const localeFR = {
         TITRE: "Dis-nous en plus sur ta scolarité",
       },
       CLASSE: {
-        LABEL: "Classe actuelle *",
+        LABEL: "Classe actuelle",
         OPTIONS: {
           SECONDE: {
             LABEL: "Seconde Générale et Technologique",
@@ -96,22 +96,24 @@ export const localeFR = {
         LABEL: "Type de bac choisi ou envisagé",
       },
       SPÉCIALITÉS: {
-        LABEL: "Enseignements de spécialité (EDS) choisis ou envisagés",
-        DESCRIPTION: "Commence à taper puis sélectionne des enseignements",
-        SÉLECTIONNÉS: "Enseignement(s) de spécialité sélectionné(s)",
+        LABEL: "Spécialités (EDS) choisies ou envisagées",
+        DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
+        SÉLECTIONNÉS: "Spécialité(s) sélectionnée(s)",
       },
     },
     DOMAINES: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes domaines professionnels",
-        TITRE: "As-tu déjà identifié des domaines ?",
+        TITRE: "Les domaines professionnels qui t'attirent",
       },
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste",
     },
     INTÊRETS: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes centres d'intêrets",
         TITRE: "Plus tard, je voudrais ...",
       },
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d'intêret parmi la liste",
     },
     MÉTIERS: {
       PARCOURS_INSCRIPTION: {
@@ -119,7 +121,8 @@ export const localeFR = {
         TITRE: "As-tu déjà quelques idées de métiers ?",
       },
       SITUATION: {
-        LÉGENDE: "Mon avancement *",
+        LÉGENDE: "Mon avancement",
+        DESCRIPTION: "Pas de panique, c’est simplement pour comprendre comment MPS peut t’aider.",
         OPTIONS: {
           AUCUNE_IDÉE: {
             LABEL: "Pas pour l’instant",
@@ -135,7 +138,7 @@ export const localeFR = {
       MÉTIERS_ENVISAGÉS: {
         LABEL: "Métiers envisagés",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les métiers qui pourraient t’intéresser",
-        SÉLECTIONNÉS: "Métiers sélectionné(s)",
+        SÉLECTIONNÉS: "Métier(s) sélectionné(s)",
       },
     },
     ÉTUDE: {
@@ -180,7 +183,7 @@ export const localeFR = {
         },
       },
       SITUATION_VILLES: {
-        LÉGENDE: "Où souhaites-tu étudier ? *",
+        LÉGENDE: "Où souhaites-tu étudier ?",
         OPTIONS: {
           AUCUNE_IDÉE: {
             LABEL: "Aucune idée",
@@ -191,22 +194,22 @@ export const localeFR = {
         },
       },
       VILLES_ENVISAGÉES: {
-        LABEL: "Villes envisagées",
-        DESCRIPTION: "Commence à taper puis ajoute en favoris les villes qui pourraient t’intéresser",
-        SÉLECTIONNÉES: "Villes sélectionnée(s)",
+        LABEL: "Villes",
+        DESCRIPTION: "Commence à taper puis sélectionne des villes",
+        SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
       },
     },
     FORMATIONS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Les études ou cursus",
-        TITRE: "Y a-t-il des études ou des cursus qui t'attirent ?",
+        TITRE_ÉTAPE: "Les études ou formations post-bac",
+        TITRE: "Y a-t-il des études qui t'attirent ?",
       },
       SITUATION: {
-        LÉGENDE: "Mon avancement *",
+        LÉGENDE: "Mon avancement",
         OPTIONS: {
           AUCUNE_IDÉE: {
             LABEL: "Pas pour l’instant",
-            DESCRIPTION: "Ce n'est pas grave, MPS est là pour t'accompagner.",
+            DESCRIPTION: "Pas de souci, MPS va te proposer différentes possibilités",
             EMOJI: "🤔",
           },
           QUELQUES_PISTES: {
@@ -218,7 +221,7 @@ export const localeFR = {
       FORMATIONS_ENVISAGÉES: {
         LABEL: "Formations envisagées",
         DESCRIPTION: "Commence à taper puis ajoute en favoris les formations qui pourraient t’intéresser",
-        SÉLECTIONNÉES: "Formations sélectionnée(s)",
+        SÉLECTIONNÉES: "Formation(s) sélectionnée(s)",
       },
     },
     CONFIRMATION_INSCRIPTION: {
@@ -267,7 +270,8 @@ export const localeFR = {
   },
   COMMUN: {
     FERMER: "Fermer",
-    CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
+    CHAMPS_MARQUÉS_DU_SYMBOLE: "Les champs marqués du symbole",
+    SONT_OBLIGATOIRES: "sont obligatoires.",
     CONTINUER: "Continuer",
     RECHERCHER: "Rechercher",
     RETOUR: "Retour",

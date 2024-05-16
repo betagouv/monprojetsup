@@ -1,7 +1,14 @@
 import { type BoutonRadioRicheProps } from "./BoutonRadioRiche.interface";
 import { useId } from "react";
 
-const BoutonRadioRiche = ({ légende, description, options, status, registerHookForm }: BoutonRadioRicheProps) => {
+const BoutonRadioRiche = ({
+  légende,
+  description,
+  options,
+  status,
+  obligatoire = false,
+  registerHookForm,
+}: BoutonRadioRicheProps) => {
   const id = useId();
 
   const estEnColonne = options.length <= 2;
@@ -24,13 +31,13 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
         className="fr-fieldset__legend--regular fr-fieldset__legend"
         id="radio-rich-legend"
       >
-        {légende}
+        {légende} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </legend>
       <div className="fr-grid-row">
         {options.map((option) => (
           <div
-            className={`fr-fieldset__element ${estEnColonne ? "fr-fieldset__element--inline fr-col-6" : "fr-col-12"}`}
+            className={`fr-fieldset__element ${estEnColonne ? "md:fr-col-6 fr-col-12 flex-1 basis-full md:basis-0" : "fr-col-12"}`}
             key={option.label}
           >
             <div className={`fr-radio-group fr-radio-rich ${estEnColonne ? "h-full" : ""}`}>
@@ -38,6 +45,7 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
                 disabled={status?.type === "désactivé"}
                 id={option.valeur}
                 name={id}
+                required={obligatoire ?? false}
                 type="radio"
                 value={option.valeur}
                 {...registerHookForm}
@@ -62,16 +70,13 @@ const BoutonRadioRiche = ({ légende, description, options, status, registerHook
       <div
         aria-live="assertive"
         className="fr-messages-group"
-        id="radio-rich-status-messages"
+        id="radio-rich-messages"
       >
-        {status && ["erreur", "succès"].includes(status.type) && (
-          <p
-            className={`fr-message ${classEnFonctionDuStatus().message}`}
-            id="radio-rich-status-message"
-          >
-            {status.message}
-          </p>
-        )}
+        <div id="radio-rich-message">
+          {status && ["erreur", "succès"].includes(status.type) && (
+            <p className={`fr-message ${classEnFonctionDuStatus().message}`}>{status.message}</p>
+          )}
+        </div>
       </div>
     </fieldset>
   );

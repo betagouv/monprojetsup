@@ -26,6 +26,7 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
   return (
     <form
       id={formId}
+      noValidate
       onSubmit={mettreÀJourÉlève}
     >
       <div className="grid grid-flow-row gap-8 md:grid-flow-col">
@@ -49,6 +50,7 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
       <div className="mt-12">
         <BoutonRadio
           légende={i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.LÉGENDE}
+          obligatoire
           options={situationVillesOptions}
           registerHookForm={register("situationVilles")}
           status={erreurs.situationVilles ? { type: "erreur", message: erreurs.situationVilles.message } : undefined}

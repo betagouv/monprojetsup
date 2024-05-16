@@ -7,6 +7,7 @@ export type ChampDeSaisieProps = {
   };
   icône?: string;
   auChangement?: React.ChangeEventHandler<HTMLInputElement>;
+  obligatoire?: boolean;
   registerHookForm?: {};
   estChampDeRecherche?: boolean;
 };

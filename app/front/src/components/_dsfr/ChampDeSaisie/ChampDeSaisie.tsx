@@ -8,6 +8,7 @@ const ChampDeSaisie = ({
   status,
   icône,
   auChangement,
+  obligatoire = false,
   registerHookForm,
   estChampDeRecherche,
 }: ChampDeSaisieProps) => {
@@ -30,6 +31,7 @@ const ChampDeSaisie = ({
     id,
     name: id,
     onChange: auChangement,
+    required: obligatoire ?? false,
   };
 
   const inputJSX = (
@@ -57,7 +59,7 @@ const ChampDeSaisie = ({
         className="fr-label"
         htmlFor={id}
       >
-        {label}
+        {label} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </label>
       {estChampDeRecherche ? (
@@ -69,7 +71,6 @@ const ChampDeSaisie = ({
           {inputSearchJSX}
           <button
             className="fr-btn"
-            title={i18n.COMMUN.RECHERCHER}
             type="button"
           >
             {i18n.COMMUN.RECHERCHER}
@@ -80,14 +81,11 @@ const ChampDeSaisie = ({
       ) : (
         inputJSX
       )}
-      {status && ["erreur", "succès"].includes(status.type) && (
-        <p
-          className={classEnFonctionDuStatus().message}
-          id={`status-${id}`}
-        >
-          {status.message}
-        </p>
-      )}
+      <div id={`status-${id}`}>
+        {status && ["erreur", "succès"].includes(status.type) && (
+          <p className={classEnFonctionDuStatus().message}>{status.message}</p>
+        )}
+      </div>
     </div>
   );
 };

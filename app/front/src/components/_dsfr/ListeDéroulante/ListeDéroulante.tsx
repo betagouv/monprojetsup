@@ -7,6 +7,7 @@ const ListeDéroulante = ({
   description,
   options,
   status,
+  obligatoire = false,
   registerHookForm,
   valeurOptionSélectionnéeParDéfaut,
 }: ListeDéroulanteProps) => {
@@ -28,7 +29,7 @@ const ListeDéroulante = ({
         className="fr-label"
         htmlFor={`select-${id}`}
       >
-        {label}
+        {label} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </label>
       <select
@@ -37,6 +38,7 @@ const ListeDéroulante = ({
         defaultValue={valeurOptionSélectionnéeParDéfaut ?? ""}
         disabled={status?.type === "désactivé"}
         id={`select-${id}`}
+        required={obligatoire ?? false}
         {...registerHookForm}
       >
         <option
@@ -55,14 +57,11 @@ const ListeDéroulante = ({
           </option>
         ))}
       </select>
-      {status && ["erreur", "succès"].includes(status.type) && (
-        <p
-          className={classEnFonctionDuStatus().message}
-          id={`select-message-${id}`}
-        >
-          {status.message}
-        </p>
-      )}
+      <div id={`select-message-${id}`}>
+        {status && ["erreur", "succès"].includes(status.type) && (
+          <p className={classEnFonctionDuStatus().message}>{status.message}</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -42,6 +42,10 @@ class TestHelper {
     return this._page.getByRole("button", { name: nomDuDomaine, exact: true });
   };
 
+  public messageErreurAuMoinsUnDomaine = () => {
+    return this._page.locator("#domaines-message").getByText(i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN);
+  };
+
   private _boutonSoumissionFormulaire = () => {
     return this._page.getByRole("button", { name: i18n.COMMUN.CONTINUER });
   };
@@ -52,6 +56,18 @@ class TestHelper {
 }
 
 test.describe("Inscription élève - Mes domaines", () => {
+  test("L'élève doit choisir au moins un domaine", async ({ page }) => {
+    // GIVEN
+    const testhelper = new TestHelper(page);
+    await testhelper.naviguerVersLaPage();
+
+    // WHEN
+    await testhelper.soumettreLeFormulaire();
+
+    // THEN
+    await expect(testhelper.messageErreurAuMoinsUnDomaine()).toBeVisible();
+  });
+
   test("Je peux sélectionner des domaines", async ({ page }) => {
     // GIVEN
     const testhelper = new TestHelper(page);
@@ -79,15 +95,17 @@ test.describe("Inscription élève - Mes domaines", () => {
     expect(await testhelper.boutonDomaine(testhelper.DOMAINE_ART).getAttribute(testhelper.BOUTON_APPUYÉ)).toBe("false");
   });
 
-  test("Je peux passer à l'étape suivante sans rien renseigner", async ({ page }) => {
+  test("Si au moins un domaine est renseigné, passage à l'étape suivante", async ({ page }) => {
     // GIVEN
     const testhelper = new TestHelper(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
+    await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_ARTS_CULTURE);
+    await testhelper.cliquerSurUnDomaine(testhelper.DOMAINE_ART);
     await testhelper.soumettreLeFormulaire();
 
-    // // THEN
+    // THEN
     expect(page.url()).toContain(testhelper.urlPageSuivante);
   });
 

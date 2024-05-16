@@ -21,10 +21,12 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
   return (
     <form
       id={formId}
+      noValidate
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
         légende={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
+        obligatoire
         options={situationFormationsOptions}
         registerHookForm={register("situationFormations")}
         status={
