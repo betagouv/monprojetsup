@@ -394,19 +394,14 @@ export function addTransitionToHistory(tabName, data) {
 export function onBackButtonEvent(e) {
   const state = e.state;
   if (state === undefined || state === null) return false;
-
   console.log("PopState " + state?.tabName);
   if (state?.tabName) {
-    if (state.tabName == "groups") {
-      if (state.data) {
-        session.setSelectedGroup(state.data.curGroup);
-        session.setSelectedStudent(state.data.curStudent);
-        ui.showGroupsTab();
-        refreshGroupTab(false);
-      }
-    } else {
-      ui.showTabWithId(state.tabName);
+    if (state.data) {
+      session.setSelectedGroup(state.data.curGroup);
+      session.setSelectedStudent(state.data.curStudent);
+      session.setCurrentSearch(state.curSearch);
     }
+    nav.setScreen(state.tabName, true);
   }
   //Devenir référent d'un nouveau groupee.preventDefault();
 }
