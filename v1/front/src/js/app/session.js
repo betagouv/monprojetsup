@@ -124,10 +124,13 @@ function getSelectedGroup() {
 }
 export function getCurrentSearch() {
   const str = sessionStorage.currentSearch;
-  if (str === undefined || str === null) return "";
+  if (str == undefined || str == null || str == "undefined" || str == null)
+    return "";
   return str;
 }
 export function setCurrentSearch(str) {
+  if (str == undefined || str == null || str == "undefined" || str == null)
+    return;
   sessionStorage.currentSearch = str;
 }
 
