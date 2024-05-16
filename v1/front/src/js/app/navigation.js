@@ -121,7 +121,7 @@ const screen_enter_handlers = {
     session.setSelectedStudent(null);
     await ui.showRechercheScreen();
     init_main_nav();
-    $("#search-784-input").val("");
+    $("#search-784-input").val(session.getCurrentSearch());
     await updateRecherche();
   },
   board: async () => {
@@ -371,14 +371,20 @@ async function updateStudentRetours(retoursListe) {
   }
 }
 
-async function setScreen(screen) {
+export async function setScreen(screen, doNotUpdateHistory = false) {
   console.log("setScreen", screen);
   if (screen == null) {
     session.saveScreen(null);
   } else if (screen in screens || screen in screen_enter_handlers) {
     let current_screen = session.getScreen();
     screen = await doTransition(current_screen, screen);
-    $(`#nav-${screen}`).attr("aria-current", true);
+    if (screen !== current_screen && !doNotUpdateHistory)
+      app.addTransitionToHistory(screen, {
+        curGroup: session.getSelectedGroup(),
+        curStudent: session.getSelectedStudent(),
+        curSearch: session.getCurrentSearch(),
+      });
+    $(`#nav-${screen}`).attr("aria-current", false);
     init_main_nav();
     ui.hideNiveauInformation(data.getProfileValue("niveau"));
   }
@@ -399,7 +405,7 @@ function back(current_screen) {
 async function doTransition(old_screen, new_screen) {
   const result = await exitScreen(old_screen, new_screen);
   let screen = session.getScreen();
-  if (result) {
+  if (result || new_screen === back(old_screen)) {
     await enterScreen(new_screen);
     screen = new_screen;
     app.logAction("doTransition " + old_screen + " --> " + new_screen);
@@ -492,6 +498,7 @@ export function init_main_nav() {
 
 async function updateRecherche() {
   let str = $("#search-784-input").val();
+  session.setCurrentSearch(str);
   if (str === null || str === undefined) str = "";
   ui.showWaitingMessage();
   const msg = await app.doSearch(str);

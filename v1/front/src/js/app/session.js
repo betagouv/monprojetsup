@@ -122,6 +122,14 @@ function setSelectedGroup(group) {
 function getSelectedGroup() {
   return sessionStorage.group;
 }
+export function getCurrentSearch() {
+  const str = sessionStorage.currentSearch;
+  if (str === undefined || str === null) return "";
+  return str;
+}
+export function setCurrentSearch(str) {
+  sessionStorage.currentSearch = str;
+}
 
 export function isAStudentalreadyInAGroup() {
   return (

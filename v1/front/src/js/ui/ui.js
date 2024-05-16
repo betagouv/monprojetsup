@@ -1720,6 +1720,7 @@ function initOnce() {
     handlers.addTransitionToHistory(id, {
       curGroup: session.getSelectedGroup(),
       curStudent: session.getSelectedStudent(),
+      curSearch: session.getCurrentSearch(),
     });
   };
 
