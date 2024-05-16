@@ -518,6 +518,13 @@ function updateSpecialitesOptions() {
   data.srcAutoComplete.spe_classes = optionsSpecialites;
 }
 
+export function getNbSpecialites() {
+  const classes = data.srcAutoComplete.spe_classes;
+  if (classes == null || classes == undefined) return 0;
+  const result = Object.entries(classes).length;
+  return result;
+}
+
 /**
  *
  * @param {} list
