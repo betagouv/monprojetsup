@@ -391,7 +391,7 @@ export function addTransitionToHistory(tabName, data) {
   window.history.pushState({ tabName: tabName, data: data }, tabName, null);
 }
 
-export function onBackButtonEvent(e) {
+export async function onBackButtonEvent(e) {
   const state = e.state;
   if (state === undefined || state === null) return false;
   console.log("PopState " + state?.tabName);
@@ -401,7 +401,7 @@ export function onBackButtonEvent(e) {
       session.setSelectedStudent(state.data.curStudent);
       session.setCurrentSearch(state.curSearch);
     }
-    nav.setScreen(state.tabName, true);
+    await nav.setScreen(state.tabName, false);
   }
   //Devenir référent d'un nouveau groupee.preventDefault();
 }
