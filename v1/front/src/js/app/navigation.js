@@ -392,8 +392,8 @@ function next(current_screen) {
 }
 
 function back(current_screen) {
-  if (!current_screen in screens) return undefined;
-  return screens[current_screen]?.back;
+  if (!(current_screen in screens)) return undefined;
+  return screens[current_screen].back;
 }
 
 async function doTransition(old_screen, new_screen) {
@@ -1065,7 +1065,7 @@ function validateEDS() {
   let result = true;
   const niveau = data.getProfileValue("niveau");
   if (niveau == "term" || niveau == "prem") {
-    result = data.getNbEDS() >= 2;
+    result = data.getNbEDS() >= 2 || data.getNbSpecialites() < 2;
     if (!result) {
       $("#scolarite-messages").html(
         `<p class="fr-alert fr-alert--error">Sélectionne au moins deux spécialités afin de compléter ton profil!</p>`
