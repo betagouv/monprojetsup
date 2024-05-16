@@ -71,8 +71,6 @@ $(async function () {
 
   console.log("MPS version " + __VERSION__);
 
-  $("#version_appli").html("Version " + __VERSION__);
-
   /* Step3: trying automatic reconnection based on session cookie */
   const loggedIn = session.isLoggedIn();
   if (login) {

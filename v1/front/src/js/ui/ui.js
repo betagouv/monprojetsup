@@ -370,6 +370,7 @@ export function injectHtml() {
       .then((html) => {
         $(`#${id}`).html(html);
         $(".hidden-modal-button").hide();
+        $("#version_appli").html("Version " + __VERSION__);
       });
   }
 }
