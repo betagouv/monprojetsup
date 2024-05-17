@@ -64,7 +64,7 @@ data class ProfileDTO(
     )
     val interets: List<String>,
     @Schema(description = "moyenne générale scolaire estimée en terminale", example = "14", required = false)
-    val moyenneGenerale: String,
+    val moyenneGenerale: Float,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -84,7 +84,7 @@ data class ProfileDTO(
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             interets = interets,
-            choices = choix.map { it.toSuggestion() },
+            choix = choix.map { it.toSuggestion() },
         )
 }
 
