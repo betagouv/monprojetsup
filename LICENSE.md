@@ -1,4 +1,3 @@
-# LICENCES
 
 Le code source de ce dépôt est publié sous [licence MIT](#licence-mit).
 
@@ -7,7 +6,7 @@ La marque d'État est à usage exclusif des acteurs de la sphère
 le droit d'auteur. [Lire les explications sur le site de la marque
 d'État.](https://www.gouvernement.fr/charte/charte-graphique-les-fondamentaux/la-typographie)
 
-## LICENCE MIT
+# LICENCE MIT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
