@@ -68,7 +68,8 @@ class PublicAccountController(
 @RequestMapping("$BASE_PATH/account")
 class AuthenticatedAccountController(
     private val disconnectService: DisconnectService,
-    private val setNewPasswordService: SetNewPasswordService
+    private val setNewPasswordService: SetNewPasswordService,
+    private val joinGroupService: JoinGroupService
 ) {
 
 
@@ -80,6 +81,11 @@ class AuthenticatedAccountController(
     @PostMapping("/setNewPassword")
     fun setNewPassword(@RequestBody request: SetNewPasswordService.Request): SetNewPasswordService.Response {
         return setNewPasswordService.handleRequestAndExceptions(request)
+    }
+
+    @PostMapping("/joinGroup")
+    fun joinGroup(@RequestBody request: JoinGroupService.Request): JoinGroupService.Response {
+        return joinGroupService.handleRequestAndExceptions(request)
     }
 
 }

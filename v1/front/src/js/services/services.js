@@ -53,7 +53,7 @@ export const validateAccount = account_services.validateAccount;
 export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
 export const validateCodeAcces = account_services.validateCodeAcces;
-export const joinGroup = account_services.joinGroup;
+export const joinGroupAsync = account_services.joinGroupAsync;
 
 /**************** TEACHER SERVICES ************* */
 export const updateAdminInfos = teacher_services.getAdminInfos;

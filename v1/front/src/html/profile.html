@@ -69,6 +69,18 @@
               Corbeille
             </button>
           </li>
+          <li role="presentation" id="tab-groupe-li">
+            <button
+              id="tab-groupe"
+              class="fr-tabs__tab fr-tabs__tab--icon-left"
+              tabindex="-1"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-groupe-panel"
+            >
+              Groupe
+            </button>
+          </li>
           <!--
           <li role="presentation">
             <button
@@ -130,15 +142,31 @@
           <br />
           <div class="bin-container profile-cell-container"></div>
         </div>
-        <!--
+
         <div
-          id="tab-parametres-panel"
+          id="tab-groupe-panel"
           class="fr-tabs__panel"
           role="tabpanel"
-          aria-labelledby="tab-parametres"
+          aria-labelledby="tab-groupe"
         >
+          <div class="tab-groupe-statut">
+            <div class="inagroup">
+              Tu es membre du groupe
+              <b>'<span class="current-group-label"></span>'</b>.
+            </div>
+            <div class="notinagroup">
+              <p>Tu n'es membre d'aucun groupe.</p>
+            </div>
+            <br />
+            <br />
+            <div>
+              <button id="open-joingroupmodal-button" class="fr-btn fr-btn">
+                <div class="inagroup">Changer de groupe</div>
+                <div class="notinagroup">Rejoindre un groupe</div>
+              </button>
+            </div>
+          </div>
         </div>
-        -->
       </div>
     </div>
   </div>

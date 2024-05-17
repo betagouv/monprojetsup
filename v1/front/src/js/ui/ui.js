@@ -316,16 +316,10 @@ async function injectProfileTabs(tabNames) {
   }
 
   for (const tabName of tabNames) {
-    //console.log("Fetched " + tabName);
     let $div = $(`#tab-${tabName}-panel`);
-    /*while ($div.length == 0) {
-    $div = $(`#tab-${tabName}-panel`);
-    //throw Error(`no div #tab-${tabName}-panel`);
-  }*/
     $div.html(htmls[tabName]);
     setupSelects(tabName, `#tab-${tabName}-panel`);
   }
-  //console.log("Intitialized profile tab " + tabName);
 }
 
 export function updateMultiOptionsItemsStatus(menus) {
@@ -363,6 +357,7 @@ export function injectHtml() {
     "modals/metier.html": "metier-placeholder",
     "modals/rgpd.html": "rgpd-modal-placeholder",
     "rgpd_content.html": "rgpd-placeholder",
+    "modals/change_group.html": "change_group-placeholder",
   };
   for (const [file, id] of Object.entries(m)) {
     fetch("html/" + file)
@@ -412,7 +407,18 @@ export async function showProfileScreen() {
   $(".profile-div-prenomnom").html(data.getPrenomNom());
   $(".prenomnom").html(data.getPrenomNom());
   $(".profile-div-email").html(session.getLogin());
+  updateGroupInfo();
 }
+
+export function updateGroupInfo() {
+  const ina = session.isAStudentalreadyInAGroup();
+  const out = session.isAStudentThatCouldJoinAGroup();
+  $(".inagroup").toggle(ina);
+  $(".notinagroup").toggle(out);
+  $(".current-group-label").html(session.getGroupName());
+  $("#tab-groupe-li").toggle(ina || out);
+}
+
 export async function showTeacherProfileScreen() {
   await showConnectedScreen("profile_teacher");
   $(".profile-div-prenomnom").html(data.getPrenomNom());

@@ -46,7 +46,6 @@ let handlers = {
     server.setModeration(moderate, type, app.showAdminTab),
   addGroupMember: app.addGroupMember,
   changeGroupStatus: app.changeGroupStatus,
-  joinGroup: app.joinGroup,
   becomeGroupAdmin: app.becomeGroupAdmin,
   setSelectedGroup: app.setSelectedGroup,
   setSelectedStudent: app.setSelectedStudent,

@@ -650,7 +650,7 @@ public abstract class DB {
 
     protected abstract void saveUser(User user);
 
-    protected abstract @NotNull User getUser(String login) throws UnknownUserException;
+    public abstract @NotNull User getUser(String login) throws UnknownUserException;
 
     public abstract void exportUsersToFile(String filename, boolean expeENS, boolean anonymize) throws IOException;
 
@@ -713,6 +713,8 @@ public abstract class DB {
             return author;
         }
     }
+
+    public abstract void joinGroup(@NotNull String userType, String accessCode) throws WrongAccessCodeException, UnknownUserException;
 }
 
 

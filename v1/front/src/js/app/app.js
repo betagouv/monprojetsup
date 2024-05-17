@@ -32,7 +32,6 @@ import * as session from "./session";
 import * as data from "../data/data";
 import * as ui from "../ui/ui";
 import * as dataload from "../data/load";
-import * as tunnel from "../ui/tunnel";
 import * as nav from "../app/navigation";
 import("./../../dsfr.module.min.js");
 
@@ -97,6 +96,10 @@ export async function validateCodeAcces(accountType, accesGroupe) {
     session.setRole(accountType);
   }
   return answer;
+}
+
+export async function joinGroupAsync(accessCode) {
+  return server.joinGroupAsync(accessCode);
 }
 
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
@@ -417,29 +420,6 @@ function processStudentProfileMsg(msg) {
   } else {
     setSelectedStudent(null);
   }
-}
-
-export function joinGroup(group, groupToken) {
-  server.joinGroup(group, groupToken, (msg) => {
-    setAdminInfos(msg);
-    if (session.isAdminOrTeacher()) {
-      refreshGroupTab(true);
-      showSelectGroupTab(msg);
-    } else {
-      let msgModal =
-        "Ta demande a été prise en compte, le référent du groupe doit la valider.";
-      if (
-        msg.infos.groups &&
-        msg.infos.groups.length == 1 &&
-        msg.infos.groups[0].members &&
-        msg.infos.groups[0].members.length == 1
-      ) {
-        msgModal = "Félicitations, tu fais maintenant partie du groupe.";
-      }
-      tunnel.openTutoModal("", msgModal);
-      ui.showAccountTab();
-    }
-  });
 }
 
 function setSelectedGroup(group) {
