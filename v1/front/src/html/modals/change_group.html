@@ -1,0 +1,71 @@
+<!------------------------------------>
+<!-- acount validation required Modal -->
+<!------------------------------------>
+
+<button
+  id="changeGroupModalButton"
+  class="fr-btn hidden-modal-button"
+  data-fr-opened="false"
+  aria-controls="changeGroupModal"
+></button>
+<dialog
+  aria-labelledby="fr-modal-title-modal-1"
+  id="changeGroupModal"
+  class="fr-modal"
+>
+  <div class="fr-container fr-container--fluid fr-container-md">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+        <div class="fr-modal__body">
+          <div class="fr-modal__header">
+            <button
+              id="closeModalButton"
+              class="fr-btn--close fr-btn"
+              title="Fermer la fenêtre modale"
+              aria-controls="changeGroupModal"
+            >
+              Fermer
+            </button>
+          </div>
+          <div class="fr-modal__content">
+            <h1 id="fr-modal-title-modal-1" class="fr-modal__title">
+              <span class="fr-icon-arrow-right-line fr-icon--lg"></span
+              >Rejoindre un groupe
+            </h1>
+            <div class="fr-fieldset__element">
+              <div class="fr-input-group" id="input-group-6213">
+                <label class="fr-label" for="undefined-1"
+                  >Renseigne le code d'accès qui t'a été transmis par le
+                  responsable du groupe que tu veux rejoindre.</label
+                >
+                <br />
+
+                <input
+                  class="fr-input"
+                  aria-describedby="createAccount-messages"
+                  name="undefined"
+                  id="changeGroupCodeAcces"
+                  type="text"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  placeholder="Tape ton code d'accès..."
+                />
+              </div>
+              <div
+                class="fr-messages-group"
+                id="createAccount-code-acces-messages"
+                aria-live="polite"
+              ></div>
+            </div>
+            <div class="button-container">
+              <button id="joingroup-button" class="fr-btn fr-btn">
+                Rejoindre ce groupe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
