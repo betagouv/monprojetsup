@@ -192,6 +192,7 @@ const screen_enter_handlers = {
     await app.getProfile();
     await ui.showProfileScreen();
     profileEditionSetup();
+    groupChangeSetup();
     fillInBin();
     init_main_nav();
   },
@@ -629,6 +630,31 @@ function fillInBin() {
   }
 }
 
+function groupChangeSetup() {
+  $("#open-joingroupmodal-button")
+    .off()
+    .on("click", () => {
+      $("#changeGroupModalButton").trigger("click");
+      $("#joingroup-button")
+        .off()
+        .on("click", async () => {
+          //todo
+          const codeAccess = $("#changeGroupCodeAcces").val();
+          const msg = await app.joinGroupAsync(codeAccess);
+          if (!msg.ok) {
+            $("#createAccount-code-acces-messages").html(
+              `<p class="fr-alert fr-alert--error">Le code d'accès '${sanitize(
+                codeAccess
+              )}' est erroné</p>`
+            );
+          } else {
+            await app.updateAdminInfos();
+            ui.updateGroupInfo();
+            $("#closeModalButton").trigger("click");
+          }
+        });
+    });
+}
 function profileEditionSetup() {
   setUpAutoComplete("spe_classes", 0);
   setUpAutoComplete("metiers", 2);

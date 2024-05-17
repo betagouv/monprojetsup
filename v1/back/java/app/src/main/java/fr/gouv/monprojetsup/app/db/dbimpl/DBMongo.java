@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.app.db.dbimpl;
 
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Updates;
 import fr.gouv.monprojetsup.app.db.model.*;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
@@ -657,6 +656,31 @@ public class DBMongo extends DB implements Closeable {
             findGroupWithAdminAccessCode(code);
         }
     }
+
+    @Override
+    public void joinGroup(@NotNull String login, String code) throws DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UnknownUserException {
+
+        if (code == null || code.isEmpty()) {
+            throw new DBExceptions.UserInputException.WrongAccessCodeException();
+        }
+
+        login = normalizeUser(login);
+        val user = getUser(login);
+
+        final Group group;
+        if (user.getUserType() == lyceen) {
+            group = findGroupWithAccessCode(code);
+            forgetUserInGroups(user.login());
+            group.addMember(login);
+        } else {
+            group = findGroupWithAdminAccessCode(code);
+            forgetUserInGroups(user.login());
+            group.addAdmin(login);
+        }
+        saveGroup(group);
+
+    }
+
 
 
 

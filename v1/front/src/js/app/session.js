@@ -142,6 +142,15 @@ export function isAStudentalreadyInAGroup() {
     getSelectedGroup() !== null
   );
 }
+export function isAStudentThatCouldJoinAGroup() {
+  return (
+    !isAnonymous() &&
+    !isAdminOrTeacher() &&
+    (getSelectedGroup() === "" ||
+      getSelectedGroup() === undefined ||
+      getSelectedGroup() === null)
+  );
+}
 
 export function atLeastOneGroupOpen() {}
 
@@ -186,6 +195,11 @@ export function setGroupInfo(infos) {
 export function getGroupInfo(infos) {
   if (sessionStorage.groupInfos) return JSON.parse(sessionStorage.groupInfos);
   return null;
+}
+export function getGroupName() {
+  if (sessionStorage.groupInfos)
+    return JSON.parse(sessionStorage.groupInfos)?.name;
+  return "";
 }
 
 export function setNoGroupOpenFlag(isSingle) {

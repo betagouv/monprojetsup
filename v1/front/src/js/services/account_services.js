@@ -42,7 +42,7 @@ export async function createAccountAsync(data) {
         resolve(data);
       },
       true,
-      (error) => reject(error)
+      (error) => reject(Error(error))
     );
   });
 }
@@ -57,7 +57,7 @@ export async function validateCodeAcces(data) {
       },
       true,
       (error) => {
-        reject(error);
+        reject(Error(error));
       }
     );
   });
@@ -100,13 +100,20 @@ export function validateAccount(email, token, onSuccess = null) {
   );
 }
 
-export function joinGroup(group, groupToken, onSuccess = null) {
-  postToSpringService(
-    "account/joinGroup",
-    {
-      group: group,
-      groupToken: groupToken,
-    },
-    onSuccess
-  );
+export async function joinGroupAsync(accessCode) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "account/joinGroup",
+      {
+        accessCode: accessCode,
+      },
+      (data) => {
+        resolve(data);
+      },
+      false,
+      (error) => {
+        reject(Error(error));
+      }
+    );
+  });
 }
