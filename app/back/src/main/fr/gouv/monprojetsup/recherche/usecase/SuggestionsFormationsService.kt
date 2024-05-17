@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.recherche.usecase
 
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
 import fr.gouv.monprojetsup.recherche.domain.entity.Profile
@@ -8,6 +9,8 @@ import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.recherche.domain.port.TripletAffectationRepository
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
+import kotlin.math.min
 
 @Service
 class SuggestionsFormationsService(
@@ -15,12 +18,17 @@ class SuggestionsFormationsService(
     val formationRepository: FormationRepository,
     val tripletAffectationRepository: TripletAffectationRepository,
 ) {
-    fun suggererFormations(profile: Profile): List<FormationPourProfil> {
+    @Throws(MonProjetSupInternalErrorException::class)
+    fun suggererFormations(
+        profile: Profile,
+        deLIndex: Int,
+        aLIndex: Int,
+    ): List<FormationPourProfil> {
         val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profile)
         val idsDesPremieresFormationsTriesParAffinites =
             affinitesFormationEtMetier.formations.sortedByDescending {
                 it.tauxAffinite
-            }.take(NOMBRE_FORMATIONS_SUGGEREES).map { it.idFormation }
+            }.subList(deLIndex, min(aLIndex, affinitesFormationEtMetier.formations.size)).map { it.idFormation }
         val formationsEtLeursMetiers =
             formationRepository.recupererLesFormationsAvecLeursMetiers(
                 idsDesPremieresFormationsTriesParAffinites,
@@ -80,9 +88,5 @@ class SuggestionsFormationsService(
         val orderById = idsMetierTriesParAffinite.mapIndexed { index, idMetier -> Pair(idMetier, index) }.toMap()
         val metiersTries = metiers.sortedBy { orderById[it.id] }
         return metiersTries.map { it.nom }
-    }
-
-    companion object {
-        private const val NOMBRE_FORMATIONS_SUGGEREES = 50
     }
 }

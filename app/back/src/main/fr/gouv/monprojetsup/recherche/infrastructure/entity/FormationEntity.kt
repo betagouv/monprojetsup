@@ -4,7 +4,9 @@ import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
@@ -36,6 +38,9 @@ class FormationEntity {
 
     @Column(name = "formation_parente", nullable = false)
     lateinit var formationParente: String
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
+    lateinit var metiers: List<FormationMetierEntity>
 
     fun toFormation() =
         Formation(

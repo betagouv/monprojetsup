@@ -8,6 +8,6 @@ data class Profile(
     val preferencesGeographique: List<String>,
     val specialites: List<String>,
     val interets: List<String>,
-    val moyenneGenerale: String,
-    val choices: List<Suggestion>,
+    val moyenneGenerale: Float,
+    val choix: List<Suggestion>,
 )

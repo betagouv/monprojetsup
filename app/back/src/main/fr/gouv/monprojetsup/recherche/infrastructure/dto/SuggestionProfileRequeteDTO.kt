@@ -26,8 +26,8 @@ data class ProfileDTO(
         geo_pref = profile.preferencesGeographique,
         spe_classes = profile.specialites,
         interests = profile.interets,
-        moygen = profile.moyenneGenerale,
-        choices = profile.choices.map { SuggestionDTO(it) },
+        moygen = profile.moyenneGenerale.toString(),
+        choices = profile.choix.map { SuggestionDTO(it) },
     )
 }
 

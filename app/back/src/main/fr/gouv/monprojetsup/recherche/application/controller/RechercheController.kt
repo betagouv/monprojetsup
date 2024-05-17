@@ -18,17 +18,27 @@ class RechercheController(
     fun postRecherche(
         @RequestBody rechercheFormationRequeteDTO: RechercheFormationRequeteDTO,
     ): RechercheFormationReponseDTO {
-        val formationsPourProfil = suggestionsFormationsService.suggererFormations(rechercheFormationRequeteDTO.profile.toProfile())
+        val formationsPourProfil =
+            suggestionsFormationsService.suggererFormations(
+                profile = rechercheFormationRequeteDTO.profile.toProfile(),
+                deLIndex = 0,
+                aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
+            )
         return RechercheFormationReponseDTO(
-            formationsPourProfil.map { formationPourProfil ->
-                FormationDTO(
-                    id = formationPourProfil.id,
-                    nom = formationPourProfil.nom,
-                    tauxAffinite = formationPourProfil.tauxAffinite,
-                    villes = formationPourProfil.communesTrieesParAffinites,
-                    metiers = formationPourProfil.metiersTriesParAffinites,
-                )
-            },
+            formations =
+                formationsPourProfil.map { formationPourProfil ->
+                    FormationDTO(
+                        id = formationPourProfil.id,
+                        nom = formationPourProfil.nom,
+                        tauxAffinite = formationPourProfil.tauxAffinite,
+                        villes = formationPourProfil.communesTrieesParAffinites,
+                        metiers = formationPourProfil.metiersTriesParAffinites,
+                    )
+                },
         )
+    }
+
+    companion object {
+        private const val NOMBRE_FORMATIONS_SUGGEREES = 50
     }
 }
