@@ -64,7 +64,7 @@ public class GetAffinitiesServiceDTO {
 
     ) {
         public double getSortScore(int searchScore) {
-            return affinite + 100.0 * searchScore;
+            return affinite + 10000.0 * searchScore;
         }
     }
 }

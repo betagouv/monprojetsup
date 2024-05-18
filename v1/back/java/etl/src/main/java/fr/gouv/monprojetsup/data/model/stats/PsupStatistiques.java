@@ -96,7 +96,6 @@ public class PsupStatistiques implements Serializable {
     public final Map<String, String> nomsFilieres = new TreeMap<>();
 
     public Map<String, String> labels = new TreeMap<>();
-
     public static final String TOUS_GROUPES_CODE = "";
     public static final int MOYENNE_BAC_CODE = -2;
     public static final String TOUS_BACS_CODE = "";
