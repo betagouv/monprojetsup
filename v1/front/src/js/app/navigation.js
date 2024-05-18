@@ -503,6 +503,10 @@ export function init_main_nav() {
 
 async function updateRecherche() {
   let str = $("#search-784-input").val();
+  const currentSearch = session.getCurrentSearch();
+  if (currentSearch !== str) {
+    app.logAction("search", str);
+  }
   session.setCurrentSearch(str);
   if (str === null || str === undefined) str = "";
   ui.showWaitingMessage();
@@ -513,10 +517,10 @@ async function updateRecherche() {
   $("#search-button").off().on("click", updateRecherche);
   $("#search-784-input")
     .off()
-    .on("keypress", function (event) {
+    .on("keypress", async function (event) {
       // Check if the key pressed is Enter
       if (event.key === "Enter") {
-        updateRecherche();
+        await updateRecherche();
       }
     });
 
