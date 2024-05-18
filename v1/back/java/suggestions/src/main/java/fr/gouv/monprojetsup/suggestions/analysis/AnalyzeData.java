@@ -5,20 +5,20 @@ import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.analysis.ServerDataAnalysis;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,7 +26,6 @@ import static fr.gouv.monprojetsup.data.DataSources.ONISEP_FICHES_METIERS;
 import static fr.gouv.monprojetsup.data.Helpers.*;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.edgesKeys;
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.edgesLabels;
 
 @Slf4j
 public class AnalyzeData {
@@ -78,7 +77,6 @@ public class AnalyzeData {
         List<MlData> datas = new ArrayList<>();
 
 
-        datas.clear();
         AlgoSuggestions.edgesKeys.edges().keySet().forEach(key -> {
             if (isFiliere(key)) {
                 //ajouter les descriptifs parcoursup
@@ -243,10 +241,9 @@ public class AnalyzeData {
     }
 
     private static void outputSemanticGraph() throws IOException {
+        Edges edgesLabels = new Edges();
         edgesLabels.createLabelledGraphFrom(edgesKeys, statistiques.labels);
-
         Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
-
     }
 
     private static void outputRelatedToHealth() throws IOException {

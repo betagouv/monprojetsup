@@ -39,8 +39,6 @@ public class AlgoSuggestions {
     /* les relations entre les différents indices dans les nomenclatures */
     public static final Edges edgesKeys = new Edges();
 
-    /* les relations entre les différents labels dans les nomenclatures */
-    public static final Edges edgesLabels = new Edges();
     protected static final Set<String> apprentissage = new HashSet<>();
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
 
