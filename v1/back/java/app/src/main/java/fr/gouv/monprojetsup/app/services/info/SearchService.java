@@ -154,6 +154,13 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                     affinites.getLeft().add(new Affinity(s, 0.001));
                 }
             });
+        } else {
+            //if keyword, include all results from searchScores, even if not in affinite
+            searchScores.keySet().forEach(s -> {
+                if (affinites.getLeft().stream().noneMatch(aff -> aff.key().equals(s))) {
+                    affinites.getLeft().add(new Affinity(s, 0.001));
+                }
+            });
         }
 
         //calcul des cores de tri

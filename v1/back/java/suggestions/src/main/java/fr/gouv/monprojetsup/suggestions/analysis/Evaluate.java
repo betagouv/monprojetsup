@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.ServerData.GROUPE_INFIX;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
@@ -28,6 +29,8 @@ public class Evaluate {
 
 
     private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
+
+    static Map<String, String> labelsNoDebug;
 
     public static void main(String[] args) throws Exception {
 
@@ -37,12 +40,18 @@ public class Evaluate {
                     "labelsDebug.json",
                     Map.class
             );
+            labelsNoDebug = Serialisation.fromJsonFile(
+                    "labelsNoDebug.json",
+                    Map.class
+            );
         } catch (Exception e) {
             SuggestionServer server = new SuggestionServer();
             server.init();
         }
 
         ReferenceCases cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
+
+        cases.toDetails("details", true);
 
 
         try (
@@ -193,7 +202,7 @@ public class Evaluate {
 
     public static @Nullable String getFlCodFromLabel(String expectation) {
         return
-                ServerData.statistiques.labels.entrySet().stream()
+                labelsNoDebug.entrySet().stream()
                         .map(e -> Pair.of(e.getKey(), levenAlgo.apply(e.getValue(), expectation)))
                         .filter(e -> e.getRight() >= 0)
                         .min(Comparator.comparingInt(Pair::getRight))
