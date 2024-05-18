@@ -430,6 +430,10 @@ public class AffinityEvaluator {
         //pour chaque filiere, on scanne toutes les details et on calcule la distance min ç chaque ville
         double bonus = Config.NO_MATCH_SCORE;
 
+        /* geo_pref is not null in theory but not in practice, because of what I consider a broken feature of GSon deserialization
+        on the kotlin / spring side */
+        if (pf.geo_pref() == null || pf.geo_pref().isEmpty()) return bonus;
+
         for (String cityName : pf.geo_pref()) {
             @NotNull val result = Distances.getGeoExplanations(fl, cityName);
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);

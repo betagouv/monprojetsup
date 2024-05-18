@@ -516,6 +516,10 @@ public class PsupStatistiques implements Serializable {
                 .forEach(e -> e.setValue(e.getValue().updateMiddle50FromFrequencesCumulees()));
     }
 
+    public Collection<Integer> getLasFlCodes() {
+        return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
+    }
+
 
     public record LASCorrespondance(
             Map<String,String> lasToGeneric
