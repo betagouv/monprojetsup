@@ -2,7 +2,9 @@ package fr.gouv.monprojetsup.app.services.info;
 
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
+import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
@@ -128,6 +130,12 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     protected @NotNull Response handleRequest(@NotNull SearchService.Request req) throws Exception {
 
         Map<String, Integer> searchScores = ServerData.search(req.recherche);
+
+        if(searchScores.isEmpty()) {
+            Log.logTrace("back", "search", List.of(req.recherche, 0, "no results"));
+        } else {
+            Log.logTrace("back", "search", List.of(req.recherche, searchScores.size()));
+        }
 
         //equivalent d'un appel à /affinites
         final Pair<List<Affinity>, List<String>> affinites = getAffinities(

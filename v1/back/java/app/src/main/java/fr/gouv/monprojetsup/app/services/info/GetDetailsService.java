@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.app.services.info;
 
+import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
@@ -81,6 +83,8 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
 
     @Override
     protected @NotNull Response handleRequest(@NotNull GetDetailsService.Request req) throws Exception {
+
+        Log.logTrace("back", "getDetails", req.keys);
 
         //LOGGER.info("HAndling request " + req);
         final @NotNull List<ResultatRecherche> suggestions = getDetails(
