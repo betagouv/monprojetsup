@@ -55,13 +55,13 @@ public record ReferenceCases(
     }
 
     public static String toExplanationString2(List<String> interests, String sep) {
-        return interests.stream()
+        return interests == null ? "" : interests.stream()
                 .map(e -> getDebugLabel(e))
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
     public static String toExplanations(List<String> list, String sep) {
-        return list.stream()
+        return list == null ? "" : list.stream()
                 .map(e -> getDebugLabel(e))
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
@@ -137,15 +137,13 @@ public record ReferenceCases(
 
         protected static boolean USE_LOCAL_URL = true;
 
-        public static final String LOCAL_URL = "http://localhost:8004/";
+
+        public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
         public static final String REMOTE_URL = "https://monprojetsup.fr/";
+
 
         public static void useRemoteUrl(boolean useRemote) {
             USE_LOCAL_URL = !useRemote;
-        }
-
-        public ReferenceCase(String explanationString, ProfileDTO profile) {
-            this(explanationString, profile, new ArrayList<>(), new ArrayList<>());
         }
 
         public void toFile(String outputFilename, boolean includeDetails) throws IOException {
@@ -410,10 +408,11 @@ public record ReferenceCases(
         return response.body();
     }
 
+
     public static GetExplanationsAndExamplesServiceDTO.Response callExplanationsService(
             GetExplanationsAndExamplesServiceDTO.Request request
     ) throws IOException, InterruptedException {
-        String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.2/public/explanations", request);
+        String response = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "explanations", request);
         return new Gson().fromJson(response, GetExplanationsAndExamplesServiceDTO.Response.class);
     }
 
@@ -421,7 +420,7 @@ public record ReferenceCases(
         return callSuggestionsService(new GetSuggestionsService.Request(pf)).suggestions().suggestions();
     }
     private static GetSuggestionsService.Response callSuggestionsService(GetSuggestionsService.Request pf) throws IOException, InterruptedException {
-        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "api/1.2/public/details";
+        String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions";
         String response = post(url, pf);
         return new Gson().fromJson(response, GetSuggestionsService.Response.class);
     }

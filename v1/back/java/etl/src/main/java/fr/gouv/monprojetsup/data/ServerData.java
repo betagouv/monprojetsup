@@ -29,6 +29,7 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
@@ -37,6 +38,7 @@ import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 public class ServerData {
 
 
+    public static final String GROUPE_INFIX = " groupe ";
     /***************************************************************************
      ******************* DATAS ***********************************
      ****************************************************************************/
@@ -113,6 +115,7 @@ public class ServerData {
         Distances.init();
 
         filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toList()));
+        filieresFront.addAll(statistiques.getLASCorrespondance().lasToGeneric().keySet());
         filieresFront.removeAll(flGroups.keySet());
         filieresFront.addAll(flGroups.values());
 
@@ -125,6 +128,8 @@ public class ServerData {
                 if (label.contains("L1")) {
                     tagsSources.add("licence", filiere);
                 }
+            } else {
+                LOGGER.warning("Excluding label in search for  " + filiere + " since it has no label");
             }
             getMetiersAssocies(filiere, metiersVersFormations).forEach(
                     metier -> {
@@ -235,6 +240,11 @@ public class ServerData {
 
     private static void updateLabelsForDebug() {
         statistiques.updateLabels(onisepData, backPsupData, statistiques.getLASCorrespondance().lasToGeneric());
+        try {
+            Serialisation.toJsonFile("labelsNoDebug.json", statistiques.labels, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Map<String, String> suffixes =
                 reverseFlGroups.entrySet().stream()
                         .filter(e -> !e.getValue().isEmpty())
@@ -242,7 +252,7 @@ public class ServerData {
                                         Map.Entry::getKey,
                                         s -> s.getValue().toString())
                                 );
-        suffixes.forEach((key, suffix) -> statistiques.labels.put(key, statistiques.labels.get(key) + " groupe " + suffix) );
+        suffixes.forEach((key, suffix) -> statistiques.labels.put(key, statistiques.labels.get(key) + GROUPE_INFIX + suffix) );
         try {
             Serialisation.toJsonFile("labelsDebug.json", statistiques.labels, true);
         } catch (IOException e) {
