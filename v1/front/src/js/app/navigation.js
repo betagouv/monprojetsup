@@ -504,7 +504,7 @@ async function updateRecherche() {
   let str = $("#search-784-input").val();
   const currentSearch = session.getCurrentSearch();
   if (currentSearch !== str) {
-    app.logAction("search", str);
+    app.logAction("search " + str);
   }
   session.setCurrentSearch(str);
   if (str === null || str === undefined) str = "";
