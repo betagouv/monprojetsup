@@ -131,7 +131,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         Map<String, Integer> searchScores = ServerData.search(req.recherche);
 
-        if(searchScores.isEmpty()) {
+        if(searchScores.isEmpty() && !req.recherche.trim().isEmpty()) {
             Log.logTrace("back", "search", List.of(req.recherche, 0, "no results"));
         } else {
             Log.logTrace("back", "search", List.of(req.recherche, searchScores.size()));

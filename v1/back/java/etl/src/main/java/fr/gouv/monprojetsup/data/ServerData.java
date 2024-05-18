@@ -48,7 +48,10 @@ public class ServerData {
     public static OnisepData onisepData;
     public static JsonCarte carte;
 
-    /* la liste des filières groupées visibles dans le front */
+    /* la liste des filières groupées visibles dans le front.
+    * Définit le périmètre des résultats de recherche et des recommandations remontées au front.
+    * Contient toutes les filières actives + les las - les filières groupées + les groupements de filières
+    * */
     public static final Set<String> filieresFront = new HashSet<>();
 
     public static TagsSources tagsSources;
@@ -89,17 +92,16 @@ public class ServerData {
         log.info("Loading server data...");
 
         loadBackEndData();
+        loadStatistiques();
 
+        backPsupData.filActives().addAll(statistiques.getLasFlCodes());
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
-
-
-        ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
-        ServerData.statistiques.removeSmallPopulations();
 
         ServerData.specialites = SpecialitesLoader.load(ServerData.statistiques);
 
         /* can be deleted afte rnext data update */
+        ServerData.statistiques.removeSmallPopulations();
         ServerData.statistiques.rebuildMiddle50();
         ServerData.statistiques.createGroupAdmisStatistique(reverseFlGroups);
         ServerData.statistiques.createGroupAdmisStatistique(getLasToGtaMapping());
@@ -114,11 +116,20 @@ public class ServerData {
 
         Distances.init();
 
+        computeFilieresFront();
+
+        initTagSources();
+
+        dataLoaded = true;
+    }
+
+    private static void computeFilieresFront() {
         filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toList()));
-        filieresFront.addAll(statistiques.getLASCorrespondance().lasToGeneric().keySet());
         filieresFront.removeAll(flGroups.keySet());
         filieresFront.addAll(flGroups.values());
+    }
 
+    private static void initTagSources() throws IOException {
         tagsSources = TagsSources.load(backPsupData.getCorrespondances());
         val metiersVersFormations = getMetiersVersFormations();
         filieresFront.forEach(filiere -> {
@@ -141,7 +152,6 @@ public class ServerData {
 
         Serialisation.toJsonFile("tagsSources.json", tagsSources, true);
 
-        dataLoaded = true;
     }
 
     private static Collection<String> getMetiersAssocies(String filiere, Map<String, Set<String>> metiersVersFormations) {
@@ -213,6 +223,10 @@ public class ServerData {
 
         ServerData.cities = new CitiesBack(backendData.cities().cities());
 
+    }
+
+    private static void loadStatistiques() throws IOException {
+        ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
     }
 
     private static Map<String, Set<String>> getLasToGtaMapping() {

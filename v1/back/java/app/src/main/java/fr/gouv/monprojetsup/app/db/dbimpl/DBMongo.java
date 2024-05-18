@@ -230,7 +230,7 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     public void logTrace(@NotNull String origin, @NotNull String event, @Nullable Object o) {
-        tracesDb.insert(new ServerTrace(origin, event, o));
+            tracesDb.insert(new ServerTrace(origin, event, o));
     }
 
     @Override
