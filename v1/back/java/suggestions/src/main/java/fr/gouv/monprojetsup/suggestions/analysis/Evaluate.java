@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +23,7 @@ import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.data.ServerData.GROUPE_INFIX;
+import static fr.gouv.monprojetsup.data.ServerData.getDebugLabel;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
@@ -109,9 +111,9 @@ public class Evaluate {
                         || expectation.contains("apprentissage")) continue;*/
                         int rank = getRank(expectation, suggestionsRanks);
                         if (rank > 0) {
-                            fos.write("OK: rank " + rank + " " + expectation + "\n");
+                            fos.write("OK rank " + rank + " \t" + expectation + "\n");
                         } else {
-                            fos.write("    KO: " + expectation + "\n");
+                            fos.write("           \t" + expectation + "\n");
                             //TODO: retro details compute interests ok KO
                             try (
                                     OutputStreamWriter fos2 = new OutputStreamWriter(
@@ -150,8 +152,8 @@ public class Evaluate {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
                                 .filter(s -> isFiliere(s.fl()))
-                                .map(e -> ServerData.getDebugLabel(e.fl()))
-                                .collect(Collectors.joining("\n\t", "\t", "\n")));
+                                .map(e -> getOKPrefix(refCase, ServerData.getDebugLabel(e.fl())) + ServerData.getDebugLabel(e.fl()))
+                                .collect(Collectors.joining("\n", "", "\n")));
                     }
 
 
@@ -166,15 +168,37 @@ public class Evaluate {
 
     }
 
+    private static String getOKPrefix(ReferenceCases.ReferenceCase refCase, String suggestion) {
+        val favoris = refCase.pf().suggApproved().stream()
+                .filter(e -> isFiliere(e.fl()))
+                .map(e -> getDebugLabel(e.fl()))
+                .collect(Collectors.toMap(e -> e, e -> 1));
+        int rank = getRank(suggestion, favoris);
+        if(rank > 0) return "fav      \t";
+        //si dans conseils alors
+        rank = getRank(suggestion, refCase.expectations().stream()
+                .collect(Collectors.toMap(e -> e, e -> 1, (existingValue, newValue) -> existingValue, HashMap::new))
+        );
+        if(rank > 0) return "exp      \t";
+        return "         ";
+    }
+
+    private static String removeCodes(String str) {
+        int i = str.indexOf(" groupe");
+        if(i >= 0) str = str.substring(0, i);
+        i = str.indexOf(" (fl");
+        if(i >= 0) str = str.substring(0, i);
+        i = str.indexOf(" (fr");
+        if(i >= 0) str = str.substring(0, i);
+        return str;
+    }
+
     private static int getRank(String expectation, Map<String, Integer> suggestionsRanks) {
+        final String expectation2 = removeCodes(expectation);
         List<Map.Entry<String, Integer>> z =  suggestionsRanks.entrySet().stream()
                 .filter(e -> {
-                            String target = e.getKey();
-                            int i = target.indexOf(" groupe");
-                            if(i >= 0) target = target.substring(0, i);
-                            i = target.indexOf(" (");
-                            if(i >= 0) target = target.substring(0, i);
-                            int dist = levenAlgo.apply(expectation,target);
+                            String target = removeCodes(e.getKey());
+                            int dist = levenAlgo.apply(expectation2,target);
                             return dist >= 0 && dist < 5;
                         }
                     )
