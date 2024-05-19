@@ -10,7 +10,7 @@ import static java.util.Map.entry;
 public final class Config {
     public static final double SEUIL_TYPE_BAC_NO_MATCH = 0.01;
     public static final double SEUIL_TYPE_BAC_FULL_MATCH = 0.2;
-    public static final int MAX_NG_SUGGESTIONS = 5;
+    public static final int MAX_NG_SUGGESTIONS = 20;
 
     @Getter
     @Setter
