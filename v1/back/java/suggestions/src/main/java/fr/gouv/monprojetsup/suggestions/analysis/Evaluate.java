@@ -88,7 +88,7 @@ public class Evaluate {
                 int k = 1;
                 for (Suggestion sugg : refCase.suggestions()) {
                     if(isFiliere(sugg.fl())) {
-                        suggestionsRanks.put(ServerData.getLabel(sugg.fl(), sugg.fl()), k);
+                        suggestionsRanks.put(sugg.fl(), k);
                         k++;
                     }
                 }
@@ -152,7 +152,7 @@ public class Evaluate {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
                                 .filter(s -> isFiliere(s.fl()))
-                                .map(e -> getOKPrefix(refCase, ServerData.getDebugLabel(e.fl())) + ServerData.getDebugLabel(e.fl()))
+                                .map(e -> getOKPrefix(refCase, e.fl()) + ServerData.getDebugLabel(e.fl()))
                                 .collect(Collectors.joining("\n", "", "\n")));
                     }
 
@@ -168,20 +168,30 @@ public class Evaluate {
 
     }
 
-    private static String getOKPrefix(ReferenceCases.ReferenceCase refCase, String suggestion) {
+    private static String getOKPrefix(ReferenceCases.ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
-                .filter(e -> isFiliere(e.fl()))
-                .map(e -> getDebugLabel(e.fl()))
-                .collect(Collectors.toMap(e -> e, e -> 1));
-        int rank = getRank(suggestion, favoris);
+                .map(e -> e.fl())
+                .filter(fl -> isFiliere(fl))
+                .collect(Collectors.toMap(fl -> fl, fl -> 1));
+        int rank = getRank(flCodSugg, favoris);
         if(rank > 0) return "fav      \t";
         //si dans conseils alors
-        rank = getRank(suggestion, refCase.expectations().stream()
-                .collect(Collectors.toMap(e -> e, e -> 1, (existingValue, newValue) -> existingValue, HashMap::new))
-        );
+        Map<String, Integer> expectations = new HashMap<>();
+        int k = 1;
+        for (String expec : refCase.expectations()) {/*refCase.expectations().stream()
+                .collect(Collectors.toMap(e -> e, e -> 1, (existingValue, newValue) -> existingValue, HashMap::new)*/
+            String flCod = getFlCodFromLabel(expec);
+            if(flCod == null) {
+                throw new RuntimeException("could not match '" + expec + "' to a code");
+            }
+            expectations.put(flCod, k++);
+        }
+        rank = getRank(flCodSugg, expectations);
+
         if(rank > 0) return "exp      \t";
-        return "         ";
+        return "         \t";
     }
+
 
     private static String removeCodes(String str) {
         int i = str.indexOf(" groupe");
@@ -193,22 +203,15 @@ public class Evaluate {
         return str;
     }
 
-    private static int getRank(String expectation, Map<String, Integer> suggestionsRanks) {
+    private static int getRank(String expectation, Map<String, Integer> suggestionsCodes) {
         final String expectation2 = removeCodes(expectation);
-        List<Map.Entry<String, Integer>> z =  suggestionsRanks.entrySet().stream()
-                .filter(e -> {
-                            String target = removeCodes(e.getKey());
-                            int dist = levenAlgo.apply(expectation2,target);
-                            return dist >= 0 && dist < 5;
-                        }
-                    )
-                .toList();
-
-        return z.stream()
-                .mapToInt(Map.Entry::getValue)
-                .min()
-                .orElse(-1);
+        return suggestionsCodes.getOrDefault(expectation2, -1);
     }
+
+    private static String findFormationCodeFromLabel(String formationLabel) {
+        return null;
+    }
+
 
 
     static String toApprentissageExplanationString(String apprentissage) {
@@ -228,7 +231,7 @@ public class Evaluate {
         return
                 labelsNoDebug.entrySet().stream()
                         .map(e -> Pair.of(e.getKey(), levenAlgo.apply(e.getValue(), expectation)))
-                        .filter(e -> e.getRight() >= 0)
+                        .filter(e -> e.getRight() >= 0 && e.getRight() < 5)
                         .min(Comparator.comparingInt(Pair::getRight))
                         .map(Pair::getLeft)
                         .orElse(null);
