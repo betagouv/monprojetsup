@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as InscriptionImport } from './routes/_inscription'
 import { Route as EleveTableauDeBordIndexImport } from './routes/eleve/tableau-de-bord/index'
+import { Route as EleveProfilIndexImport } from './routes/eleve/profil/index'
 import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_inscription/inscription/scolarite/index'
 import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
 import { Route as InscriptionInscriptionMetiersIndexImport } from './routes/_inscription/inscription/metiers/index'
@@ -47,6 +48,13 @@ const EleveTableauDeBordIndexRoute = EleveTableauDeBordIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/eleve/tableau-de-bord/index.lazy').then((d) => d.Route),
+)
+
+const EleveProfilIndexRoute = EleveProfilIndexImport.update({
+  path: '/eleve/profil/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/eleve/profil/index.lazy').then((d) => d.Route),
 )
 
 const InscriptionInscriptionConfirmationIndexLazyRoute =
@@ -141,6 +149,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
+    '/eleve/profil/': {
+      preLoaderRoute: typeof EleveProfilIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/eleve/tableau-de-bord/': {
       preLoaderRoute: typeof EleveTableauDeBordIndexImport
       parentRoute: typeof rootRoute
@@ -194,6 +206,7 @@ export const routeTree = rootRoute.addChildren([
     InscriptionInscriptionScolariteIndexRoute,
     InscriptionInscriptionConfirmationIndexLazyRoute,
   ]),
+  EleveProfilIndexRoute,
   EleveTableauDeBordIndexRoute,
 ])
 

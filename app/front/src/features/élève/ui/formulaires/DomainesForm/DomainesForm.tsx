@@ -7,7 +7,7 @@ import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèv
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
 
-const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: DomainesFormProps) => {
+const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: DomainesFormProps) => {
   const { data: catégoriesDomainesProfessionnels } = useSuspenseQuery(catégoriesDomainesProfessionnelsQueryOptions);
 
   const { setValue, mettreÀJourÉlève, getValues, erreurs } = useÉlèveForm({
@@ -43,6 +43,7 @@ const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Domaine
           auChangementFiltresSélectionnés={(filtreIdsSélectionnés) => setValue("domaines", filtreIdsSélectionnés)}
           catégories={filtresGroupésParCatégories}
           filtreIdsSélectionnésParDéfaut={getValues("domaines")}
+          niveauDeTitre={niveauDeTitreCatégories}
         />
         <div
           aria-live="assertive"

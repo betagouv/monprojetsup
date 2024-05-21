@@ -1,4 +1,4 @@
-import { i18n } from "../../src/configuration/i18n/i18n";
+import { i18n } from "../../../src/configuration/i18n/i18n";
 import { expect, test } from "@playwright/test";
 
 test.describe("Inscription élève - Confirmation", () => {

@@ -53,9 +53,19 @@ const ÉlèveInscriptionPage = () => {
       case "/inscription/scolarite":
         return <ScolaritéForm {...propsFormulaire} />;
       case "/inscription/domaines":
-        return <DomainesForm {...propsFormulaire} />;
+        return (
+          <DomainesForm
+            {...propsFormulaire}
+            niveauDeTitreCatégories="h2"
+          />
+        );
       case "/inscription/interets":
-        return <IntêretsForm {...propsFormulaire} />;
+        return (
+          <IntêretsForm
+            {...propsFormulaire}
+            niveauDeTitreCatégories="h2"
+          />
+        );
       case "/inscription/metiers":
         return <MétiersForm {...propsFormulaire} />;
       case "/inscription/etude":

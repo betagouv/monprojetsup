@@ -43,7 +43,7 @@ export const localeFR = {
   ÉLÈVE: {
     PROJET: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mon projet supérieur",
+        TITRE_ÉTAPE: "Projet supérieur",
         TITRE: "As-tu déjà un projet d’études supérieures ?",
       },
       SITUATION: {
@@ -69,7 +69,7 @@ export const localeFR = {
     },
     SCOLARITÉ: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Ma scolarité",
+        TITRE_ÉTAPE: "Scolarité",
         TITRE: "Dis-nous en plus sur ta scolarité",
       },
       CLASSE: {
@@ -103,14 +103,14 @@ export const localeFR = {
     },
     DOMAINES: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes domaines professionnels",
+        TITRE_ÉTAPE: "Domaines professionnels",
         TITRE: "Les domaines professionnels qui t'attirent",
       },
       SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste",
     },
     INTÊRETS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes centres d'intêrets",
+        TITRE_ÉTAPE: "Centres d'intêrets",
         TITRE: "Plus tard, je voudrais ...",
       },
       SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d'intêret parmi la liste",
@@ -143,7 +143,7 @@ export const localeFR = {
     },
     ÉTUDE: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes futures études",
+        TITRE_ÉTAPE: "Études supérieures",
         TITRE: "À propos des études supérieures",
       },
       DURÉE_ÉTUDES: {
@@ -235,6 +235,9 @@ export const localeFR = {
         CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
       },
     },
+    PROFIL: {
+      TITRE: "Mon Profil",
+    },
     TABLEAU_DE_BORD: {
       TITRE_PAGE: "Tableau de bord",
       TITRE: "Bienvenue dans ton espace MPS",
@@ -273,6 +276,7 @@ export const localeFR = {
     CHAMPS_MARQUÉS_DU_SYMBOLE: "Les champs marqués du symbole",
     SONT_OBLIGATOIRES: "sont obligatoires.",
     CONTINUER: "Continuer",
+    ENREGISTRER: "Enregistrer",
     RECHERCHER: "Rechercher",
     RETOUR: "Retour",
     FORMATION: "Formation",
@@ -280,6 +284,7 @@ export const localeFR = {
     TAUX_AFFINITÉ: "Taux d'affinité",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
     PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
+    MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
@@ -290,5 +295,7 @@ export const localeFR = {
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
     RETIRER: "Retirer",
+    VOIR_FIL_ARIANE: "Voir le fil d’ariane",
+    VOUS_ÊTES_ICI: "Vous êtes ici :",
   },
 } as const;

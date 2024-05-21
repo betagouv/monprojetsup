@@ -1,5 +1,6 @@
 import { type FiltresGroupésParCatégorieProps } from "./FiltresGroupésParCatégorie.interface";
 import TagFiltre from "@/components/_dsfr/TagFiltre/TagFiltre";
+import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ const FiltresGroupésParCatégorie = ({
   catégories,
   auChangementFiltresSélectionnés,
   filtreIdsSélectionnésParDéfaut,
+  niveauDeTitre,
 }: FiltresGroupésParCatégorieProps) => {
   const [filtreIdsSélectionnés, setFiltreIdsSélectionnés] = useState(filtreIdsSélectionnésParDéfaut ?? []);
 
@@ -52,15 +54,21 @@ const FiltresGroupésParCatégorie = ({
             className="w-full rounded-2xl border border-solid border-[--border-default-grey] px-8 py-4 text-left hover:border-[--background-open-blue-france-active] hover:!bg-[--background-open-blue-france] aria-expanded:rounded-b-none"
           >
             <Accordion.Trigger className="group grid grid-flow-col items-center justify-between">
-              <h2 className="fr-h6 mb-0">
-                <span
-                  aria-hidden
-                  className="pr-4"
+              <div className="*:mb-0">
+                <Titre
+                  niveauDeTitre={niveauDeTitre}
+                  styleDeTitre="h6"
                 >
-                  {catégorie.emoji}
-                </span>{" "}
-                {catégorie.nom}
-              </h2>
+                  <span
+                    aria-hidden
+                    className="pr-4"
+                  >
+                    {catégorie.emoji}
+                  </span>{" "}
+                  {catégorie.nom}
+                </Titre>
+              </div>
+
               <svg
                 className="rotate-180 transition-all duration-200 group-aria-expanded:rotate-0"
                 fill="none"
