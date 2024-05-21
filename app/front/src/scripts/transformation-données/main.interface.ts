@@ -14,6 +14,7 @@ export type Données = {
   liensMetiersFormations: LienMétierFormations;
   liensSecteursMetiers: LienSecteurMétiers;
   eds: Eds;
+  psupData: PSupData;
 };
 
 export type FormationId = string;
@@ -27,6 +28,7 @@ export type IntérêtId = string;
 export type ThématiqueId = string;
 export type Matièreid = string;
 export type SecteurId = string;
+export type TripleAffectationId = string;
 
 export type Labels = Record<FormationId | MétierId | SecteurId, string>;
 
@@ -120,5 +122,27 @@ export type Eds = {
   [key: FormationId]: {
     attendus?: string;
     recoEDS?: string;
+  };
+};
+
+export type PSupData = {
+  formations: {
+    formations: {
+      [key: TripleAffectationId]: {
+        gTaCod: number;
+        gTiCod: number;
+        gFlCod: number;
+        libelle: string;
+        academie: string;
+        academieCode: number;
+        capacite: number;
+        etablissement: string;
+        groupes: number[];
+        lat: number;
+        lng: number;
+        commune: string;
+        codeCommune: string;
+      };
+    };
   };
 };

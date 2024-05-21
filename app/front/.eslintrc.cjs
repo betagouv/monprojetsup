@@ -81,6 +81,11 @@ module.exports = {
             "propName": "className",
             "allowedFor": [
               "Link",
+              "Accordion.Root",
+              "Accordion.Item",
+              "Accordion.Header",
+              "Accordion.Trigger",
+              "Accordion.Content",
             ]
           }
         ]

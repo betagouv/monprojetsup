@@ -2,8 +2,11 @@ import logoMPS from "@/assets/logo/logo-mps.svg";
 import Navigation from "@/components/_layout/Navigation/Navigation";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
+import { useRouterState } from "@tanstack/react-router";
 
 const Entête = () => {
+  const router = useRouterState();
+
   return (
     <header
       className="fr-header"
@@ -32,19 +35,21 @@ const Entête = () => {
                     src={logoMPS}
                   />
                 </div>
-                <div className="fr-header__navbar">
-                  <button
-                    aria-controls="navigation-modal"
-                    aria-haspopup="menu"
-                    className="fr-btn--menu fr-btn"
-                    data-fr-opened="false"
-                    id="navigation-burger-button"
-                    title={i18n.NAVIGATION.MAIN_NAVIGATION}
-                    type="button"
-                  >
-                    {i18n.NAVIGATION.MAIN_NAVIGATION}
-                  </button>
-                </div>
+                {!router.location.pathname.includes("/inscription/") && (
+                  <div className="fr-header__navbar">
+                    <button
+                      aria-controls="navigation-modal"
+                      aria-haspopup="menu"
+                      className="fr-btn--menu fr-btn"
+                      data-fr-opened="false"
+                      id="navigation-burger-button"
+                      title={i18n.NAVIGATION.MAIN_NAVIGATION}
+                      type="button"
+                    >
+                      {i18n.NAVIGATION.MAIN_NAVIGATION}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="fr-header__service">
                 <LienInterne
@@ -59,7 +64,7 @@ const Entête = () => {
           </div>
         </div>
       </div>
-      <Navigation />
+      {!router.location.pathname.includes("/inscription/") && <Navigation />}
     </header>
   );
 };

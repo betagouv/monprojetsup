@@ -13,3 +13,8 @@ export type Formation = {
   }>;
   affinité?: number;
 };
+
+export type FormationAperçu = {
+  id: Formation["id"];
+  nom: Formation["nom"];
+};

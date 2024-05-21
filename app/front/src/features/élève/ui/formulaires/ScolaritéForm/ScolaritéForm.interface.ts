@@ -9,3 +9,7 @@ export type ClasseOptions = Array<{
   valeur: ClasseÉlève;
   label: string;
 }>;
+
+export type useScolaritéFormArgs = {
+  àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+};

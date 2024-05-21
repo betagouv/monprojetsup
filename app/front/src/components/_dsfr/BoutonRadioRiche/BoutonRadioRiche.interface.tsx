@@ -11,5 +11,6 @@ export type BoutonRadioRicheProps = {
     type: "désactivé" | "erreur" | "succès";
     message?: string;
   };
+  obligatoire?: boolean;
   registerHookForm?: {};
 };

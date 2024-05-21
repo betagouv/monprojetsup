@@ -17,7 +17,7 @@ const TagCliquable = ({ libellé, auClic, taille, supprimable }: TagCliquablePro
 
   return (
     <button
-      aria-label={`${supprimable && i18n.ACCESSIBILITÉ.RETIRER} ${libellé}`}
+      aria-label={`${supprimable ? i18n.ACCESSIBILITÉ.RETIRER : ""} ${libellé}`}
       className={`fr-tag ${classEnFonctionDeSupprimable()} ${classEnFonctionDeLaTaille()}`}
       onClick={auClic}
       type="button"

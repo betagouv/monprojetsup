@@ -14,12 +14,12 @@ const IndicateurÉtapes = ({ étapes, indexÉtapeActuelle }: IndicateurÉtapesPr
 
   return (
     <div className="fr-stepper fr-mb-0">
-      <h2 className="fr-stepper__title">
+      <p className="fr-stepper__title">
         {étapes[indexÉtapeCourante]}{" "}
         <span className="fr-stepper__state">
           Étape {indexÉtapeActuelle + 1} sur {nombreÉtapes}
         </span>{" "}
-      </h2>{" "}
+      </p>{" "}
       <div
         className="fr-stepper__steps"
         data-fr-current-step={indexÉtapeActuelle + 1}

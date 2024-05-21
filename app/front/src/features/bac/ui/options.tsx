@@ -1,5 +1,5 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
-import { type Bac } from "@/features/bac/domain/bac.interface";
+import { type Spécialité } from "@/features/bac/domain/bac.interface";
 import { queryOptions } from "@tanstack/react-query";
 
 export const bacsQueryOptions = queryOptions({
@@ -11,15 +11,28 @@ export const bacsQueryOptions = queryOptions({
   },
 });
 
-export const spécialitésPourUnBacQueryOptions = (bacId?: Bac["id"]) =>
+export const rechercheSpécialitésQueryOptions = (bacId?: string, recherche?: string) =>
   queryOptions({
-    queryKey: ["spécialités", bacId],
-    queryFn: async ({ queryKey }) => {
-      if (queryKey[1] === undefined) return [];
+    queryKey: ["spécialités", "recherche", bacId, recherche],
+    queryFn: async () => {
+      if (bacId === undefined) return [];
 
-      const spécialités = await dépendances.récupérerSpécialitésPourUnBacUseCase.run(queryKey[1]);
+      const spécialités = await dépendances.rechercherSpécialitésPourUnBacUseCase.run(bacId, recherche);
 
       return spécialités ?? [];
     },
     enabled: false,
+  });
+
+export const récupérerSpécialitésQueryOptions = (spécialitéIds?: Array<Spécialité["id"]>) =>
+  queryOptions({
+    queryKey: ["spécialités", spécialitéIds],
+    queryFn: async () => {
+      if (spécialitéIds === undefined) return [];
+
+      const spécialités = await dépendances.récupérerSpécialitésUseCase.run(spécialitéIds);
+
+      return spécialités ?? [];
+    },
+    enabled: true,
   });

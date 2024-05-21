@@ -1,7 +1,14 @@
 import { type CaseÀCocherProps } from "./CaseÀCocher.interface";
 import { useId } from "react";
 
-const CaseÀCocher = ({ légende, description, options, status, registerHookForm }: CaseÀCocherProps) => {
+const CaseÀCocher = ({
+  légende,
+  description,
+  options,
+  status,
+  obligatoire = false,
+  registerHookForm,
+}: CaseÀCocherProps) => {
   const id = useId();
 
   const classEnFonctionDuStatus = () => {
@@ -22,7 +29,7 @@ const CaseÀCocher = ({ légende, description, options, status, registerHookForm
         className="fr-fieldset__legend--regular fr-fieldset__legend"
         id={`${id}-legend`}
       >
-        {légende}
+        {légende} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </legend>
       {options.map((option) => (
@@ -59,14 +66,11 @@ const CaseÀCocher = ({ légende, description, options, status, registerHookForm
         className="fr-messages-group"
         id={`${id}-messages`}
       >
-        {status && ["erreur", "succès"].includes(status.type) && (
-          <p
-            className={`fr-message ${classEnFonctionDuStatus().message}`}
-            id="radio-rich-status-message"
-          >
-            {status.message}
-          </p>
-        )}
+        <div id="radio-rich-status-message">
+          {status && ["erreur", "succès"].includes(status.type) && (
+            <p className={`fr-message ${classEnFonctionDuStatus().message}`}>{status.message}</p>
+          )}
+        </div>
       </div>
     </fieldset>
   );

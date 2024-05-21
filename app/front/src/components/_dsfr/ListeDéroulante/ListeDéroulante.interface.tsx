@@ -6,6 +6,7 @@ export type ListeDéroulanteProps = {
     type: "désactivé" | "erreur" | "succès";
     message?: string;
   };
+  obligatoire?: boolean;
   valeurOptionSélectionnéeParDéfaut?: string;
   registerHookForm?: {};
 };

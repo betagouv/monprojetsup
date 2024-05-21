@@ -8,3 +8,8 @@ export type Métier = {
     nom: string;
   }>;
 };
+
+export type MétierAperçu = {
+  id: Métier["id"];
+  nom: Métier["nom"];
+};

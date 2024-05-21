@@ -1,5 +1,6 @@
 import { type Bac, type Spécialité } from "@/features/bac/domain/bac.interface";
 import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.interface";
+import Fuse from "fuse.js";
 
 export class bacInMemoryRepository implements BacRepository {
   private BACS = [
@@ -635,19 +636,40 @@ export class bacInMemoryRepository implements BacRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(this.BACS);
-      }, 500);
+      }, 300);
     });
   }
 
-  public async récupérerSpécialités(bacId: Bac["id"]): Promise<Spécialité[] | undefined> {
-    const spécialitéIdsDuBac = this.BACS_SPECIALITÉS.filter((bacSpécialité) => bacSpécialité.bacId === bacId).map(
-      (bacSpécialité) => bacSpécialité.spécialitéId,
-    );
+  public async rechercherSpécialitésDUnBac(bacId: Bac["id"], recherche?: string): Promise<Spécialité[] | undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const spécialitésDuBac = this.BACS_SPECIALITÉS.filter((bacSpécialité) => bacSpécialité.bacId === bacId).map(
+          (spécialitéDuBac) => this.SPÉCIALITÉS.find((spécialité) => spécialité.id === spécialitéDuBac.spécialitéId),
+        );
 
-    const spécialitésDuBac = spécialitéIdsDuBac.map((spécialitéId) =>
-      this.SPÉCIALITÉS.find((spécialité) => spécialité.id === spécialitéId),
-    );
+        const spécialités = [
+          ...new Set(spécialitésDuBac.filter((spécialité): spécialité is Spécialité => spécialité !== undefined)),
+        ];
 
-    return [...new Set(spécialitésDuBac.filter((spécialité): spécialité is Spécialité => spécialité !== undefined))];
+        if (recherche) {
+          const fuse = new Fuse<Spécialité>(spécialités, {
+            distance: 200,
+            threshold: 0.4,
+            keys: ["nom"],
+          });
+
+          const correspondances = fuse.search(recherche);
+          resolve(correspondances.map((correspondance) => correspondance.item));
+        } else {
+          resolve(spécialités);
+        }
+      }, 300);
+    });
+  }
+
+  public async récupérerSpécialités(spécialitéIds?: Array<Spécialité["id"]>): Promise<Spécialité[] | undefined> {
+    if (!spécialitéIds) return this.SPÉCIALITÉS;
+
+    return this.SPÉCIALITÉS.filter((spécialité) => spécialitéIds.includes(spécialité.id));
   }
 }

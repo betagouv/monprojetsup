@@ -14,14 +14,21 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as InscriptionImport } from './routes/_inscription'
-import { Route as RechercheIndexImport } from './routes/recherche/index'
+import { Route as EleveTableauDeBordIndexImport } from './routes/eleve/tableau-de-bord/index'
 import { Route as InscriptionInscriptionScolariteIndexImport } from './routes/_inscription/inscription/scolarite/index'
 import { Route as InscriptionInscriptionProjetIndexImport } from './routes/_inscription/inscription/projet/index'
+import { Route as InscriptionInscriptionMetiersIndexImport } from './routes/_inscription/inscription/metiers/index'
+import { Route as InscriptionInscriptionInteretsIndexImport } from './routes/_inscription/inscription/interets/index'
+import { Route as InscriptionInscriptionFormationsIndexImport } from './routes/_inscription/inscription/formations/index'
+import { Route as InscriptionInscriptionEtudeIndexImport } from './routes/_inscription/inscription/etude/index'
 import { Route as InscriptionInscriptionDomainesIndexImport } from './routes/_inscription/inscription/domaines/index'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const InscriptionInscriptionConfirmationIndexLazyImport = createFileRoute(
+  '/_inscription/inscription/confirmation/',
+)()
 
 // Create/Update Routes
 
@@ -35,12 +42,22 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const RechercheIndexRoute = RechercheIndexImport.update({
-  path: '/recherche/',
+const EleveTableauDeBordIndexRoute = EleveTableauDeBordIndexImport.update({
+  path: '/eleve/tableau-de-bord/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/recherche/index.lazy').then((d) => d.Route),
+  import('./routes/eleve/tableau-de-bord/index.lazy').then((d) => d.Route),
 )
+
+const InscriptionInscriptionConfirmationIndexLazyRoute =
+  InscriptionInscriptionConfirmationIndexLazyImport.update({
+    path: '/inscription/confirmation/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/confirmation/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const InscriptionInscriptionScolariteIndexRoute =
   InscriptionInscriptionScolariteIndexImport.update({
@@ -58,6 +75,46 @@ const InscriptionInscriptionProjetIndexRoute =
     getParentRoute: () => InscriptionRoute,
   } as any).lazy(() =>
     import('./routes/_inscription/inscription/projet/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const InscriptionInscriptionMetiersIndexRoute =
+  InscriptionInscriptionMetiersIndexImport.update({
+    path: '/inscription/metiers/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/metiers/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const InscriptionInscriptionInteretsIndexRoute =
+  InscriptionInscriptionInteretsIndexImport.update({
+    path: '/inscription/interets/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/interets/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const InscriptionInscriptionFormationsIndexRoute =
+  InscriptionInscriptionFormationsIndexImport.update({
+    path: '/inscription/formations/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/formations/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const InscriptionInscriptionEtudeIndexRoute =
+  InscriptionInscriptionEtudeIndexImport.update({
+    path: '/inscription/etude/',
+    getParentRoute: () => InscriptionRoute,
+  } as any).lazy(() =>
+    import('./routes/_inscription/inscription/etude/index.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -84,12 +141,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionImport
       parentRoute: typeof rootRoute
     }
-    '/recherche/': {
-      preLoaderRoute: typeof RechercheIndexImport
+    '/eleve/tableau-de-bord/': {
+      preLoaderRoute: typeof EleveTableauDeBordIndexImport
       parentRoute: typeof rootRoute
     }
     '/_inscription/inscription/domaines/': {
       preLoaderRoute: typeof InscriptionInscriptionDomainesIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/etude/': {
+      preLoaderRoute: typeof InscriptionInscriptionEtudeIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/formations/': {
+      preLoaderRoute: typeof InscriptionInscriptionFormationsIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/interets/': {
+      preLoaderRoute: typeof InscriptionInscriptionInteretsIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/metiers/': {
+      preLoaderRoute: typeof InscriptionInscriptionMetiersIndexImport
       parentRoute: typeof InscriptionImport
     }
     '/_inscription/inscription/projet/': {
@@ -98,6 +171,10 @@ declare module '@tanstack/react-router' {
     }
     '/_inscription/inscription/scolarite/': {
       preLoaderRoute: typeof InscriptionInscriptionScolariteIndexImport
+      parentRoute: typeof InscriptionImport
+    }
+    '/_inscription/inscription/confirmation/': {
+      preLoaderRoute: typeof InscriptionInscriptionConfirmationIndexLazyImport
       parentRoute: typeof InscriptionImport
     }
   }
@@ -109,10 +186,15 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   InscriptionRoute.addChildren([
     InscriptionInscriptionDomainesIndexRoute,
+    InscriptionInscriptionEtudeIndexRoute,
+    InscriptionInscriptionFormationsIndexRoute,
+    InscriptionInscriptionInteretsIndexRoute,
+    InscriptionInscriptionMetiersIndexRoute,
     InscriptionInscriptionProjetIndexRoute,
     InscriptionInscriptionScolariteIndexRoute,
+    InscriptionInscriptionConfirmationIndexLazyRoute,
   ]),
-  RechercheIndexRoute,
+  EleveTableauDeBordIndexRoute,
 ])
 
 /* prettier-ignore-end */

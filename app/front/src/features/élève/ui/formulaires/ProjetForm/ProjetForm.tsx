@@ -34,10 +34,12 @@ const ProjetForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFor
   return (
     <form
       id={formId}
+      noValidate
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
         légende={i18n.ÉLÈVE.PROJET.SITUATION.LÉGENDE}
+        obligatoire
         options={situationOptions}
         registerHookForm={register("situation")}
         status={erreurs.situation ? { type: "erreur", message: erreurs.situation.message } : undefined}

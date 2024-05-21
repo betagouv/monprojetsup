@@ -47,22 +47,22 @@ export const localeFR = {
         TITRE: "As-tu déjà un projet d’études supérieures ?",
       },
       SITUATION: {
-        LÉGENDE: "Ma situation *",
+        LÉGENDE: "Ma situation",
         OPTIONS: {
           AUCUNE_IDÉE: {
-            LABEL: "Je n'ai encore aucune idée",
-            DESCRIPTION: "Ca tombe bien, MPS est là pour ça.",
-            EMOJI: "😇",
+            LABEL: "Je n'ai pas encore d’idée",
+            DESCRIPTION: "Ça tombe bien, MPS te présente des idées d'études selon ton profil.",
+            EMOJI: "🥚",
           },
           QUELQUES_PISTES: {
             LABEL: "J’ai déjà quelques pistes d’orientation",
             DESCRIPTION: "Super, MPS va t’aider à affiner ton projet post-bac.",
-            EMOJI: "🤔",
+            EMOJI: "🐣",
           },
           PROJET_PRÉCIS: {
             LABEL: "J'ai déjà un projet précis",
-            DESCRIPTION: "Formidable, explorons tes options ensemble.",
-            EMOJI: "🧐",
+            DESCRIPTION: "Formidable, explorons les différentes possibilités ensemble.",
+            EMOJI: "🐥",
           },
         },
       },
@@ -73,7 +73,7 @@ export const localeFR = {
         TITRE: "Dis-nous en plus sur ta scolarité",
       },
       CLASSE: {
-        LABEL: "Classe actuelle *",
+        LABEL: "Classe actuelle",
         OPTIONS: {
           SECONDE: {
             LABEL: "Seconde Générale et Technologique",
@@ -96,33 +96,172 @@ export const localeFR = {
         LABEL: "Type de bac choisi ou envisagé",
       },
       SPÉCIALITÉS: {
-        LABEL: "Enseignements de spécialité (EDS) choisis ou envisagés",
-        DESCRIPTION: "Commence à taper puis sélectionne des enseignements",
+        LABEL: "Spécialités (EDS) choisies ou envisagées",
+        DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
+        SÉLECTIONNÉS: "Spécialité(s) sélectionnée(s)",
       },
-      SPÉCIALITÉS_SÉLECTIONNÉES: "Enseignement(s) de spécialité sélectionné(s)",
     },
     DOMAINES: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes domaines professionnels",
-        TITRE: "As-tu déjà identifié des domaines ?",
+        TITRE: "Les domaines professionnels qui t'attirent",
       },
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste",
     },
-    TALENTS: {
+    INTÊRETS: {
       PARCOURS_INSCRIPTION: {
-        TITRE_ÉTAPE: "Mes petits talents",
-        TITRE: "Parlons un peu de toi. Tu dirais que tu es ...",
+        TITRE_ÉTAPE: "Mes centres d'intêrets",
+        TITRE: "Plus tard, je voudrais ...",
       },
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d'intêret parmi la liste",
     },
     MÉTIERS: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Les métiers qui m'inspirent",
         TITRE: "As-tu déjà quelques idées de métiers ?",
       },
+      SITUATION: {
+        LÉGENDE: "Mon avancement",
+        DESCRIPTION: "Pas de panique, c’est simplement pour comprendre comment MPS peut t’aider.",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Pas pour l’instant",
+            DESCRIPTION: "Ce n'est pas grave, MPS est là pour t'accompagner.",
+            EMOJI: "🤔",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai identifié un ou plusieurs métiers",
+            EMOJI: "🙂",
+          },
+        },
+      },
+      MÉTIERS_ENVISAGÉS: {
+        LABEL: "Métiers envisagés",
+        DESCRIPTION: "Commence à taper puis ajoute en favoris les métiers qui pourraient t’intéresser",
+        SÉLECTIONNÉS: "Métier(s) sélectionné(s)",
+      },
     },
-    ÉTUDES: {
+    ÉTUDE: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Mes futures études",
         TITRE: "À propos des études supérieures",
+      },
+      DURÉE_ÉTUDES: {
+        LABEL: "Durée des études",
+        DESCRIPTION: "Temps d’études que tu envisages après le bac",
+        OPTIONS: {
+          OPTIONS_OUVERTES: {
+            LABEL: "Je garde mes options ouvertes",
+          },
+          COURTE: {
+            LABEL: "Courte - 3 ans ou moins",
+          },
+          LONGUE: {
+            LABEL: "Longue - 5 ans ou plus",
+          },
+          AUCUNE_IDÉE: {
+            LABEL: "Aucune idée pour le moment",
+          },
+        },
+      },
+      ALTERNANCE: {
+        LABEL: "Ton intérêt pour un cursus en alternance",
+        DESCRIPTION: "Formations alternant scolarité et pratique en entreprise",
+        OPTIONS: {
+          PAS_INTÉRESSÉ: {
+            LABEL: "Pas du tout intéressé(e)",
+          },
+          INDIFFÉRENT: {
+            LABEL: "Indifférent(e)",
+          },
+          INTÉRESSÉ: {
+            LABEL: "Intéressé(e)",
+          },
+          TRÈS_INTÉRESSÉ: {
+            LABEL: "Très intéressé(e)",
+          },
+        },
+      },
+      SITUATION_VILLES: {
+        LÉGENDE: "Où souhaites-tu étudier ?",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Aucune idée",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai quelques villes en tête",
+          },
+        },
+      },
+      VILLES_ENVISAGÉES: {
+        LABEL: "Villes",
+        DESCRIPTION: "Commence à taper puis sélectionne des villes",
+        SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
+      },
+    },
+    FORMATIONS: {
+      PARCOURS_INSCRIPTION: {
+        TITRE_ÉTAPE: "Les études ou formations post-bac",
+        TITRE: "Y a-t-il des études qui t'attirent ?",
+      },
+      SITUATION: {
+        LÉGENDE: "Mon avancement",
+        OPTIONS: {
+          AUCUNE_IDÉE: {
+            LABEL: "Pas pour l’instant",
+            DESCRIPTION: "Pas de souci, MPS va te proposer différentes possibilités",
+            EMOJI: "🤔",
+          },
+          QUELQUES_PISTES: {
+            LABEL: "J’ai déjà identifié une ou plusieurs formations post-bac",
+            EMOJI: "🙂",
+          },
+        },
+      },
+      FORMATIONS_ENVISAGÉES: {
+        LABEL: "Formations envisagées",
+        DESCRIPTION: "Commence à taper puis ajoute en favoris les formations qui pourraient t’intéresser",
+        SÉLECTIONNÉES: "Formation(s) sélectionnée(s)",
+      },
+    },
+    CONFIRMATION_INSCRIPTION: {
+      TITRE_PAGE: "Inscription terminée",
+      TITRE: "Félicitations",
+      SOUS_TITRE: "Ton inscription est terminée 👌",
+      CONTENU: "N’hésite pas à enrichir ton profil pour trouver plus facilement ta voie.",
+      BOUTON_ACTION: "Découvre ton espace MPS",
+      BANDEAU: {
+        TITRE: "Besoin d’aide pour t’orienter ?",
+        CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
+      },
+    },
+    TABLEAU_DE_BORD: {
+      TITRE_PAGE: "Tableau de bord",
+      TITRE: "Bienvenue dans ton espace MPS",
+      MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
+      CARTES: {
+        SUGGESTIONS: {
+          TITRE: "Explore les suggestions de formations post-bac",
+          SOUS_TITRE: "d'après tes préférences et découvres-en d'autres",
+        },
+        FAVORIS: {
+          TITRE: "Consulte les formations post-bac que tu as sélectionnées",
+          SOUS_TITRE: "et consolide tes futurs voeux pour Parcoursup",
+        },
+        PROFIL: {
+          TITRE: "Enrichis ton profil pour améliorer les suggestions",
+          SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
+        },
+      },
+      TÉMOIGNAGE: {
+        AUTEUR: "Charlotte",
+        RÔLE: "De l'équipe MPS",
+        SECONDE:
+          "Ton objectif d'ici la fin de l'année : avoir ajouté au moins une formation ou un métier dans ta sélection personnelle. Tu peux évidemment en ajouter plus (et dans différents domaines), si tu le souhaites !",
+        PREMIÈRE:
+          "Ton orientation se construit dans le temps : il est important que tu sélectionnes plusieurs formations post-bac possibles - et surtout, que tu te renseignes concernant les attendus pour pouvoir te préparer !",
+        TERMINALE:
+          "Il est temps de réaliser concrètement tes projets ! Pour chaque formation post-bac sur MPS dans laquelle tu te projettes, tu devrais avoir au moins 3 favoris sur Parcoursup.",
       },
     },
   },
@@ -131,15 +270,19 @@ export const localeFR = {
   },
   COMMUN: {
     FERMER: "Fermer",
-    CHAMPS_OBLIGATOIRES: "Les champs marqués du symbole * sont obligatoires.",
+    CHAMPS_MARQUÉS_DU_SYMBOLE: "Les champs marqués du symbole",
+    SONT_OBLIGATOIRES: "sont obligatoires.",
     CONTINUER: "Continuer",
+    RECHERCHER: "Rechercher",
     RETOUR: "Retour",
     FORMATION: "Formation",
     MÉTIER: "Métier",
     TAUX_AFFINITÉ: "Taux d'affinité",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
+    PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
     ERREURS_FORMULAIRES: {
-      LISTE_OBLIGATOIRE: "Veuillez sélectionner une option parmi la liste.",
+      AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
+      LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
     },
   },
   ACCESSIBILITÉ: {
