@@ -768,7 +768,7 @@ function displayFormationDetails(dat) {
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
   //cities
-  addGeoloctoDiv(dat.cities, $div);
+  addGeoloctoDiv(dat.cities, $div, false);
   //links
   displayUrls(key, dat.fois);
   //summary
@@ -853,7 +853,7 @@ function getUrlLabel(url) {
     return "Plus de détails";
   }
   if (url.includes("parcoursup")) {
-    return "Plus de détails sur Parcoursup";
+    return "Toute l'offre de formation sur Parcoursup";
   }
   return "Plus d'infos";
 }
@@ -1330,6 +1330,8 @@ function buildAffinityCard(
   else return buildMetierAffinityCard(key, fav, metiers, nodetails);
 }
 
+const hideGeolocIncards = true;
+
 function buildFormationAffinityCard(
   key,
   fav,
@@ -1430,7 +1432,7 @@ function buildFormationAffinityCard(
   } else {
     $(".icon-favorite", $div).hide();
   }
-  addGeoloctoDiv(cities, $div);
+  addGeoloctoDiv(cities, $div, hideGeolocIncards);
 
   if (metiers.length > 0) {
     $(".card-metiers-list", $div).empty();
@@ -1589,23 +1591,27 @@ function buildMetierAffinityCard(key, fav, formations, nodetails) {
   return $div;
 }
 
-function addGeoloctoDiv(cities, $div) {
+function addGeoloctoDiv(cities, $div, hideGeolocInCards = true) {
   $(".card-geoloc", $div).empty();
   if (cities.length == 0) {
     $(".card-geoloc", $div).empty();
     $(".card-geoloc", $div).hide();
   } else {
-    for (let j = 0; j < 5; j++) {
-      if (j >= cities.length) break;
-      const city = cities[j];
-      $(".card-geoloc", $div).append(
-        (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
-      );
-    }
-    if (cities.length > 5) {
-      $(".card-geoloc", $div).append(
-        `&nbsp;&middot;&nbsp;+${cities.length - 5}`
-      );
+    if (hideGeolocInCards) {
+      $(".card-geoloc", $div).append(`${cities.length} lieux de formation`);
+    } else {
+      for (let j = 0; j < 5; j++) {
+        if (j >= cities.length) break;
+        const city = cities[j];
+        $(".card-geoloc", $div).append(
+          (j == 0 ? "" : "&nbsp;&middot;&nbsp;") + city
+        );
+      }
+      if (cities.length > 5) {
+        $(".card-geoloc", $div).append(
+          `&nbsp;&middot;&nbsp;+${cities.length - 5}`
+        );
+      }
     }
     $(".card-geoloc", $div).show();
   }
