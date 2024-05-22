@@ -932,7 +932,7 @@ function convertFlCodToCarteId(fl) {
   if (fl.startsWith("fl")) {
     const flNum = parseInt(fl.substr(2));
     if (flNum >= 1000000) {
-      return "fl" + (flNum - 1000000) + "x las";
+      return "fl" + (flNum - 1000000) + "x acces sante";
     } else {
       return fl + "x";
     }
