@@ -35,7 +35,8 @@ public class GetExplanationsAndExamplesServiceDTO {
             String key,
             @ArraySchema(arraySchema = @Schema(description = "explications", allOf = Explanation.class))
             @NotNull List<Explanation> explanations,
-            @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante", example = "[\"met_129\",\"met_84\",\"met_5\"]"))
+            @ArraySchema(arraySchema = @Schema(description = "examples de métiers, triés par affinité décroissante",
+                    example = "[\"met_129\",\"met_84\",\"met_5\"]"))
             @NotNull List<String> examples
     ) {
     }
