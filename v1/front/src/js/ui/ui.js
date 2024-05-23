@@ -774,7 +774,7 @@ function displayFormationDetails(dat) {
   const label = data.getLabel(key);
   $(".formation-details-title").html(label);
   //cities
-  addGeoloctoDiv(dat.cities, $div, false);
+  addGeoloctoDiv(dat.cities, $div, true);
   //links
   displayUrls(key, dat.fois);
   //summary
