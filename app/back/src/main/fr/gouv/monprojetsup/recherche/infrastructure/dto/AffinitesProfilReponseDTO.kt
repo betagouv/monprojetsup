@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class AffinitesProfileReponseDTO(
+data class AffinitesProfilReponseDTO(
     @JsonProperty(value = "affinites")
     val affinites: List<AffinitesDTO>,
     @JsonProperty(value = "metiers")

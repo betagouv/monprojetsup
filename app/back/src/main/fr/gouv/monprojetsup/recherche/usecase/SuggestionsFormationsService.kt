@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.recherche.usecase
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
-import fr.gouv.monprojetsup.recherche.domain.entity.Profile
+import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
@@ -20,11 +20,11 @@ class SuggestionsFormationsService(
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     fun suggererFormations(
-        profile: Profile,
+        profilEleve: ProfilEleve,
         deLIndex: Int,
         aLIndex: Int,
     ): List<FormationPourProfil> {
-        val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profile)
+        val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
         val idsDesPremieresFormationsTriesParAffinites =
             affinitesFormationEtMetier.formations.sortedByDescending {
                 it.tauxAffinite
@@ -49,7 +49,7 @@ class SuggestionsFormationsService(
                 val nomCommunesTriesParAffinites =
                     getNomCommunesTriesParAffinites(
                         tripletsAffectation = triplesAffectation,
-                        communesFavorites = profile.preferencesGeographique,
+                        communesFavorites = profilEleve.villesPreferees,
                     )
                 FormationPourProfil(
                     id = formation.id,
@@ -64,11 +64,11 @@ class SuggestionsFormationsService(
 
     private fun getNomCommunesTriesParAffinites(
         tripletsAffectation: List<TripletAffectation>,
-        communesFavorites: List<String>,
+        communesFavorites: List<String>?,
     ): List<String> {
         val communesDesAffectations = tripletsAffectation.map { it.commune }.distinct()
         val communesTrieesParAffinites: MutableList<String> = mutableListOf()
-        communesFavorites.forEach { commune ->
+        communesFavorites?.forEach { commune ->
             if (communesDesAffectations.contains(commune)) {
                 communesTrieesParAffinites.add(commune)
             }

@@ -2,11 +2,11 @@ package fr.gouv.monprojetsup.recherche.application.controller
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
-import fr.gouv.monprojetsup.recherche.domain.entity.Profile
-import fr.gouv.monprojetsup.recherche.domain.entity.Suggestion
+import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -29,63 +29,63 @@ class RechercheControllerTest(
     @Nested
     inner class `Quand on appelle la route de recherche de formations` {
         private val unProfil =
-            Profile(
-                niveau = "term",
+            ProfilEleve(
+                id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+                classe = "terminale",
                 bac = "Générale",
-                duree = "long",
-                apprentissage = "C",
-                preferencesGeographique = listOf("Soulac-sur-Mer", "Nantes"),
-                specialites = listOf("Sciences de la vie et de la Terre", "Mathématiques"),
-                interets =
-                    listOf(
-                        "T_ITM_1054",
-                        "T_ITM_1534",
-                        "T_ITM_1248",
-                        "T_ITM_1351",
-                        "T_ROME_2092381917",
-                        "T_IDEO2_4812",
-                    ),
+                dureeEtudesPrevue = "options_ouvertes",
+                alternance = "pas_interesse",
+                villesPreferees = listOf("Paris"),
+                specialites = listOf("1056", "1054"),
+                centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,
-                choix =
-                    listOf(
-                        Suggestion(
-                            fl = "fl2014",
-                            status = 1,
-                            date = "string",
-                        ),
-                    ),
+                metiersChoisis = listOf("MET_123", "MET_456"),
+                formationsChoisies = listOf("fl1234", "fl5678"),
+                domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             )
         private val requete =
             """
             {
-              "profile": {
-                "niveau": "term",
+              "profil": {
+                "id": "adcf627c-36dd-4df5-897b-159443a6d49c",
+                "situation": "aucune_idee",
+                "classe": "terminale",
                 "bac": "Générale",
-                "duree": "long",
-                "apprentissage": "C",
-                "preferencesGeographique": [
-                  "Soulac-sur-Mer",
-                  "Nantes"
-                ],
                 "specialites": [
-                  "Sciences de la vie et de la Terre",
-                  "Mathématiques"
+                  "1056",
+                  "1054"
                 ],
-                "interets": [
+                "domaines": [
                   "T_ITM_1054",
                   "T_ITM_1534",
                   "T_ITM_1248",
-                  "T_ITM_1351",
+                  "T_ITM_1351"
+                ],
+                "centresInterets": [
                   "T_ROME_2092381917",
                   "T_IDEO2_4812"
                 ],
-                "moyenneGenerale": "14",
-                "choix": [
+                "situationMetiers": "quelques_pistes",
+                "metiers": [
+                  "MET_123",
+                  "MET_456"
+                ],
+                "dureeEtudesPrevue": "options_ouvertes",
+                "alternance": "pas_interesse",
+                "situationVilles": "quelques_pistes",
+                "villes": [
                   {
-                    "fl": "fl2014",
-                    "status": 1,
-                    "date": "string"
+                    "codeInsee": "75015",
+                    "nom": "Paris",
+                    "latitude": 2.2885659,
+                    "longitude": 48.8512252
                   }
+                ],
+                "moyenneGenerale": 14,
+                "situationFormations": "quelques_pistes",
+                "formations": [
+                  "fl1234",
+                  "fl5678"
                 ]
               }
             }
@@ -111,7 +111,8 @@ class RechercheControllerTest(
                             "vétérinaire",
                         ),
                 )
-            Mockito.`when`(suggestionsFormationsService.suggererFormations(unProfil, 0, 50)).thenReturn(listOf(formationPourProfil))
+            given(suggestionsFormationsService.suggererFormations(unProfil, 0, 50))
+                .willReturn(listOf(formationPourProfil))
 
             // when-then
             mvc.perform(
@@ -150,7 +151,7 @@ class RechercheControllerTest(
         }
 
         @Test
-        fun `si le service échoue, doit retourner 500`() {
+        fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
             val uneException =
                 MonProjetSupInternalErrorException(

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.recherche.domain.entity.Profile
+import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.recherche.domain.port.SpecialitesRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.recherche.infrastructure.dto.AffinitesProfileReponseDTO
-import fr.gouv.monprojetsup.recherche.infrastructure.dto.SuggestionProfileRequeteDTO
+import fr.gouv.monprojetsup.recherche.infrastructure.dto.AffinitesProfilReponseDTO
+import fr.gouv.monprojetsup.recherche.infrastructure.dto.ProfilDTO
+import fr.gouv.monprojetsup.recherche.infrastructure.dto.SuggestionProfilRequeteDTO
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,16 +20,20 @@ import kotlin.jvm.Throws
 
 @Component
 class SuggestionApiHttpClient(
-    private val httpClient: OkHttpClient,
     @Value("\${suggestions.api.url}")
     private val baseUrl: String,
     private val objectMapper: ObjectMapper,
+    private val httpClient: OkHttpClient,
+    private val specialitesRepository: SpecialitesRepository,
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesAffinitees(profile: Profile): AffinitesPourProfil {
+    override fun recupererLesAffinitees(profilEleve: ProfilEleve): AffinitesPourProfil {
         val url = "$baseUrl/affinites"
         val mediaType = "application/json; charset=utf-8".toMediaType()
-        val jsonRequete = objectMapper.writeValueAsString(SuggestionProfileRequeteDTO(profile)).toRequestBody(mediaType)
+        val specialites = profilEleve.specialites?.let { specialitesRepository.recupererLesSpecialites(it).map { it.label } }
+        val jsonRequete =
+            objectMapper.writeValueAsString(SuggestionProfilRequeteDTO(ProfilDTO(profilEleve, specialites)))
+                .toRequestBody(mediaType)
         val requete = Request.Builder().post(jsonRequete).url(url).build()
         val reponse =
             try {
@@ -41,7 +47,7 @@ class SuggestionApiHttpClient(
             }
         val reponseDTO =
             try {
-                objectMapper.readValue(reponse.body?.string(), AffinitesProfileReponseDTO::class.java)
+                objectMapper.readValue(reponse.body?.string(), AffinitesProfilReponseDTO::class.java)
             } catch (e: Exception) {
                 throw MonProjetSupInternalErrorException(
                     "ERREUR_API_SUGGESTIONS_REPONSE",
