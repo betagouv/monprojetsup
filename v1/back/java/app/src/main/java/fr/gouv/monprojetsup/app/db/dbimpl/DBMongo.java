@@ -726,7 +726,8 @@ public class DBMongo extends DB implements Closeable {
 
     }
 
-    private Group findGroupWithAccessCode(String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
+    private Group findGroupWithAccessCode(@Nullable String code) throws DBExceptions.UserInputException.WrongAccessCodeException {
+        if(code == null) code = "";
         Document group = collection(GROUPS_COLL_NAME).find(eq(Group.REGISTRATION_TOKEN_FIELD, code)).first();
         if (group == null) {
             throw new DBExceptions.UserInputException.WrongAccessCodeException();
