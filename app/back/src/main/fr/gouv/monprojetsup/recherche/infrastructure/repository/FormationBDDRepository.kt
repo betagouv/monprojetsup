@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class FormationBDDRepository(
-    val formationMetierJPARepository: FormationMetierJPARepository,
+    val formationJPARepository: FormationJPARepository,
 ) : FormationRepository {
     @Transactional(readOnly = true)
     override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): Map<Formation, List<Metier>> {
-        val formations = formationMetierJPARepository.findAllByIdIn(idsFormations)
+        val formations = formationJPARepository.findAllByIdIn(idsFormations)
         return formations.associate { formationEntity ->
             formationEntity.toFormation() to formationEntity.metiers.map { it.metier.toMetier() }
         }

@@ -20,7 +20,7 @@ class RechercheController(
     ): RechercheFormationReponseDTO {
         val formationsPourProfil =
             suggestionsFormationsService.suggererFormations(
-                profile = rechercheFormationRequeteDTO.profile.toProfile(),
+                profilEleve = rechercheFormationRequeteDTO.profil.toProfil(),
                 deLIndex = 0,
                 aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
             )
