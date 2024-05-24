@@ -348,6 +348,8 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     protected synchronized void saveGroup(Group group) {
+        LOGGER.info("saveGroup " +  new Gson().toJson(group));
+        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
         upsert(GROUPS_COLL_NAME, group.getId(), group);
     }
 
@@ -466,39 +468,6 @@ public class DBMongo extends DB implements Closeable {
         }
     }
 
-    public List<Lycee> getExpeENSLycees() {
-        return collection(LYCEES_COLL_NAME)
-                .find(eq(EXPE_ENS, true))
-                .map(doc -> new Gson().fromJson(doc.toJson(), Lycee.class))
-                .into(new ArrayList<>());
-    }
-
-    public List<User> getExpeENSUsers() {
-        Set<String> lycees = getExpeENSLycees().stream().map(Lycee::getId).collect(Collectors.toSet());
-        return getUsers().stream().filter(u -> u.getLycees().stream().anyMatch(lycees::contains)).toList();
-    }
-
-    public void saveUsers(List<User> users) {
-        // saves all users in the db
-        users.forEach(this::saveUser);
-    }
-
-    public void saveGroups(List<Group> groups) {
-        // saves all groups in the db
-        groups.forEach(this::saveGroup);
-    }
-
-    public synchronized void reinitTreatmentGroupRegistrationCodes() {
-        //get all groups from db whose expeENSGroupe is T
-        List<Group> testGroups = collection(GROUPS_COLL_NAME).find(eq(Group.EXPE_ENS_GROUPE_FIELD, "T"))
-                .map(doc -> new Gson().fromJson(doc.toJson(), Group.class))
-                .into(new ArrayList<>());
-        testGroups.forEach(group -> {
-            group.resetRegistrationCode();
-            saveGroup(group);
-        });
-    }
-
     private MongoCollection<Document> collection(String colName) {
         return mongoTemplate.getCollection(colName);
     }
@@ -566,6 +535,8 @@ public class DBMongo extends DB implements Closeable {
         if (group == null) {
             throw new DBExceptions.UnknownGroupException();
         }
+        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
+        LOGGER.info("findgroup" + new Gson().toJson(group));
         return group;
     }
 
