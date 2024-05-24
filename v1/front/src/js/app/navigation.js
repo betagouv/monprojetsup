@@ -305,9 +305,9 @@ function getUrlOpinionTally() {
   delete params.statut;
 
   let url = "https://tally.so/r/3xd2aE";
-  if (group == "quanti3") url = "https://tally.so/r/3jBYD1";
+  //if (group == "quanti3") url = "https://tally.so/r/3jBYD1";
   if (session.isAdminOrTeacher()) {
-    url = group == "quanti3" ? "https://tally.so/r/w8d6Wk" : null;
+    url = "https://tally.so/r/w8d6Wk";
   }
   if (url === null) return null;
   /*Tests MAI 2024 · Questionnaire lycéen·nes élu·e·s	https://tally.so/r/3xd2aE	Les élu·e·s (lycées agricoles et hors lycées agricoles)	login_elus
