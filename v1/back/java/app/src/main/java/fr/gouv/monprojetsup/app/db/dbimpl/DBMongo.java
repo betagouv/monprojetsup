@@ -348,6 +348,8 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     protected synchronized void saveGroup(Group group) {
+        LOGGER.info("saveGroup " +  new Gson().toJson(group));
+        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
         upsert(GROUPS_COLL_NAME, group.getId(), group);
     }
 
@@ -527,6 +529,8 @@ public class DBMongo extends DB implements Closeable {
         if (group == null) {
             throw new DBExceptions.UnknownGroupException();
         }
+        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
+        LOGGER.info("findgroup" + new Gson().toJson(group));
         return group;
     }
 
