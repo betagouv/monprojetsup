@@ -139,6 +139,9 @@ public class ServerData {
                 if (label.contains("L1")) {
                     tagsSources.add("licence", filiere);
                 }
+                if (label.toLowerCase().contains("infirmier")) {
+                    tagsSources.add("IFSI", filiere);
+                }
             } else {
                 LOGGER.warning("Excluding label in search for  " + filiere + " since it has no label");
             }
