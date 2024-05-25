@@ -160,7 +160,7 @@ public final class User {
             return String.format(
                     """
                             <p>Ta demande de création de compte doit être validée par ton professeur principal ou
-                             un un référent.</p><p>
+                             un référent.</p><p>
                             En cas de problème, contacte <b>support@monprojetsup.fr</b>.</p>
                             """)
                     ;
