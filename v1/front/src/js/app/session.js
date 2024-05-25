@@ -67,6 +67,10 @@ function isAdminOrTeacher() {
   const role = getRole();
   return role === Roles.admin || role === Roles.teacher;
 }
+export function isFakeLyceen() {
+  const infos = getCachedAdminInfos();
+  return isStudent() && (infos.type == "pp" || infos.type == "admin");
+}
 export function isStudent() {
   const role = getRole();
   return role === Roles.student;
@@ -215,7 +219,8 @@ export function setAdminInfos(infos) {
 }
 
 export function getCachedAdminInfos() {
-  return JSON.parse(sessionStorage.adminInfos);
+  if (sessionStorage.adminInfos) return JSON.parse(sessionStorage.adminInfos);
+  return {};
 }
 
 export function hideFormations() {
