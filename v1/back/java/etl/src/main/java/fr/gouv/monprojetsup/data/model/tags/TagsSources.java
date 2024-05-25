@@ -12,6 +12,7 @@ import java.util.*;
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile;
+import static java.lang.Math.max;
 
 @Slf4j
 public record TagsSources(
@@ -80,25 +81,23 @@ public record TagsSources(
                 String label = ServerData.getLabel(candidate);
                 if(label != null) {
                     String cleanLabel = normalize(label);
-                    if(cleanLabel.contains(cleanTag)) {
-                        result.put(candidate, result.getOrDefault(candidate, 0) + 4);
+                    if(cleanLabel.startsWith(cleanTag) || cleanLabel.contains(" " + cleanTag) || cleanLabel.contains("(" + cleanTag) ) {
+                        result.put(candidate, max(result.getOrDefault(candidate, 0) , 8));
                     }
-                } else {
-                    int i = 0;
                 }
-
             });
 
             for (Map.Entry<String, Set<String>> entry : sources.entrySet()) {
                 String k = entry.getKey();
                 Set<String> value = entry.getValue();
                 int score = 0;
-                if (k.startsWith(cleanTag)) score = 2;
+                if (k.equals(cleanTag)) score = 4;
+                else if (k.startsWith(cleanTag)) score = 2;
                 else if(k.contains(cleanTag)) score = 1;
                 if(score > 0) {
                     for (String candidate : value) {
                         if (candidates.contains(candidate)) {
-                            result.put(candidate, result.getOrDefault(candidate, 0) + score);
+                            result.put(candidate, result.getOrDefault(candidate, 0) | score );
                         }
                     }
                 }
@@ -107,7 +106,7 @@ public record TagsSources(
 
         ServerData.reverseFlGroups.forEach((flGroup, fls) -> {
             int score = fls.stream().map(fl -> result.getOrDefault(fl, 0)).reduce(0, Integer::max);
-            score = Math.max(result.getOrDefault(flGroup, 0), score);
+            score = max(result.getOrDefault(flGroup, 0), score);
             if(score > 0) {
                 result.put(flGroup, score);
             }
