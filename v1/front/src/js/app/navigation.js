@@ -590,6 +590,20 @@ export function init_main_nav() {
         await setScreen("profil");
       }
     });
+  $("#switch-to-lyceen").prop("checked", session.isStudent());
+  $("#switch-to-lyceen")
+    .off()
+    .on("change", async function () {
+      const checked = $(this).is(":checked");
+      if (checked) {
+        await setScreen(null);
+        app.toLyceen();
+      } else {
+        await setScreen(null);
+        app.toTeacher();
+      }
+    });
+
   $(".prenomnom").html(data.getPrenomNom());
 }
 

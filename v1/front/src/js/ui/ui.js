@@ -1864,6 +1864,9 @@ let hideFormations = false;
 export function setRoleVisibility() {
   $(".student-only").toggle(!session.isAdminOrTeacher());
   $(".teacher-only").toggle(session.isAdminOrTeacher());
+  $(".teacher-or-fake-lyceen-only").toggle(
+    session.isAdminOrTeacher() || session.isFakeLyceen()
+  );
   $(".admin-only").toggle(session.isAdmin());
   if (session.isAdminOrTeacher()) {
     const st = session.getSelectedStudent();
