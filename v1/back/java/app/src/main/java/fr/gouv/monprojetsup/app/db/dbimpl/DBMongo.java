@@ -76,7 +76,7 @@ public class DBMongo extends DB implements Closeable {
     private final ErrorsRepository errorsDb;
 
     public static final String ERRORS_COLL_NAME = "errors";
-
+    public static final String TRACES_COLL_NAME = "traces";
     private static final String BACK = "back";
     private static final String FRONT = "front";
 
@@ -282,6 +282,7 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     protected void updateUserField(String id, String key, Object value) {
+        //LOGGER.info("Updating user field %s for user %s object %s".formatted(key, id, new Gson().toJson(value)));
         updateCollectionItemField(USERS_COLL_NAME, id, key, value);
     }
 
@@ -348,8 +349,6 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     protected synchronized void saveGroup(Group group) {
-        LOGGER.info("saveGroup " +  new Gson().toJson(group));
-        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
         upsert(GROUPS_COLL_NAME, group.getId(), group);
     }
 
@@ -368,6 +367,20 @@ public class DBMongo extends DB implements Closeable {
             throw new DBExceptions.UnknownUserException(id);
         }
         return new Gson().fromJson(doc.toJson(), User.class);
+        /*
+        try {
+            User user =  usersDb.findById(id).orElse(null);
+            if(user == null) {
+                throw new DBExceptions.UnknownUserException(id);
+            }
+            return user;
+        } catch (MappingException unused) {
+            Document doc = usersDb.findDocById(id);
+            if(doc == null) {
+                throw new DBExceptions.UnknownUserException(id);
+            }
+            return new Gson().fromJson(doc.toJson(), User.class);
+        }*/
     }
 
     @Override
@@ -440,18 +453,6 @@ public class DBMongo extends DB implements Closeable {
                 .toList(), true);
     }
 
-    public void exportFavorisToFile(String s) throws IOException {
-        LOGGER.info("Export des favoris vers un fichier local");
-        List<Profile> profiles =
-        getUsers().stream()
-                .filter(User::isLyceen)
-                .filter(User::hasFavoris)
-                .map(User::pf)
-                .toList();
-        profiles.forEach(Profile::anonymize);//using peek is discouraged
-        Serialisation.toJsonFile(s,profiles, true);
-    }
-
     @Override
     public List<ServerTrace> getTraces() {
         return tracesDb.findAll();
@@ -501,6 +502,10 @@ public class DBMongo extends DB implements Closeable {
         collection(colName).deleteMany(document);
     }
 
+    public void insert(String colName, List<Document> collect) {
+        mongoTemplate.insert(collect, colName);
+    }
+
     public void clear(String colName) {
         deleteMany(colName, new Document());
     }
@@ -521,7 +526,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public @NotNull Group findGroup(String id) throws DBExceptions.UnknownGroupException {
+    protected @NotNull Group findGroup(String id) throws DBExceptions.UnknownGroupException {
         if (id == null || id.isEmpty()) {
             throw new DBExceptions.UnknownGroupException();
         }
@@ -529,8 +534,6 @@ public class DBMongo extends DB implements Closeable {
         if (group == null) {
             throw new DBExceptions.UnknownGroupException();
         }
-        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
-        LOGGER.info("findgroup" + new Gson().toJson(group));
         return group;
     }
 
@@ -575,7 +578,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public boolean isAdminOfUser(String login, String user) {
+    public boolean isAdminOfUser(String login, String user) throws DBExceptions.UnknownUserException {
         login = normalizeUser(login);
         if (isSuperAdmin(login)) return true;
         //finds groups whose members contain user and admins contain login
@@ -640,15 +643,17 @@ public class DBMongo extends DB implements Closeable {
             }
             forgetUserInGroups(user.login());
             group.addMember(login);
+            saveGroup(group);
+            return Pair.of(false, group.getName());
         } else {
             group = findGroupWithAdminAccessCode(code);
             if(group.hasAdmin(login)) {
                 return Pair.of(true, group.getName());
             }
             group.addAdmin(login);
+            saveGroup(group);
+            return Pair.of(false, group.getName());
         }
-        saveGroup(group);
-        return Pair.of(false, group.getName());
     }
 
 
@@ -665,7 +670,7 @@ public class DBMongo extends DB implements Closeable {
     @Override
     public synchronized void createNewUser(
             @NotNull CreateAccountService.CreateAccountRequest data,
-            boolean confirmEmailOnAccountCreation) throws DBExceptions.ModelException, NoSuchAlgorithmException, InvalidKeySpecException, DBExceptions.UserInputException.InvalidPasswordException, DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UserInputException.UserAlreadyExistsException, DBExceptions.UserInputException.UnauthorizedLoginException {
+            boolean confirmEmailOnAccountCreation) throws DBExceptions.ModelException, NoSuchAlgorithmException, InvalidKeySpecException, DBExceptions.UserInputException.InvalidPasswordException, DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UserInputException.InvalidGroupTokenException, DBExceptions.UserInputException.UserAlreadyExistsException, DBExceptions.UserInputException.UnauthorizedLoginException {
         final int maxLength = 64;
 
         if (data.password().length() > maxLength
@@ -790,6 +795,16 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
+    public ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws DBExceptions.ModelException {
+        @NotNull Group group = findGroup(grpId);
+        if (!group.hasMember(memberLogin)) {
+            return null;
+        }
+        User p = getUser(memberLogin);
+        return p.pf().toDbo();
+    }
+
+    @Override
     public void setGroupsNiveaux() {
         //find all groups whose filed niveau is null
         List<Group> groups = collection(GROUPS_COLL_NAME).find(eq(NIVEAU_FIELD, null))
@@ -800,7 +815,7 @@ public class DBMongo extends DB implements Closeable {
 
     private void setNiveau(Group group) {
         Classe.Niveau niveau = group.getNiveau();
-        //noinspection ConstantValue
+        List<Group> updated = new ArrayList<>();
         if(niveau == null && group.getLycee() != null && group.getClasse() != null) {
             try {
                 val lycee = findLycee(group.getLycee());
@@ -836,7 +851,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public AdminInfosDTO getAdminInfos(String login) throws DBExceptions.UnknownUserException {
+    public AdminInfosDTO getAdminInfos(String login) throws DBExceptions.UnknownUserException, DBExceptions.UnknownGroupException {
         //the precision of the data depends on the privilege
         login = normalizeUser(login);
         User user = getUser(login);
@@ -893,11 +908,17 @@ public class DBMongo extends DB implements Closeable {
     private AdminInfosDTO getAdminInfos(
             String login,
             Role role,
-            UserTypes type, UserTypes appType, Set<String> lyceesUser, int profileCompleteness, UserConfig config) {
+            UserTypes type, UserTypes appType, Set<String> lyceesUser, int profileCompleteness, UserConfig config) throws DBExceptions.UnknownGroupException {
         //on liste les lycées de l'utilisateur
         List<Lycee> lyceesUserItems = new ArrayList<>();
         if(role == User.Role.ADMIN) {
             lyceesUserItems.addAll(getLycees());
+        } else {
+            /*
+            for (String s : lyceesUser) {
+                Lycee lycee = findLycee(s);
+                lyceesUserItems.add(lycee);
+            }*/
         }
 
         AdminInfosDTO result = new AdminInfosDTO(
@@ -991,7 +1012,6 @@ public class DBMongo extends DB implements Closeable {
     public List<Group> getAllGroups() {
            return groupsDb.findAll();
     }
-
 
 
 }

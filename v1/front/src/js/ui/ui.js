@@ -42,7 +42,6 @@ import { Tab } from "bootstrap";
 import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
-import { sanitize } from "dompurify";
 
 export {
   initOnce,
@@ -182,7 +181,7 @@ export async function showTunnelScreen(subscreen) {
       ["poussin", "openstreetmap", "dart"],
     ];
     const sec = new Date().getSeconds();
-    const j = 0; //Math.round(sec % icons.length);
+    const j = Math.round(sec % icons.length);
     for (const i of [0, 1, 2]) {
       $(`#icon-img-idea${i}`).attr("src", `img/${icons[j][i]}.png`);
     }
@@ -353,7 +352,6 @@ export function injectHtml() {
     "header.html": "header-placeholder",
     "footer.html": "footer-placeholder",
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
-    "modals/favori.html": "favori-placeholder",
     "modals/validate_account.html": "validate_account-placeholder",
     "modals/error.html": "error-placeholder",
     "modals/metier.html": "metier-placeholder",
@@ -479,10 +477,10 @@ export function showRechercheData(data, showAffinities) {
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
-    addAffinityCard(dat, false);
     if (i == 0) {
       displayItemDetails(dat, false);
     }
+    addAffinityCard(dat, false);
   }
   $(".formation-card-header-affinity").toggle(showAffinities);
   //like and dislike handlers
@@ -523,16 +521,6 @@ export function showGroupsTab2() {
 export function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
 }
-
-export function getMyFavoriComment(dretours) {
-  for (const o of dretours) {
-    const type = o.type;
-    if (type === "favori") {
-      return o.content;
-    }
-  }
-  return "";
-}
 function addAffinityCard(dat, nodetails) {
   const $div = buildAffinityCard(
     dat.key,
@@ -552,14 +540,9 @@ function addAffinityCard(dat, nodetails) {
   } else {
     console.log("null formation " + dat.key);
   }
-
-  const myself = getLogin();
   const retours = {};
   for (const o of dat.retours) {
     const author = o.author;
-    if (author === myself) {
-      continue;
-    }
     let retour = retours[author];
     if (retour === undefined) retour = {};
     if (o.type === "comment") {
@@ -569,20 +552,8 @@ function addAffinityCard(dat, nodetails) {
     if (o.type === "opinion") retour.opinion = o.content;
     retours[author] = retour;
   }
-
-  /*** la zone favori  ***/
-  const myComment = getMyFavoriComment(dat.retours);
-  const score = dat.scoreFavori;
-  addFavoriDiv(dat.key, score, myComment, dat.isFavori);
-
-  /*** les retours  ***/
-  const retourss = Object.entries(retours);
-  if (retourss.length == 0) {
-    hideRetours(dat.key);
-  } else {
-    for (const [author, retour] of retourss) {
-      addRetour(dat.key, author, retour.type, retour.comment, retour.date);
-    }
+  for (const [author, retour] of Object.entries(retours)) {
+    addRetour(dat.key, author, retour.opinion, retour.comment, retour.date);
   }
 }
 
@@ -625,19 +596,8 @@ function displayMetierDetails(dat) {
 
 export function updateGroupsList(groups) {
   const $div = $(".nav_teacher select").empty();
-  const selectedGroup = session.getSelectedGroup();
   for (const group of groups) {
-    const li = `
-        <option 
-            id="group_select_${group.id
-              .replaceAll(" ", "_")
-              .replaceAll(".", "_")}"
-            value="${group.id}"
-            ${group.id == selectedGroup ? "selected" : ""}
-            >${group.name}
-        </option>
-    `;
-    $div.append(li);
+    addGroupEntry(group, $div);
   }
 }
 
@@ -645,7 +605,21 @@ export function cleanKey(key) {
   return key.replaceAll(" ", "_").replaceAll(".", "_");
 }
 
+function addGroupEntry(group, $div) {
+  const li = `
+        <option class="group_select"
+            id="group_select_${group.id
+              .replaceAll(" ", "_")
+              .replaceAll(".", "_")}"
+            group_id="${group.id}"
+            >${group.name}
+        </option>
+    `;
+  $div.append(li);
+}
+
 export function setStudentDetails(details) {
+  $("#nb_students_connected").html(details.nb_students_connected);
   const $div = $(".eleves_tiles_container").empty();
   let nb = 0;
   let nb_students_connected = 0;
@@ -670,10 +644,6 @@ export function setStudentDetails(details) {
   }
   if (nb == 0) nb = 1;
   $("#nb_students_connected").html(nb_students_connected);
-  $(".en_quelques_chiffres_teacher").toggle(nb_students_connected > 0);
-  $(".current_group_teacher_eleves").toggle(nb_students_connected > 0);
-  $(".groupe_vide_teacher").toggle(nb_students_connected == 0);
-
   $("#pct_students_connected").html(
     Math.round((100 * nb_students_connected) / nb) + "%"
   );
@@ -812,7 +782,6 @@ export function updateFav(key) {
       }
     }
     $(`.icon-favorite_${key}`).toggle(fav);
-    $(`.favori-div_${key}`).toggle(fav);
   }
 }
 
@@ -1152,7 +1121,7 @@ function displayExplanations(explications, detailed) {
     addExplanation(
       `Cette formation est similaire à: <em>&quot;${simis.join(
         "&quot;,&quot;"
-      )}</em> qui fait partie de vos favoris.</p>`,
+      )}</em>.</p>`,
       "fr-icon-arrow-right-up-line"
     );
   }
@@ -1260,35 +1229,33 @@ function addExplanation2(expl) {
     msgs.push(".");
     msgs.push("</span>");
     addExplanation("En lien avec tes choix " + msgs.join(""));
-  } else if (expl.moygen) {
+  } else if (expl.bac) {
     addExplanation(
       "Tu as auto-évalué ta " +
         " moyenne générale à <b>" +
-        +expl.moygen.moy +
+        +expl.bac.moy +
         "</b>. " +
         "Parmi les lycéennes et lycéens " +
-        (expl.moygen.bacUtilise == ""
+        (expl.bac.bacUtilise == ""
           ? ""
-          : "de série '" + expl.moygen.bacUtilise + "' ") +
+          : "de série '" + expl.bac.bacUtilise + "' ") +
         "admis dans ce type de formation en 2023, la moitié avait une moyenne au bac dans l'intervalle <b>" +
-        getHTMLMiddle50(expl.moygen) +
+        getHTMLMiddle50(expl.bac) +
         "</b>."
     );
   } else if (expl.tbac) {
-    addExplanation(
-      "<p>Idéal si tu as un bac série '" + expl.tbac.bac + "'.</p>"
-    );
+    addExplanation("Idéal si tu as un bac série '" + expl.tbac.bac + "'.</p>");
   } else if (expl.perso) {
     return; // "<p>Tu as toi-même ajouté cette formation à ta sélection.</p>";
   } else if (expl.spec) {
     const stats = expl.spec.stats;
     let result = "";
-    for (const stat of expl.spec.stats) {
+    for (const [spe, pourcentage] of Object.entries(expl.spec.stats)) {
       result +=
         "<p>La spécialité '" +
-        stat.spe +
+        spe +
         "' a été choisie par " +
-        stat.pct +
+        Math.round(100 * pourcentage) +
         "% des candidats admis dans ce type de formation en 2023.</p>";
     }
     addExplanation(result);
@@ -1475,16 +1442,11 @@ function buildFormationAffinityCard(
 `);
   }
   if (session.isStudent()) {
-    const $favoris =
-      $(`<div class="student-only"><div class="favori-div favori-div_${key}">
-              </div></div>`);
-    $(`.favori-div`, $favoris).hide();
     const $retours =
       $(`<div id="retours-div_${key}" class="retours-div student-only">
-              <hr id="retours-hr_${key}"/>
+              <hr/>
               </div>`).hide();
     //hidden by default, willbe shonw only if any comment
-    $div.append($favoris);
     $div.append($retours);
   }
 
@@ -1524,110 +1486,6 @@ function buildFormationAffinityCard(
   return $div;
 }
 
-export function hideFavori(key) {
-  $(`#favori-hr_${key}`).hide();
-}
-export function hideRetours(key) {
-  $(`#retours-hr_${key}`).hide();
-}
-
-function isInteger(str) {
-  const num = parseInt(str, 10);
-  return !isNaN(num) && Number.isInteger(num);
-}
-
-export function cleanupFavoriScore(score) {
-  if (score == null || score === undefined || !isInteger(score)) score = 1;
-  score = parseInt(score, 10);
-  if (score < 1) score = 1;
-  if (score > data.maxScore) score = data.maxScore;
-  return score;
-}
-export function addFavoriDiv(key, score, comment, visible) {
-  const $favori = $(`<div class="favori"></div>`);
-
-  $favori.append(`
-  <div class="favori-title-div">
-        <span class="favori-title-icon fr-icon-user-heart-line" aria-hidden="true"></span>
-        <div>Mon appréciation personnelle</div>
-        <button 
-        id="btn-avis${key}"
-        class="fr-btn fr-icon-draft-fill fr-btn--tertiary-no-outline fr-ml-auto btn-avis" 
-        key="${key}"
-        title="Modifier l'appréciation personnelle">
-		        </button>
-        </div>
-      `);
-  $favori.append(`
-        <div>
-        Mon niveau d'intérêt pour cette formation:
-        </div>
-      <div class="favori-score-div favori-score-div${key}">
-      </div>`);
-  $favori.append(`
-     <div class="favori-remark-div${key}">      
-       <div>
-        Mes remarques:
-        </div>
-        <div class="favori-comment-content favori-comment-content${key}">
-        </div>
-    </div>
-`);
-
-  addScoreToDiv(key, $(".favori-score-div", $favori));
-
-  setFavoriData(key, score, comment, $favori);
-
-  $(`.favori-div_${key}`).append($favori).toggle(visible);
-}
-
-export function extractScoreFromDiv($div, key) {
-  const $score = (`.favori-score-div`, $div);
-  let score = 0;
-  $(".favori-score-bullet", $score).each((i, $bullet) => {
-    if ($($bullet).hasClass("full")) {
-      score = score + 1;
-    }
-  });
-  return score;
-}
-export function extractCommentFromDiv($div, key) {
-  const $comment = $(`.favori-comment-content`, $div);
-  return $comment.html().replaceAll("<br>", "\n");
-}
-export function addScoreToDiv(key, $div) {
-  $div.empty();
-  for (let i = 1; i <= data.maxScore; i++) {
-    $div.append(
-      $(
-        `<div score="${i}" class="favori-score-bullet favori-score-bullet_${key}_${i}" aria-hidden="true"></div>`
-      )
-    );
-  }
-}
-
-export function setFavoriData(key, score, comment, $div) {
-  if (comment != null && comment !== undefined) {
-    comment = sanitize(comment);
-    $(`.favori-comment-content${key}`, $div).html(
-      comment.replaceAll("\n", "<br/>")
-    );
-    $(`.favori-remark-div${key}`, $div).toggle(comment != "");
-  }
-
-  //cleanup data
-  score = cleanupFavoriScore(score);
-
-  for (let i = 1; i <= data.maxScore; i++) {
-    const $bullet = $(`.favori-score-bullet_${key}_${i}`, $div);
-    if (i <= score) {
-      $bullet.addClass("full");
-    } else {
-      $bullet.removeClass("full");
-    }
-  }
-}
-
 export function addRetour(key, author, opinion, comment, dateStr) {
   const $retour = $(`
     <div class="retour">
@@ -1640,14 +1498,13 @@ export function addRetour(key, author, opinion, comment, dateStr) {
         👍
         &nbsp;${author} soutient ton choix  
         </div>`);
-  } else if (opinion === "discuss") {
+  }
+  if (opinion === "discuss") {
     $retour.append(`
       <div class="retour-opinion-div">        
         💬
         &nbsp;À discuter avec ${author}  
         </div>`);
-  } else {
-    return;
   }
   if (comment !== null && comment !== undefined && comment !== "") {
     $retour.append(`
@@ -1689,7 +1546,6 @@ export function addRetour(key, author, opinion, comment, dateStr) {
         </div>`);
     }
   }
-  $(`#retours-hr_${key}`).show();
   $(`#retours-div_${key}`).append($retour).show();
 }
 
@@ -2006,23 +1862,9 @@ export function showDetails(grpid, stats, explanations, exemples) {
 let hideFormations = false;
 
 export function setRoleVisibility() {
-  $(".experts-only").toggle(session.isExpert());
-  $(".student-only")
-    .not(".invisible-to-experts")
-    .toggle(!session.isAdminOrTeacher());
-  $(".teacher-only")
-    .not(".invisible-to-experts")
-    .not(".student-only")
-    .toggle(session.isAdminOrTeacher());
-  $(".teacher-or-fake-lyceen-only")
-    .not(".student-only")
-    .not(".invisible-to-experts")
-    .toggle(session.isAdminOrTeacher() || session.isFakeLyceen());
+  $(".student-only").toggle(!session.isAdminOrTeacher());
+  $(".teacher-only").toggle(session.isAdminOrTeacher());
   $(".admin-only").toggle(session.isAdmin());
-
-  if (session.getLogin() == undefined) $("visible-only-when-connected").hide();
-  if (session.isExpert()) $(".invisible-to-experts").hide();
-
   if (session.isAdminOrTeacher()) {
     const st = session.getSelectedStudent();
     $(".teacher-div").toggle(st !== undefined);
@@ -2097,7 +1939,7 @@ function displayClientError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  showErrorMessage("Erreur", msg);
+  showErrorMessage("Erreur du client", msg);
 }
 
 //validationMessage
