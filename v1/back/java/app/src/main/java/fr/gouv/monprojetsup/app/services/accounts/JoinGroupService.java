@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,12 @@ public class JoinGroupService extends MyService<JoinGroupService.Request, JoinGr
      */
     public record Response(
             @NotNull ResponseHeader header,
-            boolean ok
+            boolean ok,
+            boolean wasAlreadyInGroup,
+            String groupName
     ) {
-        public Response(boolean ok) {
-            this(new ResponseHeader(), ok);
+        public Response(boolean ok, boolean wasAlreadyInGroup, String groupName) {
+            this(new ResponseHeader(), ok, wasAlreadyInGroup, groupName);
         }
     }
 
@@ -44,11 +47,11 @@ public class JoinGroupService extends MyService<JoinGroupService.Request, JoinGr
         DB.authenticator.tokenAuthenticate(req.login(), req.token());
         boolean ok = true;
         try {
-            WebServer.db().joinGroup(req.login(), req.accessCode);
+            val result = WebServer.db().joinGroup(req.login(), req.accessCode);
+            return new Response(true, result.getLeft(), result.getRight());
         } catch (DBExceptions.UserInputException.WrongAccessCodeException ignored) {
-            ok = false;
+            return new Response(false, false, null);
         }
-        return new Response(ok || WebServer.config().isNoAuthentificationMode());
     }
 
 

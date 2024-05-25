@@ -202,6 +202,10 @@ public final class Group {
         login = normalizeUser(login);
         admins.remove(login);
     }
+    public void removeMember(String login) {
+        login = normalizeUser(login);
+        members.remove(login);
+    }
 
     /**
      * @return true if the group was changed by init
