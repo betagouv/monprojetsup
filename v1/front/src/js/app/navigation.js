@@ -2,7 +2,7 @@ import * as ui from "../ui/ui";
 import * as session from "./session";
 import * as app from "./app";
 import * as events from "../app/events";
-import $ from "jquery";
+import $, { event } from "jquery";
 import * as data from "./../data/data";
 import * as autocomplete from "./../ui/autocomplete/autocomplete";
 import { sanitize } from "dompurify";
@@ -54,6 +54,7 @@ const screens = {
   inscription_tunnel_felicitations_teacher: {},
   groupes: {},
   profil_teacher: {},
+  gestion_groupes: {},
 };
 
 const screen_enter_handlers = {
@@ -96,7 +97,7 @@ const screen_enter_handlers = {
           .on("click", async (event) => {
             const login = $("#sendResetPasswordEmailInputEmail").val();
             $("#sendResetPasswordEmailInputEmail-messages").empty();
-            $("#sendResetPasswordEmailInputEmail-messages2").empty();
+            $(".sendResetPasswordEmailInputEmail-messages2").empty();
             if (login === null || login === undefined || login.length == 0) {
               $("#sendResetPasswordEmailInputEmail-messages").html(
                 '<p class="fr-alert fr-alert--error">Préciser le login</p>'
@@ -109,8 +110,13 @@ const screen_enter_handlers = {
               app.sendResetPasswordEmail(login);
               //$("#passwordReinitializedButton").trigger("click");
               //$("#resetConfirmationModalEmail").html(login);
-              $("#sendResetPasswordEmailInputEmail-messages2").html(
-                `<p class="fr-alert fr-alert--success">Si cet identifiant correspond bien à votre compte, un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
+              $(".sendResetPasswordEmailInputEmail-messages2").html(
+                `<p class="fr-alert fr-alert--success">
+                Si cet identifiant correspond bien à votre compte,
+                 un e-mail vous a été envoyé pour vous permettre de réinitialiser 
+                 votre mot de passe. En cas de difficulté veuillez contacter 
+                 support@monprojetsup.fr.
+                 </p>`
               );
             }
             event.preventDefault();
@@ -196,6 +202,10 @@ const screen_enter_handlers = {
     fillInBin();
     init_main_nav();
   },
+  gestion_groupes: async () => {
+    await showTeacherProfileScreen();
+    await ui.showTeacherProfileTab("gestion_groupes");
+  },
   student_profile: async () => {
     const login = session.getSelectedStudent();
     if (login === null || login === undefined) {
@@ -217,13 +227,8 @@ const screen_enter_handlers = {
     $(".multi-options-item").off().addClass("no-pointer");
   },
   profil_teacher: async () => {
-    await ui.showTeacherProfileScreen();
-    $("#basculer_mode_lyceen")
-      .off()
-      .on("click", async () => {
-        await setScreen(null);
-        app.toLyceen();
-      });
+    await showTeacherProfileScreen();
+    await ui.showTeacherProfileTab("parametres");
   },
   inscription_tunnel_statut: async () => {
     await ui.showTunnelScreen("statut");
@@ -282,6 +287,93 @@ const screen_exit_handlers = {
   inscription_tunnel_interests: validateInterests,
   inscription_tunnel_scolarite: validateEDS,
 };
+
+async function initTeacherProfileScreenHandlers() {
+  await app.updateAdminInfos();
+
+  ui.updateGroupInfo();
+  $("#join-group-teacher")
+    .off()
+    .on("click", async () => {
+      const codeAccess = $("#inputJoinGroupCodeAcces").val();
+      const msg = await app.joinGroupAsync(codeAccess);
+      if (!msg.ok) {
+        $("#join-group-messages").html(
+          `<p class="fr-alert fr-alert--error">Le code d'accès '${sanitize(
+            codeAccess
+          )}' est erroné</p>`
+        );
+      } else {
+        $("#join-group-messages").empty();
+        let fb = "";
+        if (msg.wasAlreadyInGroup) {
+          fb = `Vous êtes déjà référent du groupe '${msg.groupName}'.`;
+        } else {
+          fb = `Vous êtes maintenant référent du groupe '${msg.groupName}'.`;
+        }
+        $("#join-group-messages").html(
+          `<p class="fr-alert fr-alert--info">${fb}</p>`
+        );
+        initTeacherProfileScreenHandlers();
+      }
+    });
+
+  $(".leave-group")
+    .off()
+    .on("click", async (event) => {
+      const closestButton = event.currentTarget.closest("button");
+      const key = closestButton.getAttribute("key");
+      if (key) {
+        await app.leaveGroupAsync(key);
+        $("#join-group-messages").empty();
+        initTeacherProfileScreenHandlers();
+      }
+    });
+}
+
+async function showTeacherProfileScreen() {
+  if (!session.isAdminOrTeacher()) {
+    return setScreen("profil");
+  }
+
+  await ui.showTeacherProfileScreen();
+  await initTeacherProfileScreenHandlers();
+
+  $("#basculer_mode_lyceen")
+    .off()
+    .on("click", async () => {
+      await setScreen(null);
+      app.toLyceen();
+    });
+
+  $("#reset_password-button")
+    .off()
+    .on("click", async () => {
+      await setScreen("reset_password");
+    });
+
+  $("#champNom").val(data.getProfileValue("nom"));
+  $("#champPrenom").val(data.getProfileValue("prenom"));
+  $("#save-parameters-teacher")
+    .off()
+    .on("click", async () => {
+      events.profileValueChangedHandler2("nom", $("#champNom").val());
+      events.profileValueChangedHandler2("prenom", $("#champPrenom").val());
+    });
+
+  $(".sendResetPasswordEmailInputEmail-messages2").empty();
+  $("#reinit-passwd")
+    .off()
+    .on("click", async () => {
+      const login = session.getLogin();
+      app.sendResetPasswordEmail(login);
+      $(".sendResetPasswordEmailInputEmail-messages2").html(
+        `<p class="fr-alert fr-alert--success">
+        Un e-mail vous a été envoyé pour vous permettre de réinitialiser votre mot de passe. 
+        En cas de difficulté veuillez contacter support@monprojetsup.fr.</p>`
+      );
+    });
+}
 
 function getUrlOpinionTally() {
   const groupInfo = session.getGroupInfo();
@@ -830,11 +922,16 @@ async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
   $(".group_select").attr("aria-current", false);
-  $(`#group_select_${group_id.replaceAll(" ", "_").replaceAll(".", "_")}`).attr(
-    "aria-current",
-    "page"
-  );
+  $(`#group_select_${ui.cleanKey(group_id)}`).attr("aria-current", "page");
+  $("#code_classe_div").html(details.token);
   ui.setStudentDetails(details);
+
+  $(".gerer_groupes")
+    .off()
+    .on("click", async () => {
+      await setScreen("gestion_groupes");
+    });
+
   $(".student_selection_button")
     .off()
     .on("click", async (event) => {

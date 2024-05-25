@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.app.controllers
 import fr.gouv.monprojetsup.app.BASE_PATH
 import fr.gouv.monprojetsup.app.services.accounts.*
 import fr.gouv.monprojetsup.common.server.Server
+import fr.gouv.monprojetsup.common.server.Server.BasicResponse
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -69,7 +70,8 @@ class PublicAccountController(
 class AuthenticatedAccountController(
     private val disconnectService: DisconnectService,
     private val setNewPasswordService: SetNewPasswordService,
-    private val joinGroupService: JoinGroupService
+    private val joinGroupService: JoinGroupService,
+    private val leaveGroupService: LeaveGroupService
 ) {
 
 
@@ -86,6 +88,10 @@ class AuthenticatedAccountController(
     @PostMapping("/joinGroup")
     fun joinGroup(@RequestBody request: JoinGroupService.Request): JoinGroupService.Response {
         return joinGroupService.handleRequestAndExceptions(request)
+    }
+    @PostMapping("/leaveGroup")
+    fun leaveGroup(@RequestBody request: LeaveGroupService.Request): BasicResponse {
+        return leaveGroupService.handleRequestAndExceptions(request)
     }
 
 }

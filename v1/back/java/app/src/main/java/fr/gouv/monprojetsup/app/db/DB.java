@@ -714,7 +714,10 @@ public abstract class DB {
         }
     }
 
-    public abstract void joinGroup(@NotNull String userType, String accessCode) throws WrongAccessCodeException, UnknownUserException;
+    public abstract Pair<Boolean,String> joinGroup(@NotNull String userType, String accessCode) throws WrongAccessCodeException, UnknownUserException;
+
+    public abstract void leaveGroup(@NotNull String login, @NotNull String key) throws DBExceptions.UnknownGroupException;
+
 }
 
 

@@ -6,37 +6,33 @@
     </div>
   </div>
   <div class="nav_teacher">
-    <nav
-      class="fr-nav"
-      id="header-navigation"
-      role="navigation"
-      aria-label="Menu principal"
-    >
-      <ul class="fr-nav__list">
-        <!--
-        <li class="fr-nav__item">
-          <a
-            class="fr-nav__link"
-            href="#"
-            target="_self"
-            aria-current="page"
-            group_id="seconde8"
-            >Classe de seconde 8</a
-          >
-        </li>
-        <li class="fr-nav__item">
-          <a class="fr-nav__link" href="#" target="_self" group_id="premiere3"
-            >Classe de Premiere 3</a
-          >
-        </li>
-        <li class="fr-nav__item">
-          <a class="fr-nav__link" href="#" target="_self" group_id="terminale7"
-            >Classe de Terminale 7</a
-          >
-        </li>
-        -->
-      </ul>
-    </nav>
+    <div class="fr-select-group">
+      <!--      <label class="fr-label" for="select">Groupe</label>-->
+      <select
+        class="fr-select"
+        id="header-navigation"
+        role="navigation"
+        aria-label="Menu principal"
+      ></select>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <div id="code_classe_label">
+        Code d'accès au groupe&nbsp;
+        <div id="code_classe_div">AABB</div>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div>
+      <button
+        class="fr-btn fr-btn--secondary gerer_groupes"
+        title="Gérer mes groupes"
+      >
+        <span class="fr-icon-team-line"></span>
+        Gérer mes groupes
+      </button>
+    </div>
+    <div class="sep"></div>
     <div class="sep"></div>
     <div>
       <button class="fr-btn recherche" title="Recherche de formations">

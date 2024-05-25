@@ -410,6 +410,11 @@ export async function showProfileScreen() {
   updateGroupInfo();
 }
 
+export function showTeacherProfileTab(tab) {
+  if (tab == "parametres") $("#tab-parametres").trigger("click");
+  if (tab == "gestion_groupes" || tab == "groupes")
+    $("#tabpanel-406KK").trigger("click");
+}
 export function updateGroupInfo() {
   const ina = session.isAStudentalreadyInAGroup();
   const out = session.isAStudentThatCouldJoinAGroup();
@@ -417,6 +422,26 @@ export function updateGroupInfo() {
   $(".notinagroup").toggle(out);
   $(".current-group-label").html(session.getGroupName());
   $("#tab-groupe-li").toggle(ina || out);
+  //tabpanel-406KK
+  $(".list-group-teacher").empty();
+  const infos = session.getCachedAdminInfos();
+  if (infos.groups.length == 0) {
+    $(".list-group-teacher").append(
+      `<div class="fr-alert fr-alert--info">Vous n'êtes référent d'aucun groupe. Si nécessaire, rapprochez vous de la direction de votre établissement afin d'obtenir un code d'accès.</div>`
+    );
+  } else {
+    for (const group of infos.groups) {
+      $(".list-group-teacher").append(
+        `<div class="list-group-teacher-item">${group.name}
+          <div class="sep"></div>
+           <button class="fr-button right" key="${group.id}">
+            <span  class="fr-icon-delete-fill leave-group">
+            </span>
+          </button>
+        </div>`
+      );
+    }
+  }
 }
 
 export async function showTeacherProfileScreen() {
@@ -424,6 +449,8 @@ export async function showTeacherProfileScreen() {
   $(".profile-div-prenomnom").html(data.getPrenomNom());
   $(".prenomnom").html(data.getPrenomNom());
   $(".profile-div-email").html(session.getLogin());
+  $("#join-group-messages").empty();
+  updateGroupInfo();
 }
 
 export function showWaitingMessage() {
@@ -568,26 +595,25 @@ function displayMetierDetails(dat) {
 }
 
 export function updateGroupsList(groups) {
-  const $div = $(".nav_teacher #header-navigation .fr-nav__list").empty();
+  const $div = $(".nav_teacher select").empty();
   for (const group of groups) {
     addGroupEntry(group, $div);
   }
 }
+
+export function cleanKey(key) {
+  return key.replaceAll(" ", "_").replaceAll(".", "_");
+}
+
 function addGroupEntry(group, $div) {
   const li = `
-        <li class="fr-nav__item">
-          <a
-            class="fr-nav__link group_select"
+        <option class="group_select"
             id="group_select_${group.id
               .replaceAll(" ", "_")
               .replaceAll(".", "_")}"
-            href="#"
-            target="_self"
-            aria-current="page"
             group_id="${group.id}"
-            >${group.name}</a
-          >
-        </li>
+            >${group.name}
+        </option>
     `;
   $div.append(li);
 }

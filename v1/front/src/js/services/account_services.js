@@ -117,3 +117,22 @@ export async function joinGroupAsync(accessCode) {
     );
   });
 }
+//leaveGroupAsync
+
+export async function leaveGroupAsync(key) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "account/leaveGroup",
+      {
+        key: key,
+      },
+      (data) => {
+        resolve(data);
+      },
+      false,
+      (error) => {
+        reject(Error(error));
+      }
+    );
+  });
+}

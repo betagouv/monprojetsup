@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
 import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
@@ -348,8 +349,6 @@ public class DBMongo extends DB implements Closeable {
 
     @Override
     protected synchronized void saveGroup(Group group) {
-        LOGGER.info("saveGroup " +  new Gson().toJson(group));
-        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
         upsert(GROUPS_COLL_NAME, group.getId(), group);
     }
 
@@ -535,8 +534,6 @@ public class DBMongo extends DB implements Closeable {
         if (group == null) {
             throw new DBExceptions.UnknownGroupException();
         }
-        Arrays.stream(Thread.currentThread().getStackTrace()).map(StackTraceElement::toString).forEach(LOGGER::info);
-        LOGGER.info("findgroup" + new Gson().toJson(group));
         return group;
     }
 
@@ -629,7 +626,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public void joinGroup(@NotNull String login, String code) throws DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UnknownUserException {
+    public Pair<Boolean,String> joinGroup(@NotNull String login, String code) throws DBExceptions.UserInputException.WrongAccessCodeException, DBExceptions.UnknownUserException {
 
         if (code == null || code.isEmpty()) {
             throw new DBExceptions.UserInputException.WrongAccessCodeException();
@@ -641,19 +638,33 @@ public class DBMongo extends DB implements Closeable {
         final Group group;
         if (user.getUserType() == lyceen) {
             group = findGroupWithAccessCode(code);
+            if(group.hasMember(login)) {
+                return Pair.of(true, group.getName());
+            }
             forgetUserInGroups(user.login());
             group.addMember(login);
+            saveGroup(group);
+            return Pair.of(false, group.getName());
         } else {
             group = findGroupWithAdminAccessCode(code);
-            forgetUserInGroups(user.login());
+            if(group.hasAdmin(login)) {
+                return Pair.of(true, group.getName());
+            }
             group.addAdmin(login);
+            saveGroup(group);
+            return Pair.of(false, group.getName());
         }
-        saveGroup(group);
-
     }
 
 
-
+    @Override
+    public void leaveGroup(@NotNull String login, @NotNull String key) throws DBExceptions.UnknownGroupException {
+        login = normalizeUser(login);
+        val group = findGroup(key);
+        group.removeAdmin(login);
+        group.removeMember(login);
+        saveGroup(group);
+    }
 
 
     @Override

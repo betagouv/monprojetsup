@@ -153,9 +153,70 @@ footer {
 .nav_teacher {
   display: flex;
   flex-direction: horizontal;
+    align-items: center;
+      justify-content: center;
 }
+.nav_teacher #code_classe_label {
+  color: var(--light-decisions-text-text-default-grey, #3A3A3A);
+    font-family: Marianne;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    /* 150% */
+}
+.nav_teacher #code_classe_div {
+border-radius: 4px;
+  background: var(--light-options-illustration-color-950-default-yellow-tournesol-950, #FEECC2);
+  padding-left: 5px;
+    padding-right: 5px;
+    align-self: center;}
 .nav_teacher .sep {
   flex: 1;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#code_classe_label {
+  display: flex;
+  flex-direction:row;
+}
+.list-group-teacher {
+  display: flex;
+  flex-direction: column;
+
+}
+.list-group-teacher-title {
+  color: var(--light-decisions-text-text-title-grey, #161616);
+  
+    /* 1.Titres/H4 - SM/Desktop */
+    font-family: Marianne;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    /* 133.333% */
+    margin-bottom: 40px;
+}
+#tab-parametres-panel button {
+  margin: 5px;
+}
+#profile-div-left div{
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  display: flex;
+}
+
+.list-group-teacher-item {
+margin-bottom: 10px;
+background: var(--light-options-illustration-color-950-default-yellow-tournesol-950, #FEECC2);
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+}
+.list-group-teacher-item button {
+  align-self: flex-end;
 }
 #main-div-groupes {
   background: var(--light-options-illustration-color-975-default-beige-gris-galet-975, #F9F6F2);

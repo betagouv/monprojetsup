@@ -101,6 +101,9 @@ export async function validateCodeAcces(accountType, accesGroupe) {
 export async function joinGroupAsync(accessCode) {
   return server.joinGroupAsync(accessCode);
 }
+export async function leaveGroupAsync(key) {
+  return server.leaveGroupAsync(key);
+}
 
 export function storeCredentialsAfterSuccesfulAuth(login, password) {
   //https://developer.mozilla.org/en-US/docs/Web/API/CredentialsContainer/store

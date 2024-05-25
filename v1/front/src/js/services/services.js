@@ -54,7 +54,7 @@ export const sendResetPasswordEmail = account_services.sendResetPasswordEmail;
 export const setNewPassword = account_services.setNewPassword;
 export const validateCodeAcces = account_services.validateCodeAcces;
 export const joinGroupAsync = account_services.joinGroupAsync;
-
+export const leaveGroupAsync = account_services.leaveGroupAsync;
 /**************** TEACHER SERVICES ************* */
 export const updateAdminInfos = teacher_services.getAdminInfos;
 export const updateAdminInfosAsync = teacher_services.getAdminInfosAsync;
