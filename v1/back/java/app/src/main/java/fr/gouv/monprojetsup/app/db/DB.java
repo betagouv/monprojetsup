@@ -47,8 +47,6 @@ public abstract class DB {
     /* the file used by the backend */
     public static final String DEFAULT_SUPERUSER = "hugo.gimbert@gmail.com";
     public static final String LYCEE_DEMO = "LyceeDemo";
-    public static final String LYCEE_EXPERTS = "profils_ref";
-    public static final String CLASSE_EXPERTS = "tous";
     public static final String CLASSE_DEMO = "PremiereDemo";
     public static final String LYCEE_ANO = "LyceeAno";
     public static final String CLASSE_ANO = "ClasseAno";
@@ -164,10 +162,10 @@ public abstract class DB {
 
     public void updateProfile(
             @NotNull String login,
-            @NotNull ProfileUpdateDTO unsanitizedUpdate) throws UnknownUserException {
+            @NotNull ProfileUpdateDTO unsanitizedProfile) throws UnknownUserException {
         User user = getUser(login);
-        ProfileUpdateDTO update = unsanitizedUpdate.sanitize();
-        user.updateProfile(update);
+        ProfileUpdateDTO updatedProfile = unsanitizedProfile.sanitize();
+        user.updateProfile(updatedProfile);
         ProfileDb pf = user.getProfile().toDbo();
         updateUserField(login, PF_FIELD, pf);
     }
@@ -215,10 +213,6 @@ public abstract class DB {
         return Group.lyceeToGroupId(LYCEE_DEMO, CLASSE_DEMO);
     }
 
-    public static String getExpertGroupId() {
-        return Group.lyceeToGroupId(LYCEE_EXPERTS, CLASSE_EXPERTS);
-    }
-
     protected List<GetGroupDetailsService.StudentDetails> getMemberDetails(Set<String> members) {
         return getUsers(members).stream()
                 .map(this::getMemberDetails)
@@ -257,8 +251,9 @@ public abstract class DB {
      * @param student the student
      * @param topic the topic
      * @param comment the comment
+     * @throws UnknownUserException if the user is unknown
      */
-    public void addMessage(@NotNull String author, @NotNull String student, @NotNull String topic, @NotNull String comment) {
+    public void addMessage(@NotNull String author, @NotNull String student, @NotNull String topic, @NotNull String comment) throws UnknownUserException {
         topic = topic.replace(".", "_");
         addToUserArrayField(
                 student,
@@ -438,24 +433,6 @@ public abstract class DB {
             return createNewGroup(LYCEE_DEMO, CLASSE_DEMO);
         }
     }
-    public void findOrCreateExpertsGroup() throws ModelException {
-        try {
-            findGroup(getExpertGroupId());
-        } catch (UnknownGroupException e) {
-            Lycee lycExpert = new Lycee(LYCEE_EXPERTS, LYCEE_EXPERTS,
-                    List.of(new Classe(CLASSE_EXPERTS, CLASSE_EXPERTS,
-                            Classe.Niveau.terminale,
-                            false,
-                            false,
-                            "G"
-                            ,LYCEE_EXPERTS)
-                    ),
-                    new HashSet<>()
-            );
-            saveLycee(lycExpert);
-            createNewGroup(LYCEE_DEMO, CLASSE_DEMO);
-        }
-    }
     public @NotNull Group findOrCreateAnonymousGroup() throws ModelException {
         try {
             Group group = findGroup(getAnoGroupId());
@@ -490,7 +467,6 @@ public abstract class DB {
             demo.setNiveau(Classe.Niveau.premiere);
             saveGroup(demo);
         }
-        findOrCreateExpertsGroup();
         Group ano = findOrCreateAnonymousGroup();
         if(ano.getNiveau() == null) {
             ano.setNiveau(Classe.Niveau.terminale);
@@ -521,12 +497,12 @@ public abstract class DB {
 
     public abstract List<Group> getAllGroups();
 
-    /* *********************************************************************************/
-    /* *********************************************************************************/
-    /* *************************** ABSTRACT METHODS ************************************/
-    /* *********************************************************************************/
-    /* *********************************************************************************/
-    /* *********************************************************************************/
+    /**********************************************************************************/
+    /**********************************************************************************/
+    /**************************** ABSTRACT METHODS ************************************/
+    /**********************************************************************************/
+    /**********************************************************************************/
+    /**********************************************************************************/
 
     protected abstract void assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup() throws DBExceptions.ModelException;
 
@@ -569,7 +545,7 @@ public abstract class DB {
 
     protected abstract void forgetUserInGroups(String user);
 
-    public abstract @NotNull Group findGroup(String groupId) throws UnknownGroupException;
+    protected abstract @NotNull Group findGroup(String groupId) throws UnknownGroupException;
 
     public abstract void createNewUser(
             @NotNull CreateAccountService.CreateAccountRequest data,
@@ -637,6 +613,16 @@ public abstract class DB {
 
 
     /**
+     * gets the profile of the member of a group
+     *
+     * @param grpId       the group id
+     * @param memberLogin the member login
+     * @return the profile
+     */
+    public abstract ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws ModelException;
+
+
+    /**
      * gets the details of a group
      *
      * @param groupId the id of the group
@@ -675,7 +661,10 @@ public abstract class DB {
     public void exportGroupsNonENSToFile(String filename) throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
         List<Group> groups = new ArrayList<>(getGroupsAndLycees().getGroups());
-        groups.removeIf(g -> !g.getExpeENSGroupe().equals("quanti3")
+        groups.removeIf(g -> ! g.getLycee().equals("graves")
+                && !g.getLycee().equals("bremonthier")
+                && !g.getLycee().equals("vaclav")
+                && !g.getLycee().equals("libourne")
         );
         Serialisation.toJsonFile(filename, groups, true);
         List<String> admins = groups.stream().flatMap(g -> g.getAdmins().stream()).toList();
@@ -683,16 +672,6 @@ public abstract class DB {
             for (String admin : admins) {
                 tool.append(admin);
                 tool.newLine();
-            }
-        }
-        try(CsvTools tool = new CsvTools("groups_quanti3.csv", ';')) {
-            tool.appendHeaders(List.of("lycee","groupe","nom", "acces","admin"));
-            for (Group group : groups) {
-                tool.append(group.getLycee());
-                tool.append(group.getId());
-                tool.append(group.getName());
-                tool.append(group.getRegistrationToken());
-                tool.append(group.getAdminToken());
             }
         }
     }
@@ -738,14 +717,6 @@ public abstract class DB {
     public abstract Pair<Boolean,String> joinGroup(@NotNull String userType, String accessCode) throws WrongAccessCodeException, UnknownUserException;
 
     public abstract void leaveGroup(@NotNull String login, @NotNull String key) throws DBExceptions.UnknownGroupException;
-
-    public boolean isExpert(User user) {
-        try {
-            return isAdminOfGroup(user.login(), getExpertGroupId());
-        } catch (ModelException e) {
-            return false;
-        }
-    }
 
 }
 

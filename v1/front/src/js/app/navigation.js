@@ -426,17 +426,17 @@ async function updateStudentRetours(retoursListe) {
   const retoursByKey = {};
   for (const retour of retoursListe) {
     const key = retour.key;
-    let ret = retoursByKey[key];
-    if (ret === undefined) ret = {};
-    ret.type = retour.type;
-    retoursByKey[key] = ret;
+    let retours = retoursByKey[key];
+    if (retours === undefined) retours = {};
+    retours[retour.type] = retour.content;
+    retoursByKey[key] = retours;
   }
   for (const [key, value] of Object.entries(retoursByKey)) {
-    if (value.type == "opinion") {
-      ui.setTeacherOpinion(key, value.content);
+    if ("opinion" in value) {
+      ui.setTeacherOpinion(key, value.opinion);
     }
-    if (value.type == "comment") {
-      ui.setTeacherComment(key, value.content);
+    if ("comment" in value) {
+      ui.setTeacherComment(key, value.comment);
     }
   }
   if (session.isAdminOrTeacher()) {
@@ -581,15 +581,6 @@ export function init_main_nav() {
     .on("click", async function () {
       await setScreen("recherche");
     });
-  $(".create-profil-référence")
-    .off()
-    .on("click", async function () {
-      if (session.isExpert()) {
-        app.switchToNewRefProfile();
-        //todo: create profile with a special call
-        //call the postlogin handler
-      }
-    });
   $(".monespace")
     .off()
     .on("click", async function () {
@@ -599,20 +590,6 @@ export function init_main_nav() {
         await setScreen("profil");
       }
     });
-  $("#switch-to-lyceen").prop("checked", session.isStudent());
-  $("#switch-to-lyceen")
-    .off()
-    .on("change", async function () {
-      const checked = $(this).is(":checked");
-      if (checked) {
-        await setScreen(null);
-        await app.toLyceen();
-      } else {
-        await setScreen(null);
-        await app.toTeacher();
-      }
-    });
-
   $(".prenomnom").html(data.getPrenomNom());
 }
 
@@ -639,13 +616,14 @@ async function updateRecherche() {
       }
     });
 
-  updateHandlersCommonToRechercheAndFavoris();
-
   $("#formation-details-header-nav-central-icon")
     .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
-      addFavorite(id);
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
+        ui.updateFav(id);
+        init_main_nav();
+      });
     });
   $(".add-to-favorites-btn")
     .off()
@@ -655,7 +633,11 @@ async function updateRecherche() {
       $(this).html("Ajouté à ma sélection");
       $(this).addClass("activated");
       $(this).addClass("favori");
-      addFavorite(id);
+
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
+        ui.updateFav(id);
+        init_main_nav();
+      });
     });
   $(".add-to-bin-btn")
     .off("click")
@@ -667,51 +649,6 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
-}
-
-function addFavorite(id) {
-  events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
-    ui.updateFav(id);
-    init_main_nav();
-    ui.setFavoriData(id, 3, "", $("body"));
-    $(`#btn-avis${id}`).trigger("click");
-  });
-}
-
-function updateHandlersCommonToRechercheAndFavoris() {
-  $(".btn-avis")
-    .off("click")
-    .on("click", function (event) {
-      const key = event.currentTarget.getAttribute("key");
-      const $div = $(event.currentTarget).closest(".favori");
-      let score = ui.extractScoreFromDiv($div);
-      let comment = ui.extractCommentFromDiv($div);
-
-      comment = sanitize(comment);
-      const $favoriDiv = $("#favoriModal .favori-div");
-      ui.addScoreToDiv(key, $("#favoriModal .favori-score-div"), score);
-      ui.setFavoriData(key, score, comment, $favoriDiv);
-      $("#favoriComment").val(comment);
-
-      $("#favoriModal .favori-score-bullet").addClass("clickable");
-      $("#favoriModal .favori-score-bullet")
-        .off()
-        .on("click", function (event) {
-          score = event.currentTarget.getAttribute("score");
-          ui.setFavoriData(key, score, null, $favoriDiv);
-        });
-      $("#favoriSaveModalButton")
-        .off()
-        .on("click", async () => {
-          const newComment = $("#favoriModal #favoriComment").val();
-          await app.updateFavoriData(key, score, newComment);
-          //update the rest of the UI
-          ui.setFavoriData(key, score, newComment, $("body"));
-        });
-
-      $("#favoriModalButton").trigger("click");
-    });
-
   $(".remove-from-favoris-btn")
     .off("click")
     .on("click", function (event) {
@@ -719,16 +656,40 @@ function updateHandlersCommonToRechercheAndFavoris() {
       events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
         ui.updateFav(id);
         init_main_nav();
+        await updateRecherche();
       });
     });
 }
+
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
 
   ui.showFavoris(msg.details);
-  updateHandlersCommonToRechercheAndFavoris();
+  $(".add-to-favorites-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
 
+      $(this).html("Ajouté à ma sélection");
+      $(this).addClass("activated");
+      $(this).addClass("favori");
+
+      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
+        ui.updateFav(id)
+      );
+    });
+
+  $(".add-to-bin-btn")
+    .off("click")
+    .on("click", function () {
+      const id = $(this).attr("data-id");
+      events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
+        ui.updateFav(id);
+        const msg = await app.getSelection();
+        ui.showFavoris(msg.details);
+      });
+    });
   $(".remove-from-favoris-btn")
     .off("click")
     .on("click", function () {
@@ -930,7 +891,6 @@ function format(x, nbDigits) {
 
 async function displayLandingScreen() {
   await ui.showLandingScreen();
-  //$(".visible-only-when-connected").hide();
   $("#landing-placeholder")
     .off()
     .on("click", async () => {
@@ -942,10 +902,10 @@ async function updateGroupesScreen() {
   //ask for the list of groups
   const infos = await app.updateAdminInfos();
   ui.updateGroupsList(infos.groups);
-  $(".nav_teacher select")
+  $(".group_select")
     .off()
-    .on("change", async (event) => {
-      const group_id = event.currentTarget.value;
+    .on("click", async (event) => {
+      const group_id = event.currentTarget.getAttribute("group_id");
       app.setSelectedGroup(group_id);
       await showGroup(group_id);
     });
@@ -961,6 +921,8 @@ async function updateGroupesScreen() {
 async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
+  $(".group_select").attr("aria-current", false);
+  $(`#group_select_${ui.cleanKey(group_id)}`).attr("aria-current", "page");
   $("#code_classe_div").html(details.token);
   ui.setStudentDetails(details);
 
