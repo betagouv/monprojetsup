@@ -598,8 +598,7 @@ export function getNbEDS() {
   return data.profile.spe_classes ? data.profile.spe_classes.length : 0;
 }
 
-export function getOrCreateSugg(key, newStatus) {
-  let changed = true;
+function getOrCreateSugg2(key) {
   ensureMandatoryProfileFields();
   let sugg = { fl: key, expl: [{ perso: {} }] }; //important do not include status
   const suggs = data.profile.choices.filter((s) => s.fl == key);
@@ -608,6 +607,12 @@ export function getOrCreateSugg(key, newStatus) {
   } else {
     data.profile.choices.push(sugg);
   }
+  return sugg;
+}
+
+export function getOrCreateSugg(key, newStatus) {
+  const sugg = getOrCreateSugg2(key);
+  let changed = true;
   changed = sugg.status === undefined || sugg.status !== newStatus;
   sugg.status = newStatus;
   return [sugg, changed];
@@ -637,6 +642,11 @@ export function emptyBin() {
 
 export function removeFromBin(id) {
   data.profile.choices = data.profile.choices.filter((s) => s.fl != id);
+}
+
+export function updateSuggestionScore(key, score) {
+  const sugg = getOrCreateSugg2(key);
+  sugg.favoriScore = score;
 }
 
 export function getSuggestionsWaiting() {

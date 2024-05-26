@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.app.services.info;
 
 import com.google.gson.Gson;
+import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.MyService;
@@ -34,7 +35,7 @@ import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
 @Service
 public class SearchService extends MyService<SearchService.Request, SearchService.Response> {
 
-    protected static boolean USE_LOCAL_URL = true;
+    protected static final boolean USE_LOCAL_URL = true;
 
     public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
     public static final String REMOTE_URL = "https://monprojetsup.fr/";
@@ -44,7 +45,11 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         super(Request.class);
     }
 
+
     public record Request(
+
+            @NotNull String login,
+            @NotNull String token,
 
             @Schema(description = "Recherche de formation.")
             boolean includeFormations,
@@ -91,12 +96,12 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
             @NotNull List<String> examples,
 
             @ArraySchema(arraySchema = @Schema(description = "retours", allOf = ProfileDb.Retour.class))
-            @NotNull List<ProfileDb.Retour> retours
+            @NotNull List<ProfileDb.Retour> retours,
+
+            boolean isFavori,
+            @Nullable Integer scoreFavori
 
     ) {
-        public double sortScore() {
-            return 100 * searchScore + affinity;
-        }
     }
     public record Response(
             ResponseHeader header,
@@ -111,8 +116,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                                * des lieux de formations d'intérêts, proches des villes d'intérêts du profil
                                * des villes disponibles pour faire cette formation, triées par ordre décroissant de disctance avec les villes d'intérêts du profil
                                * des stats sur la formation, adaptées au type de bac du profil
-                               """,
-                    required = true
+                               """
             )
             @NotNull List<ResultatRecherche> details
     ) {
@@ -129,6 +133,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     @Override
     protected @NotNull Response handleRequest(@NotNull SearchService.Request req) throws Exception {
 
+        DB.authenticator.tokenAuthenticate(req.login(), req.token());
+
         Map<String, Integer> searchScores = ServerData.search(req.recherche);
 
         if(searchScores.isEmpty() && !req.recherche.trim().isEmpty()) {
@@ -144,9 +150,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         //fallback if no answer
         if (affinites.getLeft().isEmpty()) {
-            searchScores.keySet().forEach(s -> {
-                affinites.getLeft().add(new Affinity(s, 0.05));
-            });
+            searchScores.keySet().forEach(s -> affinites.getLeft().add(new Affinity(s, 0.05)));
         }
 
         if(!req.recherche.trim().isEmpty()) {
@@ -196,6 +200,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                 affinites.getLeft().stream().collect(Collectors.toMap(Affinity::key, Affinity::affinite)),
                 searchScores
         );
+
+        SearchService.injectRetours(suggestions, WebServer.db().getProfile(req.login).retours());
 
         return new SearchService.Response(suggestions);
     }
@@ -255,6 +261,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         val eae = getExplanationsandExamples(pf, keys);
         if(eae.size() != keys.size()) throw new RuntimeException("Error: " + eae.size() + " explanations for " + keys.size() + " request ");
 
+        Map<String, SuggestionDTO> favoris = pf.suggApproved().stream().collect(Collectors.toMap(SuggestionDTO::fl, s -> s));
+
         int i = 0;
         for (String key : keys) {
             val fois = getGeographicInterests(
@@ -272,6 +280,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
             val eaee = eae.get(i);
 
+            boolean isFavori = favoris.containsKey(key);
+
             result.add(
                     new ResultatRecherche(
                             key,
@@ -284,7 +294,9 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                             stats,
                             eaee.explanations(),
                             eaee.examples(),
-                            new ArrayList<>()
+                            new ArrayList<>(),
+                            isFavori,
+                            isFavori ? favoris.get(key).score() : null
                     )
             );
             i++;
@@ -307,5 +319,31 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                 .toList();
     }
 
+    public static void injectRetours(@NotNull List<ResultatRecherche> resultats, @Nullable List<ProfileDb.Retour> retoursList) {
+        if(retoursList == null) return;
+        Map<String, List<ProfileDb.Retour>> retoursByKeys = retoursList.stream().collect(Collectors.groupingBy(ProfileDb.Retour::key));
+        for (ResultatRecherche resultat : resultats) {
+            val retours = retoursByKeys.get(resultat.key());
+            if(retours != null) {
+                retours.forEach(retour -> {
+                    val author = retour.author();
+                    String authorName;
+                    try {
+                        authorName = WebServer.db().getUserName(author);
+                    } catch (Exception e) {
+                        authorName = author;
+                    }
+                    resultat.retours().add(new ProfileDb.Retour(
+                            authorName,
+                            retour.type(),
+                            retour.key(),
+                            retour.content(),
+                            retour.date()
+                    ));
+                });
+
+            }
+        }
+    }
 
 }

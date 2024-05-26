@@ -25,6 +25,7 @@ public record Suggestion(
         String date,
         @Nullable Integer status,
 
+
         List<String> items//items, like filiere in a grouped filiere
 ) {
 
@@ -36,10 +37,6 @@ public record Suggestion(
         return new Suggestion(fl, explanations, LocalDateTime.now().toString(), SUGG_PENDING, items);
     }
 
-    public static Suggestion getSuggestion(Suggestion s, int status) {
-        return new Suggestion(s.fl, s.expl, LocalDateTime.now().toString(), status, null);
-    }
-
     public static Suggestion merge(String keyGroup, List<String> keys, @Nullable List<Explanation> explanations) {
         return new Suggestion(
                     keyGroup,
@@ -48,26 +45,6 @@ public record Suggestion(
                     SUGG_PENDING,
                     keys
                 );
-    }
-
-    public Suggestion sanitize() {
-        return new Suggestion(
-                Sanitizer.sanitize(fl),
-                null,
-                Sanitizer.sanitize(date),
-                status,
-                items == null ? Collections.emptyList() : items.stream().map(Sanitizer::sanitize).toList()
-        );
-    }
-
-    public Suggestion anonymize() {
-        return new Suggestion(
-                fl,
-                null,
-                null,
-                status,
-                items
-        );
     }
 
     public String humanReadable() {
@@ -88,6 +65,6 @@ public record Suggestion(
     }
 
     public SuggestionDTO toDTO() {
-        return new SuggestionDTO(fl, status);
+        return new SuggestionDTO(fl, status, null);
     }
 }

@@ -83,7 +83,7 @@ export async function search(
       (data) => {
         resolve(data);
       },
-      true,
+      false,
       (error) => reject(error)
     );
   });

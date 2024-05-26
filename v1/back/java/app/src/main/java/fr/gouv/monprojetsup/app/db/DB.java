@@ -162,10 +162,10 @@ public abstract class DB {
 
     public void updateProfile(
             @NotNull String login,
-            @NotNull ProfileUpdateDTO unsanitizedProfile) throws UnknownUserException {
+            @NotNull ProfileUpdateDTO unsanitizedUpdate) throws UnknownUserException {
         User user = getUser(login);
-        ProfileUpdateDTO updatedProfile = unsanitizedProfile.sanitize();
-        user.updateProfile(updatedProfile);
+        ProfileUpdateDTO update = unsanitizedUpdate.sanitize();
+        user.updateProfile(update);
         ProfileDb pf = user.getProfile().toDbo();
         updateUserField(login, PF_FIELD, pf);
     }

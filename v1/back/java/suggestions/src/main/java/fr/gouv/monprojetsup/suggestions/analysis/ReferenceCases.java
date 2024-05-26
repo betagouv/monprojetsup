@@ -56,13 +56,13 @@ public record ReferenceCases(
 
     public static String toExplanationString2(List<String> interests, String sep) {
         return interests == null ? "" : interests.stream()
-                .map(e -> getDebugLabel(e))
+                .map(ServerData::getDebugLabel)
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
     public static String toExplanations(List<String> list, String sep) {
         return list == null ? "" : list.stream()
-                .map(e -> getDebugLabel(e))
+                .map(ServerData::getDebugLabel)
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
@@ -302,7 +302,7 @@ public record ReferenceCases(
                                                 Collectors.joining("\n")
                                         )
                 );
-                output.append(toExplanationString(refCase.suggestions.stream().map(s -> s.toDTO()).toList(), ""));
+                output.append(toExplanationString(refCase.suggestions.stream().map(Suggestion::toDTO).toList(), ""));
                 output.append("");
                 output.append("");
                 output.newLine();
@@ -327,38 +327,34 @@ public record ReferenceCases(
         LOGGER.info("\tgetting details #");
         AtomicInteger j = new AtomicInteger(1);
 
-        answer.suggestions.addAll(
-                suggestions
-                        .stream()
-                        .map(suggestion -> {
+        List<Suggestion> list = new ArrayList<>();
+        for (GetSuggestionsService.SuggestionsDTO.Suggestion suggestion1 : suggestions) {
 
-                                    LOGGER.info("\tgetting explanations for suggestion #" + j.get() + " "
-                                            + ServerData.getDebugLabel(suggestion.fl()));
-                                    j.getAndIncrement();
+            LOGGER.info("\tgetting explanations for suggestion #" + j.get() + " "
+                    + getDebugLabel(suggestion1.fl()));
+            j.getAndIncrement();
 
-                            GetExplanationsAndExamplesServiceDTO.Response responseExpl = null;
-                            try {
-                                responseExpl = callExplanationsService(
-                                        new GetExplanationsAndExamplesServiceDTO.Request(
-                                                refCase.pf,
-                                                List.of(suggestion.fl())
-                                        )
-                                );
-                                if(responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            return
-                                            Suggestion.getPendingSuggestion(
-                                                    suggestion.fl(),
-                                                    responseExpl.liste().get(0).explanations(),
-                                                    List.of()
-                                            );
-                                }
+            GetExplanationsAndExamplesServiceDTO.Response responseExpl = null;
+            try {
+                responseExpl = callExplanationsService(
+                        new GetExplanationsAndExamplesServiceDTO.Request(
+                                refCase.pf,
+                                List.of(suggestion1.fl())
                         )
-                        .toList()
+                );
+                if (responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Suggestion unexpectedNumberOfExplanations = Suggestion.getPendingSuggestion(
+                    suggestion1.fl(),
+                    responseExpl.liste().get(0).explanations(),
+                    List.of()
+            );
+            list.add(unexpectedNumberOfExplanations);
+        }
+        answer.suggestions.addAll(
+                list
         );
         return answer;
     }
@@ -368,26 +364,27 @@ public record ReferenceCases(
         AtomicInteger i = new AtomicInteger(1);
 
         val results = new ReferenceCases();
+        val list = cases
+                .stream()
+                .map(refCase -> {
+                    try {
+                        String name = refCase.name();
+                        if (restricttoIndex != null && i.get() != restricttoIndex) {
+                            i.incrementAndGet();
+                            return null;
+                        }
+                        String nameCase = "case " + (i.getAndIncrement());
+                        name  = (name == null) ? nameCase : nameCase + name.substring(0, min(20,name.length()));
+                        LOGGER.info("getting suggestion and explanations for " + name);
+                        return getSuggestionsAndExplanations(refCase);
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
         results.cases.addAll(
-                cases
-                        .stream()
-                        .map(refCase -> {
-                            try {
-                                String name = refCase.name();
-                                if (restricttoIndex != null && i.get() != restricttoIndex) {
-                                    i.incrementAndGet();
-                                    return null;
-                                }
-                                String nameCase = "case " + (i.getAndIncrement());
-                                name  = (name == null) ? nameCase : nameCase + name.substring(0, min(20,name.length()));
-                                LOGGER.info("getting suggestion and explanations for " + name);
-                                return getSuggestionsAndExplanations(refCase);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .filter(Objects::nonNull)
-                        .toList()
+                list
         );
         return results;
     }

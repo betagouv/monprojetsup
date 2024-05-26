@@ -45,7 +45,7 @@ public class SetStudentFeedbackService extends MyService<SetStudentFeedbackServi
     @Override
     protected @NotNull Server.BasicResponse handleRequest(Request req) throws Exception {
         DB.authenticator.tokenAuthenticate(req.login, req.token);
-        if(!WebServer.db().isAdminOfUser(req.login, req.studentLogin)) {
+        if(!req.login.equals(req.studentLogin) && !WebServer.db().isAdminOfUser(req.login, req.studentLogin)) {
             throw new DBExceptions.UserInputException.ForbiddenException();
         }
         WebServer.db().setTeacherFeedback(req.login, req.studentLogin, req.key, req.type, req.content);

@@ -206,8 +206,8 @@ public final class User {
         return isAtLeastTeacher(userType);
     }
 
-    public void updateProfile(ProfileUpdateDTO profile) {
-        pf.updateProfile(profile);
+    public void updateProfile(ProfileUpdateDTO update) {
+        pf.updateProfile(update);
     }
 
     public void updateProfile(ProfileDb profile) {
