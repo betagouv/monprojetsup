@@ -687,6 +687,7 @@ async function updateRecherche() {
       events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
         ui.updateFav(id);
         init_main_nav();
+        ui.setFavoriData(id, 3, "", $("body"));
       });
     });
   $(".add-to-bin-btn")
@@ -706,7 +707,6 @@ async function updateRecherche() {
       events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
         ui.updateFav(id);
         init_main_nav();
-        await updateRecherche();
       });
     });
 }
