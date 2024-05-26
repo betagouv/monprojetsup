@@ -1,0 +1,79 @@
+<!------------------------------------>
+<!-- acount validation required Modal -->
+<!------------------------------------>
+
+<button
+  id="favoriModalButton"
+  class="fr-btn hidden-modal-button"
+  data-fr-opened="false"
+  aria-controls="favoriModal"
+></button>
+<dialog
+  aria-labelledby="fr-modal-title-modal-1"
+  id="favoriModal"
+  class="fr-modal"
+>
+  <div class="fr-container fr-container--fluid fr-container-md">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+        <div class="fr-modal__body">
+          <div class="fr-modal__header">
+            <button
+              class="fr-btn--close fr-btn"
+              title="Fermer la fenêtre modale"
+              aria-controls="favoriModal"
+            >
+              Fermer
+            </button>
+          </div>
+          <div class="fr-modal__content">
+            <h1 id="fr-modal-title-modal-1" class="fr-modal__title">
+              <span
+                class="favori-title-icon fr-icon-user-heart-line"
+                aria-hidden="true"
+              ></span>
+              <b><span id="metierLabel">Mon appréciation personnelle</span></b>
+            </h1>
+            <div id="metierDescriptif">
+              La formation est enregistrée dans vos favoris
+            </div>
+            <div>
+              Confidentiel: le référent de votre groupe n'a pas accès à vos
+              remarques.
+            </div>
+            <div class="favori-div">
+              <label class="fr-label" for="text-input-text"
+                >Mon niveau d'intérêt pour cette formation</label
+              >
+              <div class="favori-score-div"></div>
+              <div class="favori-remark-div">
+                <div class="favori-comment-content">
+                  <label class="fr-label" for="text-input-text"
+                    >Mes remarques</label
+                  >
+                  <span class="fr-hint-text">500 caractères maximum</span>
+                  <textarea
+                    id="favoriComment"
+                    class="fr-input"
+                    type="text"
+                    id="text-input-text"
+                    name="text-input-text"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="metierDetailsButtons">
+              <button
+                id="favoriSaveModalButton"
+                class="fr-btn ave-favori-comments-btn"
+                aria-controls="favoriModal"
+              >
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
