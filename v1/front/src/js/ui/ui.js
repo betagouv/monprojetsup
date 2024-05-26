@@ -42,6 +42,7 @@ import { Tab } from "bootstrap";
 import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
 import { Modal } from "bootstrap";
+import { sanitize } from "dompurify";
 
 export {
   initOnce,
@@ -352,6 +353,7 @@ export function injectHtml() {
     "header.html": "header-placeholder",
     "footer.html": "footer-placeholder",
     "modals/oubli_mdp.html": "oubli_mdp-placeholder",
+    "modals/favori.html": "favori-placeholder",
     "modals/validate_account.html": "validate_account-placeholder",
     "modals/error.html": "error-placeholder",
     "modals/metier.html": "metier-placeholder",
@@ -477,10 +479,10 @@ export function showRechercheData(data, showAffinities) {
   $("#search-results-nb").html(nbResults);
   for (let i = 0; i < nbResults; i++) {
     const dat = data[i];
+    addAffinityCard(dat, false);
     if (i == 0) {
       displayItemDetails(dat, false);
     }
-    addAffinityCard(dat, false);
   }
   $(".formation-card-header-affinity").toggle(showAffinities);
   //like and dislike handlers
@@ -521,6 +523,16 @@ export function showGroupsTab2() {
 export function clearAffinityCards() {
   $("#explore-div-resultats-left-liste").empty();
 }
+
+export function getMyFavoriComment(dretours) {
+  for (const o of dretours) {
+    const type = o.type;
+    if (type === "favori") {
+      return o.content;
+    }
+  }
+  return "";
+}
 function addAffinityCard(dat, nodetails) {
   const $div = buildAffinityCard(
     dat.key,
@@ -540,9 +552,14 @@ function addAffinityCard(dat, nodetails) {
   } else {
     console.log("null formation " + dat.key);
   }
+
+  const myself = getLogin();
   const retours = {};
   for (const o of dat.retours) {
     const author = o.author;
+    if (author === myself) {
+      continue;
+    }
     let retour = retours[author];
     if (retour === undefined) retour = {};
     if (o.type === "comment") {
@@ -552,8 +569,20 @@ function addAffinityCard(dat, nodetails) {
     if (o.type === "opinion") retour.opinion = o.content;
     retours[author] = retour;
   }
-  for (const [author, retour] of Object.entries(retours)) {
-    addRetour(dat.key, author, retour.opinion, retour.comment, retour.date);
+
+  /*** la zone favori  ***/
+  const myComment = getMyFavoriComment(dat.retours);
+  const score = dat.scoreFavori;
+  showFavori(dat.key, score, myComment, dat.isFavori);
+
+  /*** les retours  ***/
+  const retourss = Object.entries(retours);
+  if (retourss.length == 0) {
+    hideRetours(dat.key);
+  } else {
+    for (const [author, retour] of retourss) {
+      addRetour(dat.key, author, retour.type, retour.comment, retour.date);
+    }
   }
 }
 
@@ -782,6 +811,7 @@ export function updateFav(key) {
       }
     }
     $(`.icon-favorite_${key}`).toggle(fav);
+    $(`.favori-div_${key}`).toggle(fav);
   }
 }
 
@@ -1442,11 +1472,16 @@ function buildFormationAffinityCard(
 `);
   }
   if (session.isStudent()) {
+    const $favoris =
+      $(`<div class="student-only"><div class="favori-div favori-div_${key}">
+              </div></div>`);
+    $(`.favori-div`, $favoris).hide();
     const $retours =
       $(`<div id="retours-div_${key}" class="retours-div student-only">
-              <hr/>
+              <hr id="retours-hr_${key}"/>
               </div>`).hide();
     //hidden by default, willbe shonw only if any comment
+    $div.append($favoris);
     $div.append($retours);
   }
 
@@ -1486,6 +1521,106 @@ function buildFormationAffinityCard(
   return $div;
 }
 
+export function hideFavori(key) {
+  $(`#favori-hr_${key}`).hide();
+}
+export function hideRetours(key) {
+  $(`#retours-hr_${key}`).hide();
+}
+
+function isInteger(str) {
+  const num = parseInt(str, 10);
+  return !isNaN(num) && Number.isInteger(num);
+}
+
+export function cleanupFavoriScore(score) {
+  if (score == null || score === undefined || !isInteger(score)) score = 1;
+  score = parseInt(score, 10);
+  if (score < 1) score = 1;
+  if (score > 5) score = 5;
+  return score;
+}
+export function showFavori(key, score, comment, visible) {
+  const $favori = $(`<div class="favori"></div>`);
+
+  $favori.append(`
+  <div class="favori-title-div">
+        <span class="favori-title-icon fr-icon-user-heart-line" aria-hidden="true"></span>
+        <div>Mon appréciation personnelle</div>
+        <button 
+        class="fr-btn fr-icon-draft-fill fr-btn--tertiary-no-outline fr-ml-auto btn-avis" 
+        key="${key}"
+        title="Modifier l'appréciation personnelle">
+		        </button>
+        </div>
+      `);
+  $favori.append(`
+      <div class="favori-score-div favori-score-div${key}">
+      </div>`);
+  $favori.append(`
+     <div class="favori-remark-div${key}">      
+       <div>
+        Mes remarques:
+        </div>
+        <div class="favori-comment-content favori-comment-content${key}">
+        </div>
+    </div>
+`);
+
+  addScoreToDiv(key, $(".favori-score-div", $favori));
+
+  setFavoriData(key, score, comment, $favori);
+
+  $(`.favori-div_${key}`).append($favori).toggle(visible);
+}
+
+export function extractScoreFromDiv($div, key) {
+  const $score = (`.favori-score-div`, $div);
+  let score = 0;
+  $(".favori-score-bullet", $score).each((i, $bullet) => {
+    if ($($bullet).hasClass("full")) {
+      score = score + 1;
+    }
+  });
+  return score;
+}
+export function extractCommentFromDiv($div, key) {
+  const $comment = $(`.favori-comment-content`, $div);
+  return $comment.html().replaceAll("<br>", "\n");
+}
+export function addScoreToDiv(key, $div) {
+  $div.empty();
+  for (let i = 1; i <= 5; i++) {
+    $div.append(
+      $(
+        `<div score="${i}" class="favori-score-bullet favori-score-bullet_${key}_${i}" aria-hidden="true"></div>`
+      )
+    );
+  }
+}
+
+export function setFavoriData(key, score, comment, $div) {
+  if (comment != null && comment !== undefined) {
+    comment = sanitize(comment);
+    $(`.favori-comment-content${key}`, $div).html(
+      comment.replaceAll("\n", "<br/>")
+    );
+    $(`.favori-remark-div${key}`, $div).toggle(comment != "");
+  }
+
+  //cleanup data
+  score = cleanupFavoriScore(score);
+
+  for (let i = 1; i <= 5; i++) {
+    const $bullet = $(`.favori-score-bullet_${key}_${i}`, $div);
+    if (i <= score) {
+      $bullet.addClass("full");
+    } else {
+      $bullet.removeClass("full");
+    }
+  }
+}
+
 export function addRetour(key, author, opinion, comment, dateStr) {
   const $retour = $(`
     <div class="retour">
@@ -1498,13 +1633,14 @@ export function addRetour(key, author, opinion, comment, dateStr) {
         👍
         &nbsp;${author} soutient ton choix  
         </div>`);
-  }
-  if (opinion === "discuss") {
+  } else if (opinion === "discuss") {
     $retour.append(`
       <div class="retour-opinion-div">        
         💬
         &nbsp;À discuter avec ${author}  
         </div>`);
+  } else {
+    return;
   }
   if (comment !== null && comment !== undefined && comment !== "") {
     $retour.append(`
@@ -1546,6 +1682,7 @@ export function addRetour(key, author, opinion, comment, dateStr) {
         </div>`);
     }
   }
+  $(`#retours-hr_${key}`).show();
   $(`#retours-div_${key}`).append($retour).show();
 }
 

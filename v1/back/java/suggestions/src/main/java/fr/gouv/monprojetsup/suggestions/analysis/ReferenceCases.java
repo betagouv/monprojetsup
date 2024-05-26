@@ -2,17 +2,17 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.model.Explanation;
+import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.Explanation;
+import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
+import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,15 +25,14 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.getDebugLabel;
+import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ONISEP;
+import static fr.gouv.monprojetsup.data.Constants.CENTRE_INTERETS_ROME;
+import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
@@ -104,12 +103,10 @@ public record ReferenceCases(
 
     public static String evaluate(ProfileDTO pf, String expectation)
             throws IOException, InterruptedException {
-        val responseExpl =
+       val responseExpl =
 
                 getExplanationsAndExamples(pf, expectation);
-        if (responseExpl.liste().size() != 1)
-            throw new RuntimeException("unexpected number of explanations");
-
+       if(responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
         return responseExpl.liste().get(0).explanations().stream().map(Explanation::toExplanation)
                 .collect(Collectors.joining("\t\n", "\t", "\n"));
     }
@@ -138,7 +135,7 @@ public record ReferenceCases(
     ){
         public static final String STAR_SEP = "********************************************************************\n";
 
-        public static boolean USE_LOCAL_URL = true;
+        protected static boolean USE_LOCAL_URL = true;
 
 
         public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
@@ -175,7 +172,7 @@ public record ReferenceCases(
                 fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
                 fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
-
+                //fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
                 if(includeDetails) {
                     for (Suggestion entry : suggestions) {
                         String label = ServerData.getDebugLabel(entry.fl());
@@ -203,15 +200,22 @@ public record ReferenceCases(
 
         try {
             ServerData.statistiques = new PsupStatistiques();
-            ServerData.statistiques.labels =
-                    Serialisation.<Map<String,String>>fromJsonFile(
-                            "labelsDebug.json",
-                            Map.class
-                    );
+            ServerData.statistiques.labels = Serialisation.fromJsonFile(
+                    "labelsDebug.json",
+                      Map.class
+            );
         } catch (Exception e) {
             SuggestionServer server = new SuggestionServer();
             server.init();
         }
+
+
+        /*
+        //uncomment to anonymize the reference cases
+        //cases.cases.stream().forEach(c -> c.pf.anonymize());
+        List<ReferenceCase> newCases = cases.cases.stream().map(c -> c.makeHumanReadable()).toList();
+        Serialisation.toJsonFile("referenceCasesAnonymized.json", newCases, true);
+        */
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
@@ -243,6 +247,10 @@ public record ReferenceCases(
                 fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions.stream()
                         .map(e -> ServerData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
+                /*fos.write(lineSeparator() + STAR_SEP);
+                    fos.write("Explication détaillées sur la suggestion:" +  lineSeparator());
+                        fos.write(entry.humanReadable());*/
+
             }
         }
         return fos.toString();
@@ -265,6 +273,7 @@ public record ReferenceCases(
                     "Notes et Remarques")
             );
             int i = 1;
+            Set<String> interets = new HashSet<>(List.of(CENTRE_INTERETS_ROME, CENTRE_INTERETS_ONISEP));
 
             for (ReferenceCase refCase : cases) {
                 String name = "Profil " + i;
@@ -274,12 +283,12 @@ public record ReferenceCases(
                 output.append(toExplanationStringShort(refCase.pf, ""));
 
                 output.append(toExplanations(refCase.pf.interests().stream()
-                        .filter(Helpers::isInteret
+                        .filter(e -> Helpers.isInteret(e)
                         )
                         .toList(),""));
 
                 output.append(toExplanations(refCase.pf.interests().stream()
-                        .filter(Helpers::isTheme
+                        .filter(e -> Helpers.isTheme(e)
                         )
                         .toList(),""));
 
@@ -288,7 +297,10 @@ public record ReferenceCases(
                 output.append(toExplanationString(refCase.pf.suggRejected(), ""));
                 output.append(
                         refCase.expectations == null ? "" :
-                                String.join("\n", refCase.expectations)
+                                refCase.expectations.stream()
+                                        .collect(
+                                                Collectors.joining("\n")
+                                        )
                 );
                 output.append(toExplanationString(refCase.suggestions.stream().map(Suggestion::toDTO).toList(), ""));
                 output.append("");
@@ -303,7 +315,7 @@ public record ReferenceCases(
             ReferenceCase refCase
     ) throws IOException, InterruptedException {
         if (refCase.pf == null) return null;
-        val suggestions = callSuggestionsService(refCase.pf);
+        List<GetSuggestionsService.SuggestionsDTO.Suggestion> suggestions = callSuggestionsService(refCase.pf);
 
         ReferenceCase answer = new ReferenceCase(
                 refCase.name,
@@ -316,18 +328,18 @@ public record ReferenceCases(
         AtomicInteger j = new AtomicInteger(1);
 
         List<Suggestion> list = new ArrayList<>();
-        for (val suggestion1 : suggestions) {
+        for (GetSuggestionsService.SuggestionsDTO.Suggestion suggestion1 : suggestions) {
 
             LOGGER.info("\tgetting explanations for suggestion #" + j.get() + " "
-                    + getDebugLabel(suggestion1.key()));
+                    + getDebugLabel(suggestion1.fl()));
             j.getAndIncrement();
 
-            GetExplanationsAndExamplesServiceDTO.Response responseExpl;
+            GetExplanationsAndExamplesServiceDTO.Response responseExpl = null;
             try {
                 responseExpl = callExplanationsService(
                         new GetExplanationsAndExamplesServiceDTO.Request(
                                 refCase.pf,
-                                List.of(suggestion1.key())
+                                List.of(suggestion1.fl())
                         )
                 );
                 if (responseExpl.liste().size() != 1) throw new RuntimeException("unexpected number of explanations");
@@ -335,7 +347,7 @@ public record ReferenceCases(
                 throw new RuntimeException(e);
             }
             Suggestion unexpectedNumberOfExplanations = Suggestion.getPendingSuggestion(
-                    suggestion1.key(),
+                    suggestion1.fl(),
                     responseExpl.liste().get(0).explanations(),
                     List.of()
             );
@@ -401,10 +413,13 @@ public record ReferenceCases(
         return new Gson().fromJson(response, GetExplanationsAndExamplesServiceDTO.Response.class);
     }
 
-    public static List<GetAffinitiesServiceDTO.Affinity> callSuggestionsService(ProfileDTO pf) throws IOException, InterruptedException {
+    public static List<GetSuggestionsService.SuggestionsDTO.Suggestion> callSuggestionsService(ProfileDTO pf) throws IOException, InterruptedException {
+        return callSuggestionsService(new GetSuggestionsService.Request(pf)).suggestions().suggestions();
+    }
+    private static GetSuggestionsService.Response callSuggestionsService(GetSuggestionsService.Request pf) throws IOException, InterruptedException {
         String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions";
-        String response = post(url, new GetAffinitiesServiceDTO.Request(pf));
-        return new Gson().fromJson(response, GetAffinitiesServiceDTO.Response.class).affinites();
+        String response = post(url, pf);
+        return new Gson().fromJson(response, GetSuggestionsService.Response.class);
     }
 
 
