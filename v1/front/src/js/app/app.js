@@ -276,6 +276,11 @@ export function removeFromBin(key) {
   updateSuggestions([{ fl: key, status: data.SUGG_WAITING }]);
 }
 
+export function updateSuggestionScore(key, score) {
+  data.updateSuggestionScore(key, score);
+  updateSuggestions([{ fl: key, score: score }]);
+}
+
 export function updateSuggestions(suggestions, handler = null) {
   server.updateProfile({ suggestions: suggestions }, handler);
 }
@@ -322,6 +327,9 @@ export async function setTeacherComment(key, comment) {
     "comment",
     comment
   );
+}
+export async function setStudentComment(key, comment) {
+  await server.setTeacherFeedback(session.getLogin(), key, "favori", comment);
 }
 
 export async function updateAdminInfos() {
