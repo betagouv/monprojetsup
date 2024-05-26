@@ -873,6 +873,54 @@ color: var(--light-decisions-text-text-title-grey, #161616);
         padding-left: 10px;
         /* Add padding to space content from the separator */
 }
+.favori-div {
+  //border: 1px solid rgb(180, 179, 179);
+  color: var(--light-decisions-text-text-label-grey, #161616);
+  box-shadow: rgb(221, 221, 221) 0px 0px 0px 1px inset;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  cursor: default;
+}
+.favori-score-div {
+  display: flex;
+  flex-direction: row;
+}
+.favori-title-div {
+  display: flex;
+    flex-direction: row;
+}
+.favori-title-icon {
+    color: rgb(0, 169, 95);
+  }
+.favori-score-div {
+  color: rgb(0, 169, 95);
+}
+.favori-comment-content {
+  background-color:  rgb(0, 169, 95,0.1);
+  padding: 10px;
+}
+.favori-score-bullet {
+  border-radius: 50%;
+    border: 1px solid rgb(0, 169, 95);
+    color: rgb(0, 169, 95);
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+  }
+.favori-score-bullet.full {
+  background-color: rgb(0, 169, 95);
+}
+.clickable {
+  cursor: pointer;
+}
+#favoriModal .favori-score-div {
+  padding: 20px;
+}
+#favoriModal .favori-comment-div {
+  margin: 20px;
+}
 
 .retour-comment-icon {
   align-items: start;

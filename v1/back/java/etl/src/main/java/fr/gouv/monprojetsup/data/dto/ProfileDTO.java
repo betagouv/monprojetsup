@@ -1,11 +1,12 @@
 package fr.gouv.monprojetsup.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.gouv.monprojetsup.common.Sanitizer;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -104,4 +105,5 @@ public record ProfileDTO(
         if(choices == null) return Set.of();
         return choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).map(SuggestionDTO::fl).collect(Collectors.toSet());
     }
+
 }

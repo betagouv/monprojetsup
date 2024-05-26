@@ -64,20 +64,6 @@ public final class Profile {
     @NotNull private Map<String, SuggestionDTO> choices = new HashMap<>();
 
 
-
-    public Profile(String login) {
-        this.login = login;
-        this.nom = null;
-        this.prenom = null;
-        this.bac = null;
-        this.duree = null;
-        this.apprentissage = null;
-        this.mention = null;
-        this.moygen = null;
-        this.niveau = null;//inconnu
-        this.ine = null;
-    }
-
     public Profile(String login, String nom, String prenom) {
         this.login = login;
         this.nom = nom;
@@ -204,37 +190,34 @@ public final class Profile {
     }
 
 
-    public void updateProfile(
+    public void     updateProfile(
             @NotNull ProfileUpdateDTO update) {
 
-        if(update.name() != null) {
+        if (update.name() != null) {
             boolean add = Objects.equals(update.action(), "add");
             boolean clear = Objects.equals(update.action(), "clear");
             this.setValue(update.name(), update.value(), add, clear);
         }
-        if(update.suggestions() != null) {
+        if (update.suggestions() != null) {
             update.suggestions().forEach(suggestion -> {
                 String fl = suggestion.fl();
-                if(fl != null) {
-                    Integer status = suggestion.status();
-                    if (status == null || status == SUGG_PENDING) {
-                        choices.remove(fl);
-                    } else {
-                        SuggestionDTO current = choices.getOrDefault(fl, new SuggestionDTO(
-                                fl,
-                                suggestion.status()
-                                )
-                        );
-                        choices.put(fl.replace(".", "_"),
-                                current.updateStatus(
-                                        suggestion.status()
-                                )
-                        );
-                    }
+                fl = fl.replace(".", "_");
+                Integer status = suggestion.status();
+                if (status != null && status == SUGG_PENDING) {
+                    choices.remove(fl);
+                } else {
+                    SuggestionDTO current = choices.getOrDefault(fl, new SuggestionDTO(
+                                    fl,
+                                    suggestion.status(),
+                                    suggestion.score()
+                            )
+                    );
+                    if (status != null) current = current.updateStatus(status);
+                    if (suggestion.score() != null) current = current.updateScore(suggestion.score());
+                    choices.put(fl, current);
                 }
             });
         }
-
     }
 
     public void updateProfile(ProfileDb p) {
@@ -356,7 +339,7 @@ public final class Profile {
 
     public void setTeacherFeedback( @NotNull String author,@NotNull String key, @NotNull String type, @Nullable String content) {
         if(retours == null) retours = new ArrayList<>();
-        retours.removeIf(r -> r.author().equals(author) && r.key().equals(key) && r.type().equals(type));
+        retours.removeIf(r -> r.author().equals(author) && r.key().equals(key));
         if(content != null) {
             retours.add(new ProfileDb.Retour(author, type, key, content, LocalDate.now().toString()));
         }

@@ -426,17 +426,17 @@ async function updateStudentRetours(retoursListe) {
   const retoursByKey = {};
   for (const retour of retoursListe) {
     const key = retour.key;
-    let retours = retoursByKey[key];
-    if (retours === undefined) retours = {};
-    retours[retour.type] = retour.content;
-    retoursByKey[key] = retours;
+    let ret = retoursByKey[key];
+    if (ret === undefined) ret = {};
+    ret.type = retour.type;
+    retoursByKey[key] = ret;
   }
   for (const [key, value] of Object.entries(retoursByKey)) {
-    if ("opinion" in value) {
-      ui.setTeacherOpinion(key, value.opinion);
+    if (value.type == "opinion") {
+      ui.setTeacherOpinion(key, value.content);
     }
-    if ("comment" in value) {
-      ui.setTeacherComment(key, value.comment);
+    if (value.type == "comment") {
+      ui.setTeacherComment(key, value.content);
     }
   }
   if (session.isAdminOrTeacher()) {
@@ -619,6 +619,42 @@ async function updateRecherche() {
   const msg = await app.doSearch(str);
   const showAffinities = str == "";
   ui.showRechercheData(msg.details, showAffinities);
+
+  $(".btn-avis")
+    .off("click")
+    .on("click", function (event) {
+      const key = event.currentTarget.getAttribute("key");
+      const $div = $(event.currentTarget).closest(".favori");
+      let score = ui.extractScoreFromDiv($div);
+      let comment = ui.extractCommentFromDiv($div);
+
+      comment = sanitize(comment);
+      const $favoriDiv = $("#favoriModal .favori-div");
+      ui.addScoreToDiv(key, $("#favoriModal .favori-score-div"), score);
+      ui.setFavoriData(key, score, comment, $favoriDiv);
+      $("#favoriComment").val(comment);
+
+      $("#favoriModal .favori-score-bullet").addClass("clickable");
+      $("#favoriModal .favori-score-bullet")
+        .off()
+        .on("click", function (event) {
+          score = event.currentTarget.getAttribute("score");
+          ui.setFavoriData(key, score, null, $favoriDiv);
+        });
+      $("#favoriSaveModalButton")
+        .off()
+        .on("click", async () => {
+          //send the new score
+          await app.updateSuggestionScore(key, score);
+          //Send the new comment
+          comment = $("#favoriModal #favoriComment").val();
+          await app.setStudentComment(key, comment);
+          //update the rest of the UI
+          ui.setFavoriData(key, score, comment, $("body"));
+        });
+
+      $("#favoriModalButton").trigger("click");
+    });
 
   $("#search-button").off().on("click", updateRecherche);
   $("#search-784-input")
