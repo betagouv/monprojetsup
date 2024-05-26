@@ -573,7 +573,7 @@ function addAffinityCard(dat, nodetails) {
   /*** la zone favori  ***/
   const myComment = getMyFavoriComment(dat.retours);
   const score = dat.scoreFavori;
-  showFavori(dat.key, score, myComment, dat.isFavori);
+  addFavoriDiv(dat.key, score, myComment, dat.isFavori);
 
   /*** les retours  ***/
   const retourss = Object.entries(retours);
@@ -1540,7 +1540,7 @@ export function cleanupFavoriScore(score) {
   if (score > 5) score = 5;
   return score;
 }
-export function showFavori(key, score, comment, visible) {
+export function addFavoriDiv(key, score, comment, visible) {
   const $favori = $(`<div class="favori"></div>`);
 
   $favori.append(`
@@ -1555,6 +1555,9 @@ export function showFavori(key, score, comment, visible) {
         </div>
       `);
   $favori.append(`
+        <div>
+        Mon niveau d'intérêt pour cette formation:
+        </div>
       <div class="favori-score-div favori-score-div${key}">
       </div>`);
   $favori.append(`
