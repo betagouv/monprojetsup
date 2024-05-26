@@ -89,7 +89,9 @@ public class AffinityEvaluator {
         //computing filieres we do not want to give advice about
         //because they are already in the profile
         List<SuggestionDTO> approved = pf.suggApproved();
-        this.flApproved = approved.stream().map(SuggestionDTO::fl).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
+        this.flApproved = approved.stream()
+                .filter(s -> s.score() == null || s.score() >= 3)
+                .map(SuggestionDTO::fl).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
 
         List<SuggestionDTO> rejectedSuggestions = pf.suggRejected();
 
