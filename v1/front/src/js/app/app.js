@@ -262,14 +262,17 @@ export function updateProfile(name, value, action) {
   server.updateProfile({ name: name, value: value, action: action }, () => {});
 }
 
+export async function updateFavoriData(key, score, comment) {
+  //send the new score
+  data.updateSuggestionScore(key, score);
+  await server.setTeacherFeedback(session.getLogin(), key, "favori", comment);
+  updateSuggestions([{ fl: key, score: score }]);
+  //Send the new comment
+}
+
 export function removeFromBin(key) {
   data.removeFromBin(key);
   updateSuggestions([{ fl: key, status: data.SUGG_WAITING }]);
-}
-
-export function updateSuggestionScore(key, score) {
-  data.updateSuggestionScore(key, score);
-  updateSuggestions([{ fl: key, score: score }]);
 }
 
 export function updateSuggestions(suggestions, handler = null) {
@@ -313,9 +316,6 @@ export async function setTeacherComment(key, comment) {
     "comment",
     comment
   );
-}
-export async function setStudentComment(key, comment) {
-  await server.setTeacherFeedback(session.getLogin(), key, "favori", comment);
 }
 
 export async function updateAdminInfos() {

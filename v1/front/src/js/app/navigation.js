@@ -620,42 +620,6 @@ async function updateRecherche() {
   const showAffinities = str == "";
   ui.showRechercheData(msg.details, showAffinities);
 
-  $(".btn-avis")
-    .off("click")
-    .on("click", function (event) {
-      const key = event.currentTarget.getAttribute("key");
-      const $div = $(event.currentTarget).closest(".favori");
-      let score = ui.extractScoreFromDiv($div);
-      let comment = ui.extractCommentFromDiv($div);
-
-      comment = sanitize(comment);
-      const $favoriDiv = $("#favoriModal .favori-div");
-      ui.addScoreToDiv(key, $("#favoriModal .favori-score-div"), score);
-      ui.setFavoriData(key, score, comment, $favoriDiv);
-      $("#favoriComment").val(comment);
-
-      $("#favoriModal .favori-score-bullet").addClass("clickable");
-      $("#favoriModal .favori-score-bullet")
-        .off()
-        .on("click", function (event) {
-          score = event.currentTarget.getAttribute("score");
-          ui.setFavoriData(key, score, null, $favoriDiv);
-        });
-      $("#favoriSaveModalButton")
-        .off()
-        .on("click", async () => {
-          //send the new score
-          await app.updateSuggestionScore(key, score);
-          //Send the new comment
-          comment = $("#favoriModal #favoriComment").val();
-          await app.setStudentComment(key, comment);
-          //update the rest of the UI
-          ui.setFavoriData(key, score, comment, $("body"));
-        });
-
-      $("#favoriModalButton").trigger("click");
-    });
-
   $("#search-button").off().on("click", updateRecherche);
   $("#search-784-input")
     .off()
@@ -665,6 +629,8 @@ async function updateRecherche() {
         await updateRecherche();
       }
     });
+
+  updateHandlersCommonToRechercheAndFavoris();
 
   $("#formation-details-header-nav-central-icon")
     .off()
@@ -701,6 +667,42 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
+}
+
+function updateHandlersCommonToRechercheAndFavoris() {
+  $(".btn-avis")
+    .off("click")
+    .on("click", function (event) {
+      const key = event.currentTarget.getAttribute("key");
+      const $div = $(event.currentTarget).closest(".favori");
+      let score = ui.extractScoreFromDiv($div);
+      let comment = ui.extractCommentFromDiv($div);
+
+      comment = sanitize(comment);
+      const $favoriDiv = $("#favoriModal .favori-div");
+      ui.addScoreToDiv(key, $("#favoriModal .favori-score-div"), score);
+      ui.setFavoriData(key, score, comment, $favoriDiv);
+      $("#favoriComment").val(comment);
+
+      $("#favoriModal .favori-score-bullet").addClass("clickable");
+      $("#favoriModal .favori-score-bullet")
+        .off()
+        .on("click", function (event) {
+          score = event.currentTarget.getAttribute("score");
+          ui.setFavoriData(key, score, null, $favoriDiv);
+        });
+      $("#favoriSaveModalButton")
+        .off()
+        .on("click", async () => {
+          const newComment = $("#favoriModal #favoriComment").val();
+          await app.updateFavoriData(key, score, newComment);
+          //update the rest of the UI
+          ui.setFavoriData(key, score, newComment, $("body"));
+        });
+
+      $("#favoriModalButton").trigger("click");
+    });
+
   $(".remove-from-favoris-btn")
     .off("click")
     .on("click", function (event) {
@@ -711,36 +713,13 @@ async function updateRecherche() {
       });
     });
 }
-
 async function updateSelection() {
   ui.showWaitingMessage();
   const msg = await app.getSelection();
 
   ui.showFavoris(msg.details);
-  $(".add-to-favorites-btn")
-    .off("click")
-    .on("click", function () {
-      const id = $(this).attr("data-id");
+  updateHandlersCommonToRechercheAndFavoris();
 
-      $(this).html("Ajouté à ma sélection");
-      $(this).addClass("activated");
-      $(this).addClass("favori");
-
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () =>
-        ui.updateFav(id)
-      );
-    });
-
-  $(".add-to-bin-btn")
-    .off("click")
-    .on("click", function () {
-      const id = $(this).attr("data-id");
-      events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
-        ui.updateFav(id);
-        const msg = await app.getSelection();
-        ui.showFavoris(msg.details);
-      });
-    });
   $(".remove-from-favoris-btn")
     .off("click")
     .on("click", function () {
