@@ -98,10 +98,17 @@ export function toggleProfileScoreHandler(key) {
 export function changeSuggestionStatus(id, newStatus, handler = null) {
   //toast_accept(id);
   const [sugg, changed] = data.getOrCreateSugg(id, newStatus);
-  app.updateSuggestions(
-    [{ fl: sugg.fl, status: sugg.status, score: 3 }],
-    handler
-  );
+  if (newStatus == data.SUGG_APPROVED) {
+    app.updateSuggestions(
+      [{ fl: sugg.fl, status: sugg.status, score: 3 }],
+      handler
+    );
+  } else {
+    app.updateSuggestions(
+      [{ fl: sugg.fl, status: sugg.status, score: 1 }],
+      handler
+    );
+  }
   return changed;
 }
 

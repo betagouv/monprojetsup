@@ -673,6 +673,7 @@ async function updateRecherche() {
       events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
         ui.updateFav(id);
         init_main_nav();
+        ui.setFavoriData(id, 3, "", $("body"));
       });
     });
   $(".add-to-favorites-btn")
