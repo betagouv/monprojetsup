@@ -66,4 +66,11 @@ class SuggestionApiHttpClient(
             metiersTriesParAffinites = reponseDTO.metiersTriesParAffinites,
         )
     }
+
+    override fun recupererLesExplications(
+        profilEleve: ProfilEleve,
+        idFormation: String,
+    ): AffinitesPourProfil {
+        TODO("Not yet implemented")
+    }
 }

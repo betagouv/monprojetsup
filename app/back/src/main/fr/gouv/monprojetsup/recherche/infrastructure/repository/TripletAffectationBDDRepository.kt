@@ -17,4 +17,11 @@ class TripletAffectationBDDRepository(
             tripletsAffectation[idFormation]?.map { it.toTripletAffectation() } ?: emptyList()
         }
     }
+
+    @Transactional(readOnly = true)
+    override fun recupererLesTripletsAffectationDUneFormation(idFormation: String): List<TripletAffectation> {
+        return tripletAffectationJPARepository.findAllByIdFormation(idFormation).map {
+            it.toTripletAffectation()
+        }
+    }
 }

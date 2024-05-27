@@ -2,9 +2,7 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
-import fr.gouv.monprojetsup.recherche.domain.entity.Metier
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.recherche.domain.port.TripletAffectationRepository
@@ -40,15 +38,15 @@ class SuggestionsFormationsService(
         return idsDesPremieresFormationsTriesParAffinites.mapNotNull { idFormation ->
             formationsEtLeursMetiers.keys.firstOrNull { it.id == idFormation }?.let { formation ->
                 val metiers = formationsEtLeursMetiers[formation]!!
-                val triplesAffectation = tripletsAffectation[idFormation] ?: emptyList()
+                val tripletsAffectations = tripletsAffectation[idFormation] ?: emptyList()
                 val nomMetiersTriesParAffinites =
-                    getNomMetiersTriesParAffinites(
+                    TrieParProfilBuilder.getNomMetiersTriesParAffinites(
                         metiers = metiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     )
                 val nomCommunesTriesParAffinites =
-                    getNomCommunesTriesParAffinites(
-                        tripletsAffectation = triplesAffectation,
+                    TrieParProfilBuilder.getNomCommunesTriesParAffinites(
+                        tripletsAffectation = tripletsAffectations,
                         communesFavorites = profilEleve.villesPreferees,
                     )
                 FormationPourProfil(
@@ -60,33 +58,5 @@ class SuggestionsFormationsService(
                 )
             }
         }
-    }
-
-    private fun getNomCommunesTriesParAffinites(
-        tripletsAffectation: List<TripletAffectation>,
-        communesFavorites: List<String>?,
-    ): List<String> {
-        val communesDesAffectations = tripletsAffectation.map { it.commune }.distinct()
-        val communesTrieesParAffinites: MutableList<String> = mutableListOf()
-        communesFavorites?.forEach { commune ->
-            if (communesDesAffectations.contains(commune)) {
-                communesTrieesParAffinites.add(commune)
-            }
-        }
-        communesDesAffectations.forEach { commune ->
-            if (!communesTrieesParAffinites.contains(commune)) {
-                communesTrieesParAffinites.add(commune)
-            }
-        }
-        return communesTrieesParAffinites
-    }
-
-    private fun getNomMetiersTriesParAffinites(
-        metiers: List<Metier>,
-        idsMetierTriesParAffinite: List<String>,
-    ): List<String> {
-        val orderById = idsMetierTriesParAffinite.mapIndexed { index, idMetier -> Pair(idMetier, index) }.toMap()
-        val metiersTries = metiers.sortedBy { orderById[it.id] }
-        return metiersTries.map { it.nom }
     }
 }
