@@ -661,10 +661,7 @@ public abstract class DB {
     public void exportGroupsNonENSToFile(String filename) throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
         List<Group> groups = new ArrayList<>(getGroupsAndLycees().getGroups());
-        groups.removeIf(g -> ! g.getLycee().equals("graves")
-                && !g.getLycee().equals("bremonthier")
-                && !g.getLycee().equals("vaclav")
-                && !g.getLycee().equals("libourne")
+        groups.removeIf(g -> !g.getExpeENSGroupe().equals("quanti3")
         );
         Serialisation.toJsonFile(filename, groups, true);
         List<String> admins = groups.stream().flatMap(g -> g.getAdmins().stream()).toList();
@@ -672,6 +669,16 @@ public abstract class DB {
             for (String admin : admins) {
                 tool.append(admin);
                 tool.newLine();
+            }
+        }
+        try(CsvTools tool = new CsvTools("groups_quanti3.csv", ';')) {
+            tool.appendHeaders(List.of("lycee","groupe","nom", "acces","admin"));
+            for (Group group : groups) {
+                tool.append(group.getLycee());
+                tool.append(group.getId());
+                tool.append(group.getName());
+                tool.append(group.getRegistrationToken());
+                tool.append(group.getAdminToken());
             }
         }
     }
