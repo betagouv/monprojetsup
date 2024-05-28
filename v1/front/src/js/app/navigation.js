@@ -636,11 +636,7 @@ async function updateRecherche() {
     .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
-        ui.updateFav(id);
-        init_main_nav();
-        ui.setFavoriData(id, 3, "", $("body"));
-      });
+      addFavorite(id);
     });
   $(".add-to-favorites-btn")
     .off()
@@ -650,12 +646,7 @@ async function updateRecherche() {
       $(this).html("Ajouté à ma sélection");
       $(this).addClass("activated");
       $(this).addClass("favori");
-
-      events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
-        ui.updateFav(id);
-        init_main_nav();
-        ui.setFavoriData(id, 3, "", $("body"));
-      });
+      addFavorite(id);
     });
   $(".add-to-bin-btn")
     .off("click")
@@ -667,6 +658,15 @@ async function updateRecherche() {
         await updateRecherche();
       });
     });
+}
+
+function addFavorite(id) {
+  events.changeSuggestionStatus(id, data.SUGG_APPROVED, () => {
+    ui.updateFav(id);
+    init_main_nav();
+    ui.setFavoriData(id, 3, "", $("body"));
+    $(`#btn-avis${id}`).trigger("click");
+  });
 }
 
 function updateHandlersCommonToRechercheAndFavoris() {

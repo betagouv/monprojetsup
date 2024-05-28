@@ -1533,11 +1533,12 @@ function isInteger(str) {
   return !isNaN(num) && Number.isInteger(num);
 }
 
+const maxScore = 5;
 export function cleanupFavoriScore(score) {
   if (score == null || score === undefined || !isInteger(score)) score = 1;
   score = parseInt(score, 10);
   if (score < 1) score = 1;
-  if (score > 5) score = 5;
+  if (score > maxScore) score = maxScore;
   return score;
 }
 export function addFavoriDiv(key, score, comment, visible) {
@@ -1548,6 +1549,7 @@ export function addFavoriDiv(key, score, comment, visible) {
         <span class="favori-title-icon fr-icon-user-heart-line" aria-hidden="true"></span>
         <div>Mon appréciation personnelle</div>
         <button 
+        id="btn-avis${key}"
         class="fr-btn fr-icon-draft-fill fr-btn--tertiary-no-outline fr-ml-auto btn-avis" 
         key="${key}"
         title="Modifier l'appréciation personnelle">
@@ -1593,7 +1595,7 @@ export function extractCommentFromDiv($div, key) {
 }
 export function addScoreToDiv(key, $div) {
   $div.empty();
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= maxScore; i++) {
     $div.append(
       $(
         `<div score="${i}" class="favori-score-bullet favori-score-bullet_${key}_${i}" aria-hidden="true"></div>`
@@ -1614,7 +1616,7 @@ export function setFavoriData(key, score, comment, $div) {
   //cleanup data
   score = cleanupFavoriScore(score);
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= maxScore; i++) {
     const $bullet = $(`.favori-score-bullet_${key}_${i}`, $div);
     if (i <= score) {
       $bullet.addClass("full");
