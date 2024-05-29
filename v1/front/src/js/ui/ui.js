@@ -2084,7 +2084,7 @@ function displayClientError(msg) {
   const msgHtml = msg
     .replaceAll("\\n", "<br>")
     .replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-  showErrorMessage("Erreur du client", msg);
+  showErrorMessage("Erreur", msg);
 }
 
 //validationMessage
