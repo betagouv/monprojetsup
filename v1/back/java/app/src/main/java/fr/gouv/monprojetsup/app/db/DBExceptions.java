@@ -146,7 +146,7 @@ public class DBExceptions {
         public static class UserAlreadyExistsException extends UserInputException {
 
             public UserAlreadyExistsException() {
-                super("Il existe déjà un compte utilisateur avec ce login.");
+                super("Il existe déjà un compte utilisateur avec ce login. Vous pouvez demander la réinitialisation du mot de passe depuis la page de connexion. En cas de problème, veuillez contacter support@monprojetsup.fr");
             }
 
         }
