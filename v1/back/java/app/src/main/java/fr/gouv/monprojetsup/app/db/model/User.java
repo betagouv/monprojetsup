@@ -304,7 +304,6 @@ public final class User {
     }
 
 
-
     public enum Role {USER, TEACHER, ADMIN}
 
     public enum UserTypes {
