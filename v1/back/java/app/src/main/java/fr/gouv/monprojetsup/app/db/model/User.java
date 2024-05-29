@@ -266,8 +266,10 @@ public final class User {
      * @return remove personal information from profile
      */
     public void anonymize() {
-        cr = new Credential("","");
+        cr = new Credential(null,null);
         pf.anonymize();
+        id = pf.getLogin();
+        lycees.clear();
     }
 
     public void setEvalENS(boolean evalENS) {
@@ -293,6 +295,13 @@ public final class User {
         if(pf != null) pf.removeDotsFromKeys();
     }
 
+    public boolean hasFavoris() {
+        return pf!= null && pf.hasFavoris();
+    }
+
+    public boolean isLyceen() {
+        return userType == lyceen;
+    }
 
 
     public enum Role {USER, TEACHER, ADMIN}

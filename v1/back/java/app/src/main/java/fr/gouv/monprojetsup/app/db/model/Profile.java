@@ -260,6 +260,7 @@ public final class Profile {
         );
         choices.clear();
         choices.putAll(an);
+        retours.clear();
     }
 
     /**
@@ -345,4 +346,7 @@ public final class Profile {
         }
     }
 
+    public boolean hasFavoris() {
+        return choices.values().stream().anyMatch(s -> s.status() == SUGG_APPROVED);
+    }
 }
