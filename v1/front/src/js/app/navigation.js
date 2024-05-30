@@ -581,6 +581,15 @@ export function init_main_nav() {
     .on("click", async function () {
       await setScreen("recherche");
     });
+  $(".create-profil-référence")
+    .off()
+    .on("click", async function () {
+      if (session.isExpert()) {
+        app.switchToNewRefProfile();
+        //todo: create profile with a special call
+        //call the postlogin handler
+      }
+    });
   $(".monespace")
     .off()
     .on("click", async function () {
@@ -597,10 +606,10 @@ export function init_main_nav() {
       const checked = $(this).is(":checked");
       if (checked) {
         await setScreen(null);
-        app.toLyceen();
+        await app.toLyceen();
       } else {
         await setScreen(null);
-        app.toTeacher();
+        await app.toTeacher();
       }
     });
 
@@ -921,6 +930,7 @@ function format(x, nbDigits) {
 
 async function displayLandingScreen() {
   await ui.showLandingScreen();
+  //$(".visible-only-when-connected").hide();
   $("#landing-placeholder")
     .off()
     .on("click", async () => {
@@ -932,10 +942,10 @@ async function updateGroupesScreen() {
   //ask for the list of groups
   const infos = await app.updateAdminInfos();
   ui.updateGroupsList(infos.groups);
-  $(".group_select")
+  $(".nav_teacher select")
     .off()
-    .on("click", async (event) => {
-      const group_id = event.currentTarget.getAttribute("group_id");
+    .on("change", async (event) => {
+      const group_id = event.currentTarget.value;
       app.setSelectedGroup(group_id);
       await showGroup(group_id);
     });
@@ -951,8 +961,6 @@ async function updateGroupesScreen() {
 async function showGroup(group_id) {
   if (group_id == null || group_id == undefined) return;
   const details = await app.getGroupDetails(group_id);
-  $(".group_select").attr("aria-current", false);
-  $(`#group_select_${ui.cleanKey(group_id)}`).attr("aria-current", "page");
   $("#code_classe_div").html(details.token);
   ui.setStudentDetails(details);
 

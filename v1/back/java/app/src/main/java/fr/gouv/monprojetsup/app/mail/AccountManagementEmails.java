@@ -13,7 +13,7 @@ public class AccountManagementEmails {
 
     public static Map<String, LocalDateTime> lastEmailSent = new ConcurrentHashMap<>();
 
-    public static void checkLastEmailWasSentReasonableLungTimeAgo(String emailAdress) throws DBExceptions.UserInputException.TooManyEmails {
+    public static void checkLastEmailWasSentReasonableLongTimeAgo(String emailAdress) throws DBExceptions.UserInputException.TooManyEmails {
         LocalDateTime lastEmail = lastEmailSent.get(emailAdress);
         if (lastEmail != null && lastEmail.plusMinutes(1).isAfter(LocalDateTime.now())) {
             throw new DBExceptions.UserInputException.TooManyEmails();
@@ -23,7 +23,7 @@ public class AccountManagementEmails {
 
     public static void sendConfirmationLink(String emailAdress, String confirmationToken) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(emailAdress);
+        checkLastEmailWasSentReasonableLongTimeAgo(emailAdress);
 
         String confirmationLink
                 = String.format("%s/validate.html?email=", WebServer.config().getUrl())
@@ -72,7 +72,7 @@ public class AccountManagementEmails {
 
     public static void sendEmailAccountCreationRejected(String user) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(user);
+        checkLastEmailWasSentReasonableLongTimeAgo(user);
 
         WebServer.LOGGER.info(" Sending rejection email to " + user);
         MailSender.send(
@@ -94,7 +94,7 @@ public class AccountManagementEmails {
 
     public static void sendEmailAccountCreationConfirmed(String user) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(user);
+        checkLastEmailWasSentReasonableLongTimeAgo(user);
 
         WebServer.LOGGER.info("sendEmailAccountCreationConfirmed Sending confirmation email to " + user);
         MailSender.send(
@@ -139,7 +139,7 @@ public class AccountManagementEmails {
 
     public static void sendAcceptUserInGroupEmail(String user, String groupName) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(user);
+        checkLastEmailWasSentReasonableLongTimeAgo(user);
 
         WebServer.LOGGER.info("sendAcceptUserInGroupEmail Sending confirmation email to '"
                 + user
@@ -167,7 +167,7 @@ public class AccountManagementEmails {
 
     public static void sendResetPasswordEmail(String emailAdress, String confirmationToken) throws DBExceptions.UserInputException.TooManyEmails {
 
-        checkLastEmailWasSentReasonableLungTimeAgo(emailAdress);
+        checkLastEmailWasSentReasonableLongTimeAgo(emailAdress);
 
         WebServer.LOGGER.info("sendResetPasswordEmail Sending confirmation email to " + emailAdress);
         String confirmationLink
@@ -199,5 +199,32 @@ public class AccountManagementEmails {
                                 """, confirmationLink, confirmationLink)
         );
 
+    }
+
+    public static void sendNewUserCreatedByExpertEmail(String emailAdress, String login, String password) throws DBExceptions.UserInputException.TooManyEmails {
+
+        checkLastEmailWasSentReasonableLongTimeAgo(emailAdress);
+
+        WebServer.LOGGER.info("sendNewUserCreatedByExpertEmail Sending expert confirmation email to " + emailAdress);
+
+        MailSender.send(
+                WebServer.config().getEmailConfig(),
+                emailAdress,
+                "MonProjetSup: création d'un nouveau profil de référence",
+                String.format(
+                        """
+                                <p>Un nouveau profil de référence lycéen a été créé en utilisant votre compte expert MonProjetSup. 
+                                Les identifiants et le mot de passse de ce nouveau profil sont indiqués ci-dessous.</p>
+                                <p>Si vous n'avez pas sollicité cette opération, merci de prévenir rapidement support@monprojetsup.fr.</p>
+                                <br/>
+                                <p>identifiant <b>%s</b></p>
+                                <p>mot de passe <b>%s</b></p>
+                                <br/>
+                                Cordialement,<br/>
+                                l'équipe de MonProjetSup<br/>
+                                support@monprojetsup.fr<br/>
+                                https://monprojetsup.fr
+                                """, login, password)
+        );
     }
 }

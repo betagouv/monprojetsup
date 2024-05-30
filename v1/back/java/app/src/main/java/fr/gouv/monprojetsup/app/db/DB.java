@@ -47,6 +47,8 @@ public abstract class DB {
     /* the file used by the backend */
     public static final String DEFAULT_SUPERUSER = "hugo.gimbert@gmail.com";
     public static final String LYCEE_DEMO = "LyceeDemo";
+    public static final String LYCEE_EXPERTS = "profils_ref";
+    public static final String CLASSE_EXPERTS = "tous";
     public static final String CLASSE_DEMO = "PremiereDemo";
     public static final String LYCEE_ANO = "LyceeAno";
     public static final String CLASSE_ANO = "ClasseAno";
@@ -213,6 +215,10 @@ public abstract class DB {
         return Group.lyceeToGroupId(LYCEE_DEMO, CLASSE_DEMO);
     }
 
+    public static String getExpertGroupId() {
+        return Group.lyceeToGroupId(LYCEE_EXPERTS, CLASSE_EXPERTS);
+    }
+
     protected List<GetGroupDetailsService.StudentDetails> getMemberDetails(Set<String> members) {
         return getUsers(members).stream()
                 .map(this::getMemberDetails)
@@ -251,9 +257,8 @@ public abstract class DB {
      * @param student the student
      * @param topic the topic
      * @param comment the comment
-     * @throws UnknownUserException if the user is unknown
      */
-    public void addMessage(@NotNull String author, @NotNull String student, @NotNull String topic, @NotNull String comment) throws UnknownUserException {
+    public void addMessage(@NotNull String author, @NotNull String student, @NotNull String topic, @NotNull String comment) {
         topic = topic.replace(".", "_");
         addToUserArrayField(
                 student,
@@ -433,6 +438,24 @@ public abstract class DB {
             return createNewGroup(LYCEE_DEMO, CLASSE_DEMO);
         }
     }
+    public void findOrCreateExpertsGroup() throws ModelException {
+        try {
+            findGroup(getExpertGroupId());
+        } catch (UnknownGroupException e) {
+            Lycee lycExpert = new Lycee(LYCEE_EXPERTS, LYCEE_EXPERTS,
+                    List.of(new Classe(CLASSE_EXPERTS, CLASSE_EXPERTS,
+                            Classe.Niveau.terminale,
+                            false,
+                            false,
+                            "G"
+                            ,LYCEE_EXPERTS)
+                    ),
+                    new HashSet<>()
+            );
+            saveLycee(lycExpert);
+            createNewGroup(LYCEE_DEMO, CLASSE_DEMO);
+        }
+    }
     public @NotNull Group findOrCreateAnonymousGroup() throws ModelException {
         try {
             Group group = findGroup(getAnoGroupId());
@@ -467,6 +490,7 @@ public abstract class DB {
             demo.setNiveau(Classe.Niveau.premiere);
             saveGroup(demo);
         }
+        findOrCreateExpertsGroup();
         Group ano = findOrCreateAnonymousGroup();
         if(ano.getNiveau() == null) {
             ano.setNiveau(Classe.Niveau.terminale);
@@ -497,12 +521,12 @@ public abstract class DB {
 
     public abstract List<Group> getAllGroups();
 
-    /**********************************************************************************/
-    /**********************************************************************************/
-    /**************************** ABSTRACT METHODS ************************************/
-    /**********************************************************************************/
-    /**********************************************************************************/
-    /**********************************************************************************/
+    /* *********************************************************************************/
+    /* *********************************************************************************/
+    /* *************************** ABSTRACT METHODS ************************************/
+    /* *********************************************************************************/
+    /* *********************************************************************************/
+    /* *********************************************************************************/
 
     protected abstract void assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup() throws DBExceptions.ModelException;
 
@@ -545,7 +569,7 @@ public abstract class DB {
 
     protected abstract void forgetUserInGroups(String user);
 
-    protected abstract @NotNull Group findGroup(String groupId) throws UnknownGroupException;
+    public abstract @NotNull Group findGroup(String groupId) throws UnknownGroupException;
 
     public abstract void createNewUser(
             @NotNull CreateAccountService.CreateAccountRequest data,
@@ -610,16 +634,6 @@ public abstract class DB {
     public abstract void deleteGroup(@NotNull String gid);
 
     public abstract void deleteUser(String user) throws EmptyUserNameException, UnknownUserException;
-
-
-    /**
-     * gets the profile of the member of a group
-     *
-     * @param grpId       the group id
-     * @param memberLogin the member login
-     * @return the profile
-     */
-    public abstract ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws ModelException;
 
 
     /**
@@ -724,6 +738,14 @@ public abstract class DB {
     public abstract Pair<Boolean,String> joinGroup(@NotNull String userType, String accessCode) throws WrongAccessCodeException, UnknownUserException;
 
     public abstract void leaveGroup(@NotNull String login, @NotNull String key) throws DBExceptions.UnknownGroupException;
+
+    public boolean isExpert(User user) {
+        try {
+            return isAdminOfGroup(user.login(), getExpertGroupId());
+        } catch (ModelException e) {
+            return false;
+        }
+    }
 
 }
 

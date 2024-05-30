@@ -216,6 +216,38 @@ export function getNoGroupOpenFlag() {
 
 export function setAdminInfos(infos) {
   sessionStorage.adminInfos = JSON.stringify(infos);
+  let expertMode = null;
+  for (const group of infos.groups) {
+    if (group.expeENSGroup === "profils_ref") expertMode = true;
+  }
+  setExpertMode(expertMode);
+}
+
+export function setCurrentGroupIfNeeded(infos) {
+  //ensures a current group is selected
+  const curGroup = getSelectedGroup();
+  if (
+    (curGroup === undefined || curGroup === null) &&
+    infos.groups &&
+    infos.groups.length > 0
+  ) {
+    let id = infos.groups[0].id;
+    if (isExpert()) {
+      for (const group of infos.groups) {
+        if (group.expeENSGroup === "profils_ref") id = group.id;
+      }
+    }
+    setSelectedGroup(id);
+  }
+}
+
+function setExpertMode(mode) {
+  if (mode === null) delete sessionStorage.expertMode;
+  else sessionStorage.expertMode = mode;
+}
+
+export function isExpert() {
+  return sessionStorage.expertMode === "true";
 }
 
 export function getCachedAdminInfos() {

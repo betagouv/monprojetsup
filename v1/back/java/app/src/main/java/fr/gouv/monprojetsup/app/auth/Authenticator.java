@@ -22,7 +22,6 @@ public class Authenticator {
 
 
 
-
     public static class SessionExpiredException extends Exception {
         public SessionExpiredException() {
             super("Session expirée, veuillez vous reconnecter.");
@@ -146,6 +145,5 @@ public class Authenticator {
         tokenAuthenticate(login, token);
         return WebServer.config().getAdmins().contains(login);
     }
-
 
 }

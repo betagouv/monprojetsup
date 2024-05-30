@@ -69,14 +69,30 @@ export function addGroupMember(group, name, add, onSuccess = null) {
   );
 }
 
-export function switchRole(role, onSuccess = null) {
-  postToSpringService(
-    "teacher/role",
-    {
-      role: role,
-    },
-    onSuccess
-  );
+export async function switchRole(role, onSuccess = null) {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/role",
+      {
+        role: role,
+      },
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
+}
+
+export async function switchToNewRefProfile() {
+  return new Promise((resolve, reject) => {
+    postToSpringService(
+      "teacher/switchToNewRefProfile",
+      {},
+      (data) => resolve(data),
+      false,
+      (error) => reject(error)
+    );
+  });
 }
 
 export function getStudentProfile(curGroup, curStudent, onSuccess = null) {
