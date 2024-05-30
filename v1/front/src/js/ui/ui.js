@@ -625,8 +625,19 @@ function displayMetierDetails(dat) {
 
 export function updateGroupsList(groups) {
   const $div = $(".nav_teacher select").empty();
+  const selectedGroup = session.getSelectedGroup();
   for (const group of groups) {
-    addGroupEntry(group, $div);
+    const li = `
+        <option 
+            id="group_select_${group.id
+              .replaceAll(" ", "_")
+              .replaceAll(".", "_")}"
+            value="${group.id}"
+            ${group.id == selectedGroup ? "selected" : ""}
+            >${group.name}
+        </option>
+    `;
+    $div.append(li);
   }
 }
 
@@ -634,21 +645,7 @@ export function cleanKey(key) {
   return key.replaceAll(" ", "_").replaceAll(".", "_");
 }
 
-function addGroupEntry(group, $div) {
-  const li = `
-        <option class="group_select"
-            id="group_select_${group.id
-              .replaceAll(" ", "_")
-              .replaceAll(".", "_")}"
-            group_id="${group.id}"
-            >${group.name}
-        </option>
-    `;
-  $div.append(li);
-}
-
 export function setStudentDetails(details) {
-  $("#nb_students_connected").html(details.nb_students_connected);
   const $div = $(".eleves_tiles_container").empty();
   let nb = 0;
   let nb_students_connected = 0;
@@ -673,6 +670,10 @@ export function setStudentDetails(details) {
   }
   if (nb == 0) nb = 1;
   $("#nb_students_connected").html(nb_students_connected);
+  $(".en_quelques_chiffres_teacher").toggle(nb_students_connected > 0);
+  $(".current_group_teacher_eleves").toggle(nb_students_connected > 0);
+  $(".groupe_vide_teacher").toggle(nb_students_connected == 0);
+
   $("#pct_students_connected").html(
     Math.round((100 * nb_students_connected) / nb) + "%"
   );
@@ -1533,12 +1534,11 @@ function isInteger(str) {
   return !isNaN(num) && Number.isInteger(num);
 }
 
-const maxScore = 5;
 export function cleanupFavoriScore(score) {
   if (score == null || score === undefined || !isInteger(score)) score = 1;
   score = parseInt(score, 10);
   if (score < 1) score = 1;
-  if (score > maxScore) score = maxScore;
+  if (score > data.maxScore) score = data.maxScore;
   return score;
 }
 export function addFavoriDiv(key, score, comment, visible) {
@@ -1595,7 +1595,7 @@ export function extractCommentFromDiv($div, key) {
 }
 export function addScoreToDiv(key, $div) {
   $div.empty();
-  for (let i = 1; i <= maxScore; i++) {
+  for (let i = 1; i <= data.maxScore; i++) {
     $div.append(
       $(
         `<div score="${i}" class="favori-score-bullet favori-score-bullet_${key}_${i}" aria-hidden="true"></div>`
@@ -1616,7 +1616,7 @@ export function setFavoriData(key, score, comment, $div) {
   //cleanup data
   score = cleanupFavoriScore(score);
 
-  for (let i = 1; i <= maxScore; i++) {
+  for (let i = 1; i <= data.maxScore; i++) {
     const $bullet = $(`.favori-score-bullet_${key}_${i}`, $div);
     if (i <= score) {
       $bullet.addClass("full");
@@ -2004,12 +2004,23 @@ export function showDetails(grpid, stats, explanations, exemples) {
 let hideFormations = false;
 
 export function setRoleVisibility() {
-  $(".student-only").toggle(!session.isAdminOrTeacher());
-  $(".teacher-only").toggle(session.isAdminOrTeacher());
-  $(".teacher-or-fake-lyceen-only").toggle(
-    session.isAdminOrTeacher() || session.isFakeLyceen()
-  );
+  $(".experts-only").toggle(session.isExpert());
+  $(".student-only")
+    .not(".invisible-to-experts")
+    .toggle(!session.isAdminOrTeacher());
+  $(".teacher-only")
+    .not(".invisible-to-experts")
+    .not(".student-only")
+    .toggle(session.isAdminOrTeacher());
+  $(".teacher-or-fake-lyceen-only")
+    .not(".student-only")
+    .not(".invisible-to-experts")
+    .toggle(session.isAdminOrTeacher() || session.isFakeLyceen());
   $(".admin-only").toggle(session.isAdmin());
+
+  if (session.getLogin() == undefined) $("visible-only-when-connected").hide();
+  if (session.isExpert()) $(".invisible-to-experts").hide();
+
   if (session.isAdminOrTeacher()) {
     const st = session.getSelectedStudent();
     $(".teacher-div").toggle(st !== undefined);
