@@ -1,9 +1,11 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
+import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService
 import fr.gouv.monprojetsup.app.services.info.SearchService
 import fr.gouv.monprojetsup.app.services.teacher.*
 import fr.gouv.monprojetsup.common.server.Server
+import fr.gouv.monprojetsup.common.server.Server.BasicRequest
 import fr.gouv.monprojetsup.common.server.Server.BasicResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,7 +23,8 @@ class TeacherControllers(
     private val switchRoleService: SwitchRoleService,
     private val setGroupMemberService: SetGroupMemberService,
     private val resetStudentPasswordService: ResetUserPasswordService,
-    private val setStudentFeedbackService: SetStudentFeedbackService
+    private val setStudentFeedbackService: SetStudentFeedbackService,
+    private val switchToNewRefProfileRoleService: SwitchToNewRefProfileRoleService
 ) {
 
 
@@ -63,6 +66,11 @@ class TeacherControllers(
     @PostMapping("/role")
     fun switchRole(@RequestBody request: SwitchRoleService.Request): Server.BasicResponse {
         return switchRoleService.handleRequestAndExceptions(request)
+    }
+
+    @PostMapping("/switchToNewRefProfile")
+    fun switchToNewRefProfileRoleService(@RequestBody request: BasicRequest): CreateAccountService.Response {
+        return switchToNewRefProfileRoleService.handleRequestAndExceptions(request)
     }
 
 }

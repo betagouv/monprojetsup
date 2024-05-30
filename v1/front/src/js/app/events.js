@@ -100,7 +100,7 @@ export function changeSuggestionStatus(id, newStatus, handler = null) {
   const [sugg, changed] = data.getOrCreateSugg(id, newStatus);
   if (newStatus == data.SUGG_APPROVED) {
     app.updateSuggestions(
-      [{ fl: sugg.fl, status: sugg.status, score: 3 }],
+      [{ fl: sugg.fl, status: sugg.status, score: data.maxScore - 1 }],
       handler
     );
   } else {

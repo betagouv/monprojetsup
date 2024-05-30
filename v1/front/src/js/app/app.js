@@ -185,6 +185,7 @@ export async function postLoginHandler() {
   session.setProfileCompletenessLevel(profileCompleteness);
   const msgp = await server.getProfileAsync();
   data.loadProfile(msgp.profile);
+  await nav.setScreen(null);
   await nav.startNavigation();
 
   //ui.showValidationRequiredMessage(session.getLogin(), "bla bla");
@@ -279,12 +280,17 @@ export function updateSuggestions(suggestions, handler = null) {
   server.updateProfile({ suggestions: suggestions }, handler);
 }
 
-export function toTeacher() {
-  server.switchRole("pp", postLoginHandler);
+export async function toTeacher() {
+  await server.switchRole("pp");
+  await postLoginHandler();
 }
-
-export function toLyceen() {
-  server.switchRole("lyceen", postLoginHandler);
+export async function toLyceen() {
+  await server.switchRole("lyceen");
+  await postLoginHandler();
+}
+export async function switchToNewRefProfile() {
+  const data = await server.switchToNewRefProfile();
+  await loginServerAnswerHandler(data.data);
 }
 
 async function disconnect() {
@@ -349,18 +355,7 @@ function setAdminInfos(infos) {
   );
   session.setAdminInfos(infos);
 
-  setCurrentGroupIfNeeded(infos);
-}
-function setCurrentGroupIfNeeded(infos) {
-  //ensures a current group is selected
-  const curGroup = session.getSelectedGroup();
-  if (
-    (curGroup === undefined || curGroup === null) &&
-    infos.groups &&
-    infos.groups.length > 0
-  ) {
-    session.setSelectedGroup(infos.groups[0].id);
-  }
+  session.setCurrentGroupIfNeeded(infos);
 }
 
 function showSelectGroupTab(msg) {

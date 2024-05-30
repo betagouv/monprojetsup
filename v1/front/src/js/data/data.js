@@ -609,7 +609,7 @@ function getOrCreateSugg2(key) {
   }
   return sugg;
 }
-
+export const maxScore = 5;
 export function getOrCreateSugg(key, newStatus) {
   const sugg = getOrCreateSugg2(key);
   let changed = true;

@@ -191,6 +191,7 @@ public class Groups {
 
         findOrCreateDemoGroup();
 
+
         createMissingGroups();
 
         groups.removeIf(g -> g.getName() == null || g.getName().isEmpty());
