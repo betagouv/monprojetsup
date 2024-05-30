@@ -519,7 +519,7 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    protected @NotNull Group findGroup(String id) throws DBExceptions.UnknownGroupException {
+    public @NotNull Group findGroup(String id) throws DBExceptions.UnknownGroupException {
         if (id == null || id.isEmpty()) {
             throw new DBExceptions.UnknownGroupException();
         }
@@ -783,16 +783,6 @@ public class DBMongo extends DB implements Closeable {
                  DBExceptions.UnknownUserException ignored) {
             //nothing to do
         }
-    }
-
-    @Override
-    public ProfileDb getGroupMemberProfile(String grpId, String memberLogin) throws DBExceptions.ModelException {
-        @NotNull Group group = findGroup(grpId);
-        if (!group.hasMember(memberLogin)) {
-            return null;
-        }
-        User p = getUser(memberLogin);
-        return p.pf().toDbo();
     }
 
     @Override

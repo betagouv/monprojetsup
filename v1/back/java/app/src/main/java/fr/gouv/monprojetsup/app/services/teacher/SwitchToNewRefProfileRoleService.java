@@ -43,8 +43,8 @@ public class SwitchToNewRefProfileRoleService extends MyService<Server.BasicRequ
                 password,
                 user.getCguVersion(),
                 group.getRegistrationToken(),
-                req.login(),
-                Long.toString(1 + nbUsersAlreadyCreated)
+                login,
+                ""
         ));
         ///send email
         AccountManagementEmails.sendNewUserCreatedByExpertEmail(
