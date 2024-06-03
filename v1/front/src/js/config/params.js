@@ -35,9 +35,9 @@ export const apps = {
 };
 
 export const durees = {
-  indiff: "Je garde mes options ouvertes",
   court: "Courtes - 3 ans ou moins",
   long: "Longues - 5 ans ou plus",
+  indiff: "Aucune idée pour le moment",
 };
 
 export const domaines = [
