@@ -35,10 +35,9 @@ export const apps = {
 };
 
 export const durees = {
-  court:
-    "Je m'intéresse en priorité aux formations courtes et rapidement professionnalisantes.",
-  long: "J'ai envie de faire des études longues.",
-  indiff: "Je ne sais pas encore, je garde toutes mes options ouvertes.",
+  court: "Courtes - 3 ans ou moins",
+  long: "Longues - 5 ans ou plus",
+  indiff: "Aucune idée pour le moment",
 };
 
 export const domaines = [
