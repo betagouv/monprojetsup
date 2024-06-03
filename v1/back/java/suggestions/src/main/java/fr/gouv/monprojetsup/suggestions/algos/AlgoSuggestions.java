@@ -56,26 +56,12 @@ public class AlgoSuggestions {
 
     private static final AtomicInteger counter = new AtomicInteger(0);
 
-    public static double getBigCapacityScore(String fl) {
-
+    public static double getCapacityScore(String fl) {
         int nbFormations = ServerData.getNbFormations(fl);
         int capacity = ServerData.getCapacity(fl);
-
-        double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
-        double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
+        double capacityScore = (capacity >= MIN_CAPACITY_FOR_PENALTY) ? 1.0 : (double) capacity / MIN_CAPACITY_FOR_PENALTY;
+        double nbFormationsScore = (nbFormations >= MIN_NB_FORMATIONS_FOR_PENALTY) ? 1.0 : (double) nbFormations / MIN_NB_FORMATIONS_FOR_PENALTY;
         return capacityScore * nbFormationsScore;
-
-    }
-    public static double getSmallCapacityScore(String fl) {
-        return 1.0;
-        /*
-
-        //int nbFormations = ServerData.getNbFormations(fl);
-        int capacity = ServerData.getCapacity(fl);
-
-        double capacityScore = (capacity <= p90Capacity) ? 1.0 : (double) p90Capacity / capacity;
-        //double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
-        return capacityScore;// * nbFormationsScore;*/
 
     }
 
@@ -94,17 +80,8 @@ public class AlgoSuggestions {
             return affinite > NO_MATCH_SCORE &&scores.entrySet().stream().anyMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
         }
 
-        public int getNbQuotasSatisfied(EnumMap<SuggestionDiversityQuota, Double> minScoreForQuota) {
-            if(affinite <= NO_MATCH_SCORE) return 0;
-            /*if(scores.entrySet().stream().anyMatch(e -> e.getValue() == null)) {
-                throw new IllegalStateException("Null score");
-            }*/
-            return (int) scores.entrySet().stream().filter(e -> e.getValue() >= minScoreForQuota.get(e.getKey())).count();
-        }
-
         public enum SuggestionDiversityQuota {
             NOT_SMALL,
-            NOT_BIG,
             BAC,
             MOYGEN
         }
@@ -114,7 +91,6 @@ public class AlgoSuggestions {
         static {
             quotas = new EnumMap<>(SuggestionDiversityQuota.class);
             quotas.put(SuggestionDiversityQuota.NOT_SMALL, 0.75);
-            quotas.put(SuggestionDiversityQuota.NOT_BIG, 0.75);
             quotas.put(SuggestionDiversityQuota.BAC, 0.5);
             quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
         }
@@ -213,16 +189,13 @@ public class AlgoSuggestions {
 
             Pair<String, Affinite> choice;
 
-            Map<String, Integer> scores = affinities.stream().collect(Collectors.toMap(
-                    Pair::getLeft,
-                    p -> p.getRight().getNbQuotasSatisfied(minScoreForQuota)
-            ));
-
-            int maxScore = scores.values().stream().max(Integer::compareTo).orElse(0);
-
-            choice = affinities.stream()
-                    .filter(a -> scores.getOrDefault(a.getLeft(), 0) >= maxScore)
-                    .findFirst().orElse(null);
+            choice = affinities.stream().filter(a -> a.getRight().satisfiesAllOf(minScoreForQuota)).findFirst().orElse(null);
+            if(choice == null) {
+                choice = affinities.stream().filter(a -> a.getRight().satisfiesOneOf(minScoreForQuota)).findFirst().orElse(null);
+            }
+            if(choice == null) {
+                choice = affinities.getFirst();
+            }
 
             if(choice == null) throw new IllegalStateException("No choice found");
 

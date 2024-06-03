@@ -13,10 +13,12 @@ import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.update.BackEndData;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
+import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
+import io.micrometer.observation.Observation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,10 +80,6 @@ public class ServerData {
     private static boolean dataLoaded = false;
     private static Map<String, Integer> nbFormations = new HashMap<>();
     private static Map<String, Integer> capacity = new HashMap<>();
-    public static int p90NbFormations;
-    public static int p50Capacity;
-    public static int p75Capacity;
-    public static int p90Capacity;
 
 
     /**
@@ -140,32 +138,14 @@ public class ServerData {
             nbFormations.put(key, value.size());
             capacity.put(key, value.stream().mapToInt(f -> f.capacite).sum());
         });
-        p90NbFormations
-                = p50(nbFormations.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p50Capacity = p50(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p75Capacity = p75(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p90Capacity = p90(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
 
         initTagSources();
 
         dataLoaded = true;
     }
 
-    private static Integer p25(Collection<Integer> values) {
-        return values.stream().sorted().skip(values.size() / 4).findFirst().orElse(0);
-    }
-    private static Integer p50(Collection<Integer> values) {
-        return values.stream().sorted().skip(values.size() / 2).findFirst().orElse(0);
-    }
-    private static Integer p75(Collection<Integer> values) {
-        return values.stream().sorted().skip(75 * values.size() / 100).findFirst().orElse(0);
-    }
-    private static Integer p90(Collection<Integer> values) {
-        return values.stream().sorted().skip(90 * values.size()  /100).findFirst().orElse(0);
-    }
-
     private static void computeFilieresFront() {
-        filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).toList());
+        filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toList()));
         filieresFront.removeAll(flGroups.keySet());
         filieresFront.addAll(flGroups.values());
     }

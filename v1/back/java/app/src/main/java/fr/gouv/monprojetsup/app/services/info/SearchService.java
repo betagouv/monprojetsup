@@ -137,59 +137,59 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
 
         Map<String, Integer> searchScores = ServerData.search(req.recherche);
 
-        if(searchScores.isEmpty() && !req.recherche.trim().isEmpty()) {
+        boolean emptySearch = req.recherche.trim().isEmpty();
+
+        if(searchScores.isEmpty() && !emptySearch) {
             Log.logTrace("back", "search", List.of(req.recherche, 0, "no results"));
         } else {
             Log.logTrace("back", "search", List.of(req.recherche, searchScores.size()));
         }
 
+
         //equivalent d'un appel à /affinites
-        final Pair<List<Affinity>, List<String>> affinites = getAffinities(
-                req.profile
-        );
+        final Pair<List<Affinity>, List<String>> affinites;
 
-        //fallback if no answer
-        if (affinites.getLeft().isEmpty()) {
-            searchScores.keySet().forEach(s -> affinites.getLeft().add(new Affinity(s, 0.05)));
-        }
-
-        if(!req.recherche.trim().isEmpty()) {
-            affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
-        }
-
-
-        //if no keyword, always results
-        if(req.recherche.trim().isEmpty()) {
-            Set<String> here = affinites.getLeft().stream().map(Affinity::key).collect(Collectors.toSet());
+        //if no keyword, always results and no sorting
+        final List<String> keys;
+        if(emptySearch) {
+            affinites = getSuggestions(req.profile);
+            keys = affinites.getLeft().stream().map(Affinity::key).toList();
+            final Set<String> here = new HashSet<>(keys);
             ServerData.filieresFront.forEach(s -> {
                 if (!here.contains(s)) {
                     affinites.getLeft().add(new Affinity(s, 0.001));
                 }
             });
         } else {
+            affinites = getAffinities(req.profile);
+            //fallback if no answer
+            if (affinites.getLeft().isEmpty()) {
+                searchScores.keySet().forEach(s -> affinites.getLeft().add(new Affinity(s, 0.05)));
+            }
+
+            affinites.getLeft().removeIf(aff -> !searchScores.containsKey(aff.key()));
+
             //if keyword, include all results from searchScores, even if not in affinite
             searchScores.keySet().forEach(s -> {
                 if (affinites.getLeft().stream().noneMatch(aff -> aff.key().equals(s))) {
                     affinites.getLeft().add(new Affinity(s, 0.001));
                 }
             });
-        }
-
-        //calcul des cores de tri
-        Map<String, Double> sortScores
-                = affinites.getLeft().stream().collect(
-                        Collectors.toMap(
+            //calcul des cores de tri
+            Map<String, Double> sortScores
+                    = affinites.getLeft().stream().collect(
+                    Collectors.toMap(
                             Affinity::key,
                             aff -> aff.getSortScore(searchScores.getOrDefault(aff.key(), 0))
-                        )
-        );
-
-        //tri des clés
-        List<String> keys =
-                affinites.getLeft().stream()
-                        .sorted(Comparator.comparing(aff -> - sortScores.getOrDefault(aff.key(), 0.0)))
-                        .map(Affinity::key)
-                        .toList();
+                    )
+            );
+            //tri des clés
+            keys =
+                    affinites.getLeft().stream()
+                            .sorted(Comparator.comparing(aff -> - sortScores.getOrDefault(aff.key(), 0.0)))
+                            .map(Affinity::key)
+                            .toList();
+        }
 
         //calcul des clés de la page
         List<String> keysPage = keys.stream().skip((long) req.pageNb * req.pageSize).limit(req.pageSize).toList();
@@ -210,6 +210,13 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     private static Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
         String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinites", request);
+        val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
+        return Pair.of(response.affinites(), response.metiers());
+    }
+
+    private static Pair<List<Affinity>, List<String>> getSuggestions(ProfileDTO profile) throws IOException, InterruptedException {
+        val request = new GetAffinitiesServiceDTO.Request(profile);
+        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions", request);
         val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
         return Pair.of(response.affinites(), response.metiers());
     }
