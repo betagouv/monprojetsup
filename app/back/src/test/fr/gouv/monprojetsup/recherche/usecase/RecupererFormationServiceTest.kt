@@ -50,7 +50,7 @@ class RecupererFormationServiceTest {
                     "(français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels " +
                     "(botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le " +
                     "métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-            descriptifAttendu =
+            descriptifAttendus =
                 "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
                     "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des " +
                     "fleurs, ainsi que les soins et l'entretien des végétaux.",
@@ -130,18 +130,25 @@ class RecupererFormationServiceTest {
                 id = "fl0001",
                 nom = "CAP Fleuriste",
                 formationsAssociees = listOf("fl0010", "fl0012"),
-                detailFormation =
+                descriptifFormation =
                     "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires" +
                         " pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. " +
                         "Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des " +
                         "enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste " +
                         "permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en " +
                         "atelier de composition florale.",
-                detailDiplome =
+                descriptifDiplome =
                     "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
                         "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
                         "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
                         "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
+                descriptifAttendus =
+                    "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
+                        "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
+                        "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                descriptifConseils =
+                    "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                        "actuelles en matière de design floral pour exceller dans ce domaine.",
                 criteresAdmission =
                     CriteresAdmission(
                         principauxPoints =
@@ -156,14 +163,7 @@ class RecupererFormationServiceTest {
                                 centille75eme = 15.0f,
                                 centille95eme = 19.0f,
                             ),
-                        attenduFormation =
-                            "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                                "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
-                                "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                     ),
-                conseils =
-                    "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                        "actuelles en matière de design floral pour exceller dans ce domaine.",
                 liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                 metiers =
                     listOf(
@@ -257,18 +257,25 @@ class RecupererFormationServiceTest {
                 id = "fl0001",
                 nom = "CAP Fleuriste",
                 formationsAssociees = listOf("fl0010", "fl0012"),
-                detailFormation =
+                descriptifFormation =
                     "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires" +
                         " pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. " +
                         "Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des " +
                         "enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste " +
                         "permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en " +
                         "atelier de composition florale.",
-                detailDiplome =
+                descriptifDiplome =
                     "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
                         "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
                         "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
                         "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
+                descriptifAttendus =
+                    "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
+                        "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
+                        "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                descriptifConseils =
+                    "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                        "actuelles en matière de design floral pour exceller dans ce domaine.",
                 criteresAdmission =
                     CriteresAdmission(
                         principauxPoints =
@@ -283,14 +290,7 @@ class RecupererFormationServiceTest {
                                 centille75eme = 15.0f,
                                 centille95eme = 19.0f,
                             ),
-                        attenduFormation =
-                            "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                                "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
-                                "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                     ),
-                conseils =
-                    "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                        "actuelles en matière de design floral pour exceller dans ce domaine.",
                 liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                 metiersTriesParAffinites =
                     listOf(

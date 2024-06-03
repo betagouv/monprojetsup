@@ -64,13 +64,14 @@ class RechercheController(
                 FormationDetailleDTO(
                     id = formation.id,
                     nom = formation.nom,
-                    formationsAssociees = formation.formationsAssociees,
-                    detailFormation = formation.detailFormation,
-                    detailDiplome = formation.detailDiplome,
+                    formationsAssociees = formation.formationsAssociees?.takeUnless { it.isEmpty() },
+                    descriptifFormation = formation.descriptifFormation,
+                    descriptifDiplome = formation.descriptifDiplome,
+                    descriptifAttendus = formation.descriptifAttendus,
                     criteresAdmission =
                         formation.criteresAdmission?.let { criteresAdmission ->
                             CriteresAdmissionDTO(
-                                principauxPoints = criteresAdmission.principauxPoints,
+                                principauxPoints = criteresAdmission.principauxPoints?.takeUnless { it.isEmpty() },
                                 moyenneGenerale =
                                     criteresAdmission.moyenneGenerale?.let { moyenneGenerale ->
                                         MoyenneGeneraleDTO(
@@ -80,21 +81,20 @@ class RechercheController(
                                             moyenneGenerale.centille95eme,
                                         )
                                     },
-                                attenduFormation = criteresAdmission.attenduFormation,
                             )
                         },
-                    conseils = formation.conseils,
-                    liens = formation.liens,
-                    villes = formation.communes,
+                    descriptifConseils = formation.descriptifConseils,
+                    liens = formation.liens?.takeUnless { it.isEmpty() },
+                    villes = formation.communes.takeUnless { it.isEmpty() },
                     metiers =
                         formation.metiers.map { metier ->
                             MetierDetailleDTO(
                                 id = metier.id,
                                 nom = metier.nom,
                                 descriptif = metier.descriptif,
-                                lienOnisep = metier.liens?.firstOrNull(),
+                                liens = metier.liens?.takeUnless { it.isEmpty() },
                             )
-                        },
+                        }.takeUnless { it.isEmpty() },
                     tauxAffinite = formation.tauxAffinite,
                 ),
             explications =
@@ -103,8 +103,8 @@ class RechercheController(
                         geographique =
                             explications.geographique?.map {
                                 ExplicationGeographiqueDTO(nom = it.ville, distanceKm = it.distanceKm)
-                            },
-                        similaires = explications.similaires,
+                            }?.takeUnless { it.isEmpty() },
+                        similaires = explications.similaires?.takeUnless { it.isEmpty() },
                         dureeEtudesPrevue = explications.dureeEtudesPrevue,
                         alternance = explications.alternance,
                         interets = explications.interets,

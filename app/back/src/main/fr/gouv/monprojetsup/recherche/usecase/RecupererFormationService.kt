@@ -36,7 +36,6 @@ class RecupererFormationService(
                         centille95eme = 19f,
                     ),
                 // TODO recuperer la moyenne Générale + les totaux par Bac
-                attenduFormation = formation.descriptifAttendu,
             )
         return if (profilEleve != null) {
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
@@ -54,10 +53,11 @@ class RecupererFormationService(
                 id = formation.id,
                 nom = formation.nom,
                 formationsAssociees = formation.formationsAssociees,
-                detailFormation = formation.descriptifGeneral,
-                detailDiplome = formation.descriptifDiplome,
+                descriptifFormation = formation.descriptifGeneral,
+                descriptifDiplome = formation.descriptifDiplome,
+                descriptifConseils = formation.descriptifConseils,
+                descriptifAttendus = formation.descriptifAttendus,
                 criteresAdmission = criteresAdmission,
-                conseils = formation.descriptifConseils,
                 liens = formation.liens,
                 tauxAffinite = affinitesFormationEtMetier.formations.first { it.idFormation == formation.id }.tauxAffinite,
                 metiersTriesParAffinites = nomMetiersTriesParAffinites,
@@ -69,10 +69,11 @@ class RecupererFormationService(
                 id = formation.id,
                 nom = formation.nom,
                 formationsAssociees = formation.formationsAssociees,
-                detailFormation = formation.descriptifGeneral,
-                detailDiplome = formation.descriptifDiplome,
+                descriptifFormation = formation.descriptifGeneral,
+                descriptifDiplome = formation.descriptifDiplome,
+                descriptifConseils = formation.descriptifConseils,
+                descriptifAttendus = formation.descriptifAttendus,
                 criteresAdmission = criteresAdmission,
-                conseils = formation.descriptifConseils,
                 liens = formation.liens,
                 metiers = formation.metiers,
                 communes = tripletsAffectations.map { it.commune }.distinct(),

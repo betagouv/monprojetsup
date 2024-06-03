@@ -97,7 +97,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             "(français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels " +
                             "(botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le " +
                             "métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                    descriptifAttendu =
+                    descriptifAttendus =
                         "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
                             "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des " +
                             "fleurs, ainsi que les soins et l'entretien des végétaux.",
@@ -167,7 +167,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             "enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet " +
                             "d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou " +
                             "en atelier de composition florale.",
-                    descriptifAttendu =
+                    descriptifAttendus =
                         "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de " +
                             "la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que " +
                             "les soins et l'entretien des végétaux.",
@@ -236,7 +236,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             "en passant par les arts. Organisée en parcours types, définis par chaque université, la licence " +
                             "permet d'acquérir une culture générale solide, des compétences disciplinaires, " +
                             "transversales et linguistiques.",
-                    descriptifAttendu = null,
+                    descriptifAttendus = null,
                     descriptifDiplome = null,
                     descriptifConseils = "",
                     pointsAttendus = emptyList(),
