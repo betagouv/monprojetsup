@@ -127,9 +127,6 @@ public class Simulate {
                 @ArraySchema(arraySchema = @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
                 Map<String, SuggestionDTO> choices,
 
-                //replaced by interests
-                @Schema(name = "deprecated", description = "deprecated")
-                @Deprecated Map<String, Integer> scores,
                 @Schema(description = "statut de réflexion 0/1/2", example = "0")
                 String statut
 
@@ -146,7 +143,6 @@ public class Simulate {
                         interests,
                         moygen,
                         choices.values().stream().toList(),
-                        scores,
                         statut
                 );
             }

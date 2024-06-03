@@ -24,7 +24,8 @@ public class GetAffinitiesService extends MyService<GetAffinitiesServiceDTO.Requ
         final @NotNull List<Pair<String,Double>> affinites = AlgoSuggestions.getFormationsAffinities(
                 req.profile(),
                 SuggestionServer.getConfig().getSuggFilConfig()
-        );
+        ).stream().map(p -> Pair.of(p.getLeft(), p.getRight().affinite())).toList();
+
         List<String> metiers = AlgoSuggestions.sortMetiersByAffinites(
                 req.profile(),
                 null,

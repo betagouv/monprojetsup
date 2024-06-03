@@ -1,75 +1,37 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
+import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestions;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GetSuggestionsService extends MyService<GetSuggestionsService.Request, GetSuggestionsService.Response> {
+public class GetSuggestionsService extends MyService<GetAffinitiesServiceDTO.Request, GetAffinitiesServiceDTO.Response> {
 
 
     public GetSuggestionsService() {
-        super(Request.class);
-    }
-
-    public record Request(
-
-            @Schema(name = "profile", description = "Profil pour lequel les details sont demandées.")
-            @NotNull ProfileDTO profile
-    ) {
-
-    }
-
-    public record Response(
-            ResponseHeader header,
-            SuggestionsDTO suggestions
-    ) {
-
-        public Response(@NotNull Suggestions suggestions) {
-            this(
-                    new ResponseHeader(),
-                    new SuggestionsDTO(suggestions)
-            );
-        }
+        super(GetAffinitiesServiceDTO.class);
     }
 
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull GetSuggestionsService.Request req) throws Exception {
+    protected @NotNull GetAffinitiesServiceDTO.Response handleRequest(@NotNull GetAffinitiesServiceDTO.Request req) {
 
-        //LOGGER.info("HAndling request " + req);
-        final @NotNull Suggestions suggestions = AlgoSuggestions.getSuggestions(
-                req.profile,
+        final @NotNull List<Pair<String,Double>> suggestions = AlgoSuggestions.getFormationsSuggestions(
+                req.profile(),
+                SuggestionServer.getConfig().getSuggFilConfig()
+        );
+        List<String> metiers = AlgoSuggestions.sortMetiersByAffinites(
+                req.profile(),
+                null,
                 SuggestionServer.getConfig().getSuggFilConfig()
         );
 
-        return new GetSuggestionsService.Response(suggestions);
-    }
-
-
-    public record SuggestionsDTO(List<Suggestion> suggestions) {
-
-        public SuggestionsDTO(Suggestions suggestions) {
-            this(suggestions.suggestions().stream()
-                    .map(s -> new Suggestion(s))
-                    .toList()
-            );
-        }
-
-        public record Suggestion(
-                String fl
-        ) {
-            public Suggestion(fr.gouv.monprojetsup.suggestions.algos.Suggestion s) {
-                this(s.fl());
-            }
-        }
+        return new GetAffinitiesServiceDTO.Response(suggestions, metiers);
     }
 
     public String checkHealth() {
