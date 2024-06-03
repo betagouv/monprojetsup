@@ -1,3 +1,8 @@
 package fr.gouv.monprojetsup.recherche.application.dto
 
-data class RecupererFormationRequeteDTO(val profil: ProfilDTO?)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+class RecupererFormationRequeteDTO(
+    @JsonProperty("profil")
+    val profil: ProfilDTO?,
+)

@@ -36,7 +36,7 @@ class FormationBDDRepository(
                 id = formation.id,
                 nom = formation.label,
                 descriptifGeneral = formation.descriptifGeneral,
-                descriptifAttendu = formation.descriptifAttendu,
+                descriptifAttendus = formation.descriptifAttendus,
                 liens = formation.urls,
                 metiers =
                     formation.metiers.map { metierEntity ->

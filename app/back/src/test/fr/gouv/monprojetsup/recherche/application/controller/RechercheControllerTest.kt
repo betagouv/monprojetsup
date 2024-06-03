@@ -219,16 +219,23 @@ class RechercheControllerTest(
                             ),
                         ),
                     formationsAssociees = listOf("fl0012"),
-                    detailFormation =
+                    descriptifFormation =
                         "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
                             "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) " +
                             "permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes " +
                             "socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement " +
                             "par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, " +
                             "une université.",
-                    detailDiplome =
+                    descriptifDiplome =
                         "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
                             "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
                     criteresAdmission =
                         CriteresAdmission(
                             principauxPoints =
@@ -243,14 +250,7 @@ class RechercheControllerTest(
                                     centille75eme = 17f,
                                     centille95eme = 19.5f,
                                 ),
-                            attenduFormation =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
                         ),
-                    conseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                            "actuelles en matière de design floral pour exceller dans ce domaine.",
                     liens =
                         listOf(
                             "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
@@ -298,8 +298,9 @@ class RechercheControllerTest(
                             "formationsAssociees": [
                               "fl0012"
                             ],
-                            "detailFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "detailDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "criteresAdmission": {
                               "principauxPoints": [
                                 "Les résultats scolaires",
@@ -310,10 +311,9 @@ class RechercheControllerTest(
                                 "centille25eme": 14.0,
                                 "centille75eme": 17.0,
                                 "centille95eme": 19.5
-                              },
-                              "attenduFormation": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux."
+                              }
                             },
-                            "conseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "liens": [
                               "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                             ],
@@ -326,13 +326,13 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "lienOnisep": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                "liens": ["https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "lienOnisep": null
+                                "liens": null
                               }
                             ],
                             "tauxAffinite": 0.9
@@ -388,16 +388,23 @@ class RechercheControllerTest(
                             ),
                         ),
                     formationsAssociees = listOf("fl0012"),
-                    detailFormation =
+                    descriptifFormation =
                         "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
                             "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) " +
                             "permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes " +
                             "socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement " +
                             "par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, " +
                             "une université.",
-                    detailDiplome =
+                    descriptifDiplome =
                         "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
                             "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
                     criteresAdmission =
                         CriteresAdmission(
                             principauxPoints =
@@ -412,14 +419,7 @@ class RechercheControllerTest(
                                     centille75eme = 17f,
                                     centille95eme = 19.5f,
                                 ),
-                            attenduFormation =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
                         ),
-                    conseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                            "actuelles en matière de design floral pour exceller dans ce domaine.",
                     liens =
                         listOf(
                             "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
@@ -455,8 +455,9 @@ class RechercheControllerTest(
                             "formationsAssociees": [
                               "fl0012"
                             ],
-                            "detailFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
-                            "detailDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "criteresAdmission": {
                               "principauxPoints": [
                                 "Les résultats scolaires",
@@ -467,10 +468,9 @@ class RechercheControllerTest(
                                 "centille25eme": 14.0,
                                 "centille75eme": 17.0,
                                 "centille95eme": 19.5
-                              },
-                              "attenduFormation": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux."
+                              }
                             },
-                            "conseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "liens": [
                               "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                             ],
@@ -483,13 +483,13 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "lienOnisep": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                "liens": ["https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "lienOnisep": null
+                                "liens": null
                               }
                             ],
                             "tauxAffinite": null

@@ -9,10 +9,11 @@ data class FormationDetailleDTO(
     val id: String,
     val nom: String,
     val formationsAssociees: List<String>?,
-    val detailFormation: String?,
-    val detailDiplome: String?,
+    val descriptifFormation: String?,
+    val descriptifDiplome: String?,
+    val descriptifConseils: String?,
+    val descriptifAttendus: String?,
     val criteresAdmission: CriteresAdmissionDTO?,
-    val conseils: String?,
     val liens: List<String>?,
     val villes: List<String>?,
     val metiers: List<MetierDetailleDTO>?,
@@ -23,7 +24,7 @@ data class MetierDetailleDTO(
     val id: String,
     val nom: String,
     val descriptif: String?,
-    val lienOnisep: String?,
+    val liens: List<String>?,
 )
 
 data class ExplicationsDTO(
@@ -42,7 +43,6 @@ data class ExplicationGeographiqueDTO(
 data class CriteresAdmissionDTO(
     val principauxPoints: List<String>?,
     val moyenneGenerale: MoyenneGeneraleDTO?,
-    val attenduFormation: String?,
 )
 
 data class MoyenneGeneraleDTO(
