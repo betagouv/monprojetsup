@@ -1,18 +1,16 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import com.google.gson.Gson;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
+import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.distances.Distances;
+import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.distances.Distances;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.suggestions.server.Log;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,7 +28,6 @@ import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
 import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
-import static java.lang.Math.*;
 
 public class AlgoSuggestions {
 
@@ -46,6 +43,9 @@ public class AlgoSuggestions {
     private static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     private static final double MAX_AFFINITY_PERCENT = 0.90;
+    private static final int MIN_CAPACITY_FOR_PENALTY = 1000;
+    private static final int MIN_NB_FORMATIONS_FOR_PENALTY = 50;
+
     //utilisé par suggestions
     public static Map<String, Integer> codesSpecialites = new HashMap<>();
 
@@ -56,88 +56,62 @@ public class AlgoSuggestions {
 
     private static final AtomicInteger counter = new AtomicInteger(0);
 
-    /**
-     * Get details associated to a profile.
-     * Side effect: inject explanations into personal choices personal
-     *
-     * @param pf  the profile
-     * @param cfg the config used, essentially weights on criteria
-     * @return the details
-     */
-    public static @NotNull Suggestions getSuggestions(
-            @Nullable ProfileDTO pf,
-            @NotNull Config cfg
-    ) {
-        counter.getAndIncrement();
-        //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
-        if(pf == null || containsNothingPersonal(pf)) {
-            LOGGER.info(NOTHING_PERSONAL);
-            return new Suggestions();
-        }
-        //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
-        Map<String, Double> filieresScores = new HashMap<>();
-
-        /* première passe pour calculer les interests */
-        backPsupData.filActives().forEach(gFlCod -> {
-            String fl = FILIERE_PREFIX + gFlCod;
-            // the core computation
-            double score = affinityEvaluator.getAffinityEvaluation(fl);
-            //
-            if (score > NO_MATCH_SCORE) {
-                filieresScores.put(fl, score);
-            }
-        });
-
-        if(filieresScores.isEmpty()) {
-            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les interests des filières à 0 sur un un profil contenant des éléments personnesl"
-                    + new Gson().toJson(pf.cleanupDates())
-            );
-        }
-
-        /* seconde passe pour calculer des explications */
-        List<Suggestion> filiereSuggs = getFilieresSuggestions(filieresScores, cfg);
-
-        if(filiereSuggs.isEmpty()  && !filieresScores.isEmpty()) {
-            Log.logBackError("Pas de suggestion de filiere sur un un profil contenant des éléments personnesl et des interests filieres non vide"
-                    + new Gson().toJson(pf.cleanupDates())
-            );
-        }
-
-        /* troisième passe pour compléter avec les thèmes et les métiers */
-        List<Suggestion> metiersSuggestions
-                = affinityEvaluator
-                .getCloseTagsSuggestionsOrderedByIncreasingDistance(
-                        MAX_LENGTH_FOR_SUGGESTIONS,
-                        false,
-                        cfg.maxNbSuggestions()
-                );
-        if(metiersSuggestions.isEmpty()) {
-            Log.logTrace(AlgoSuggestions.class.getSimpleName(), "Tous les interests des metiers à 0 sur le profil " + new Gson().toJson(pf.cleanupDates()));
-        }
-
-        List<Suggestion> answer = new ArrayList<>(
-                filiereSuggs.stream()
-                        .limit((cfg.isVerboseMode() ? 5L : 1L) * cfg.maxNbSuggestions())
-                        .toList()
-        );
-
-        List.of(SEC_ACT_PREFIX_IN_GRAPH).forEach(pref ->
-                answer.addAll(
-                metiersSuggestions.stream()
-                        .filter(s -> s.fl().startsWith(pref))
-                        .limit(cfg.maxNbSuggestions())
-                        .toList()
-                )
-        );
-        Log.logTrace("anonymous",  "Serving " + filiereSuggs.size()
-                + " formations details, total "+ answer.size()
-        );
-
-        return new Suggestions(answer);
+    public static double getCapacityScore(String fl) {
+        int nbFormations = ServerData.getNbFormations(fl);
+        int capacity = ServerData.getCapacity(fl);
+        double capacityScore = (capacity >= MIN_CAPACITY_FOR_PENALTY) ? 1.0 : (double) capacity / MIN_CAPACITY_FOR_PENALTY;
+        double nbFormationsScore = (nbFormations >= MIN_NB_FORMATIONS_FOR_PENALTY) ? 1.0 : (double) nbFormations / MIN_NB_FORMATIONS_FOR_PENALTY;
+        return capacityScore * nbFormationsScore;
 
     }
 
+
+    public record Affinite(
+            String key,
+            double affinite,
+            EnumMap<SuggestionDiversityQuota, Double> scores
+    ) {
+
+        public boolean satisfiesAllOf(EnumMap<SuggestionDiversityQuota, Double> minScoreForQuota) {
+            return affinite > NO_MATCH_SCORE &&  scores.entrySet().stream().allMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
+        }
+
+        public boolean satisfiesOneOf(EnumMap<SuggestionDiversityQuota, Double> minScoreForQuota) {
+            return affinite > NO_MATCH_SCORE &&scores.entrySet().stream().anyMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
+        }
+
+        public enum SuggestionDiversityQuota {
+            NOT_SMALL,
+            BAC,
+            MOYGEN
+        }
+
+        public static final EnumMap<SuggestionDiversityQuota, Double> quotas;
+
+        static {
+            quotas = new EnumMap<>(SuggestionDiversityQuota.class);
+            quotas.put(SuggestionDiversityQuota.NOT_SMALL, 0.75);
+            quotas.put(SuggestionDiversityQuota.BAC, 0.5);
+            quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
+        }
+
+        public static Affinite getNoMatch(String key) {
+            return new Affinite(key, NO_MATCH_SCORE, new EnumMap<>(SuggestionDiversityQuota.class));
+        }
+
+        public static Affinite round(Affinite aff, double finalMaxScore) {
+            double newAffinite = Math.max(0.0, Math.min(1.0, Math.round( (aff.affinite / finalMaxScore) * 10e6) / 10e6));
+            return new Affinite(aff.key, newAffinite,aff.scores);
+        }
+
+        public @NotNull Affinite max(@Nullable Affinite affinite) {
+            if(affinite == null) return this;
+            if(affinite.affinite() > this.affinite) return affinite;
+            return this;
+        }
+
+
+    }
 
     /**
      * Get affinities associated to a profile.
@@ -146,7 +120,7 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the affinities
      */
-    public static @NotNull List<Pair<String, Double>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg) {
+    public static @NotNull List<Pair<String, Affinite>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -156,34 +130,84 @@ public class AlgoSuggestions {
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
 
-        Map<String, Double> affnites = backPsupData.filActives().stream()
+        Map<String, Affinite> affinites = backPsupData.filActives().stream()
                 .map(Constants::gFlCodToFrontId)
                 .collect(Collectors.toMap(
                         fl -> flGroups.getOrDefault(fl,fl),
                         affinityEvaluator::getAffinityEvaluation,
-                        Math::max,
+                        Affinite::max,
                         TreeMap::new
                 ));
 
 
         //computing maximal score for etalonnage
-        double maxScore = affnites.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0) / MAX_AFFINITY_PERCENT;
+        double maxScore = affinites.values().stream().mapToDouble(aff -> aff.affinite).max().orElse(1.0) / MAX_AFFINITY_PERCENT;
 
         if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
         if(USE_BIN) {
             pf.suggRejected().forEach(suggestionDTO -> {
                 String fl = suggestionDTO.fl();
-                if (affnites.containsKey(fl)) {
-                    affnites.put(fl, NO_MATCH_SCORE);
+                if (affinites.containsKey(fl)) {
+                    affinites.put(fl, Affinite.getNoMatch(fl));
                 }
             });
         }
 
         //rounding to 6 digits
         double finalMaxScore = maxScore;
-        affnites.entrySet().forEach(e -> e.setValue(max(0.0, min(1.0, Math.round( (e.getValue() / finalMaxScore) * 10e6) / 10e6))));
-        return affnites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight())).toList();
+        affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
+        return affinites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight().affinite)).toList();
+    }
+
+
+    /**
+     * Get suggestions associated to a profile.
+     *
+     * @param pf  the profile
+     * @param cfg the config
+     * @return the suggestions, each indexed with a score
+     */
+    public static @NotNull List<Pair<String, Double>> getFormationsSuggestions(@NotNull ProfileDTO pf, @NotNull Config cfg) {
+
+        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(getFormationsAffinities(pf, cfg));
+
+        //reordering with the following diversity rules
+        //the concatenation of the favoris and the suggestions shoudl include at most 1/3 rare formation
+        //the first should be adequate to bac
+
+        Map<Affinite.SuggestionDiversityQuota, Double> totals = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
+
+        List<Pair<String, Double>> result = new ArrayList<>();
+
+        while(!affinities.isEmpty()) {
+            int nb = result.size() + 1;
+            EnumMap<Affinite.SuggestionDiversityQuota, Double> minScoreForQuota = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
+            Affinite.quotas.forEach((k,v) -> minScoreForQuota.put(k,
+                    v * nb - totals.getOrDefault(k, 0.0))
+            );
+
+            Pair<String, Affinite> choice;
+
+            choice = affinities.stream().filter(a -> a.getRight().satisfiesAllOf(minScoreForQuota)).findFirst().orElse(null);
+            if(choice == null) {
+                choice = affinities.stream().filter(a -> a.getRight().satisfiesOneOf(minScoreForQuota)).findFirst().orElse(null);
+            }
+            if(choice == null) {
+                choice = affinities.getFirst();
+            }
+
+            if(choice == null) throw new IllegalStateException("No choice found");
+
+            result.add(Pair.of(choice.getLeft(), choice.getRight().affinite));
+            affinities.remove(choice);
+
+            choice.getRight().scores.forEach((k,v) -> totals.merge(k, v, Double::sum));
+
+        }
+
+        return result;
+
     }
 
 
@@ -203,6 +227,7 @@ public class AlgoSuggestions {
         }
 
         final Set<String> clesFiltrees;
+        //noinspection ReplaceNullCheck
         if(cles != null) {
             clesFiltrees = new HashSet<>(cles);
         } else {
@@ -237,42 +262,6 @@ public class AlgoSuggestions {
 
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
-    }
-
-
-    private static List<Suggestion> getFilieresSuggestions(
-            Map<String, Double> filieresScores,
-            Config cfg) {
-
-        List<String> bestSuggestionsUngrouped = new ArrayList<>(filieresScores.keySet());
-
-        Map<String, List<String>> groupedIndices = bestSuggestionsUngrouped.stream().collect(
-                Collectors.groupingBy(
-                        ServerData::getGroupOfFiliere
-                )
-        );
-
-        groupedIndices.forEach((s, suggestions) ->
-                filieresScores.put(
-                        s,
-                        suggestions.stream().mapToDouble(
-                                fl -> filieresScores.getOrDefault(fl, NO_MATCH_SCORE)
-                        ).max().orElse(NO_MATCH_SCORE)
-                ));
-        List<String> bestSuggestionsGrouped = new ArrayList<>(groupedIndices.keySet());
-        //les plus gros interests en premier
-        bestSuggestionsGrouped.sort((o1, o2) ->
-             (int) signum(filieresScores.get(o2) - filieresScores.get(o1))
-        );
-
-        int nbSugg = min(cfg.maxNbSuggestions(), bestSuggestionsGrouped.size());
-
-        return bestSuggestionsGrouped.stream()
-                        .limit(nbSugg)
-                        .map(groupKey -> {
-                            List<String> keys = groupedIndices.get(groupKey);
-                            return Suggestion.merge(groupKey, keys, null);
-                        }).toList();
     }
 
     private static boolean containsNothingPersonal(@NotNull ProfileDTO pf) {
@@ -436,6 +425,7 @@ public class AlgoSuggestions {
 
         Map<String,List<Path>> result = pathsFromDistances.get(key);
         if(result != null) return result;
+        //noinspection DataFlowIssue
         @NotNull Map<String,List<Path>> result2 = edgesKeys
                         .computePathesFrom(n, maxDistance)
                         .stream()

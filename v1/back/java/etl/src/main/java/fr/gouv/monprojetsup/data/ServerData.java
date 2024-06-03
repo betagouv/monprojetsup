@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
+import io.micrometer.observation.Observation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -77,6 +78,8 @@ public class ServerData {
      */
 
     private static boolean dataLoaded = false;
+    private static Map<String, Integer> nbFormations = new HashMap<>();
+    private static Map<String, Integer> capacity = new HashMap<>();
 
 
     /**
@@ -97,6 +100,12 @@ public class ServerData {
         backPsupData.filActives().addAll(statistiques.getLasFlCodes());
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
+        reverseFlGroups.forEach((key, value) -> {
+            if(value.size() > 1) {
+                filToFormations.put(key, value.stream().flatMap(f -> filToFormations.getOrDefault(f, List.of()).stream()).collect(Collectors.toList()));
+            }
+        });
+
 
         ServerData.specialites = SpecialitesLoader.load(ServerData.statistiques);
 
@@ -114,9 +123,21 @@ public class ServerData {
         );
         liensDomainesMetiers = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
+
         Distances.init();
 
         computeFilieresFront();
+
+        for (String s : filieresFront) {
+            if (filToFormations.getOrDefault(s, List.of()).isEmpty())
+                LOGGER.warning("No formations for " + s);
+                //throw new RuntimeException("No formations for " + s);
+        }
+
+        filToFormations.forEach((key, value) -> {
+            nbFormations.put(key, value.size());
+            capacity.put(key, value.stream().mapToInt(f -> f.capacite).sum());
+        });
 
         initTagSources();
 
@@ -440,6 +461,12 @@ public class ServerData {
     }
 
 
+    public static int getNbFormations(String fl) {
+        return nbFormations.getOrDefault(fl, 0);
+    }
 
+    public static int getCapacity(String fl) {
+        return capacity.getOrDefault(fl, 0);
+    }
 }
 

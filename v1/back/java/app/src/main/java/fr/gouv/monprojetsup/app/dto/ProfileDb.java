@@ -27,7 +27,6 @@ public record ProfileDb(
      Map<String, Integer> scores,
     String mention,
      String moygen,
-
      Map<String, SuggestionDTO> choices,
         String statut,
         List<Retour> retours
@@ -101,8 +100,7 @@ public record ProfileDb(
                 spe_classes.stream().map(Sanitizer::sanitize).collect(Collectors.toSet()),
                 scores.entrySet().stream().filter(e -> e.getValue() != null && e.getValue() > 0).map(Map.Entry::getKey).toList(),
                 Sanitizer.sanitize(moygen),
-                choices == null ? Collections.emptyList() : choices.values().stream().toList(),
-                Map.of(),
+                (choices == null ? List.of() : choices.values().stream().toList()),
                 statut
         );
     }

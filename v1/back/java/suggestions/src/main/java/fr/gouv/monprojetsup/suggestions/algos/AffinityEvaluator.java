@@ -118,15 +118,6 @@ public class AffinityEvaluator {
             });
         }
 
-        //deprecated
-        if(pf.scores() != null) {
-            nonZeroScores.addAll(pf.scores().entrySet()
-                    .stream()
-                    .filter(e -> e.getValue() > 0)
-                    .map(Map.Entry::getKey)
-                    .toList());
-        }
-
         //autres formations
         nonZeroScores.addAll(approved.stream().map(SuggestionDTO::fl).toList());
 
@@ -150,8 +141,8 @@ public class AffinityEvaluator {
     }
 
     /* the public entry points */
-    public Double getAffinityEvaluation(String fl) {
-        if (USE_BIN && rejected.contains(fl)) return Config.NO_MATCH_SCORE;
+    public Affinite getAffinityEvaluation(String fl) {
+        if (USE_BIN && rejected.contains(fl)) return Affinite.getNoMatch(fl);
         return getScoreAndExplanation(fl, null, null);
     }
 
@@ -168,7 +159,7 @@ public class AffinityEvaluator {
         List<Paire<Double, Explanation>> unsortedExpl = new ArrayList<>();
 
         //the computation
-        double totalScoreforFiliere = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores);
+        Affinite totalScoreforFiliere = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores);
 
         unsortedExpl.sort(Comparator.comparing(e -> -e.cg1));
 
@@ -201,7 +192,7 @@ public class AffinityEvaluator {
             expl2.addAll(sortedExpl);
             sortedExpl = expl2;
         }
-        return Pair.of(sortedExpl, totalScoreforFiliere);
+        return Pair.of(sortedExpl, totalScoreforFiliere.affinite());
     }
 
 
@@ -223,19 +214,19 @@ public class AffinityEvaluator {
      * @param matches used to get debug info about what matched and how
      * @return the score
      */
-    private double getScoreAndExplanation(
+    private Affinite getScoreAndExplanation(
             String fl,
             List<Paire<Double, Explanation>> expl,
             Map<String, Double> matches
             ) {
 
-        if(rejected.contains(fl)) return Config.NO_MATCH_SCORE;
+        if(rejected.contains(fl)) return Affinite.getNoMatch(fl);
 
         final int bacIndex = pf.bacIndex();
 
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
         if (isLas(fl) && !isInterestedinHealth) {
-            return Config.NO_MATCH_SCORE;
+            return Affinite.getNoMatch(fl);
         }
 
         /*
@@ -254,7 +245,7 @@ public class AffinityEvaluator {
         boolean process = expl != null
                 || scores.entrySet().stream()
                 .anyMatch(e -> cfg.personalCriteria().contains(e.getKey()) && e.getValue() > Config.NO_MATCH_SCORE);
-        if (!process) return Config.NO_MATCH_SCORE;
+        if (!process) return Affinite.getNoMatch(fl);
 
         if(Helpers.isFiliere(fl)) {
             scores.putAll(Map.ofEntries(
@@ -298,8 +289,18 @@ public class AffinityEvaluator {
                     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
-        return score;
+        val moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
+        val bacMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 0.0));
+        double accessScore = AlgoSuggestions.getCapacityScore(fl);
+
+        EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
+        quotas.put(Affinite.SuggestionDiversityQuota.NOT_SMALL, accessScore);
+        quotas.put(Affinite.SuggestionDiversityQuota.BAC, bacMultiplier);
+        quotas.put(Affinite.SuggestionDiversityQuota.MOYGEN, moyGenMultiplier);
+
+        return new Affinite(fl, score, quotas);
     }
+
 
     private double getMultiplier(String key, Double value) {
         if(Objects.equals(key,BONUS_MOY_GEN)) return MULTIPLIER_FOR_UNFITTED_NOTES + value;

@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.parcoursup.carte.algos.tools.Paire;
+import io.micrometer.observation.Observation;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -193,7 +194,6 @@ public record PsupData(
         ) {
     public static final String C_JA_COD = "C_JA_COD";
     public static final String G_TA_COD = "G_TA_COD";
-
     public PsupData() {
         this(
                 new HashSet<>(),
@@ -583,4 +583,6 @@ public record PsupData(
         }
         return Map.of();
     }
+
+
 }

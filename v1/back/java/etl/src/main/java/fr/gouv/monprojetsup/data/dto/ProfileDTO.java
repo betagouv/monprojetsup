@@ -30,10 +30,6 @@ public record ProfileDTO(
         String moygen,
         @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
         List<SuggestionDTO> choices,
-
-        //replaced by interests
-        @Schema(name = "deprecated", description = "deprecated")
-        @Deprecated Map<String,Integer> scores,
         @Schema(description = "statut de réflexion 0/1/2", example = "0")
         String statut
 
@@ -75,22 +71,6 @@ public record ProfileDTO(
         };
     }
 
-
-    public ProfileDTO cleanupDates() {
-        return new ProfileDTO(
-                niveau,
-                bac,
-                duree,
-                apprentissage,
-                geo_pref,
-                spe_classes,
-                interests,
-                moygen,
-                cleanupDates(choices),
-                scores,
-                statut
-                );
-    }
 
     private List<SuggestionDTO> cleanupDates(List<SuggestionDTO> choices) {
         return choices.stream().map(e -> e.anonymize()).toList();
