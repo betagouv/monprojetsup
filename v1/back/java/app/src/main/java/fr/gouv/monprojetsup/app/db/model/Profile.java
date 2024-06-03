@@ -112,7 +112,7 @@ public final class Profile {
 
     @Transient
     public int getProfileCompleteness() {
-        if(isOk(nom) == 0 || isOk(prenom) == 0 || isOk(niveau) == 0) return PROFILE_COMPLETENESS_LEVEL_PROFILE;
+        if( (isOk(nom) == 0 && isOk(prenom) == 0) || isOk(niveau) == 0) return PROFILE_COMPLETENESS_LEVEL_PROFILE;
         if(choices.isEmpty() && scores.isEmpty()) return PROFILE_COMPLETENESS_LEVEL_PREFS;
         return PROFILE_COMPLETENESS_LEVEL_OK;
     }
