@@ -258,7 +258,9 @@ public class UpdateFrontData {
 
             for (val line : lines) {
                 String flfrcod = line.getOrDefault(keyFlFr, "");
-                if (flfrcod.isBlank()) throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
+                if (flfrcod.isBlank()) {
+                    throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
+                }
 
                 String frcod = line.getOrDefault(keyTypeFor, "");
 
