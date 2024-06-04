@@ -290,7 +290,7 @@ public class AffinityEvaluator {
         }
 
         double moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
-        double bacMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 0.0));
+        double bacMultiplier = getMultiplier(BONUS_TYPE_BAC, scores.getOrDefault(Config.BONUS_TYPE_BAC, 0.0));
         double bigCapacityScore = AlgoSuggestions.getBigCapacityScore(fl);
         double smallCapacityScore = AlgoSuggestions.getSmallCapacityScore(fl);
 
@@ -462,12 +462,12 @@ public class AffinityEvaluator {
         final double result;
         switch (pf.duree().toLowerCase()) {
             case "court" -> {
-                result = (5 - duree);
+                result = duree <= 3 ? (5 - duree) : Config.NO_MATCH_SCORE;
                 if (result > 2 && expl != null)
                     expl.add(new Paire<>(result * weight, Explanation.getDurationExplanation(pf.duree())));
             }
             case "long" -> {
-                result = duree;
+                result = duree >= 4 ? duree : Config.NO_MATCH_SCORE;
                 if (result > 3 && expl != null)
                     expl.add(new Paire<>(result * weight, Explanation.getDurationExplanation(pf.duree())));
             }
