@@ -6059,6 +6059,10 @@ export class formationInMemoryRepository implements FormationRepository {
     return this.FORMATIONS.filter((formation) => formationIds.includes(formation.id)).map(this._mapperVersAperçu);
   }
 
+  public async récupérer(formationId: Formation["id"]): Promise<Formation | undefined> {
+    return this.FORMATIONS.find((formation) => formation.id === formationId);
+  }
+
   private _mapperVersAperçu = (formation: Formation) => {
     return {
       id: formation.id,

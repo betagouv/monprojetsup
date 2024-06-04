@@ -4,10 +4,10 @@ import { expect, type Page, test } from "@playwright/test";
 class TestHelper {
   public constructor(private _page: Page) {}
 
-  public readonly urlPageSuivante = "/inscription/scolarite";
+  public readonly urlPageSuivante = "/eleve/inscription/scolarite";
 
   public naviguerVersLaPage = async () => {
-    await this._page.goto("/inscription/projet");
+    await this._page.goto("/eleve/inscription/projet");
   };
 
   public soumettreLeFormulaire = async () => {

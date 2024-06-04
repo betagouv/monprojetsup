@@ -10,7 +10,7 @@ const Navigation = () => {
     },
     {
       titre: "Inscription",
-      href: "/inscription/projet",
+      href: "/eleve/inscription/projet",
     },
   ];
 

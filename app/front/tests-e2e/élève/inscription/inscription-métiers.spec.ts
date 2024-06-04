@@ -10,7 +10,7 @@ class TestHelper extends InscriptionTestHelper {
   public SECOND_MÉTIER = "gestionnaire de contrats d'assurance";
 
   public constructor(protected _page: Page) {
-    super(_page, "/inscription/metiers", "/inscription/etude");
+    super(_page, "/eleve/inscription/metiers", "/eleve/inscription/etude");
   }
 
   public champSituationMétiers = (optionLabel: string) => {

@@ -10,7 +10,7 @@ class TestHelper extends InscriptionTestHelper {
   public SECONDE_FORMATION = "BTS - Tourisme";
 
   public constructor(protected _page: Page) {
-    super(_page, "/inscription/formations", "/inscription/confirmation");
+    super(_page, "/eleve/inscription/formations", "/eleve/inscription/confirmation");
   }
 
   public champSituationFormations = (optionLabel: string) => {

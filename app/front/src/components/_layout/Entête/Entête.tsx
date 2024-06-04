@@ -35,7 +35,7 @@ const Entête = () => {
                     src={logoMPS}
                   />
                 </div>
-                {!router.location.pathname.includes("/inscription/") && (
+                {!router.location.pathname.includes("/eleve/inscription/") && (
                   <div className="fr-header__navbar">
                     <button
                       aria-controls="navigation-modal"
@@ -64,7 +64,7 @@ const Entête = () => {
           </div>
         </div>
       </div>
-      {!router.location.pathname.includes("/inscription/") && <Navigation />}
+      {!router.location.pathname.includes("/eleve/inscription/") && <Navigation />}
     </header>
   );
 };
