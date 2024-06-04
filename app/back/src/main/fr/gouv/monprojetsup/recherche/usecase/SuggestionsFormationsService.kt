@@ -36,12 +36,14 @@ class SuggestionsFormationsService(
                 idsDesPremieresFormationsTriesParAffinites,
             )
         return idsDesPremieresFormationsTriesParAffinites.mapNotNull { idFormation ->
-            formationsEtLeursMetiers.keys.firstOrNull { it.id == idFormation }?.let { formation ->
-                val metiers = formationsEtLeursMetiers[formation]!!
+            formationsEtLeursMetiers.firstNotNullOfOrNull {
+                if (it.key.id == idFormation) it else null
+            }?.let { paire ->
+                val formation = paire.key
                 val tripletsAffectations = tripletsAffectation[idFormation] ?: emptyList()
                 val nomMetiersTriesParAffinites =
                     TrieParProfilBuilder.getNomMetiersTriesParAffinites(
-                        metiers = metiers,
+                        metiers = paire.value,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     )
                 val nomCommunesTriesParAffinites =

@@ -1,6 +1,9 @@
 package fr.gouv.monprojetsup.recherche.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
@@ -142,10 +145,10 @@ class ProfilDTO(
     fun toProfil() =
         ProfilEleve(
             id = id,
-            classe = classe,
+            classe = ChoixNiveau.deserialiseApplication(classe),
             bac = bac,
-            dureeEtudesPrevue = dureeEtudesPrevue,
-            alternance = alternance,
+            dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
+            alternance = ChoixAlternance.deserialiseApplication(alternance),
             formationsChoisies = formations,
             villesPreferees = villes?.map { it.nom },
             specialites = specialites,

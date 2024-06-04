@@ -75,11 +75,40 @@ sealed class FicheFormation(
 }
 
 data class ExplicationsSuggestion(
-    val geographique: List<ExplicationGeographique>?,
-    val similaires: List<String>?,
-    val dureeEtudesPrevue: String?,
-    val alternance: String?,
-    val interets: String?,
+    val geographique: List<ExplicationGeographique>? = null,
+    val formationsSimilaires: List<String>? = null,
+    val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
+    val alternance: ChoixAlternance? = null,
+    val interets: List<String>? = null,
+    val specialitesChoisies: Map<String, Double>? = null,
+    val typeBaccalaureat: TypeBaccalaureat? = null,
+    val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
+    val tags: List<Tag>? = null,
+    val tagsCourts: List<String>? = null,
+)
+
+data class Tag(
+    val noeuds: List<String>?,
+    val poid: Double?,
+)
+
+data class AutoEvaluationMoyenne(
+    val moyenne: Double?,
+    val mediane: Centilles?,
+    val bacUtilise: String?,
+)
+
+data class TypeBaccalaureat(
+    val nomBaccalaureat: String?,
+    val pourcentage: Int?,
+)
+
+data class Centilles(
+    val rangEch25: Int?,
+    val rangEch50: Int?,
+    val rangEch75: Int?,
+    val rangEch10: Int?,
+    val rangEch90: Int?,
 )
 
 data class ExplicationGeographique(
