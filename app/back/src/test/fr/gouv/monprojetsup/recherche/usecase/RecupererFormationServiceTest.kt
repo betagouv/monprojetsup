@@ -1,7 +1,11 @@
 package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAdmission
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
@@ -19,6 +23,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 class RecupererFormationServiceTest {
@@ -223,10 +228,10 @@ class RecupererFormationServiceTest {
         val profil =
             ProfilEleve(
                 id = "adcf627c-36dd-4df5-897b-159443a6d49c",
-                classe = "terminale",
+                classe = ChoixNiveau.TERMINALE,
                 bac = "Générale",
-                dureeEtudesPrevue = "options_ouvertes",
-                alternance = "pas_interesse",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
+                alternance = ChoixAlternance.PAS_INTERESSE,
                 villesPreferees = listOf("Caen"),
                 specialites = listOf("1001", "1049"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
@@ -247,6 +252,8 @@ class RecupererFormationServiceTest {
                     ),
             ),
         )
+        val explications = mock(ExplicationsSuggestion::class.java)
+        given(suggestionHttpClient.recupererLesExplications(profilEleve = profil, "fl0001")).willReturn(explications)
 
         // When
         val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -320,7 +327,7 @@ class RecupererFormationServiceTest {
                     ),
                 communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
                 tauxAffinite = 0.7f,
-                explications = null,
+                explications = explications,
             ),
         )
     }

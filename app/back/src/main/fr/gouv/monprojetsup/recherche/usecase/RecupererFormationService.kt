@@ -39,6 +39,7 @@ class RecupererFormationService(
             )
         return if (profilEleve != null) {
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
+            val explications = suggestionHttpClient.recupererLesExplications(profilEleve, idFormation)
             val nomMetiersTriesParAffinites =
                 TrieParProfilBuilder.trierMetiersParAffinites(
                     metiers = formation.metiers,
@@ -62,7 +63,7 @@ class RecupererFormationService(
                 tauxAffinite = affinitesFormationEtMetier.formations.first { it.idFormation == formation.id }.tauxAffinite,
                 metiersTriesParAffinites = nomMetiersTriesParAffinites,
                 communesTrieesParAffinites = nomCommunesTriesParAffinites,
-                explications = null, // TODO appeler le endpoint explications
+                explications = explications,
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
