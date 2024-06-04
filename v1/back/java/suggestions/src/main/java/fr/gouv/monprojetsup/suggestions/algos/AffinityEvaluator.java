@@ -289,12 +289,14 @@ public class AffinityEvaluator {
                     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
-        val moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
-        val bacMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 0.0));
-        double accessScore = AlgoSuggestions.getCapacityScore(fl);
+        double moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
+        double bacMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 0.0));
+        double bigCapacityScore = AlgoSuggestions.getBigCapacityScore(fl);
+        double smallCapacityScore = AlgoSuggestions.getSmallCapacityScore(fl);
 
         EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
-        quotas.put(Affinite.SuggestionDiversityQuota.NOT_SMALL, accessScore);
+        quotas.put(Affinite.SuggestionDiversityQuota.NOT_SMALL, bigCapacityScore);
+        quotas.put(Affinite.SuggestionDiversityQuota.NOT_BIG, smallCapacityScore);
         quotas.put(Affinite.SuggestionDiversityQuota.BAC, bacMultiplier);
         quotas.put(Affinite.SuggestionDiversityQuota.MOYGEN, moyGenMultiplier);
 

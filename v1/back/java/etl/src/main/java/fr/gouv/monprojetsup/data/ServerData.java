@@ -80,6 +80,9 @@ public class ServerData {
     private static boolean dataLoaded = false;
     private static Map<String, Integer> nbFormations = new HashMap<>();
     private static Map<String, Integer> capacity = new HashMap<>();
+    public static int p25NbFormations;
+    public static int p25Capacity;
+    public static int p75Capacity;
 
 
     /**
@@ -138,10 +141,20 @@ public class ServerData {
             nbFormations.put(key, value.size());
             capacity.put(key, value.stream().mapToInt(f -> f.capacite).sum());
         });
+        p25NbFormations = p25(nbFormations.values());
+        p25Capacity = p25(capacity.values());
+        p75Capacity = p75(capacity.values());
 
         initTagSources();
 
         dataLoaded = true;
+    }
+
+    private static Integer p25(Collection<Integer> values) {
+        return values.stream().sorted().skip(values.size() / 4).findFirst().orElse(0);
+    }
+    private static Integer p75(Collection<Integer> values) {
+        return values.stream().sorted().skip(3 * values.size() / 4).findFirst().orElse(0);
     }
 
     private static void computeFilieresFront() {
