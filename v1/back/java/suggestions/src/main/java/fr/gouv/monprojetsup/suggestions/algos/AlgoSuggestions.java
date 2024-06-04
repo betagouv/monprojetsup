@@ -61,19 +61,21 @@ public class AlgoSuggestions {
         int nbFormations = ServerData.getNbFormations(fl);
         int capacity = ServerData.getCapacity(fl);
 
-        double capacityScore = (capacity >= p25Capacity) ? 1.0 : (double) capacity / p25Capacity;
-        double nbFormationsScore = (nbFormations >= p25NbFormations) ? 1.0 : (double) nbFormations / p25NbFormations;
+        double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
+        double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
         return capacityScore * nbFormationsScore;
 
     }
     public static double getSmallCapacityScore(String fl) {
+        return 1.0;
+        /*
 
-        int nbFormations = ServerData.getNbFormations(fl);
+        //int nbFormations = ServerData.getNbFormations(fl);
         int capacity = ServerData.getCapacity(fl);
 
-        double capacityScore = (capacity <= p75Capacity) ? 1.0 : (double) p75Capacity / capacity;
-        double nbFormationsScore = (nbFormations >= p25NbFormations) ? 1.0 : (double) nbFormations / p25NbFormations;
-        return capacityScore * nbFormationsScore;
+        double capacityScore = (capacity <= p90Capacity) ? 1.0 : (double) p90Capacity / capacity;
+        //double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
+        return capacityScore;// * nbFormationsScore;*/
 
     }
 
