@@ -2,6 +2,10 @@ import { type Ville } from "@/features/ville/domain/ville.interface";
 
 export type Élève = {
   id: string;
+  nom: string;
+  prénom: string;
+  nomUtilisateur: string;
+  email?: string;
   situation?: SituationÉlève;
   classe?: ClasseÉlève;
   bac?: string;

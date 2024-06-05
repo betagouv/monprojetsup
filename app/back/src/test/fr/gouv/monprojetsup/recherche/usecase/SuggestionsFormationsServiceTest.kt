@@ -5,7 +5,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
-import fr.gouv.monprojetsup.recherche.domain.entity.Profile
+import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
@@ -591,12 +591,12 @@ class SuggestionsFormationsServiceTest {
     @Test
     fun `suggererFormations - quand demander les 5 premieres formations, alors les retourner classés par ordre d'affinité du profil`() {
         // Given
-        val profile =
-            mock(Profile::class.java).apply {
-                given(this.preferencesGeographique).willReturn(listOf("Paris"))
+        val profilEleve =
+            mock(ProfilEleve::class.java).apply {
+                given(this.villesPreferees).willReturn(listOf("Paris"))
             }
 
-        given(suggestionHttpClient.recupererLesAffinitees(profile)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         val formationsEtLeursMetiers =
             mapOf(
@@ -682,7 +682,7 @@ class SuggestionsFormationsServiceTest {
         )
 
         // When
-        val result = suggestionsFormationsService.suggererFormations(profile, 0, 5)
+        val result = suggestionsFormationsService.suggererFormations(profilEleve, 0, 5)
 
         // Then
         assertThat(result).isEqualTo(
@@ -757,12 +757,12 @@ class SuggestionsFormationsServiceTest {
     @Test
     fun `suggererFormations - les villes doivent être ordonnées par affinités et enlever les doublons`() {
         // Given
-        val profile =
-            mock(Profile::class.java).apply {
-                given(this.preferencesGeographique).willReturn(listOf("Paris", "Caen"))
+        val profilEleve =
+            mock(ProfilEleve::class.java).apply {
+                given(this.villesPreferees).willReturn(listOf("Paris", "Caen"))
             }
 
-        given(suggestionHttpClient.recupererLesAffinitees(profile)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         val formationsEtLeursMetiers =
             mapOf(
@@ -852,7 +852,7 @@ class SuggestionsFormationsServiceTest {
         )
 
         // When
-        val result = suggestionsFormationsService.suggererFormations(profile, 0, 5)
+        val result = suggestionsFormationsService.suggererFormations(profilEleve, 0, 5)
 
         // Then
         assertThat(result[0].communesTrieesParAffinites).isEqualTo(listOf("Paris", "Marseille"))
@@ -865,9 +865,9 @@ class SuggestionsFormationsServiceTest {
     @Test
     fun `suggererFormations - quand l'API suggestion nous retourne des listes vides, alors on doit les retourner une liste vide`() {
         // Given
-        val profile =
-            mock(Profile::class.java).apply {
-                given(this.preferencesGeographique).willReturn(listOf("Paris"))
+        val profilEleve =
+            mock(ProfilEleve::class.java).apply {
+                given(this.formationsChoisies).willReturn(listOf("Paris"))
             }
 
         val affinitesFormationEtMetierVides =
@@ -875,12 +875,12 @@ class SuggestionsFormationsServiceTest {
                 metiersTriesParAffinites = emptyList(),
                 formations = emptyList(),
             )
-        given(suggestionHttpClient.recupererLesAffinitees(profile)).willReturn(affinitesFormationEtMetierVides)
+        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetierVides)
         given(formationRepository.recupererLesFormationsAvecLeursMetiers(emptyList())).willReturn(emptyMap())
         given(tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(emptyList())).willReturn(emptyMap())
 
         // When
-        val result = suggestionsFormationsService.suggererFormations(profile, 0, 5)
+        val result = suggestionsFormationsService.suggererFormations(profilEleve, 0, 5)
 
         // Then
         assertThat(result).isEqualTo(emptyList<FormationPourProfil>())
@@ -889,9 +889,9 @@ class SuggestionsFormationsServiceTest {
     @Test
     fun `suggererFormations - quand les indexs sont inversés, alors on doit throw une exception`() {
         // Given
-        val profile =
-            mock(Profile::class.java).apply {
-                given(this.preferencesGeographique).willReturn(listOf("Paris"))
+        val profilEleve =
+            mock(ProfilEleve::class.java).apply {
+                given(this.formationsChoisies).willReturn(listOf("Paris"))
             }
 
         val affinitesFormationEtMetier =
@@ -899,11 +899,11 @@ class SuggestionsFormationsServiceTest {
                 metiersTriesParAffinites = metiersTriesParAffinites,
                 formations = formations,
             )
-        given(suggestionHttpClient.recupererLesAffinitees(profile)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         // When & Then
         assertThatThrownBy {
-            suggestionsFormationsService.suggererFormations(profile, 5, 0)
+            suggestionsFormationsService.suggererFormations(profilEleve, 5, 0)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 }

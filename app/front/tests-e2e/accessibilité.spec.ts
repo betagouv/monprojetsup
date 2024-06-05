@@ -12,6 +12,7 @@ const pages = [
   "/inscription/formations",
   "/inscription/confirmation",
   "/eleve/tableau-de-bord",
+  "/eleve/profil",
 ];
 
 for (const testedPage of pages) {

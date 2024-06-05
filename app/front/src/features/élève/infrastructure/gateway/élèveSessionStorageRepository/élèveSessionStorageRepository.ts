@@ -25,8 +25,13 @@ export class élèveSessionStorageRepository implements ÉlèveRepository {
   }
 
   public async créer(): Promise<Élève> {
-    const id = Date.now().toString();
-    const élève = { id };
+    const élève = {
+      id: Date.now().toString(),
+      nom: "Nom",
+      prénom: "Prénom",
+      nomUtilisateur: "nomUtilisateur",
+      email: "example@example.com",
+    };
 
     sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(élève));
     return élève;

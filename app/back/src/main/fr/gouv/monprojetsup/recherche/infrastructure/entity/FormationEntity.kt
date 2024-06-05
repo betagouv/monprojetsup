@@ -1,13 +1,14 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.entity
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
-import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.Type
 
 @Entity
 @Table(name = "formation")
@@ -19,26 +20,6 @@ class FormationEntity {
     @Column(name = "label", nullable = false)
     lateinit var label: String
 
-    @Column(name = "descriptif_general", nullable = true)
-    var descriptifGeneral: String? = null
-
-    @Column(name = "descriptif_specialites", nullable = true)
-    var descriptifSpecialites: String? = null
-
-    @Column(name = "descriptif_attendu", nullable = true)
-    var descriptifAttendu: String? = null
-
-    @ElementCollection
-    @Column(name = "mots_clefs", nullable = true)
-    var motsClefs: List<String>? = null
-
-    @ElementCollection
-    @Column(name = "urls", nullable = false)
-    var urls: List<String>? = null
-
-    @Column(name = "formation_parente", nullable = false)
-    lateinit var formationParente: String
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
     lateinit var metiers: List<FormationMetierEntity>
 
@@ -47,4 +28,42 @@ class FormationEntity {
             id = id,
             nom = label,
         )
+}
+
+@Entity
+@Table(name = "formation")
+class FormationDetailleeEntity {
+    @Id
+    @Column(name = "id", nullable = false)
+    lateinit var id: String
+
+    @Column(name = "label", nullable = false)
+    lateinit var label: String
+
+    @Column(name = "descriptif_general", nullable = true)
+    var descriptifGeneral: String? = null
+
+    @Column(name = "descriptif_conseils", nullable = true)
+    var descriptifConseils: String? = null
+
+    @Column(name = "descriptif_diplome", nullable = true)
+    var descriptifDiplome: String? = null
+
+    @Column(name = "descriptif_attendu", nullable = true)
+    var descriptifAttendus: String? = null
+
+    @Type(ListArrayType::class)
+    @Column(name = "formations_associees", nullable = true, columnDefinition = "varchar[]")
+    var formationsAssociees: List<String>? = null
+
+    @Type(ListArrayType::class)
+    @Column(name = "points_attendus", nullable = true, columnDefinition = "varchar[]")
+    var pointsAttendus: List<String>? = null
+
+    @Type(ListArrayType::class)
+    @Column(name = "urls", nullable = false, columnDefinition = "varchar[]")
+    var urls: List<String>? = null
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
+    lateinit var metiers: List<FormationMetierEntity>
 }

@@ -7,6 +7,7 @@ export type FiltresGroupésParCatégorieProps = {
       nom: string;
     }>;
   }>;
+  niveauDeTitre: "h2" | "h3";
   filtreIdsSélectionnésParDéfaut?: string[];
   auChangementFiltresSélectionnés: (filtreIdsSélectionnés: string[]) => void;
 };

@@ -7,7 +7,7 @@ import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèv
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
 
-const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: IntêretsFormProps) => {
+const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntêretsFormProps) => {
   const { data: catégoriesCentresIntêrets } = useSuspenseQuery(catégoriesCentresIntêretsQueryOptions);
 
   const { setValue, mettreÀJourÉlève, getValues, erreurs } = useÉlèveForm({
@@ -45,6 +45,7 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Intêr
           }
           catégories={filtresGroupésParCatégories}
           filtreIdsSélectionnésParDéfaut={getValues("centresIntêrets")}
+          niveauDeTitre={niveauDeTitreCatégories}
         />
         <div
           aria-live="assertive"
