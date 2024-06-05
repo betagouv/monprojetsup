@@ -52,7 +52,7 @@ const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargem
 
   return {
     ariaLabelFormaté: ariaLabelFormaté(),
-    classesCSS: `${classEnFonctionDeLaTaille()} ${classEnFonctionDeLIcône()} ${classEnFonctionDeEstUnTéléchargement()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeEstUnTag()}`,
+    classesCSS: `${classEnFonctionDeLaTaille()} ${classEnFonctionDeLIcône()} ${classEnFonctionDeEstUnTéléchargement()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeEstUnTag()} has-[.fr-btn]:after:hidden`,
     target: estLienExterne ? "_blank" : "_self",
   };
 };

@@ -43,10 +43,10 @@ const Entête = () => {
                       className="fr-btn--menu fr-btn"
                       data-fr-opened="false"
                       id="navigation-burger-button"
-                      title={i18n.NAVIGATION.MAIN_NAVIGATION}
+                      title={i18n.NAVIGATION.ACCUEIL}
                       type="button"
                     >
-                      {i18n.NAVIGATION.MAIN_NAVIGATION}
+                      {i18n.NAVIGATION.ACCUEIL}
                     </button>
                   </div>
                 )}

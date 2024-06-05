@@ -9,4 +9,5 @@ export type useLienProps = {
   };
   estUnTéléchargement?: boolean;
   estUnTag?: boolean;
+  estUnBouton?: boolean;
 };
