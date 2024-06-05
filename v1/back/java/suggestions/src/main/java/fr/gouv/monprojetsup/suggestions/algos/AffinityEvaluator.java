@@ -220,7 +220,7 @@ public class AffinityEvaluator {
             Map<String, Double> matches
             ) {
 
-        if(rejected.contains(fl)) return Affinite.getNoMatch(fl);
+         if(rejected.contains(fl)) return Affinite.getNoMatch(fl);
 
         final int bacIndex = pf.bacIndex();
 
