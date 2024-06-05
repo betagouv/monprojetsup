@@ -95,7 +95,6 @@ public class ServerDataAnalysis {
 
         exportLiensDomainesMetiers();
 
-
         exportAttendus();
 
         Serialisation.toJsonFile("thematiques.json", ServerData.onisepData.thematiques().thematiques(), true);

@@ -42,6 +42,8 @@ public class AnalyzeData {
 
         outputRelatedToHealth();
 
+        outputGraph();
+
         outputSemanticGraph();
 
         outputFormationsSansMetiers();
@@ -50,7 +52,7 @@ public class AnalyzeData {
 
         outputFormationsSansThemes();
 
-        ServerDataAnalysis.outputResumesDescriptifsFormationsEtMetiersExtraits();
+
     }
 
     public record MlData(String key, String label, List<Data> texts) {
@@ -240,6 +242,9 @@ public class AnalyzeData {
 
     }
 
+    private static void outputGraph() throws IOException {
+        Serialisation.toJsonFile("graph.json", edgesKeys.edges(), true);
+    }
     private static void outputSemanticGraph() throws IOException {
         Edges edgesLabels = new Edges();
         edgesLabels.createLabelledGraphFrom(edgesKeys, statistiques.labels);
