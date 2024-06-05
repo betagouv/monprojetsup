@@ -261,7 +261,77 @@ public class ConnecteurBackendSQL {
 
         recupererEntreeCarte(data);
 
+        recupererVoeuxParCandidat(data);
+
         return data;
+    }
+
+    public Map<Integer, Integer> recuperationTypesBacs() throws SQLException {
+
+        Map<Integer, Integer>  typesBacCandiats = new HashMap<>();
+        try (Statement stmt = this.conn.createStatement()) {
+
+            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
+            LOGGER.info("Récupération des types de bac par candidat");
+            stmt.setFetchSize(1_000_000);
+            String sql = ""
+                    + "SELECT can.g_cn_cod, ic.i_tc_cod from g_can_arch can, i_cla_arch ic " +
+                    "where  can.I_CL_COD_BAC=ic.I_CL_COD and ic.i_tc_cod is not null";
+            LOGGER.info(sql);
+
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                while (result.next()) {
+                    int gCnCod = result.getInt(1);
+                    int typeBac = result.getInt(2);
+                    typesBacCandiats.put(gCnCod,typeBac);
+                }
+            }
+
+        }
+        return typesBacCandiats;
+    }
+
+    private void recupererVoeuxParCandidat(PsupData data) throws SQLException {
+
+
+        Map<Integer, Set<Integer>> voeuxParCandidat = new HashMap<>();
+
+        try (Statement stmt = this.conn.createStatement()) {
+
+            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
+            LOGGER.info("Récupération des filieres par candidat");
+            stmt.setFetchSize(1_000_000);
+            String sql = ""
+                    + "SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod"
+                    //id du groupe de classement
+                    + " FROM A_VOE_ARCH voeu, "
+                    + "I_INS_ARCH ins, "
+                    + "A_REC_GRP_ARCH  arecgrp, "
+                    + "SP_G_TRI_AFF_ARCH  aff"
+                    + WHERE
+                    + " voeu.g_ta_cod=aff.g_ta_cod"
+                    + " AND voeu.g_ta_cod = arecgrp.g_ta_cod"
+                    + " AND arecgrp.g_ti_cod = ins.g_ti_cod"
+                    + " AND voeu.g_cn_cod = ins.g_cn_cod"
+                    + " AND voeu.a_sv_cod > -90" //élimine les voeux non sélectionnés
+                    + " AND NVL(ins.i_is_val,0) = 1" //élimine les voeux non validés
+                    ;
+
+            LOGGER.info(sql);
+
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                while (result.next()) {
+                    int gCnCod = result.getInt(1);
+                    int gTaCod = result.getInt(2);
+                    voeuxParCandidat.computeIfAbsent(gTaCod, z -> new HashSet<>()).add(gCnCod);
+                }
+            }
+
+        }
+
+        data.voeuxParCandidat().clear();
+        data.voeuxParCandidat().addAll(voeuxParCandidat.values());
+
     }
 
     private void recupererLas(PsupData data) throws SQLException {

@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.update.psup;
 
+import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.parcoursup.carte.algos.tools.Paire;
-import io.micrometer.observation.Observation;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -190,10 +190,13 @@ public record PsupData(
         /* correlations between wishes, by bac type and by filieres */
         CorrelationsParBac correlations,
 
-        Set<Integer> las
+        Set<Integer> las,
+
+        List<Set<Integer>> voeuxParCandidat
         ) {
     public static final String C_JA_COD = "C_JA_COD";
     public static final String G_TA_COD = "G_TA_COD";
+
     public PsupData() {
         this(
                 new HashSet<>(),
@@ -202,7 +205,8 @@ public record PsupData(
                 new Formations(),
                 new HashMap<>(),
                 new CorrelationsParBac(),
-                new HashSet<>()
+                new HashSet<>(),
+                new ArrayList<>()
         );
     }
 
@@ -324,7 +328,7 @@ public record PsupData(
     /**
      * Maps a fl** to an fl** or a fr**
      *
-     * @return
+     * @return the correspondance
      */
     public Map<String, String> getCorrespondances() {
         Map<Integer, Integer> flToFl = new HashMap<>();
@@ -470,8 +474,8 @@ public record PsupData(
         Map<String, String> corr = getCorrespondances();
         result.addAll(
                 filActives.stream()
-                        .filter(flcod -> formations.filieres.containsKey(flcod))
-                        .map(flcod -> gFlCodToFrontId(flcod))
+                        .filter(formations.filieres::containsKey)
+                        .map(Constants::gFlCodToFrontId)
                         .filter(key -> !corr.containsKey(key) || corr.get(key).equals(key))
                         .collect(Collectors.toSet())
         );
@@ -479,13 +483,6 @@ public record PsupData(
         return result;
     }
 
-
-    public List<Map<String, String>> getJuryAdmission() {
-        if(!diversPsup().containsKey("c_jur_adm")) {
-            throw new RuntimeException("Missing data for jury admission");
-        }
-        return  diversPsup().get("c_jur_adm");
-    }
 
     public Map<String, GrilleAnalyse> getGrillesAnalyseCandidatures() {
         //maj de sintitulés
