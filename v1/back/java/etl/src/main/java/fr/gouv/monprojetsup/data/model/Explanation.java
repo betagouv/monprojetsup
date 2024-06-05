@@ -30,9 +30,6 @@ record ExplanationTag(List<Path> pathes) {
 
 }
 
-record ExplanationSearch(String word) {
-
-}
 
 record ExplanationTagShort(List<String> ns) {
 
@@ -98,21 +95,19 @@ record ExplanationSimilarity(String fl, double p) {}
 
 record ExplanationTypeBac (int percentage, String bac) {}
 
-record ExplanationBac (double moy, Middle50 middle50, String bacUtilise) {}
 record ExplanationNotes(double moy, Middle50 middle50, String bacUtilise) {}
 
 record ExplanationDebug (String expl) {}
 
-record ExplanationSpecialites (Map<String, Double> stats) {}
+record ExplanationSpecialite (String spe, int pct) {}
 
-record ExplanationInteretTags(List<String> tags) {}
+record ExplanationSpecialites (List<ExplanationSpecialite> stats) {}
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Explanation {
-/* Centralizes all explanations given to candidate.
-* Should be externalized to a config file someday*/
+/* Centralizes all explanations given to candidate. */
 
     @Nullable List<ExplanationGeo> geo;
     @Nullable ExplanationApprentissage app;
@@ -121,18 +116,21 @@ public class Explanation {
     @Nullable ExplanationDuration dur;
     @Nullable ExplanationSimilarity simi;
     @Nullable ExplanationTypeBac tbac;
-    @Nullable ExplanationBac bac;
     @Nullable ExplanationNotes moygen;
     @Nullable ExplanationDebug debug;
     @Nullable ExplanationSpecialites spec;
-    @Nullable ExplanationInteretTags interets;
-    @Nullable ExplanationSearch search;
 
     public static @NotNull List<Explanation> merge(@Nullable List<Explanation> explanations) {
         if(explanations == null) return Collections.emptyList();
         List<Explanation> result = new ArrayList<>();
         ExplanationDuration dur = null;
-        Set<String> interets = new HashSet<>();
+
+        ExplanationNotes moygen = null;
+        boolean seenMoyGen = false;
+
+        ExplanationTypeBac tbac = null;
+        boolean seenTypeBac = false;
+
         Set<Path> pathes = new HashSet<>();
         Set<String> nodes = new HashSet<>();
         for (Explanation e : explanations) {
@@ -140,22 +138,45 @@ public class Explanation {
                 continue;
             }
 
-            if (e.geo != null || e.simi != null || e.debug != null) {
+            if (e.geo != null || e.simi != null || e.debug != null || e.spec != null) {
                 result.add(e);
             }
             if (e.dur != null && dur == null) {
                 result.add(e);
                 dur = e.dur;
-            } else if (e.interets != null) {
-                interets.addAll(e.interets.tags());
-            } else if(e.tag != null) {
+            }
+            if (e.moygen != null) {
+                if(seenMoyGen) {
+                    moygen = null;
+                } else {
+                    moygen = e.moygen;
+                    seenMoyGen = true;
+                }
+            }
+            if (e.tbac != null) {
+                if(seenTypeBac) {
+                    tbac = null;
+                } else {
+                    tbac = e.tbac;
+                    seenTypeBac = true;
+                }
+            }
+            if(e.tag != null) {
                 pathes.addAll(e.tag.pathes());
-            } else if(e.tags != null) {
+            }
+            if(e.tags != null) {
                 nodes.addAll(e.tags.ns());
             }
         }
-        if(!interets.isEmpty()) {
-            result.add(getChosenTagsExplanation(interets.stream().toList()));
+        if(moygen != null) {
+            Explanation e = new Explanation();
+            e.moygen = moygen;
+            result.add(e);
+        }
+        if(tbac != null) {
+            Explanation e = new Explanation();
+            e.tbac = tbac;
+            result.add(e);
         }
         if(!pathes.isEmpty()) {
             result.add(getTagExplanation(pathes));
@@ -236,13 +257,7 @@ public class Explanation {
 
     public static @NotNull Explanation getSpecialitesExplanation(Map<String, Double> stats) {
         Explanation e = new Explanation();
-        e.spec = new ExplanationSpecialites(stats);
-        return e;
-    }
-
-    public static @NotNull Explanation getChosenTagsExplanation(List<String> tags) {
-        Explanation e = new Explanation();
-        e.interets = new ExplanationInteretTags(tags);
+        e.spec = new ExplanationSpecialites(stats.entrySet().stream().map(ee -> new ExplanationSpecialite(ee.getKey(), (int) (ee.getValue() * 100))).toList());
         return e;
     }
 
@@ -264,10 +279,8 @@ public class Explanation {
         if(dur != null) sb.append("Durée: ").append(dur.option()).append("\n");
         if(simi != null) sb.append("Similarité: ").append(simi.fl()).append("\n");
         if(tbac != null) sb.append("Type de bac: ").append(tbac).append("\n");
-        if(bac != null) sb.append("Bac: ").append(bac).append("\n");
         if(moygen != null) sb.append("Moyenne générale: ").append(moygen).append("\n");
         if(spec != null) sb.append("Spécialités: ").append(spec).append("\n");
-        if(interets != null) sb.append("Intérêts: ").append(interets).append("\n");
         if(debug != null) sb.append(debug.expl()).append("\n");
         return sb.toString();
     }
@@ -281,11 +294,9 @@ public class Explanation {
         if(dur != null) sb.append("dur=").append(dur).append("\n");
         if(simi != null) sb.append("simi=").append(simi).append("\n");
         if(tbac != null) sb.append("tbac=").append(tbac).append("\n");
-        if(bac != null) sb.append("bac=").append(bac).append("\n");
         if(moygen != null) sb.append("moygen=").append(moygen).append("\n");
         if(debug != null && !debug.expl().startsWith("Pas de")) sb.append(debug.expl()).append("\n");
         if(spec != null) sb.append("spec=").append(spec).append("\n");
-        if(interets != null) sb.append("interets=").append(interets).append("\n");
         return sb.toString();
     }
 
