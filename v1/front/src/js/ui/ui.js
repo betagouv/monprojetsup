@@ -1152,7 +1152,7 @@ function displayExplanations(explications, detailed) {
     addExplanation(
       `Cette formation est similaire à: <em>&quot;${simis.join(
         "&quot;,&quot;"
-      )}</em>.</p>`,
+      )}</em> qui fait partie de vos favoris.</p>`,
       "fr-icon-arrow-right-up-line"
     );
   }
@@ -1260,33 +1260,35 @@ function addExplanation2(expl) {
     msgs.push(".");
     msgs.push("</span>");
     addExplanation("En lien avec tes choix " + msgs.join(""));
-  } else if (expl.bac) {
+  } else if (expl.moygen) {
     addExplanation(
       "Tu as auto-évalué ta " +
         " moyenne générale à <b>" +
-        +expl.bac.moy +
+        +expl.moygen.moy +
         "</b>. " +
         "Parmi les lycéennes et lycéens " +
-        (expl.bac.bacUtilise == ""
+        (expl.moygen.bacUtilise == ""
           ? ""
-          : "de série '" + expl.bac.bacUtilise + "' ") +
+          : "de série '" + expl.moygen.bacUtilise + "' ") +
         "admis dans ce type de formation en 2023, la moitié avait une moyenne au bac dans l'intervalle <b>" +
-        getHTMLMiddle50(expl.bac) +
+        getHTMLMiddle50(expl.moygen) +
         "</b>."
     );
   } else if (expl.tbac) {
-    addExplanation("Idéal si tu as un bac série '" + expl.tbac.bac + "'.</p>");
+    addExplanation(
+      "<p>Idéal si tu as un bac série '" + expl.tbac.bac + "'.</p>"
+    );
   } else if (expl.perso) {
     return; // "<p>Tu as toi-même ajouté cette formation à ta sélection.</p>";
   } else if (expl.spec) {
     const stats = expl.spec.stats;
     let result = "";
-    for (const [spe, pourcentage] of Object.entries(expl.spec.stats)) {
+    for (const stat of expl.spec.stats) {
       result +=
         "<p>La spécialité '" +
-        spe +
+        stat.spe +
         "' a été choisie par " +
-        Math.round(100 * pourcentage) +
+        stat.pct +
         "% des candidats admis dans ce type de formation en 2023.</p>";
     }
     addExplanation(result);

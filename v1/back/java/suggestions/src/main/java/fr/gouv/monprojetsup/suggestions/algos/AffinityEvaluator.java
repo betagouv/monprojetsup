@@ -189,7 +189,6 @@ public class AffinityEvaluator {
                     ));
                 }
             });
-            expl2.addAll(sortedExpl);
             sortedExpl = expl2;
         }
         return Pair.of(sortedExpl, totalScoreforFiliere.affinite());
@@ -499,7 +498,7 @@ public class AffinityEvaluator {
             if (simScore > 0) {
                 double simi = 1.0 * simScore / PsupStatistiques.SIM_FIL_MAX_WEIGHT;
                 bonus += simi;
-                if (expl != null) {
+                if (expl != null && !fl.equals(approved)) {
                     int percentage = Math.max(1, (int) simi * 100);
                     expl.add(new Paire<>(simi * weight, Explanation.getSimilarityExplanation(approved, percentage)));
                 }
@@ -544,10 +543,8 @@ public class AffinityEvaluator {
             if(cfg.isVerboseMode()) {
                 String msg = getTagSubScoreExplanation(score, subscores);
                 expl.add(new Paire<>(score * weight, Explanation.getDebugExplanation(msg)));
-                expl.add(new Paire<>(score * weight, Explanation.getTagExplanation(pathes)));
-            } else {
-                expl.add(new Paire<>(score * weight, Explanation.getTagExplanationShort(pathes)));
             }
+            expl.add(new Paire<>(score * weight, Explanation.getTagExplanationShort(pathes)));
         }
         return score;
     }
@@ -604,14 +601,13 @@ public class AffinityEvaluator {
                             Set<Path> pathes = matches.getOrDefault(s, Collections.emptySet());
                             List<Explanation> explanations;
                             if(includeExplanations) {
+                                explanations = new ArrayList<>();
                                 if (cfg.isVerboseMode()) {
-                                    explanations = new ArrayList<>();
-                                    explanations.add(Explanation.getTagExplanation(pathes));
+                                    //explanations.add(Explanation.getTagExplanation(pathes));
                                     double score = scores.getOrDefault(s, 0.0);
                                     explanations.add(Explanation.getDebugExplanation("Score : " + score + BR));
-                                } else {
-                                    explanations = List.of(Explanation.getTagExplanationShort(pathes));
                                 }
+                                explanations.add(Explanation.getTagExplanationShort(pathes));
                             } else {
                                 explanations = null;
                             }
@@ -699,18 +695,18 @@ public class AffinityEvaluator {
 
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
-        if(key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
+        if (key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
             candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
-        } else  {
+        } else {
             candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
-            if(isLas(key)) {
+            if (isLas(key)) {
                 String key2 = lasCorrespondance.lasToGeneric().get(key);
-                if(key2 != null) {
+                if (key2 != null) {
                     candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
                     candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
                 }
             }
-            if(reverseFlGroups.containsKey(key)) {
+            if (reverseFlGroups.containsKey(key)) {
                 candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
             }
         }
@@ -718,23 +714,25 @@ public class AffinityEvaluator {
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;
-        if(Helpers.isFiliere(key)) {
+        if (Helpers.isFiliere(key)) {
             Set<String> keys = ServerData.getFilieresOfGroup(key);
-            explanations =
-                    keys.stream()
-                            .map(this::getExplanations)
-                            .sorted(Comparator.comparingDouble(p -> -p.getRight()))
-                            .map(Pair::getLeft)
-                            .findFirst()
-                            .orElse(List.of());
+            explanations = keys.stream()
+                    .map(this::getExplanations)
+                    .sorted(Comparator.comparingDouble(p -> -p.getRight()))
+                    .map(Pair::getLeft)
+                    .findFirst()
+                    .orElse(List.of());
+            if (keys.size() >= 2) {
+                explanations = Explanation.merge(explanations);
+            }
         } else {
             restrictPathesToTarget(key);
             explanations =
                     getCloseTagsSuggestionsOrderedByIncreasingDistance(
-                                    MAX_LENGTH_FOR_SUGGESTIONS,
-                                    true,
+                            MAX_LENGTH_FOR_SUGGESTIONS,
+                            true,
                             cfg.maxNbSuggestions()
-                            )
+                    )
                             .stream()
                             .filter(e -> e.expl() != null)
                             .flatMap(e -> e.expl().stream())
@@ -743,9 +741,8 @@ public class AffinityEvaluator {
         }
         return new GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples(
                 key,
-                Explanation.merge(explanations),
+                explanations,
                 examples
         );
-
     }
 }
