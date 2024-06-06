@@ -28,7 +28,7 @@ class SuggestionApiHttpClient(
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesAffinitees(profilEleve: ProfilEleve): AffinitesPourProfil {
-        val url = "$baseUrl/affinites"
+        val url = "$baseUrl/suggestions"
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val specialites = profilEleve.specialites?.let { specialitesRepository.recupererLesSpecialites(it).map { it.label } }
         val jsonRequete =
