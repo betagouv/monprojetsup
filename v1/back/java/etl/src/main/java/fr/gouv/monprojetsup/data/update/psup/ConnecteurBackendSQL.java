@@ -68,14 +68,11 @@ record DescriptifFormation(
 
 public class ConnecteurBackendSQL {
 
-    public static final String LYCEENS_ADMIS = " admis ";
     public static final String LYCEENS_ADMIS_FILIERE = " admis_filiere ";
     public static final String LYCEENS_CANDIDATS_FILIERE = " candidats_filieres ";
     public static final String LYCEENS_ADMIS_FORMATION = " admis_formations ";
     private static final Logger LOGGER = Logger.getLogger(ConnecteurBackendSQL.class.getSimpleName());
-    private static final String FORMATIONS_TABLE = " SP_G_TRI_AFF ";
     private static final String FROM = " FROM ";
-    private static final String AND = " AND ";
 
     @NotNull
     private final Connection conn;
@@ -304,10 +301,10 @@ public class ConnecteurBackendSQL {
             String sql = ""
                     + "SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod"
                     //id du groupe de classement
-                    + " FROM A_VOE_ARCH voeu, "
-                    + "I_INS_ARCH ins, "
-                    + "A_REC_GRP_ARCH  arecgrp, "
-                    + "SP_G_TRI_AFF_ARCH  aff"
+                    + " FROM A_VOE voeu, "
+                    + "I_INS ins, "
+                    + "A_REC_GRP  arecgrp, "
+                    + "SP_G_TRI_AFF  aff"
                     + WHERE
                     + " voeu.g_ta_cod=aff.g_ta_cod"
                     + " AND voeu.g_ta_cod = arecgrp.g_ta_cod"
@@ -380,22 +377,23 @@ public class ConnecteurBackendSQL {
                         "g_for_tau_reu_comments", "select * from user_col_comments where table_name like '%G_FOR_TAU_REU%' and comments is not null",
                         "a_rec_grp", "select c_gp_cod,g_ti_cod,g_ta_cod,c_ja_cod,a_rg_pla,a_rg_nbr_sou from a_rec_grp",
                         "g_fil_att_con", "select g_fl_cod,g_fl_lib,g_fl_des_att, g_fl_sig_mot_rec,g_fl_con_lyc_prem,g_fl_con_lyc_term, g_fl_typ_con_lyc from g_fil",
-                        "c_jur_adm", "select * from c_jur_adm")
+                        "descriptions_formations", "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from descriptions_formations"
+                )
         );
         data.diversPsup().putAll(o);
+        recupererDescriptions(data);
     }
 
 
-    public static DescriptifsFormations recupererDescriptions(Connection connection) throws Exception {
+    public void recupererDescriptions(PsupData data) throws SQLException {
 
-        DescriptifsFormations descriptifs = new DescriptifsFormations();
-        try (Statement stmt = connection.createStatement()) {
+        try (Statement stmt = this.conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
             String sql = "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from descriptions_formations";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    descriptifs.descriptions().add(new DescriptifFormation(
+                    data.descriptifsFormations().descriptions().add(new DescriptifFormation(
                             rs.getInt(1),
                             rs.getInt(2),
                             rs.getInt(3),
@@ -407,7 +405,6 @@ public class ConnecteurBackendSQL {
                 }
             }
         }
-        return descriptifs;
     }
 
     private void recupererFormations(PsupData data) throws Exception {
@@ -439,8 +436,8 @@ public class ConnecteurBackendSQL {
                 + ConnecteurSQL.FIL_TYPE_TABLE + " fil,"
                 + ConnecteurSQL.FOR_TYPE_TABLE
                 + " fr "
-                + WHERE + " fil.frCodPsup=fr.frCodPsup "
-                + "ORDER BY fr.frCodPsup,G_FL_COD";
+                + WHERE + " fil.g_fr_cod=fr.g_fr_cod "
+                + "ORDER BY fr.g_fr_cod,G_FL_COD";
         try (
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(sql)) {
@@ -564,16 +561,16 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod,frCodPsup,g_fl_lib, frLibPsup,g_fr_sig from filieres2";
+            String sql = "select g_fl_cod,g_fr_cod,g_fl_lib, g_fr_lib,g_fr_sig from filieres2";
             LOGGER.info(sql);
 
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     data.addDuree(
                             rs.getInt("g_fl_cod"),
-                            rs.getInt("frCodPsup"),
+                            rs.getInt("g_fr_cod"),
                             rs.getString("g_fl_lib"),
-                            rs.getString("frLibPsup"),
+                            rs.getString("g_fr_lib"),
                             rs.getString("g_fr_sig")
                     );
                 }
@@ -766,7 +763,7 @@ public class ConnecteurBackendSQL {
             String sql = "select i_cs_ann," +
                     "i_mt_cod, " +
                     "i_cl_cod, " +
-                    "nb from stats_mat_bac " +
+                        "nb from stats_mat_bac " +
                     "order by i_mt_cod ";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {

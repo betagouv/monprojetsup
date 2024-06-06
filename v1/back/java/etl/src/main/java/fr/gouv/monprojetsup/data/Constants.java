@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data;
 
 public class Constants {
-    public static final String TYPE_FORMATION_PREFIX = "fr";//like frCodPsup
+    public static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
     public static final String FILIERE_PREFIX = "fl";//like g_fl_cod
     public static final String FORMATION_PREFIX = "ta";//like g_ta_cod
     public static final String MET_PREFIX = "MET_";
