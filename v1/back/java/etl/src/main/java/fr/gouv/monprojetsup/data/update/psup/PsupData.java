@@ -133,8 +133,10 @@ record DureesEtudes(
             duree = 3;
         } else if (gFrCod == 69) {//Brevet de maitrise compagnons du tour de France
             duree = 2;
+        } else if (gFrCod == 49) {//Certificat ede spécialisation
+            duree = 1;
         } else {
-            throw new RuntimeException("Unknown formation duree for frCodPsup=" + gFrCod);
+            throw new RuntimeException("Unknown formation duree for g_fr_cod=" + gFrCod);
         }
         //DU FP DEUST
         durees.put(fl, duree);
@@ -192,7 +194,9 @@ public record PsupData(
 
         Set<Integer> las,
 
-        List<Set<Integer>> voeuxParCandidat
+        List<Set<Integer>> voeuxParCandidat,
+
+        DescriptifsFormations descriptifsFormations
         ) {
     public static final String C_JA_COD = "C_JA_COD";
     public static final String G_TA_COD = "G_TA_COD";
@@ -206,7 +210,8 @@ public record PsupData(
                 new HashMap<>(),
                 new CorrelationsParBac(),
                 new HashSet<>(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                new DescriptifsFormations()
         );
     }
 

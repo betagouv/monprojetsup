@@ -35,7 +35,6 @@ public class GetStatistiquesFromPsupDB {
             LOGGER.info("Export du full data set");
             toZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), data.getLeft(), true);
 
-
             LOGGER.info("Export du middle data set");
             data.getLeft().minimize();
             toZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), data.getLeft(), true);

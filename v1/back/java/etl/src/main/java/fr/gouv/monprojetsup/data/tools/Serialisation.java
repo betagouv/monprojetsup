@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.update.psup.OrientationConfig;
 import fr.parcoursup.carte.exceptions.AccesDonneesException;
 import jakarta.xml.bind.JAXBContext;
@@ -28,27 +29,38 @@ public class Serialisation {
 
     private static final Logger LOGGER = Logger.getLogger(Serialisation.class.getSimpleName());
 
-    public static <T> T fromJsonFile(String path, Class<T> type) throws IOException {
+    public static <T> T fromJsonFile(Path path, Class<T> type) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(
                 new BufferedInputStream(
-                        Files.newInputStream(Path.of(path))
+                        Files.newInputStream(path)
+                ), StandardCharsets.UTF_8)
+        ) {
+            return new Gson().fromJson(reader, type);
+        }
+    }
+    public static <T> T fromJsonFile(String path, Class<T> type) throws IOException {
+        return fromJsonFile(Path.of(path), type);
+    }
+    public static <T> T fromJsonFile(Path path, Type type) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(
+                new BufferedInputStream(
+                        Files.newInputStream(path)
                 ), StandardCharsets.UTF_8)
         ) {
             return new Gson().fromJson(reader, type);
         }
     }
     public static <T> T fromJsonFile(String path, Type type) throws IOException {
-        try (InputStreamReader reader = new InputStreamReader(
-                new BufferedInputStream(
-                        Files.newInputStream(Path.of(path))
-                ), StandardCharsets.UTF_8)
-        ) {
-            return new Gson().fromJson(reader, type);
-        }
+        return fromJsonFile(Path.of(path), type);
     }
-    public static <T> T fromZippedJson(String path, Class<T> type) throws IOException {
+
+        public static <T> T fromZippedJson(String path, Class<T> type) throws IOException {
+        return fromZippedJson(Path.of(path), type);
+    }
+
+    public static <T> T fromZippedJson(Path path, Class<T> type) throws IOException {
         try (BufferedInputStream s = new BufferedInputStream(
-                Files.newInputStream(Path.of(path)))
+                Files.newInputStream(path))
         ) {
             ZipInputStream zip = new ZipInputStream(s);
             ZipEntry entry = zip.getNextEntry();
@@ -203,4 +215,6 @@ public class Serialisation {
             return (T) m.unmarshal(reader);
         }
     }
+
+
 }
