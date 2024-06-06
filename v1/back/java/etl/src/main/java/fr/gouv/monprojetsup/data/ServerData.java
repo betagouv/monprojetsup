@@ -67,6 +67,7 @@ public class ServerData {
     public static Map<String, String> flGroups = null;
 
     protected static final Map<String, List<Formation>> filToFormations = new HashMap<>();
+    protected static final Map<String, String> formationsToFilieres = new HashMap<>();
 
     public static CitiesBack cities = null;
     /*
@@ -253,15 +254,19 @@ public class ServerData {
         backPsupData.formations().formations.values()
                 .forEach(f -> {
                     int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
-                    String key = Constants.gFlCodToFrontId(gFlCod);
+                    String filKey = Constants.gFlCodToFrontId(gFlCod);
+                    String forKey = Constants.gTaCodToFrontId(f.gTaCod);
                     filToFormations
-                            .computeIfAbsent(key, z -> new ArrayList<>())
+                            .computeIfAbsent(filKey, z -> new ArrayList<>())
                             .add(f);
-                    if(groupes.containsKey(key)) {
+                    val grKey = groupes.get(filKey);
+                    if(Objects.nonNull(grKey)) {
                         filToFormations
-                                .computeIfAbsent(groupes.get(key), z -> new ArrayList<>())
+                                .computeIfAbsent(grKey, z -> new ArrayList<>())
                                 .add(f);
-
+                        formationsToFilieres.put(forKey, grKey);
+                    } else {
+                        formationsToFilieres.put(forKey, filKey);
                     }
                 });
 
@@ -487,6 +492,10 @@ public class ServerData {
 
     public static int getCapacity(String fl) {
         return capacity.getOrDefault(fl, 0);
+    }
+
+    public static Map<String, String> getFormationTofilieres() {
+        return new HashMap<>(formationsToFilieres);
     }
 }
 
