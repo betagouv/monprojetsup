@@ -54,18 +54,6 @@ import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.parcoursup.carte.algos.filsim.AlgoFilieresSimilaires.calculerCorrelations;
 import static fr.parcoursup.carte.donnees.SQLStringsConstants.WHERE;
 
-record DescriptifFormation(
-        int code,
-        int codeTypeFormation,
-        int codeFiliere,
-        String libFiliere,
-        String libVoeu,
-        String debouches,
-        String enseignement
-) {
-
-}
-
 public class ConnecteurBackendSQL {
 
     public static final String LYCEENS_ADMIS_FILIERE = " admis_filiere ";
@@ -320,7 +308,7 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int gTaCod = result.getInt(2);
-                    voeuxParCandidat.computeIfAbsent(gTaCod, z -> new HashSet<>()).add(gCnCod);
+                    voeuxParCandidat.computeIfAbsent(gCnCod, z -> new HashSet<>()).add(gTaCod);
                 }
             }
 
