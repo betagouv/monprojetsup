@@ -3,6 +3,9 @@ package fr.gouv.monprojetsup.data;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
+
+import java.nio.file.Path;
 
 public class DataSources {
     public static final String FRONT_DATA_JSON_FILENAME = "frontendData.json";
@@ -77,6 +80,8 @@ public class DataSources {
     }
 
     public static String getSourceDataFilePath(String filename) {
-        return DataServerConfig.config.getDataRootDirectory() + "data/" + filename;
+        String pathWithSpace = DataServerConfig.config.getDataRootDirectory() + "data/" + filename;
+        val path = java.nio.file.Path.of(pathWithSpace);
+        return path.toString();
     }
 }

@@ -186,18 +186,26 @@ public class UpdateFrontData {
 
             Descriptifs descriptifs =
                     Serialisation.fromJsonFile(
-                            DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH),
+                            DataSources.getSourceDataFilePath(
+                                    DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH
+                            ),
                             Descriptifs.class
                     );
 
             Map<String, String> summaries = Serialisation.fromJsonFile(
-                    DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH),
+                    DataSources.getSourceDataFilePath(
+                            DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH
+                    ),
                     new TypeToken<>() {
                     }.getType()
             );
             descriptifs.inject(summaries);
 
-            MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(DataSources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH), MetiersScrapped.class);
+            MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(
+                    DataSources.getSourceDataFilePath(
+                            DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH
+                    ),
+                    MetiersScrapped.class);
             descriptifs.inject(metiersScrapped);
 
             descriptifs.injectFichesMetiers(fichesMetiers);
@@ -223,7 +231,9 @@ public class UpdateFrontData {
         }
 
         private static void addMpsdescriptifs(Descriptifs descriptifs) {
-            val lines = CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), '\t');
+            val lines = CsvTools.readCSV(
+                    DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),
+                    '\t');
             String keyFlFr = null;
             String keyDescFormation = null;
             String keyDescFiliere = null;
