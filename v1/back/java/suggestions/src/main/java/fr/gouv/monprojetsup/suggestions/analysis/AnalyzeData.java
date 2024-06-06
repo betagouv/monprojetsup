@@ -13,6 +13,8 @@ import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
+import fr.gouv.monprojetsup.data.update.psup.DescriptifsFormations;
+import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -22,6 +24,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
+import static fr.gouv.monprojetsup.data.DataSources.BACK_PSUP_DATA_FILENAME;
 import static fr.gouv.monprojetsup.data.DataSources.ONISEP_FICHES_METIERS;
 import static fr.gouv.monprojetsup.data.Helpers.*;
 import static fr.gouv.monprojetsup.data.ServerData.*;
@@ -76,7 +80,15 @@ public class AnalyzeData {
                 statistiques.getLASCorrespondance().lasToGeneric()
         );
 
+        val psupData =  Serialisation.fromZippedJson(
+                DataSources.getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
+                PsupData.class);
+
+        val descriptifsIndexedByGta = psupData.descriptifsFormations().indexed();
+
+
         List<MlData> datas = new ArrayList<>();
+
 
 
         AlgoSuggestions.edgesKeys.edges().keySet().forEach(key -> {
@@ -87,6 +99,15 @@ public class AnalyzeData {
                 if (descriptif1 != null) {
                     texts.add(new MlData.Data("descriptifs_onisep", descriptif1));
                 }
+                val formations = ServerData.getFormationsFromFil(key);
+                formations.forEach(f -> {
+                    val descriptif2 = descriptifsIndexedByGta.get(f.gTaCod);
+                    if (descriptif2 != null) {
+                        texts.add(new MlData.Data("descriptifs_psup_voeu", descriptif2.libVoeu()));
+                        texts.add(new MlData.Data("descriptifs_psup_ens", descriptif2.enseignement()));
+                        texts.add(new MlData.Data("descriptifs_psup_debouches", descriptif2.debouches()));
+                    }
+                });
                 datas.add(new MlData(key, getLabel(key), texts));
             }
 
@@ -130,6 +151,16 @@ public class AnalyzeData {
             }
         });
         Serialisation.toJsonFile("ml_tags.json", tags, true);
+
+
+        val gtaToFil = ServerData.getFormationTofilieres();
+        List<Set<String>> voeuxParCandidat =
+                psupData.voeuxParCandidat().stream().map(
+                        voeux -> voeux.stream().map(
+                                v -> gtaToFil.get(FORMATION_PREFIX + v)
+                        ).filter(Objects::nonNull).collect(Collectors.toSet())
+                ).toList();
+        Serialisation.toJsonFile("ml_voeux.json", voeuxParCandidat, true);
 
     }
 
