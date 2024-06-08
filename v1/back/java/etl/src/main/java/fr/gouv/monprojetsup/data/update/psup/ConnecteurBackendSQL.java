@@ -259,8 +259,7 @@ public class ConnecteurBackendSQL {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             LOGGER.info("Récupération des types de bac par candidat");
             stmt.setFetchSize(1_000_000);
-            String sql = ""
-                    + "SELECT can.g_cn_cod, ic.i_tc_cod from g_can_arch can, i_cla_arch ic " +
+            String sql = "SELECT can.g_cn_cod, ic.i_tc_cod from g_can_arch can, i_cla_arch ic " +
                     "where  can.I_CL_COD_BAC=ic.I_CL_COD and ic.i_tc_cod is not null";
             LOGGER.info(sql);
 
@@ -286,8 +285,7 @@ public class ConnecteurBackendSQL {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             LOGGER.info("Récupération des filieres par candidat");
             stmt.setFetchSize(1_000_000);
-            String sql = ""
-                    + "SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod"
+            String sql = "SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod"
                     //id du groupe de classement
                     + " FROM A_VOE voeu, "
                     + "I_INS ins, "

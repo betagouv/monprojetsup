@@ -12,8 +12,7 @@ import java.nio.file.Path;
 public final class DataServerConfig {
 
     @Getter
-    private String dataRootDirectory = "../../../";
-
+    private String dataRootDirectory;
 
     public static final String DATA_SERVER_CONFIG_FILENAME = "dataConfig.json";
 
@@ -38,6 +37,7 @@ public final class DataServerConfig {
         }
 
         config = result;
+        log.info("Using data directory '" + result.getDataRootDirectory() + "'");
         return result;
     }
 }

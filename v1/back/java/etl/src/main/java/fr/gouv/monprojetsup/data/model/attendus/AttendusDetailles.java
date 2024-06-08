@@ -78,7 +78,7 @@ public record AttendusDetailles(
                 ));
     }
 
-    public static record AttenduDetaille(
+    public record AttenduDetaille(
             Integer gFlCod,
             String gFlLib,
             @Nullable String attendus,
@@ -123,7 +123,7 @@ public record AttendusDetailles(
         }
         public Attendus simplifyForFront() {
             boolean takeRecoPrem = (recoPremGeneriques != null
-                    && (recoTermGeneriques == null || !recoPremGeneriques.equals(recoTermGeneriques))
+                    && (!recoPremGeneriques.equals(recoTermGeneriques))
                     && !recoPremGeneriques.contains("Pas de données pour cette fili")
             );
 

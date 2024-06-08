@@ -507,14 +507,10 @@ public class AnalyzeUserBehaviour {
     }
 
     private static boolean aVuUneSuggestionDeFiliere(List<String> right) {
-        if(right.stream().anyMatch(s ->
+        return right.stream().anyMatch(s ->
                 s.contains("reloadSuggestions fl")
-                || s.contains("reloadSuggestions fr")
-                || s.contains("reloadSuggestions formations"))
-        ) {
-            return true;
-        }
-        return false;
+                        || s.contains("reloadSuggestions fr")
+                        || s.contains("reloadSuggestions formations"));
     }
 
     private static long nbUrlPsup(List<String> right) {

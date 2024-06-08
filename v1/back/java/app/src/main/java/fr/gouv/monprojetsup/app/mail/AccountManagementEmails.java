@@ -79,16 +79,15 @@ public class AccountManagementEmails {
                 WebServer.config().getEmailConfig(),
                 user,
                 "MonProjetSup: échec de votre création de compte",
-                String.format(
+                """
+                        <p>Votre demande de création de compte a été rejetée par un modérateur.</p>
+                        <br/>                              
+                        <br/>                              
+                        Cordialement,<br/>
+                        l'équipe de MonProjetSup<br/>
+                        support@monprojetsup.fr<br/>
+                        https://monprojetsup.fr
                         """
-                                <p>Votre demande de création de compte a été rejetée par un modérateur.</p>
-                                <br/>                              
-                                <br/>                              
-                                Cordialement,<br/>
-                                l'équipe de MonProjetSup<br/>
-                                support@monprojetsup.fr<br/>
-                                https://monprojetsup.fr
-                                """)
         );
     }
 

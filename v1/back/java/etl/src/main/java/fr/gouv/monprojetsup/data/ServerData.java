@@ -77,8 +77,8 @@ public class ServerData {
      */
 
     private static boolean dataLoaded = false;
-    private static Map<String, Integer> nbFormations = new HashMap<>();
-    private static Map<String, Integer> capacity = new HashMap<>();
+    private static final Map<String, Integer> nbFormations = new HashMap<>();
+    private static final Map<String, Integer> capacity = new HashMap<>();
     public static int p90NbFormations;
     public static int p50Capacity;
     public static int p75Capacity;
@@ -159,10 +159,10 @@ public class ServerData {
         return values.stream().sorted().skip(values.size() / 2).findFirst().orElse(0);
     }
     private static Integer p75(Collection<Integer> values) {
-        return values.stream().sorted().skip(75 * values.size() / 100).findFirst().orElse(0);
+        return values.stream().sorted().skip(75L * values.size() / 100).findFirst().orElse(0);
     }
     private static Integer p90(Collection<Integer> values) {
-        return values.stream().sorted().skip(90 * values.size()  /100).findFirst().orElse(0);
+        return values.stream().sorted().skip(90L * values.size()  /100).findFirst().orElse(0);
     }
 
     private static void computeFilieresFront() {

@@ -316,18 +316,17 @@ export function getUrls(gFlCod, autocomplete) {
   if (gFlCod in data.urls) {
     return data.urls[gFlCod];
   }
-  const urls = new Set();
+  const urls = {};
   for (const key of convertGroupsToKeys([gFlCod])) {
     if (key in data.urls) {
       for (const url of data.urls[key]) {
-        urls.add(url);
+        urls[url.uri] = url.label;
       }
     }
   }
-  if (urls.size > 0) {
-    return Array.from(urls);
-  }
-  return [];
+  const urlsArray = Array.from(Objects.entries(urls));
+  data.urls[gFlCod] = urlsArray;
+  return urlsArray;
 }
 
 /*
