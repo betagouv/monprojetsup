@@ -72,8 +72,8 @@ public record UsersBehaviourReport(
         );
     }
 
-    private static AtomicInteger anonymizedCounter = new AtomicInteger(1);
-    private static ConcurrentHashMap<String, Integer> anonymized = new ConcurrentHashMap<>();
+    private static final AtomicInteger anonymizedCounter = new AtomicInteger(1);
+    private static final ConcurrentHashMap<String, Integer> anonymized = new ConcurrentHashMap<>();
     private static String doAnonymize(boolean anonymize, String origin) {
         if(!anonymize) return origin;
         return anonymized.computeIfAbsent(

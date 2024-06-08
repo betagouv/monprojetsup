@@ -31,7 +31,7 @@ public class AddMessageService extends MyService<AddMessageService.Request, AddM
     ) {
     }
 
-    private static PolicyFactory policyCommentBuilder = new HtmlPolicyBuilder()
+    private static final PolicyFactory policyCommentBuilder = new HtmlPolicyBuilder()
             .allowAttributes("src").onElements("img")
             .allowAttributes("href").onElements("a")
             // Allow some URLs through.
@@ -45,7 +45,7 @@ public class AddMessageService extends MyService<AddMessageService.Request, AddM
                     "table", "td", "th", "tr", "colgroup", "fieldset", "legend"
             )
             .toFactory();
-    private static PolicyFactory policyTopicBuilder = new HtmlPolicyBuilder().toFactory();
+    private static final PolicyFactory policyTopicBuilder = new HtmlPolicyBuilder().toFactory();
 
     public record Response(
             ResponseHeader header

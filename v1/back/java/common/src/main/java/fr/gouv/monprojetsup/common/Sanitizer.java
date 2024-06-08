@@ -5,9 +5,9 @@ import org.owasp.html.PolicyFactory;
 
 public class Sanitizer {
 
-    private static PolicyFactory policyTopicBuilder = new HtmlPolicyBuilder().toFactory();
+    private static final PolicyFactory policyTopicBuilder = new HtmlPolicyBuilder().toFactory();
 
-    private static int MAX_INPUT_SIZE = 512;
+    private static final int MAX_INPUT_SIZE = 512;
 
     public static String sanitize(String topic) {
         if(topic == null) return null;

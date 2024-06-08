@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,8 +53,6 @@ public class ServerDataAnalysis {
 
     public static void main(String[] args) throws Exception {
 
-        //fixme WebServer.loadConfig();
-
         DataServerConfig.load();
 
         compareActionsFormations();
@@ -64,34 +61,9 @@ public class ServerDataAnalysis {
 
         DataServerConfig.load();
 
-        /*
-        log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
-        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
-        data.removeFormations();
-        data.removeSmallPopulations();
-
-        log.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
-        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
-        psupData.cleanup();
-
-        log.info("Chargement des données ROME");
-        RomeData romeData = RomeData.load();
-
-        log.info("Chargement des données Onisep");
-        final OnisepData onisepData = OnisepData.fromFiles();
-
-        log.info("Insertion des données ROME dans les données Onisep");
-        onisepData.insertRomeData(romeData.centresInterest()); //before updateLabels
-
-        log.info("Maj des données Onisep (noms des filières et urls)");
-        data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
-        */
-
         exportCentresDinteretsEtThemes();
 
         outputResumesDescriptifsFormationsEtMetiersExtraits();
-
-        exportDeltaWithBillyCorr();
 
         exportLiensDomainesMetiers();
 
@@ -101,61 +73,6 @@ public class ServerDataAnalysis {
 
         /* *** items sans descriptis  ****/
         Descriptifs desc = UpdateFrontData.DataContainer.loadDescriptifs(ServerData.onisepData, flGroups, statistiques.getLASCorrespondance().lasToGeneric());
-        /*
-        Set<Integer> lasses = backPsupData.las();
-        List<String> filieresAffichees = backPsupData.filActives().stream()
-                .filter(f -> !lasses.contains(f))
-                .map(Constants::gFlCodToFrontId)
-                .map(f -> flGroups.getOrDefault(f,f))
-                .distinct()
-                .sorted(Comparator.comparing(f -> ServerData.getLabel(f,f)))
-                .toList();
-        try(OutputStreamWriter out = new OutputStreamWriter(
-                new BufferedOutputStream(Files.newOutputStream(Path.of("resumes.html")))
-                , StandardCharsets.UTF_8)) {
-            out.write(
-                    """
-                            <h1>Propositions de résumés de descriptifs de formations</h1>
-                            <p>Ce document présente des propositions de résumés de descriptifs de formation récupérés depuis le site Onisep.fr.</p>
-                            <p>La génération des résumés est effectuée à l'aide d'une IA générative,
-                            en lui demandant de réduire les textes originaux à moins de 500 caractères.</p>
-                            <p>Il y a eu une vérification humaine sur quelques exemples, mais pas systématique.</p>
-                            """
-            );
-
-            int index = 1;
-            for (String key : filieresAffichees) {
-                Descriptifs.Descriptif descriptif = desc.keyToDescriptifs().get(key);
-                String label = ServerData.getLabel(key);
-                if (descriptif != null && descriptif.summary() != null && !label.contains("LAS")) {
-                    out.write("<hr/>" + System.lineSeparator());
-                    out.write("<h2>" + label + "</h2>");
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<h3>Original</h3><p>"
-                            + (descriptif.presentation() != null ? descriptif.presentation().length()  : 0) + " caractères</p>");
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write(descriptif.presentation() != null ? descriptif.presentation()  : "");
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<h3>Résumé</h3><p>" + descriptif.summary().length() + " caractères</p>");
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write(descriptif.summary());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    out.write("<br/>" + System.lineSeparator());
-                    index++;
-                }
-
-            }
-            out.write("Total: " + index + " résumés produits.");
-        }
-        */
 
         outputMetiersSansDescriptifs(desc);
 
@@ -415,26 +332,6 @@ public class ServerDataAnalysis {
 
     }
 
-    private static void exportDeltaWithBillyCorr() {
-        @NotNull Map<String, Set<String>> copy =  onisepData.edgesMetiersFilieres().edges();
-        //we keep only formation
-        copy.keySet().removeIf(s -> !Helpers.isFiliere(s));
-
-        onisepData.billy().psupToIdeo2().forEach(
-                line -> {
-                    String gFlCod = line.G_FL_COD();
-                    String idsIdeo2 = line.IDS_IDEO2();
-                    Set<String> ids = Arrays.stream(idsIdeo2.split(";")).map(String::trim).collect(Collectors.toSet());
-                    boolean changed = copy.computeIfAbsent("fl" + gFlCod, k -> new TreeSet<>()).removeAll(ids);
-                    if(changed) {
-
-                    }
-                    //to be continued
-                }
-        );
-    }
-
-
     public static final String ONISEP_ACTIONS_FORMATIONS_PATH = "ideo_actions_formations/ideo-actions_de_formation_initiale-univers_enseignement_superieur.json";
     public static final String CARTE_JSON_PATH = "psup_actions_formations/psupdata-06-03-2024-11-05-05.json";
 
@@ -503,7 +400,6 @@ public class ServerDataAnalysis {
 
                 for (List<Formation> forms : psupUAI.values()) {
 
-                    Set<String> uaiAlreadySeen = new HashSet<>();
                     for (Formation f : forms) {
                         csv.append(line.G_FR_COD());
                         csv.append(line.G_FR_LIB());
@@ -526,15 +422,6 @@ public class ServerDataAnalysis {
 
     }
 
-    private static String libelle(List<fr.gouv.parcoursup.carte.modele.modele.Formation> f, JsonCarte carte) {
-        if(f.isEmpty()) return "";
-        return libelle(f.get(0), carte);
-    }
-
-    private static String libelle(fr.gouv.parcoursup.carte.modele.modele.Formation f, JsonCarte carte) {
-        if(f.getGealib() != null) return f.getGealib();
-        return carte.etablissements.get(f.getGea()).getUrl();
-    }
     private static void exportCentresDinteretsEtThemes() throws IOException {
         Interets interets = onisepData.interets();
         try(CsvTools csv = new CsvTools("centresInterets.csv",',')) {
@@ -577,7 +464,7 @@ public class ServerDataAnalysis {
                 try {
                     csv.append(stringStringPair.getLeft());
                     csv.append(stringStringPair.getRight());
-                    csv.append(strings.stream().collect(Collectors.joining("\n")));
+                    csv.append(String.join("\n", strings));
                     csv.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -695,7 +582,8 @@ public class ServerDataAnalysis {
         psupData.cleanup();
 
         log.info("Ajout des liens metiers");
-        Map<String, String> urls = new HashMap<>(data.liensOnisep);
+        Map<String, Descriptifs.Link> urls = new HashMap<>();
+        data.liensOnisep.forEach((s, s2) -> urls.put(s, new Descriptifs.Link(s2, getLabel(s))));
         onisepData.metiers().metiers().forEach((s, metier) -> {
             //onisep.fr/http/redirections/metier/slug/[identifiant]
         });
@@ -781,18 +669,19 @@ public class ServerDataAnalysis {
 
                 Map<String, String> mpsData = (descriptif == null) ? Map.of() : descriptif.getMpsData();
 
-                List<String> listeUrls = new ArrayList<>();
-
                 //"url onisep",
                 csv.append(
                             listeFilieres
-                                    .stream().map(s -> data.liensOnisep.getOrDefault(s, ""))
-                                    .filter(s -> !s.isEmpty())
-                                    .map(s -> Descriptifs.toAvenirs(s))
+                                    .stream().map(s ->
+                                            Pair.of(
+                                                    data.liensOnisep.getOrDefault(s, ""),
+                                                    ServerData.getLabel(s)
+                                                    )
+                                    )
+                                    .filter(s -> !s.getLeft().isEmpty())
+                                    .map(s -> Descriptifs.toAvenirs(s.getLeft(), s.getRight()).uri())
                                     .distinct()
                                     .collect(Collectors.joining("\n"))
-
-
                     );
 
                 //"URL corrections",
@@ -831,15 +720,14 @@ public class ServerDataAnalysis {
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().attendus() != null)
                         .map(p -> getLabel(p.getLeft()) + "\n" + p.getRight().attendus())
-                        .filter(o ->  o!= null && !o.isBlank()).distinct()
+                        .filter(o -> !o.isBlank()).distinct()
                         .collect(Collectors.joining("\n\n****    cas multiple    ****\n\n")));
 
-                //                    "recommandations sur le parcours au lycée");
                 csv.append(listeFilieres.stream()
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().recoEDS() != null)
                         .map(p -> getLabel(p.getLeft()) + "\n" + p.getRight().recoEDS())
-                        .filter(o ->  o!= null && !o.isBlank()).distinct()
+                        .filter(o -> !o.isBlank()).distinct()
                         .collect(Collectors.joining("\n\n****    cas multiple     ****\n\n")));
                 csv.newLine();
             }
@@ -884,8 +772,8 @@ public class ServerDataAnalysis {
                 Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
                 if(descriptif == null || descriptif.hasError() || descriptif.presentation() == null) continue;
 
-                    int i = descriptif.presentation().indexOf("Exemples de métiers");
-                    if(i < 0) continue;
+                int i = descriptif.presentation().indexOf("Exemples de métiers");
+                if(i < 0) continue;
                 List<Triple<String, String, Metiers.Metier>> triplets = new ArrayList<>(onisepData.metiers().extractMetiers(descriptif.presentation().substring(i)));
                 if(triplets.isEmpty()) continue;
 

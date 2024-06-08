@@ -55,37 +55,29 @@ record ExplanationTagShort(List<String> ns) {
         return toExplanation(",");
     }
     public String toExplanation(String sep) {
-        StringBuilder ssb = new StringBuilder();
 
-        ssb.append(ns().stream()
-                        .filter(s -> Helpers.isFiliere(s))
-                .sorted().map(
-                ServerData::getDebugLabel
-        ).collect(Collectors.joining(sep,"\t","\n")))
-        ;
-
-        ssb.append(ns().stream()
-                .filter(s -> Helpers.isMetier(s))
+        String ssb = ns().stream()
+                .filter(s -> Helpers.isFiliere(s))
                 .sorted().map(
                         ServerData::getDebugLabel
-                ).collect(Collectors.joining(sep,"\n\t","\n")))
-        ;
+                ).collect(Collectors.joining(sep, "\t", "\n")) +
+                ns().stream()
+                        .filter(s -> Helpers.isMetier(s))
+                        .sorted().map(
+                                ServerData::getDebugLabel
+                        ).collect(Collectors.joining(sep, "\n\t", "\n")) +
+                ns().stream()
+                        .filter(s -> Helpers.isTheme(s))
+                        .sorted().map(
+                                ServerData::getDebugLabel
+                        ).collect(Collectors.joining(sep, "\n\t", "\n")) +
+                ns().stream()
+                        .filter(s -> Helpers.isInteret(s))
+                        .sorted().map(
+                                ServerData::getDebugLabel
+                        ).collect(Collectors.joining(sep, "\n\t", "\n"));
 
-        ssb.append(ns().stream()
-                .filter(s -> Helpers.isTheme(s))
-                .sorted().map(
-                        ServerData::getDebugLabel
-                ).collect(Collectors.joining(sep,"\n\t","\n")))
-        ;
-
-        ssb.append(ns().stream()
-                .filter(s -> Helpers.isInteret(s))
-                .sorted().map(
-                        ServerData::getDebugLabel
-                ).collect(Collectors.joining(sep,"\n\t","\n")))
-        ;
-
-        return ssb.toString();
+        return ssb;
     }
 }
 

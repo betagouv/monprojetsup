@@ -38,7 +38,7 @@ class MPSUserDetails(
     }
 
     override fun getPassword(): String {
-        return user.hashAndSaltConcatenated;
+        return user.hashAndSaltConcatenated
     }
 
     override fun getUsername(): String {

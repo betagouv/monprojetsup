@@ -32,7 +32,7 @@ public class SetModerationHandler extends MyService<SetModerationHandler.Request
         if(!DB.authenticator.checkIsSuperUser(req.login(), req.token())) {
             throw new DBExceptions.UserInputException.ForbiddenException();
         }
-        WebServer.db().setModeration(req.moderate, req.type);
+        DB.setModeration(req.moderate, req.type);
         final AdminInfosDTO infos = WebServer.db().getAdminInfos(req.login);
         return new GetAdminInfosService.Response(
                         infos,

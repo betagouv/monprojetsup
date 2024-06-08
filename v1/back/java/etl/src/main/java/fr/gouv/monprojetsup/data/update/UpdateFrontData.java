@@ -56,7 +56,7 @@ public class UpdateFrontData {
             Metiers metiers,
             Thematiques thematiques,
             Interets interets,
-            Map<String, Set<String>> urls,
+            Map<String, Set<Descriptifs.Link>> urls,
             Map<String, String> groups,
             Map<String, List<String>> labelsTypes,
             Map<String, String> constants, //stats nationales sur moyenne générale et moyennes au bac
@@ -72,7 +72,7 @@ public class UpdateFrontData {
         public static DataContainer load(
                 PsupData psupData,
                 OnisepData onisepData,
-                Map<String, String> liensOnisep,
+                Map<String, Descriptifs.Link> links,
                 PsupStatistiques.LASCorrespondance lasCorrespondance,
                 Map<String, Attendus> eds,
                 Map<String, GrilleAnalyse> grilles,
@@ -94,7 +94,7 @@ public class UpdateFrontData {
                     = onisepData.getExtendedMetiersVersFormations(groups, lasCorrespondance, descriptifs);
 
             Map<String, Set<String>> liensSecteursMetiers
-                    = onisepData.getSecteursVersMetiers(
+                    = OnisepData.getSecteursVersMetiers(
                     onisepData.fichesMetiers(),
                     onisepData.formations().getFormationsDuSup()
             );
@@ -102,7 +102,7 @@ public class UpdateFrontData {
             Map<DomainePro, Set<String>> liensDomainesMetiers
                     = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
-            Map<String, Set<String>> urls = new TreeMap<>();
+            Map<String, Set<Descriptifs.Link>> urls = new TreeMap<>();
 
             /* we cannot do tthat anymore... need to do it by hand for the moment... and should be a dynmaic call in the future
             List<String> declaredfields = Arrays.stream(ProfileDTO.class.getDeclaredFields()).map(f -> f.getName()).toList();
@@ -156,7 +156,7 @@ public class UpdateFrontData {
                     declaredfields
             );
 
-            answer.updateUrls(onisepData, liensOnisep, lasCorrespondance.lasToGeneric());
+            answer.updateLinks(onisepData, links, lasCorrespondance.lasToGeneric());
 
             Serialisation.toJsonFile("urls.json", answer.urls, true);
 
@@ -210,11 +210,6 @@ public class UpdateFrontData {
 
             descriptifs.injectFichesMetiers(fichesMetiers);
             descriptifs.injectDomainesPro(onisepData.domainesWeb());
-            /* article actuel ok
-            String passKey = gFlCodToFrontId(PASS_FL_COD);
-            Descriptifs.Descriptif desc = descriptifs.keyToDescriptifs().get(passKey);
-            descriptifs.keyToDescriptifs().put(passKey, addToDescriptif(PAS_LAS_TEXT, desc));
-            */
 
             if (includeMpsData) {
                 addMpsdescriptifs(descriptifs);
@@ -234,9 +229,9 @@ public class UpdateFrontData {
             val lines = CsvTools.readCSV(
                     DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),
                     '\t');
-            String keyFlFr = null;
-            String keyDescFormation = null;
-            String keyDescFiliere = null;
+            String keyFlFr;
+            String keyDescFormation;
+            String keyDescFiliere;
             String keyTypeFor = "code type formation";
 
             Map<String, String> resumesTypesformations = new HashMap<>();
@@ -305,18 +300,15 @@ public class UpdateFrontData {
             }
         }
 
-        private void addUrl(String key, String url) {
-            if (url != null && !url.isEmpty()) {
-                if (url.contains("www.terminales2022-2023.fr")) {
-                    if (url.contains("www.terminales2022-2023.fr/http/redirections/formation/slug/")) {
-                        url = url.replace(
-                                "www.terminales2022-2023.fr",
-                                "www.onisep.fr");
-                    } else {
-                        return;//we skip those broken urls
-                    }
+        private void addUrl(String key, String uri) {
+            addUrl(key, uri, ServerData.getLabel(key));
+        }
+        private void addUrl(String key, String uri, String label) {
+            if (uri != null && !uri.isEmpty()) {
+                if (uri.contains("www.terminales2022-2023.fr")) {
+                    throw new RuntimeException("deprecated url");
                 }
-                url = Descriptifs.toAvenirs(url);
+                val url = Descriptifs.toAvenirs(uri, label);
                 urls.computeIfAbsent(cleanup(key), z -> new HashSet<>()).add(url);
             }
         }
@@ -325,37 +317,32 @@ public class UpdateFrontData {
             urls.remove(cleanup(key));
         }
 
-        public void updateUrls(OnisepData onisepData, Map<String, String> liensOnisep, Map<String, String> lasCorrespondance) {
+        public void updateLinks(OnisepData onisepData, Map<String, Descriptifs.Link> links, Map<String, String> lasCorrespondance) {
             urls.clear();
-            for (Map.Entry<String, String> entry : liensOnisep.entrySet()) {
-                String key = entry.getKey();
-                String s2 = entry.getValue();
-                addUrl(key, s2);
+            for (val entry : links.entrySet()) {
+                addUrl(entry.getKey(), entry.getValue().uri(), entry.getValue().label());
             }
             onisepData.metiers().metiers().values().forEach(metier -> {
-                if (metier.url() != null && !metier.url().isEmpty()) {
-                    addUrl(metier.id(), metier.url());
-                }
                 if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
-                    addUrl(metier.id(), metier.urlRome());
+                    addUrl(metier.id(), metier.urlRome(), metier.libRome());
                 }
             });
-            onisepData.domainesWeb().domaines().forEach(domainePro -> addUrl(cleanup(domainePro.id()), domainePro.url()));
+            onisepData.domainesWeb().domaines().forEach(domainePro
+                    -> addUrl(cleanup(domainePro.id()), domainePro.url(), domainePro.nom())
+            );
             descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
                 if (descriptif.isCorrectedUrl()) {
                     clearUrls(key);
-                } else {
-                    addUrl(key, descriptif.url());
                 }
                 Collection<String> urls = descriptif.multiUrls();
                 if (urls != null) {
-                    urls.forEach(url2 -> addUrl(key, url2));
+                    urls.forEach(url2 -> addUrl(key, url2, url2));
                 }
             });
-            addUrl(gFlCodToFrontId(PASS_FL_COD), URL_ARTICLE_PAS_LAS);
+            addUrl(gFlCodToFrontId(PASS_FL_COD), URL_ARTICLE_PAS_LAS, "Les études de santé");
             lasCorrespondance.forEach((keyLas, keyGen) -> {
-                addUrl(keyLas, URL_ARTICLE_PAS_LAS);
-                urls.getOrDefault(keyGen, Collections.emptySet()).forEach(s -> addUrl(keyLas, s));
+                addUrl(keyLas, URL_ARTICLE_PAS_LAS,"Les études de santé");
+                urls.getOrDefault(keyGen, Collections.emptySet()).forEach(s -> addUrl(keyLas, s.uri(), s.label()));
             });
         }
     }
@@ -387,10 +374,13 @@ public class UpdateFrontData {
         data.updateLabels(onisepData, psupData, data.getLASCorrespondance().lasToGeneric());
 
         LOGGER.info("Ajout des liens metiers");
-        val urls = new HashMap<String, String>();
-        data.liensOnisep.forEach((key, value) -> urls.put(key, Descriptifs.toAvenirs(value)));
+        val urls = new HashMap<String, Descriptifs.Link>();
+        data.liensOnisep.forEach((key, value) -> urls.put(key, Descriptifs.toAvenirs(value, data.labels.getOrDefault(key,""))));
         onisepData.metiers().metiers().forEach((s, metier) -> {
-            //onisep.fr/http/redirections/metier/slug/[identifiant]
+            urls.put(s, Descriptifs.toAvenirs(
+                    "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/" + s.replace('_','.'),
+                    metier.lib())
+            );
         });
 
         Map<String, Attendus> eds = Attendus.getAttendus(

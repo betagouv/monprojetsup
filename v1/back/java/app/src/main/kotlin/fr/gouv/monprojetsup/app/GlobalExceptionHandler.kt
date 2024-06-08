@@ -21,16 +21,16 @@ class GlobalExceptionHandler {
     // MyService exception handler
     @ExceptionHandler(MyServiceException::class)
     fun handleRMyServiceException(ex: MyServiceException, request: WebRequest?): ResponseEntity<*> {
-        val inner = ex.cause;
-        val response = MyService.handleAnException(inner, ex.request, if (request != null) request.toString() else null);
+        val inner = ex.cause
+        val response = MyService.handleAnException(inner, ex.request, if (request != null) request.toString() else null)
 
         return ResponseEntity<Any>(response, HttpStatus.OK)
     }
 
     @ExceptionHandler(ServerStartingException::class)
     fun handleRMyServiceException(ex: ServerStartingException, request: WebRequest?): ResponseEntity<*> {
-        val inner = ex.cause;
-        val response = MyService.handleAnException(inner, ex.message, null);
+        val inner = ex.cause
+        val response = MyService.handleAnException(inner, ex.message, null)
 
         return ResponseEntity<Any>(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }

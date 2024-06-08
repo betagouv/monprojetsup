@@ -96,8 +96,7 @@ public class Formation implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Formation) {
-            Formation mtb = (Formation) obj;
+        if (obj instanceof Formation mtb) {
             return (gTaCod == mtb.gTaCod);
         } else {
             throw new ClassCastException("Test d'égalité imprévu");

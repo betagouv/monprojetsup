@@ -133,7 +133,7 @@ public class Evaluate {
                                 if (cod == null) {
                                     fos2.write("could not find '" + expectation + "'");
                                 } else {
-                                    fos2.write(cases.evaluate(refCase.pf(), cod));
+                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod));
                                 }
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");

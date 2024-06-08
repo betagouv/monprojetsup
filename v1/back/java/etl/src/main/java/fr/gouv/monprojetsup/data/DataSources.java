@@ -80,7 +80,8 @@ public class DataSources {
     }
 
     public static String getSourceDataFilePath(String filename) {
-        String pathWithSpace = DataServerConfig.config.getDataRootDirectory() + "data/" + filename;
+        String dir = DataServerConfig.config.getDataRootDirectory();
+        String pathWithSpace = dir + "data/" + filename;
         val path = java.nio.file.Path.of(pathWithSpace);
         return path.toString();
     }

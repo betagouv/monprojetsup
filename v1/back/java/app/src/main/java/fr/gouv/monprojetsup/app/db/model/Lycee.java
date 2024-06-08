@@ -16,7 +16,7 @@ public final class Lycee {
 
     public static final String LYCEES_COLL_NAME = "lycees";
     private static final Logger LOGGER = Logger.getLogger(Lycee.class.getName());
-    private @Field("id") @Getter String id;
+    private final @Field("id") @Getter String id;
     private final @Getter String name;
     private @Getter List<Classe> classes = new ArrayList<>();
     private @Getter Set<String> proviseurs = new HashSet<>();
