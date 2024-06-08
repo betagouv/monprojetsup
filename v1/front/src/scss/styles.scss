@@ -1110,7 +1110,8 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 }
 #metierslinks {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .formation-card-header-sep {
   flex-grow:1;
