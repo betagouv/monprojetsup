@@ -75,7 +75,7 @@ class SuggestionApiHttpClientTest {
     @Test
     fun `recupererLesAffinitees - doit retourner les AffinitesPourProfil avec les formations triées par affinitées`() {
         // Given
-        val url = "http://localhost:8080/affinites"
+        val url = "http://localhost:8080/suggestions"
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val reponseBody =
             """
@@ -210,7 +210,7 @@ class SuggestionApiHttpClientTest {
     @Test
     fun `recupererLesAffinitees - doit envoyer la bonne requete`() {
         // Given
-        val url = "http://localhost:8080/affinites"
+        val url = "http://localhost:8080/suggestions"
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val reponseBody =
             """
@@ -311,7 +311,7 @@ class SuggestionApiHttpClientTest {
         suggestionApiHttpClient.recupererLesAffinitees(unProfil)
 
         // Then
-        assertThat(requeteCaptor.value.url.toString()).isEqualTo("http://localhost:8080/affinites")
+        assertThat(requeteCaptor.value.url.toString()).isEqualTo("http://localhost:8080/suggestions")
 
         val buffer = Buffer()
         requeteCaptor.value.body?.writeTo(buffer)
@@ -394,7 +394,7 @@ class SuggestionApiHttpClientTest {
     @Test
     fun `recupererLesAffinitees - si la désérialisation échoue, doit throw MonProjetSupInternalErrorException`() {
         // Given
-        val url = "http://localhost:8080/affinites"
+        val url = "http://localhost:8080/suggestions"
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val reponseBody =
             """

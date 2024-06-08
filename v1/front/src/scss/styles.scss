@@ -1270,7 +1270,14 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 .formation-details-link {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
+}
+.formation-details-link-with-border {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 4px 8px 4px 12px;
+  margin-right: 16px;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #DDD);
 }
 .formation-details-stats-sep {
   color : #dddddd;

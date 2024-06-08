@@ -31,7 +31,6 @@ class GlobalExceptionHandler {
     fun handleRMyServiceException(ex: ServerStartingException, request: WebRequest?): ResponseEntity<*> {
         val inner = ex.cause
         val response = MyService.handleAnException(inner, ex.message, null)
-
         return ResponseEntity<Any>(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
