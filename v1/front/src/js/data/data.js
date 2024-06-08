@@ -324,7 +324,9 @@ export function getUrls(gFlCod, autocomplete) {
       }
     }
   }
-  const urlsArray = Array.from(Objects.entries(urls));
+  const urlsArray = Array.from(
+    Object.entries(urls).map((arr) => ({ uri: arr[0], label: arr[1] }))
+  );
   data.urls[gFlCod] = urlsArray;
   return urlsArray;
 }
