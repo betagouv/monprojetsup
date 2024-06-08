@@ -1,11 +1,10 @@
 package fr.gouv.monprojetsup.data.model.metiers;
 
+import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.MetierOnisep;
-import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.cleanup;
 
 public record Metiers(
-        /**
+        /*
          * indexed by metiers fl e.g. MET.7776
          */
         Map<String,Metier> metiers
@@ -39,12 +38,10 @@ public record Metiers(
         }
     }
 
-    private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
-
     /**
      * maps full string to MET.* code, with spell check
-     * @param metierLabel
-     * @return
+     * @param metierLabel e.g. "Mécanicien automobile"
+     * @return MET.* code
      */
     public @Nullable String findMetierKey(String metierLabel) {
         return DictApproxInversion.findKey(
@@ -63,20 +60,20 @@ public record Metiers(
 
     /**
      * Extracts metiers from a string, separated by ,;:. or .
-     * @param substring
+     * @param substring e.g. "Mécanicien automobile, électricien, ..."
      * @return list of (MET_xxx, original text, metier)
      */
     public List<Triple<String,String,Metier>> extractMetiers(String substring) {
-        return Arrays.stream(substring.split("[;:,;.]"))
+        return Arrays.stream(substring.split("[;:,.]"))
                 .map(String::trim)
                 .map(s -> Pair.of(findMetierKey(s),s))
                 .filter(p -> p.getLeft() != null)
                 .map(p -> Triple.of(p.getLeft(),p.getRight(), metiers.get(p.getLeft())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<String> extractMetiersKeys(String substring) {
-        return extractMetiers(substring).stream().map(Triple::getLeft).collect(Collectors.toList());
+        return extractMetiers(substring).stream().map(Triple::getLeft).toList();
     }
 
 

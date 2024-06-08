@@ -122,7 +122,7 @@ public record OnisepData(
 
         liens.contents().content().forEach(content -> {
                     String keyMetier = Constants.cleanup(content.keyMetier());
-                    if (!metiers.metiers().keySet().contains(keyMetier)) {
+                    if (!metiers.metiers().containsKey(keyMetier)) {
                         String title = content.title();
                         if (title != null && !title.isEmpty()) {
                             metiers.metiers().put(keyMetier,
@@ -230,29 +230,16 @@ public record OnisepData(
             }
             entry.setValue(val.toLowerCase());
         });
-        List<Map.Entry<String, String>> vslle = dico.entrySet().stream().toList();
         List<Map<String,String>> metiersFormationsAjouts = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_AJOUT),
                 new TypeToken<List<Map<String,String>>>(){}.getType()
                 );
-        Set<String> unmatched = new HashSet<>();
 
         metiersFormationsAjouts.forEach(stringStringMap -> {
-            /* {
-               "nom_filiere": "BTS - Conception et industrialisation en construction navale",
-               "fl": "fl10417",
-               "nom_metier": "Architecte naval / navale"
-             },*/
             String filiere = stringStringMap.get("fl");
             String metier = stringStringMap.get("nom_metier");
             String metierKey = DictApproxInversion.findKey(metier.toLowerCase(), dico);
-            //metiers.findMetierKey(metier);
-            if(metierKey == null) {
-                unmatched.add(metier);
-            } else {
-                /*
-                continue;
-                throw new RuntimeException("Failed to parse metier " + metier);*/
+            if(metierKey != null) {
                 edgesMetiersFilieres.put(metierKey, filiere);
             }
         });
@@ -263,19 +250,12 @@ public record OnisepData(
 
         try(CsvTools csvTools = new CsvTools("ajouts_heritage.csv", ',')) {
             csvTools.appendHeaders(List.of("fl1","lib1","fl2","lib2"));
-            for (Map<String, String> stringStringMap : metiersFormationsHeritage) {/*{
-                "nom_filiere": "C.M.I - Acoustique et Vibrations",
-                "fl": "fl4073",
-                "nom_formation": "L1 - Acoustique et Vibrations"
-                }, */
+            for (Map<String, String> stringStringMap : metiersFormationsHeritage) {
                 String fl = stringStringMap.get("fl");
                 String lib1 = stringStringMap.get("nom_filiere");
                 String lib2 = stringStringMap.get("nom_formation");
                 String fl2 = DictApproxInversion.findKey(lib2.toLowerCase(), dico);
-//            String formationKey = filieres.findFormationKey(formation);
-                if (fl2 == null) {
-                    unmatched.add(lib2);
-                } else {
+                if (fl2 != null) {
                     csvTools.append(fl);
                     csvTools.append(lib1);
                     csvTools.append(fl2);
@@ -284,7 +264,7 @@ public record OnisepData(
                     edgesMetiersFilieres
                             .getPredecessors(fl2)
                             .keySet()
-                            .stream().filter(s -> isMetier(s))
+                            .stream().filter(Helpers::isMetier)
                             .forEach(s -> edgesMetiersFilieres.put(s, fl)
                             );
                 }
@@ -294,19 +274,12 @@ public record OnisepData(
 
 
 
-        System.out.print(unmatched.stream().collect(Collectors.joining("\n")));
         //adding links from the big xml and jm and cécile correspondances
         getMetiersVersFormations(filieres, lines, metiers).forEach(
                 (key, metierss) -> metierss.forEach(
                         metier -> edgesMetiersFilieres.put(metier, key)
                 )
         );
-
-        TypeFormationOni.Typesformations typesformations =
-                Serialisation.fromJsonFile(
-                        DataSources.getSourceDataFilePath(DataSources.TYPES_FORMATIONS_ONISEP_PATH),
-                        TypeFormationOni.Typesformations.class
-                );
 
 
         return new OnisepData(metiers,
@@ -371,7 +344,7 @@ public record OnisepData(
     /**
      * maps a flcod "fl11" to metiers "MET.999"
      *
-     * @return
+     * @return a map flcod -> metiers
      */
     public Map<String, Set<String>> getExtendedMetiersVersFormations() {
         return getExtendedMetiersVersFormations(
@@ -383,7 +356,7 @@ public record OnisepData(
 
     /**
      * metiers vers filieres
-     * @return
+     * @return a map metiers -> filieres
      */
     public Map<String, Set<String>> getExtendedMetiersVersFormations(
             Map<String, String> groups,
@@ -424,7 +397,7 @@ public record OnisepData(
         Set<String> metiersPass =
                 metiersVersFormations.entrySet().stream()
                         .filter(e -> e.getValue().contains( passKey))
-                        .map(e -> e.getKey())
+                        .map(Map.Entry::getKey)
                         .collect(Collectors.toSet());
         metiersPass.forEach(m ->
                 metiersVersFormations.computeIfAbsent( m,
@@ -499,7 +472,7 @@ public record OnisepData(
                     Set<String> keys =
                             Arrays.stream(line.METIER_IDEO2().split(";"))
                                     .map(String::trim)
-                                    .map(metier -> metiers.findMetier(metier))
+                                    .map(metiers::findMetier)
                                     .filter(Objects::nonNull)
                                     .map(Metiers.Metier::id)
                                     .collect(Collectors.toSet());
@@ -535,14 +508,12 @@ public record OnisepData(
 
     public static Map<DomainePro, Set<String>> getDomainesVersMetiers(Metiers metiers) {
         Map<DomainePro, Set<String>> result = new HashMap<>();
-        metiers.metiers().forEach((metierIndex, metier) -> {
-            metier.domaines().forEach(
-                    s1 -> result.computeIfAbsent(
-                            s1,
-                            z -> new HashSet<>()
-                    ).add(metierIndex)
-            );
-        });
+        metiers.metiers().forEach((metierIndex, metier) -> metier.domaines().forEach(
+                s1 -> result.computeIfAbsent(
+                        s1,
+                        z -> new HashSet<>()
+                ).add(metierIndex)
+        ));
         return result;
     }
 

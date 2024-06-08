@@ -25,8 +25,7 @@ public final class Edges {
         String cb = cleanupKeys ? Constants.cleanup(b) : b;
         if(ca.equals(cb)) return true;
         if(!edges.containsKey(ca)) return false;
-        if(!edges.get(ca).containsKey(cb)) return false;
-        return true;
+        return edges.get(ca).containsKey(cb);
     }
 
     public void put(String a, String b) {

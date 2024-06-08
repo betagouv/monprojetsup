@@ -44,7 +44,7 @@ public record Formation(
                 return url_et_id_onisep.substring(pos+1);
         }
 
-        private static Set<String> niveauxCertif = Set.of("5","6","7","8");
+        private static final Set<String> niveauxCertif = Set.of("5","6","7","8");
     public boolean isFormationDuSup() {
         return (niveau_etudes() != null && niveau_etudes().isFormationDuSup())
                 || niveau_de_certification != null && niveau_de_certification.toLowerCase().contains("bac +")

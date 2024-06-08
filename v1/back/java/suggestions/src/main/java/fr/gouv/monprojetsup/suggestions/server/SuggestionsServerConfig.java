@@ -14,13 +14,13 @@ public class SuggestionsServerConfig {
     private static final String CONFIG_FILENAME = "suggestionsConfig.json";
 
     @Getter
-    private Config suggFilConfig = new Config();
+    private final Config suggFilConfig = new Config();
 
     @Getter
-    private String referenceCasesFilename = "referenceCasesFilename.json";
+    private final String referenceCasesFilename = "referenceCasesFilename.json";
 
     @Getter
-    private String dataRootDirectory = "../../../";
+    private final String dataRootDirectory = "../../../";
 
 
     public static SuggestionsServerConfig load() throws IOException {

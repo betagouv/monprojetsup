@@ -884,7 +884,7 @@ function displayUrls(subkey, forsOfInterest) {
       .append(
         `<div class="formation-details-link">
           <a href="${uri}" target="_psup"
-            >${getUrlLabel(uri)}<img
+            >Toute l'offre de formation sur Parcoursup<img
               src="img/link-dsfr.svg"
               alt="lien vers le site"
           /></a>
@@ -897,8 +897,8 @@ function displayUrls(subkey, forsOfInterest) {
   for (const url of urls) {
     $(".formation-details-links-other").append(
       `<div class="formation-details-link">
-          <a href="${url}" target="_onisep"
-            >${getUrlLabel(url)}<img
+          <a href="${url.uri}" target="_onisep"
+            >${getUrlLabel(url, urls.length >= 2)}<img
               src="img/link-dsfr.svg"
               alt="lien vers le site"
           /></a>
@@ -908,17 +908,14 @@ function displayUrls(subkey, forsOfInterest) {
   }
 }
 
-function getUrlLabel(url) {
-  if (url.includes("onisep") || url.includes("terminales")) {
+function getUrlLabel(url, details) {
+  if (
+    !details &&
+    (url.uri.includes("onisep") || url.uri.includes("terminales"))
+  ) {
     return "Lire la suite";
   }
-  if (url.includes("pole")) {
-    return "Plus de détails";
-  }
-  if (url.includes("parcoursup")) {
-    return "Toute l'offre de formation sur Parcoursup";
-  }
-  return "Plus d'infos";
+  return "Plus d'infos" + (details ? " sur '" + url.label + "'" : "");
 }
 
 function format(x, nbDigits) {
@@ -2123,8 +2120,17 @@ export function showMetierDetails(metier) {
     $("#metierDescriptif").empty();
   }
   $("#metierUrl").hide();
+  $("#metierslinks").empty();
   for (const url of urls) {
-    $("#metierUrl").show().attr("href", url);
+    const label =
+      "Plus d'infos " + (urls.length >= 2 ? "sur '" + url.label + "'" : "");
+    $("#metierslinks").append(
+      `
+      <a id="metierUrl" href="${url.uri}" target="_metier"
+                >${label}
+                <img src="img/link-dsfr.svg" alt="lien vers le site"
+              /></a>`
+    );
   }
   $("#metierModal .add-to-favorites-btn").attr("data-id", metier);
   $("#metierModal .remove-from-favoris-btn").attr("data-id", metier);

@@ -27,14 +27,15 @@ public record Descriptifs(
         this(new HashMap<>());
     }
 
-    public static String toAvenirs(String s) {
-        if(s == null) return null;
-        return s
+    public static Link toAvenirs(String uri, String label) {
+        if(uri == null) return null;
+        uri =  uri
                 .replace(
                 "www.terminales2022-2023.fr","www.onisep.fr")
                 .replace(ONISEP_URL1,EXPLORER_AVENIRS_URL)
                 .replace(ONISEP_URL2,EXPLORER_AVENIRS_URL)
                 ;
+        return new Link(label, uri);
     }
 
     public void injectFichesMetiers(FichesMetierOnisep fiches) {
@@ -443,4 +444,7 @@ public record Descriptifs(
     }
 
 
+    public record Link(String label, String uri) {
+
+    }
 }

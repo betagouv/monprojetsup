@@ -29,7 +29,7 @@ class TeacherControllers(
 
 
     @PostMapping("/groups/list")
-    fun getGroupInfos(@RequestBody request: Server.BasicRequest): GetAdminInfosService.Response {
+    fun getGroupInfos(@RequestBody request: BasicRequest): GetAdminInfosService.Response {
         return getAdminInfosService.handleRequestAndExceptions(request)
     }
 
@@ -64,7 +64,7 @@ class TeacherControllers(
     }
 
     @PostMapping("/role")
-    fun switchRole(@RequestBody request: SwitchRoleService.Request): Server.BasicResponse {
+    fun switchRole(@RequestBody request: SwitchRoleService.Request): BasicResponse {
         return switchRoleService.handleRequestAndExceptions(request)
     }
 
