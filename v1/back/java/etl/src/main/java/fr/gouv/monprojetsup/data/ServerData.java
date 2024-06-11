@@ -142,10 +142,10 @@ public class ServerData {
             capacity.put(key, value.stream().mapToInt(f -> f.capacite).sum());
         });
         p90NbFormations
-                = p50(nbFormations.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p50Capacity = p50(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p75Capacity = p75(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
-        p90Capacity = p90(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList()));
+                = p50(nbFormations.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).toList());
+        p50Capacity = p50(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).toList());
+        p75Capacity = p75(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).toList());
+        p90Capacity = p90(capacity.entrySet().stream().filter(e -> filieresFront.contains(e.getKey())).map(Map.Entry::getValue).toList());
 
         initTagSources();
 
