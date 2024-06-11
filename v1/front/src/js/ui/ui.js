@@ -884,7 +884,7 @@ function displayUrls(subkey, forsOfInterest) {
       .append(
         `<div class="formation-details-link">
           <a href="${uri}" target="_psup"
-            >Toute l'offre de formation sur Parcoursup<img
+            >Voir sur la carte Parcoursup<img
               src="img/link-dsfr.svg"
               alt="lien vers le site"
           /></a>
@@ -896,7 +896,7 @@ function displayUrls(subkey, forsOfInterest) {
   $(".formation-details-links-other").empty();
   for (const url of urls) {
     $(".formation-details-links-other").append(
-      `<div class="formation-details-link">
+      `<div class="formation-details-link-with-border">
           <a href="${url.uri}" target="_onisep"
             >${getUrlLabel(url, urls.length >= 2)}<img
               src="img/link-dsfr.svg"
