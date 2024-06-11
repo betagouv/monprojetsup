@@ -12,4 +12,6 @@ interface FormationRepository {
     fun recupererUneFormationAvecSesMetiers(idFormation: String): FormationDetaillee
 
     fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): Map<Formation, List<Metier>>
+
+    fun recupererLesNomsDesFormations(idsFormations: List<String>): List<Formation>
 }

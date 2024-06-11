@@ -2,44 +2,77 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
-import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAdmission
+import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationAutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.recherche.domain.entity.MoyenneGenerale
+import fr.gouv.monprojetsup.recherche.domain.entity.Interet
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.recherche.domain.port.BaccalaureatRepository
+import fr.gouv.monprojetsup.recherche.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
+import fr.gouv.monprojetsup.recherche.domain.port.InteretRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.recherche.domain.port.TripletAffectationRepository
 import org.springframework.stereotype.Service
-import kotlin.jvm.Throws
 
 @Service
 class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val tripletAffectationRepository: TripletAffectationRepository,
+    val baccalaureatRepository: BaccalaureatRepository,
+    val interetRepository: InteretRepository,
+    val domaineRepository: DomaineRepository,
 ) {
+    companion object {
+        private const val TAILLE_ECHELLON_NOTES = 0.5f
+    }
+
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
         profilEleve: ProfilEleve?,
         idFormation: String,
     ): FicheFormation {
         val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)
-        val tripletsAffectations = tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation)
-        val criteresAdmission =
-            CriteresAdmission(
-                principauxPoints = formation.pointsAttendus,
-                moyenneGenerale =
-                    MoyenneGenerale(
-                        centille5eme = 0f,
-                        centille25eme = 12f,
-                        centille75eme = 15f,
-                        centille95eme = 19f,
-                    ),
-                // TODO recuperer la moyenne Générale + les totaux par Bac
-            )
+        val tripletsAffectations =
+            tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(formation.id)
         return if (profilEleve != null) {
+            val explications = suggestionHttpClient.recupererLesExplications(profilEleve, formation.id)
+            val explicationsGeographiquesFiltrees =
+                explications.geographique.sortedBy { it.distanceKm }.distinctBy { it.ville }
+            val explicationAutoEvaluationMoyenne =
+                explications.autoEvaluationMoyenne?.let {
+                    val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.bacUtilise)
+                    ExplicationAutoEvaluationMoyenne(
+                        baccalaureat = baccalaureat ?: Baccalaureat(it.bacUtilise, it.bacUtilise, it.bacUtilise),
+                        moyenneAutoEvalue = it.moyenneAutoEvalue,
+                        basIntervalleNotes = it.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
+                        hautIntervalleNotes = it.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
+                    )
+                }
+            val explicationTypeBaccalaureat =
+                explications.typeBaccalaureat?.let {
+                    val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.nomBaccalaureat)
+                    ExplicationTypeBaccalaureat(
+                        baccalaureat = baccalaureat ?: Baccalaureat(it.nomBaccalaureat, it.nomBaccalaureat, it.nomBaccalaureat),
+                        pourcentage = it.pourcentage,
+                    )
+                }
+            val (domaines: List<Domaine>?, interets: List<Interet>?) =
+                explications.interetsEtDomainesChoisis.takeUnless { it.isEmpty() }
+                    ?.let {
+                        val domaines = domaineRepository.recupererLesDomaines(it)
+                        val interets = interetRepository.recupererLesInterets(it)
+                        Pair(domaines, interets)
+                    } ?: Pair(null, null)
+            val formationsSimilaires =
+                explications.formationsSimilaires.takeUnless { it.isEmpty() }?.let {
+                    formationRepository.recupererLesNomsDesFormations(it)
+                }
+
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
-            val explications = suggestionHttpClient.recupererLesExplications(profilEleve, idFormation)
             val nomMetiersTriesParAffinites =
                 TrieParProfilBuilder.trierMetiersParAffinites(
                     metiers = formation.metiers,
@@ -51,32 +84,20 @@ class RecupererFormationService(
                     communesFavorites = profilEleve.villesPreferees,
                 )
             FicheFormation.FicheFormationPourProfil(
-                id = formation.id,
-                nom = formation.nom,
-                formationsAssociees = formation.formationsAssociees,
-                descriptifFormation = formation.descriptifGeneral,
-                descriptifDiplome = formation.descriptifDiplome,
-                descriptifConseils = formation.descriptifConseils,
-                descriptifAttendus = formation.descriptifAttendus,
-                criteresAdmission = criteresAdmission,
-                liens = formation.liens,
+                formation = formation,
                 tauxAffinite = affinitesFormationEtMetier.formations.first { it.idFormation == formation.id }.tauxAffinite,
                 metiersTriesParAffinites = nomMetiersTriesParAffinites,
                 communesTrieesParAffinites = nomCommunesTriesParAffinites,
-                explications = explications,
+                explications = explications.copy(geographique = explicationsGeographiquesFiltrees),
+                domaines = domaines,
+                interets = interets,
+                explicationAutoEvaluationMoyenne = explicationAutoEvaluationMoyenne,
+                formationsSimilaires = formationsSimilaires,
+                explicationTypeBaccalaureat = explicationTypeBaccalaureat,
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
-                id = formation.id,
-                nom = formation.nom,
-                formationsAssociees = formation.formationsAssociees,
-                descriptifFormation = formation.descriptifGeneral,
-                descriptifDiplome = formation.descriptifDiplome,
-                descriptifConseils = formation.descriptifConseils,
-                descriptifAttendus = formation.descriptifAttendus,
-                criteresAdmission = criteresAdmission,
-                liens = formation.liens,
-                metiers = formation.metiers,
+                formation = formation,
                 communes = tripletsAffectations.map { it.commune }.distinct(),
             )
         }

@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
+import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
-import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve

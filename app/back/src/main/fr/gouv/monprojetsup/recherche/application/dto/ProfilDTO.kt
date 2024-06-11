@@ -157,19 +157,19 @@ class ProfilDTO(
             metiersChoisis = metiers,
             domainesInterets = domaines,
         )
-}
 
-class VilleDTO(
-    @Schema(description = "Code Insee de la ville", example = "75015", required = true)
-    @JsonProperty("codeInsee")
-    val codeInsee: String,
-    @Schema(description = "Dénomination de la ville", example = "Paris", required = true)
-    @JsonProperty("nom")
-    val nom: String,
-    @Schema(description = "Latitude de la ville", example = "2.2885659", required = true)
-    @JsonProperty("latitude")
-    val latitude: Float,
-    @Schema(description = "Longitude de la ville", example = "48.8512252", required = true)
-    @JsonProperty("longitude")
-    val longitude: Float,
-)
+    class VilleDTO(
+        @Schema(description = "Code Insee de la ville", example = "75015", required = true)
+        @JsonProperty("codeInsee")
+        val codeInsee: String,
+        @Schema(description = "Dénomination de la ville", example = "Paris", required = true)
+        @JsonProperty("nom")
+        val nom: String,
+        @Schema(description = "Latitude de la ville", example = "2.2885659", required = true)
+        @JsonProperty("latitude")
+        val latitude: Float,
+        @Schema(description = "Longitude de la ville", example = "48.8512252", required = true)
+        @JsonProperty("longitude")
+        val longitude: Float,
+    )
+}

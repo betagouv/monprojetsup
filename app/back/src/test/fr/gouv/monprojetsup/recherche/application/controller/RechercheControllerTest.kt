@@ -3,21 +3,21 @@ package fr.gouv.monprojetsup.recherche.application.controller
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
-import fr.gouv.monprojetsup.recherche.domain.entity.AutoEvaluationMoyenne
-import fr.gouv.monprojetsup.recherche.domain.entity.Centilles
+import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAdmission
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
+import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationAutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.recherche.domain.entity.Formation
+import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
+import fr.gouv.monprojetsup.recherche.domain.entity.Interet
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
-import fr.gouv.monprojetsup.recherche.domain.entity.MoyenneGenerale
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.recherche.domain.entity.Tag
-import fr.gouv.monprojetsup.recherche.domain.entity.TypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.junit.jupiter.api.Nested
@@ -194,9 +194,36 @@ class RechercheControllerTest(
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationPourProfil(
-                    id = "fl680002",
-                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                    tauxAffinite = 0.9f,
+                    formation =
+                        FormationDetaillee(
+                            id = "fl680002",
+                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                            formationsAssociees = listOf("fl0012"),
+                            descriptifGeneral =
+                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
+                                    "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
+                                    "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                                    "établissement de l’enseignement supérieur, une université.",
+                            descriptifDiplome =
+                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                                    "conférent le grade de licence.",
+                            descriptifAttendus =
+                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                            descriptifConseils =
+                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
+                            liens =
+                                listOf(
+                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                        "cycle-pluridisciplinaire-d-etudes-superieures",
+                                ),
+                            metiers = emptyList(),
+                            pointsAttendus = emptyList(),
+                        ),
                     communesTrieesParAffinites =
                         listOf(
                             "Paris  5e  Arrondissement",
@@ -219,77 +246,56 @@ class RechercheControllerTest(
                                 liens = emptyList(),
                             ),
                         ),
-                    formationsAssociees = listOf("fl0012"),
-                    descriptifFormation =
-                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) " +
-                            "permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes " +
-                            "socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement " +
-                            "par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, " +
-                            "une université.",
-                    descriptifDiplome =
-                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                            "conférent le grade de licence.",
-                    descriptifAttendus =
-                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                    descriptifConseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                            "actuelles en matière de design floral pour exceller dans ce domaine.",
-                    criteresAdmission =
-                        CriteresAdmission(
-                            principauxPoints =
-                                listOf(
-                                    "Les résultats scolaires",
-                                    "Les compétences, méthodes de travail et savoir-faire",
-                                ),
-                            moyenneGenerale =
-                                MoyenneGenerale(
-                                    centille5eme = 10f,
-                                    centille25eme = 14f,
-                                    centille75eme = 17f,
-                                    centille95eme = 19.5f,
-                                ),
-                        ),
-                    liens =
+                    tauxAffinite = 0.9f,
+                    domaines =
                         listOf(
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
+                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
+                        ),
+                    interets = listOf(Interet(id = "T_ROME_731379930", nom = "je veux aider les autres")),
+                    explicationAutoEvaluationMoyenne =
+                        ExplicationAutoEvaluationMoyenne(
+                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
+                            moyenneAutoEvalue = 15f,
+                            basIntervalleNotes = 14f,
+                            hautIntervalleNotes = 16f,
+                        ),
+                    formationsSimilaires =
+                        listOf(
+                            Formation("fl1", "CPGE MPSI"),
+                            Formation("fl7", "BUT Informatique"),
                         ),
                     explications =
                         ExplicationsSuggestion(
                             geographique =
                                 listOf(
-                                    ExplicationGeographique(
+                                    ExplicationsSuggestion.ExplicationGeographique(
                                         ville = "Nantes",
                                         distanceKm = 1,
                                     ),
-                                    ExplicationGeographique(
-                                        ville = "Nantes",
-                                        distanceKm = 85,
+                                    ExplicationsSuggestion.ExplicationGeographique(
+                                        ville = "Paris",
+                                        distanceKm = 3,
                                     ),
                                 ),
                             formationsSimilaires = listOf("fl1", "fl7"),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                             alternance = ChoixAlternance.TRES_INTERESSE,
-                            interets = listOf("chat", "medecin"),
                             specialitesChoisies =
-                                mapOf(
-                                    "specialiteA" to 0.12,
-                                    "specialiteB" to 0.1,
-                                    "specialiteC" to 0.89,
+                                listOf(
+                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
                                 ),
                             typeBaccalaureat =
-                                TypeBaccalaureat(
+                                ExplicationsSuggestion.TypeBaccalaureat(
                                     nomBaccalaureat = "Général",
                                     pourcentage = 18,
                                 ),
                             autoEvaluationMoyenne =
-                                AutoEvaluationMoyenne(
-                                    moyenne = 14.5,
-                                    mediane =
-                                        Centilles(
+                                ExplicationsSuggestion.AutoEvaluationMoyenne(
+                                    moyenneAutoEvalue = 14.5f,
+                                    rangs =
+                                        ExplicationsSuggestion.RangsEchellons(
                                             rangEch25 = 12,
                                             rangEch50 = 14,
                                             rangEch75 = 16,
@@ -298,23 +304,16 @@ class RechercheControllerTest(
                                         ),
                                     bacUtilise = "Général",
                                 ),
-                            tags =
-                                listOf(
-                                    Tag(
-                                        noeuds = listOf("noeud1", "noeud2", "noeud3"),
-                                        poid = 12.4,
-                                    ),
-                                    Tag(
-                                        noeuds = listOf("noeud4"),
-                                        poid = 18.0,
-                                    ),
-                                ),
-                            tagsCourts =
+                            interetsEtDomainesChoisis =
                                 listOf(
                                     "T_ROME_731379930",
-                                    "T_IDEO2_4812",
-                                    "T_ROME_803089798",
+                                    "T_ITM_1356",
                                 ),
+                        ),
+                    explicationTypeBaccalaureat =
+                        ExplicationTypeBaccalaureat(
+                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                            pourcentage = 18,
                         ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
@@ -331,28 +330,27 @@ class RechercheControllerTest(
                           "formation": {
                             "id": "fl680002",
                             "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "formationsAssociees": [
+                            "idsFormationsAssociees": [
                               "fl0012"
                             ],
                             "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "criteresAdmission": {
-                              "principauxPoints": [
-                                "Les résultats scolaires",
-                                "Les compétences, méthodes de travail et savoir-faire"
-                              ],
-                              "moyenneGenerale": {
-                                "centille5eme": 10.0,
-                                "centille25eme": 14.0,
-                                "centille75eme": 17.0,
-                                "centille95eme": 19.5
-                              }
+                            "moyenneGeneraleDesAdmis": {
+                              "idBaccalaureat": "",
+                              "nomBaccalaureat": "",
+                              "centilles": []
                             },
-                            "liens": [
-                              "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                            ],
+                            "criteresAnalyseCandidature": {
+                              "nom": "",
+                              "pourcentage": 12
+                            },
+                            "repartitionAdmisAnneePrecedente": {
+                              "total": 12,
+                              "parBaccalaureat": []
+                            },
+                            "liens": [],
                             "villes": [
                               "Paris  5e  Arrondissement",
                               "Paris 16e  Arrondissement"
@@ -362,15 +360,13 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "liens": [
-                                  "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
-                                ]
+                                "liens": []
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": null
+                                "liens": []
                               }
                             ],
                             "tauxAffinite": 0.9
@@ -378,65 +374,65 @@ class RechercheControllerTest(
                           "explications": {
                             "geographique": [
                               {
-                                "nom": "Nantes",
+                                "nomVille": "Nantes",
                                 "distanceKm": 1
                               },
                               {
-                                "nom": "Nantes",
-                                "distanceKm": 85
+                                "nomVille": "Paris",
+                                "distanceKm": 3
                               }
                             ],
                             "formationsSimilaires": [
-                              "fl1",
-                              "fl7"
+                              {
+                                "id": "fl1",
+                                "nom": "CPGE MPSI"
+                              },
+                              {
+                                "id": "fl7",
+                                "nom": "BUT Informatique"
+                              }
                             ],
                             "dureeEtudesPrevue": "longue",
                             "alternance": "tres_interesse",
-                            "interets": [
-                              "chat",
-                              "medecin"
-                            ],
-                            "specialitesChoisies": {
-                              "specialiteA": 0.12,
-                              "specialiteB": 0.1,
-                              "specialiteC": 0.89
+                            "interetsEtDomainesChoisis": {
+                              "interets": [
+                                {
+                                  "id": "T_ROME_731379930",
+                                  "nom": "je veux aider les autres"
+                                }
+                              ],
+                              "domaines": [
+                                {
+                                  "id": "T_ITM_1356",
+                                  "nom": "soin aux animaux"
+                                }
+                              ]
                             },
+                            "specialitesChoisies": [
+                              {
+                                "nomSpecialite": "specialiteA",
+                                "pourcentage": 12
+                              },
+                              {
+                                "nomSpecialite": "specialiteB",
+                                "pourcentage": 1
+                              },
+                              {
+                                "nomSpecialite": "specialiteC",
+                                "pourcentage": 89
+                              }
+                            ],
                             "typeBaccalaureat": {
-                              "nomBaccalaureat": "Général",
+                              "nomBaccalaureat": "Série Générale",
                               "pourcentage": 18
                             },
                             "autoEvaluationMoyenne": {
-                              "moyenne": 14.5,
-                              "mediane": {
-                                "rangEch25": 12,
-                                "rangEch50": 14,
-                                "rangEch75": 16,
-                                "rangEch10": 10,
-                                "rangEch90": 17
-                              },
-                              "bacUtilise": "Général"
-                            },
-                            "tags": [
-                              {
-                                "noeuds": [
-                                  "noeud1",
-                                  "noeud2",
-                                  "noeud3"
-                                ],
-                                "poid": 12.4
-                              },
-                              {
-                                "noeuds": [
-                                  "noeud4"
-                                ],
-                                "poid": 18.0
-                              }
-                            ],
-                            "tagsCourts": [
-                              "T_ROME_731379930",
-                              "T_IDEO2_4812",
-                              "T_ROME_803089798"
-                            ]
+                              "moyenne": 15.0,
+                              "basIntervalleNotes": 14.0,
+                              "hautIntervalleNotes": 16.0,
+                              "idBaccalaureatUtilise": "Générale",
+                              "nomBaccalaureatUtilise": "Série Générale"
+                            }
                           }
                         }
                         """.trimIndent(),
@@ -449,67 +445,60 @@ class RechercheControllerTest(
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationSansProfil(
-                    id = "fl680002",
-                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                    communes =
-                        listOf(
-                            "Paris  5e  Arrondissement",
-                            "Paris 16e  Arrondissement",
-                        ),
-                    metiers =
-                        listOf(
-                            MetierDetaille(
-                                id = "MET001",
-                                nom = "géomaticien/ne",
-                                descriptif =
-                                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                        "exploite les données pour modéliser le territoire",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
-                            ),
-                            MetierDetaille(
-                                id = "MET002",
-                                nom = "documentaliste",
-                                descriptif = null,
-                                liens = emptyList(),
-                            ),
-                        ),
-                    formationsAssociees = listOf("fl0012"),
-                    descriptifFormation =
-                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) " +
-                            "permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes " +
-                            "socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement " +
-                            "par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, " +
-                            "une université.",
-                    descriptifDiplome =
-                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                            "conférent le grade de licence.",
-                    descriptifAttendus =
-                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                    descriptifConseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                            "actuelles en matière de design floral pour exceller dans ce domaine.",
-                    criteresAdmission =
-                        CriteresAdmission(
-                            principauxPoints =
+                    formation =
+                        FormationDetaillee(
+                            id = "fl680002",
+                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                            metiers =
+                                listOf(
+                                    MetierDetaille(
+                                        id = "MET001",
+                                        nom = "géomaticien/ne",
+                                        descriptif =
+                                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                                                "exploite les données pour modéliser le territoire",
+                                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
+                                    ),
+                                    MetierDetaille(
+                                        id = "MET002",
+                                        nom = "documentaliste",
+                                        descriptif = null,
+                                        liens = emptyList(),
+                                    ),
+                                ),
+                            formationsAssociees = listOf("fl0012"),
+                            descriptifGeneral =
+                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
+                                    "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
+                                    "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                                    "établissement de l’enseignement supérieur, une université.",
+                            descriptifDiplome =
+                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                                    "conférent le grade de licence.",
+                            descriptifAttendus =
+                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                            descriptifConseils =
+                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
+                            liens =
+                                listOf(
+                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                        "cycle-pluridisciplinaire-d-etudes-superieures",
+                                ),
+                            pointsAttendus =
                                 listOf(
                                     "Les résultats scolaires",
                                     "Les compétences, méthodes de travail et savoir-faire",
                                 ),
-                            moyenneGenerale =
-                                MoyenneGenerale(
-                                    centille5eme = 10f,
-                                    centille25eme = 14f,
-                                    centille75eme = 17f,
-                                    centille95eme = 19.5f,
-                                ),
                         ),
-                    liens =
+                    communes =
                         listOf(
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
+                            "Paris  5e  Arrondissement",
+                            "Paris 16e  Arrondissement",
                         ),
                 )
             given(recupererFormationService.recupererFormation(null, "fl680002")).willReturn(ficheFormation)
@@ -531,28 +520,27 @@ class RechercheControllerTest(
                           "formation": {
                             "id": "fl680002",
                             "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            "formationsAssociees": [
+                            "idsFormationsAssociees": [
                               "fl0012"
                             ],
                             "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
-                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "criteresAdmission": {
-                              "principauxPoints": [
-                                "Les résultats scolaires",
-                                "Les compétences, méthodes de travail et savoir-faire"
-                              ],
-                              "moyenneGenerale": {
-                                "centille5eme": 10.0,
-                                "centille25eme": 14.0,
-                                "centille75eme": 17.0,
-                                "centille95eme": 19.5
-                              }
-                            },
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                            "liens": [
-                              "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
-                            ],
+                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                            "moyenneGeneraleDesAdmis": {
+                              "idBaccalaureat": "",
+                              "nomBaccalaureat": "",
+                              "centilles": []
+                            },
+                            "criteresAnalyseCandidature": {
+                              "nom": "",
+                              "pourcentage": 12
+                            },
+                            "repartitionAdmisAnneePrecedente": {
+                              "total": 12,
+                              "parBaccalaureat": []
+                            },
+                            "liens": [],
                             "villes": [
                               "Paris  5e  Arrondissement",
                               "Paris 16e  Arrondissement"
@@ -562,13 +550,13 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "liens": ["https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"]
+                                "liens": []
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": null
+                                "liens": []
                               }
                             ],
                             "tauxAffinite": null
