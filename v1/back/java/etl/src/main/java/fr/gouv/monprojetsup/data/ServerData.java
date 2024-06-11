@@ -497,5 +497,6 @@ public class ServerData {
     public static Map<String, String> getFormationTofilieres() {
         return new HashMap<>(formationsToFilieres);
     }
+
 }
 
