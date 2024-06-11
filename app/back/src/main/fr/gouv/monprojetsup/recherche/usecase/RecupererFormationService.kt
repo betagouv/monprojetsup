@@ -16,6 +16,7 @@ import fr.gouv.monprojetsup.recherche.domain.port.InteretRepository
 import fr.gouv.monprojetsup.recherche.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.recherche.domain.port.TripletAffectationRepository
 import org.springframework.stereotype.Service
+import kotlin.math.roundToInt
 
 @Service
 class RecupererFormationService(
@@ -83,9 +84,13 @@ class RecupererFormationService(
                     tripletsAffectation = tripletsAffectations,
                     communesFavorites = profilEleve.villesPreferees,
                 )
+            val tauxAffinite =
+                affinitesFormationEtMetier.formations.firstOrNull {
+                    it.idFormation == formation.id
+                }?.tauxAffinite?.let { (it * 100).roundToInt() } ?: 0
             FicheFormation.FicheFormationPourProfil(
                 formation = formation,
-                tauxAffinite = affinitesFormationEtMetier.formations.first { it.idFormation == formation.id }.tauxAffinite,
+                tauxAffinite = tauxAffinite,
                 metiersTriesParAffinites = nomMetiersTriesParAffinites,
                 communesTrieesParAffinites = nomCommunesTriesParAffinites,
                 explications = explications.copy(geographique = explicationsGeographiquesFiltrees),

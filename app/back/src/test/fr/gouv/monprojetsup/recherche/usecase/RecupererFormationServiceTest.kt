@@ -380,7 +380,7 @@ class RecupererFormationServiceTest {
                             ),
                         ),
                     communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
-                    tauxAffinite = 0.7f,
+                    tauxAffinite = 70,
                     formationsSimilaires = null,
                     explicationAutoEvaluationMoyenne = null,
                     domaines = null,
@@ -511,7 +511,7 @@ class RecupererFormationServiceTest {
                             ),
                         ),
                     communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
-                    tauxAffinite = 0.7f,
+                    tauxAffinite = 70,
                     formationsSimilaires = null,
                     explicationAutoEvaluationMoyenne = null,
                     domaines = null,
@@ -769,6 +769,72 @@ class RecupererFormationServiceTest {
             // Then
             resultat as FicheFormation.FicheFormationPourProfil
             assertThat(resultat.formationsSimilaires).usingRecursiveComparison().isEqualTo(formations)
+        }
+
+        @Test
+        fun `si la formation n'est pas présente dans la liste retournée par l'api suggestion, doit retourner 0 en taux d'affinité`() {
+            // Given
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl00011")).willReturn(formationDetaillee.copy(id = "fl00011"))
+            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00011")).willReturn(
+                tripletsAffectations,
+            )
+            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val explications = ExplicationsSuggestion()
+            given(
+                suggestionHttpClient.recupererLesExplications(
+                    profilEleve = profil,
+                    idFormation = "fl00011",
+                ),
+            ).willReturn(explications)
+            // When
+            val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00011")
+
+            // Then
+            assertThat(resultat.tauxAffinite).isEqualTo(0)
+        }
+
+        @Test
+        fun `si la valeur du taux d'affinité est strictement inférieur à x,xx5, doit l'arrondir à l'inférieur`() {
+            // Given
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0002")).willReturn(formationDetaillee.copy(id = "fl0002"))
+            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0002")).willReturn(
+                tripletsAffectations,
+            )
+            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val explications = ExplicationsSuggestion()
+            given(
+                suggestionHttpClient.recupererLesExplications(
+                    profilEleve = profil,
+                    idFormation = "fl0002",
+                ),
+            ).willReturn(explications)
+            // When
+            val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0002")
+
+            // Then
+            assertThat(resultat.tauxAffinite).isEqualTo(13)
+        }
+
+        @Test
+        fun `si la valeur du taux d'affinité est supérieur ou égale à x,xx5, doit l'arrondir au supérieur`() {
+            // Given
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl00014")).willReturn(formationDetaillee.copy(id = "fl00014"))
+            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00014")).willReturn(
+                tripletsAffectations,
+            )
+            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val explications = ExplicationsSuggestion()
+            given(
+                suggestionHttpClient.recupererLesExplications(
+                    profilEleve = profil,
+                    idFormation = "fl00014",
+                ),
+            ).willReturn(explications)
+            // When
+            val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00014")
+
+            // Then
+            assertThat(resultat.tauxAffinite).isEqualTo(66)
         }
     }
 }

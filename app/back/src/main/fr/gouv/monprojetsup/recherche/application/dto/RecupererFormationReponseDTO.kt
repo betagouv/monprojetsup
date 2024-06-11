@@ -27,7 +27,7 @@ data class RecupererFormationReponseDTO(
         val liens: List<LiensDTO>,
         val villes: List<String>,
         val metiers: List<MetierDetailleDTO>,
-        val tauxAffinite: Float?,
+        val tauxAffinite: Int?,
     ) {
         companion object {
             fun fromFicheFormation(ficheFormation: FicheFormation): FormationDetailleDTO {
