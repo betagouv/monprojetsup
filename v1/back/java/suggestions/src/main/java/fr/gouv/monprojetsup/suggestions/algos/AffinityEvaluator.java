@@ -142,7 +142,7 @@ public class AffinityEvaluator {
 
     /* the public entry points */
     public Affinite getAffinityEvaluation(String fl) {
-        if (USE_BIN && rejected.contains(fl)) return Affinite.getNoMatch(fl);
+        if (USE_BIN && rejected.contains(fl)) return Affinite.getNoMatch();
         return getScoreAndExplanation(fl, null, null);
     }
 
@@ -219,13 +219,13 @@ public class AffinityEvaluator {
             Map<String, Double> matches
             ) {
 
-         if(rejected.contains(fl)) return Affinite.getNoMatch(fl);
+         if(rejected.contains(fl)) return Affinite.getNoMatch();
 
         final int bacIndex = pf.bacIndex();
 
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
         if (isLas(fl) && !isInterestedinHealth) {
-            return Affinite.getNoMatch(fl);
+            return Affinite.getNoMatch();
         }
 
         /*
@@ -244,7 +244,7 @@ public class AffinityEvaluator {
         boolean process = expl != null
                 || scores.entrySet().stream()
                 .anyMatch(e -> cfg.personalCriteria().contains(e.getKey()) && e.getValue() > Config.NO_MATCH_SCORE);
-        if (!process) return Affinite.getNoMatch(fl);
+        if (!process) return Affinite.getNoMatch();
 
         if(Helpers.isFiliere(fl)) {
             scores.putAll(Map.ofEntries(
@@ -299,7 +299,7 @@ public class AffinityEvaluator {
         quotas.put(Affinite.SuggestionDiversityQuota.BAC, bacMultiplier);
         quotas.put(Affinite.SuggestionDiversityQuota.MOYGEN, moyGenMultiplier);
 
-        return new Affinite(fl, score, quotas);
+        return new Affinite(score, quotas);
     }
 
 
@@ -715,14 +715,21 @@ public class AffinityEvaluator {
 
         List<Explanation> explanations;
         if (Helpers.isFiliere(key)) {
+            val mainExpl = getExplanations(key).getLeft();
+
             Set<String> keys = ServerData.getFilieresOfGroup(key);
-            explanations = keys.stream()
-                    .map(this::getExplanations)
-                    .sorted(Comparator.comparingDouble(p -> -p.getRight()))
-                    .map(Pair::getLeft)
-                    .findFirst()
-                    .orElse(List.of());
-            if (keys.size() >= 2) {
+
+            val subExpl = keys.stream()
+                    .filter(k -> !k.equals(key))
+                    .flatMap(e -> getExplanations(e).getLeft().stream())
+                    .filter(e -> e != null && e.isInheritableFromSingleFormationToItsGroup())
+                    .toList();
+
+            if (subExpl.isEmpty()) {
+                explanations = mainExpl;
+            } else {
+                explanations = new ArrayList<>(mainExpl);
+                explanations.addAll(subExpl);
                 explanations = Explanation.merge(explanations);
             }
         } else {

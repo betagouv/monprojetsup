@@ -12,6 +12,8 @@ import java.util.List;
 @Service
 public class GetSuggestionsService extends MyService<GetAffinitiesServiceDTO.Request, GetAffinitiesServiceDTO.Response> {
 
+    public final static  String SUGGESTIONS_ENDPOINT = "suggestions";
+
 
     public GetSuggestionsService() {
         super(GetAffinitiesServiceDTO.class);

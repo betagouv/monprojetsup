@@ -196,47 +196,6 @@ export async function getProfile() {
   data.loadProfile(msg.profile);
 }
 
-export async function askFormationsDetails() {
-  const profile = data.getAnonymousProfile();
-  const msg = await server.getFormationsAffinities(profile);
-  const affinites = msg.affinites;
-  const keys = [];
-  let i = 0;
-  for (i = 0; i < 20; i++) {
-    //horrible way to do that
-    if (i >= affinites.length) break;
-    const key = msg.affinites[i].key;
-    keys.push(key);
-  }
-
-  const msg2 = await server.getExplanations(keys, profile);
-  i = 0;
-  for (const explanations of msg2.liste) {
-    //todo  check key
-    if (explanations.key != keys[i]) {
-      await frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
-      break;
-    }
-    affinites[i].explanations = explanations;
-    i++;
-  }
-
-  //explanations
-  const msg3 = await server.getDetails(keys, profile);
-  i = 0;
-  for (const details of msg3.details) {
-    //todo  check key
-    if (details.key != keys[i]) {
-      await frontErrorHandler({ msg: "Réponse erronée du serveur" }, true);
-      break;
-    }
-    affinites[i].details = details;
-    i++;
-  }
-
-  return affinites;
-}
-
 export async function doSearch(recherche) {
   const includeFormations = true;
   const includeMetiers = true;
