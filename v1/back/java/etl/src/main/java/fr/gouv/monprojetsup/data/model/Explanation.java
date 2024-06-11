@@ -114,14 +114,19 @@ public class Explanation {
 
     public static @NotNull List<Explanation> merge(@Nullable List<Explanation> explanations) {
         if(explanations == null) return Collections.emptyList();
-        List<Explanation> result = new ArrayList<>();
+
+        //we use a set to avoid duplicates
+        Set<Explanation> result = new HashSet<>();
         ExplanationDuration dur = null;
 
+        ExplanationSpecialites spec = null;
+        boolean seenSpec = false;
+        ExplanationTypeBac tbac = null;
+        boolean seenTbac = false;
         ExplanationNotes moygen = null;
         boolean seenMoyGen = false;
 
-        ExplanationTypeBac tbac = null;
-        boolean seenTypeBac = false;
+        ExplanationApprentissage app = null;
 
         Set<Path> pathes = new HashSet<>();
         Set<String> nodes = new HashSet<>();
@@ -129,29 +134,30 @@ public class Explanation {
             if(e == null) {
                 continue;
             }
-
-            if (e.geo != null || e.simi != null || e.debug != null || e.spec != null) {
-                result.add(e);
+            if(e.app != null) {
+                app = e.app;
             }
-            if (e.dur != null && dur == null) {
-                result.add(e);
+            if(e.dur != null) {
                 dur = e.dur;
             }
-            if (e.moygen != null) {
-                if(seenMoyGen) {
-                    moygen = null;
-                } else {
-                    moygen = e.moygen;
-                    seenMoyGen = true;
-                }
+
+            if (e.geo != null || e.simi != null || e.debug != null) {
+                result.add(e);
+            }
+            if (e.spec != null) {
+                if(!seenSpec) spec = e.spec;
+                else spec = null;
+                seenSpec = true;
             }
             if (e.tbac != null) {
-                if(seenTypeBac) {
-                    tbac = null;
-                } else {
-                    tbac = e.tbac;
-                    seenTypeBac = true;
-                }
+                if(!seenTbac) tbac = e.tbac;
+                else tbac = null;
+                seenTbac = true;
+            }
+            if (e.moygen != null) {
+                if(!seenMoyGen) moygen = e.moygen;
+                else moygen = null;
+                seenMoyGen = true;
             }
             if(e.tag != null) {
                 pathes.addAll(e.tag.pathes());
@@ -160,14 +166,14 @@ public class Explanation {
                 nodes.addAll(e.tags.ns());
             }
         }
-        if(moygen != null) {
-            Explanation e = new Explanation();
-            e.moygen = moygen;
-            result.add(e);
-        }
-        if(tbac != null) {
-            Explanation e = new Explanation();
-            e.tbac = tbac;
+
+        Explanation e = new Explanation();
+        e.app = app;
+        e.dur = dur;
+        e.spec = spec;
+        e.tbac = tbac;
+        e.moygen = moygen;
+        if(e.isEmpty()) {
             result.add(e);
         }
         if(!pathes.isEmpty()) {
@@ -176,7 +182,11 @@ public class Explanation {
         if(!nodes.isEmpty()) {
             result.add(getTagExplanationShort(nodes));
         }
-        return result;
+        return result.stream().toList();
+    }
+
+    private boolean isEmpty() {
+        return geo == null && app == null && tag == null && tags == null && dur == null && simi == null && tbac == null && moygen == null && debug == null && spec == null;
     }
 
     public static @NotNull Explanation getGeoExplanation(@Nullable List<ExplanationGeo> result) {
@@ -293,6 +303,13 @@ public class Explanation {
     }
 
 
+    public boolean isInheritableFromSingleFormationToItsGroup() {
+        return hasNoStats();
+    }
+
+    private boolean hasNoStats() {
+        return moygen == null && tbac == null && spec == null;
+    }
 }
 
 

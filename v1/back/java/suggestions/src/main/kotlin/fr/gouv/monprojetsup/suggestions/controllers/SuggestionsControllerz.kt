@@ -7,6 +7,8 @@ import fr.gouv.monprojetsup.data.dto.SortMetiersByAffinityServiceDTO
 import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
 import fr.gouv.monprojetsup.suggestions.services.*
+import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService.EXPLANATIONS_ENDPOINT
+import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService.SUGGESTIONS_ENDPOINT
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -34,16 +36,10 @@ class SuggestionsControllerz(
     private val getSimpleStatsService: GetSimpleStatsService
 ) {
 
-    @Operation(summary = "Récupère la liste des formations et des métiers, classés par affinité.")
-    @PostMapping("/affinites")
-    fun getAffiniteFormations(
-        @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
-    ): GetAffinitiesServiceDTO.Response {
-        return getSuggestionsService.handleRequestAndExceptions(request)
-    }
+
 
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
-    @PostMapping("/suggestions")
+    @PostMapping("/$SUGGESTIONS_ENDPOINT")
     fun getSuggestions(
         @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
     ): GetAffinitiesServiceDTO.Response {
@@ -63,7 +59,7 @@ class SuggestionsControllerz(
         description = "Produit des explications au sujet de l'affinité d'un profil à une formation." +
                 "Les explications sont des éléments sur la cohérence entre les différents éléments de profil et les caractéristiques de la formation." +
                 "Par exemple la cohérence avec les préférences géographiques ou les centres d'intérêts du candidat.")
-    @PostMapping("/explanations")
+    @PostMapping("/$EXPLANATIONS_ENDPOINT")
     fun getExplanationsAndExamples(@RequestBody request : GetExplanationsAndExamplesServiceDTO.Request): GetExplanationsAndExamplesServiceDTO.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
 
     @Operation(summary = "Récupère une liste de formations d'affectation d'un ou plusieurs types, les plus proches d'une liste de villes données.")
