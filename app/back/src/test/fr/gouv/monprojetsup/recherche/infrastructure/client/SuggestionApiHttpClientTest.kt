@@ -6,18 +6,17 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorExcep
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
-import fr.gouv.monprojetsup.recherche.domain.entity.AutoEvaluationMoyenne
-import fr.gouv.monprojetsup.recherche.domain.entity.Centilles
+import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
-import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AffiniteSpecialite
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.ExplicationGeographique
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.Specialite
-import fr.gouv.monprojetsup.recherche.domain.entity.Tag
-import fr.gouv.monprojetsup.recherche.domain.entity.TypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.port.SpecialitesRepository
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
@@ -398,7 +397,7 @@ class SuggestionApiHttpClientTest {
             }.isEqualTo(
                 MonProjetSupInternalErrorException(
                     code = "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    msg = "Erreur lors de la connexion à l'API de suggestions à l'url http://localhost:8080/affinites",
+                    msg = "Erreur lors de la connexion à l'API de suggestions à l'url http://localhost:8080/suggestions",
                     origine = exception,
                 ),
             )
@@ -506,26 +505,6 @@ class SuggestionApiHttpClientTest {
                           }
                         },
                         {
-                          "tag": {
-                            "paths": [
-                              {
-                                "nodes": [
-                                  "noeud1",
-                                  "noeud2",
-                                  "noeud3"
-                                ],
-                                "weight": 12.4
-                              },
-                              {
-                                "nodes": [
-                                  "noeud4"
-                                ],
-                                "weight": 18
-                              }
-                            ]
-                          }
-                        },
-                        {
                           "simi": {
                             "fl": "fl1",
                             "p": 0.15
@@ -544,19 +523,6 @@ class SuggestionApiHttpClientTest {
                           }
                         },
                         {
-                          "bac": {
-                            "moy": 14.5,
-                            "middle50": {
-                              "rangEch10": 10,
-                              "rangEch25": 12,
-                              "rangEch50": 14,
-                              "rangEch75": 16,
-                              "rangEch90": 17
-                            },
-                            "bacUtilise": "Général"
-                          }
-                        },
-                        {
                           "moygen": {
                             "moy": 14.5,
                             "middle50": {
@@ -571,24 +537,20 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "spec": {
-                            "stats": {
-                              "specialiteA": 0.12,
-                              "specialiteB": 0.10,
-                              "specialiteC": 0.89
-                            }
-                          }
-                        },
-                        {
-                          "interets": {
-                            "tags": [
-                              "chat",
-                              "medecin"
+                            "stats": [
+                              {
+                                "spe": "specialiteA",
+                                "pct": 12
+                              },
+                              {
+                                "spe": "specialiteB",
+                                "pct": 10
+                              },
+                              {
+                                "spe": "specialiteC",
+                                "pct": 89
+                              }
                             ]
-                          }
-                        },
-                        {
-                          "search": {
-                            "word": "animal"
                           }
                         },
                         {
@@ -602,6 +564,20 @@ class SuggestionApiHttpClientTest {
                               "distance": 85,
                               "city": "Nantes",
                               "form": "ta5888"
+                            }
+                          ]
+                        },
+                        {
+                          "geo": [
+                            {
+                              "distance": 20,
+                              "city": "Paris",
+                              "form": "ta5589"
+                            },
+                            {
+                              "distance": 25,
+                              "city": "Paris",
+                              "form": "ta5890"
                             }
                           ]
                         },
@@ -651,16 +627,23 @@ class SuggestionApiHttpClientTest {
                                 ville = "Nantes",
                                 distanceKm = 85,
                             ),
+                            ExplicationGeographique(
+                                ville = "Paris",
+                                distanceKm = 20,
+                            ),
+                            ExplicationGeographique(
+                                ville = "Paris",
+                                distanceKm = 25,
+                            ),
                         ),
                     formationsSimilaires = listOf("fl1", "fl7"),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                     alternance = ChoixAlternance.TRES_INTERESSE,
-                    interets = listOf("chat", "medecin"),
                     specialitesChoisies =
-                        mapOf(
-                            "specialiteA" to 0.12,
-                            "specialiteB" to 0.1,
-                            "specialiteC" to 0.89,
+                        listOf(
+                            AffiniteSpecialite("specialiteA", 12),
+                            AffiniteSpecialite("specialiteB", 10),
+                            AffiniteSpecialite("specialiteC", 89),
                         ),
                     typeBaccalaureat =
                         TypeBaccalaureat(
@@ -669,9 +652,9 @@ class SuggestionApiHttpClientTest {
                         ),
                     autoEvaluationMoyenne =
                         AutoEvaluationMoyenne(
-                            moyenne = 14.5,
-                            mediane =
-                                Centilles(
+                            moyenneAutoEvalue = 14.5f,
+                            rangs =
+                                ExplicationsSuggestion.RangsEchellons(
                                     rangEch25 = 12,
                                     rangEch50 = 14,
                                     rangEch75 = 16,
@@ -680,18 +663,7 @@ class SuggestionApiHttpClientTest {
                                 ),
                             bacUtilise = "Général",
                         ),
-                    tags =
-                        listOf(
-                            Tag(
-                                noeuds = listOf("noeud1", "noeud2", "noeud3"),
-                                poid = 12.4,
-                            ),
-                            Tag(
-                                noeuds = listOf("noeud4"),
-                                poid = 18.0,
-                            ),
-                        ),
-                    tagsCourts =
+                    interetsEtDomainesChoisis =
                         listOf(
                             "T_ROME_731379930",
                             "T_IDEO2_4812",
@@ -806,7 +778,7 @@ class SuggestionApiHttpClientTest {
                             ),
                         ),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    tagsCourts = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
+                    interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
                 )
             assertThat(result).isEqualTo(attendu)
         }

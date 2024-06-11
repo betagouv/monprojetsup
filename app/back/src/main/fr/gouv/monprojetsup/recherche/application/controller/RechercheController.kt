@@ -1,12 +1,10 @@
 package fr.gouv.monprojetsup.recherche.application.controller
 
-import fr.gouv.monprojetsup.recherche.application.dto.ExplicationsDTO
-import fr.gouv.monprojetsup.recherche.application.dto.FormationDTO
-import fr.gouv.monprojetsup.recherche.application.dto.FormationDetailleDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationReponseDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationRequeteDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationReponseDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationRequeteDTO
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,7 +32,7 @@ class RechercheController(
         return RechercheFormationReponseDTO(
             formations =
                 formationsPourProfil.map { formationPourProfil ->
-                    FormationDTO(
+                    RechercheFormationReponseDTO.FormationDTO(
                         id = formationPourProfil.id,
                         nom = formationPourProfil.nom,
                         tauxAffinite = formationPourProfil.tauxAffinite,
@@ -50,14 +48,21 @@ class RechercheController(
         @PathVariable("idformation") idFormation: String,
         @RequestBody recupererFormationRequeteDTO: RecupererFormationRequeteDTO,
     ): RecupererFormationReponseDTO {
-        val formation =
+        val ficheFormation =
             recupererFormationService.recupererFormation(
                 profilEleve = recupererFormationRequeteDTO.profil?.toProfil(),
                 idFormation = idFormation,
             )
         return RecupererFormationReponseDTO(
-            formation = FormationDetailleDTO.fromFicheFormation(formation),
-            explications = formation.explications?.let { explications -> ExplicationsDTO.fromExplications(explications) },
+            formation = RecupererFormationReponseDTO.FormationDetailleDTO.fromFicheFormation(ficheFormation),
+            explications =
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil ->
+                        RecupererFormationReponseDTO.ExplicationsDTO.fromFicheFormation(
+                            ficheFormation,
+                        )
+                    is FicheFormation.FicheFormationSansProfil -> null
+                },
         )
     }
 

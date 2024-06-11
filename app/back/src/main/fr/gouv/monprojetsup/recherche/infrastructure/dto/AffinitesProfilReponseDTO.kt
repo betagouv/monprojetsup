@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.recherche.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
-import fr.gouv.monprojetsup.recherche.domain.entity.FormationAvecSonAffinite
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AffinitesProfilReponseDTO(
@@ -16,7 +15,7 @@ data class AffinitesProfilReponseDTO(
         AffinitesPourProfil(
             formations =
                 affinites.sortedByDescending { it.affinite }.map {
-                    FormationAvecSonAffinite(
+                    AffinitesPourProfil.FormationAvecSonAffinite(
                         idFormation = it.key,
                         tauxAffinite = it.affinite,
                     )

@@ -62,4 +62,10 @@ class FormationBDDRepository(
             formationEntity.toFormation() to formationEntity.metiers.map { it.metier.toMetier() }
         }
     }
+
+    @Transactional(readOnly = true)
+    override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<Formation> {
+        val formations = formationJPARepository.findAllByIdIn(idsFormations)
+        return formations.map { Formation(it.id, it.label) }
+    }
 }
