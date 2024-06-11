@@ -11,13 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
-/*export const setGroupAdmin = admin_services.setGroupAdmin;
-export const createGroup = admin_services.createGroup;
-export const deleteUser = admin_services.deleteUser;
-export const moderateAccountCreation = admin_services.moderateAccountCreation;
-export const setModeration = admin_services.setModeration;
-export const changeGroupStatus = admin_services.changeGroupStatus;
-*/
+
 @RestController
 @RequestMapping("$BASE_PATH/admin")
 class AdminControllers(

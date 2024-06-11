@@ -81,7 +81,6 @@ public class AlgoSuggestions {
 
 
     public record Affinite(
-            String key,
             double affinite,
             EnumMap<SuggestionDiversityQuota, Double> scores
     ) {
@@ -119,13 +118,13 @@ public class AlgoSuggestions {
             quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
         }
 
-        public static Affinite getNoMatch(String key) {
-            return new Affinite(key, NO_MATCH_SCORE, new EnumMap<>(SuggestionDiversityQuota.class));
+        public static Affinite getNoMatch() {
+            return new Affinite(NO_MATCH_SCORE, new EnumMap<>(SuggestionDiversityQuota.class));
         }
 
         public static Affinite round(Affinite aff, double finalMaxScore) {
             double newAffinite = Math.max(0.0, Math.min(1.0, Math.round( (aff.affinite / finalMaxScore) * 10e6) / 10e6));
-            return new Affinite(aff.key, newAffinite,aff.scores);
+            return new Affinite(newAffinite,aff.scores);
         }
 
         public @NotNull Affinite max(@Nullable Affinite affinite) {
@@ -173,7 +172,7 @@ public class AlgoSuggestions {
             pf.suggRejected().forEach(suggestionDTO -> {
                 String fl = suggestionDTO.fl();
                 if (affinites.containsKey(fl)) {
-                    affinites.put(fl, Affinite.getNoMatch(fl));
+                    affinites.put(fl, Affinite.getNoMatch());
                 }
             });
         }
@@ -181,7 +180,10 @@ public class AlgoSuggestions {
         //rounding to 6 digits
         double finalMaxScore = maxScore;
         affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
-        return affinites.entrySet().stream().map(Pair::of).sorted(Comparator.comparingDouble(p -> -p.getRight().affinite)).toList();
+        return affinites.entrySet().stream()
+                .map(Pair::of)
+                .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite))
+                .toList();
     }
 
 

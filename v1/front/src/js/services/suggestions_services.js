@@ -11,22 +11,6 @@ export function getSuggestions(profile, onSuccess) {
   );
 }
 
-export async function getFormationsAffinities(profile) {
-  return new Promise((resolve, reject) => {
-    postToSpringService(
-      "affinite/formations",
-      {
-        profile: profile,
-      },
-      (data) => {
-        resolve(data);
-      },
-      true,
-      (error) => reject(error)
-    );
-  });
-}
-
 export async function getExplanations(keys, profile) {
   return new Promise((resolve, reject) => {
     postToSpringService(
