@@ -3,11 +3,11 @@ package fr.gouv.monprojetsup.recherche.domain.entity
 sealed class FicheFormation(
     open val formation: FormationDetaillee,
     open val communes: List<String>,
-    open val tauxAffinite: Float?,
+    open val tauxAffinite: Int?,
 ) {
     data class FicheFormationPourProfil(
         override val formation: FormationDetaillee,
-        override val tauxAffinite: Float?,
+        override val tauxAffinite: Int?,
         val explications: ExplicationsSuggestion?,
         val formationsSimilaires: List<Formation>?,
         val interets: List<Interet>?,

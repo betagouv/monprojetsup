@@ -246,7 +246,7 @@ class RechercheControllerTest(
                                 liens = emptyList(),
                             ),
                         ),
-                    tauxAffinite = 0.9f,
+                    tauxAffinite = 90,
                     domaines =
                         listOf(
                             Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
@@ -369,7 +369,7 @@ class RechercheControllerTest(
                                 "liens": []
                               }
                             ],
-                            "tauxAffinite": 0.9
+                            "tauxAffinite": 90
                           },
                           "explications": {
                             "geographique": [
