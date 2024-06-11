@@ -307,12 +307,7 @@ public record PsupData(
         filActives.removeAll(formationsEnAppAvecEquivalentSansApp);
         filActives.retainAll(formations().filieres.keySet());
 
-        formations().filieres.keySet().retainAll(filActives);
-
-        formations().formations.values().removeIf(
-                f -> !formations().filieres.containsKey(f.gFlCod)
-        );
-
+        //do not do that.... because we remove app effectively...formations().filieres.keySet().retainAll(filActives);
         formations().cleanup();
 
 
@@ -322,7 +317,7 @@ public record PsupData(
         return formations.filieres.values().stream()
                 .filter(f -> f.apprentissage
                         && f.gFlCodeFi != f.gFlCod
-                        && filActives.contains(f.gFlCodeFi)
+                        //&& filActives.contains(f.gFlCodeFi) do not uncomment (!)
                 )
                 .collect(Collectors.toMap(
                         f -> f.gFlCodeFi,

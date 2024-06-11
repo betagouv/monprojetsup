@@ -101,6 +101,8 @@ public class Formations  implements Serializable {
     }
 
     public void cleanup() {
+
+        formations.values().removeIf(f -> !filieres.containsKey(f.gFlCod));
         formations.values().removeIf(f -> f.capacite <= 0);
 
         Set<Integer> filieresActives = formations.values().stream().map(f -> f.gFlCod).collect(Collectors.toSet());
