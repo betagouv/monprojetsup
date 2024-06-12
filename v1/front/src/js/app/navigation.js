@@ -625,9 +625,14 @@ async function updateRecherche() {
   session.setCurrentSearch(str);
   if (str === null || str === undefined) str = "";
   ui.showWaitingMessage();
-  const msg = await app.doSearch(str);
-  const showAffinities = str == "";
-  ui.showRechercheData(msg.details, showAffinities);
+
+  if (str == "" && session.isAdminOrTeacher()) {
+    ui.clearRechercheData();
+  } else {
+    const msg = await app.doSearch(str);
+    const showAffinities = str == "";
+    ui.showRechercheData(msg.details, showAffinities);
+  }
 
   $("#search-button").off().on("click", updateRecherche);
   $("#search-784-input")
