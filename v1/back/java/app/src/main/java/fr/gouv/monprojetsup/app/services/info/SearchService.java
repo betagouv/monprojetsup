@@ -161,7 +161,7 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
                 }
             });
         } else {
-            affinites = getAffinities(req.profile);
+            affinites = getSuggestions(req.profile);
             //fallback if no answer
             if (affinites.getLeft().isEmpty()) {
                 searchScores.keySet().forEach(s -> affinites.getLeft().add(new Affinity(s, 0.05)));
@@ -207,13 +207,6 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
     }
 
     //
-    private static Pair<List<Affinity>, List<String>> getAffinities(ProfileDTO profile) throws IOException, InterruptedException {
-        val request = new GetAffinitiesServiceDTO.Request(profile);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "affinites", request);
-        val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
-        return Pair.of(response.affinites(), response.metiers());
-    }
-
     private static Pair<List<Affinity>, List<String>> getSuggestions(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
         String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions", request);
