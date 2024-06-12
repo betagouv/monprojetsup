@@ -459,6 +459,21 @@ export function showWaitingMessage() {
   $("#explore-div-wait").show();
   $("#explore-div-resultats").hide();
 }
+export function clearRechercheData() {
+  clearAffinityCards();
+  $("#explore-div-wait").hide();
+  $("#explore-div-resultats").show();
+  const nbResults = 0;
+  const noResults = nbResults == 0;
+  $("#explore-div-resultats-left-noresult").show();
+  $("#explore-div-resultats-right").css("visibility", "hidden");
+  $("#explore-div-resultats-left-label").hide();
+  $("#explore-div-resultats-left-entete").show();
+  $("#explore-div-resultats-left-noresult").show();
+
+  $("#search-results-nb").html("");
+}
+
 export function showRechercheData(data, showAffinities) {
   clearAffinityCards();
   $("#explore-div-wait").hide();
@@ -1429,7 +1444,7 @@ function buildFormationAffinityCard(
           <div class="card-metiers-list">
           </div>
         </div>`);
-  if (session.isAdminOrTeacher()) {
+  if (session.isAdminOrTeacher() && session.hasSelectedStudent()) {
     $div.append(`
               <div class="teacher-div teacher-only">
           <hr/>
