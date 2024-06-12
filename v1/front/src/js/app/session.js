@@ -176,6 +176,9 @@ export function setSelectedStudentName(studentName) {
 function getSelectedStudent() {
   return sessionStorage.student;
 }
+export function hasSelectedStudent() {
+  return sessionStorage.student !== undefined;
+}
 export function getSelectedStudentName() {
   return sessionStorage.studentName;
 }
