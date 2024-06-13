@@ -15,8 +15,8 @@
 	<description>Extract, transform, load data of MonProjetSup</description>
 	<properties>
 		<maven.compiler.source>19</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
-		<java.version>18</java.version>
+		<maven.compiler.target>19</maven.compiler.target>
+		<java.version>19</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
 	</properties>
