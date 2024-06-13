@@ -448,8 +448,11 @@ export function updateGroupInfo() {
 
 export async function showTeacherProfileScreen() {
   await showConnectedScreen("profile_teacher");
-  $(".profile-div-prenomnom").html(data.getPrenomNom());
-  $(".prenomnom").html(data.getPrenomNom());
+
+  const pn = data.getPrenomNom();
+  $(".profile-div-prenomnom").html(pn);
+  $(".prenomnom").html(pn);
+  $(".prenomnom-header").html(pn);
   $(".profile-div-email").html(session.getLogin());
   $("#join-group-messages").empty();
   updateGroupInfo();
@@ -2028,7 +2031,6 @@ export function setRoleVisibility() {
     .toggle(session.isAdminOrTeacher());
   $(".teacher-or-fake-lyceen-only")
     .not(".student-only")
-    .not(".invisible-to-experts")
     .toggle(session.isAdminOrTeacher() || session.isFakeLyceen());
   $(".admin-only").toggle(session.isAdmin());
 
