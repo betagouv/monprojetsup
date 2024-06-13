@@ -13,8 +13,15 @@ export type Données = {
   constants: Constants;
   liensMetiersFormations: LienMétierFormations;
   liensSecteursMetiers: LienSecteurMétiers;
+  grillesAnalyseCandidatures: GrillesAnalyseCandidatures;
+  grillesAnalyseCandidaturesLabels: GrillesAnalyseCandidaturesLabels;
   eds: Eds;
   psupData: PSupData;
+  bacs: Bacs;
+  domaines: Domaines;
+  intêrets: Intêrets;
+  nombreAdmisParBac: NombreAdmisParBac;
+  repartitionAdmisParBacEtMatiere: RepartitionAdmisParBacEtMatiere;
 };
 
 export type FormationId = string;
@@ -29,6 +36,7 @@ export type ThématiqueId = string;
 export type Matièreid = string;
 export type SecteurId = string;
 export type TripleAffectationId = string;
+export type CritèreAnalyseId = string;
 
 export type Labels = Record<FormationId | MétierId | SecteurId, string>;
 
@@ -73,6 +81,7 @@ export type Descriptifs = {
     [key: FormationId | MétierId]: {
       presentation?: string;
       summary?: string;
+      summaryFormation?: string;
     };
   };
 };
@@ -86,7 +95,7 @@ export type Thématiques = {
 };
 
 export type Urls = {
-  [key: FormationId | MétierId]: string[];
+  [key: FormationId | MétierId]: Array<{ label: string; uri: string }>;
 };
 
 export type GroupeDeFormation = {
@@ -118,6 +127,18 @@ export type LienSecteurMétiers = {
   [key: SecteurId]: MétierId[];
 };
 
+export type GrillesAnalyseCandidatures = {
+  [key: FormationId]: {
+    pcts: {
+      [key: CritèreAnalyseId]: string;
+    };
+  };
+};
+
+export type GrillesAnalyseCandidaturesLabels = {
+  [key: CritèreAnalyseId]: string;
+};
+
 export type Eds = {
   [key: FormationId]: {
     attendus?: string;
@@ -142,6 +163,59 @@ export type PSupData = {
         lng: number;
         commune: string;
         codeCommune: string;
+      };
+    };
+  };
+};
+
+export type Bacs = Array<{
+  id: BacId;
+  nom: string;
+  idExterne: string;
+}>;
+
+export type Domaines = Array<{
+  emoji: string;
+  nom: string;
+  id: string;
+  enfants: Array<{
+    id: string;
+    nom: string;
+    emoji: string;
+  }>;
+}>;
+
+export type Intêrets = Array<{
+  emoji: string;
+  nom: string;
+  id: string;
+  sousCatégories: Array<{
+    id: string;
+    nom: string;
+    emoji: string;
+    enfants: Array<{
+      id: string;
+      nom: string;
+    }>;
+  }>;
+}>;
+
+export type NombreAdmisParBac = {
+  [key: FormationId]: {
+    [key: BacId]: number;
+  };
+};
+
+export type RepartitionAdmisParBacEtMatiere = {
+  [key: FormationId]: {
+    parBac: {
+      [key: BacId]: {
+        parMatiere: {
+          [key: Matièreid]: {
+            frequencesCumulees: number[];
+            middle50: Record<string, number>;
+          };
+        };
       };
     };
   };
