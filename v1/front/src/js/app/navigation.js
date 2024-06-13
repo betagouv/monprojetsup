@@ -275,6 +275,14 @@ const screen_enter_handlers = {
       });
   },
   groupes: async () => {
+    //$(".prenomnom").html(data.getPrenomNom());
+    $("select").prop("disabled", false);
+    $("input").prop("disabled", false);
+    $(".fr-input").show();
+    $(".trashItem").show();
+
+    await app.getProfile();
+    $(".prenomnom-header").html(data.getPrenomNom());
     await ui.showGroupesScreen();
     await updateGroupesScreen();
   },
@@ -613,7 +621,8 @@ export function init_main_nav() {
       }
     });
 
-  $(".prenomnom").html(data.getPrenomNom());
+  const pn = data.getPrenomNom();
+  $(".prenomnom").html(pn);
 }
 
 async function updateRecherche() {
