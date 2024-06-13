@@ -95,7 +95,7 @@ from where the server is run. You can edit it to set the admins.
 Requires a direct connection to psup database
 
 ```
-mvn exec:java -f../etl/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.data.psupdb.UpdateParcoursupDataFromPsupDB
+mvn exec:java -f../etl/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.data.update.psup.UpdateParcoursupDataFromPsupDB
 ```
 
 
