@@ -240,7 +240,7 @@ public class UpdateFrontData {
                 throw new IllegalStateException("No data in " + DataSources.RESUMES_MPS_PATH);
             }
             val line0 = lines.get(0);
-            keyFlFr = line0.keySet().stream().filter(k -> k.contains("groupe")).findAny().orElse(null);
+            keyFlFr = line0.keySet().stream().filter(k -> k.contains("pac")).findAny().orElse(null);
             keyDescFormation = line0.keySet().stream().filter(k -> k.contains("formation VLauriane")).findAny().orElse(null);
             keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("spécialité")).findAny().orElse(null);
 

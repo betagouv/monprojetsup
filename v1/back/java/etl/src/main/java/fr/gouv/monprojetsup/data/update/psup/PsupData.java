@@ -302,7 +302,9 @@ public record PsupData(
     public void cleanup() {
         filsim().normalize();
 
-        Collection<Integer> formationsEnAppAvecEquivalentSansApp = getFormationsenAppAvecEquivalentSansApp().values();
+        val formationsEnAppAvecEquivalentSansApp = getFormationsenAppAvecEquivalentSansApp(
+                filActives.stream().map(Constants::gFlCodToFrontId).collect(Collectors.toSet())
+        );
 
         filActives.removeAll(formationsEnAppAvecEquivalentSansApp);
         filActives.retainAll(formations().filieres.keySet());
@@ -313,16 +315,15 @@ public record PsupData(
 
     }
 
-    public Map<Integer, Integer> getFormationsenAppAvecEquivalentSansApp() {
-        return formations.filieres.values().stream()
+    public Collection<Integer> getFormationsenAppAvecEquivalentSansApp(Set<String> filActives) {
+        return  formations.filieres.values().stream()
                 .filter(f -> f.apprentissage
                         && f.gFlCodeFi != f.gFlCod
-                        //&& filActives.contains(f.gFlCodeFi) do not uncomment (!)
+                        && filActives.contains(f.gFlCodeFi)
+                        && filActives.contains(f.gFlCod)
                 )
-                .collect(Collectors.toMap(
-                        f -> f.gFlCodeFi,
-                        f -> f.gFlCod
-                ));
+                .map( f-> f.gFlCod)
+                .toList();
     }
 
     /**

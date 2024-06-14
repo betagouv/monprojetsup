@@ -40,7 +40,7 @@ public class GenerateExpertsDocs {
             Simulate.main(args);
             cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
         }
-
+        
         cases.toDetails("détails", true);
 
         try (
