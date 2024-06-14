@@ -18,6 +18,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
+import static fr.gouv.monprojetsup.app.db.DB.LYCEE_EXPERTS;
+
 @SpringBootApplication
 @EnableMongoRepositories
 @ComponentScan(basePackages = {"fr.gouv.monprojetsup"})
@@ -52,6 +54,8 @@ public class ExportDataToLocalFile {
 
         db.exportUsersToFile("usersExpeENS.json", true, false);
         db.exportUsersToFile("usersExpeENSAnonymized.json", true, true);
+        db.exportExpertProfiles("profilsExperts.json", LYCEE_EXPERTS, false);
+
         copyFile(Path.of("usersExpeENS.json"), Path.of("data/usersExpeENS_" + LocalDateTime.now() + ".json"));
 
         db.exportGroupsToFile("groups.json");
