@@ -4,6 +4,7 @@ package fr.gouv.monprojetsup.app.db.admin;
 import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.db.dbimpl.DBMongo;
+import fr.gouv.monprojetsup.data.DataSources;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import static fr.gouv.monprojetsup.app.db.DB.LYCEE_EXPERTS;
+import static fr.gouv.monprojetsup.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
 
 @SpringBootApplication
 @EnableMongoRepositories
@@ -55,6 +57,7 @@ public class ExportDataToLocalFile {
         db.exportUsersToFile("usersExpeENS.json", true, false);
         db.exportUsersToFile("usersExpeENSAnonymized.json", true, true);
         db.exportExpertProfiles("profilsExperts.json", LYCEE_EXPERTS, false);
+        db.exportExpertProfiles(DataSources.getSourceDataFilePath(PROFILS_EXPERTS_MPS_PATH), LYCEE_EXPERTS, false);
 
         copyFile(Path.of("usersExpeENS.json"), Path.of("data/usersExpeENS_" + LocalDateTime.now() + ".json"));
 

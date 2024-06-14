@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static fr.gouv.monprojetsup.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.useRemoteUrl;
 
@@ -46,7 +48,7 @@ public class Simulate {
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
-                "profilsExperts.json",
+                DataSources.getSourceDataFilePath(PROFILS_EXPERTS_MPS_PATH),
                 new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
 
         );
