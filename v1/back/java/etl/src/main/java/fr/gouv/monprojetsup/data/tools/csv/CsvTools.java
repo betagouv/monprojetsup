@@ -3,10 +3,7 @@ package fr.gouv.monprojetsup.data.tools.csv;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class CsvTools implements Closeable {
@@ -59,7 +56,7 @@ public class CsvTools implements Closeable {
 
     public void append(@Nullable String val) throws IOException {
         if(!this.skipNextSeparator) writer.append(separator);
-        writer.append("\"" + (val == null ? "" : val.replace("\"","'")) + "\"");
+        writer.append("\"" + (Objects.isNull(val) ? "" : val.replace("\"","'")) + "\"");
         skipNextSeparator = false;
     }
 
