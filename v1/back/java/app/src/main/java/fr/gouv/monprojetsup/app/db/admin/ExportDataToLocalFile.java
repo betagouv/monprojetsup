@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.db.dbimpl.DBMongo;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,6 +31,7 @@ public class ExportDataToLocalFile {
         // Replace the placeholder with your Atlas connection string
 
         WebServerConfig config = WebServerConfig.load();
+        DataServerConfig.load();
 
         ConfigurableApplicationContext context =
                 new SpringApplicationBuilder(ExportDataToLocalFile.class)
