@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.tools.csv;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +57,9 @@ public class CsvTools implements Closeable {
         return data;
     }
 
-    public void append(String val) throws IOException {
+    public void append(@Nullable String val) throws IOException {
         if(!this.skipNextSeparator) writer.append(separator);
-        writer.append("\"" + val.replace("\"","'") + "\"");
+        writer.append("\"" + (val == null ? "" : val.replace("\"","'")) + "\"");
         skipNextSeparator = false;
     }
 
