@@ -428,7 +428,7 @@ public class AlgoSuggestions {
         ).collect(Collectors.toSet());
         //suppression des filières en app couvertes par une filière sans app,
         toErase.addAll(
-                backPsupData.getFormationsenAppAvecEquivalentSansApp().values()
+                backPsupData.getFormationsenAppAvecEquivalentSansApp(filActives)
                         .stream().map(Constants::gFlCodToFrontId)
                         .collect(Collectors.toSet())
         );
