@@ -16,14 +16,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.data.ServerData.GROUPE_INFIX;
-import static fr.gouv.monprojetsup.data.ServerData.getDebugLabel;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
@@ -74,7 +71,7 @@ public class Evaluate {
         ) {
             int i = 1;
             long last = System.currentTimeMillis();
-            for (ReferenceCases.ReferenceCase refCase : cases.cases()) {
+            for (ReferenceCase refCase : cases.cases()) {
                 long now = System.currentTimeMillis();
                 LOGGER.info("Evaluating #" + i + " " + (now - last) + "ms");
                 last = now;
@@ -168,7 +165,7 @@ public class Evaluate {
 
     }
 
-    private static String getOKPrefix(ReferenceCases.ReferenceCase refCase, String flCodSugg) {
+    private static String getOKPrefix(ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
                 .map(e -> e.fl())
                 .filter(fl -> isFiliere(fl))

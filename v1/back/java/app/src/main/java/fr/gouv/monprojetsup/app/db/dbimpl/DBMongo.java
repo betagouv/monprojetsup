@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import fr.gouv.monprojetsup.app.db.model.*;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
-import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.ServerError;
 import fr.gouv.monprojetsup.app.log.ServerTrace;
 import fr.gouv.monprojetsup.app.server.WebServer;
@@ -954,6 +954,28 @@ public class DBMongo extends DB implements Closeable {
         Serialisation.toJsonFile(filename, users, true);
     }
 
+    public void exportExpertProfiles(
+            String filename,
+            String lycee,
+            boolean anonymize
+    ) throws IOException {
+        LOGGER.info("Export des utilisateurs vers un fichier local.");
+        Collection<User> users =  find(USERS_COLL_NAME,
+                eq(User.LYCEES_FIELD, lycee),
+                User.class
+        );
+        users.forEach(User::removeCredentials);
+        if(anonymize) {
+            users.forEach(User::anonymize);
+        }
+        List<Pair<String, ProfileDTO>> profiles = users.stream()
+                .map(u -> Pair.of(u.pf().getName() + " (" + u.login() + ")", u.pf().toDbo().toDto()))
+                .toList();
+
+        Serialisation.toJsonFile(filename, profiles, true);
+    }
+
+
     @Override
     public Groups getGroupsAndLycees() {
         Groups groups = new Groups();
@@ -987,7 +1009,6 @@ public class DBMongo extends DB implements Closeable {
     public List<Group> getAllGroups() {
            return groupsDb.findAll();
     }
-
 
 
 }

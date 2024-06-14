@@ -1,24 +1,21 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.val;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.useRemoteUrl;
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.useRemoteUrl;
 
 public class Simulate {
 
@@ -47,16 +44,13 @@ public class Simulate {
             server.init();
         }
 
-        ReferenceCases cases;
-        LOGGER.info("Loading reference cases...");
-        try {
-            cases = ReferenceCases.loadFromFile("referenceCases.json");
-        } catch (Exception e) {
-            LOGGER.warning("Could not load reference cases, trying old format...");
-            ReferenceCasesOld casesOld = Serialisation.fromJsonFile("referenceCases.json", ReferenceCasesOld.class);
-            cases = casesOld.toReferencesCases();
-            Serialisation.toJsonFile("referenceCases.json", cases, true);
-        }
+        LOGGER.info("Loading experts profiles...");
+        List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
+                "profilsExperts.json",
+                new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
+
+        );
+        ReferenceCases cases = from(profiles);
 
 
         LOGGER.info("Retrieving details and explanations...");
@@ -73,80 +67,15 @@ public class Simulate {
 
     }
 
-    public record ReferenceCasesOld(
-            List<ReferenceCaseOld> cases
-    ) {
-
-        public ReferenceCasesOld() {
-            this(new ArrayList<>());
-        }
-
-        public ReferenceCases toReferencesCases() {
-            return new ReferenceCases(
-                    cases.stream().map(ReferenceCaseOld::toReferenceCase).toList()
-            );
-        }
-
-        public record ReferenceCaseOld(
-                String name,
-                ProfileDTOOld pf,
-                List<String> expectations,
-
-                //stores label to explanations
-                List<Suggestion> suggestions
-        ) {
-            public ReferenceCases.ReferenceCase toReferenceCase() {
-                return new ReferenceCases.ReferenceCase(
-                        name,
-                        pf.toProfileDTO(),
-                        expectations,
-                        suggestions
-                );
-            }
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public record ProfileDTOOld(
-
-                @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "secSTHR", "secTMD", "prem", "term"})
-                String niveau,
-                @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
-                String bac,
-                @Schema(name = "duree", description = "durée envisagée des études", example = "long", allowableValues = {"", "court", "long", "indiff"})
-                String duree,
-                @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
-                String apprentissage,
-                @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]"))
-                Set<String> geo_pref,
-                @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
-                Set<String> spe_classes,
-                @ArraySchema(arraySchema = @Schema(name = "interests", description = "centres d'intérêt", example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\", \"T_ROME_2092381917\", \"T_IDEO2_4812\"]"))
-                List<String> interests,
-                @Schema(description = "moyenne générale scolaire estimée en terminale", example = "14")
-                String moygen,
-                @ArraySchema(arraySchema = @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
-                Map<String, SuggestionDTO> choices,
-
-                @Schema(description = "statut de réflexion 0/1/2", example = "0")
-                String statut
-
-        ) {
-
-            public ProfileDTO toProfileDTO() {
-                return new ProfileDTO(
-                        niveau,
-                        bac,
-                        duree,
-                        apprentissage,
-                        geo_pref,
-                        spe_classes,
-                        interests,
-                        moygen,
-                        choices.values().stream().toList(),
-                        statut
-                );
-            }
-        }
+    public static ReferenceCases from(List<Pair<String, ProfileDTO>> profiles) {
+        ReferenceCases result = new ReferenceCases();
+        profiles.forEach(pair -> {
+            val pf = pair.getRight();
+            val refCase = new ReferenceCase(pair.getLeft(), pf);
+            refCase.turnFavorisToExpectations();
+            result.cases().add(refCase);
+        });
+        return result;
     }
 
 }
