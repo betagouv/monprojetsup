@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.ServerData.getDebugLabel;
-import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.ReferenceCase.*;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
 
@@ -43,6 +42,18 @@ import static java.lang.System.lineSeparator;
 public record ReferenceCases(
         List<ReferenceCase> cases
 ) {
+
+    public static final String STAR_SEP = "********************************************************************\n";
+
+    public static boolean USE_LOCAL_URL = true;
+
+
+    public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
+    public static final String REMOTE_URL = "https://monprojetsup.fr/";
+
+    public static void useRemoteUrl(boolean useRemote) {
+        USE_LOCAL_URL = !useRemote;
+    }
 
     public ReferenceCases() {
         this(new ArrayList<>());
@@ -91,14 +102,55 @@ public record ReferenceCases(
 
     public void toDetails(String prefix, boolean includeDetails) throws IOException {
         int i = 1;
-        for (ReferenceCases.ReferenceCase result : cases) {
+        for (ReferenceCase result : cases) {
             if (result != null) {
                 String name = result.name();
                 if(name.length() > 20) name = name.substring(0, 20);
                 String outputFilename = prefix + " profil " + i +  (name.startsWith("ProfileDTO") ? "" : " - " +name) + ".txt";
-                result.toFile(outputFilename, includeDetails);
+                toFile(result, outputFilename, includeDetails);
             }
             i++;
+        }
+    }
+
+
+    private void toFile(ReferenceCase result, String outputFilename, boolean includeDetails) throws IOException {
+        outputFilename = outputFilename
+                .replace("\\", "_")
+                .replace("#", "_")
+                .replace("/", "_")
+        ;
+        try (
+                OutputStreamWriter fos = new OutputStreamWriter(
+                        Files.newOutputStream(Path.of(outputFilename)),
+                        StandardCharsets.UTF_8
+                )
+        ) {
+            fos.write(STAR_SEP);
+            fos.write("************ Profile " + (result.name() == null || result.name().startsWith("ProfileDTO") ? "" : result.name()) + " ***********\n");
+            fos.write(STAR_SEP);
+            fos.write("Profile: " + ReferenceCases.toExplanationString(result.pf()));
+            fos.write(lineSeparator() + STAR_SEP + lineSeparator());
+            val expectations = result.expectations();
+            if (expectations != null && !expectations.isEmpty()) {
+                fos.write("Suggestions définies par experts:\n" + expectations.stream()
+                        .collect(Collectors.joining("\n\t", "\t", "\n")));
+            } else {
+                fos.write("Aucune suggestion définie par experts\n");
+            }
+            fos.write(lineSeparator() + STAR_SEP + lineSeparator());
+
+            val suggestions = result.suggestions();
+            fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
+                    .collect(Collectors.joining("\n\t", "\t", "\n")));
+
+            if (includeDetails) {
+                for (Suggestion entry : suggestions) {
+                    fos.write(lineSeparator() + STAR_SEP + lineSeparator());
+                    fos.write("Explications détaillées sur la suggestion:" + lineSeparator());
+                    fos.write(entry.humanReadable());
+                }
+            }
         }
     }
 
@@ -127,68 +179,6 @@ public record ReferenceCases(
 
     public static Logger LOGGER = Logger.getLogger(ReferenceCases.class.getName());
 
-
-    public record ReferenceCase(
-            String name,
-            ProfileDTO pf,
-            List<String> expectations,
-
-            //stores label to explanations
-            List<Suggestion> suggestions
-    ){
-        public static final String STAR_SEP = "********************************************************************\n";
-
-        public static boolean USE_LOCAL_URL = true;
-
-
-        public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
-        public static final String REMOTE_URL = "https://monprojetsup.fr/";
-
-
-        public static void useRemoteUrl(boolean useRemote) {
-            USE_LOCAL_URL = !useRemote;
-        }
-
-        public void toFile(String outputFilename, boolean includeDetails) throws IOException {
-            outputFilename = outputFilename
-                    .replace("\\","_")
-                    .replace("#","_")
-                    .replace("/","_")
-            ;
-            try (
-                    OutputStreamWriter fos = new OutputStreamWriter(
-                            Files.newOutputStream(Path.of(outputFilename)),
-                            StandardCharsets.UTF_8
-                    )
-            ) {
-                fos.write(STAR_SEP);
-                fos.write("************ Profile " + (name == null || name.startsWith("ProfileDTO") ? "" : name) + " ***********\n");
-                fos.write(STAR_SEP);
-                fos.write("Profile: " + toExplanationString(pf));
-                fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
-                if(expectations != null && !expectations.isEmpty()) {
-                    fos.write("Suggestions définies par experts:\n" + expectations.stream()
-                            .collect(Collectors.joining("\n\t", "\t", "\n")));
-                } else {
-                    fos.write("Aucune suggestion définie par experts\n");
-                }
-                fos.write(lineSeparator() + STAR_SEP + lineSeparator() );
-                fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
-                        .collect(Collectors.joining("\n\t", "\t", "\n")));
-
-                if(includeDetails) {
-                    for (Suggestion entry : suggestions) {
-                        String label = ServerData.getDebugLabel(entry.fl());
-                        fos.write(lineSeparator() + STAR_SEP + lineSeparator());
-                        fos.write("Explications détaillées sur la suggestion:" + lineSeparator());
-                        fos.write(entry.humanReadable());
-                    }
-                }
-            }
-        }
-
-
-    }
 
     public static ReferenceCases loadFromFile(String filename) throws IOException {
         return Serialisation.fromJsonFile(filename, ReferenceCases.class);
@@ -231,16 +221,16 @@ public record ReferenceCases(
             fos.append("************ Profile ").append(i).append(" ***********\n");
             fos.append("************ ").append(refCase.name()).append(" ***********\n");
             fos.append(STAR_SEP);
-            fos.append(toExplanationString(refCase.pf));
+            fos.append(toExplanationString(refCase.pf()));
             i++;
-            if(refCase.expectations != null) {
+            if(refCase.expectations() != null) {
                 fos.append("\n\n" + STAR_SEP);
-                fos.append("Suggestions définies par expertise:\n\n").append(refCase.expectations.stream()
+                fos.append("Suggestions définies par expertise:\n\n").append(refCase.expectations().stream()
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
             }
-            if(refCase.suggestions != null) {
+            if(refCase.suggestions() != null) {
                 fos.append("\n\n" + STAR_SEP);
-                fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions.stream()
+                fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions().stream()
                         .map(e -> ServerData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
             }
@@ -269,28 +259,28 @@ public record ReferenceCases(
             for (ReferenceCase refCase : cases) {
                 String name = "Profil " + i;
                 i++;
-                if (refCase.name() != null && !refCase.name.contains("ProfileDTO")) name = refCase.name();
+                if (refCase.name() != null && !refCase.name().contains("ProfileDTO")) name = refCase.name();
                 output.append(name);
-                output.append(toExplanationStringShort(refCase.pf, ""));
+                output.append(toExplanationStringShort(refCase.pf(), ""));
 
-                output.append(toExplanations(refCase.pf.interests().stream()
+                output.append(toExplanations(refCase.pf().interests().stream()
                         .filter(Helpers::isInteret
                         )
                         .toList(),""));
 
-                output.append(toExplanations(refCase.pf.interests().stream()
+                output.append(toExplanations(refCase.pf().interests().stream()
                         .filter(Helpers::isTheme
                         )
                         .toList(),""));
 
-                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), ""));
-                output.append(toExplanationString(refCase.pf.suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), ""));
-                output.append(toExplanationString(refCase.pf.suggRejected(), ""));
+                output.append(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), ""));
+                output.append(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), ""));
+                output.append(toExplanationString(refCase.pf().suggRejected(), ""));
                 output.append(
-                        refCase.expectations == null ? "" :
-                                String.join("\n", refCase.expectations)
+                        refCase.expectations() == null ? "" :
+                                String.join("\n", refCase.expectations())
                 );
-                output.append(toExplanationString(refCase.suggestions.stream().map(Suggestion::toDTO).toList(), ""));
+                output.append(toExplanationString(refCase.suggestions().stream().map(Suggestion::toDTO).toList(), ""));
                 output.append("");
                 output.append("");
                 output.newLine();
@@ -302,13 +292,16 @@ public record ReferenceCases(
     public @Nullable ReferenceCase getSuggestionsAndExplanations(
             ReferenceCase refCase
     ) throws IOException, InterruptedException {
-        if (refCase.pf == null) return null;
-        val suggestions = callSuggestionsService(refCase.pf);
+        if (refCase.pf() == null) return null;
+        List<GetAffinitiesServiceDTO.Affinity> suggestions = callSuggestionsService(refCase.pf());
+        suggestions.removeIf(s -> s.affinite() < 0.01);
+        suggestions = suggestions.stream().limit(20).toList();
 
         ReferenceCase answer = new ReferenceCase(
-                refCase.name,
-                refCase.pf,
-                refCase.expectations,
+                refCase.name(),
+                refCase.pf(),
+                refCase.expectations(),
+                refCase.rejections(),
                 new ArrayList<>()
         );
 
@@ -326,7 +319,7 @@ public record ReferenceCases(
             try {
                 responseExpl = callExplanationsService(
                         new GetExplanationsAndExamplesServiceDTO.Request(
-                                refCase.pf,
+                                refCase.pf(),
                                 List.of(suggestion1.key())
                         )
                 );
@@ -341,14 +334,14 @@ public record ReferenceCases(
             );
             list.add(unexpectedNumberOfExplanations);
         }
-        answer.suggestions.addAll(
+        answer.suggestions().addAll(
                 list
         );
         return answer;
     }
 
 
-    public ReferenceCases getSuggestionsAndExplanations(Integer restricttoIndex) {
+    public ReferenceCases getSuggestionsAndExplanations(Integer restrictToIndex) {
         AtomicInteger i = new AtomicInteger(1);
 
         val results = new ReferenceCases();
@@ -357,7 +350,7 @@ public record ReferenceCases(
                 .map(refCase -> {
                     try {
                         String name = refCase.name();
-                        if (restricttoIndex != null && i.get() != restricttoIndex) {
+                        if (restrictToIndex != null && i.get() != restrictToIndex) {
                             i.incrementAndGet();
                             return null;
                         }

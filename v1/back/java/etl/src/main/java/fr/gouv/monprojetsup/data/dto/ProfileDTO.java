@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
 
@@ -86,4 +88,7 @@ public record ProfileDTO(
         return choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).map(SuggestionDTO::fl).collect(Collectors.toSet());
     }
 
+    public void removeAllFormationChoices() {
+          choices.removeIf(s -> isFiliere(s.fl()));
+    }
 }
