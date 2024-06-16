@@ -311,13 +311,12 @@ public record UsersBehaviourReport(
     }
 
 
-    private Duration medianProfileCompletionTime(List<UserSession> reports) {
+    private DurationStats medianProfileCompletionTime(List<UserSession> reports) {
         List<Duration> durations = reports.stream()
                 .map(UserSession::profileCompletionTime)
                 .filter(Objects::nonNull)
-                .sorted()
                 .toList();
-        return medianDuration(durations);
+        return DurationStats.of(durations);
     }
 
     private static Duration medianDuration(List<Duration> durations) {
@@ -443,7 +442,11 @@ public record UsersBehaviourReport(
 
         public List<Pair<String,Duration>> screensDurations() {
             List<Pair<String,Duration>> result = new ArrayList<>();
-            val transitions = behaviour.stream().filter(UserBehaviour::isTransition).map(UserBehaviour::getTrace).toList();
+            val transitions =
+                    behaviour.stream()
+                            .filter(UserBehaviour::isTransition)
+                            .map(UserBehaviour::getTrace)
+                            .toList();
             LocalDateTime last = null;
             for(val transition: transitions) {
                 String fromScreen = transition.fromScreen();
@@ -453,7 +456,10 @@ public record UsersBehaviourReport(
                 }
                 last = now;
             }
-            return result;
+            return result.stream().collect(Collectors.groupingBy(Pair::getLeft))
+                    .entrySet().stream()
+                    .map(e -> Pair.of(e.getKey(), e.getValue().stream().map(Pair::getRight).reduce(Duration.ZERO, Duration::plus)))
+                    .toList();
         }
     }
 
