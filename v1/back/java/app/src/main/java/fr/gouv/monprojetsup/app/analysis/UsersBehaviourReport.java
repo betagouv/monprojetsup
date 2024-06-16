@@ -207,7 +207,7 @@ public record UsersBehaviourReport(
 
 
         sb.append("durée médiane de complétion du profil: ")
-                .append(medianProfileCompletionTime(reports).toSeconds() + " secondes")
+                .append(medianProfileCompletionTime(reports))
                 .append("\n");
 
         sb.append("durée médiane sur chaque écran:\n");
