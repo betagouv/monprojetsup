@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
 
-import java.nio.file.Path;
-
 public class DataSources {
     public static final String FRONT_DATA_JSON_FILENAME = "frontendData.json";
     public static final String FRONT_DATA_JSON_FILENAME2 = "frontendData2.json";

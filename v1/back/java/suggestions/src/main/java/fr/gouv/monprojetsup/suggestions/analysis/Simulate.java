@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
@@ -33,6 +34,8 @@ public class Simulate {
 
         //we want the server in debug mode, with full explanations
         useRemoteUrl(false);
+
+        DataServerConfig.load();
 
         LOGGER.info("Loading config...");
         try {
