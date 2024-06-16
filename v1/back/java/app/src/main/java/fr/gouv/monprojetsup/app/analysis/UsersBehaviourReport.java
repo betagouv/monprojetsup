@@ -322,6 +322,7 @@ public record UsersBehaviourReport(
 
     private static Duration medianDuration(List<Duration> durations) {
         if(durations.isEmpty()) return Duration.ZERO;
+        durations = durations.stream().sorted().toList();
         if(durations.size() % 2 == 0) {
             return Duration.between(
                     LocalDateTime.MIN,
