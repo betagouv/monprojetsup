@@ -41,6 +41,7 @@ import * as params from "../config/params";
 import { Tab } from "bootstrap";
 import { handlers } from "../app/events";
 import { isAdmin, isAdminOrTeacher, getRole, getLogin } from "../app/session";
+import { logAction } from "../app/app";
 import { Modal } from "bootstrap";
 import { sanitize } from "dompurify";
 
@@ -565,6 +566,7 @@ function addAffinityCard(dat, nodetails) {
     updateFav(dat.key);
     $("#explore-div-resultats-left-liste").append($div);
     $div.on("click", () => {
+      logAction("details formation " + key);
       displayItemDetails(dat, nodetails);
     });
   } else {

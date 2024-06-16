@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
@@ -45,6 +47,8 @@ public class GenerateExpertsDocs {
             cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
         }
 
+        cases = toHumanReadable(cases);
+
         cases.toDetails("détails", true);
 
         try (
@@ -59,5 +63,25 @@ public class GenerateExpertsDocs {
         cases.resumeCsv("profiles_expectations_suggestions.csv");
 
     }
+
+    private static ReferenceCases toHumanReadable(ReferenceCases cases) {
+        ReferenceCases res = new ReferenceCases();
+        for (ReferenceCase c : cases.cases()) {
+            res.cases().add(new ReferenceCase(
+                    c.name(),
+                    c.pf(),
+                    toHumanReadable(c.expectations()),
+                    toHumanReadable(c.rejections()),
+                            c.suggestions()
+            ));
+        }
+        return res;
+    }
+
+    private static List<String> toHumanReadable(List<String> filieres) {
+        return filieres.stream().map(f -> ServerData.getLabel(f,f)).toList();
+    }
+
+
 
 }

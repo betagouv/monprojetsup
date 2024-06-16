@@ -42,30 +42,25 @@ public class ExportDataToLocalFile {
 
         db.load(config);
 
-        db.exportGroupsNonENSToFile("groupsNonENS.json");
 
         db.exportTracesToFile("traces.json");
-        copyFile(Path.of("traces.json"), Path.of("traces_" + LocalDateTime.now() + ".json"));
-        copyFile(Path.of("traces.json"), Path.of("data/traces_" + LocalDateTime.now() + ".json"));
+        String suffix = LocalDateTime.now() + ".json";
+        copyFile(Path.of("traces.json"), Path.of("traces_" + suffix ));
+        copyFile(Path.of("traces.json"), Path.of("data/traces_" + suffix));
 
         db.exportErrorsToFile("errors.json", false);
-        copyFile(Path.of("errors.json"), Path.of("errors_" + LocalDateTime.now() + ".json"));
+        copyFile(Path.of("errors.json"), Path.of("errors_" + suffix ));
 
-        db.setFlagEvalENS();
+        db.exportUsersToFile("users.json", false);
+        copyFile(Path.of("users.json"), Path.of("users_" + suffix));
 
-        db.exportUsersToFile("users.json", false, false);
-        copyFile(Path.of("users.json"), Path.of("users_" + LocalDateTime.now() + ".json"));
-
-        db.exportUsersToFile("usersExpeENS.json", true, false);
-        db.exportUsersToFile("usersExpeENSAnonymized.json", true, true);
         db.exportExpertProfiles("profilsExperts.json", LYCEE_EXPERTS, false);
         db.exportExpertProfiles(DataSources.getSourceDataFilePath(PROFILS_EXPERTS_MPS_PATH), LYCEE_EXPERTS, false);
 
-        copyFile(Path.of("usersExpeENS.json"), Path.of("data/usersExpeENS_" + LocalDateTime.now() + ".json"));
-
-        db.exportGroupsToFile("groups.json");
-        copyFile(Path.of("groups.json"), Path.of("groups_" + LocalDateTime.now() + ".json"));
-        copyFile(Path.of("groups.json"), Path.of("data/groups_" + LocalDateTime.now() + ".json"));
+        db.exportGroupsToFile();
+        db.exportGroupsOfTestsGroup("quanti3");
+        copyFile(Path.of("groups.json"), Path.of("groups_" + suffix ));
+        copyFile(Path.of("groups.json"), Path.of("data/groups_" + suffix ));
 
         db.stop();
 
