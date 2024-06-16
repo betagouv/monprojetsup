@@ -666,33 +666,31 @@ public abstract class DB {
 
     public abstract @NotNull User getUser(String login) throws UnknownUserException;
 
-    public abstract void exportUsersToFile(String filename, boolean expeENS, boolean anonymize) throws IOException;
+    public abstract void exportUsersToFile(String filename, boolean anonymize) throws IOException;
 
-    public void exportGroupsToFile(String filename) throws IOException {
+    public void exportGroupsToFile() throws IOException {
         LOGGER.info("Export des groupes vers un fichier local.");
-        getGroupsAndLycees().save(filename);
+        exportGroupsOfTestsGroup("");
     }
-    public void exportGroupsNonENSToFile(String filename) throws IOException {
-        LOGGER.info("Export des groupes vers un fichier local.");
+    public void exportGroupsOfTestsGroup(String testGroup) throws IOException {
+        LOGGER.info("Export des groupes du groupe de test '" + testGroup + "' vers un fichier local.");
         List<Group> groups = new ArrayList<>(getGroupsAndLycees().getGroups());
-        groups.removeIf(g -> !g.getExpeENSGroupe().equals("quanti3")
+        groups.removeIf(g -> !g.getExpeENSGroupe().contains(testGroup)
         );
-        Serialisation.toJsonFile(filename, groups, true);
-        List<String> admins = groups.stream().flatMap(g -> g.getAdmins().stream()).toList();
-        try(CsvTools tool = new CsvTools(filename + ".csv", ';')) {
-            for (String admin : admins) {
-                tool.append(admin);
-                tool.newLine();
-            }
+        String filename = "groups";
+        if(!testGroup.isEmpty()) {
+            filename = "groups_" + testGroup;
         }
-        try(CsvTools tool = new CsvTools("groups_quanti3.csv", ';')) {
-            tool.appendHeaders(List.of("lycee","groupe","nom", "acces","admin"));
+        Serialisation.toJsonFile(filename + ".json", groups, true);
+        try(CsvTools tool = new CsvTools(filename + ".csv", ';')) {
+            tool.appendHeaders(List.of("lycee","groupe","nom", "acces","admin","admins"));
             for (Group group : groups) {
                 tool.append(group.getLycee());
                 tool.append(group.getId());
                 tool.append(group.getName());
                 tool.append(group.getRegistrationToken());
                 tool.append(group.getAdminToken());
+                tool.append(String.join(",", group.getAdmins()));
             }
         }
     }

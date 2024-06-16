@@ -146,6 +146,7 @@ public class DBMongo extends DB implements Closeable {
         );
     }
 
+    /*
     public void setFlagEvalENS() {
         List<User> users = getUsers();
         users.forEach(user -> {
@@ -155,7 +156,7 @@ public class DBMongo extends DB implements Closeable {
             }
         });
 
-    }
+    }*/
 
     @Override
     protected synchronized void assignDemoGroupToAllUsersAtLeastPPExceptHackersGroup() throws DBExceptions.ModelException {
@@ -941,15 +942,12 @@ public class DBMongo extends DB implements Closeable {
     }
 
     @Override
-    public void exportUsersToFile(String filename, boolean expeENS, boolean anonymize) throws IOException {
+    public void exportUsersToFile(String filename, boolean anonymize) throws IOException {
         LOGGER.info("Export des utilisateurs vers un fichier local.");
         List<User> users = new ArrayList<>(getUsers());
         users.forEach(User::removeCredentials);
         if(anonymize) {
             users.forEach(User::anonymize);
-        }
-        if(expeENS) {
-            users.removeIf(user -> user.getLycees().stream().noneMatch(lyceesExpeENS::contains));
         }
         Serialisation.toJsonFile(filename, users, true);
     }

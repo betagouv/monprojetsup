@@ -659,12 +659,14 @@ async function updateRecherche() {
     .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
+      app.logAction("ajout favori par icone " + id);
       addFavorite(id);
     });
   $(".add-to-favorites-btn")
     .off()
     .on("click", function () {
       const id = $(this).attr("data-id");
+      app.logAction("ajout favori par bouton " + id);
 
       $(this).html("Ajouté à ma sélection");
       $(this).addClass("activated");
@@ -675,8 +677,10 @@ async function updateRecherche() {
     .off("click")
     .on("click", function () {
       const id = $(this).attr("data-id");
+      app.logAction("ajout corbeille " + id);
       events.changeSuggestionStatus(id, data.SUGG_REJECTED, async () => {
         ui.updateFav(id);
+
         init_main_nav();
         await updateRecherche();
       });
@@ -732,6 +736,7 @@ function updateHandlersCommonToRechercheAndFavoris() {
       const id = event.currentTarget.getAttribute("data-id");
       events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
         ui.updateFav(id);
+        app.logAction("suppression favori " + id);
         init_main_nav();
       });
     });
@@ -749,6 +754,7 @@ async function updateSelection() {
       const id = $(this).attr("data-id");
       events.changeSuggestionStatus(id, data.SUGG_WAITING, async () => {
         ui.updateFav(id);
+        app.logAction("suppression favori " + id);
         const msg = await app.getSelection();
         ui.showFavoris(msg.details);
       });

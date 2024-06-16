@@ -1,38 +1,44 @@
-package fr.gouv.monprojetsup.app.analysis;
+package fr.gouv.monprojetsup.app.analysis.old;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.app.analysis.WordSearch;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.app.db.model.Group;
-import fr.gouv.monprojetsup.app.db.model.Groups;
 import fr.gouv.monprojetsup.app.db.model.User;
 import fr.gouv.monprojetsup.app.log.ServerTrace;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static java.lang.Math.abs;
 
-public class AnalyzeUserBehaviour {
+@SuppressWarnings("ALL")
+public class AnalyzeUserBehaviourFromFiles {
 
-    private static final Logger LOGGER = Logger.getLogger(AnalyzeUserBehaviour.class.getName());
+
     public static void main(String[] args) throws IOException {
 
-        String directory = "traces";
+        String directory = "data";
 
         /* load all users as a list of users from the file "usersExpeENS.json" */
 
-        Groups groups = Serialisation.fromJsonFile("groups.json", Groups.class);
-        groups.init();
+        List<Group> groups = Serialisation.fromJsonFile("groups.json",
+                new TypeToken<List<Group>>(){}.getType()
+        );
+
+
 
         List<User> usersOfInterest
                 = Serialisation.fromJsonFile(
@@ -45,8 +51,6 @@ public class AnalyzeUserBehaviour {
          */
 
         List<ServerTrace> allTraces = Collections.synchronizedList(new ArrayList<>());
-
-        analyseWordSearch(allTraces);
 
         Arrays.stream(Objects.requireNonNull(new File(directory).listFiles())).parallel()
                 .filter(f -> f.getName().startsWith("traces"))
@@ -62,206 +66,225 @@ public class AnalyzeUserBehaviour {
                         }
                 );
 
+        WordSearch.analyseWordSearch(allTraces);
 
-        analyze(groups.getGroups(), usersOfInterest, allTraces);
-    }
+        Set<String> testGroups = groups.stream().map(Group::getExpeENSGroupe).collect(Collectors.toSet());
 
-    private static void analyseWordSearch(List<ServerTrace> allTraces) throws IOException {
-        Map<String, Long> searches = allTraces.stream()
-                .filter(st -> st.event() != null && st.event().contains("searching "))
-                .map(st -> st.event().substring(st.event().indexOf("searching ")))
-                .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+        for(String testGroup : testGroups) {
+            Set<String> members = groups.stream()
+                    .filter(g -> g.getExpeENSGroupe().equals(testGroup))
+                    .flatMap(g -> g.getMembers().stream())
+                    .collect(Collectors.toSet());
+            analyze(
+                    groups.stream().filter(g -> g.getExpeENSGroupe().equals(testGroup)).toList(),
+                    usersOfInterest.stream().filter(u -> members.contains(u.login())).toList(),
+                    allTraces,
+                    testGroup
+            );
+        }
 
-        Serialisation.toJsonFile("searches.json", searches, true);
     }
 
     public static void analyze(
             List<Group> groups,
             List<User> users,
-            List<ServerTrace> tracesList
-    ) throws IOException {
+            List<ServerTrace> tracesList,
+            String suffix) throws IOException {
 
         Map<String, ServerTrace> traces = new HashMap<>();
         tracesList.forEach(serverTrace -> {
             traces.put(serverTrace.timestamp(), serverTrace);
         });
 
-        if(traces.isEmpty()) throw new RuntimeException("No data to analyze");
+        try(OutputStreamWriter fos = new OutputStreamWriter(
+                Files.newOutputStream(Path.of("report_" + suffix + ".json"))
+        )) {
 
-        Set<String> loginsOfInterest =  users.stream().map(User::login).collect(Collectors.toSet());
-
-        Set<Group> groupsOfInterest = groups.stream()
-                .filter(g -> g.getMembers().stream().anyMatch(loginsOfInterest::contains))
-                .collect(Collectors.toSet());
+            //creates a logger using fos
 
 
-        Map<String, Group> usertoGroup = new HashMap<>();
-        groupsOfInterest.forEach(group -> group.getMembers().stream()
-                .filter(loginsOfInterest::contains)
-                .forEach(login -> usertoGroup.put(login, group)));
+            if (traces.isEmpty()) {
+                fos.append("No data to analyze for group ").append(suffix).append(")").append("\n");
+                return;
+            }
+
+            Set<String> loginsOfInterest = users.stream().map(User::login).collect(Collectors.toSet());
+
+            Set<Group> groupsOfInterest = groups.stream()
+                    .filter(g -> g.getMembers().stream().anyMatch(loginsOfInterest::contains))
+                    .collect(Collectors.toSet());
 
 
-        Map<String,Long> lycees = users.stream()
-                .flatMap(u -> u.getLycees().stream())
-                .collect(Collectors.groupingBy(u -> u, Collectors.counting()));
+            Map<String, Group> usertoGroup = new HashMap<>();
+            groupsOfInterest.forEach(group -> group.getMembers().stream()
+                    .filter(loginsOfInterest::contains)
+                    .forEach(login -> usertoGroup.put(login, group)));
 
 
-        Map<String,Long> groupes =
-                usertoGroup.values().stream().collect(Collectors.groupingBy(Group::getName, Collectors.counting()));
-        List<String> realGroups = groupes.entrySet().stream().filter(e -> e.getValue() >= 5).map(Map.Entry::getKey).toList();
-
-        LOGGER.info("Périmètre des statistiques: lycéens du groupe test");
-        LOGGER.info("Lycées: " + lycees.size());
-        LOGGER.info("Classes/groupes: " + groupes.size());
-        LOGGER.info("Lycéens: " + users.size());
-
-        LOGGER.info("Lycées avec au moins 5 lycéens: " + lycees.entrySet().stream()
-                .filter(e -> e.getValue() >= 5).count());
-        LOGGER.info("Classes/groupes avec au moins 5 lycéens: " + realGroups.size());
-        LOGGER.info("\t\t " + String.join("\n\t\t", realGroups));
-
-        List<User> usersOfInterestWithFavori = new ArrayList<>(users);
-        /* keeping only users having selected a formation favori */
-        usersOfInterestWithFavori.removeIf(u -> u.pf().suggApproved().stream().noneMatch(s -> isFiliere(s.fl())));
-        //print the number of users fof interest
-        LOGGER.info("Lycéens avec au moins une formation en favori: " + usersOfInterestWithFavori.size());
-
-        //computing the set of localdatetime, rounded to hour, for which we observe at least one trace
-        List<String> hours = traces.keySet().stream()
-                .map(LocalDateTime::parse)
-                .map(ldt -> ldt.withMinute(0).withSecond(0).withNano(0))
-                .map(LocalDateTime::toString)
-                .distinct()
-                .sorted()
-                .toList();
-        Serialisation.toJsonFile("hours.json", hours, true);
-
-        traces.values().removeIf(st -> st.event() == null);
-        traces.values().removeIf(st -> !loginsOfInterest.contains(st.origin()));
-        //print the number of traces of users of interest
-        LOGGER.info("Traces d'évènement: " + traces.size());
-
-        // Analyzing the traces
-        //compute the first date where the occurence of an event containing "openUrl" has been seen
-        LocalDateTime firstOpenUrlTimestamp = traces.values().stream()
-                .filter(st -> st.event() != null && st.event().contains("openUrl")  )
-                .map(ServerTrace::timestamp)
-                .map(LocalDateTime::parse)
-                .min(LocalDateTime::compareTo)
-                .orElse(null);
-       // if(firstOpenUrlTimestamp == null) throw new RuntimeException("No occurence of an event containing openUrl");
-
-        //LOGGER.info("First date where openurl was observed: " + firstOpenUrlTimestamp);
-
-        //remove from traces all elements whose keys is strictly earlier to firstOpenUrlTimestamp
-        traces.entrySet().removeIf(e -> LocalDateTime.parse(e.getKey()).isBefore(firstOpenUrlTimestamp));
-
-        //list all users with an event of type UpdateProfileService and params containing a key of type suggestions
-        ///with a "fl" field coantining "fl
-        List<Pair<ServerTrace, Map>> updateProfileServiceWithSuggestions =  traces.values().stream().filter(st ->
-                        st.event().contains("UpdateProfileService") || st.event().contains("UpdateProfileHandler")
-                )
-                .filter(st -> st.param() instanceof Map)
-                .map(st -> Pair.of(st, (Map<String, Object>)st.param()))
-                .map(p -> Pair.of(p.getLeft(),p.getRight().get("suggestions")))
-                .filter(p -> p.getRight() instanceof List)
-                .map(p -> Pair.of(p.getLeft(), (List)p.getRight()))
-                .map(p  -> Pair.of(p.getLeft(), p.getRight().size() == 1 ? p.getRight().get(0) : null))
-                .filter(p -> p.getRight() instanceof Map)
-                .map(p -> Pair.of(p.getLeft(), (Map)p.getRight()))
-                .toList();
+            Map<String, Long> lycees = users.stream()
+                    .flatMap(u -> u.getLycees().stream())
+                    .collect(Collectors.groupingBy(u -> u, Collectors.counting()));
 
 
-        analyseFormationsSuggestions(traces, usertoGroup, users);
+            Map<String, Long> groupes =
+                    usertoGroup.values().stream().collect(Collectors.groupingBy(Group::getName, Collectors.counting()));
+            List<String> realGroups = groupes.entrySet().stream().filter(e -> e.getValue() >= 5).map(Map.Entry::getKey).toList();
 
-        Serialisation.toJsonFile("suggestionsObserved.json", updateProfileServiceWithSuggestions, true);
+            fos.append("Périmètre des statistiques: lycéens du groupe '" + suffix + "'").append("\n");
+            fos.append("Lycées: " + lycees.size()).append("\n");
+            fos.append("Classes/groupes: " + groupes.size()).append("\n");
+            fos.append("Lycéens: " + users.size()).append("\n");
 
-        List<ServerTrace> ajoutFavoriFormation = updateProfileServiceWithSuggestions.stream()
-                .map(p -> Pair.of(p.getLeft(), (Map<String, Object>)p.getRight()))
-                .filter(p -> {
-                            Map<String, Object> m = p.getRight();
-                            if (m.get("fl") instanceof String fl && m.get("status") instanceof Double status) {
-                                return isFiliere(fl) && (Math.round(status) == 1L);
+            fos.append("Lycées avec au moins 5 lycéens: " + lycees.entrySet().stream()
+                    .filter(e -> e.getValue() >= 5).count()).append("\n");
+            fos.append("Classes/groupes avec au moins 5 lycéens: " + realGroups.size()).append("\n");
+            fos.append("\t\t " + String.join("\n\t\t", realGroups)).append("\n");
+
+            List<User> usersOfInterestWithFavori = new ArrayList<>(users);
+            /* keeping only users having selected a formation favori */
+            usersOfInterestWithFavori.removeIf(u -> u.pf().suggApproved().stream().noneMatch(s -> isFiliere(s.fl())));
+            //print the number of users fof interest
+            fos.append("Lycéens avec au moins une formation en favori: " + usersOfInterestWithFavori.size()).append("\n");
+
+            //computing the set of localdatetime, rounded to hour, for which we observe at least one trace
+            List<String> hours = traces.keySet().stream()
+                    .map(LocalDateTime::parse)
+                    .map(ldt -> ldt.withMinute(0).withSecond(0).withNano(0))
+                    .map(LocalDateTime::toString)
+                    .distinct()
+                    .sorted()
+                    .toList();
+            Serialisation.toJsonFile("hours.json", hours, true);
+
+            traces.values().removeIf(st -> st.event() == null);
+            traces.values().removeIf(st -> !loginsOfInterest.contains(st.origin()));
+            //print the number of traces of users of interest
+            fos.append("Traces d'évènement: " + traces.size()).append("\n");
+
+            // Analyzing the traces
+            //compute the first date where the occurence of an event containing "openUrl" has been seen
+            LocalDateTime firstOpenUrlTimestamp = traces.values().stream()
+                    .filter(st -> st.event() != null && st.event().contains("openUrl"))
+                    .map(ServerTrace::timestamp)
+                    .map(LocalDateTime::parse)
+                    .min(LocalDateTime::compareTo)
+                    .orElse(null);
+            // if(firstOpenUrlTimestamp == null) throw new RuntimeException("No occurence of an event containing openUrl");
+
+            //LOGGER.info("First date where openurl was observed: " + firstOpenUrlTimestamp);
+
+            //remove from traces all elements whose keys is strictly earlier to firstOpenUrlTimestamp
+            if (firstOpenUrlTimestamp != null) {
+                traces.entrySet().removeIf(e -> LocalDateTime.parse(e.getKey()).isBefore(firstOpenUrlTimestamp));
+            }
+
+            //list all users with an event of type UpdateProfileService and params containing a key of type suggestions
+            ///with a "fl" field coantining "fl
+            List<Pair<ServerTrace, Map>> updateProfileServiceWithSuggestions = traces.values().stream().filter(st ->
+                            st.event().contains("UpdateProfileService") || st.event().contains("UpdateProfileHandler")
+                    )
+                    .filter(st -> st.param() instanceof Map)
+                    .map(st -> Pair.of(st, (Map<String, Object>) st.param()))
+                    .map(p -> Pair.of(p.getLeft(), p.getRight().get("suggestions")))
+                    .filter(p -> p.getRight() instanceof List)
+                    .map(p -> Pair.of(p.getLeft(), (List) p.getRight()))
+                    .map(p -> Pair.of(p.getLeft(), p.getRight().size() == 1 ? p.getRight().get(0) : null))
+                    .filter(p -> p.getRight() instanceof Map)
+                    .map(p -> Pair.of(p.getLeft(), (Map) p.getRight()))
+                    .toList();
+
+
+            analyseFormationsSuggestions(traces, usertoGroup, users, fos, suffix);
+
+            Serialisation.toJsonFile("suggestionsObserved_" + suffix + ".json", updateProfileServiceWithSuggestions, true);
+
+            List<ServerTrace> ajoutFavoriFormation = updateProfileServiceWithSuggestions.stream()
+                    .map(p -> Pair.of(p.getLeft(), (Map<String, Object>) p.getRight()))
+                    .filter(p -> {
+                                Map<String, Object> m = p.getRight();
+                                if (m.get("fl") instanceof String fl && m.get("status") instanceof Double status) {
+                                    return isFiliere(fl) && (Math.round(status) == 1L);
+                                }
+                                if (m.get("fl") instanceof String fl && m.get("status") instanceof Integer status) {
+                                    return isFiliere(fl) && (status == 1);
+                                }
+                                return false;
                             }
-                            if (m.get("fl") instanceof String fl && m.get("status") instanceof Integer status) {
-                                return isFiliere(fl) && (status == 1);
-                            }
-                            return false;
-                        }
-                )
-                .map(Pair::getLeft)
-                .sorted(Comparator.comparing(ServerTrace::timestamp))
-                .toList();
+                    )
+                    .map(Pair::getLeft)
+                    .sorted(Comparator.comparing(ServerTrace::timestamp))
+                    .toList();
 
-        List<ServerTrace> filieresSuggestions = traces.values().stream()
-                .filter(st -> st.event() != null && (st.event().contains("front reloadSuggestions fl")
-                        || st.event().contains("front reloadSuggestions fr")
-                        || st.event().contains("front reloadSuggestions formations"))
-                )
-                .toList();
+            List<ServerTrace> filieresSuggestions = traces.values().stream()
+                    .filter(st -> st.event() != null && (st.event().contains("front reloadSuggestions fl")
+                            || st.event().contains("front reloadSuggestions fr")
+                            || st.event().contains("front reloadSuggestions formations"))
+                    )
+                    .toList();
 
-        Set<String> candidatesWithFilieresSuggestions = filieresSuggestions.stream()
-                .map(ServerTrace::origin)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-        LOGGER.info("Lycéens ayant vu une ou plusieurs suggestions de filières: " + candidatesWithFilieresSuggestions.size());
+            Set<String> candidatesWithFilieresSuggestions = filieresSuggestions.stream()
+                    .map(ServerTrace::origin)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            fos.append("Lycéens ayant vu une ou plusieurs suggestions de filières: " + candidatesWithFilieresSuggestions.size()).append("\n");
 
-        Map<String, List<String>> groupsWithFilieresSuggestions =
-                candidatesWithFilieresSuggestions.stream()
-                .map(id -> Pair.of(id, usertoGroup.get(id)))
-                .filter(p -> p.getRight() != null)
-                .collect(Collectors.groupingBy(p -> p.getRight().getId()))
-                .entrySet().stream().collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                e -> e.getValue().stream().map(Pair::getLeft).toList()
-                        )
-                )
-                ;
-        Serialisation.toJsonFile("groupsWithFilieresSuggestions.json", groupsWithFilieresSuggestions,true);
+            Map<String, List<String>> groupsWithFilieresSuggestions =
+                    candidatesWithFilieresSuggestions.stream()
+                            .map(id -> Pair.of(id, usertoGroup.get(id)))
+                            .filter(p -> p.getRight() != null)
+                            .collect(Collectors.groupingBy(p -> p.getRight().getId()))
+                            .entrySet().stream().collect(Collectors.toMap(
+                                            Map.Entry::getKey,
+                                            e -> e.getValue().stream().map(Pair::getLeft).toList()
+                                    )
+                            );
+            Serialisation.toJsonFile("groupsWithFilieresSuggestions" + suffix + ".json", groupsWithFilieresSuggestions, true);
 
-        /*reloadSuggestions fl*/
+            /*reloadSuggestions fl*/
 
-        Serialisation.toJsonFile("addSingleFiliereToFavorisByENSUserEvents.json", ajoutFavoriFormation, true);
+            Serialisation.toJsonFile("addSingleFiliereToFavoris" + suffix + ".json", ajoutFavoriFormation, true);
 
 
-        List<ServerTrace> openPsupUrl = traces.values().stream()
-                .filter(st -> st.event().contains("openUrl") &&  st.event().contains("parcoursup"))
-                .toList();
-        List<ServerTrace> openOnisepUrl = traces.values().stream()
-                .filter(st -> st.event().contains("openUrl") &&  st.event().contains("www.onisep.fr"))
-                .toList();
+            List<ServerTrace> openPsupUrl = traces.values().stream()
+                    .filter(st -> st.event().contains("openUrl") && st.event().contains("parcoursup"))
+                    .toList();
+            List<ServerTrace> openOnisepUrl = traces.values().stream()
+                    .filter(st -> st.event().contains("openUrl") && (st.event().contains("www.onisep.fr") || st.event().contains("avenirs")))
+                    .toList();
 
-        List<String> usersHavingOpenedPsupUrl = openPsupUrl.stream()
-                .map(ServerTrace::origin)
-                .filter(Objects::nonNull)
-                .distinct()
-                .sorted()
-                .toList();
-        List<String> usersHavingOpenedOnisepUrl = openOnisepUrl.stream()
-                .map(ServerTrace::origin)
-                .filter(Objects::nonNull)
-                .distinct()
-                .sorted()
-                .toList();
+            List<String> usersHavingOpenedPsupUrl = openPsupUrl.stream()
+                    .map(ServerTrace::origin)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .sorted()
+                    .toList();
+            List<String> usersHavingOpenedOnisepUrl = openOnisepUrl.stream()
+                    .map(ServerTrace::origin)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .sorted()
+                    .toList();
 
-        //print the two sizes of the sets of users
-        LOGGER.info("Lycéens ayant visité au moins une url parcoursup: " + usersHavingOpenedPsupUrl.size());
-        LOGGER.info("Lycéens ayant visité au moins une url onisep: " + usersHavingOpenedOnisepUrl.size());
+            //print the two sizes of the sets of users
+            fos.append("Lycéens ayant visité au moins une url parcoursup: " + usersHavingOpenedPsupUrl.size()).append("\n");
+            fos.append("Lycéens ayant visité au moins une url onisep: " + usersHavingOpenedOnisepUrl.size()).append("\n");
+        }
     }
 
     private static void analyseFormationsSuggestions(
             Map<String, ServerTrace> traces,
-            Map<String, Group> usertoGroup, List<User> users) throws IOException {
+            Map<String, Group> usertoGroup, List<User> users, OutputStreamWriter fos, String suffix) throws IOException {
 
         Map<String,List<ServerTrace>> connectionsOfUserOfInterestsInTestsGroupAfterStratification = traces.values().stream()
                 .filter(st -> st.origin() != null)
                 .collect(Collectors.groupingBy(ServerTrace::origin));
 
         detailedNavigationAnalysis(
-                "traces_utilisateurs.json",
+                "traces_utilisateurs_" + suffix + ".json",
                 connectionsOfUserOfInterestsInTestsGroupAfterStratification,
                 usertoGroup,
-                users
+                users,
+                fos
         );
 
 
@@ -273,7 +296,8 @@ public class AnalyzeUserBehaviour {
             String filename,
             Map<String, List<ServerTrace>> connectionsOfUserOfInterestsInTestsGroupAfterStratification,
             Map<String, Group> usertoGroup,
-            List<User> usersList) throws IOException {
+            List<User> usersList,
+            OutputStreamWriter fos) throws IOException {
 
         Map<String, User> users = new HashMap<>();
         usersList.forEach(u -> users.put(u.login(), u));
@@ -388,8 +412,8 @@ public class AnalyzeUserBehaviour {
 
         }
 
-        LOGGER.info("Lycéens " + allUSers.size());
-        LOGGER.info("Lycéens revenus " + retours.size());
+        fos.append("Lycéens " + allUSers.size()).append("\n");
+        fos.append("Lycéens revenus " + retours.size()).append("\n");
 
         try(CsvTools csv = new CsvTools("lyceen" + filename.replace("json","csv"), ',')) {
             csv.appendHeaders(List.of(
@@ -441,47 +465,9 @@ public class AnalyzeUserBehaviour {
         Map<String,Integer> statsLyceesNbUsers = new HashMap<>();
         Map<String,Integer> statsLyceesFavoris = new HashMap<>();
 
-        Set <String> lycees = Set.of("vaclav","graves","smdc_toulouse","bremonthier","libourne");
-
-        try(CsvTools csv = new CsvTools("lyceen_non_ENS" + filename.replace("json","csv"), ',')) {
-            csv.appendHeaders(List.of(
-                    "lycéens",
-                    "nb favoris",
-                    "nb favoris formations",
-                    "nb favoris metiers",
-                    "nb favoris formations suggestions"
-            ));
-            for (Map.Entry<String, User> entry : users.entrySet()) {
-                String s = entry.getKey();
-                User user = entry.getValue();
-                Group gr = usertoGroup.get(s);
-                if(gr == null) continue;
-                if(gr.isExpeENSGroup()) continue;
-
-                String lycee = gr.getLycee();
-                if(!lycees.contains(lycee)) {
-                    System.out.println(lycee);
-                    continue;
-                }
-
-                int nbFavoris = user.pf().suggApproved().size();
-                statsLyceesNbUsers.put(lycee, statsLyceesNbUsers.getOrDefault(lycee, 0) + 1);
-                statsLyceesFavoris.put(lycee, statsLyceesFavoris.getOrDefault(lycee, 0) + nbFavoris);
-
-                csv.append(s);
-                csv.append(nbFavoris);
-                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())).count());
-                csv.append(user.pf().suggApproved().stream().filter(s1 -> !isFiliere(s1.fl())).count());
-                csv.append(user.pf().suggApproved().stream().filter(s1 -> isFiliere(s1.fl())
-                        && suggestionsVues.getOrDefault(s,Collections.emptySet()).contains(s1.fl())
-                ).count());
-                csv.newLine();
-            }
-        }
-        LOGGER.info(statsLyceesNbUsers.toString());
-        LOGGER.info(statsLyceesFavoris.toString());
-
-            LOGGER.info("Lycéens ayant navigué au moins 10 minutes : " + nbUsersWithRealNavigation.size());
+        fos.append(statsLyceesNbUsers.toString()).append("\n");
+        fos.append(statsLyceesFavoris.toString()).append("\n");
+        fos.append("Lycéens ayant navigué au moins 10 minutes : " + nbUsersWithRealNavigation.size()).append("\n");
 
     }
 
