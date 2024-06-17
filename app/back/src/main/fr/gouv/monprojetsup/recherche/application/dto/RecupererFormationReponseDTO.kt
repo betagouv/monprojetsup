@@ -5,6 +5,8 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centille
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
@@ -40,12 +42,13 @@ data class RecupererFormationReponseDTO(
                     descriptifDiplome = formation.descriptifDiplome,
                     descriptifAttendus = formation.descriptifAttendus,
                     moyenneGeneraleDesAdmis =
-                        MoyenneGeneraleDesAdmisDTO(
-                            idBaccalaureat = "",
-                            nomBaccalaureat = "",
-                            centilles = listOf(),
-                        ),
-                    // TODO #64
+                        when (ficheFormation) {
+                            is FicheFormation.FicheFormationPourProfil ->
+                                ficheFormation.moyenneGeneraleDesAdmis?.let {
+                                    MoyenneGeneraleDesAdmisDTO.fromMoyenneGeneraleDesAdmis(it)
+                                }
+                            is FicheFormation.FicheFormationSansProfil -> null
+                        },
                     descriptifConseils = formation.descriptifConseils,
                     liens = emptyList(), // TODO #66
                     villes =
@@ -116,14 +119,31 @@ data class RecupererFormationReponseDTO(
         }
 
         data class MoyenneGeneraleDesAdmisDTO(
-            val idBaccalaureat: String,
+            val idBaccalaureat: String?,
             val nomBaccalaureat: String?,
             val centilles: List<CentilleDTO>,
         ) {
             data class CentilleDTO(
                 val centille: Int,
                 val note: Float,
-            )
+            ) {
+                companion object {
+                    fun fromCentille(centille: Centille) =
+                        CentilleDTO(
+                            centille = centille.centille,
+                            note = centille.note,
+                        )
+                }
+            }
+
+            companion object {
+                fun fromMoyenneGeneraleDesAdmis(moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis) =
+                    MoyenneGeneraleDesAdmisDTO(
+                        idBaccalaureat = moyenneGeneraleDesAdmis.idBaccalaureat,
+                        nomBaccalaureat = moyenneGeneraleDesAdmis.nomBaccalaureat,
+                        centilles = moyenneGeneraleDesAdmis.centilles.map { CentilleDTO.fromCentille(it) },
+                    )
+            }
         }
     }
 

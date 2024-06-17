@@ -31,5 +31,5 @@ class FormationMetierId : Serializable {
     lateinit var metierId: String
 
     @Column(name = "formation_id")
-    lateinit var formationId: String
+    lateinit var idFormation: String
 }
