@@ -566,7 +566,7 @@ function addAffinityCard(dat, nodetails) {
     updateFav(dat.key);
     $("#explore-div-resultats-left-liste").append($div);
     $div.on("click", () => {
-      logAction("details formation " + key);
+      logAction("details formation " + dat.key);
       displayItemDetails(dat, nodetails);
     });
   } else {
