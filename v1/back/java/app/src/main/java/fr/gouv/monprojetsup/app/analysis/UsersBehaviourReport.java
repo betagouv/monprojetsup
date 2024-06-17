@@ -226,11 +226,14 @@ public record UsersBehaviourReport(
 
     }
 
-    private int pctShowFavorisKnowingOneFavori(List<UserSession> reports) {
+    private double pctShowFavorisKnowingOneFavori(List<UserSession> reports) {
         int nbUsersWithFavori = nbUsersWithFavoris(reports);
         if(nbUsersWithFavori == 0) return -1;
         int nbVisitingSelectionScreen = nbVisitingSelectionScreen(reports);
-        return 100 * nbVisitingSelectionScreen / nbUsersWithFavori;
+        System.out.println("nbVisitingSelectionScreen = " + nbVisitingSelectionScreen);
+        System.out.println("nbUsersWithFavori = " + nbUsersWithFavori);
+
+        return 100.0 * nbVisitingSelectionScreen / nbUsersWithFavori;
     }
 
     private int nbVisitingSelectionScreen(List<UserSession> reports) {
