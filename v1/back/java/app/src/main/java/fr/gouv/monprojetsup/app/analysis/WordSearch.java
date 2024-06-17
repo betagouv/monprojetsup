@@ -24,14 +24,14 @@ public class WordSearch {
                     searching = searching.substring(i + beginOldStr.length());
                     int j = searching.indexOf("\"");
                     if(j > 0) {
-                        searching = searching.substring(0, j);
+                        searching = searching.substring(0, j).toLowerCase().trim();
                         searches.merge(searching, 1L, Long::sum);
                     }
                 }
             }
             if (st.event() != null && st.event().contains("search ")) {
                 String w = st.event().substring(st.event().indexOf("search ") + "search ".length());
-                searches.merge(w, 1L, Long::sum);
+                searches.merge(w.toLowerCase().trim(), 1L, Long::sum);
             }
         }
 
