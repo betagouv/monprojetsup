@@ -52,6 +52,8 @@ public class CreateAnalysisReports {
 
         List<ServerTrace> traces = db.getTraces();
 
+        WordSearch.analyseWordSearch(traces);
+        
         List<Group> groups = new ArrayList<>(db.getAllGroups());
 
         List<User> users = new ArrayList<>(db.getUsers());
