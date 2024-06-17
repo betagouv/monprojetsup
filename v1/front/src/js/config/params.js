@@ -3,6 +3,7 @@ export { params };
 export const classes = {
   "": "Choisis une option",
   sec: "Seconde Générale et Technologique",
+  secPro: "Seconde Pro",
   secSTHR: "Seconde STHR",
   secTMD: "Seconde TMD",
   prem: "Première",

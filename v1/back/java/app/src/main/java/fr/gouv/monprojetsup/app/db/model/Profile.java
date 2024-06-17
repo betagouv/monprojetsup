@@ -190,7 +190,7 @@ public final class Profile {
     }
 
 
-    public void     updateProfile(
+    public void updateProfile(
             @NotNull ProfileUpdateDTO update) {
 
         if (update.name() != null) {
