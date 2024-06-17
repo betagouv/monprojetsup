@@ -37,7 +37,7 @@ public record UsersBehaviourReport(
         Map<String, GroupBehaviourReport> groupsBehaviours
 ) {
 
-    private static final int MIN_NAV_TIME_MINUTES = 10;
+    private static final int MIN_NAV_TIME_MINUTES = 5;
 
     public static UsersBehaviourReport getReport(
             Map<String, Group> usersToGroups,
@@ -68,18 +68,20 @@ public record UsersBehaviourReport(
                 )
                 );
 
+        val data = behaviours.entrySet().stream()
+                .map(entry -> new GroupBehaviourReport(
+                        entry.getKey().getLycee(),
+                        Group.lyceeToGroupId(entry.getKey().getLycee(), entry.getKey().getClasse()),
+                        entry.getValue(),
+                        anonymize
+
+                ))
+                .collect(Collectors.toMap(GroupBehaviourReport::groupe, gb -> gb));
+
         return new UsersBehaviourReport(
                 begin,
                 end,
-                behaviours.entrySet().stream()
-                        .map(entry -> new GroupBehaviourReport(
-                                entry.getKey().getLycee(),
-                                Group.lyceeToGroupId(entry.getKey().getLycee(), entry.getKey().getClasse()),
-                                entry.getValue(),
-                                anonymize
-
-                        ))
-                        .collect(Collectors.toMap(GroupBehaviourReport::groupe, gb -> gb))
+                data
         );
     }
 
@@ -166,7 +168,7 @@ public record UsersBehaviourReport(
                 .append("\n")
                 .append("Classes/groupes avec au moins 5 lycéens: ").append(realGroups.size())
                 .append("\n");
-        if(realGroups.size() < 10) {
+        if(realGroups.size() < 50) {
             sb.append(realGroups.stream().map(g -> g.groupe)
                             .collect(
                                     Collectors.joining("\n\t\t", "\t\t", "\n")
@@ -179,7 +181,7 @@ public record UsersBehaviourReport(
                         .sum()
                 )
                 .append("\n")
-                .append("Lycéens ayant navigué au moins 10 minutes: "
+                .append("Lycéens ayant navigué au moins " + MIN_NAV_TIME_MINUTES + " minutes: "
                         + groupsBehaviours.values().stream().mapToLong(b -> b.nbUsersWithNavLongerThan(MIN_NAV_TIME_MINUTES)).sum()
                 )
                 /*
@@ -201,22 +203,36 @@ public record UsersBehaviourReport(
                 )
                 .append("\n")
         ;
+
+
         List<UserSession> reports = groupsBehaviours.values().stream()
                 .flatMap(g -> g.individualBehaviours.values().stream())
+                .filter(u -> u.navigationTimeInMinutes() >= MIN_NAV_TIME_MINUTES)
                 .toList();
+        //transform repsort sinto unmodifiable list
 
+        sb.append("stats parmi les ").append(reports.size()).append(" sessions ayant duré au moins " + MIN_NAV_TIME_MINUTES + " minutes.").append("\n");
 
         sb.append("durée médiane de complétion du profil: ")
                 .append(medianProfileCompletionTime(reports))
                 .append("\n");
+
+        sb.append("pourcentage de lycéens utilisant la recherche: ")
+                .append(pctUsingResearch(reports) + "%")
+                .append("\n");
+
+        //pctAddingFavoris
+        sb.append("pourcentage ayant ajouté au moins un favori: ");
+        sb.append(pctAddingFavoris(reports) + "%").append("\n");
+
+        sb.append("pourcentage des affichage favoris parmi ceux qui ont mis au moins un favori: ");
+        sb.append(pctShowFavorisKnowingOneFavori(reports) + "%").append("\n");
 
         sb.append("durée médiane sur chaque écran:\n");
         medianScreensDurations(reports).forEach(
                 p -> sb.append("\t").append(p.getLeft()).append(": ").append(p.getRight()).append("\n\n")
         );
 
-        sb.append("pourcentage des affichage favoris parmi ceux qui ont mis au moins un favori: ");
-        sb.append(pctShowFavorisKnowingOneFavori(reports) + "%").append("\n");
 
         sb.append("\n")
                 .append("\n")
@@ -226,7 +242,18 @@ public record UsersBehaviourReport(
 
     }
 
+    private int pctUsingResearch(List<UserSession> reports) {
+        if(reports.isEmpty()) return 0;
+        int nbUsersWithSearches = nbUsersWithSearch(reports);
+        return 100 * nbUsersWithSearches / reports.size();
+    }
+
+    private int nbUsersWithSearch(List<UserSession> reports) {
+        return (int) reports.stream().filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSearch())).count();
+    }
+
     private double pctShowFavorisKnowingOneFavori(List<UserSession> reports) {
+        val update = reports.stream().flatMap(r -> r.behaviour.stream().filter(b -> b.getTrace().isUpdate())).toList();
         int nbUsersWithFavori = nbUsersWithFavoris(reports);
         if(nbUsersWithFavori == 0) return -1;
         int nbVisitingSelectionScreen = nbVisitingSelectionScreen(reports);
@@ -236,9 +263,15 @@ public record UsersBehaviourReport(
         return 100.0 * nbVisitingSelectionScreen / nbUsersWithFavori;
     }
 
+    private double pctAddingFavoris(List<UserSession> reports) {
+        int nbUsersWithFavori = nbUsersWithFavoris(reports);
+        if(nbUsersWithFavori == 0) return -1;
+        return 100.0 * nbUsersWithFavori / reports.size();
+    }
+
     private int nbVisitingSelectionScreen(List<UserSession> reports) {
         return (int) reports.stream()
-                //.filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSuggestionsUpdate()))
+                .filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSuggestionsUpdate()))
                 .filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSelectionScreen()))
                 .count();
     }

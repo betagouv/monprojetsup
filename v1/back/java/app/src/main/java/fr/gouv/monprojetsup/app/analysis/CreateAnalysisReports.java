@@ -37,6 +37,8 @@ public class CreateAnalysisReports {
 
     public static void main(String[] args) throws IOException, DBExceptions.ModelException, InterruptedException {
 
+        String onlyGroup = null;//"quanti3";
+
         WebServerConfig config = WebServerConfig.load();
 
         ConfigurableApplicationContext context =
@@ -61,6 +63,9 @@ public class CreateAnalysisReports {
         Set<String> testGroups = groups.stream().map(Group::getExpeENSGroupe).collect(Collectors.toSet());
 
         for(String testGroup : testGroups) {
+
+            if(onlyGroup != null && !testGroup.equals(onlyGroup)) continue;
+
             Set<String> members = groups.stream()
                     .filter(g -> g.getExpeENSGroupe().equals(testGroup))
                     .flatMap(g -> g.getMembers().stream())

@@ -30,7 +30,7 @@ public record ServerTrace(String timestamp, String origin, String event, Object 
     }
 
     public String toSummary() {
-        return timestamp + " - " + event;
+        return timestamp + " - " + event + (param == null ? ""  :  " - " + param.toString());
     }
 
     public boolean isSeeingDetailsOfPoc2() {
@@ -81,7 +81,24 @@ public record ServerTrace(String timestamp, String origin, String event, Object 
         return answer;
     }
 
+    public boolean isUpdate() {
+        boolean answer =  event != null
+                && event.contains("UpdateProfileService")
+                /*
+                && ((Map<?, ?>) param).get("suggestions") instanceof List
+                && ((List<?>) ((Map<?, ?>) param).get("suggestions"))
+                        .stream()
+                        .anyMatch(o -> o instanceof SuggestionDTO && ( (SuggestionDTO) o).status() == SuggestionDTO.SUGG_APPROVED)
+                 */
+                ;
+        return answer;
+    }
+
     public boolean isSelectionScreen() {
         return event != null && event.contains("doTransition") && event.contains("selection");
+    }
+
+    public boolean isSearch() {
+        return event != null && event.contains("search");
     }
 }
