@@ -1,4 +1,4 @@
-INSERT INTO groupement_domaine
+INSERT INTO domaine_categorie
 VALUES ('agriculture_alimentaire',
         'Agriculture et Alimentation',
         '🥕');

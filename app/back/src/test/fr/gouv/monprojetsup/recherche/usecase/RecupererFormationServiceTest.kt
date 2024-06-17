@@ -7,17 +7,17 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationAutoEvaluationMoyenne
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.recherche.domain.entity.Interet
+import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
@@ -727,11 +727,11 @@ class RecupererFormationServiceTest {
             val domaines = listOf(Domaine(id = "T_ITM_1169", nom = "défense nationale"))
             val interets =
                 listOf(
-                    Interet(id = "T_ROME_731379930", nom = "je veux aider les autres"),
-                    Interet(id = "T_ROME_1959553899", nom = "je veux créer quelque chose de mes mains"),
+                    InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
+                    InteretSousCategorie(id = "creer", nom = "Créer quelque chose de mes mains"),
                 )
             given(domaineRepository.recupererLesDomaines(interetsEtDomainesChoisis)).willReturn(domaines)
-            given(interetRepository.recupererLesInterets(interetsEtDomainesChoisis)).willReturn(interets)
+            given(interetRepository.recupererLesSousCategoriesDInterets(interetsEtDomainesChoisis)).willReturn(interets)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")

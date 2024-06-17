@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.recherche.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.recherche.domain.entity.Interet
+import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,18 +14,27 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:interet.sql")
-    fun `Doit retourner les domaines reconnus et ignorer ceux inconnus`() {
+    fun `Doit retourner les interêts reconnus et ignorer ceux inconnus`() {
         // Given
-        val ids = listOf("decouvrir_monde", "linguistique", "voyage", "multiculturel")
+        val ids =
+            listOf(
+                "decouvrir_monde",
+                "linguistique",
+                "voyage",
+                "multiculturel",
+                "T_ROME_1825212206",
+                "T_ROME_934089965",
+                "T_ROME_326548351",
+            )
 
         // When
-        val result = interetBDDRepository.recupererLesInterets(ids)
+        val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
 
         // Then
         val attendu =
             listOf(
-                Interet(id = "voyage", nom = "Voyager"),
-                Interet(id = "linguistique", nom = "Apprendre de nouvelles langues"),
+                InteretSousCategorie(id = "voyage", nom = "Voyager"),
+                InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues"),
             )
         assertThat(result).isEqualTo(attendu)
     }
@@ -36,7 +46,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
         val ids = emptyList<String>()
 
         // When
-        val result = interetBDDRepository.recupererLesInterets(ids)
+        val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
 
         // Then
         val attendu = emptyList<Interet>()
