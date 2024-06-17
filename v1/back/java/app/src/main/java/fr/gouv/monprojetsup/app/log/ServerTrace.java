@@ -80,4 +80,8 @@ public record ServerTrace(String timestamp, String origin, String event, Object 
                 ;
         return answer;
     }
+
+    public boolean isSelectionScreen() {
+        return event != null && event.contains("doTransition") && event.contains("selection");
+    }
 }
