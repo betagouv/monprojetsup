@@ -10,7 +10,7 @@ sealed class FicheFormation(
         override val tauxAffinite: Int?,
         val explications: ExplicationsSuggestion?,
         val formationsSimilaires: List<Formation>?,
-        val interets: List<Interet>?,
+        val interets: List<InteretSousCategorie>?,
         val domaines: List<Domaine>?,
         val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne?,
         val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat?,
@@ -20,7 +20,19 @@ sealed class FicheFormation(
             formation = formation.copy(metiers = metiersTriesParAffinites),
             tauxAffinite = tauxAffinite,
             communes = communesTrieesParAffinites,
+        ) {
+        data class ExplicationAutoEvaluationMoyenne(
+            val baccalaureat: Baccalaureat,
+            val moyenneAutoEvalue: Float,
+            val basIntervalleNotes: Float,
+            val hautIntervalleNotes: Float,
         )
+
+        data class ExplicationTypeBaccalaureat(
+            val baccalaureat: Baccalaureat,
+            val pourcentage: Int,
+        )
+    }
 
     data class FicheFormationSansProfil(
         override val formation: FormationDetaillee,
@@ -31,31 +43,3 @@ sealed class FicheFormation(
             communes = communes,
         )
 }
-
-data class Interet(
-    val id: String,
-    val nom: String,
-)
-
-data class Domaine(
-    val id: String,
-    val nom: String,
-)
-
-data class ExplicationAutoEvaluationMoyenne(
-    val baccalaureat: Baccalaureat,
-    val moyenneAutoEvalue: Float,
-    val basIntervalleNotes: Float,
-    val hautIntervalleNotes: Float,
-)
-
-data class ExplicationTypeBaccalaureat(
-    val baccalaureat: Baccalaureat,
-    val pourcentage: Int,
-)
-
-data class Baccalaureat(
-    val id: String,
-    val idExterne: String,
-    val nom: String,
-)

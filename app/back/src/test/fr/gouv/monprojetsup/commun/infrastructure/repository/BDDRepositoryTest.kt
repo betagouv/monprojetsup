@@ -26,8 +26,18 @@ class BDDRepositoryTest {
             jdbcTemplate,
             "join_metier_formation",
             "triplet_affectation",
+            "interet",
+            "interet_sous_categorie",
+            "domaine",
+            "moyenne_generale_admis",
+            "repartition_admis",
+            "specialite",
+            "critere_analyse_candidature",
+            "domaine_categorie",
+            "interet_categorie",
             "metier",
             "formation",
+            "baccalaureat",
         )
     }
 
