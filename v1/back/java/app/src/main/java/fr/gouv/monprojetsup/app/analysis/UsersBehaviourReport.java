@@ -238,7 +238,7 @@ public record UsersBehaviourReport(
 
     private int nbVisitingSelectionScreen(List<UserSession> reports) {
         return (int) reports.stream()
-                .filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSuggestionsUpdate()))
+                //.filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSuggestionsUpdate()))
                 .filter(r -> r.behaviour.stream().anyMatch(b -> b.getTrace().isSelectionScreen()))
                 .count();
     }
