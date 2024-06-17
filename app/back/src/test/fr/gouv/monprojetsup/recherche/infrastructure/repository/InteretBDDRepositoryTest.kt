@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
-import fr.gouv.monprojetsup.recherche.domain.entity.Interet
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -49,7 +48,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
         val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
 
         // Then
-        val attendu = emptyList<Interet>()
+        val attendu = emptyList<InteretSousCategorie>()
         assertThat(result).isEqualTo(attendu)
     }
 }

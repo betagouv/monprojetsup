@@ -15,6 +15,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeB
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
@@ -32,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -56,6 +58,9 @@ class RecupererFormationServiceTest {
     @Mock
     lateinit var domaineRepository: DomaineRepository
 
+    @Mock
+    lateinit var moyenneGeneraleDesAdmisService: MoyenneGeneraleDesAdmisService
+
     @InjectMocks
     lateinit var recupererFormationService: RecupererFormationService
 
@@ -68,25 +73,10 @@ class RecupererFormationServiceTest {
         FormationDetaillee(
             id = "fl0001",
             nom = "CAP Fleuriste",
-            descriptifGeneral =
-                "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les " +
-                    "compétences nécessaires pour exercer le métier de fleuriste. La formation dure 2 ans et " +
-                    "est accessible après la classe de 3ème. Elle comprend des enseignements généraux " +
-                    "(français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels " +
-                    "(botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le " +
-                    "métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-            descriptifAttendus =
-                "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                    "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des " +
-                    "fleurs, ainsi que les soins et l'entretien des végétaux.",
-            descriptifDiplome =
-                "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
-                    "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
-                    "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
-                    "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
-            descriptifConseils =
-                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
-                    "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+            descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+            descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+            descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+            descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
             pointsAttendus =
                 listOf(
                     "Les compétences, méthodes de travail et savoir-faire",
@@ -99,24 +89,13 @@ class RecupererFormationServiceTest {
                     MetierDetaille(
                         id = "MET_001",
                         nom = "Fleuriste",
-                        descriptif =
-                            "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
-                                "jardinerie ou en atelier de composition florale.",
+                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                     ),
                     MetierDetaille(
                         id = "MET_002",
                         nom = "Fleuriste événementiel",
-                        descriptif =
-                            "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                "des compositions florales, des plantes et des accessoires de décoration pour des " +
-                                "événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                "Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
-                                "en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler " +
-                                "en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
+                        descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                     ),
                 ),
@@ -147,6 +126,10 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl0001")).willReturn(
                 tripletsAffectations,
             )
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(null, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
@@ -164,50 +147,23 @@ class RecupererFormationServiceTest {
                                     "Les compétences, méthodes de travail et savoir-faire",
                                     "Motivation et cohérence de ton projet",
                                 ),
-                            descriptifGeneral =
-                                "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires " +
-                                    "pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la " +
-                                    "classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, " +
-                                    "histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, " +
-                                    "techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en " +
-                                    "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                            descriptifDiplome =
-                                "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
-                                    "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
-                                    "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
-                                    "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
-                            descriptifAttendus =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                                    "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
-                                    "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            descriptifConseils =
-                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
+                            descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                            descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                            descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                            descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
                             liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                             metiers =
                                 listOf(
                                     MetierDetaille(
                                         id = "MET_001",
                                         nom = "Fleuriste",
-                                        descriptif =
-                                            "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                                "florales, des plantes et des accessoires de décoration. Il peut également " +
-                                                "être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
-                                                "en fonction de l occasion et de leur budget. Le fleuriste peut travailler en " +
-                                                "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
+                                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                     ),
                                     MetierDetaille(
                                         id = "MET_002",
                                         nom = "Fleuriste événementiel",
-                                        descriptif =
-                                            "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                                "des compositions florales, des plantes et des accessoires de décoration " +
-                                                "pour des événements particuliers (mariages, baptêmes, anniversaires, " +
-                                                "réceptions, etc.). Il peut également être amené à conseiller ses clients " +
-                                                "sur le choix des fleurs et des plantes en fonction de l occasion et de leur " +
-                                                "budget. Le fleuriste événementiel peut travailler en boutique, en grande " +
-                                                "surface, en jardinerie ou en atelier de composition florale.",
+                                        descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                     ),
                                 ),
@@ -272,6 +228,12 @@ class RecupererFormationServiceTest {
                 tripletsAffectations,
             )
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
@@ -300,25 +262,10 @@ class RecupererFormationServiceTest {
                         id = "fl0001",
                         nom = "CAP Fleuriste",
                         formationsAssociees = listOf("fl0010", "fl0012"),
-                        descriptifGeneral =
-                            "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires " +
-                                "pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après " +
-                                "la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, " +
-                                "histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, " +
-                                "techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en " +
-                                "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                        descriptifDiplome =
-                            "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
-                                "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
-                                "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
-                                "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
-                        descriptifAttendus =
-                            "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                                "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
-                                "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                        descriptifConseils =
-                            "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                "actuelles en matière de design floral pour exceller dans ce domaine.",
+                        descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                        descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                        descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                        descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
                         pointsAttendus =
                             listOf(
                                 "Les compétences, méthodes de travail et savoir-faire",
@@ -330,25 +277,13 @@ class RecupererFormationServiceTest {
                                 MetierDetaille(
                                     id = "MET_001",
                                     nom = "Fleuriste",
-                                    descriptif =
-                                        "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                            "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                            "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                            "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
-                                            "jardinerie ou en atelier de composition florale.",
+                                    descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                                 MetierDetaille(
                                     id = "MET_002",
                                     nom = "Fleuriste événementiel",
-                                    descriptif =
-                                        "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                            "des compositions florales, des plantes et des accessoires de décoration pour " +
-                                            "des événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                            "Il peut également être amené à conseiller ses clients sur le choix des fleurs et " +
-                                            "des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel " +
-                                            "peut travailler en boutique, en grande surface, en jardinerie ou en atelier de " +
-                                            "composition florale.",
+                                    descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                             ),
@@ -358,24 +293,13 @@ class RecupererFormationServiceTest {
                             MetierDetaille(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
-                                descriptif =
-                                    "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, des " +
-                                        "compositions florales, des plantes et des accessoires de décoration pour des événements " +
-                                        "particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). Il peut également être " +
-                                        "amené à conseiller ses clients sur le choix des fleurs et des plantes en fonction de " +
-                                        "l occasion et de leur budget. Le fleuriste événementiel peut travailler en boutique, " +
-                                        "en grande surface, en jardinerie ou en atelier de composition florale.",
+                                descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                                 liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                             ),
                             MetierDetaille(
                                 id = "MET_001",
                                 nom = "Fleuriste",
-                                descriptif =
-                                    "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                        "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                        "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                        "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en jardinerie " +
-                                        "ou en atelier de composition florale.",
+                                descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                                 liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                             ),
                         ),
@@ -387,6 +311,7 @@ class RecupererFormationServiceTest {
                     interets = null,
                     explications = explications,
                     explicationTypeBaccalaureat = null,
+                    moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
                 ),
             )
         }
@@ -402,6 +327,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormationParente)).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications =
                 ExplicationsSuggestion(
@@ -431,25 +362,10 @@ class RecupererFormationServiceTest {
                         id = idFormationParente,
                         nom = "CAP Fleuriste",
                         formationsAssociees = listOf("fl0010", "fl0012"),
-                        descriptifGeneral =
-                            "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires " +
-                                "pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après " +
-                                "la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, " +
-                                "histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, " +
-                                "techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en " +
-                                "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                        descriptifDiplome =
-                            "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du " +
-                                "système éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un " +
-                                "métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège " +
-                                "et s'adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.",
-                        descriptifAttendus =
-                            "Il est attendu des candidats de démontrer une solide compréhension des techniques " +
-                                "de base de la floristerie, y compris la composition florale, la reconnaissance des plantes " +
-                                "et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                        descriptifConseils =
-                            "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                "actuelles en matière de design floral pour exceller dans ce domaine.",
+                        descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                        descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                        descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                        descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
                         pointsAttendus =
                             listOf(
                                 "Les compétences, méthodes de travail et savoir-faire",
@@ -461,25 +377,13 @@ class RecupererFormationServiceTest {
                                 MetierDetaille(
                                     id = "MET_001",
                                     nom = "Fleuriste",
-                                    descriptif =
-                                        "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                            "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                            "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                            "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
-                                            "jardinerie ou en atelier de composition florale.",
+                                    descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                                 MetierDetaille(
                                     id = "MET_002",
                                     nom = "Fleuriste événementiel",
-                                    descriptif =
-                                        "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                            "des compositions florales, des plantes et des accessoires de décoration pour " +
-                                            "des événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                            "Il peut également être amené à conseiller ses clients sur le choix des fleurs et " +
-                                            "des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel " +
-                                            "peut travailler en boutique, en grande surface, en jardinerie ou en atelier de " +
-                                            "composition florale.",
+                                    descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                             ),
@@ -489,24 +393,13 @@ class RecupererFormationServiceTest {
                             MetierDetaille(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
-                                descriptif =
-                                    "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, des " +
-                                        "compositions florales, des plantes et des accessoires de décoration pour des événements " +
-                                        "particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). Il peut également être " +
-                                        "amené à conseiller ses clients sur le choix des fleurs et des plantes en fonction de " +
-                                        "l occasion et de leur budget. Le fleuriste événementiel peut travailler en boutique, " +
-                                        "en grande surface, en jardinerie ou en atelier de composition florale.",
+                                descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
                                 liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                             ),
                             MetierDetaille(
                                 id = "MET_001",
                                 nom = "Fleuriste",
-                                descriptif =
-                                    "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                        "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                        "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                        "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en jardinerie " +
-                                        "ou en atelier de composition florale.",
+                                descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
                                 liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                             ),
                         ),
@@ -518,6 +411,7 @@ class RecupererFormationServiceTest {
                     interets = null,
                     explications = explications,
                     explicationTypeBaccalaureat = null,
+                    moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
                 ),
             )
         }
@@ -529,6 +423,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications =
                 ExplicationsSuggestion(
@@ -594,6 +494,12 @@ class RecupererFormationServiceTest {
                 tripletsAffectations,
             )
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
                     autoEvaluationMoyenne =
@@ -654,6 +560,11 @@ class RecupererFormationServiceTest {
                 tripletsAffectations,
             )
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(null)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(null, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
                     autoEvaluationMoyenne =
@@ -710,6 +621,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val interetsEtDomainesChoisis =
                 listOf(
@@ -750,6 +667,12 @@ class RecupererFormationServiceTest {
                 tripletsAffectations,
             )
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             val explications = ExplicationsSuggestion(formationsSimilaires = listOf("fl1", "fl7"))
             given(
                 suggestionHttpClient.recupererLesExplications(
@@ -778,6 +701,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00011")).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl00011"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
             given(
@@ -800,6 +729,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0002")).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0002"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
             given(
@@ -822,6 +757,12 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00014")).willReturn(
                 tripletsAffectations,
             )
+            val baccalaureat = mock(Baccalaureat::class.java)
+            given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
+            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
+            given(
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl00014"),
+            ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
             given(

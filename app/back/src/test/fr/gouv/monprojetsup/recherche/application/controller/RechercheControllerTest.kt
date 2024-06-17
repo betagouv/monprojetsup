@@ -12,6 +12,8 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centille
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
@@ -315,6 +317,18 @@ class RechercheControllerTest(
                             baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
                             pourcentage = 18,
                         ),
+                    moyenneGeneraleDesAdmis =
+                        MoyenneGeneraleDesAdmis(
+                            idBaccalaureat = "Général",
+                            nomBaccalaureat = "Série Générale",
+                            centilles =
+                                listOf(
+                                    Centille(centille = 5, note = 13f),
+                                    Centille(centille = 25, note = 14.5f),
+                                    Centille(centille = 75, note = 17f),
+                                    Centille(centille = 95, note = 18f),
+                                ),
+                        ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
 
@@ -338,9 +352,26 @@ class RechercheControllerTest(
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "moyenneGeneraleDesAdmis": {
-                              "idBaccalaureat": "",
-                              "nomBaccalaureat": "",
-                              "centilles": []
+                              "idBaccalaureat": "Général",
+                              "nomBaccalaureat": "Série Générale",
+                              "centilles": [
+                                {
+                                  "centille": 5,
+                                  "note": 13.0
+                                },
+                                {
+                                  "centille": 25,
+                                  "note": 14.5
+                                },
+                                {
+                                  "centille": 75,
+                                  "note": 17.0
+                                },
+                                {
+                                  "centille": 95,
+                                  "note": 18.0
+                                }
+                              ]
                             },
                             "criteresAnalyseCandidature": {
                               "nom": "",
@@ -423,6 +454,7 @@ class RechercheControllerTest(
                               }
                             ],
                             "typeBaccalaureat": {
+                              "idBaccalaureat": "Générale",
                               "nomBaccalaureat": "Série Générale",
                               "pourcentage": 18
                             },
@@ -527,11 +559,7 @@ class RechercheControllerTest(
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": {
-                              "idBaccalaureat": "",
-                              "nomBaccalaureat": "",
-                              "centilles": []
-                            },
+                            "moyenneGeneraleDesAdmis": null,
                             "criteresAnalyseCandidature": {
                               "nom": "",
                               "pourcentage": 12
