@@ -48,6 +48,8 @@ public final class WebServerConfig {
     @Getter
     private Set<String> dailyEmailENSRecipients = new HashSet<>();
     @Getter
+    private Set<String> expertsEmailRecipients = new HashSet<>();
+    @Getter
     private boolean noAuthentificationMode = false;
     @Getter
     private boolean verbose = false;
