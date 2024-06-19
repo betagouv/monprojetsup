@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.app.server.WebServer;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountManagementEmails {
@@ -206,9 +206,13 @@ public class AccountManagementEmails {
 
         WebServer.LOGGER.info("sendNewUserCreatedByExpertEmail Sending expert confirmation email to " + emailAdress);
 
+        List<String> adresses = new ArrayList<>();
+        adresses.add(emailAdress);
+        adresses.addAll(WebServer.config().getExpertsEmailRecipients());
+
         MailSender.send(
                 WebServer.config().getEmailConfig(),
-                emailAdress,
+                adresses,
                 "MonProjetSup: création d'un nouveau profil de référence",
                 String.format(
                         """
