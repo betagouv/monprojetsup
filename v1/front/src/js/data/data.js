@@ -257,6 +257,14 @@ export function getNbSuggestionsWaiting() {
   return 0;
 }
 
+export function getNbExplanations(explanations) {
+  let nb = 0;
+  for (const expl of explanations) {
+    if (expl.debug === null || expl.debug === undefined) nb++;
+  }
+  return nb;
+}
+
 /* the stats depend on the bac of the user */
 function loadStats(typeBac) {
   if (!typeBac) typeBac = tousBacs;
