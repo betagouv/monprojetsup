@@ -199,7 +199,7 @@ export async function getProfile() {
 export async function doSearch(recherche) {
   const includeFormations = true;
   const includeMetiers = true;
-  const pageSize = 20;
+  const pageSize = 50;
   const pageNb = 0;
   const profile = data.getAnonymousProfile();
 
