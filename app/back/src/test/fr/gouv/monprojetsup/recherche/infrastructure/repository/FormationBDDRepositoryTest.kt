@@ -109,13 +109,9 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus =
-                        listOf(
-                            "Les compétences, méthodes de travail et savoir-faire",
-                            "Motivation et cohérence de ton projet",
-                        ),
+                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    liens = emptyList(),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -127,7 +123,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
                                         "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
                                         "jardinerie ou en atelier de composition florale.",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens = emptyList(),
                             ),
                             MetierDetaille(
                                 id = "MET002",
@@ -139,7 +135,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
                                         "en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler " +
                                         "en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens = emptyList(),
                             ),
                         ),
                 ),
@@ -179,13 +175,9 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus =
-                        listOf(
-                            "Les compétences, méthodes de travail et savoir-faire",
-                            "Motivation et cohérence de ton projet",
-                        ),
+                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    liens = emptyList(),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -197,7 +189,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
                                         "en fonction de l occasion et de leur budget. Le fleuriste peut travailler en " +
                                         "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens = emptyList(),
                             ),
                             MetierDetaille(
                                 id = "MET002",
@@ -210,7 +202,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel " +
                                         "peut travailler en boutique, en grande surface, en jardinerie ou en atelier de " +
                                         "composition florale.",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens = emptyList(),
                             ),
                         ),
                 ),
@@ -241,7 +233,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils = "",
                     pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0005"),
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"),
+                    liens = emptyList(),
                     metiers = emptyList(),
                 ),
             )

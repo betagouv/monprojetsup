@@ -5,13 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SuggestionProfilRequeteDTO(
-    @field:JsonProperty(value = "profile")
-    val profil: ProfilDTO,
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class ProfilDTO(
+data class APISuggestionProfilDTO(
     @field:JsonProperty(value = "niveau")
     val classe: String?,
     @field:JsonProperty(value = "bac")
@@ -32,36 +26,14 @@ data class ProfilDTO(
     val choix: List<SuggestionDTO>?,
 ) {
     constructor(profilEleve: ProfilEleve, specialites: List<String>?) : this(
-        classe =
-            when (profilEleve.classe) {
-                "seconde" -> "sec"
-                "seconde_sthr" -> "secSTHR"
-                "seconde_tmd" -> "secTMD"
-                "premiere" -> "prem"
-                "terminale" -> "term"
-                else -> ""
-            },
+        classe = profilEleve.classe.apiSuggestionValeur,
         bac =
             when (profilEleve.bac) {
                 "NC" -> ""
                 else -> profilEleve.bac
             },
-        duree =
-            when (profilEleve.dureeEtudesPrevue) {
-                "options_ouvertes" -> "indiff"
-                "courte" -> "court"
-                "longue" -> "long"
-                "aucune_idee" -> ""
-                else -> ""
-            },
-        alternance =
-            when (profilEleve.alternance) {
-                "pas_interesse" -> "D"
-                "indifferent" -> "C"
-                "interesse" -> "B"
-                "tres_interesse" -> "A"
-                else -> ""
-            },
+        duree = profilEleve.dureeEtudesPrevue.apiSuggestionValeur,
+        alternance = profilEleve.alternance.apiSuggestionValeur,
         preferencesGeographiques = profilEleve.villesPreferees,
         specialites = specialites,
         interets = (profilEleve.centresInterets ?: emptyList()) + (profilEleve.domainesInterets ?: emptyList()),

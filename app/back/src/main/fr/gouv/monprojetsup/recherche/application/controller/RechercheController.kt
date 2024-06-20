@@ -1,16 +1,10 @@
 package fr.gouv.monprojetsup.recherche.application.controller
 
-import fr.gouv.monprojetsup.recherche.application.dto.CriteresAdmissionDTO
-import fr.gouv.monprojetsup.recherche.application.dto.ExplicationGeographiqueDTO
-import fr.gouv.monprojetsup.recherche.application.dto.ExplicationsDTO
-import fr.gouv.monprojetsup.recherche.application.dto.FormationDTO
-import fr.gouv.monprojetsup.recherche.application.dto.FormationDetailleDTO
-import fr.gouv.monprojetsup.recherche.application.dto.MetierDetailleDTO
-import fr.gouv.monprojetsup.recherche.application.dto.MoyenneGeneraleDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationReponseDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationRequeteDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationReponseDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationRequeteDTO
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.springframework.web.bind.annotation.PathVariable
@@ -38,7 +32,7 @@ class RechercheController(
         return RechercheFormationReponseDTO(
             formations =
                 formationsPourProfil.map { formationPourProfil ->
-                    FormationDTO(
+                    RechercheFormationReponseDTO.FormationDTO(
                         id = formationPourProfil.id,
                         nom = formationPourProfil.nom,
                         tauxAffinite = formationPourProfil.tauxAffinite,
@@ -54,61 +48,20 @@ class RechercheController(
         @PathVariable("idformation") idFormation: String,
         @RequestBody recupererFormationRequeteDTO: RecupererFormationRequeteDTO,
     ): RecupererFormationReponseDTO {
-        val formation =
+        val ficheFormation =
             recupererFormationService.recupererFormation(
                 profilEleve = recupererFormationRequeteDTO.profil?.toProfil(),
                 idFormation = idFormation,
             )
         return RecupererFormationReponseDTO(
-            formation =
-                FormationDetailleDTO(
-                    id = formation.id,
-                    nom = formation.nom,
-                    formationsAssociees = formation.formationsAssociees?.takeUnless { it.isEmpty() },
-                    descriptifFormation = formation.descriptifFormation,
-                    descriptifDiplome = formation.descriptifDiplome,
-                    descriptifAttendus = formation.descriptifAttendus,
-                    criteresAdmission =
-                        formation.criteresAdmission?.let { criteresAdmission ->
-                            CriteresAdmissionDTO(
-                                principauxPoints = criteresAdmission.principauxPoints?.takeUnless { it.isEmpty() },
-                                moyenneGenerale =
-                                    criteresAdmission.moyenneGenerale?.let { moyenneGenerale ->
-                                        MoyenneGeneraleDTO(
-                                            moyenneGenerale.centille5eme,
-                                            moyenneGenerale.centille25eme,
-                                            moyenneGenerale.centille75eme,
-                                            moyenneGenerale.centille95eme,
-                                        )
-                                    },
-                            )
-                        },
-                    descriptifConseils = formation.descriptifConseils,
-                    liens = formation.liens?.takeUnless { it.isEmpty() },
-                    villes = formation.communes.takeUnless { it.isEmpty() },
-                    metiers =
-                        formation.metiers.map { metier ->
-                            MetierDetailleDTO(
-                                id = metier.id,
-                                nom = metier.nom,
-                                descriptif = metier.descriptif,
-                                liens = metier.liens?.takeUnless { it.isEmpty() },
-                            )
-                        }.takeUnless { it.isEmpty() },
-                    tauxAffinite = formation.tauxAffinite,
-                ),
+            formation = RecupererFormationReponseDTO.FormationDetailleDTO.fromFicheFormation(ficheFormation),
             explications =
-                formation.explications?.let { explications ->
-                    ExplicationsDTO(
-                        geographique =
-                            explications.geographique?.map {
-                                ExplicationGeographiqueDTO(nom = it.ville, distanceKm = it.distanceKm)
-                            }?.takeUnless { it.isEmpty() },
-                        similaires = explications.similaires?.takeUnless { it.isEmpty() },
-                        dureeEtudesPrevue = explications.dureeEtudesPrevue,
-                        alternance = explications.alternance,
-                        interets = explications.interets,
-                    )
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil ->
+                        RecupererFormationReponseDTO.ExplicationsDTO.fromFicheFormation(
+                            ficheFormation,
+                        )
+                    is FicheFormation.FicheFormationSansProfil -> null
                 },
         )
     }

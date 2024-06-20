@@ -1,5 +1,8 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.dto
 
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
@@ -7,15 +10,15 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-class ProfilDTOTest {
+class APISuggestionProfilDTOTest {
     companion object {
         private val profilEleveSeconde =
             ProfilEleve(
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
-                classe = "seconde",
+                classe = ChoixNiveau.SECONDE,
                 bac = "Générale",
-                dureeEtudesPrevue = "options_ouvertes",
-                alternance = "pas_interesse",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
+                alternance = ChoixAlternance.PAS_INTERESSE,
                 villesPreferees = listOf("Paris", "Marseille"),
                 specialites = listOf("1056", "1054"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
@@ -25,7 +28,7 @@ class ProfilDTOTest {
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             )
         private val profilDTOSeconde =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "sec",
                 bac = "Générale",
                 duree = "indiff",
@@ -53,10 +56,10 @@ class ProfilDTOTest {
         private val profilEleveSecondeSTHR =
             ProfilEleve(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
-                classe = "seconde_sthr",
+                classe = ChoixNiveau.SECONDE_STHR,
                 bac = "P",
-                dureeEtudesPrevue = "courte",
-                alternance = "indifferent",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
+                alternance = ChoixAlternance.INDIFFERENT,
                 villesPreferees = listOf("Lyon", "Caen"),
                 specialites = listOf("1053", "1055"),
                 centresInterets = emptyList(),
@@ -66,7 +69,7 @@ class ProfilDTOTest {
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             )
         private val profilDTOSecondeSTHR =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "secSTHR",
                 bac = "P",
                 duree = "court",
@@ -84,10 +87,10 @@ class ProfilDTOTest {
         private val profilEleveSecondeTMD =
             ProfilEleve(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
-                classe = "seconde_tmd",
+                classe = ChoixNiveau.SECONDE_TMD,
                 bac = "PA",
-                dureeEtudesPrevue = "longue",
-                alternance = "interesse",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                alternance = ChoixAlternance.INTERESSE,
                 villesPreferees = emptyList(),
                 specialites = emptyList(),
                 centresInterets = listOf("T_IDEO2_4813", "T_ROME_2092381918"),
@@ -97,7 +100,7 @@ class ProfilDTOTest {
                 domainesInterets = emptyList(),
             )
         private val profilDTOSecondeTMD =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "secTMD",
                 bac = "PA",
                 duree = "long",
@@ -115,10 +118,10 @@ class ProfilDTOTest {
         private val profilElevePremiere =
             ProfilEleve(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
-                classe = "premiere",
+                classe = ChoixNiveau.PREMIERE,
                 bac = "S2TMD",
-                dureeEtudesPrevue = "aucune_idee",
-                alternance = "tres_interesse",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
+                alternance = ChoixAlternance.TRES_INTERESSE,
                 villesPreferees = listOf("Lyon", "Paris"),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
@@ -128,7 +131,7 @@ class ProfilDTOTest {
                 domainesInterets = emptyList(),
             )
         private val profilDTOPremiere =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "prem",
                 bac = "S2TMD",
                 duree = "",
@@ -143,10 +146,10 @@ class ProfilDTOTest {
         private val profilEleveTerminal =
             ProfilEleve(
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
-                classe = "terminale",
+                classe = ChoixNiveau.TERMINALE,
                 bac = "NC",
-                dureeEtudesPrevue = "options_ouvertes",
-                alternance = "pas_interesse",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
+                alternance = ChoixAlternance.PAS_INTERESSE,
                 villesPreferees = listOf("Paris", "Marseille"),
                 specialites = listOf("1056", "1054"),
                 centresInterets = null,
@@ -156,7 +159,7 @@ class ProfilDTOTest {
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             )
         private val profilDTOTerminal =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "term",
                 bac = "",
                 duree = "indiff",
@@ -174,10 +177,10 @@ class ProfilDTOTest {
         private val profilEleveNull =
             ProfilEleve(
                 id = "unknown",
-                classe = null,
+                classe = ChoixNiveau.NON_RENSEIGNE,
                 bac = null,
-                dureeEtudesPrevue = null,
-                alternance = null,
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.NON_RENSEIGNE,
+                alternance = ChoixAlternance.NON_RENSEIGNE,
                 villesPreferees = null,
                 specialites = null,
                 centresInterets = null,
@@ -187,7 +190,7 @@ class ProfilDTOTest {
                 domainesInterets = null,
             )
         private val profilDTONull =
-            ProfilDTO(
+            APISuggestionProfilDTO(
                 classe = "",
                 bac = null,
                 duree = "",
@@ -215,10 +218,10 @@ class ProfilDTOTest {
     @MethodSource("testsProfileDTO")
     fun `to - doit créer le ProfilDTO attendu`(
         entree: ProfilEleve,
-        dtoAttendu: ProfilDTO,
+        dtoAttendu: APISuggestionProfilDTO,
     ) {
         // When
-        val resultat = ProfilDTO(entree, listOf("SVT", "Maths"))
+        val resultat = APISuggestionProfilDTO(entree, listOf("SVT", "Maths"))
 
         // Then
         assertThat(resultat).usingRecursiveAssertion().isEqualTo(dtoAttendu)

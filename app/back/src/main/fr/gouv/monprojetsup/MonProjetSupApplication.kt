@@ -7,8 +7,11 @@ import org.springframework.boot.runApplication
 
 @OpenAPIDefinition(servers = [Server(url = "/")])
 @SpringBootApplication
-class MonProjetSupApplication
-
-fun main(args: Array<String>) {
-    runApplication<MonProjetSupApplication>(*args)
+class MonProjetSupApplication {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            runApplication<MonProjetSupApplication>(*args)
+        }
+    }
 }

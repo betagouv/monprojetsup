@@ -37,18 +37,18 @@ class FormationBDDRepository(
                 nom = formation.label,
                 descriptifGeneral = formation.descriptifGeneral,
                 descriptifAttendus = formation.descriptifAttendus,
-                liens = formation.urls,
+                liens = emptyList(), // TODO #66
                 metiers =
                     formation.metiers.map { metierEntity ->
                         MetierDetaille(
                             id = metierEntity.metier.id,
                             nom = metierEntity.metier.label,
                             descriptif = metierEntity.metier.descriptifGeneral,
-                            liens = metierEntity.metier.urls,
+                            liens = emptyList(), // TODO #66
                         )
                     },
                 formationsAssociees = formation.formationsAssociees,
-                pointsAttendus = formation.pointsAttendus,
+                pointsAttendus = emptyList(), // TODO #71
                 descriptifConseils = formation.descriptifConseils,
                 descriptifDiplome = formation.descriptifDiplome,
             )
@@ -61,5 +61,11 @@ class FormationBDDRepository(
         return formations.associate { formationEntity ->
             formationEntity.toFormation() to formationEntity.metiers.map { it.metier.toMetier() }
         }
+    }
+
+    @Transactional(readOnly = true)
+    override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<Formation> {
+        val formations = formationJPARepository.findAllByIdIn(idsFormations)
+        return formations.map { Formation(it.id, it.label) }
     }
 }
