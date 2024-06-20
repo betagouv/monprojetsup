@@ -553,11 +553,12 @@ export function getMyFavoriComment(dretours) {
   return "";
 }
 function addAffinityCard(dat, nodetails) {
+  const nbreasons = data.getNbExplanations(dat.explanations);
   const $div = buildAffinityCard(
     dat.key,
     dat.fav,
     dat.type,
-    dat.affinity,
+    nbreasons,
     dat.cities,
     dat.examples,
     nodetails
@@ -1395,7 +1396,7 @@ function buildAffinityCard(
   key,
   fav,
   type,
-  affinite,
+  nbReasons,
   cities,
   metiers,
   nodetails
@@ -1404,7 +1405,7 @@ function buildAffinityCard(
     return buildFormationAffinityCard(
       key,
       fav,
-      affinite,
+      nbReasons,
       cities,
       metiers,
       nodetails
@@ -1417,7 +1418,7 @@ const hideGeolocIncards = true;
 function buildFormationAffinityCard(
   key,
   fav,
-  affinite,
+  nbReasons,
   cities,
   metiers,
   nodetails
@@ -1428,7 +1429,7 @@ function buildFormationAffinityCard(
         <div class="formation-card">
           <div class="formation-card-header formation-card-header-detail">
             <div class="formation-card-header-affinity">
-              Taux d'affinité ${Math.trunc(100 * affinite)}%
+              <span class="fr-icon-checkbox-circle-line"></span>${nbReasons} points d'affinité avec ton profil
             </div>
             <div class="formation-card-header-sep"></div>
             <div class="formation-card-header-type fr-icon-heart-fill icon-favorite icon-favorite_${key}"></div>
