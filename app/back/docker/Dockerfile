@@ -16,8 +16,10 @@ RUN cp target/*.?ar /usr/src/mps-backend.jar
 
 # Use an official OpenJDK image as the base image
 FROM openjdk:23-ea-17-jdk-slim
+
 # Set the working directory in the container
 WORKDIR /app
+
 # Copy the built JAR file from the previous stage to the container
 COPY --from=build /usr/src/mps-backend.jar .
 

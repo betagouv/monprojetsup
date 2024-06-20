@@ -1,9 +1,9 @@
 server {
-    listen 3001;
-    server_name localhost;
+    listen ${NGINX_PORT};
+    server_name ${NGINX_HOSTNAME};
 
     location / {
-        root /var/www/html;
+        root ${NGINX_ROOT};
         index index.html index.htm;
         try_files $uri $uri/ =404;
     }
