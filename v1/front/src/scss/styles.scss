@@ -1119,12 +1119,15 @@ color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425
 .formation-card-header-affinity {
 padding: 0px 6px;
 //width: 100%;
-align-items: center;
+align-items: left;
 color: var(--light-options-illustration-color-sun-default-green-emeraude-sun-425, #297254);
   font-family: Marianne;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
+}
+.formation-card-header-affinity .fr-icon-checkbox-circle-line {
+  margin-right: 5px;
 }
 
 .card-formation-title {

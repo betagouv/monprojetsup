@@ -691,6 +691,7 @@ public abstract class DB {
                 tool.append(group.getRegistrationToken());
                 tool.append(group.getAdminToken());
                 tool.append(String.join(",", group.getAdmins()));
+                tool.newLine();
             }
         }
     }
