@@ -29,15 +29,14 @@ import org.springframework.web.bind.annotation.*
     info = Info(title = "MonProjetSup API", version = "1.2"),
     servers = [ Server(url = "https://monprojetsup.fr/"), Server(url = "http://localhost:8004/") ]
 )
+
+
 class SuggestionsControllerz(
     private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,
     private val getSimpleStatsService: GetSimpleStatsService
 ) {
-
-
-
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/$SUGGESTIONS_ENDPOINT")
     fun getSuggestions(
