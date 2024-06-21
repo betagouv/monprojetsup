@@ -33,7 +33,7 @@ public class AffinityEvaluator {
 
     public static final int MAX_DISTANCE = 3;
     private static final double MULTIPLIER_FOR_UNFITTED_NOTES = 0.1;
-    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.3;
+    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.0;
 
     private static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
 

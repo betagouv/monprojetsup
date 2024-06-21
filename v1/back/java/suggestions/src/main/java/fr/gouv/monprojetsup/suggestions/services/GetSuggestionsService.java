@@ -14,11 +14,9 @@ public class GetSuggestionsService extends MyService<GetAffinitiesServiceDTO.Req
 
     public final static  String SUGGESTIONS_ENDPOINT = "suggestions";
 
-
     public GetSuggestionsService() {
         super(GetAffinitiesServiceDTO.class);
     }
-
 
     @Override
     protected @NotNull GetAffinitiesServiceDTO.Response handleRequest(@NotNull GetAffinitiesServiceDTO.Request req) {
