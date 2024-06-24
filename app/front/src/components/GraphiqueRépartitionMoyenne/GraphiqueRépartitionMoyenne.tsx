@@ -11,7 +11,7 @@ const GraphiqueRépartitionMoyenne = ({ notes }: GraphiqueRépartitionMoyennePro
         <div className="w-[12%] sm:w-[8%]">
           <strong>{notes[0]}</strong>/20
         </div>
-        <div className="w-[20%] ">
+        <div className="w-[20%]">
           <strong>{notes[1]}</strong>/20
         </div>
         <div className="w-[49.5%]">

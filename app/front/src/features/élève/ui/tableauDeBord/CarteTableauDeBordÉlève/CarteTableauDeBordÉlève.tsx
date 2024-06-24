@@ -18,7 +18,7 @@ const CarteTableauDeBordÉlève = ({ titre, sousTitre, illustration, lien }: Car
           >
             <p className="fr-h3 mb-2 text-[--text-active-blue-france]">{titre}</p>
           </LienInterne>
-          <p className="fr-text mb-0 text-[--text-default-grey]	">{sousTitre}</p>
+          <p className="fr-text mb-0 text-[--text-default-grey]">{sousTitre}</p>
         </div>
       </div>
       <div className="text-right">

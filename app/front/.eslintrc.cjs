@@ -4,7 +4,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react-hooks/recommended',
-    "plugin:sonarjs/recommended",
+    "plugin:sonarjs/recommended-legacy",
     "plugin:import/recommended",
     "plugin:import/typescript",
     "canonical/auto",
