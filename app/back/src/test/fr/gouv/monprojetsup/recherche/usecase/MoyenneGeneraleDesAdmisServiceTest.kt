@@ -1,15 +1,19 @@
 package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.port.MoyenneGeneraleAdmisRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 class MoyenneGeneraleDesAdmisServiceTest {
@@ -178,6 +182,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
@@ -197,10 +202,61 @@ class MoyenneGeneraleDesAdmisServiceTest {
     }
 
     @Test
+    fun `si en premiere ou terminal, doit retourner la moyenne générale`() {
+        // Given
+        val baccalaureat = Baccalaureat(id = "Général", idExterne = "Générale", nom = "Série Générale")
+
+        // When
+        val resultat =
+            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                baccalaureat = baccalaureat,
+                idFormation = "fl0001",
+                classe = ChoixNiveau.PREMIERE,
+            )
+
+        // Then
+        val attendu =
+            MoyenneGeneraleDesAdmis(
+                idBaccalaureat = "Général",
+                nomBaccalaureat = "Série Générale",
+                centiles =
+                    listOf(
+                        Centile(centile = 5, note = 13f),
+                        Centile(centile = 25, note = 14.5f),
+                        Centile(centile = 75, note = 17.5f),
+                        Centile(centile = 95, note = 18.5f),
+                    ),
+            )
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ChoixNiveau::class, names = ["SECONDE", "SECONDE_STHR", "SECONDE_TMD", "NON_RENSEIGNE"])
+    fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
+        // Given
+        val baccalaureat = mock(Baccalaureat::class.java)
+
+        // When
+        val resultat =
+            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                baccalaureat = baccalaureat,
+                idFormation = "fl0001",
+                classe = classe,
+            )
+
+        // Then
+        assertThat(resultat).isNull()
+    }
+
+    @Test
     fun `si le baccalaureat est null, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat = null, idFormation = "fl0001")
+            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                baccalaureat = null,
+                idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
+            )
 
         // Then
         val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
@@ -217,6 +273,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
@@ -234,6 +291,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
@@ -299,6 +357,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
@@ -332,6 +391,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
@@ -350,6 +410,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
                 baccalaureat = baccalaureat,
                 idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
             )
 
         // Then

@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorExcep
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.ExplicationGeographique
@@ -42,7 +43,12 @@ class RecupererFormationService(
         val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)
         val tripletsAffectations = tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(formation.id)
         return if (profilEleve != null) {
-            val moyenneGeneraleDesAdmis = recupererMoyenneGeneraleDesAdmis(idBaccalaureat = profilEleve.bac, idFormation = formation.id)
+            val moyenneGeneraleDesAdmis =
+                recupererMoyenneGeneraleDesAdmis(
+                    idBaccalaureat = profilEleve.bac,
+                    idFormation = formation.id,
+                    classe = profilEleve.classe,
+                )
             val explications = suggestionHttpClient.recupererLesExplications(profilEleve, formation.id)
             val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
                 explications.interetsEtDomainesChoisis.takeUnless {
@@ -93,9 +99,10 @@ class RecupererFormationService(
     private fun recupererMoyenneGeneraleDesAdmis(
         idBaccalaureat: String?,
         idFormation: String,
+        classe: ChoixNiveau,
     ): MoyenneGeneraleDesAdmis? {
         val baccalaureat = idBaccalaureat?.let { baccalaureatRepository.recupererUnBaccalaureat(it) }
-        return moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, idFormation)
+        return moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, idFormation, classe)
     }
 
     private fun filtrerEtTrier(explicationsGeographique: List<ExplicationGeographique>): List<ExplicationGeographique> {

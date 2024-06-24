@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.recherche.usecase
 import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMAL
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.port.MoyenneGeneraleAdmisRepository
 import org.springframework.stereotype.Service
@@ -12,6 +13,17 @@ class MoyenneGeneraleDesAdmisService(
     val moyenneGeneraleAdmisRepository: MoyenneGeneraleAdmisRepository,
 ) {
     fun recupererMoyenneGeneraleDesAdmisDUneFormation(
+        baccalaureat: Baccalaureat?,
+        idFormation: String,
+        classe: ChoixNiveau,
+    ): MoyenneGeneraleDesAdmis? {
+        return when (classe) {
+            ChoixNiveau.SECONDE, ChoixNiveau.SECONDE_STHR, ChoixNiveau.SECONDE_TMD, ChoixNiveau.NON_RENSEIGNE -> null
+            ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, idFormation)
+        }
+    }
+
+    private fun recupererMoyenneGeneraleDesAdmisDUneFormation(
         baccalaureat: Baccalaureat?,
         idFormation: String,
     ): MoyenneGeneraleDesAdmis? {
