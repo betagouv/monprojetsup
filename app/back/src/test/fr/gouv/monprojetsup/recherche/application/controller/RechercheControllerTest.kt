@@ -13,7 +13,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centille
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
@@ -321,12 +321,12 @@ class RechercheControllerTest(
                         MoyenneGeneraleDesAdmis(
                             idBaccalaureat = "Général",
                             nomBaccalaureat = "Série Générale",
-                            centilles =
+                            centiles =
                                 listOf(
-                                    Centille(centille = 5, note = 13f),
-                                    Centille(centille = 25, note = 14.5f),
-                                    Centille(centille = 75, note = 17f),
-                                    Centille(centille = 95, note = 18f),
+                                    Centile(centile = 5, note = 13f),
+                                    Centile(centile = 25, note = 14.5f),
+                                    Centile(centile = 75, note = 17f),
+                                    Centile(centile = 95, note = 18f),
                                 ),
                         ),
                 )
@@ -354,21 +354,21 @@ class RechercheControllerTest(
                             "moyenneGeneraleDesAdmis": {
                               "idBaccalaureat": "Général",
                               "nomBaccalaureat": "Série Générale",
-                              "centilles": [
+                              "centiles": [
                                 {
-                                  "centille": 5,
+                                  "centile": 5,
                                   "note": 13.0
                                 },
                                 {
-                                  "centille": 25,
+                                  "centile": 25,
                                   "note": 14.5
                                 },
                                 {
-                                  "centille": 75,
+                                  "centile": 75,
                                   "note": 17.0
                                 },
                                 {
-                                  "centille": 95,
+                                  "centile": 95,
                                   "note": 18.0
                                 }
                               ]

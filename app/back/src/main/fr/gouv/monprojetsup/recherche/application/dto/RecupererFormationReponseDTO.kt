@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centille
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
@@ -121,17 +121,17 @@ data class RecupererFormationReponseDTO(
         data class MoyenneGeneraleDesAdmisDTO(
             val idBaccalaureat: String?,
             val nomBaccalaureat: String?,
-            val centilles: List<CentilleDTO>,
+            val centiles: List<CentileDTO>,
         ) {
-            data class CentilleDTO(
-                val centille: Int,
+            data class CentileDTO(
+                val centile: Int,
                 val note: Float,
             ) {
                 companion object {
-                    fun fromCentille(centille: Centille) =
-                        CentilleDTO(
-                            centille = centille.centille,
-                            note = centille.note,
+                    fun fromCentile(centile: Centile) =
+                        CentileDTO(
+                            centile = centile.centile,
+                            note = centile.note,
                         )
                 }
             }
@@ -141,7 +141,7 @@ data class RecupererFormationReponseDTO(
                     MoyenneGeneraleDesAdmisDTO(
                         idBaccalaureat = moyenneGeneraleDesAdmis.idBaccalaureat,
                         nomBaccalaureat = moyenneGeneraleDesAdmis.nomBaccalaureat,
-                        centilles = moyenneGeneraleDesAdmis.centilles.map { CentilleDTO.fromCentille(it) },
+                        centiles = moyenneGeneraleDesAdmis.centiles.map { CentileDTO.fromCentile(it) },
                     )
             }
         }
