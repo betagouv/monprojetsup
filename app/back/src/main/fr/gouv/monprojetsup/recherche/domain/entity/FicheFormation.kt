@@ -46,10 +46,10 @@ sealed class FicheFormation(
         data class MoyenneGeneraleDesAdmis(
             val idBaccalaureat: String?,
             val nomBaccalaureat: String?,
-            val centilles: List<Centille>,
+            val centiles: List<Centile>,
         ) {
-            data class Centille(
-                val centille: Int,
+            data class Centile(
+                val centile: Int,
                 val note: Float,
             )
         }

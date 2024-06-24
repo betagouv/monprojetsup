@@ -25,15 +25,15 @@ class MoyenneGeneraleDesAdmisService(
                 MoyenneGeneraleDesAdmis(
                     idBaccalaureat = baccalaureat.id,
                     nomBaccalaureat = baccalaureat.nom,
-                    centilles = transformerFrequencesCumuleesEnCentilles(frequencesCumulees[baccalaureat.id]!!),
+                    centiles = transformerFrequencesCumuleesEnCentiles(frequencesCumulees[baccalaureat.id]!!),
                 )
             }
             else -> {
                 MoyenneGeneraleDesAdmis(
                     idBaccalaureat = null,
                     nomBaccalaureat = null,
-                    centilles =
-                        transformerFrequencesCumuleesEnCentilles(
+                    centiles =
+                        transformerFrequencesCumuleesEnCentiles(
                             frequencesCumulees = calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(frequencesCumulees),
                         ),
                 )
@@ -68,32 +68,32 @@ class MoyenneGeneraleDesAdmisService(
         return frequencesCumulees
     }
 
-    private fun transformerFrequencesCumuleesEnCentilles(frequencesCumulees: List<Int>): List<MoyenneGeneraleDesAdmis.Centille> {
+    private fun transformerFrequencesCumuleesEnCentiles(frequencesCumulees: List<Int>): List<MoyenneGeneraleDesAdmis.Centile> {
         val totalEleves = frequencesCumulees.last()
-        val centilles = listOf(CENTILLE_5EME, CENTILLE_25EME, CENTILLE_75EME, CENTILLE_95EME)
-        val moitieDesCentilles = centilles.size / 2
-        return centilles.mapIndexed { index: Int, centille: Int ->
-            val indexDeLaFrequenceDuCentille =
+        val centiles = listOf(CENTILLE_5EME, CENTILLE_25EME, CENTILLE_75EME, CENTILLE_95EME)
+        val moitieDesCentiles = centiles.size / 2
+        return centiles.mapIndexed { index: Int, centile: Int ->
+            val indexDeLaFrequenceDuCentile =
                 frequencesCumulees.indexOfFirst {
-                    it >= (centille * totalEleves / CENTILLE_100EME.toFloat())
+                    it >= (centile * totalEleves / CENTILLE_100EME.toFloat())
                 }
-            MoyenneGeneraleDesAdmis.Centille(
-                centille = centille,
-                note = recupererLaNoteSelonLeCoteDeLIntervalle(index, moitieDesCentilles, indexDeLaFrequenceDuCentille),
+            MoyenneGeneraleDesAdmis.Centile(
+                centile = centile,
+                note = recupererLaNoteSelonLeCoteDeLIntervalle(index, moitieDesCentiles, indexDeLaFrequenceDuCentile),
             )
         }
     }
 
     private fun recupererLaNoteSelonLeCoteDeLIntervalle(
-        indexDuCentilleEnCours: Int,
-        moitieDesCentilles: Int,
-        indexDeLaFrequenceDuCentille: Int,
+        indexDuCentileEnCours: Int,
+        moitieDesCentiles: Int,
+        indexDeLaFrequenceDuCentile: Int,
     ): Float {
         val note =
-            if (indexDuCentilleEnCours < moitieDesCentilles) {
-                indexDeLaFrequenceDuCentille * TAILLE_ECHELLON_NOTES
+            if (indexDuCentileEnCours < moitieDesCentiles) {
+                indexDeLaFrequenceDuCentile * TAILLE_ECHELLON_NOTES
             } else {
-                indexDeLaFrequenceDuCentille * TAILLE_ECHELLON_NOTES + TAILLE_ECHELLON_NOTES
+                indexDeLaFrequenceDuCentile * TAILLE_ECHELLON_NOTES + TAILLE_ECHELLON_NOTES
             }
         return note
     }

@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centille
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.port.MoyenneGeneraleAdmisRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -152,12 +152,12 @@ class MoyenneGeneraleDesAdmisServiceTest {
                 ),
         )
 
-    private val centillesTousBacConfondus =
+    private val centilesTousBacConfonduses =
         listOf(
-            Centille(5, 12.5f),
-            Centille(25, 14.5f),
-            Centille(75, 17.5f),
-            Centille(95, 18.5f),
+            Centile(5, 12.5f),
+            Centile(25, 14.5f),
+            Centile(75, 17.5f),
+            Centile(95, 18.5f),
         )
 
     @BeforeEach
@@ -185,12 +185,12 @@ class MoyenneGeneraleDesAdmisServiceTest {
             MoyenneGeneraleDesAdmis(
                 idBaccalaureat = "Général",
                 nomBaccalaureat = "Série Générale",
-                centilles =
+                centiles =
                     listOf(
-                        Centille(centille = 5, note = 13f),
-                        Centille(centille = 25, note = 14.5f),
-                        Centille(centille = 75, note = 17.5f),
-                        Centille(centille = 95, note = 18.5f),
+                        Centile(centile = 5, note = 13f),
+                        Centile(centile = 25, note = 14.5f),
+                        Centile(centile = 75, note = 17.5f),
+                        Centile(centile = 95, note = 18.5f),
                     ),
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
@@ -203,7 +203,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat = null, idFormation = "fl0001")
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centilles = centillesTousBacConfondus)
+        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -220,7 +220,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centilles = centillesTousBacConfondus)
+        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -237,7 +237,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centilles = centillesTousBacConfondus)
+        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -306,12 +306,12 @@ class MoyenneGeneraleDesAdmisServiceTest {
             MoyenneGeneraleDesAdmis(
                 idBaccalaureat = null,
                 nomBaccalaureat = null,
-                centilles =
+                centiles =
                     listOf(
-                        Centille(centille = 5, note = 7.5f),
-                        Centille(centille = 25, note = 11.5f),
-                        Centille(centille = 75, note = 14.5f),
-                        Centille(centille = 95, note = 16f),
+                        Centile(centile = 5, note = 7.5f),
+                        Centile(centile = 25, note = 11.5f),
+                        Centile(centile = 75, note = 14.5f),
+                        Centile(centile = 95, note = 16f),
                     ),
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
