@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
@@ -225,6 +226,7 @@ class RechercheControllerTest(
                                 ),
                             metiers = emptyList(),
                             pointsAttendus = emptyList(),
+                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
                         ),
                     communesTrieesParAffinites =
                         listOf(
@@ -329,6 +331,17 @@ class RechercheControllerTest(
                                     Centile(centile = 95, note = 18f),
                                 ),
                         ),
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(
+                                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                pourcentage = 0,
+                            ),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
 
@@ -373,10 +386,28 @@ class RechercheControllerTest(
                                 }
                               ]
                             },
-                            "criteresAnalyseCandidature": {
-                              "nom": "",
-                              "pourcentage": 12
-                            },
+                            "criteresAnalyseCandidature": [
+                              {
+                                "nom": "Compétences académiques",
+                                "pourcentage": 10
+                              },
+                              {
+                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                "pourcentage": 0
+                              },
+                              {
+                                "nom": "Résultats académiques",
+                                "pourcentage": 18
+                              },
+                              {
+                                "nom": "Savoir-être",
+                                "pourcentage": 42
+                              },
+                              {
+                                "nom": "Motivation, connaissance",
+                                "pourcentage": 30
+                              }
+                            ],
                             "repartitionAdmisAnneePrecedente": {
                               "total": 12,
                               "parBaccalaureat": []
@@ -526,11 +557,23 @@ class RechercheControllerTest(
                                     "Les résultats scolaires",
                                     "Les compétences, méthodes de travail et savoir-faire",
                                 ),
+                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
                         ),
                     communes =
                         listOf(
                             "Paris  5e  Arrondissement",
                             "Paris 16e  Arrondissement",
+                        ),
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(
+                                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                pourcentage = 0,
+                            ),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
                 )
             given(recupererFormationService.recupererFormation(null, "fl680002")).willReturn(ficheFormation)
@@ -560,10 +603,28 @@ class RechercheControllerTest(
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "moyenneGeneraleDesAdmis": null,
-                            "criteresAnalyseCandidature": {
-                              "nom": "",
-                              "pourcentage": 12
-                            },
+                            "criteresAnalyseCandidature": [
+                              {
+                                "nom": "Compétences académiques",
+                                "pourcentage": 10
+                              },
+                              {
+                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                "pourcentage": 0
+                              },
+                              {
+                                "nom": "Résultats académiques",
+                                "pourcentage": 18
+                              },
+                              {
+                                "nom": "Savoir-être",
+                                "pourcentage": 42
+                              },
+                              {
+                                "nom": "Motivation, connaissance",
+                                "pourcentage": 30
+                              }
+                            ],
                             "repartitionAdmisAnneePrecedente": {
                               "total": 12,
                               "parBaccalaureat": []

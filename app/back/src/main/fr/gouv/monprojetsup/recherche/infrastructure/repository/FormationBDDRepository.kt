@@ -51,6 +51,7 @@ class FormationBDDRepository(
                 pointsAttendus = emptyList(), // TODO #71
                 descriptifConseils = formation.descriptifConseils,
                 descriptifDiplome = formation.descriptifDiplome,
+                valeurCriteresAnalyseCandidature = formation.criteresAnalyse,
             )
         }
     }
