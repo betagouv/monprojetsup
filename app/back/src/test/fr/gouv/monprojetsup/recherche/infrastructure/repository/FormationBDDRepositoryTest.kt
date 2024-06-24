@@ -112,6 +112,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -178,6 +179,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -235,6 +237,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     formationsAssociees = listOf("fl0005"),
                     liens = emptyList(),
                     metiers = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
                 ),
             )
         }

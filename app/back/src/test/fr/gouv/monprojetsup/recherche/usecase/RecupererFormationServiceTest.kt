@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AffiniteSpecialite
@@ -23,6 +24,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.recherche.domain.port.BaccalaureatRepository
+import fr.gouv.monprojetsup.recherche.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.recherche.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.InteretRepository
@@ -60,6 +62,9 @@ class RecupererFormationServiceTest {
 
     @Mock
     lateinit var moyenneGeneraleDesAdmisService: MoyenneGeneraleDesAdmisService
+
+    @Mock
+    lateinit var criteresAnalyseCandidatureRepository: CriteresAnalyseCandidatureRepository
 
     @InjectMocks
     lateinit var recupererFormationService: RecupererFormationService
@@ -99,6 +104,7 @@ class RecupererFormationServiceTest {
                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                     ),
                 ),
+            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
         )
 
     private val tripletsAffectations =
@@ -117,11 +123,26 @@ class RecupererFormationServiceTest {
             ),
         )
 
+    private val criteresAnalyseCandidature =
+        listOf(
+            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+            CriteresAnalyseCandidature(
+                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                pourcentage = 0,
+            ),
+            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+        )
+
     @Nested
     inner class ProfilNull {
         @Test
-        fun `doit retourner une fiche formation sans le profil avec le taux d'affinité null`() {
+        fun `doit retourner une fiche formation sans le profil avec le taux d'affinité null et les criteres filtrant ceux à 0`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl0001")).willReturn(
                 tripletsAffectations,
@@ -163,8 +184,16 @@ class RecupererFormationServiceTest {
                                         liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                     ),
                                 ),
+                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
                         ),
                     communes = listOf("Paris", "Marseille", "Caen"),
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
                 ),
             )
             assertThat(resultat.tauxAffinite).isNull()
@@ -173,6 +202,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `ne doit pas appeler le suggestionHttpClient`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -217,8 +249,11 @@ class RecupererFormationServiceTest {
             )
 
         @Test
-        fun `doit retourner une fiche formation avec les metiers, villes triés et les explications`() {
+        fun `doit retourner une fiche formation avec les metiers et villes triés, les explications et les criteres filtrant ceux à 0`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -283,6 +318,7 @@ class RecupererFormationServiceTest {
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                             ),
+                        valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
                     ),
                     metiersTriesParAffinites =
                         listOf(
@@ -308,6 +344,13 @@ class RecupererFormationServiceTest {
                     explications = explications,
                     explicationTypeBaccalaureat = null,
                     moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
                 ),
             )
         }
@@ -315,6 +358,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si la formation est une formation enfante, doit retourner la fiche formation de son parent`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             val idFormationParente = "fl0001"
             val idFormationEnfant = "fl00012"
             given(
@@ -383,6 +429,7 @@ class RecupererFormationServiceTest {
                                     liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
                                 ),
                             ),
+                        valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
                     ),
                     metiersTriesParAffinites =
                         listOf(
@@ -408,6 +455,13 @@ class RecupererFormationServiceTest {
                     explications = explications,
                     explicationTypeBaccalaureat = null,
                     moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
                 ),
             )
         }
@@ -415,6 +469,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `doit trier et filtrer les explications géographiques`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -485,6 +542,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si le baccalaureatRepository réussi, doit retourner l'explication de l'auto évaluation et du type de bac`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -551,6 +611,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si le baccalaureatRepository échoue, doit retourner l'explication de l'auto évaluation avec le nom renvoyer`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -613,6 +676,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `doit retourner les domaines et interets`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -658,6 +724,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `doit retourner les formations similaires`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
@@ -693,6 +762,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si la formation n'est pas présente dans la liste retournée par l'api suggestion, doit retourner 0 en taux d'affinité`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl00011")).willReturn(formationDetaillee.copy(id = "fl00011"))
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00011")).willReturn(
                 tripletsAffectations,
@@ -725,6 +797,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si la valeur du taux d'affinité est strictement inférieur à x,xx5, doit l'arrondir à l'inférieur`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0002")).willReturn(formationDetaillee.copy(id = "fl0002"))
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0002")).willReturn(
                 tripletsAffectations,
@@ -753,6 +828,9 @@ class RecupererFormationServiceTest {
         @Test
         fun `si la valeur du taux d'affinité est supérieur ou égale à x,xx5, doit l'arrondir au supérieur`() {
             // Given
+            given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
+                criteresAnalyseCandidature,
+            )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl00014")).willReturn(formationDetaillee.copy(id = "fl00014"))
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00014")).willReturn(
                 tripletsAffectations,

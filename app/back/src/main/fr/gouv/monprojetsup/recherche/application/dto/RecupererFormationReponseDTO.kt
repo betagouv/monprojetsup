@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.recherche.application.dto
 
+import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
@@ -24,7 +25,7 @@ data class RecupererFormationReponseDTO(
         val descriptifConseils: String?,
         val descriptifAttendus: String?,
         val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmisDTO?,
-        val criteresAnalyseCandidature: CriteresAnalyseCandidatureDTO?,
+        val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LiensDTO>,
         val villes: List<String>,
@@ -47,6 +48,7 @@ data class RecupererFormationReponseDTO(
                                 ficheFormation.moyenneGeneraleDesAdmis?.let {
                                     MoyenneGeneraleDesAdmisDTO.fromMoyenneGeneraleDesAdmis(it)
                                 }
+
                             is FicheFormation.FicheFormationSansProfil -> null
                         },
                     descriptifConseils = formation.descriptifConseils,
@@ -71,11 +73,9 @@ data class RecupererFormationReponseDTO(
                         ),
                     // TODO #72
                     criteresAnalyseCandidature =
-                        CriteresAnalyseCandidatureDTO(
-                            nom = "",
-                            pourcentage = 12,
-                        ),
-                    // TODO #71
+                        ficheFormation.criteresAnalyseCandidature.map {
+                            CriteresAnalyseCandidatureDTO.fromCriteresAnalyseCandidature(it)
+                        },
                 )
             }
         }
@@ -88,7 +88,15 @@ data class RecupererFormationReponseDTO(
         data class CriteresAnalyseCandidatureDTO(
             val nom: String,
             val pourcentage: Int,
-        )
+        ) {
+            companion object {
+                fun fromCriteresAnalyseCandidature(criteresAnalyseCandidature: CriteresAnalyseCandidature) =
+                    CriteresAnalyseCandidatureDTO(
+                        criteresAnalyseCandidature.nom,
+                        criteresAnalyseCandidature.pourcentage,
+                    )
+            }
+        }
 
         data class RepartitionAdmisAnneePrecedenteDTO(
             val total: Int,

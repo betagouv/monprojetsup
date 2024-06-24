@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.port.BaccalaureatRepository
+import fr.gouv.monprojetsup.recherche.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.recherche.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import fr.gouv.monprojetsup.recherche.domain.port.InteretRepository
@@ -30,6 +31,7 @@ class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val tripletAffectationRepository: TripletAffectationRepository,
+    val criteresAnalyseCandidatureRepository: CriteresAnalyseCandidatureRepository,
     val baccalaureatRepository: BaccalaureatRepository,
     val interetRepository: InteretRepository,
     val domaineRepository: DomaineRepository,
@@ -42,6 +44,10 @@ class RecupererFormationService(
     ): FicheFormation {
         val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)
         val tripletsAffectations = tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(formation.id)
+        val criteresAnalyseCandidature =
+            criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(
+                valeursCriteresAnalyseCandidature = formation.valeurCriteresAnalyseCandidature,
+            ).filterNot { it.pourcentage == 0 }
         return if (profilEleve != null) {
             val moyenneGeneraleDesAdmis =
                 recupererMoyenneGeneraleDesAdmis(
@@ -87,11 +93,13 @@ class RecupererFormationService(
                 formationsSimilaires = formationsSimilaires,
                 explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
                 moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
+                criteresAnalyseCandidature = criteresAnalyseCandidature,
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
                 formation = formation,
                 communes = tripletsAffectations.map { it.commune }.distinct(),
+                criteresAnalyseCandidature = criteresAnalyseCandidature,
             )
         }
     }
