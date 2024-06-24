@@ -126,10 +126,6 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl0001")).willReturn(
                 tripletsAffectations,
             )
-            val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
-            given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(null, "fl0001"),
-            ).willReturn(moyenneGeneraleDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
@@ -232,7 +228,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
@@ -331,7 +327,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications =
@@ -427,7 +423,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications =
@@ -498,7 +494,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
@@ -563,7 +559,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(null)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(null, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(null, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             val explications =
                 ExplicationsSuggestion(
@@ -625,7 +621,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val interetsEtDomainesChoisis =
@@ -671,7 +667,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             val explications = ExplicationsSuggestion(formationsSimilaires = listOf("fl1", "fl7"))
             given(
@@ -705,7 +701,11 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl00011"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                    baccalaureat,
+                    "fl00011",
+                    ChoixNiveau.TERMINALE,
+                ),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
@@ -733,7 +733,7 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0002"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0002", ChoixNiveau.TERMINALE),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
@@ -761,7 +761,11 @@ class RecupererFormationServiceTest {
             given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
             val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
             given(
-                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl00014"),
+                moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                    baccalaureat,
+                    "fl00014",
+                    ChoixNiveau.TERMINALE,
+                ),
             ).willReturn(moyenneGeneraleDesAdmis)
             given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
             val explications = ExplicationsSuggestion()
