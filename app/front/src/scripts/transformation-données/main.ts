@@ -287,29 +287,29 @@ const main = async () => {
       metier_id    varchar(20) not null references metier,
       formation_id varchar(20) not null references formation,
   */
-  // const métierFormation = Object.entries(données.liensMetiersFormations)
-  //   .flatMap(([métierId, formationIds]) => {
-  //     if (!données.labels[métierId]) return undefined;
+  const métierFormation = Object.entries(données.liensMetiersFormations)
+    .flatMap(([métierId, formationIds]) => {
+      if (!données.labels[métierId]) return undefined;
 
-  //     return formationIds
-  //       .map((formationId) => {
-  //         if (formations.some((formation) => formation[0] === formationId))
-  //           return [métierId.trim(), formationId.trim()];
+      return formationIds
+        .map((formationId) => {
+          if (formations.some((formation) => formation[0] === formationId))
+            return [métierId.trim(), formationId.trim()];
 
-  //         return undefined;
-  //       })
-  //       .filter((mf): mf is string[] => mf !== undefined);
-  //   })
-  //   .filter((mf): mf is string[] => mf !== undefined);
+          return undefined;
+        })
+        .filter((mf): mf is string[] => mf !== undefined);
+    })
+    .filter((mf): mf is string[] => mf !== undefined);
 
-  // const insertMétierFormation = sqlHandler.générerInsert(
-  //   "join_metier_formation",
-  //   ["metier_id", "formation_id"],
-  //   métierFormation,
-  //   false,
-  // );
-  // requêteSQL.push(insertMétierFormation);
-  // sqlHandler.créerFichier("join_metier_formation", insertMétierFormation);
+  const insertMétierFormation = sqlHandler.générerInsert(
+    "join_metier_formation",
+    ["metier_id", "formation_id"],
+    métierFormation,
+    false,
+  );
+  requêteSQL.push(insertMétierFormation);
+  sqlHandler.créerFichier("join_metier_formation", insertMétierFormation);
 
   /*  TRIPLET_AFFECTATION
       id                        varchar(20)        not null primary key,
