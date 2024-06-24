@@ -18,6 +18,7 @@ import { type FormationRepository } from "@/features/formation/infrastructure/fo
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
 import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
 import { RécupérerAperçusFormationsUseCase } from "@/features/formation/usecase/RécupérerAperçusFormations";
+import { RécupérerDétailFormationUseCase } from "@/features/formation/usecase/RécupérerDétailFormation";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
@@ -61,6 +62,8 @@ export class Dépendances {
 
   public readonly récupérerAperçusFormationsUseCase: RécupérerAperçusFormationsUseCase;
 
+  public readonly récupérerDétailFormationUseCase: RécupérerDétailFormationUseCase;
+
   public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
   public readonly rechercherVillesUseCase: RechercherVillesUseCase;
@@ -93,6 +96,7 @@ export class Dépendances {
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
     this.récupérerAperçusFormationsUseCase = new RécupérerAperçusFormationsUseCase(this._formationRepository);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
+    this.récupérerDétailFormationUseCase = new RécupérerDétailFormationUseCase(this._formationRepository);
     this.rechercherVillesUseCase = new RechercherVillesUseCase(this._villeRepository);
     this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
     this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);

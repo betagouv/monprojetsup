@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Inscription élève - Confirmation", () => {
   test("J'ai un bouton qui me permet d'accéder à mon tableau de bord", async ({ page }) => {
     // GIVEN
-    await page.goto("/inscription/confirmation");
+    await page.goto("/eleve/inscription/confirmation");
 
     // WHEN
     await page.getByRole("link", { name: i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.BOUTON_ACTION }).click();

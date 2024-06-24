@@ -10,7 +10,7 @@ const Navigation = () => {
     },
     {
       titre: "Inscription",
-      href: "/inscription/projet",
+      href: "/eleve/inscription/projet",
     },
   ];
 
@@ -31,7 +31,7 @@ const Navigation = () => {
         </button>
         <div className="fr-header__menu-links" />
         <nav
-          aria-label={i18n.NAVIGATION.MAIN_NAVIGATION}
+          aria-label={i18n.ACCESSIBILITÉ.MENU_PRINCIPAL}
           className="fr-nav"
           id="main-navigation"
           role="navigation"

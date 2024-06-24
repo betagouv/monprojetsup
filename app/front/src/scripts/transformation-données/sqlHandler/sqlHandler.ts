@@ -41,7 +41,23 @@ export class SQLHandler {
             if (valeur === null || valeur === undefined) return "NULL";
             if (Array.isArray(valeur))
               return `ARRAY ${JSON.stringify(valeur).replace(/'/gu, "''").replace(/"/gu, "'")}`;
-            if (typeof valeur === "string") return `'${valeur.replace(/'/gu, "''")}'`;
+
+            if (typeof valeur === "string") {
+              if (valeur.startsWith("[{")) {
+                return `ARRAY [${valeur
+                  .replace(/'/gu, "''")
+                  .replace(/^\[/gu, "'")
+                  .replace(/\]$/gu, "'")
+                  .replace(/"\},\{"/gu, "\"}','{\"")}]::jsonb[]`;
+              }
+
+              if (valeur === "[]") {
+                return "ARRAY []::jsonb[]";
+              }
+
+              return `'${valeur.replace(/'/gu, "''")}'`;
+            }
+
             if (typeof valeur === "object") return `'${JSON.stringify(valeur)}'`;
             return valeur;
           })

@@ -17,7 +17,7 @@ const ProfilÉlèvePage = () => {
     <>
       <Head title={i18n.ÉLÈVE.PROFIL.TITRE} />
       <div className="h-full bg-[--background-alt-beige-gris-galet] bg-right-top bg-no-repeat lg:bg-[url('/images-de-fond/tableau-de-bord.svg')]">
-        <div className="fr-container h-full   pb-20  pt-4">
+        <div className="fr-container h-full pb-20 pt-4">
           <FilAriane
             chemin={[{ nom: i18n.ÉLÈVE.TABLEAU_DE_BORD.TITRE_PAGE, lien: "/eleve/tableau-de-bord" }]}
             libelléPageCourante={i18n.ÉLÈVE.PROFIL.TITRE}

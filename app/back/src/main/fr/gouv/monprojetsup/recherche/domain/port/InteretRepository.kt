@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.recherche.domain.port
 
-import fr.gouv.monprojetsup.recherche.domain.entity.Interet
+import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 
 interface InteretRepository {
-    fun recupererLesInterets(ids: List<String>): List<Interet>
+    fun recupererLesSousCategoriesDInterets(idsInterets: List<String>): List<InteretSousCategorie>
 }

@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.recherche.application.dto
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationAutoEvaluationMoyenne
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
-import fr.gouv.monprojetsup.recherche.domain.entity.Interet
+import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 
 data class RecupererFormationReponseDTO(
@@ -155,7 +155,7 @@ data class RecupererFormationReponseDTO(
                         alternance = explications.alternance?.jsonValeur,
                         interetsEtDomainesChoisis =
                             InteretsEtDomainesDTO(
-                                interets = ficheFormation.interets?.map { InteretDTO.fromInteret(it) } ?: emptyList(),
+                                interets = ficheFormation.interets?.map { InteretDTO.fromInteretSousCategorie(it) } ?: emptyList(),
                                 domaines = ficheFormation.domaines?.map { DomaineDTO.fromDomaine(it) } ?: emptyList(),
                             ),
                         specialitesChoisies =
@@ -187,7 +187,7 @@ data class RecupererFormationReponseDTO(
             val nom: String,
         ) {
             companion object {
-                fun fromInteret(interet: Interet) = InteretDTO(id = interet.id, nom = interet.nom)
+                fun fromInteretSousCategorie(interet: InteretSousCategorie) = InteretDTO(id = interet.id, nom = interet.nom)
             }
         }
 

@@ -10,10 +10,10 @@ class TestHelper {
 
   public constructor(private _page: Page) {}
 
-  public readonly urlPageSuivante = "/inscription/domaines";
+  public readonly urlPageSuivante = "/eleve/inscription/domaines";
 
   public naviguerVersLaPage = async () => {
-    await this._page.goto("/inscription/scolarite");
+    await this._page.goto("/eleve/inscription/scolarite");
   };
 
   public soumettreLeFormulaire = async () => {

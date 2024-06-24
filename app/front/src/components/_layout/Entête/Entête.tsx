@@ -35,7 +35,7 @@ const Entête = () => {
                     src={logoMPS}
                   />
                 </div>
-                {!router.location.pathname.includes("/inscription/") && (
+                {!router.location.pathname.includes("/eleve/inscription/") && (
                   <div className="fr-header__navbar">
                     <button
                       aria-controls="navigation-modal"
@@ -43,10 +43,10 @@ const Entête = () => {
                       className="fr-btn--menu fr-btn"
                       data-fr-opened="false"
                       id="navigation-burger-button"
-                      title={i18n.NAVIGATION.MAIN_NAVIGATION}
+                      title={i18n.NAVIGATION.ACCUEIL}
                       type="button"
                     >
-                      {i18n.NAVIGATION.MAIN_NAVIGATION}
+                      {i18n.NAVIGATION.ACCUEIL}
                     </button>
                   </div>
                 )}
@@ -64,7 +64,7 @@ const Entête = () => {
           </div>
         </div>
       </div>
-      {!router.location.pathname.includes("/inscription/") && <Navigation />}
+      {!router.location.pathname.includes("/eleve/inscription/") && <Navigation />}
     </header>
   );
 };
