@@ -70,7 +70,14 @@ class RecupererFormationService(
                 }
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
             FicheFormation.FicheFormationPourProfil(
-                formation = formation,
+                id = formation.id,
+                nom = formation.nom,
+                descriptifGeneral = formation.descriptifGeneral,
+                descriptifAttendus = formation.descriptifAttendus,
+                descriptifDiplome = formation.descriptifDiplome,
+                descriptifConseils = formation.descriptifConseils,
+                formationsAssociees = formation.formationsAssociees,
+                liens = formation.liens,
                 tauxAffinite =
                     calculDuTauxDAffinite(
                         formationAvecLeurAffinite = affinitesFormationEtMetier.formations,
@@ -97,8 +104,16 @@ class RecupererFormationService(
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
-                formation = formation,
+                id = formation.id,
+                nom = formation.nom,
+                descriptifGeneral = formation.descriptifGeneral,
+                descriptifAttendus = formation.descriptifAttendus,
+                descriptifDiplome = formation.descriptifDiplome,
+                descriptifConseils = formation.descriptifConseils,
+                formationsAssociees = formation.formationsAssociees,
+                liens = formation.liens,
                 communes = tripletsAffectations.map { it.commune }.distinct(),
+                metiers = formation.metiers,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
             )
         }

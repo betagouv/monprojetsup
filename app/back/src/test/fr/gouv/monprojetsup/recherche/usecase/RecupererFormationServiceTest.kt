@@ -82,11 +82,6 @@ class RecupererFormationServiceTest {
             descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
             descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
             descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-            pointsAttendus =
-                listOf(
-                    "Les compétences, méthodes de travail et savoir-faire",
-                    "Motivation et cohérence de ton projet",
-                ),
             formationsAssociees = listOf("fl0010", "fl0012"),
             liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
             metiers =
@@ -154,37 +149,28 @@ class RecupererFormationServiceTest {
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
                 FicheFormation.FicheFormationSansProfil(
-                    formation =
-                        FormationDetaillee(
-                            id = "fl0001",
-                            nom = "CAP Fleuriste",
-                            formationsAssociees = listOf("fl0010", "fl0012"),
-                            pointsAttendus =
-                                listOf(
-                                    "Les compétences, méthodes de travail et savoir-faire",
-                                    "Motivation et cohérence de ton projet",
-                                ),
-                            descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
-                            descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
-                            descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
-                            descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                            liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
-                            metiers =
-                                listOf(
-                                    MetierDetaille(
-                                        id = "MET_001",
-                                        nom = "Fleuriste",
-                                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                    ),
-                                    MetierDetaille(
-                                        id = "MET_002",
-                                        nom = "Fleuriste événementiel",
-                                        descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                    ),
-                                ),
-                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
+                    id = "fl0001",
+                    nom = "CAP Fleuriste",
+                    formationsAssociees = listOf("fl0010", "fl0012"),
+                    descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                    descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                    descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                    descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
+                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    metiers =
+                        listOf(
+                            MetierDetaille(
+                                id = "MET_001",
+                                nom = "Fleuriste",
+                                descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
+                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                            ),
+                            MetierDetaille(
+                                id = "MET_002",
+                                nom = "Fleuriste événementiel",
+                                descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
+                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                            ),
                         ),
                     communes = listOf("Paris", "Marseille", "Caen"),
                     criteresAnalyseCandidature =
@@ -288,37 +274,14 @@ class RecupererFormationServiceTest {
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
                 FicheFormation.FicheFormationPourProfil(
-                    FormationDetaillee(
-                        id = "fl0001",
-                        nom = "CAP Fleuriste",
-                        formationsAssociees = listOf("fl0010", "fl0012"),
-                        descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
-                        descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
-                        descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
-                        descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                        pointsAttendus =
-                            listOf(
-                                "Les compétences, méthodes de travail et savoir-faire",
-                                "Motivation et cohérence de ton projet",
-                            ),
-                        liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
-                        metiers =
-                            listOf(
-                                MetierDetaille(
-                                    id = "MET_001",
-                                    nom = "Fleuriste",
-                                    descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                    liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                ),
-                                MetierDetaille(
-                                    id = "MET_002",
-                                    nom = "Fleuriste événementiel",
-                                    descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                    liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                ),
-                            ),
-                        valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
-                    ),
+                    id = "fl0001",
+                    nom = "CAP Fleuriste",
+                    formationsAssociees = listOf("fl0010", "fl0012"),
+                    descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                    descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                    descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                    descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
+                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                     metiersTriesParAffinites =
                         listOf(
                             MetierDetaille(
@@ -399,37 +362,14 @@ class RecupererFormationServiceTest {
             // Then
             assertThat(resultat).usingRecursiveComparison().isEqualTo(
                 FicheFormation.FicheFormationPourProfil(
-                    FormationDetaillee(
-                        id = idFormationParente,
-                        nom = "CAP Fleuriste",
-                        formationsAssociees = listOf("fl0010", "fl0012"),
-                        descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
-                        descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
-                        descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
-                        descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                        pointsAttendus =
-                            listOf(
-                                "Les compétences, méthodes de travail et savoir-faire",
-                                "Motivation et cohérence de ton projet",
-                            ),
-                        liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
-                        metiers =
-                            listOf(
-                                MetierDetaille(
-                                    id = "MET_001",
-                                    nom = "Fleuriste",
-                                    descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                    liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                ),
-                                MetierDetaille(
-                                    id = "MET_002",
-                                    nom = "Fleuriste événementiel",
-                                    descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                    liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                                ),
-                            ),
-                        valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
-                    ),
+                    id = idFormationParente,
+                    nom = "CAP Fleuriste",
+                    formationsAssociees = listOf("fl0010", "fl0012"),
+                    descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
+                    descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
+                    descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
+                    descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
+                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                     metiersTriesParAffinites =
                         listOf(
                             MetierDetaille(

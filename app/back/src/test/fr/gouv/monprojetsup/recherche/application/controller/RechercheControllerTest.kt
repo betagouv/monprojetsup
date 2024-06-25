@@ -16,7 +16,6 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
-import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
@@ -197,36 +196,30 @@ class RechercheControllerTest(
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationPourProfil(
-                    formation =
-                        FormationDetaillee(
-                            id = "fl680002",
-                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            formationsAssociees = listOf("fl0012"),
-                            descriptifGeneral =
-                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
-                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
-                                    "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
-                                    "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
-                                    "établissement de l’enseignement supérieur, une université.",
-                            descriptifDiplome =
-                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                                    "conférent le grade de licence.",
-                            descriptifAttendus =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            descriptifConseils =
-                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
-                            liens =
-                                listOf(
-                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                        "cycle-pluridisciplinaire-d-etudes-superieures",
-                                ),
-                            metiers = emptyList(),
-                            pointsAttendus = emptyList(),
-                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
+                    id = "fl680002",
+                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                    formationsAssociees = listOf("fl0012"),
+                    descriptifGeneral =
+                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                            "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
+                            "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
+                            "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                            "établissement de l’enseignement supérieur, une université.",
+                    descriptifDiplome =
+                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                            "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
+                    liens =
+                        listOf(
+                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                "cycle-pluridisciplinaire-d-etudes-superieures",
                         ),
                     communesTrieesParAffinites =
                         listOf(
@@ -508,56 +501,47 @@ class RechercheControllerTest(
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationSansProfil(
-                    formation =
-                        FormationDetaillee(
-                            id = "fl680002",
-                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            metiers =
-                                listOf(
-                                    MetierDetaille(
-                                        id = "MET001",
-                                        nom = "géomaticien/ne",
-                                        descriptif =
-                                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                                "exploite les données pour modéliser le territoire",
-                                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
-                                    ),
-                                    MetierDetaille(
-                                        id = "MET002",
-                                        nom = "documentaliste",
-                                        descriptif = null,
-                                        liens = emptyList(),
-                                    ),
-                                ),
-                            formationsAssociees = listOf("fl0012"),
-                            descriptifGeneral =
-                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
-                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
-                                    "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
-                                    "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
-                                    "établissement de l’enseignement supérieur, une université.",
-                            descriptifDiplome =
-                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                                    "conférent le grade de licence.",
-                            descriptifAttendus =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            descriptifConseils =
-                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
-                            liens =
-                                listOf(
-                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                        "cycle-pluridisciplinaire-d-etudes-superieures",
-                                ),
-                            pointsAttendus =
-                                listOf(
-                                    "Les résultats scolaires",
-                                    "Les compétences, méthodes de travail et savoir-faire",
-                                ),
-                            valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
+                    id = "fl680002",
+                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                    metiers =
+                        listOf(
+                            MetierDetaille(
+                                id = "MET001",
+                                nom = "géomaticien/ne",
+                                descriptif =
+                                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                                        "exploite les données pour modéliser le territoire",
+                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
+                            ),
+                            MetierDetaille(
+                                id = "MET002",
+                                nom = "documentaliste",
+                                descriptif = null,
+                                liens = emptyList(),
+                            ),
+                        ),
+                    formationsAssociees = listOf("fl0012"),
+                    descriptifGeneral =
+                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                            "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
+                            "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
+                            "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                            "établissement de l’enseignement supérieur, une université.",
+                    descriptifDiplome =
+                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                            "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
+                    liens =
+                        listOf(
+                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                "cycle-pluridisciplinaire-d-etudes-superieures",
                         ),
                     communes =
                         listOf(
