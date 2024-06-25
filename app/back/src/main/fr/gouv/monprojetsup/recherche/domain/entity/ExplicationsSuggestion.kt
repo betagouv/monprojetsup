@@ -1,5 +1,9 @@
 package fr.gouv.monprojetsup.recherche.domain.entity
 
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
+
 data class ExplicationsSuggestion(
     val geographique: List<ExplicationGeographique> = emptyList(),
     val formationsSimilaires: List<String> = emptyList(),
@@ -10,11 +14,6 @@ data class ExplicationsSuggestion(
     val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
     val interetsEtDomainesChoisis: List<String> = emptyList(),
 ) {
-    data class AffiniteSpecialite(
-        val nomSpecialite: String,
-        val pourcentage: Int,
-    )
-
     data class AutoEvaluationMoyenne(
         val moyenneAutoEvalue: Float,
         val rangs: RangsEchellons,
@@ -26,11 +25,6 @@ data class ExplicationsSuggestion(
         val pourcentage: Int,
     )
 
-    data class ExplicationGeographique(
-        val ville: String,
-        val distanceKm: Int,
-    )
-
     data class RangsEchellons(
         val rangEch25: Int,
         val rangEch50: Int,
@@ -39,3 +33,26 @@ data class ExplicationsSuggestion(
         val rangEch90: Int,
     )
 }
+
+data class ExplicationsSuggestionDetaillees(
+    val geographique: List<ExplicationGeographique> = emptyList(),
+    val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
+    val alternance: ChoixAlternance? = null,
+    val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
+    val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis? = null,
+    val formationsSimilaires: List<Formation> = emptyList(),
+    val interets: List<InteretSousCategorie> = emptyList(),
+    val domaines: List<Domaine> = emptyList(),
+    val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
+    val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
+)
+
+data class AffiniteSpecialite(
+    val nomSpecialite: String,
+    val pourcentage: Int,
+)
+
+data class ExplicationGeographique(
+    val ville: String,
+    val distanceKm: Int,
+)

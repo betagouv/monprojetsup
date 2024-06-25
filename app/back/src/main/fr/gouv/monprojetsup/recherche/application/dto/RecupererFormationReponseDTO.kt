@@ -1,8 +1,10 @@
 package fr.gouv.monprojetsup.recherche.application.dto
 
+import fr.gouv.monprojetsup.recherche.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
@@ -44,7 +46,7 @@ data class RecupererFormationReponseDTO(
                     moyenneGeneraleDesAdmis =
                         when (ficheFormation) {
                             is FicheFormation.FicheFormationPourProfil ->
-                                ficheFormation.moyenneGeneraleDesAdmis?.let {
+                                ficheFormation.explications.moyenneGeneraleDesAdmis?.let {
                                     MoyenneGeneraleDesAdmisDTO.fromMoyenneGeneraleDesAdmis(it)
                                 }
 
@@ -162,140 +164,136 @@ data class RecupererFormationReponseDTO(
         val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
     ) {
         companion object {
-            fun fromFicheFormation(ficheFormation: FicheFormation.FicheFormationPourProfil): ExplicationsDTO? {
-                return ficheFormation.explications?.let { explications ->
-                    ExplicationsDTO(
-                        geographique =
-                            explications.geographique.map {
-                                ExplicationGeographiqueDTO.fromExplicationGeographique(
-                                    it,
-                                )
-                            },
-                        formationsSimilaires =
-                            ficheFormation.formationsSimilaires?.map {
-                                FormationSimilaireDTO.fromFormation(it)
-                            } ?: emptyList(),
-                        dureeEtudesPrevue = explications.dureeEtudesPrevue?.jsonValeur,
-                        alternance = explications.alternance?.jsonValeur,
-                        interetsEtDomainesChoisis =
-                            InteretsEtDomainesDTO(
-                                interets = ficheFormation.interets?.map { InteretDTO.fromInteretSousCategorie(it) } ?: emptyList(),
-                                domaines = ficheFormation.domaines?.map { DomaineDTO.fromDomaine(it) } ?: emptyList(),
-                            ),
-                        specialitesChoisies =
-                            explications.specialitesChoisies.map {
-                                AffiniteSpecialiteDTO.fromAffiniteSpecialite(
-                                    it,
-                                )
-                            },
-                        typeBaccalaureat =
-                            ficheFormation.explicationTypeBaccalaureat?.let {
-                                TypeBaccalaureatDTO.fromExplicationTypeBaccalaureat(it)
-                            },
-                        autoEvaluationMoyenne =
-                            ficheFormation.explicationAutoEvaluationMoyenne?.let {
-                                AutoEvaluationMoyenneDTO.fromAutoEvaluationMoyenne(it)
-                            },
-                    )
-                }
+            fun fromExplicationsSuggestionDetaillees(explications: ExplicationsSuggestionDetaillees): ExplicationsDTO {
+                return ExplicationsDTO(
+                    geographique =
+                        explications.geographique.map {
+                            ExplicationGeographiqueDTO.fromExplicationGeographique(
+                                it,
+                            )
+                        },
+                    formationsSimilaires =
+                        explications.formationsSimilaires.map {
+                            FormationSimilaireDTO.fromFormation(it)
+                        },
+                    dureeEtudesPrevue = explications.dureeEtudesPrevue?.jsonValeur,
+                    alternance = explications.alternance?.jsonValeur,
+                    interetsEtDomainesChoisis =
+                        InteretsEtDomainesDTO(
+                            interets = explications.interets.map { InteretDTO.fromInteretSousCategorie(it) } ?: emptyList(),
+                            domaines = explications.domaines.map { DomaineDTO.fromDomaine(it) } ?: emptyList(),
+                        ),
+                    specialitesChoisies =
+                        explications.specialitesChoisies.map {
+                            AffiniteSpecialiteDTO.fromAffiniteSpecialite(
+                                it,
+                            )
+                        },
+                    typeBaccalaureat =
+                        explications.explicationTypeBaccalaureat?.let {
+                            TypeBaccalaureatDTO.fromExplicationTypeBaccalaureat(it)
+                        },
+                    autoEvaluationMoyenne =
+                        explications.explicationAutoEvaluationMoyenne?.let {
+                            AutoEvaluationMoyenneDTO.fromAutoEvaluationMoyenne(it)
+                        },
+                )
             }
         }
+    }
 
-        data class InteretsEtDomainesDTO(
-            val interets: List<InteretDTO>,
-            val domaines: List<DomaineDTO>,
-        )
+    data class InteretsEtDomainesDTO(
+        val interets: List<InteretDTO>,
+        val domaines: List<DomaineDTO>,
+    )
 
-        data class InteretDTO(
-            val id: String,
-            val nom: String,
-        ) {
-            companion object {
-                fun fromInteretSousCategorie(interet: InteretSousCategorie) = InteretDTO(id = interet.id, nom = interet.nom)
+    data class InteretDTO(
+        val id: String,
+        val nom: String,
+    ) {
+        companion object {
+            fun fromInteretSousCategorie(interet: InteretSousCategorie) = InteretDTO(id = interet.id, nom = interet.nom)
+        }
+    }
+
+    data class DomaineDTO(
+        val id: String,
+        val nom: String,
+    ) {
+        companion object {
+            fun fromDomaine(domaine: Domaine) = DomaineDTO(id = domaine.id, nom = domaine.nom)
+        }
+    }
+
+    data class FormationSimilaireDTO(
+        val id: String,
+        val nom: String,
+    ) {
+        companion object {
+            fun fromFormation(formation: Formation) = FormationSimilaireDTO(id = formation.id, nom = formation.nom)
+        }
+    }
+
+    data class AffiniteSpecialiteDTO(
+        val nomSpecialite: String,
+        val pourcentage: Int,
+    ) {
+        companion object {
+            fun fromAffiniteSpecialite(affiniteSpecialite: AffiniteSpecialite): AffiniteSpecialiteDTO {
+                return AffiniteSpecialiteDTO(
+                    nomSpecialite = affiniteSpecialite.nomSpecialite,
+                    pourcentage = affiniteSpecialite.pourcentage,
+                )
             }
         }
+    }
 
-        data class DomaineDTO(
-            val id: String,
-            val nom: String,
-        ) {
-            companion object {
-                fun fromDomaine(domaine: Domaine) = DomaineDTO(id = domaine.id, nom = domaine.nom)
+    data class ExplicationGeographiqueDTO(
+        val nomVille: String,
+        val distanceKm: Int,
+    ) {
+        companion object {
+            fun fromExplicationGeographique(explicationGeographique: ExplicationGeographique): ExplicationGeographiqueDTO {
+                return ExplicationGeographiqueDTO(
+                    nomVille = explicationGeographique.ville,
+                    distanceKm = explicationGeographique.distanceKm,
+                )
             }
         }
+    }
 
-        data class FormationSimilaireDTO(
-            val id: String,
-            val nom: String,
-        ) {
-            companion object {
-                fun fromFormation(formation: Formation) = FormationSimilaireDTO(id = formation.id, nom = formation.nom)
+    data class AutoEvaluationMoyenneDTO(
+        val moyenne: Float,
+        val basIntervalleNotes: Float,
+        val hautIntervalleNotes: Float,
+        val idBaccalaureatUtilise: String,
+        val nomBaccalaureatUtilise: String,
+    ) {
+        companion object {
+            fun fromAutoEvaluationMoyenne(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne): AutoEvaluationMoyenneDTO {
+                return AutoEvaluationMoyenneDTO(
+                    moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
+                    basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
+                    hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
+                    idBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.id,
+                    nomBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.nom,
+                )
             }
         }
+    }
 
-        data class AffiniteSpecialiteDTO(
-            val nomSpecialite: String,
-            val pourcentage: Int,
-        ) {
-            companion object {
-                fun fromAffiniteSpecialite(affiniteSpecialite: ExplicationsSuggestion.AffiniteSpecialite): AffiniteSpecialiteDTO {
-                    return AffiniteSpecialiteDTO(
-                        nomSpecialite = affiniteSpecialite.nomSpecialite,
-                        pourcentage = affiniteSpecialite.pourcentage,
-                    )
-                }
-            }
-        }
-
-        data class ExplicationGeographiqueDTO(
-            val nomVille: String,
-            val distanceKm: Int,
-        ) {
-            companion object {
-                fun fromExplicationGeographique(
-                    explicationGeographique: ExplicationsSuggestion.ExplicationGeographique,
-                ): ExplicationGeographiqueDTO {
-                    return ExplicationGeographiqueDTO(
-                        nomVille = explicationGeographique.ville,
-                        distanceKm = explicationGeographique.distanceKm,
-                    )
-                }
-            }
-        }
-
-        data class AutoEvaluationMoyenneDTO(
-            val moyenne: Float,
-            val basIntervalleNotes: Float,
-            val hautIntervalleNotes: Float,
-            val idBaccalaureatUtilise: String,
-            val nomBaccalaureatUtilise: String,
-        ) {
-            companion object {
-                fun fromAutoEvaluationMoyenne(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne): AutoEvaluationMoyenneDTO {
-                    return AutoEvaluationMoyenneDTO(
-                        moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
-                        basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
-                        hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
-                        idBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.id,
-                        nomBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.nom,
-                    )
-                }
-            }
-        }
-
-        data class TypeBaccalaureatDTO(
-            val idBaccalaureat: String?,
-            val nomBaccalaureat: String?,
-            val pourcentage: Int?,
-        ) {
-            companion object {
-                fun fromExplicationTypeBaccalaureat(typeBaccalaureat: ExplicationTypeBaccalaureat): TypeBaccalaureatDTO {
-                    return TypeBaccalaureatDTO(
-                        idBaccalaureat = typeBaccalaureat.baccalaureat.id,
-                        nomBaccalaureat = typeBaccalaureat.baccalaureat.nom,
-                        pourcentage = typeBaccalaureat.pourcentage,
-                    )
-                }
+    data class TypeBaccalaureatDTO(
+        val idBaccalaureat: String?,
+        val nomBaccalaureat: String?,
+        val pourcentage: Int?,
+    ) {
+        companion object {
+            fun fromExplicationTypeBaccalaureat(typeBaccalaureat: ExplicationTypeBaccalaureat): TypeBaccalaureatDTO {
+                return TypeBaccalaureatDTO(
+                    idBaccalaureat = typeBaccalaureat.baccalaureat.id,
+                    nomBaccalaureat = typeBaccalaureat.baccalaureat.nom,
+                    pourcentage = typeBaccalaureat.pourcentage,
+                )
             }
         }
     }

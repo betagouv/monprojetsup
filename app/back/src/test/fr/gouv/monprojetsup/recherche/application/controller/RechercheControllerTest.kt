@@ -3,13 +3,15 @@ package fr.gouv.monprojetsup.recherche.application.controller
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
+import fr.gouv.monprojetsup.recherche.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
@@ -194,6 +196,62 @@ class RechercheControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
+            val explications =
+                ExplicationsSuggestionDetaillees(
+                    geographique =
+                        listOf(
+                            ExplicationGeographique(
+                                ville = "Nantes",
+                                distanceKm = 1,
+                            ),
+                            ExplicationGeographique(
+                                ville = "Paris",
+                                distanceKm = 3,
+                            ),
+                        ),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.TRES_INTERESSE,
+                    specialitesChoisies =
+                        listOf(
+                            AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                            AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                            AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                        ),
+                    domaines =
+                        listOf(
+                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
+                        ),
+                    interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
+                    explicationAutoEvaluationMoyenne =
+                        ExplicationAutoEvaluationMoyenne(
+                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
+                            moyenneAutoEvalue = 15f,
+                            basIntervalleNotes = 14f,
+                            hautIntervalleNotes = 16f,
+                        ),
+                    formationsSimilaires =
+                        listOf(
+                            Formation("fl1", "CPGE MPSI"),
+                            Formation("fl7", "BUT Informatique"),
+                        ),
+                    explicationTypeBaccalaureat =
+                        ExplicationTypeBaccalaureat(
+                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                            pourcentage = 18,
+                        ),
+                    moyenneGeneraleDesAdmis =
+                        MoyenneGeneraleDesAdmis(
+                            idBaccalaureat = "Général",
+                            nomBaccalaureat = "Série Générale",
+                            centiles =
+                                listOf(
+                                    Centile(centile = 5, note = 13f),
+                                    Centile(centile = 25, note = 14.5f),
+                                    Centile(centile = 75, note = 17f),
+                                    Centile(centile = 95, note = 18f),
+                                ),
+                        ),
+                )
             val ficheFormation =
                 FicheFormation.FicheFormationPourProfil(
                     id = "fl680002",
@@ -244,86 +302,7 @@ class RechercheControllerTest(
                             ),
                         ),
                     tauxAffinite = 90,
-                    domaines =
-                        listOf(
-                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
-                        ),
-                    interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
-                    explicationAutoEvaluationMoyenne =
-                        ExplicationAutoEvaluationMoyenne(
-                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
-                            moyenneAutoEvalue = 15f,
-                            basIntervalleNotes = 14f,
-                            hautIntervalleNotes = 16f,
-                        ),
-                    formationsSimilaires =
-                        listOf(
-                            Formation("fl1", "CPGE MPSI"),
-                            Formation("fl7", "BUT Informatique"),
-                        ),
-                    explications =
-                        ExplicationsSuggestion(
-                            geographique =
-                                listOf(
-                                    ExplicationsSuggestion.ExplicationGeographique(
-                                        ville = "Nantes",
-                                        distanceKm = 1,
-                                    ),
-                                    ExplicationsSuggestion.ExplicationGeographique(
-                                        ville = "Paris",
-                                        distanceKm = 3,
-                                    ),
-                                ),
-                            formationsSimilaires = listOf("fl1", "fl7"),
-                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            alternance = ChoixAlternance.TRES_INTERESSE,
-                            specialitesChoisies =
-                                listOf(
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                                ),
-                            typeBaccalaureat =
-                                ExplicationsSuggestion.TypeBaccalaureat(
-                                    nomBaccalaureat = "Général",
-                                    pourcentage = 18,
-                                ),
-                            autoEvaluationMoyenne =
-                                ExplicationsSuggestion.AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
-                                    rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
-                                            rangEch25 = 12,
-                                            rangEch50 = 14,
-                                            rangEch75 = 16,
-                                            rangEch10 = 10,
-                                            rangEch90 = 17,
-                                        ),
-                                    bacUtilise = "Général",
-                                ),
-                            interetsEtDomainesChoisis =
-                                listOf(
-                                    "T_ROME_731379930",
-                                    "T_ITM_1356",
-                                ),
-                        ),
-                    explicationTypeBaccalaureat =
-                        ExplicationTypeBaccalaureat(
-                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
-                            pourcentage = 18,
-                        ),
-                    moyenneGeneraleDesAdmis =
-                        MoyenneGeneraleDesAdmis(
-                            idBaccalaureat = "Général",
-                            nomBaccalaureat = "Série Générale",
-                            centiles =
-                                listOf(
-                                    Centile(centile = 5, note = 13f),
-                                    Centile(centile = 25, note = 14.5f),
-                                    Centile(centile = 75, note = 17f),
-                                    Centile(centile = 95, note = 18f),
-                                ),
-                        ),
+                    explications = explications,
                     criteresAnalyseCandidature =
                         listOf(
                             CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),

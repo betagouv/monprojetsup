@@ -58,8 +58,8 @@ class RechercheController(
             explications =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        RecupererFormationReponseDTO.ExplicationsDTO.fromFicheFormation(
-                            ficheFormation,
+                        RecupererFormationReponseDTO.ExplicationsDTO.fromExplicationsSuggestionDetaillees(
+                            ficheFormation.explications,
                         )
                     is FicheFormation.FicheFormationSansProfil -> null
                 },
