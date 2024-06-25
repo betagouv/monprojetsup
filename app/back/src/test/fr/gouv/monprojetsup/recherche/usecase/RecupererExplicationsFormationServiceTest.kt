@@ -89,11 +89,11 @@ class RecupererExplicationsFormationServiceTest {
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
                 specialitesChoisies =
-                listOf(
-                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                ),
+                    listOf(
+                        AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                        AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                        AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                    ),
             )
         given(
             suggestionHttpClient.recupererLesExplications(
@@ -111,11 +111,11 @@ class RecupererExplicationsFormationServiceTest {
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
                 specialitesChoisies =
-                listOf(
-                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                ),
+                    listOf(
+                        AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                        AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                        AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                    ),
                 moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
@@ -161,7 +161,7 @@ class RecupererExplicationsFormationServiceTest {
         then(moyenneGeneraleDesAdmisService).should().recupererMoyenneGeneraleDesAdmisDUneFormation(
             baccalaureat = null,
             idFormation = "fl0001",
-            classe = ChoixNiveau.TERMINALE
+            classe = ChoixNiveau.TERMINALE,
         )
         then(baccalaureatRepository).shouldHaveNoInteractions()
     }

@@ -57,8 +57,8 @@ class RecupererFormationService(
                         tripletsAffectation = tripletsAffectations,
                         communesFavorites = profilEleve.villesPreferees,
                     ),
-                explications = recupererExplicationsFormationService.recupererExplications(profilEleve, formation.id),
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
+                explications = recupererExplicationsFormationService.recupererExplications(profilEleve, formation.id),
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
