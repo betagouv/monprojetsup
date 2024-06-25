@@ -48,7 +48,6 @@ class FormationBDDRepository(
                         )
                     },
                 formationsAssociees = formation.formationsAssociees,
-                pointsAttendus = emptyList(), // TODO #71
                 descriptifConseils = formation.descriptifConseils,
                 descriptifDiplome = formation.descriptifDiplome,
                 valeurCriteresAnalyseCandidature = formation.criteresAnalyse,

@@ -34,14 +34,13 @@ data class RecupererFormationReponseDTO(
     ) {
         companion object {
             fun fromFicheFormation(ficheFormation: FicheFormation): FormationDetailleDTO {
-                val formation = ficheFormation.formation
                 return FormationDetailleDTO(
-                    id = formation.id,
-                    nom = formation.nom,
-                    idsFormationsAssociees = formation.formationsAssociees ?: emptyList(),
-                    descriptifFormation = formation.descriptifGeneral,
-                    descriptifDiplome = formation.descriptifDiplome,
-                    descriptifAttendus = formation.descriptifAttendus,
+                    id = ficheFormation.id,
+                    nom = ficheFormation.nom,
+                    idsFormationsAssociees = ficheFormation.formationsAssociees ?: emptyList(),
+                    descriptifFormation = ficheFormation.descriptifGeneral,
+                    descriptifDiplome = ficheFormation.descriptifDiplome,
+                    descriptifAttendus = ficheFormation.descriptifAttendus,
                     moyenneGeneraleDesAdmis =
                         when (ficheFormation) {
                             is FicheFormation.FicheFormationPourProfil ->
@@ -51,18 +50,11 @@ data class RecupererFormationReponseDTO(
 
                             is FicheFormation.FicheFormationSansProfil -> null
                         },
-                    descriptifConseils = formation.descriptifConseils,
+                    descriptifConseils = ficheFormation.descriptifConseils,
                     liens = emptyList(), // TODO #66
-                    villes =
-                        when (ficheFormation) {
-                            is FicheFormation.FicheFormationPourProfil -> ficheFormation.communesTrieesParAffinites
-                            is FicheFormation.FicheFormationSansProfil -> ficheFormation.communes
-                        },
+                    villes = ficheFormation.communes,
                     metiers =
-                        when (ficheFormation) {
-                            is FicheFormation.FicheFormationPourProfil -> ficheFormation.metiersTriesParAffinites
-                            is FicheFormation.FicheFormationSansProfil -> ficheFormation.formation.metiers
-                        }.map { metier ->
+                        ficheFormation.metiers.map { metier ->
                             MetierDetailleDTO.fromMetierDetaille(metier)
                         },
                     tauxAffinite =

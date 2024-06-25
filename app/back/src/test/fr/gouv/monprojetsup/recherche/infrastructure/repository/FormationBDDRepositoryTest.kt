@@ -109,7 +109,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
@@ -176,7 +175,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
@@ -233,7 +231,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifAttendus = null,
                     descriptifDiplome = null,
                     descriptifConseils = "",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0005"),
                     liens = emptyList(),
                     metiers = emptyList(),
