@@ -138,7 +138,7 @@ class RecupererFormationServiceTest {
     @Nested
     inner class ProfilNull {
         @Test
-        fun `doit retourner une fiche formation sans le profil avec le taux d'affinité null et les criteres filtrant ceux à 0`() {
+        fun `doit retourner une fiche formation sans le profil avec les criteres filtrant ceux à 0`() {
             // Given
             given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(listOf(10, 0, 18, 42, 30))).willReturn(
                 criteresAnalyseCandidature,
@@ -196,7 +196,6 @@ class RecupererFormationServiceTest {
                         ),
                 ),
             )
-            assertThat(resultat.tauxAffinite).isNull()
         }
 
         @Test
@@ -791,6 +790,7 @@ class RecupererFormationServiceTest {
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00011")
 
             // Then
+            resultat as FicheFormation.FicheFormationPourProfil
             assertThat(resultat.tauxAffinite).isEqualTo(0)
         }
 
@@ -822,6 +822,7 @@ class RecupererFormationServiceTest {
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0002")
 
             // Then
+            resultat as FicheFormation.FicheFormationPourProfil
             assertThat(resultat.tauxAffinite).isEqualTo(13)
         }
 
@@ -857,6 +858,7 @@ class RecupererFormationServiceTest {
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00014")
 
             // Then
+            resultat as FicheFormation.FicheFormationPourProfil
             assertThat(resultat.tauxAffinite).isEqualTo(66)
         }
     }
