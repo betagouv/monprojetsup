@@ -65,7 +65,11 @@ data class RecupererFormationReponseDTO(
                         }.map { metier ->
                             MetierDetailleDTO.fromMetierDetaille(metier)
                         },
-                    tauxAffinite = ficheFormation.tauxAffinite,
+                    tauxAffinite =
+                        when (ficheFormation) {
+                            is FicheFormation.FicheFormationPourProfil -> ficheFormation.tauxAffinite
+                            is FicheFormation.FicheFormationSansProfil -> null
+                        },
                     repartitionAdmisAnneePrecedente =
                         RepartitionAdmisAnneePrecedenteDTO(
                             total = 12,

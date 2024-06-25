@@ -4,7 +4,6 @@ sealed class FicheFormation(
     open val formation: FormationDetaillee,
     open val communes: List<String>,
     open val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
-    open val tauxAffinite: Int?,
 ) {
     data class FicheFormationSansProfil(
         override val formation: FormationDetaillee,
@@ -12,15 +11,14 @@ sealed class FicheFormation(
         override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
     ) : FicheFormation(
             formation = formation,
-            tauxAffinite = null,
             communes = communes,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
         )
 
     data class FicheFormationPourProfil(
         override val formation: FormationDetaillee,
-        override val tauxAffinite: Int?,
         override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
+        val tauxAffinite: Int,
         val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis?,
         val explications: ExplicationsSuggestion?,
         val formationsSimilaires: List<Formation>?,
@@ -32,7 +30,6 @@ sealed class FicheFormation(
         val communesTrieesParAffinites: List<String>,
     ) : FicheFormation(
             formation = formation.copy(metiers = metiersTriesParAffinites),
-            tauxAffinite = tauxAffinite,
             communes = communesTrieesParAffinites,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
         ) {
