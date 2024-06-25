@@ -83,3 +83,19 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
+
+  pushToOnisep: 
+    name: Push code to ONISEP Repository
+    needs: [test, lint, playwright]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add ONISEP Repository SSH Key
+        run: echo ${{secrets.GITLAB_ONISEP_SSH_KEY}} >> ~/.ssh/id_rsa 
+
+      - name: Add ONISEP Repository
+        run: git remote add onisep ${{env.GITLAB_ONISEP_REPOSITORY}}
+      
+      - name: Checkout ONISEP Repository
+        run: git push onisep HEAD:integration
