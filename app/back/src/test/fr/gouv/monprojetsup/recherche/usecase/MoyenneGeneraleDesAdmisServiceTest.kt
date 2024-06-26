@@ -13,7 +13,6 @@ import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 class MoyenneGeneraleDesAdmisServiceTest {
@@ -25,7 +24,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     private val frequencesCumulees =
         mapOf(
-            "Général" to
+            Baccalaureat(id = "Général", idExterne = "Générale", nom = "Série Générale") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -68,7 +67,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
                     6670, // 19 - 19,5
                     6677, // 19,5 - 20
                 ),
-            "STMG" to
+            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -111,7 +110,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
                     15, // 19 - 19,5
                     15, // 19,5 - 20
                 ),
-            "STI2D" to
+            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -174,13 +173,10 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     @Test
     fun `doit retourner la moyenne générale avec la gauche de l'intervalle pour la 1ere partie et la droite pour la 2nde`() {
-        // Given
-        val baccalaureat = Baccalaureat(id = "Général", idExterne = "Générale", nom = "Série Générale")
-
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = "Général",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -203,13 +199,10 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     @Test
     fun `si en premiere ou terminal, doit retourner la moyenne générale`() {
-        // Given
-        val baccalaureat = Baccalaureat(id = "Général", idExterne = "Générale", nom = "Série Générale")
-
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = "Général",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.PREMIERE,
             )
@@ -233,13 +226,10 @@ class MoyenneGeneraleDesAdmisServiceTest {
     @ParameterizedTest
     @EnumSource(value = ChoixNiveau::class, names = ["SECONDE", "SECONDE_STHR", "SECONDE_TMD", "NON_RENSEIGNE"])
     fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
-        // Given
-        val baccalaureat = mock(Baccalaureat::class.java)
-
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = "Général",
                 idFormation = "fl0001",
                 classe = classe,
             )
@@ -253,7 +243,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = null,
+                idBaccalaureat = null,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -265,13 +255,10 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     @Test
     fun `si l'id du baccalaureat n'est pas dans la liste retournée, doit retourner pour tous les baccalauréats confondus`() {
-        // Given
-        val baccalaureat = Baccalaureat(id = "Pro", idExterne = "P", nom = "Bac Pro")
-
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = "Pro",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -283,13 +270,10 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     @Test
     fun `si moins de 30 admis pour le baccalaureat dans la formation, doit retourner pour tous les baccalauréats confondus`() {
-        // Given
-        val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
-
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = "STMG",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -305,7 +289,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
         val frequencesAvecMoinsDe30AdmisAuTotal =
             mapOf(
-                "STMG" to
+                baccalaureat to
                     listOf(
                         0, // 0 - 0,5
                         0, // 0,5 - 1
@@ -355,7 +339,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -381,7 +365,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
         val frequencesAvecMoinsDe30AdmisAuTotal =
             mapOf(
-                "STMG" to emptyList<Int>(),
+                baccalaureat to emptyList<Int>(),
             )
         given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
             frequencesAvecMoinsDe30AdmisAuTotal,
@@ -389,7 +373,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -401,14 +385,14 @@ class MoyenneGeneraleDesAdmisServiceTest {
     @Test
     fun `si le retour du repository est vide, alors doit retourner null`() {
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
-        val frequencesAvecMoinsDe30AdmisAuTotal = emptyMap<String, List<Int>>()
+        val frequencesAvecMoinsDe30AdmisAuTotal = emptyMap<Baccalaureat, List<Int>>()
         given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
             frequencesAvecMoinsDe30AdmisAuTotal,
         )
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                baccalaureat = baccalaureat,
+                idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )

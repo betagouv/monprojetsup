@@ -5,9 +5,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
 @Table(name = "baccalaureat")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class BaccalaureatEntity {
     @Id
     @Column(name = "id", nullable = false)

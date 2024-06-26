@@ -180,8 +180,8 @@ data class RecupererFormationReponseDTO(
                     alternance = explications.alternance?.jsonValeur,
                     interetsEtDomainesChoisis =
                         InteretsEtDomainesDTO(
-                            interets = explications.interets.map { InteretDTO.fromInteretSousCategorie(it) } ?: emptyList(),
-                            domaines = explications.domaines.map { DomaineDTO.fromDomaine(it) } ?: emptyList(),
+                            interets = explications.interets.map { InteretDTO.fromInteretSousCategorie(it) },
+                            domaines = explications.domaines.map { DomaineDTO.fromDomaine(it) },
                         ),
                     specialitesChoisies =
                         explications.specialitesChoisies.map {

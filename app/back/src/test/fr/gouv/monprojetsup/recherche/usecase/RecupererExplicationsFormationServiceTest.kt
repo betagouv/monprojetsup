@@ -78,11 +78,9 @@ class RecupererExplicationsFormationServiceTest {
     @Test
     fun `dans le cas par défaut, doit retourner par défaut`() {
         // Given
-        val baccalaureat = mock(Baccalaureat::class.java)
-        given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
         val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
         given(
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
+            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation("Générale", "fl0001", ChoixNiveau.TERMINALE),
         ).willReturn(moyenneGeneraleDesAdmis)
         val explications =
             ExplicationsSuggestion(
@@ -124,10 +122,12 @@ class RecupererExplicationsFormationServiceTest {
     @Test
     fun `doit retourner les explications dureeEtudesPrevue, alternance, specialitesChoisies et moyenneGeneraleDesAdmis`() {
         // Given
-        val baccalaureat = mock(Baccalaureat::class.java)
-        given(baccalaureatRepository.recupererUnBaccalaureat("Générale")).willReturn(baccalaureat)
         given(
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, "fl0001", ChoixNiveau.TERMINALE),
+            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+                idBaccalaureat = "Générale",
+                idFormation = "fl0001",
+                classe = ChoixNiveau.TERMINALE,
+            ),
         ).willReturn(null)
         given(
             suggestionHttpClient.recupererLesExplications(
@@ -159,7 +159,7 @@ class RecupererExplicationsFormationServiceTest {
 
         // Then
         then(moyenneGeneraleDesAdmisService).should().recupererMoyenneGeneraleDesAdmisDUneFormation(
-            baccalaureat = null,
+            idBaccalaureat = null,
             idFormation = "fl0001",
             classe = ChoixNiveau.TERMINALE,
         )

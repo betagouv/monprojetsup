@@ -6,4 +6,6 @@ interface BaccalaureatRepository {
     fun recupererUnBaccalaureatParIdExterne(idExterneBaccalaureat: String): Baccalaureat?
 
     fun recupererUnBaccalaureat(id: String): Baccalaureat?
+
+    fun recupererTousLesBaccalaureats(): List<Baccalaureat>
 }
