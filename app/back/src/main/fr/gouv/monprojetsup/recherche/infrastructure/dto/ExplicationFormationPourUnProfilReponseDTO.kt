@@ -142,7 +142,7 @@ data class APISuggestionExplicationNotesDTO(
         ExplicationsSuggestion.AutoEvaluationMoyenne(
             moyenneAutoEvalue = moyenneAutoEvalue.toFloat(),
             rangs = mediane.toRangsEchellons(),
-            bacUtilise = bacUtilise,
+            baccalaureatUtilise = bacUtilise,
         )
 }
 

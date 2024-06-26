@@ -41,8 +41,7 @@ class MoyenneGeneraleDesAdmisService(
                 }
             return if (frequenceBaccalaureat != null && assezDAdmisPourLeBaccalaureat(frequenceBaccalaureat)) {
                 MoyenneGeneraleDesAdmis(
-                    idBaccalaureat = frequenceBaccalaureat.key.id,
-                    nomBaccalaureat = frequenceBaccalaureat.key.nom,
+                    baccalaureat = frequenceBaccalaureat.key,
                     centiles = transformerFrequencesCumuleesEnCentiles(frequenceBaccalaureat.value),
                 )
             } else {
@@ -53,8 +52,7 @@ class MoyenneGeneraleDesAdmisService(
 
     private fun creerMoyenneGeneraleAdmisPourToutBacConfondu(frequencesCumulees: Map<Baccalaureat, List<Int>>) =
         MoyenneGeneraleDesAdmis(
-            idBaccalaureat = null,
-            nomBaccalaureat = null,
+            baccalaureat = null,
             centiles =
                 transformerFrequencesCumuleesEnCentiles(
                     frequencesCumulees = calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(frequencesCumulees),

@@ -83,9 +83,9 @@ class RecupererExplicationsFormationService(
 
     private fun recupererExplicationAutoEvaluationMoyenne(explications: ExplicationsSuggestion): ExplicationAutoEvaluationMoyenne? {
         return explications.autoEvaluationMoyenne?.let {
-            val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.bacUtilise)
+            val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.baccalaureatUtilise)
             ExplicationAutoEvaluationMoyenne(
-                baccalaureat = baccalaureat ?: Baccalaureat(it.bacUtilise, it.bacUtilise, it.bacUtilise),
+                baccalaureatUtilise = baccalaureat ?: Baccalaureat(it.baccalaureatUtilise, it.baccalaureatUtilise, it.baccalaureatUtilise),
                 moyenneAutoEvalue = it.moyenneAutoEvalue,
                 basIntervalleNotes = it.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
                 hautIntervalleNotes = it.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,

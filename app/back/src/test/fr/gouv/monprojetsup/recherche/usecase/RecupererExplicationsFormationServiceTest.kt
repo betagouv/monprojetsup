@@ -243,7 +243,7 @@ class RecupererExplicationsFormationServiceTest {
                                 rangEch10 = 10,
                                 rangEch90 = 17,
                             ),
-                        bacUtilise = "Général",
+                        baccalaureatUtilise = "Général",
                     ),
                 typeBaccalaureat =
                     TypeBaccalaureat(
@@ -267,7 +267,7 @@ class RecupererExplicationsFormationServiceTest {
                 moyenneAutoEvalue = 14.5f,
                 hautIntervalleNotes = 8f,
                 basIntervalleNotes = 6f,
-                baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
             ),
         )
         assertThat(resultat.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
@@ -295,7 +295,7 @@ class RecupererExplicationsFormationServiceTest {
                                 rangEch10 = 10,
                                 rangEch90 = 17,
                             ),
-                        bacUtilise = "Général",
+                        baccalaureatUtilise = "Général",
                     ),
                 typeBaccalaureat =
                     TypeBaccalaureat(
@@ -319,7 +319,7 @@ class RecupererExplicationsFormationServiceTest {
                 moyenneAutoEvalue = 14.5f,
                 hautIntervalleNotes = 8f,
                 basIntervalleNotes = 6f,
-                baccalaureat = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
+                baccalaureatUtilise = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
             ),
         )
         assertThat(resultat.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(

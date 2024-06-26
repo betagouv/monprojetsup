@@ -67,7 +67,7 @@ sealed class FicheFormation(
             criteresAnalyseCandidature = criteresAnalyseCandidature,
         ) {
         data class ExplicationAutoEvaluationMoyenne(
-            val baccalaureat: Baccalaureat,
+            val baccalaureatUtilise: Baccalaureat,
             val moyenneAutoEvalue: Float,
             val basIntervalleNotes: Float,
             val hautIntervalleNotes: Float,
@@ -79,8 +79,7 @@ sealed class FicheFormation(
         )
 
         data class MoyenneGeneraleDesAdmis(
-            val idBaccalaureat: String?,
-            val nomBaccalaureat: String?,
+            val baccalaureat: Baccalaureat?,
             val centiles: List<Centile>,
         ) {
             data class Centile(

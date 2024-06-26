@@ -17,7 +17,7 @@ data class ExplicationsSuggestion(
     data class AutoEvaluationMoyenne(
         val moyenneAutoEvalue: Float,
         val rangs: RangsEchellons,
-        val bacUtilise: String,
+        val baccalaureatUtilise: String,
     )
 
     data class TypeBaccalaureat(
