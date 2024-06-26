@@ -317,7 +317,11 @@ class RechercheControllerTest(
                                             Centile(centile = 95, note = 18f),
                                         ),
                                 ),
-                            repartitionAdmis = RepartitionAdmis(0, listOf()),
+                            repartitionAdmis =
+                                RepartitionAdmis(
+                                    total = 12,
+                                    parBaccalaureat = listOf(),
+                                ),
                         ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
@@ -551,7 +555,11 @@ class RechercheControllerTest(
                         ),
                     statistiquesDesAdmis =
                         StatistiquesDesAdmis(
-                            repartitionAdmis = RepartitionAdmis(0, listOf()),
+                            repartitionAdmis =
+                                RepartitionAdmis(
+                                    total = 12,
+                                    parBaccalaureat = listOf(),
+                                ),
                             moyenneGeneraleDesAdmis = null,
                         ),
                 )

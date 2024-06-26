@@ -216,7 +216,7 @@ class APISuggestionProfilDTOTest {
 
     @ParameterizedTest
     @MethodSource("testsProfileDTO")
-    fun `to - doit créer le ProfilDTO attendu`(
+    fun `doit créer le ProfilDTO attendu`(
         entree: ProfilEleve,
         dtoAttendu: APISuggestionProfilDTO,
     ) {
