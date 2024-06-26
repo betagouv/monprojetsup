@@ -1,0 +1,178 @@
+/*
+----------------------------------------------------------
+
+#CSS-Grid
+
+----------------------------------------------------------
+*/
+.cssgrid-container {
+  display: grid;
+}
+.cssgrid-px-gutter .cssgrid-container {
+  column-gap: 1px;
+  row-gap: 1px;
+}
+.cssgrid-half-gutter .cssgrid-container {
+  column-gap: 18px;
+  row-gap: 18px;
+}
+.cssgrid-single-gutter .cssgrid-container {
+  column-gap: 36px;
+  row-gap: 36px;
+}
+.cssgrid-double-gutter .cssgrid-container {
+  column-gap: 72px;
+  row-gap: 72px;
+}
+@media (max-width: 959px) {
+  .cssgrid-double-gutter .cssgrid-container {
+    column-gap: 36px;
+    row-gap: 36px;
+  }
+}
+.cssgrid-triple-gutter .cssgrid-container {
+  column-gap: 108px;
+  row-gap: 108px;
+}
+@media (max-width: 1499px) {
+  .cssgrid-triple-gutter .cssgrid-container {
+    column-gap: 72px;
+    row-gap: 72px;
+  }
+}
+@media (max-width: 959px) {
+  .cssgrid-triple-gutter .cssgrid-container {
+    column-gap: 36px;
+    row-gap: 36px;
+  }
+}
+.cssgrid-quad-gutter .cssgrid-container {
+  column-gap: 144px;
+  row-gap: 144px;
+}
+@media (max-width: 1499px) {
+  .cssgrid-quad-gutter .cssgrid-container {
+    column-gap: 108px;
+    row-gap: 108px;
+  }
+}
+@media (max-width: 959px) {
+  .cssgrid-quad-gutter .cssgrid-container {
+    column-gap: 72px;
+    row-gap: 72px;
+  }
+}
+@media (max-width: 569px) {
+  .cssgrid-quad-gutter .cssgrid-container {
+    column-gap: 36px;
+    row-gap: 36px;
+  }
+}
+@media (min-width: 960px) {
+  .cssgrid-container.cssgrid-equal-height {
+    grid-auto-rows: 1fr;
+  }
+}
+@media (max-width: 959px) {
+  .cssgrid-container.cssgrid-equal-height:not(.cssgrid-equal-height-no-mobile) {
+    grid-auto-rows: 1fr;
+  }
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .t-entry-text {
+  display: table-row;
+  height: 100%;
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .t-entry-text-tc {
+  display: flex;
+  height: 100%;
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .t-entry {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .t-entry > *:last-child {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .tmb.tmb-content-center .t-entry > *:last-child {
+  justify-content: center;
+}
+.cssgrid-container.cssgrid-equal-height.cssgrid-equal-height-bottom .tmb.tmb-content-right .t-entry > *:last-child {
+  justify-content: end;
+}
+.cssgrid-container.cssgrid-equal-height .tmb > .t-inside {
+  height: 100%;
+}
+.cssgrid-container.cssgrid-align-middle .tmb {
+  display: flex;
+  align-items: center;
+}
+.cssgrid-container.cssgrid-align-bottom .tmb {
+  display: flex;
+  align-items: flex-end;
+}
+.cssgrid-footer {
+  opacity: 1 !important;
+}
+.cssgrid-system .grid-filters.filters-inner-padding {
+  margin-bottom: 0 !important;
+}
+.grid-inner-padding.cssgrid-px-gutter {
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+.grid-inner-padding.cssgrid-half-gutter {
+  padding-bottom: 18px;
+  padding-top: 18px;
+}
+.grid-inner-padding.cssgrid-single-gutter {
+  padding-bottom: 36px;
+  padding-top: 36px;
+}
+.grid-inner-padding.cssgrid-double-gutter {
+  padding-bottom: 72px;
+  padding-top: 72px;
+}
+@media (max-width: 959px) {
+  .grid-inner-padding.cssgrid-double-gutter {
+    padding-bottom: 36px;
+    padding-top: 36px;
+  }
+}
+.grid-inner-padding.cssgrid-triple-gutter {
+  padding-bottom: 108px;
+  padding-top: 108px;
+}
+@media (max-width: 959px) {
+  .grid-inner-padding.cssgrid-triple-gutter {
+    padding-bottom: 36px;
+    padding-top: 36px;
+  }
+}
+.grid-inner-padding.cssgrid-quad-gutter {
+  padding-bottom: 144px;
+  padding-top: 144px;
+}
+@media (max-width: 1499px) {
+  .grid-inner-padding.cssgrid-quad-gutter {
+    padding-bottom: 108px;
+    padding-top: 108px;
+  }
+}
+@media (max-width: 959px) {
+  .grid-inner-padding.cssgrid-quad-gutter {
+    padding-bottom: 72px;
+    padding-top: 72px;
+  }
+}
+@media (max-width: 569px) {
+  .grid-inner-padding.cssgrid-quad-gutter {
+    padding-bottom: 36px;
+    padding-top: 36px;
+  }
+}
+.cssgrid-no-gutter .tmb.tmb-bordered {
+  margin: 0 -1px -1px 0;
+}
