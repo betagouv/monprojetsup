@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
@@ -10,7 +9,6 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeB
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.port.BaccalaureatRepository
@@ -27,18 +25,11 @@ class RecupererExplicationsFormationService(
     val baccalaureatRepository: BaccalaureatRepository,
     val interetRepository: InteretRepository,
     val domaineRepository: DomaineRepository,
-    val moyenneGeneraleDesAdmisService: MoyenneGeneraleDesAdmisService,
 ) {
     fun recupererExplications(
         profilEleve: ProfilEleve,
         idFormation: String,
     ): ExplicationsSuggestionDetaillees {
-        val moyenneGeneraleDesAdmis =
-            recupererMoyenneGeneraleDesAdmis(
-                idBaccalaureat = profilEleve.bac,
-                idFormation = idFormation,
-                classe = profilEleve.classe,
-            )
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, idFormation)
         val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
             explications.interetsEtDomainesChoisis.takeUnless {
@@ -59,21 +50,12 @@ class RecupererExplicationsFormationService(
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
             specialitesChoisies = explications.specialitesChoisies,
-            moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
             formationsSimilaires = formationsSimilaires,
             interets = interets,
             domaines = domaines,
             explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
         )
-    }
-
-    private fun recupererMoyenneGeneraleDesAdmis(
-        idBaccalaureat: String?,
-        idFormation: String,
-        classe: ChoixNiveau,
-    ): MoyenneGeneraleDesAdmis? {
-        return moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(idBaccalaureat, idFormation, classe)
     }
 
     private fun filtrerEtTrier(explicationsGeographique: List<ExplicationGeographique>): List<ExplicationGeographique> {

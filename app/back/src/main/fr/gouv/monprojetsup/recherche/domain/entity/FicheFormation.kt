@@ -12,6 +12,7 @@ sealed class FicheFormation(
     open val metiers: List<MetierDetaille>,
     open val communes: List<String>,
     open val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
+    open val statistiquesDesAdmis: StatistiquesDesAdmis,
 ) {
     data class FicheFormationSansProfil(
         override val id: String,
@@ -25,6 +26,7 @@ sealed class FicheFormation(
         override val metiers: List<MetierDetaille>,
         override val communes: List<String>,
         override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
+        override val statistiquesDesAdmis: StatistiquesDesAdmis,
     ) : FicheFormation(
             id = id,
             nom = nom,
@@ -37,6 +39,7 @@ sealed class FicheFormation(
             metiers = metiers,
             communes = communes,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
+            statistiquesDesAdmis = statistiquesDesAdmis,
         )
 
     data class FicheFormationPourProfil(
@@ -49,6 +52,7 @@ sealed class FicheFormation(
         override val formationsAssociees: List<String>?,
         override val liens: List<String>?,
         override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
+        override val statistiquesDesAdmis: StatistiquesDesAdmis,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<MetierDetaille>,
         val communesTrieesParAffinites: List<String>,
@@ -65,6 +69,7 @@ sealed class FicheFormation(
             metiers = metiersTriesParAffinites,
             communes = communesTrieesParAffinites,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
+            statistiquesDesAdmis = statistiquesDesAdmis,
         ) {
         data class ExplicationAutoEvaluationMoyenne(
             val baccalaureatUtilise: Baccalaureat,
@@ -77,15 +82,5 @@ sealed class FicheFormation(
             val baccalaureat: Baccalaureat,
             val pourcentage: Int,
         )
-
-        data class MoyenneGeneraleDesAdmis(
-            val baccalaureat: Baccalaureat?,
-            val centiles: List<Centile>,
-        ) {
-            data class Centile(
-                val centile: Int,
-                val note: Float,
-            )
-        }
     }
 }

@@ -8,11 +8,11 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetail
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 
 data class RecupererFormationReponseDTO(
     val formation: FormationDetailleDTO,
@@ -46,7 +46,7 @@ data class RecupererFormationReponseDTO(
                     moyenneGeneraleDesAdmis =
                         when (ficheFormation) {
                             is FicheFormation.FicheFormationPourProfil ->
-                                ficheFormation.explications.moyenneGeneraleDesAdmis?.let {
+                                ficheFormation.statistiquesDesAdmis.moyenneGeneraleDesAdmis?.let {
                                     MoyenneGeneraleDesAdmisDTO.fromMoyenneGeneraleDesAdmis(it)
                                 }
 

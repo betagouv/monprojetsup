@@ -4,30 +4,54 @@ import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMAL
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.port.MoyenneGeneraleAdmisRepository
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
+import fr.gouv.monprojetsup.recherche.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import org.springframework.stereotype.Service
 
 @Service
-class MoyenneGeneraleDesAdmisService(
-    val moyenneGeneraleAdmisRepository: MoyenneGeneraleAdmisRepository,
+class StatistiquesDesAdmisService(
+    val frequencesCumuleesDesMoyenneDesAdmisRepository: FrequencesCumuleesDesMoyenneDesAdmisRepository,
 ) {
-    fun recupererMoyenneGeneraleDesAdmisDUneFormation(
+    fun recupererStatistiquesAdmisDUneFormation(
         idBaccalaureat: String?,
         idFormation: String,
-        classe: ChoixNiveau,
+        classe: ChoixNiveau?,
+    ): StatistiquesDesAdmis {
+        val frequencesCumulees: Map<Baccalaureat, List<Int>> =
+            frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(
+                idFormation,
+            )
+        return StatistiquesDesAdmis(
+            repartitionAdmis = recupererRepartitionAdmisDUneFormation(frequencesCumulees),
+            moyenneGeneraleDesAdmis = recupererMoyenneGeneraleDesAdmisDUneFormation(idBaccalaureat, frequencesCumulees, classe),
+        )
+    }
+
+    fun recupererRepartitionAdmisDUneFormation(frequencesCumulees: Map<Baccalaureat, List<Int>>): RepartitionAdmis {
+        return RepartitionAdmis(
+            total = 0,
+            parBaccalaureat =
+                listOf(),
+        )
+    }
+
+    fun recupererMoyenneGeneraleDesAdmisDUneFormation(
+        idBaccalaureat: String?,
+        frequencesCumulees: Map<Baccalaureat, List<Int>>,
+        classe: ChoixNiveau?,
     ): MoyenneGeneraleDesAdmis? {
         return when (classe) {
-            ChoixNiveau.SECONDE, ChoixNiveau.SECONDE_STHR, ChoixNiveau.SECONDE_TMD, ChoixNiveau.NON_RENSEIGNE -> null
-            ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererMoyenneGeneraleDesAdmisDUneFormation(idBaccalaureat, idFormation)
+            ChoixNiveau.SECONDE, ChoixNiveau.SECONDE_STHR, ChoixNiveau.SECONDE_TMD, ChoixNiveau.NON_RENSEIGNE, null -> null
+            ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererStatistiquesAdmisDUneFormation(idBaccalaureat, frequencesCumulees)
         }
     }
 
-    private fun recupererMoyenneGeneraleDesAdmisDUneFormation(
+    private fun recupererStatistiquesAdmisDUneFormation(
         idBaccalaureat: String?,
-        idFormation: String,
+        frequencesCumulees: Map<Baccalaureat, List<Int>>,
     ): MoyenneGeneraleDesAdmis? {
-        val frequencesCumulees = moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation)
         return if (lesDonnesSontVides(frequencesCumulees)) {
             null
         } else {

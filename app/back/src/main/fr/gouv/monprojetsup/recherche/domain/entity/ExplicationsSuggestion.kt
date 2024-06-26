@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.recherche.domain.entity
 
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 
 data class ExplicationsSuggestion(
     val geographique: List<ExplicationGeographique> = emptyList(),
@@ -39,7 +38,6 @@ data class ExplicationsSuggestionDetaillees(
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     val alternance: ChoixAlternance? = null,
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
-    val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis? = null,
     val formationsSimilaires: List<Formation> = emptyList(),
     val interets: List<InteretSousCategorie> = emptyList(),
     val domaines: List<Domaine> = emptyList(),

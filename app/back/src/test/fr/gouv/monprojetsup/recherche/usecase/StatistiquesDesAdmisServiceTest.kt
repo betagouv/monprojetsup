@@ -2,9 +2,9 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
-import fr.gouv.monprojetsup.recherche.domain.port.MoyenneGeneraleAdmisRepository
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
+import fr.gouv.monprojetsup.recherche.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,12 +15,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class MoyenneGeneraleDesAdmisServiceTest {
+class StatistiquesDesAdmisServiceTest {
     @Mock
-    lateinit var moyenneGeneraleAdmisRepository: MoyenneGeneraleAdmisRepository
+    lateinit var frequencesCumuleesDesMoyenneDesAdmisRepository: FrequencesCumuleesDesMoyenneDesAdmisRepository
 
     @InjectMocks
-    lateinit var moyenneGeneraleDesAdmisService: MoyenneGeneraleDesAdmisService
+    lateinit var moyenneGeneraleDesAdmisService: StatistiquesDesAdmisService
 
     private val frequencesCumulees =
         mapOf(
@@ -166,7 +166,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation = "fl0001")).willReturn(
+        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation = "fl0001")).willReturn(
             frequencesCumulees,
         )
     }
@@ -175,7 +175,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
     fun `doit retourner la moyenne générale avec la gauche de l'intervalle pour la 1ere partie et la droite pour la 2nde`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
@@ -193,14 +193,14 @@ class MoyenneGeneraleDesAdmisServiceTest {
                         Centile(centile = 95, note = 18.5f),
                     ),
             )
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
     fun `si en premiere ou terminal, doit retourner la moyenne générale`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.PREMIERE,
@@ -218,7 +218,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
                         Centile(centile = 95, note = 18.5f),
                     ),
             )
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @ParameterizedTest
@@ -226,21 +226,21 @@ class MoyenneGeneraleDesAdmisServiceTest {
     fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = classe,
             )
 
         // Then
-        assertThat(resultat).isNull()
+        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
     }
 
     @Test
     fun `si le baccalaureat est null, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = null,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
@@ -248,14 +248,14 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
         // Then
         val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
     fun `si l'id du baccalaureat n'est pas dans la liste retournée, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "Pro",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
@@ -263,14 +263,14 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
         // Then
         val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
     fun `si moins de 30 admis pour le baccalaureat dans la formation, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "STMG",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
@@ -278,7 +278,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
         // Then
         val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -331,12 +331,12 @@ class MoyenneGeneraleDesAdmisServiceTest {
                         15, // 19,5 - 20
                     ),
             )
-        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
+        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
             frequencesAvecMoinsDe30AdmisAuTotal,
         )
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
@@ -354,7 +354,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
                         Centile(centile = 95, note = 16f),
                     ),
             )
-        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -364,37 +364,37 @@ class MoyenneGeneraleDesAdmisServiceTest {
             mapOf(
                 baccalaureat to emptyList<Int>(),
             )
-        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
+        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
             frequencesAvecMoinsDe30AdmisAuTotal,
         )
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
-        assertThat(resultat).isNull()
+        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
     }
 
     @Test
     fun `si le retour du repository est vide, alors doit retourner null`() {
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
         val frequencesAvecMoinsDe30AdmisAuTotal = emptyMap<Baccalaureat, List<Int>>()
-        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
+        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
             frequencesAvecMoinsDe30AdmisAuTotal,
         )
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = baccalaureat.id,
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
 
         // Then
-        assertThat(resultat).isNull()
+        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
     }
 }
