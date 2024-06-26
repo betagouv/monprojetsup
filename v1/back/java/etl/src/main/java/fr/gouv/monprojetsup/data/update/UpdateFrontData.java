@@ -20,7 +20,6 @@ import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.monprojetsup.data.update.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
@@ -60,9 +59,6 @@ public class UpdateFrontData {
             Map<String, String> groups,
             Map<String, List<String>> labelsTypes,
             Map<String, String> constants, //stats nationales sur moyenne générale et moyennes au bac
-            Map<String, Set<String>> liensMetiersFormations,
-            Map<String, Set<String>> liensSecteursMetiers,
-            Map<DomainePro, Set<String>> liensDomainesMetiers,
             Map<String, Attendus> eds,
             Map<String, GrilleAnalyse> grillesAnalyseCandidatures,
             Map<String, String> grillesAnalyseCandidaturesLabels,
@@ -90,17 +86,6 @@ public class UpdateFrontData {
             Descriptifs descriptifs = loadDescriptifs(onisepData, groups, lasCorrespondance.lasToGeneric());
 
 
-            Map<String, Set<String>> liensMetiersFormations
-                    = onisepData.getExtendedMetiersVersFormations(groups, lasCorrespondance, descriptifs);
-
-            Map<String, Set<String>> liensSecteursMetiers
-                    = OnisepData.getSecteursVersMetiers(
-                    onisepData.fichesMetiers(),
-                    onisepData.formations().getFormationsDuSup()
-            );
-
-            Map<DomainePro, Set<String>> liensDomainesMetiers
-                    = OnisepData.getDomainesVersMetiers(onisepData.metiers());
 
             Map<String, Set<Descriptifs.Link>> urls = new TreeMap<>();
 
@@ -147,9 +132,6 @@ public class UpdateFrontData {
                             "PRECISION_PERCENTILES", Integer.toString(PsupStatistiques.PRECISION_PERCENTILES),
                             "MOYENNE_GENERALE_CODE", Integer.toString(PsupStatistiques.MOYENNE_GENERALE_CODE)
                     ),
-                    liensMetiersFormations,
-                    liensSecteursMetiers,
-                    liensDomainesMetiers,
                     eds,
                     grilles,
                     labels,
@@ -168,15 +150,7 @@ public class UpdateFrontData {
                 Map<String, String> groups,
                 Map<String, String> lasCorrespondance
         ) throws IOException {
-            return loadDescriptifs(onisepData, groups, lasCorrespondance, true);
-        }
 
-        public static Descriptifs loadDescriptifs(
-                OnisepData onisepData,
-                Map<String, String> groups,
-                Map<String, String> lasCorrespondance,
-                boolean includeMpsData
-        ) throws IOException {
             LOGGER.info("Chargement des fiches metiers");
             FichesMetierOnisep fichesMetiers = FichesMetierOnisep.load();
             fichesMetiers.metiers().metier().removeIf(fiche ->
@@ -211,6 +185,7 @@ public class UpdateFrontData {
             descriptifs.injectFichesMetiers(fichesMetiers);
             descriptifs.injectDomainesPro(onisepData.domainesWeb());
 
+            boolean includeMpsData = true;
             if (includeMpsData) {
                 addMpsdescriptifs(descriptifs);
             }

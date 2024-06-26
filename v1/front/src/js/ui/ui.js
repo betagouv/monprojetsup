@@ -503,7 +503,9 @@ export function showRechercheData(data, showAffinities) {
       displayItemDetails(dat, false);
     }
   }
-  $(".formation-card-header-affinity").toggle(showAffinities);
+  if (!showAffinities) {
+    $(".formation-card-header-affinity").hide();
+  }
   //like and dislike handlers
 }
 
@@ -1157,7 +1159,7 @@ function displayExplanations(explications, detailed) {
   }
 
   let simis = explications
-    .filter((expl) => expl.simi && expl.simi.fl)
+    .filter((expl) => expl.simi?.fl)
     .map((expl) => data.getExtendedLabel(expl.simi.fl))
     .filter((l) => l);
   simis = Array.from(new Set(simis));
@@ -1317,6 +1319,8 @@ function addExplanation2(expl) {
       tags +
       "'.</p>";
     addExplanation(result);
+  } else if (expl.debug) {
+    addExplanation(expl.debug.expl);
   }
 }
 
@@ -1450,6 +1454,7 @@ function buildFormationAffinityCard(
           <div class="card-metiers-list">
           </div>
         </div>`);
+  $(".formation-card-header-affinity", $div).toggle(nbReasons > 0);
   if (session.isAdminOrTeacher() && session.hasSelectedStudent()) {
     $div.append(`
               <div class="teacher-div teacher-only">

@@ -4,7 +4,6 @@ package fr.gouv.monprojetsup.data.analysis;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.attendus.Attendus;
@@ -23,7 +22,6 @@ import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
-import fr.gouv.monprojetsup.data.update.onisep.LienFormationMetier2;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.update.onisep.formations.Formations;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
@@ -40,6 +38,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.RESUME_FORMATION_MPS_HEADER;
 import static fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.RESUME_FORMATION_V1;
@@ -66,6 +66,8 @@ public class ServerDataAnalysis {
         outputResumesDescriptifsFormationsEtMetiersExtraits();
 
         exportLiensDomainesMetiers();
+
+        exportDataHeleneBaffin();
 
         exportAttendus();
 
@@ -107,7 +109,7 @@ public class ServerDataAnalysis {
 
         Serialisation.toJsonFile("frontFormationsLabels.json",
                 statistiques.labels.entrySet()
-                        .stream().filter(e -> Helpers.isFiliere(e.getKey()))
+                        .stream().filter(e -> isFiliere(e.getKey()))
                         .filter(e -> !flGroups.containsKey(e.getKey()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
@@ -117,7 +119,7 @@ public class ServerDataAnalysis {
 
         Serialisation.toJsonFile("frontMetiersLabels.json",
                 statistiques.labels.entrySet()
-                        .stream().filter(e -> Helpers.isMetier(e.getKey()))
+                        .stream().filter(e -> isMetier(e.getKey()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
                                 Map.Entry::getValue
@@ -258,7 +260,8 @@ public class ServerDataAnalysis {
 
 
 
-        /* *** correspondances filieres vers Metiers ****/
+        /*
+        // *** correspondances filieres vers Metiers
         Map<String, Set<String>> corrFoilMet = onisepData.getExtendedMetiersVersFormations();
         Map<String, List<String>> liens = corrFoilMet.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -279,7 +282,7 @@ public class ServerDataAnalysis {
         });
         Serialisation.toJsonFile("formationsVersMetiersOnisep.json", filToMet, true);
 
-        /* chargement et groupement par clé */
+        // chargement et groupement par clé
         LienFormationMetier2 liste = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_PAIRES_PATH_MANUEL),
                 LienFormationMetier2.class
@@ -295,7 +298,7 @@ public class ServerDataAnalysis {
                                 .collect(Collectors.toSet()
                                 )
                 ));
-        /* suppression des métiers déjà récupérés via onisep */
+        // suppression des métiers déjà récupérés via onisep
         filToMet2.forEach((s, strings) -> strings.removeAll(corrFoilMet.getOrDefault(s, Collections.emptySet())));
         Map<String, List<String> > filToMet3 =
                 filToMet2.entrySet().stream()
@@ -305,7 +308,7 @@ public class ServerDataAnalysis {
                         ));
         Serialisation.toJsonFile("formationsVersMetiersAjoutManuel.json", filToMet3, true);
 
-
+        ****/
 
 
 
@@ -329,6 +332,39 @@ public class ServerDataAnalysis {
 
 
 
+
+    }
+
+    private static void exportDataHeleneBaffin() throws IOException {
+        exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_avec_heritage.csv");
+        exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_sans_heritage.csv");
+    }
+
+    private static void exportCsvMetierToFiliereCorr(String s) throws IOException {
+        val  data = CsvTools.readCSV(s, ',');
+        List<List<String>> lines = new ArrayList<>();
+        for (Map<String, String> line : data) {
+            String key1 = line.get("\"key1\"").replace("\"", "");
+            String key2 = line.get("\"key2\"").replace("\"", "");;
+            if (isMetier(key1) && isFiliere(key2)) {
+                String lib1 = getLabel(key1, key1);
+                String lib2 = getLabel(key2, key2);
+                lines.add(List.of(lib1, key1.replace("_", "."), lib2, key2));
+            }
+        }
+        lines.sort(Comparator.comparing(l -> l.get(0).toLowerCase() + l.get(2).toLowerCase()));
+
+        try(CsvTools csv = new CsvTools(s.replace(".csv", "_hr.csv"), ',')) {
+            csv.appendHeaders(List.of("libellé métier","id_metier","fl_lib", "fl_cod"));
+            for (List<String> strings : lines) {
+                csv.append(strings.get(0));
+                csv.append(strings.get(1));
+                csv.append(strings.get(2));
+                csv.append(strings.get(3));
+                csv.newLine();
+            }
+
+        }
 
     }
 
@@ -559,7 +595,7 @@ public class ServerDataAnalysis {
     private static void outputMetiersSansDescriptifs(Descriptifs desc) throws IOException {
         ArrayList<String> copy4 = new ArrayList<>();
         onisepData.metiers().metiers().keySet().forEach(key -> {
-            if (Helpers.isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
+            if (isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
                 String label = ServerData.getDebugLabel(key);
                 if(!label.contains("null")) {
                     copy4.add(label);

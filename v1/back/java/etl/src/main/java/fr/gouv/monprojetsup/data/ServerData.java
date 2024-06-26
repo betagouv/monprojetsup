@@ -467,7 +467,7 @@ public class ServerData {
                 statistiques.getLASCorrespondance().lasToGeneric()
         );
 
-        return onisepData.getExtendedMetiersVersFormations(
+        return onisepData.getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
                 backPsupData.getCorrespondances(),
                 statistiques.getLASCorrespondance(),
                 descriptifs

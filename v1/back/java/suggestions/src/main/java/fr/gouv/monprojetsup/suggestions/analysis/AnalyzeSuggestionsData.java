@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.analysis.ServerDataAnalysis;
 import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
@@ -13,7 +12,6 @@ import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
-import fr.gouv.monprojetsup.data.update.psup.DescriptifsFormations;
 import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +30,7 @@ import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.edgesKeys;
 
 @Slf4j
-public class AnalyzeData {
+public class AnalyzeSuggestionsData {
 
     public static void main(String[] args) throws Exception {
 
@@ -91,7 +89,7 @@ public class AnalyzeData {
 
 
 
-        AlgoSuggestions.edgesKeys.edges().keySet().forEach(key -> {
+        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
             if (isFiliere(key)) {
                 //ajouter les descriptifs parcoursup
                 List<MlData.Data> texts = new ArrayList<>();
@@ -116,7 +114,7 @@ public class AnalyzeData {
         Serialisation.toJsonFile("ml_formations.json", datas, true);
 
         datas.clear();
-        AlgoSuggestions.edgesKeys.edges().keySet().forEach(key -> {
+        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
             if (isMetier(key)) {
                 //ajouter les descriptifs parcoursup
                 List<MlData.Data> texts = new ArrayList<>();
@@ -145,7 +143,7 @@ public class AnalyzeData {
         Serialisation.toJsonFile("ml_metiers.json", datas, true);
 
         Map<String, List<String>> tags = new HashMap<>();
-        AlgoSuggestions.edgesKeys.edges().keySet().forEach(key -> {
+        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
             if (isTheme(key) || isInteret(key)) {
                 tags.computeIfAbsent(getLabel(key), k -> new ArrayList<>()).add(key);
             }
