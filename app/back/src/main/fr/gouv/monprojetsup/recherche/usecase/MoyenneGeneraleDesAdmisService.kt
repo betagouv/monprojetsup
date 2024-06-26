@@ -13,61 +13,62 @@ class MoyenneGeneraleDesAdmisService(
     val moyenneGeneraleAdmisRepository: MoyenneGeneraleAdmisRepository,
 ) {
     fun recupererMoyenneGeneraleDesAdmisDUneFormation(
-        baccalaureat: Baccalaureat?,
+        idBaccalaureat: String?,
         idFormation: String,
         classe: ChoixNiveau,
     ): MoyenneGeneraleDesAdmis? {
         return when (classe) {
             ChoixNiveau.SECONDE, ChoixNiveau.SECONDE_STHR, ChoixNiveau.SECONDE_TMD, ChoixNiveau.NON_RENSEIGNE -> null
-            ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, idFormation)
+            ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererMoyenneGeneraleDesAdmisDUneFormation(idBaccalaureat, idFormation)
         }
     }
 
     private fun recupererMoyenneGeneraleDesAdmisDUneFormation(
-        baccalaureat: Baccalaureat?,
+        idBaccalaureat: String?,
         idFormation: String,
     ): MoyenneGeneraleDesAdmis? {
         val frequencesCumulees = moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation)
-        return when {
-            lesDonnesSontVides(frequencesCumulees) -> null
-            leBaccalaureatEstTrouve(
-                baccalaureat,
-                frequencesCumulees,
-            ) && assezDAdmisPourLeBaccalaureat(frequencesCumulees, baccalaureat!!) -> {
+        return if (lesDonnesSontVides(frequencesCumulees)) {
+            null
+        } else {
+            val frequenceBaccalaureat =
+                idBaccalaureat?.let { idBaccaLaureat ->
+                    try {
+                        frequencesCumulees.firstNotNullOf { if (it.key.id == idBaccaLaureat) it else null }
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+            return if (frequenceBaccalaureat != null && assezDAdmisPourLeBaccalaureat(frequenceBaccalaureat)) {
                 MoyenneGeneraleDesAdmis(
-                    idBaccalaureat = baccalaureat.id,
-                    nomBaccalaureat = baccalaureat.nom,
-                    centiles = transformerFrequencesCumuleesEnCentiles(frequencesCumulees[baccalaureat.id]!!),
+                    idBaccalaureat = frequenceBaccalaureat.key.id,
+                    nomBaccalaureat = frequenceBaccalaureat.key.nom,
+                    centiles = transformerFrequencesCumuleesEnCentiles(frequenceBaccalaureat.value),
                 )
-            }
-            else -> {
-                MoyenneGeneraleDesAdmis(
-                    idBaccalaureat = null,
-                    nomBaccalaureat = null,
-                    centiles =
-                        transformerFrequencesCumuleesEnCentiles(
-                            frequencesCumulees = calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(frequencesCumulees),
-                        ),
-                )
+            } else {
+                creerMoyenneGeneraleAdmisPourToutBacConfondu(frequencesCumulees)
             }
         }
     }
 
-    private fun assezDAdmisPourLeBaccalaureat(
-        frequencesCumulees: Map<String, List<Int>>,
-        baccalaureat: Baccalaureat,
-    ) = frequencesCumulees[baccalaureat.id]!!.last() > MINIMUM_ADMIS
+    private fun creerMoyenneGeneraleAdmisPourToutBacConfondu(frequencesCumulees: Map<Baccalaureat, List<Int>>) =
+        MoyenneGeneraleDesAdmis(
+            idBaccalaureat = null,
+            nomBaccalaureat = null,
+            centiles =
+                transformerFrequencesCumuleesEnCentiles(
+                    frequencesCumulees = calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(frequencesCumulees),
+                ),
+        )
 
-    private fun leBaccalaureatEstTrouve(
-        baccalaureat: Baccalaureat?,
-        frequencesCumulees: Map<String, List<Int>>,
-    ) = baccalaureat?.id != null && frequencesCumulees.containsKey(baccalaureat.id)
+    private fun assezDAdmisPourLeBaccalaureat(frequencesCumulees: Map.Entry<Baccalaureat, List<Int>>) =
+        frequencesCumulees.value.last() > MINIMUM_ADMIS
 
-    private fun lesDonnesSontVides(frequencesCumulees: Map<String, List<Int>>) =
+    private fun lesDonnesSontVides(frequencesCumulees: Map<Baccalaureat, List<Int>>) =
         frequencesCumulees.isEmpty() || frequencesCumulees.values.flatten().isEmpty()
 
     private fun calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(
-        listeDesFrequencesCumulees: Map<String, List<Int>>,
+        listeDesFrequencesCumulees: Map<Baccalaureat, List<Int>>,
     ): List<Int> {
         val tailleTableauNotes = (NOTE_MAXIMAL / TAILLE_ECHELLON_NOTES).toInt()
         var frequencesCumulees = List(tailleTableauNotes) { 0 }

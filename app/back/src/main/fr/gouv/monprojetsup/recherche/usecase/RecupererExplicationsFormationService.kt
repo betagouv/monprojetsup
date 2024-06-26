@@ -73,8 +73,7 @@ class RecupererExplicationsFormationService(
         idFormation: String,
         classe: ChoixNiveau,
     ): MoyenneGeneraleDesAdmis? {
-        val baccalaureat = idBaccalaureat?.let { baccalaureatRepository.recupererUnBaccalaureat(it) }
-        return moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(baccalaureat, idFormation, classe)
+        return moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(idBaccalaureat, idFormation, classe)
     }
 
     private fun filtrerEtTrier(explicationsGeographique: List<ExplicationGeographique>): List<ExplicationGeographique> {

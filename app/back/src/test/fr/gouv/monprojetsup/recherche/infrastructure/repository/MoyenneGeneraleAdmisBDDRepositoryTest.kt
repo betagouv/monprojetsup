@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,11 @@ class MoyenneGeneraleAdmisBDDRepositoryTest : BDDRepositoryTest() {
         // Then
         val attendu =
             mapOf(
-                "Général" to
+                Baccalaureat(
+                    id = "Général",
+                    nom = "Série Générale",
+                    idExterne = "Générale",
+                ) to
                     listOf(
                         0,
                         0,
@@ -65,7 +70,11 @@ class MoyenneGeneraleAdmisBDDRepositoryTest : BDDRepositoryTest() {
                         6670,
                         6677,
                     ),
-                "Professionnel" to
+                Baccalaureat(
+                    id = "Professionnel",
+                    nom = "Série Pro",
+                    idExterne = "P",
+                ) to
                     listOf(
                         0,
                         0,
@@ -122,7 +131,7 @@ class MoyenneGeneraleAdmisBDDRepositoryTest : BDDRepositoryTest() {
         val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation)
 
         // Then
-        assertThat(result).isEqualTo(emptyMap<String, List<Int>>())
+        assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
     }
 
     @Test
@@ -135,6 +144,6 @@ class MoyenneGeneraleAdmisBDDRepositoryTest : BDDRepositoryTest() {
         val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation)
 
         // Then
-        assertThat(result).isEqualTo(emptyMap<String, List<Int>>())
+        assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
     }
 }
