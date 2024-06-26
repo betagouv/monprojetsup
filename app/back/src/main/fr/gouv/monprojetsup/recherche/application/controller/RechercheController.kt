@@ -54,11 +54,11 @@ class RechercheController(
                 idFormation = idFormation,
             )
         return RecupererFormationReponseDTO(
-            formation = RecupererFormationReponseDTO.FormationDetailleDTO.fromFicheFormation(ficheFormation),
+            formation = RecupererFormationReponseDTO.FormationDetailleDTO(ficheFormation),
             explications =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        RecupererFormationReponseDTO.ExplicationsDTO.fromExplicationsSuggestionDetaillees(
+                        RecupererFormationReponseDTO.ExplicationsDTO(
                             ficheFormation.explications,
                         )
                     is FicheFormation.FicheFormationSansProfil -> null

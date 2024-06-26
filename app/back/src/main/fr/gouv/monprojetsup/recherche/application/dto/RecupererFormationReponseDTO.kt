@@ -13,6 +13,8 @@ import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 
 data class RecupererFormationReponseDTO(
     val formation: FormationDetailleDTO,
@@ -34,49 +36,43 @@ data class RecupererFormationReponseDTO(
         val metiers: List<MetierDetailleDTO>,
         val tauxAffinite: Int?,
     ) {
-        companion object {
-            fun fromFicheFormation(ficheFormation: FicheFormation): FormationDetailleDTO {
-                return FormationDetailleDTO(
-                    id = ficheFormation.id,
-                    nom = ficheFormation.nom,
-                    idsFormationsAssociees = ficheFormation.formationsAssociees ?: emptyList(),
-                    descriptifFormation = ficheFormation.descriptifGeneral,
-                    descriptifDiplome = ficheFormation.descriptifDiplome,
-                    descriptifAttendus = ficheFormation.descriptifAttendus,
-                    moyenneGeneraleDesAdmis =
-                        when (ficheFormation) {
-                            is FicheFormation.FicheFormationPourProfil ->
-                                ficheFormation.statistiquesDesAdmis.moyenneGeneraleDesAdmis?.let {
-                                    MoyenneGeneraleDesAdmisDTO.fromMoyenneGeneraleDesAdmis(it)
-                                }
+        constructor(ficheFormation: FicheFormation) : this(
+            id = ficheFormation.id,
+            nom = ficheFormation.nom,
+            idsFormationsAssociees = ficheFormation.formationsAssociees ?: emptyList(),
+            descriptifFormation = ficheFormation.descriptifGeneral,
+            descriptifDiplome = ficheFormation.descriptifDiplome,
+            descriptifAttendus = ficheFormation.descriptifAttendus,
+            moyenneGeneraleDesAdmis =
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil ->
+                        ficheFormation.statistiquesDesAdmis.moyenneGeneraleDesAdmis?.let {
+                            MoyenneGeneraleDesAdmisDTO(it)
+                        }
 
-                            is FicheFormation.FicheFormationSansProfil -> null
-                        },
-                    descriptifConseils = ficheFormation.descriptifConseils,
-                    liens = emptyList(), // TODO #66
-                    villes = ficheFormation.communes,
-                    metiers =
-                        ficheFormation.metiers.map { metier ->
-                            MetierDetailleDTO.fromMetierDetaille(metier)
-                        },
-                    tauxAffinite =
-                        when (ficheFormation) {
-                            is FicheFormation.FicheFormationPourProfil -> ficheFormation.tauxAffinite
-                            is FicheFormation.FicheFormationSansProfil -> null
-                        },
-                    repartitionAdmisAnneePrecedente =
-                        RepartitionAdmisAnneePrecedenteDTO(
-                            total = 12,
-                            parBaccalaureat = listOf(),
-                        ),
-                    // TODO #72
-                    criteresAnalyseCandidature =
-                        ficheFormation.criteresAnalyseCandidature.map {
-                            CriteresAnalyseCandidatureDTO.fromCriteresAnalyseCandidature(it)
-                        },
-                )
-            }
-        }
+                    is FicheFormation.FicheFormationSansProfil -> null
+                },
+            descriptifConseils = ficheFormation.descriptifConseils,
+            liens = emptyList(), // TODO #66
+            villes = ficheFormation.communes,
+            metiers =
+                ficheFormation.metiers.map { metier ->
+                    MetierDetailleDTO(metier)
+                },
+            tauxAffinite =
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil -> ficheFormation.tauxAffinite
+                    is FicheFormation.FicheFormationSansProfil -> null
+                },
+            repartitionAdmisAnneePrecedente =
+                RepartitionAdmisAnneePrecedenteDTO(
+                    ficheFormation.statistiquesDesAdmis.repartitionAdmis,
+                ),
+            criteresAnalyseCandidature =
+                ficheFormation.criteresAnalyseCandidature.map {
+                    CriteresAnalyseCandidatureDTO(it)
+                },
+        )
 
         data class LiensDTO(
             val nom: String,
@@ -87,23 +83,34 @@ data class RecupererFormationReponseDTO(
             val nom: String,
             val pourcentage: Int,
         ) {
-            companion object {
-                fun fromCriteresAnalyseCandidature(criteresAnalyseCandidature: CriteresAnalyseCandidature) =
-                    CriteresAnalyseCandidatureDTO(
-                        criteresAnalyseCandidature.nom,
-                        criteresAnalyseCandidature.pourcentage,
-                    )
-            }
+            constructor(criteresAnalyseCandidature: CriteresAnalyseCandidature) :
+                this(
+                    criteresAnalyseCandidature.nom,
+                    criteresAnalyseCandidature.pourcentage,
+                )
         }
 
         data class RepartitionAdmisAnneePrecedenteDTO(
             val total: Int,
-            val parBaccalaureat: List<AdmisBaccalaureat>,
+            val parBaccalaureat: List<TotalAdmisPourUnBaccalaureatDTO>,
         ) {
-            data class AdmisBaccalaureat(
+            constructor(repartitionAdmis: RepartitionAdmis) : this(
+                repartitionAdmis.total,
+                repartitionAdmis.parBaccalaureat.map {
+                    TotalAdmisPourUnBaccalaureatDTO(it)
+                },
+            )
+
+            data class TotalAdmisPourUnBaccalaureatDTO(
                 val baccalaureat: BaccalaureatDTO,
                 val nombreAdmis: Int,
-            )
+            ) {
+                constructor(totalAdmisPourUnBaccalaureat: TotalAdmisPourUnBaccalaureat) :
+                    this(
+                        baccalaureat = BaccalaureatDTO(totalAdmisPourUnBaccalaureat.baccalaureat),
+                        nombreAdmis = totalAdmisPourUnBaccalaureat.nombreAdmis,
+                    )
+            }
         }
 
         data class MetierDetailleDTO(
@@ -112,39 +119,32 @@ data class RecupererFormationReponseDTO(
             val descriptif: String?,
             val liens: List<LiensDTO>,
         ) {
-            companion object {
-                fun fromMetierDetaille(metier: MetierDetaille) =
-                    MetierDetailleDTO(
-                        id = metier.id,
-                        nom = metier.nom,
-                        descriptif = metier.descriptif,
-                        liens = emptyList(), // TODO #66
-                    )
-            }
+            constructor(metier: MetierDetaille) : this(
+                id = metier.id,
+                nom = metier.nom,
+                descriptif = metier.descriptif,
+                liens = emptyList(), // TODO #66
+            )
         }
 
         data class MoyenneGeneraleDesAdmisDTO(
             val baccalaureat: BaccalaureatDTO?,
             val centiles: List<CentileDTO>,
         ) {
+            constructor(moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis) :
+                this(
+                    baccalaureat = moyenneGeneraleDesAdmis.baccalaureat?.let { BaccalaureatDTO(it) },
+                    centiles = moyenneGeneraleDesAdmis.centiles.map { CentileDTO(it) },
+                )
+
             data class CentileDTO(
                 val centile: Int,
                 val note: Float,
             ) {
-                companion object {
-                    fun fromCentile(centile: Centile) =
-                        CentileDTO(
-                            centile = centile.centile,
-                            note = centile.note,
-                        )
-                }
-            }
-
-            companion object {
-                fun fromMoyenneGeneraleDesAdmis(moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis) =
-                    MoyenneGeneraleDesAdmisDTO(
-                        baccalaureat = moyenneGeneraleDesAdmis.baccalaureat?.let { BaccalaureatDTO.fromBaccalaureat(it) },
-                        centiles = moyenneGeneraleDesAdmis.centiles.map { CentileDTO.fromCentile(it) },
+                constructor(centile: Centile) :
+                    this(
+                        centile = centile.centile,
+                        note = centile.note,
                     )
             }
         }
@@ -160,43 +160,31 @@ data class RecupererFormationReponseDTO(
         val typeBaccalaureat: TypeBaccalaureatDTO?,
         val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
     ) {
-        companion object {
-            fun fromExplicationsSuggestionDetaillees(explications: ExplicationsSuggestionDetaillees): ExplicationsDTO {
-                return ExplicationsDTO(
-                    geographique =
-                        explications.geographique.map {
-                            ExplicationGeographiqueDTO.fromExplicationGeographique(
-                                it,
-                            )
-                        },
-                    formationsSimilaires =
-                        explications.formationsSimilaires.map {
-                            FormationSimilaireDTO.fromFormation(it)
-                        },
-                    dureeEtudesPrevue = explications.dureeEtudesPrevue?.jsonValeur,
-                    alternance = explications.alternance?.jsonValeur,
-                    interetsEtDomainesChoisis =
-                        InteretsEtDomainesDTO(
-                            interets = explications.interets.map { InteretDTO.fromInteretSousCategorie(it) },
-                            domaines = explications.domaines.map { DomaineDTO.fromDomaine(it) },
-                        ),
-                    specialitesChoisies =
-                        explications.specialitesChoisies.map {
-                            AffiniteSpecialiteDTO.fromAffiniteSpecialite(
-                                it,
-                            )
-                        },
-                    typeBaccalaureat =
-                        explications.explicationTypeBaccalaureat?.let {
-                            TypeBaccalaureatDTO.fromExplicationTypeBaccalaureat(it)
-                        },
-                    autoEvaluationMoyenne =
-                        explications.explicationAutoEvaluationMoyenne?.let {
-                            AutoEvaluationMoyenneDTO.fromAutoEvaluationMoyenne(it)
-                        },
-                )
-            }
-        }
+        constructor(explications: ExplicationsSuggestionDetaillees) : this(
+            geographique = explications.geographique.map { ExplicationGeographiqueDTO(it) },
+            formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
+            dureeEtudesPrevue = explications.dureeEtudesPrevue?.jsonValeur,
+            alternance = explications.alternance?.jsonValeur,
+            interetsEtDomainesChoisis =
+                InteretsEtDomainesDTO(
+                    interets = explications.interets.map { InteretDTO(it) },
+                    domaines = explications.domaines.map { DomaineDTO(it) },
+                ),
+            specialitesChoisies =
+                explications.specialitesChoisies.map {
+                    AffiniteSpecialiteDTO(
+                        it,
+                    )
+                },
+            typeBaccalaureat =
+                explications.explicationTypeBaccalaureat?.let {
+                    TypeBaccalaureatDTO(it)
+                },
+            autoEvaluationMoyenne =
+                explications.explicationAutoEvaluationMoyenne?.let {
+                    AutoEvaluationMoyenneDTO(it)
+                },
+        )
     }
 
     data class InteretsEtDomainesDTO(
@@ -208,55 +196,41 @@ data class RecupererFormationReponseDTO(
         val id: String,
         val nom: String,
     ) {
-        companion object {
-            fun fromInteretSousCategorie(interet: InteretSousCategorie) = InteretDTO(id = interet.id, nom = interet.nom)
-        }
+        constructor(interet: InteretSousCategorie) : this(id = interet.id, nom = interet.nom)
     }
 
     data class DomaineDTO(
         val id: String,
         val nom: String,
     ) {
-        companion object {
-            fun fromDomaine(domaine: Domaine) = DomaineDTO(id = domaine.id, nom = domaine.nom)
-        }
+        constructor(domaine: Domaine) : this(id = domaine.id, nom = domaine.nom)
     }
 
     data class FormationSimilaireDTO(
         val id: String,
         val nom: String,
     ) {
-        companion object {
-            fun fromFormation(formation: Formation) = FormationSimilaireDTO(id = formation.id, nom = formation.nom)
-        }
+        constructor(formation: Formation) : this(id = formation.id, nom = formation.nom)
     }
 
     data class AffiniteSpecialiteDTO(
         val nomSpecialite: String,
         val pourcentage: Int,
     ) {
-        companion object {
-            fun fromAffiniteSpecialite(affiniteSpecialite: AffiniteSpecialite): AffiniteSpecialiteDTO {
-                return AffiniteSpecialiteDTO(
-                    nomSpecialite = affiniteSpecialite.nomSpecialite,
-                    pourcentage = affiniteSpecialite.pourcentage,
-                )
-            }
-        }
+        constructor(affiniteSpecialite: AffiniteSpecialite) : this(
+            nomSpecialite = affiniteSpecialite.nomSpecialite,
+            pourcentage = affiniteSpecialite.pourcentage,
+        )
     }
 
     data class ExplicationGeographiqueDTO(
         val nomVille: String,
         val distanceKm: Int,
     ) {
-        companion object {
-            fun fromExplicationGeographique(explicationGeographique: ExplicationGeographique): ExplicationGeographiqueDTO {
-                return ExplicationGeographiqueDTO(
-                    nomVille = explicationGeographique.ville,
-                    distanceKm = explicationGeographique.distanceKm,
-                )
-            }
-        }
+        constructor(explicationGeographique: ExplicationGeographique) : this(
+            nomVille = explicationGeographique.ville,
+            distanceKm = explicationGeographique.distanceKm,
+        )
     }
 
     data class AutoEvaluationMoyenneDTO(
@@ -265,29 +239,21 @@ data class RecupererFormationReponseDTO(
         val hautIntervalleNotes: Float,
         val baccalaureatUtilise: BaccalaureatDTO,
     ) {
-        companion object {
-            fun fromAutoEvaluationMoyenne(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne): AutoEvaluationMoyenneDTO {
-                return AutoEvaluationMoyenneDTO(
-                    moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
-                    basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
-                    hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
-                    baccalaureatUtilise = BaccalaureatDTO.fromBaccalaureat(autoEvaluationMoyenne.baccalaureatUtilise),
-                )
-            }
-        }
+        constructor(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne) : this(
+            moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
+            basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
+            hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
+            baccalaureatUtilise = BaccalaureatDTO(autoEvaluationMoyenne.baccalaureatUtilise),
+        )
     }
 
     data class TypeBaccalaureatDTO(
         val baccalaureat: BaccalaureatDTO,
         val pourcentage: Int,
     ) {
-        companion object {
-            fun fromExplicationTypeBaccalaureat(typeBaccalaureat: ExplicationTypeBaccalaureat): TypeBaccalaureatDTO {
-                return TypeBaccalaureatDTO(
-                    baccalaureat = BaccalaureatDTO.fromBaccalaureat(typeBaccalaureat.baccalaureat),
-                    pourcentage = typeBaccalaureat.pourcentage,
-                )
-            }
-        }
+        constructor(typeBaccalaureat: ExplicationTypeBaccalaureat) : this(
+            baccalaureat = BaccalaureatDTO(typeBaccalaureat.baccalaureat),
+            pourcentage = typeBaccalaureat.pourcentage,
+        )
     }
 }
