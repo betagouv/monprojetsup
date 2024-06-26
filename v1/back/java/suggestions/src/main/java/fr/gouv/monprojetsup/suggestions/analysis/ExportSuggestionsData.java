@@ -1,15 +1,15 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.update.onisep.LienThematiqueFormation;
 import fr.gouv.monprojetsup.data.update.onisep.LienThematiqueFormation2;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -17,7 +17,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.*;
+import static fr.gouv.monprojetsup.data.ServerData.getLabel;
+import static fr.gouv.monprojetsup.data.ServerData.onisepData;
 
 @Slf4j
 public class ExportSuggestionsData {
@@ -115,16 +116,11 @@ public class ExportSuggestionsData {
 
     private static void exportGroupsWithNoMetiers() throws IOException {
         /* *** formations sans métiers associés  ****/
-        Set<String> formationsAvecMetiers =
-                onisepData.getExtendedMetiersVersFormations()
-                        .entrySet().stream()
-                        .flatMap(e -> e.getValue().stream())
-                        .collect(Collectors.toSet());
         List<String> groupsWithNoMetiers = AlgoSuggestions.edgesKeys.edges()
-                .keySet().stream().filter(
-                        strings -> Helpers.isFiliere(strings)
-                                && !formationsAvecMetiers.contains(strings)
-                ).map(strings -> getLabel(strings, strings) + " (" + strings + ")"
+                .entrySet().stream().filter(
+                        e -> Helpers.isFiliere(e.getKey())
+                                && e.getValue().stream().noneMatch(Helpers::isMetier)
+                ).map(e -> getLabel(e.getKey(), e.getKey()) + " (" + e.getKey() + ")"
                 ).sorted().toList();
 
         Serialisation.toJsonFile("groupsWithNoMetiers.json", groupsWithNoMetiers, true);

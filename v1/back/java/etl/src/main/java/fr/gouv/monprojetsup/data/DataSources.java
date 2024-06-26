@@ -18,7 +18,7 @@ public class DataSources {
     /* Onisep official data */
     public static final String ONISEP_FICHES_METIERS = "onisep_fiches_metiers/Onisep_Ideo_Fiches_metiers_12092023.json";
     public static final String ONISEP_PSUP_TO_IDEO_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26.json";
-    public static final String ONISEP_FORMATIONS_WITH_METIER_PATH = "ideo_formations/Onisep_Ideo_Fiches_Formations_12092023.json";
+    public static final String ONISEP_IDEO_FICHES_FORMATIONS_WITH_METIER_PATH = "ideo_formations/Onisep_Ideo_Fiches_Formations_12092023.json";
     public static final String ONISEP_FORMATIONS_PATH = "ideo_formations/ideo-formations_initiales_en_france.json";
     public static final String METIERS_PATH = "ideo_metiers/ideo-metiers_onisep2.json";
     public static final String TYPES_FORMATIONS_ONISEP_PATH = "ideo_types_formations/types_formation1.json";
@@ -46,6 +46,7 @@ public class DataSources {
 
     public static final String THEMATIQUES_FORMATIONS_PAIRES_v2_PATH ="indexation_psup_thematiques/ajout_indexation_thematiques_utilisables.json";
     public static final String METIERS_FORMATIONS_PAIRES_PATH_MANUEL = "indexation_psup_metiers/indexation_metiers_maj.json";
+    public static final String METIERS_FORMATIONS_ONISEP_PAIRES_PATH = "indexation_psup_metiers/Indexation_FormationMPS_MetierI-Tableau 1.tsv";
 
     public static final String METIERS_FORMATIONS_AJOUT = "indexation_psup_metiers/ajouts_metiers.json";
     public static final String METIERS_FORMATIONS_HERITAGE = "indexation_psup_metiers/ajouts_heritage.json";
@@ -58,7 +59,7 @@ public class DataSources {
     public static final String ROME_THEMES_PATH = "ROME/unix_arborescence_thematique_v451.json";//unused
     /* External data  */
     public static final String CITIES_FILE_PATH = "villes/villes_france.json";
-    public static final String CITIES_BACK_FILE_PATH = "villes_france.back.json";
+
     /***************************************************************************
      ******************* PATHES TO DATA FILES ***********************************
      ****************************************************************************/

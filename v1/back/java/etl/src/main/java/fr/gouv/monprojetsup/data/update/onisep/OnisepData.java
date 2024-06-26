@@ -1,25 +1,24 @@
 package fr.gouv.monprojetsup.data.update.onisep;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.disciplines.LiensMetiersThemesOnisep;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
-import fr.gouv.monprojetsup.data.analysis.typesFormation.TypeFormationOni;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.update.onisep.formations.Formations;
 import fr.gouv.monprojetsup.data.update.onisep.formations.FormationsAvecMetiers;
-import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.update.rome.InteretsRome;
 import lombok.val;
 
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.Helpers.isMetier;
 
 public record OnisepData(
         Metiers metiers,
@@ -73,7 +71,8 @@ public record OnisepData(
 
         List<MetierOnisep> metiersOnisep = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.METIERS_PATH),
-                new TypeToken<List<MetierOnisep>>(){}.getType()
+                new TypeToken<List<MetierOnisep>>() {
+                }.getType()
         );
         Metiers metiers = new Metiers(metiersOnisep, domainesPro);
 
@@ -92,14 +91,14 @@ public record OnisepData(
 
         Edges edgesThematiquesFilieres = new Edges();
         Serialisation.fromJsonFile(
-                        DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_FORMATIONS_PAIRES_PATH),
-                        LienThematiqueFormation.class
-                ).paires().forEach(
-                        p -> edgesThematiquesFilieres.put(
-                                Constants.gFlCodToFrontId(p.gFlCod()),
-                                thematiques.representatives(p.item())
-                        )
-                );
+                DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_FORMATIONS_PAIRES_PATH),
+                LienThematiqueFormation.class
+        ).paires().forEach(
+                p -> edgesThematiquesFilieres.put(
+                        Constants.gFlCodToFrontId(p.gFlCod()),
+                        thematiques.representatives(p.item())
+                )
+        );
 
         LienThematiqueFormation2 indexThematiqueFormation2
                 = Serialisation.fromJsonFile(
@@ -156,15 +155,15 @@ public record OnisepData(
         Edges edgesInteretsMetiers = new Edges();
         Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.METIERS_INTERETS_PAIRES_PATH),
-                        LienInteretMetier.class
-                ).paires().forEach(p ->
-                        edgesInteretsMetiers.put(
-                                p.id_centre_interet(),
-                                p.id_formation(),
-                                false,
-                                EDGES_INTERETS_METIERS_WEIGHT
-                        )//id_formation should be metier...
-                );
+                LienInteretMetier.class
+        ).paires().forEach(p ->
+                edgesInteretsMetiers.put(
+                        p.id_centre_interet(),
+                        p.id_formation(),
+                        false,
+                        EDGES_INTERETS_METIERS_WEIGHT
+                )//id_formation should be metier...
+        );
 
         LOGGER.info("Chargement de " + DataSources.ONISEP_FORMATIONS_PATH);
         Formations formations = Serialisation.fromJsonFile(
@@ -180,9 +179,10 @@ public record OnisepData(
                 formations.getFormationsDuSup()
         );
 
-        LOGGER.info("Chargement de " + DataSources.ONISEP_FORMATIONS_WITH_METIER_PATH);
+
+        LOGGER.info("Chargement de " + DataSources.ONISEP_IDEO_FICHES_FORMATIONS_WITH_METIER_PATH);
         FormationsAvecMetiers formationsAvecMetiers = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_WITH_METIER_PATH),
+                DataSources.getSourceDataFilePath(DataSources.ONISEP_IDEO_FICHES_FORMATIONS_WITH_METIER_PATH),
                 FormationsAvecMetiers.class
         );
 
@@ -195,15 +195,130 @@ public record OnisepData(
         );
 
         LOGGER.info("Calcul des filieres");
-        FilieresToFormationsOnisep filieres = FilieresToFormationsOnisep.getFilieres(
+        FilieresToFormationsOnisep filieresToFormationsOnisep = FilieresToFormationsOnisep.getFilieres(
                 formations,
                 formationsAvecMetiers,
                 lines
         );
 
 
+        Map<String, String> dico =
+                Serialisation.fromJsonFile(
+                        DataSources.getSourceDataFilePath(DataSources.LABELS_DICO),
+                        new TypeToken<Map<String, String>>() {
+                        }.getType()
+                );
+        dico.keySet().removeIf(k -> k.startsWith(FORMATION_PREFIX));
+        dico.entrySet().forEach(entry -> {
+            String val = entry.getValue();
+            int i = entry.getValue().indexOf(" groupe [");
+            if (i > 0) {
+                val = val.substring(0, i);
+            }
+            entry.setValue(val.toLowerCase());
+        });
 
-        Edges edgesMetiersFilieres = new Edges();
+
+        Edges edgesMetiersFilieresLouisV1 = getEdgesMetiersFilieresV1(fichesMetiers, dico);
+        Edges edgesMetiersFilieresLouisV2 = getEdgesMetiersFilieresV2();
+
+        //baseline
+        val edgesMetiersFilieresOrig = new Edges();
+        //adding links from the big xml and jm and cécile correspondances
+        getMetiersVersFormations(
+                filieresToFormationsOnisep,
+                lines,
+                metiers
+        ).forEach(
+                (metier, formationss) -> formationss.forEach(
+                        key -> edgesMetiersFilieresOrig.put(metier, key)
+                )
+        );
+
+        val edgesMetiersFilieres = new Edges(edgesMetiersFilieresOrig);
+
+        //ajouts louis v1 (for debug)
+        val ajoutsV1 = edgesMetiersFilieresLouisV1.minus(edgesMetiersFilieres);
+        toCsv(ajoutsV1, "ajouts_metiers_filiers_v1.csv");
+        val ajoutsV2 = edgesMetiersFilieresLouisV2.minus(edgesMetiersFilieres);
+        toCsv(ajoutsV2, "ajouts_metiers_filieres_sans_heritage.csv");
+
+        edgesMetiersFilieres.putAll(edgesMetiersFilieresLouisV2);
+        //ajouts louis v2 (for real)
+
+        List<Map<String, String>> metiersFormationsHeritage = Serialisation.fromJsonFile(
+                DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_HERITAGE),
+                new TypeToken<List<Map<String, String>>>() {
+                }.getType()
+        );
+
+        for (Map<String, String> stringStringMap : metiersFormationsHeritage) {
+            String fl = stringStringMap.get("fl");
+            String lib1 = stringStringMap.get("nom_filiere");
+            String lib2 = stringStringMap.get("nom_formation");
+            String fl2 = DictApproxInversion.findKey(lib2.toLowerCase(), dico);
+            if (fl2 != null) {
+                edgesMetiersFilieres
+                        .getPredecessors(fl2)
+                        .keySet()
+                        .stream().filter(Helpers::isMetier)
+                        .forEach(s -> edgesMetiersFilieres.put(s, fl)
+                        );
+            }
+        }
+
+        val ajoutsV2herit = edgesMetiersFilieres.minus(edgesMetiersFilieresOrig);
+        toCsv(ajoutsV2herit, "ajouts_metiers_filieres_avec_heritage.csv");
+
+        return new OnisepData(metiers,
+                thematiques,
+                interets,
+                edgesThematiquesFilieres,
+                edgesThematiquesMetiers,
+                edgesMetiersFilieres,
+                edgesInteretsMetiers,
+                filieresToFormationsOnisep,
+                lines,
+                secteursPro,
+                fichesMetiers,
+                formations);
+
+    }
+
+    private static void toCsv(Map<String, Set<String>> corr, String filename) throws IOException {
+        try(CsvTools csvTools = new CsvTools(filename, ',')) {
+            csvTools.appendHeaders(List.of("key1","key2"));
+            for (Map.Entry<String, Set<String>> entry : corr.entrySet()) {
+                String key1 = entry.getKey();
+                Set<String> keys2 = entry.getValue();
+                for (String key2 : keys2) {
+                    csvTools.append(key1);
+                    csvTools.append(key2);
+                    csvTools.newLine();
+                }
+            }
+        }
+    }
+
+
+    private static Edges getEdgesMetiersFilieresV2() {
+        val edgesMetiersFilieres = new Edges();
+
+        for (Map<String, String> stringStringMap : CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_ONISEP_PAIRES_PATH), '\t')) {
+            String idMetier = stringStringMap.get("id_metier").trim().replace("MET.", "MET_");
+            String flCod = stringStringMap.get("fl_cod").trim();
+            String aSupprimer = stringStringMap.get("Liens à supprimer");
+            if(aSupprimer.isEmpty()) {
+                edgesMetiersFilieres.put(idMetier, flCod);
+            } else {
+                int i = 0;
+            }
+        }
+        return edgesMetiersFilieres;
+    }
+
+    private static Edges getEdgesMetiersFilieresV1(FichesMetierOnisep fichesMetiers, Map<String, String> dico) throws IOException {
+        val edgesMetiersFilieres = new Edges();
         Serialisation.fromJsonFile(
                         DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_PAIRES_PATH_MANUEL),
                         LienFormationMetier2.class
@@ -216,85 +331,21 @@ public record OnisepData(
                                 )
                         )
                 );
-        Map<String, String> dico =
-                Serialisation.fromJsonFile(
-                        DataSources.getSourceDataFilePath(DataSources.LABELS_DICO),
-                        new TypeToken<Map<String,String>>(){}.getType()
-                );
-        dico.keySet().removeIf(k -> k.startsWith(FORMATION_PREFIX));
-        dico.entrySet().forEach(entry -> {
-            String val = entry.getValue();
-            int i = entry.getValue().indexOf(" groupe [");
-            if(i > 0) {
-                val = val.substring(0, i);
-            }
-            entry.setValue(val.toLowerCase());
-        });
         List<Map<String,String>> metiersFormationsAjouts = Serialisation.fromJsonFile(
                 DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_AJOUT),
                 new TypeToken<List<Map<String,String>>>(){}.getType()
-                );
+        );
 
-        metiersFormationsAjouts.forEach(stringStringMap -> {
-            String filiere = stringStringMap.get("fl");
-            String metier = stringStringMap.get("nom_metier");
+        metiersFormationsAjouts.forEach(m -> {
+            String filiere = m.get("fl");
+            String metier = m.get("nom_metier");
             String metierKey = DictApproxInversion.findKey(metier.toLowerCase(), dico);
             if(metierKey != null) {
                 edgesMetiersFilieres.put(metierKey, filiere);
             }
         });
-        List<Map<String,String>> metiersFormationsHeritage = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.METIERS_FORMATIONS_HERITAGE),
-                new TypeToken<List<Map<String,String>>>(){}.getType()
-        );
 
-        try(CsvTools csvTools = new CsvTools("ajouts_heritage.csv", ',')) {
-            csvTools.appendHeaders(List.of("fl1","lib1","fl2","lib2"));
-            for (Map<String, String> stringStringMap : metiersFormationsHeritage) {
-                String fl = stringStringMap.get("fl");
-                String lib1 = stringStringMap.get("nom_filiere");
-                String lib2 = stringStringMap.get("nom_formation");
-                String fl2 = DictApproxInversion.findKey(lib2.toLowerCase(), dico);
-                if (fl2 != null) {
-                    csvTools.append(fl);
-                    csvTools.append(lib1);
-                    csvTools.append(fl2);
-                    csvTools.append(lib2);
-                    csvTools.newLine();
-                    edgesMetiersFilieres
-                            .getPredecessors(fl2)
-                            .keySet()
-                            .stream().filter(Helpers::isMetier)
-                            .forEach(s -> edgesMetiersFilieres.put(s, fl)
-                            );
-                }
-            }
-        }
-
-
-
-
-        //adding links from the big xml and jm and cécile correspondances
-        getMetiersVersFormations(filieres, lines, metiers).forEach(
-                (key, metierss) -> metierss.forEach(
-                        metier -> edgesMetiersFilieres.put(metier, key)
-                )
-        );
-
-
-        return new OnisepData(metiers,
-                thematiques,
-                interets,
-                edgesThematiquesFilieres,
-                edgesThematiquesMetiers,
-                edgesMetiersFilieres,
-                edgesInteretsMetiers,
-                filieres,
-                lines,
-                secteursPro,
-                fichesMetiers,
-                formations);
-
+        return edgesMetiersFilieres;
     }
 
     private static void removeMetiersBelowBac(
@@ -341,114 +392,8 @@ public record OnisepData(
         });
     }
 
-    /**
-     * maps a flcod "fl11" to metiers "MET.999"
-     *
-     * @return a map flcod -> metiers
-     */
-    public Map<String, Set<String>> getExtendedMetiersVersFormations() {
-        return getExtendedMetiersVersFormations(
-                Collections.emptyMap(),
-                new PsupStatistiques.LASCorrespondance(),
-                new Descriptifs()
-        );
-    }
-
-    /**
-     * metiers vers filieres
-     * @return a map metiers -> filieres
-     */
-    public Map<String, Set<String>> getExtendedMetiersVersFormations(
-            Map<String, String> groups,
-            PsupStatistiques.LASCorrespondance lasCorrespondance,
-            Descriptifs descriptifs
-            ) {
-        boolean onisepOnly = false;
-        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
-        getMetiersVersFormations(
-                this.filieresToFormationsOnisep,
-                this.billy,
-                this.metiers
-        ).forEach(
-                (f, ms) -> ms.forEach(
-                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
-                )
-        );
-        getMetiersVersFormations(
-                descriptifs, this.metiers
-        ).forEach(
-                (f, ms) -> ms.forEach(
-                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
-                )
-        );
 
 
-        if(!onisepOnly) {
-            this.edgesMetiersFilieres().edges().forEach((s, strings) ->
-                    metiersVersFormations.computeIfAbsent(s, z -> new HashSet<>())
-                    .addAll(strings));
-        }
-        metiersVersFormations.keySet().removeIf(k -> !k.startsWith(Constants.MET_PREFIX));
-        metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !Helpers.isFiliere(s)));
-
-
-        /* ajouts des las aux metiers PASS */
-        String passKey = Constants.gFlCodToFrontId(PASS_FL_COD);
-        Set<String> metiersPass =
-                metiersVersFormations.entrySet().stream()
-                        .filter(e -> e.getValue().contains( passKey))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toSet());
-        metiersPass.forEach(m ->
-                metiersVersFormations.computeIfAbsent( m,
-                z -> new HashSet<>())
-                        .addAll(lasCorrespondance.lasToGeneric().keySet())
-        );
-
-        Map<String, Set<String>> genericToLas = lasCorrespondance.getGenericToLas();
-
-        Map<String, Set<String>> liensGroups = new HashMap<>();
-        metiersVersFormations.forEach((s, strings) -> {
-            Set<String> list2 = new HashSet<>();
-            strings.forEach(s1 -> {
-                list2.add(s1);
-                /* ajouts des groupes génériquees aux metiers des formations correspondantes */
-                list2.add(groups.getOrDefault(s1,s1));
-                /* ajouts des las aux metiers des génériques correspondants */
-                if(genericToLas.containsKey(s1)) {
-                    list2.addAll(genericToLas.get(s1));
-                }
-            });
-            liensGroups.put(s,list2);
-        });
-        return liensGroups;
-    }
-
-    /* filieres to metiers */
-    public static Map<String, Set<String>> getMetiersVersFormations(
-            Descriptifs descriptifs,
-            Metiers metiers
-    ) {
-        Map<String, Set<String>> result = new HashMap<>();
-        descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
-            if (!descriptif.hasError() && descriptif.presentation() != null) {
-                int i = descriptif.presentation().indexOf("Exemples de métiers");
-                if (i > 0) {
-                    List<String> mets = metiers.extractMetiersKeys(descriptif.presentation().substring(i));
-                    if(!mets.isEmpty()) {
-                        result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
-                    }
-                }
-            }
-            if (!descriptif.hasError() && descriptif.metiers() != null) {
-                List<String> mets = metiers.extractMetiersKeys(descriptif.metiers());
-                if(!mets.isEmpty()) {
-                    result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
-                }
-            }
-        });
-        return result;
-    }
     public static Map<String, Set<String>> getMetiersVersFormations(
             FilieresToFormationsOnisep filieresToFormationsOnisep,
             PsupToOnisepLines billy,
@@ -483,9 +428,105 @@ public record OnisepData(
                 }
         );
         result.values().removeIf(Set::isEmpty);
-        return result;
+
+        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
+        result.forEach(
+                (f, ms) -> ms.forEach(
+                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
+                )
+        );
+        return metiersVersFormations;
     }
 
+
+
+    /**
+     * metiers vers filieres
+     * @return a map metiers -> filieres
+     */
+    public Map<String, Set<String>> getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+            Map<String, String> groups,
+            PsupStatistiques.LASCorrespondance lasCorrespondance,
+            Descriptifs descriptifs
+            ) {
+
+
+        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
+
+        this.edgesMetiersFilieres().edges().forEach((s, strings) ->
+                metiersVersFormations.computeIfAbsent(s, z -> new HashSet<>())
+                        .addAll(strings));
+
+        getMetiersVersFormationsFromDescriptifs(
+                descriptifs,
+                this.metiers
+        ).forEach(
+                (f, ms) -> ms.forEach(
+                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
+                )
+        );
+
+        metiersVersFormations.keySet().removeIf(k -> !k.startsWith(Constants.MET_PREFIX));
+        metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !Helpers.isFiliere(s)));
+
+
+        /* ajouts des las aux metiers PASS */
+        String passKey = Constants.gFlCodToFrontId(PASS_FL_COD);
+        Set<String> metiersPass =
+                metiersVersFormations.entrySet().stream()
+                        .filter(e -> e.getValue().contains( passKey))
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toSet());
+        metiersPass.forEach(m ->
+                metiersVersFormations.computeIfAbsent( m,
+                z -> new HashSet<>())
+                        .addAll(lasCorrespondance.lasToGeneric().keySet())
+        );
+
+        Map<String, Set<String>> genericToLas = lasCorrespondance.getGenericToLas();
+
+        Map<String, Set<String>> liensGroups = new HashMap<>();
+        metiersVersFormations.forEach((s, strings) -> {
+            Set<String> list2 = new HashSet<>();
+            strings.forEach(s1 -> {
+                list2.add(s1);
+                /* ajouts des groupes génériques aux metiers des formations correspondantes */
+                list2.add(groups.getOrDefault(s1,s1));
+                /* ajouts des las aux metiers des génériques correspondants */
+                if(genericToLas.containsKey(s1)) {
+                    list2.addAll(genericToLas.get(s1));
+                }
+            });
+            liensGroups.put(s,list2);
+        });
+        return liensGroups;
+    }
+
+    /* filieres to metiers */
+    public static Map<String, Set<String>> getMetiersVersFormationsFromDescriptifs(
+            Descriptifs descriptifs,
+            Metiers metiers
+    ) {
+        Map<String, Set<String>> result = new HashMap<>();
+        descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
+            if (!descriptif.hasError() && descriptif.presentation() != null) {
+                int i = descriptif.presentation().indexOf("Exemples de métiers");
+                if (i > 0) {
+                    List<String> mets = metiers.extractMetiersKeys(descriptif.presentation().substring(i));
+                    if(!mets.isEmpty()) {
+                        result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
+                    }
+                }
+            }
+            if (!descriptif.hasError() && descriptif.metiers() != null) {
+                List<String> mets = metiers.extractMetiersKeys(descriptif.metiers());
+                if(!mets.isEmpty()) {
+                    result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
+                }
+            }
+        });
+        return result;
+    }
 
     public static Map<String, Set<String>> getSecteursVersMetiers(
             FichesMetierOnisep fiches,
