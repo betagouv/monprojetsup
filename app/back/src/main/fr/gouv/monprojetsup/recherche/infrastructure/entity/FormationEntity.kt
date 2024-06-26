@@ -56,6 +56,10 @@ class FormationDetailleeEntity {
     @Column(name = "formations_associees", nullable = true, columnDefinition = "varchar[]")
     var formationsAssociees: List<String>? = null
 
+    @Type(ListArrayType::class)
+    @Column(name = "criteres_analyse", columnDefinition = "int[]")
+    lateinit var criteresAnalyse: List<Int>
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
     lateinit var metiers: List<FormationMetierEntity>
 }

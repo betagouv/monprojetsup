@@ -3,17 +3,21 @@ package fr.gouv.monprojetsup.recherche.application.controller
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
+import fr.gouv.monprojetsup.recherche.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.Domaine
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
-import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
@@ -192,37 +196,88 @@ class RechercheControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
+            val explications =
+                ExplicationsSuggestionDetaillees(
+                    geographique =
+                        listOf(
+                            ExplicationGeographique(
+                                ville = "Nantes",
+                                distanceKm = 1,
+                            ),
+                            ExplicationGeographique(
+                                ville = "Paris",
+                                distanceKm = 3,
+                            ),
+                        ),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.TRES_INTERESSE,
+                    specialitesChoisies =
+                        listOf(
+                            AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                            AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                            AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                        ),
+                    domaines =
+                        listOf(
+                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
+                        ),
+                    interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
+                    explicationAutoEvaluationMoyenne =
+                        ExplicationAutoEvaluationMoyenne(
+                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
+                            moyenneAutoEvalue = 15f,
+                            basIntervalleNotes = 14f,
+                            hautIntervalleNotes = 16f,
+                        ),
+                    formationsSimilaires =
+                        listOf(
+                            Formation("fl1", "CPGE MPSI"),
+                            Formation("fl7", "BUT Informatique"),
+                        ),
+                    explicationTypeBaccalaureat =
+                        ExplicationTypeBaccalaureat(
+                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                            pourcentage = 18,
+                        ),
+                    moyenneGeneraleDesAdmis =
+                        MoyenneGeneraleDesAdmis(
+                            idBaccalaureat = "Général",
+                            nomBaccalaureat = "Série Générale",
+                            centiles =
+                                listOf(
+                                    Centile(centile = 5, note = 13f),
+                                    Centile(centile = 25, note = 14.5f),
+                                    Centile(centile = 75, note = 17f),
+                                    Centile(centile = 95, note = 18f),
+                                ),
+                        ),
+                )
             val ficheFormation =
                 FicheFormation.FicheFormationPourProfil(
-                    formation =
-                        FormationDetaillee(
-                            id = "fl680002",
-                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            formationsAssociees = listOf("fl0012"),
-                            descriptifGeneral =
-                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
-                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
-                                    "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
-                                    "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
-                                    "établissement de l’enseignement supérieur, une université.",
-                            descriptifDiplome =
-                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                                    "conférent le grade de licence.",
-                            descriptifAttendus =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            descriptifConseils =
-                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
-                            liens =
-                                listOf(
-                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                        "cycle-pluridisciplinaire-d-etudes-superieures",
-                                ),
-                            metiers = emptyList(),
-                            pointsAttendus = emptyList(),
+                    id = "fl680002",
+                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                    formationsAssociees = listOf("fl0012"),
+                    descriptifGeneral =
+                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                            "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
+                            "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
+                            "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                            "établissement de l’enseignement supérieur, une université.",
+                    descriptifDiplome =
+                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                            "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
+                    liens =
+                        listOf(
+                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                "cycle-pluridisciplinaire-d-etudes-superieures",
                         ),
                     communesTrieesParAffinites =
                         listOf(
@@ -247,73 +302,17 @@ class RechercheControllerTest(
                             ),
                         ),
                     tauxAffinite = 90,
-                    domaines =
+                    explications = explications,
+                    criteresAnalyseCandidature =
                         listOf(
-                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
-                        ),
-                    interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
-                    explicationAutoEvaluationMoyenne =
-                        ExplicationAutoEvaluationMoyenne(
-                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
-                            moyenneAutoEvalue = 15f,
-                            basIntervalleNotes = 14f,
-                            hautIntervalleNotes = 16f,
-                        ),
-                    formationsSimilaires =
-                        listOf(
-                            Formation("fl1", "CPGE MPSI"),
-                            Formation("fl7", "BUT Informatique"),
-                        ),
-                    explications =
-                        ExplicationsSuggestion(
-                            geographique =
-                                listOf(
-                                    ExplicationsSuggestion.ExplicationGeographique(
-                                        ville = "Nantes",
-                                        distanceKm = 1,
-                                    ),
-                                    ExplicationsSuggestion.ExplicationGeographique(
-                                        ville = "Paris",
-                                        distanceKm = 3,
-                                    ),
-                                ),
-                            formationsSimilaires = listOf("fl1", "fl7"),
-                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            alternance = ChoixAlternance.TRES_INTERESSE,
-                            specialitesChoisies =
-                                listOf(
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                    ExplicationsSuggestion.AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                                ),
-                            typeBaccalaureat =
-                                ExplicationsSuggestion.TypeBaccalaureat(
-                                    nomBaccalaureat = "Général",
-                                    pourcentage = 18,
-                                ),
-                            autoEvaluationMoyenne =
-                                ExplicationsSuggestion.AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
-                                    rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
-                                            rangEch25 = 12,
-                                            rangEch50 = 14,
-                                            rangEch75 = 16,
-                                            rangEch10 = 10,
-                                            rangEch90 = 17,
-                                        ),
-                                    bacUtilise = "Général",
-                                ),
-                            interetsEtDomainesChoisis =
-                                listOf(
-                                    "T_ROME_731379930",
-                                    "T_ITM_1356",
-                                ),
-                        ),
-                    explicationTypeBaccalaureat =
-                        ExplicationTypeBaccalaureat(
-                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
-                            pourcentage = 18,
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(
+                                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                pourcentage = 0,
+                            ),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
@@ -338,14 +337,49 @@ class RechercheControllerTest(
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "moyenneGeneraleDesAdmis": {
-                              "idBaccalaureat": "",
-                              "nomBaccalaureat": "",
-                              "centilles": []
+                              "idBaccalaureat": "Général",
+                              "nomBaccalaureat": "Série Générale",
+                              "centiles": [
+                                {
+                                  "centile": 5,
+                                  "note": 13.0
+                                },
+                                {
+                                  "centile": 25,
+                                  "note": 14.5
+                                },
+                                {
+                                  "centile": 75,
+                                  "note": 17.0
+                                },
+                                {
+                                  "centile": 95,
+                                  "note": 18.0
+                                }
+                              ]
                             },
-                            "criteresAnalyseCandidature": {
-                              "nom": "",
-                              "pourcentage": 12
-                            },
+                            "criteresAnalyseCandidature": [
+                              {
+                                "nom": "Compétences académiques",
+                                "pourcentage": 10
+                              },
+                              {
+                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                "pourcentage": 0
+                              },
+                              {
+                                "nom": "Résultats académiques",
+                                "pourcentage": 18
+                              },
+                              {
+                                "nom": "Savoir-être",
+                                "pourcentage": 42
+                              },
+                              {
+                                "nom": "Motivation, connaissance",
+                                "pourcentage": 30
+                              }
+                            ],
                             "repartitionAdmisAnneePrecedente": {
                               "total": 12,
                               "parBaccalaureat": []
@@ -423,6 +457,7 @@ class RechercheControllerTest(
                               }
                             ],
                             "typeBaccalaureat": {
+                              "idBaccalaureat": "Générale",
                               "nomBaccalaureat": "Série Générale",
                               "pourcentage": 18
                             },
@@ -445,60 +480,63 @@ class RechercheControllerTest(
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationSansProfil(
-                    formation =
-                        FormationDetaillee(
-                            id = "fl680002",
-                            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                            metiers =
-                                listOf(
-                                    MetierDetaille(
-                                        id = "MET001",
-                                        nom = "géomaticien/ne",
-                                        descriptif =
-                                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                                "exploite les données pour modéliser le territoire",
-                                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
-                                    ),
-                                    MetierDetaille(
-                                        id = "MET002",
-                                        nom = "documentaliste",
-                                        descriptif = null,
-                                        liens = emptyList(),
-                                    ),
-                                ),
-                            formationsAssociees = listOf("fl0012"),
-                            descriptifGeneral =
-                                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
-                                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
-                                    "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
-                                    "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
-                                    "établissement de l’enseignement supérieur, une université.",
-                            descriptifDiplome =
-                                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                                    "conférent le grade de licence.",
-                            descriptifAttendus =
-                                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            descriptifConseils =
-                                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                                    "actuelles en matière de design floral pour exceller dans ce domaine.",
-                            liens =
-                                listOf(
-                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                        "cycle-pluridisciplinaire-d-etudes-superieures",
-                                ),
-                            pointsAttendus =
-                                listOf(
-                                    "Les résultats scolaires",
-                                    "Les compétences, méthodes de travail et savoir-faire",
-                                ),
+                    id = "fl680002",
+                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                    metiers =
+                        listOf(
+                            MetierDetaille(
+                                id = "MET001",
+                                nom = "géomaticien/ne",
+                                descriptif =
+                                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                                        "exploite les données pour modéliser le territoire",
+                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
+                            ),
+                            MetierDetaille(
+                                id = "MET002",
+                                nom = "documentaliste",
+                                descriptif = null,
+                                liens = emptyList(),
+                            ),
+                        ),
+                    formationsAssociees = listOf("fl0012"),
+                    descriptifGeneral =
+                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                            "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
+                            "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
+                            "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                            "établissement de l’enseignement supérieur, une université.",
+                    descriptifDiplome =
+                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                            "conférent le grade de licence.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                    descriptifConseils =
+                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                            "actuelles en matière de design floral pour exceller dans ce domaine.",
+                    liens =
+                        listOf(
+                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                "cycle-pluridisciplinaire-d-etudes-superieures",
                         ),
                     communes =
                         listOf(
                             "Paris  5e  Arrondissement",
                             "Paris 16e  Arrondissement",
+                        ),
+                    criteresAnalyseCandidature =
+                        listOf(
+                            CriteresAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                            CriteresAnalyseCandidature(
+                                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                pourcentage = 0,
+                            ),
+                            CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                            CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                            CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
                 )
             given(recupererFormationService.recupererFormation(null, "fl680002")).willReturn(ficheFormation)
@@ -527,15 +565,29 @@ class RechercheControllerTest(
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": {
-                              "idBaccalaureat": "",
-                              "nomBaccalaureat": "",
-                              "centilles": []
-                            },
-                            "criteresAnalyseCandidature": {
-                              "nom": "",
-                              "pourcentage": 12
-                            },
+                            "moyenneGeneraleDesAdmis": null,
+                            "criteresAnalyseCandidature": [
+                              {
+                                "nom": "Compétences académiques",
+                                "pourcentage": 10
+                              },
+                              {
+                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                "pourcentage": 0
+                              },
+                              {
+                                "nom": "Résultats académiques",
+                                "pourcentage": 18
+                              },
+                              {
+                                "nom": "Savoir-être",
+                                "pourcentage": 42
+                              },
+                              {
+                                "nom": "Motivation, connaissance",
+                                "pourcentage": 30
+                              }
+                            ],
                             "repartitionAdmisAnneePrecedente": {
                               "total": 12,
                               "parBaccalaureat": []
