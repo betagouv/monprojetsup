@@ -24,7 +24,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
 
     private val frequencesCumulees =
         mapOf(
-            Baccalaureat(id = "Général", idExterne = "Générale", nom = "Série Générale") to
+            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -166,7 +166,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
+        given(moyenneGeneraleAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation = "fl0001")).willReturn(
             frequencesCumulees,
         )
     }
@@ -176,7 +176,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                idBaccalaureat = "Général",
+                idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             )
@@ -184,8 +184,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // Then
         val attendu =
             MoyenneGeneraleDesAdmis(
-                idBaccalaureat = "Général",
-                nomBaccalaureat = "Série Générale",
+                baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
                 centiles =
                     listOf(
                         Centile(centile = 5, note = 13f),
@@ -202,7 +201,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                idBaccalaureat = "Général",
+                idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.PREMIERE,
             )
@@ -210,8 +209,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // Then
         val attendu =
             MoyenneGeneraleDesAdmis(
-                idBaccalaureat = "Général",
-                nomBaccalaureat = "Série Générale",
+                baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
                 centiles =
                     listOf(
                         Centile(centile = 5, note = 13f),
@@ -229,7 +227,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
-                idBaccalaureat = "Général",
+                idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = classe,
             )
@@ -249,7 +247,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
+        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -264,7 +262,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
+        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -279,7 +277,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(idBaccalaureat = null, nomBaccalaureat = null, centiles = centilesTousBacConfonduses)
+        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
@@ -347,8 +345,7 @@ class MoyenneGeneraleDesAdmisServiceTest {
         // Then
         val attendu =
             MoyenneGeneraleDesAdmis(
-                idBaccalaureat = null,
-                nomBaccalaureat = null,
+                baccalaureat = null,
                 centiles =
                     listOf(
                         Centile(centile = 5, note = 7.5f),

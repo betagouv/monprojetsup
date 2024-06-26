@@ -101,8 +101,7 @@ data class RecupererFormationReponseDTO(
             val parBaccalaureat: List<AdmisBaccalaureat>,
         ) {
             data class AdmisBaccalaureat(
-                val idBaccalaureat: String,
-                val nomBaccalaureat: String,
+                val baccalaureat: BaccalaureatDTO,
                 val nombreAdmis: Int,
             )
         }
@@ -125,8 +124,7 @@ data class RecupererFormationReponseDTO(
         }
 
         data class MoyenneGeneraleDesAdmisDTO(
-            val idBaccalaureat: String?,
-            val nomBaccalaureat: String?,
+            val baccalaureat: BaccalaureatDTO?,
             val centiles: List<CentileDTO>,
         ) {
             data class CentileDTO(
@@ -145,8 +143,7 @@ data class RecupererFormationReponseDTO(
             companion object {
                 fun fromMoyenneGeneraleDesAdmis(moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis) =
                     MoyenneGeneraleDesAdmisDTO(
-                        idBaccalaureat = moyenneGeneraleDesAdmis.idBaccalaureat,
-                        nomBaccalaureat = moyenneGeneraleDesAdmis.nomBaccalaureat,
+                        baccalaureat = moyenneGeneraleDesAdmis.baccalaureat?.let { BaccalaureatDTO.fromBaccalaureat(it) },
                         centiles = moyenneGeneraleDesAdmis.centiles.map { CentileDTO.fromCentile(it) },
                     )
             }
@@ -266,8 +263,7 @@ data class RecupererFormationReponseDTO(
         val moyenne: Float,
         val basIntervalleNotes: Float,
         val hautIntervalleNotes: Float,
-        val idBaccalaureatUtilise: String,
-        val nomBaccalaureatUtilise: String,
+        val baccalaureatUtilise: BaccalaureatDTO,
     ) {
         companion object {
             fun fromAutoEvaluationMoyenne(autoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne): AutoEvaluationMoyenneDTO {
@@ -275,23 +271,20 @@ data class RecupererFormationReponseDTO(
                     moyenne = autoEvaluationMoyenne.moyenneAutoEvalue,
                     basIntervalleNotes = autoEvaluationMoyenne.basIntervalleNotes,
                     hautIntervalleNotes = autoEvaluationMoyenne.hautIntervalleNotes,
-                    idBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.id,
-                    nomBaccalaureatUtilise = autoEvaluationMoyenne.baccalaureat.nom,
+                    baccalaureatUtilise = BaccalaureatDTO.fromBaccalaureat(autoEvaluationMoyenne.baccalaureatUtilise),
                 )
             }
         }
     }
 
     data class TypeBaccalaureatDTO(
-        val idBaccalaureat: String?,
-        val nomBaccalaureat: String?,
-        val pourcentage: Int?,
+        val baccalaureat: BaccalaureatDTO,
+        val pourcentage: Int,
     ) {
         companion object {
             fun fromExplicationTypeBaccalaureat(typeBaccalaureat: ExplicationTypeBaccalaureat): TypeBaccalaureatDTO {
                 return TypeBaccalaureatDTO(
-                    idBaccalaureat = typeBaccalaureat.baccalaureat.id,
-                    nomBaccalaureat = typeBaccalaureat.baccalaureat.nom,
+                    baccalaureat = BaccalaureatDTO.fromBaccalaureat(typeBaccalaureat.baccalaureat),
                     pourcentage = typeBaccalaureat.pourcentage,
                 )
             }

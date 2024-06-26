@@ -661,7 +661,7 @@ class SuggestionApiHttpClientTest {
                                     rangEch10 = 10,
                                     rangEch90 = 17,
                                 ),
-                            bacUtilise = "Général",
+                            baccalaureatUtilise = "Général",
                         ),
                     interetsEtDomainesChoisis =
                         listOf(

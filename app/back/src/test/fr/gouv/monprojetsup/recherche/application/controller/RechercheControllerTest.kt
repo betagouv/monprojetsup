@@ -224,7 +224,7 @@ class RechercheControllerTest(
                     interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
                     explicationAutoEvaluationMoyenne =
                         ExplicationAutoEvaluationMoyenne(
-                            baccalaureat = Baccalaureat("Générale", "Générale", "Série Générale"),
+                            baccalaureatUtilise = Baccalaureat("Générale", "Générale", "Série Générale"),
                             moyenneAutoEvalue = 15f,
                             basIntervalleNotes = 14f,
                             hautIntervalleNotes = 16f,
@@ -241,8 +241,7 @@ class RechercheControllerTest(
                         ),
                     moyenneGeneraleDesAdmis =
                         MoyenneGeneraleDesAdmis(
-                            idBaccalaureat = "Général",
-                            nomBaccalaureat = "Série Générale",
+                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
                             centiles =
                                 listOf(
                                     Centile(centile = 5, note = 13f),
@@ -337,8 +336,10 @@ class RechercheControllerTest(
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
                             "moyenneGeneraleDesAdmis": {
-                              "idBaccalaureat": "Général",
-                              "nomBaccalaureat": "Série Générale",
+                              "baccalaureat": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              },
                               "centiles": [
                                 {
                                   "centile": 5,
@@ -457,16 +458,20 @@ class RechercheControllerTest(
                               }
                             ],
                             "typeBaccalaureat": {
-                              "idBaccalaureat": "Générale",
-                              "nomBaccalaureat": "Série Générale",
+                              "baccalaureat": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              },
                               "pourcentage": 18
                             },
                             "autoEvaluationMoyenne": {
                               "moyenne": 15.0,
                               "basIntervalleNotes": 14.0,
                               "hautIntervalleNotes": 16.0,
-                              "idBaccalaureatUtilise": "Générale",
-                              "nomBaccalaureatUtilise": "Série Générale"
+                              "baccalaureatUtilise": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              }
                             }
                           }
                         }
