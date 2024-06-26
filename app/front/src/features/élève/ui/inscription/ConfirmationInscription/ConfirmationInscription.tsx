@@ -38,7 +38,7 @@ const ConfirmationInscription = () => {
         </LienInterne>
         <hr className="mt-10 pb-10" />
         <div className="bg-[--background-alt-beige-gris-galet]">
-          <div className="bg-[url('/images-de-fond/bandeau-confirmation-inscription.svg')]  bg-no-repeat px-4 py-10 md:px-20">
+          <div className="bg-[url('/images-de-fond/bandeau-confirmation-inscription.svg')] bg-no-repeat px-4 py-10 md:px-20">
             <div className="*:mb-4">
               <Titre
                 niveauDeTitre="h2"

@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
+import fr.gouv.monprojetsup.recherche.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.AutoEvaluationMoyenne
-import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.Specialite

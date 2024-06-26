@@ -27,3 +27,11 @@ export const récupérerAperçusFormationsQueryOptions = (formationIds?: Array<F
     },
     enabled: true,
   });
+
+export const détailFormationQueryOptions = (formationId: Formation["id"]) =>
+  queryOptions({
+    queryKey: ["formation", formationId],
+    queryFn: async () => {
+      return (await dépendances.récupérerDétailFormationUseCase.run(formationId)) ?? null;
+    },
+  });

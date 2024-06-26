@@ -3,8 +3,10 @@ package fr.gouv.monprojetsup.recherche.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.commun.utilitaires.recupererUniqueValeur
+import fr.gouv.monprojetsup.recherche.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,7 +31,7 @@ data class ExplicationEtExemplesDTO(
                     explications.flatMap { it.geographiques ?: emptyList() }
                         .mapNotNull { explicationGeographique ->
                             if (explicationGeographique.ville != null && explicationGeographique.distance != null) {
-                                ExplicationsSuggestion.ExplicationGeographique(
+                                ExplicationGeographique(
                                     ville = explicationGeographique.ville,
                                     distanceKm = explicationGeographique.distance,
                                 )
@@ -50,7 +52,7 @@ data class ExplicationEtExemplesDTO(
                     },
                 specialitesChoisies =
                     explications.flatMap { it.specialite?.statistiques ?: emptyList() }.map {
-                        ExplicationsSuggestion.AffiniteSpecialite(
+                        AffiniteSpecialite(
                             nomSpecialite = it.nomSpecialite,
                             pourcentage = it.pourcentage,
                         )

@@ -109,9 +109,9 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -175,9 +175,9 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifConseils =
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0010", "fl0012"),
                     liens = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
                             MetierDetaille(
@@ -231,10 +231,10 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifAttendus = null,
                     descriptifDiplome = null,
                     descriptifConseils = "",
-                    pointsAttendus = emptyList(),
                     formationsAssociees = listOf("fl0005"),
                     liens = emptyList(),
                     metiers = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
                 ),
             )
         }
@@ -288,6 +288,28 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     msg = "La formation fl0005 existe plusieurs fois entre id et dans les formations équivalentes",
                 ),
             )
+        }
+    }
+
+    @Nested
+    inner class RecupererLesNomsDesFormations {
+        @Test
+        @Sql("classpath:formation_metier.sql")
+        fun `Doit retourner les noms des formations en ignorant celles inconnues`() {
+            // Given
+            val idsFormations = listOf("fl0001", "idInconnu", "fl0003", "", "fl0002")
+
+            // When
+            val result = formationBDDRepository.recupererLesNomsDesFormations(idsFormations)
+
+            // Then
+            val attendu =
+                listOf(
+                    Formation(id = "fl0001", nom = "CAP Fleuriste"),
+                    Formation(id = "fl0002", nom = "Bac pro Fleuriste"),
+                    Formation(id = "fl0003", nom = "ENSA"),
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
         }
     }
 }

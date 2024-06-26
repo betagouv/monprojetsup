@@ -1,6 +1,5 @@
 const pages = {
   ACCUEIL: "Accueil",
-  ARTICLES: "Articles",
   PLAN_DU_SITE: "Plan du site",
   ACCESSIBILITÉ: "Accessibilité: non conforme",
   MENTIONS_LÉGALES: "Mentions légales",
@@ -32,13 +31,31 @@ export const localeFR = {
   },
   NAVIGATION: {
     ACCUEIL: pages.ACCUEIL,
-    ARTICLES: pages.ARTICLES,
-    MAIN_NAVIGATION: "Menu principal",
   },
   PAGE_RECHERCHE: {
     TITRE: "Rechercher une formation ou un métier",
     EXEMPLES_MÉTIERS: "Exemples de métiers accessibles après cette formation",
     FORMATIONS_POUR_APPRENDRE_METIER: "formations pour apprendre le métier",
+  },
+  PAGE_FORMATION: {
+    ONGLET_FORMATION: "La formation",
+    ONGLET_DÉTAILS: "Plus de détails",
+    ONGLET_CRITÈRES: "Critères d'admission",
+    ONGLET_CONSEILS: "Nos conseils",
+    ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l'année dernière",
+    VILLES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
+    VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
+    RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
+    CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
+    MOYENNE_GÉNÉRALE: "Moyenne générale des lycéens admis à la formation",
+    LES_ATTENDUS: "Les attendus de la formation",
+    RÉPARTITION_MOYENNE: {
+      PREMIER_DÉCILE: "5% des lycéens admis avaient une moyenne générale inférieure à",
+      SECOND_DÉCILE: "20% des lycéens admis avaient une moyenne générale comprise entre",
+      TROISIÈME_DÉCILE: "50% des lycéens admis avaient une moyenne générale comprise entre",
+      QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
+    },
+    EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
   },
   ÉLÈVE: {
     PROJET: {
@@ -289,6 +306,10 @@ export const localeFR = {
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
     },
+    LIRE_SUITE: "Lire la suite",
+    MASQUER_SUITE: "Masquer la suite",
+    AJOUTER_À_LA_SÉLECTION: "Ajouter à ma sélection",
+    PAS_INTÉRESSÉ: "Pas intéressé",
   },
   ACCESSIBILITÉ: {
     LIEN_EXTERNE: "ouvre un lien externe",
@@ -297,5 +318,9 @@ export const localeFR = {
     RETIRER: "Retirer",
     VOIR_FIL_ARIANE: "Voir le fil d’ariane",
     VOUS_ÊTES_ICI: "Vous êtes ici :",
+    MENU_PRINCIPAL: "Menu principal",
+    ONGLETS_FORMATION: "Détails sur la formation",
+    VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
+    FERMER_MODALE: "Fermer la fenêtre modale",
   },
 } as const;

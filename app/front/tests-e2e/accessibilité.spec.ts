@@ -3,14 +3,14 @@ import { expect, test } from "@playwright/test";
 
 const pages = [
   "/",
-  "/inscription/projet",
-  "/inscription/scolarite",
-  "/inscription/domaines",
-  "/inscription/interets",
-  "/inscription/metiers",
-  "/inscription/etude",
-  "/inscription/formations",
-  "/inscription/confirmation",
+  "/eleve/inscription/projet",
+  "/eleve/inscription/scolarite",
+  "/eleve/inscription/domaines",
+  "/eleve/inscription/interets",
+  "/eleve/inscription/metiers",
+  "/eleve/inscription/etude",
+  "/eleve/inscription/formations",
+  "/eleve/inscription/confirmation",
   "/eleve/tableau-de-bord",
   "/eleve/profil",
 ];

@@ -9,4 +9,6 @@ export type BoutonProps = {
   désactivé?: boolean;
   icône?: BoutonSqueletteProps["icône"];
   formId?: string;
+  ariaControls?: string;
+  dataFrOpened?: string;
 };

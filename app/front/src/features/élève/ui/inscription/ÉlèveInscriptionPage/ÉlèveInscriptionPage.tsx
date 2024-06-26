@@ -48,29 +48,29 @@ const ÉlèveInscriptionPage = () => {
 
   const composantÀAfficher = () => {
     switch (étapeActuelle?.url) {
-      case "/inscription/projet":
+      case "/eleve/inscription/projet":
         return <ProjetForm {...propsFormulaire} />;
-      case "/inscription/scolarite":
+      case "/eleve/inscription/scolarite":
         return <ScolaritéForm {...propsFormulaire} />;
-      case "/inscription/domaines":
+      case "/eleve/inscription/domaines":
         return (
           <DomainesForm
             {...propsFormulaire}
             niveauDeTitreCatégories="h2"
           />
         );
-      case "/inscription/interets":
+      case "/eleve/inscription/interets":
         return (
           <IntêretsForm
             {...propsFormulaire}
             niveauDeTitreCatégories="h2"
           />
         );
-      case "/inscription/metiers":
+      case "/eleve/inscription/metiers":
         return <MétiersForm {...propsFormulaire} />;
-      case "/inscription/etude":
+      case "/eleve/inscription/etude":
         return <ÉtudeForm {...propsFormulaire} />;
-      case "/inscription/formations":
+      case "/eleve/inscription/formations":
         return <FormationsForm {...propsFormulaire} />;
       default:
         return null;
@@ -79,9 +79,9 @@ const ÉlèveInscriptionPage = () => {
 
   const préambuleÀAfficher = () => {
     switch (étapeActuelle?.url) {
-      case "/inscription/domaines":
+      case "/eleve/inscription/domaines":
         return i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN;
-      case "/inscription/interets":
+      case "/eleve/inscription/interets":
         return i18n.ÉLÈVE.INTÊRETS.SÉLECTIONNE_AU_MOINS_UN;
       default:
         return (
