@@ -24,6 +24,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.junit.jupiter.api.Nested
@@ -319,8 +320,22 @@ class RechercheControllerTest(
                                 ),
                             repartitionAdmis =
                                 RepartitionAdmis(
-                                    total = 12,
-                                    parBaccalaureat = listOf(),
+                                    total = 6915,
+                                    parBaccalaureat =
+                                        listOf(
+                                            TotalAdmisPourUnBaccalaureat(
+                                                baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                                                nombreAdmis = 6677,
+                                            ),
+                                            TotalAdmisPourUnBaccalaureat(
+                                                baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                                                nombreAdmis = 15,
+                                            ),
+                                            TotalAdmisPourUnBaccalaureat(
+                                                baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                                                nombreAdmis = 223,
+                                            ),
+                                        ),
                                 ),
                         ),
                 )
@@ -392,8 +407,30 @@ class RechercheControllerTest(
                               }
                             ],
                             "repartitionAdmisAnneePrecedente": {
-                              "total": 12,
-                              "parBaccalaureat": []
+                              "total": 6915,
+                              "parBaccalaureat": [
+                                {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "nombreAdmis": 6677
+                                },
+                                {
+                                  "baccalaureat": {
+                                    "id": "STMG",
+                                    "nom": "Série STMG"
+                                  },
+                                  "nombreAdmis": 15
+                                },
+                                {
+                                  "baccalaureat": {
+                                    "id": "STI2D",
+                                    "nom": "Série STI2D"
+                                  },
+                                  "nombreAdmis": 223
+                                }
+                              ]
                             },
                             "liens": [],
                             "villes": [

@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import org.springframework.stereotype.Service
 
@@ -29,15 +30,24 @@ class StatistiquesDesAdmisService(
         )
     }
 
-    fun recupererRepartitionAdmisDUneFormation(frequencesCumulees: Map<Baccalaureat, List<Int>>): RepartitionAdmis {
+    private fun recupererRepartitionAdmisDUneFormation(frequencesCumulees: Map<Baccalaureat, List<Int>>): RepartitionAdmis {
+        var totalAdmis = 0
+        val repartitionsParBaccalaureats =
+            frequencesCumulees.map {
+                val totalAdmisDuBaccalaureat = it.value.lastOrNull() ?: 0
+                totalAdmis += totalAdmisDuBaccalaureat
+                TotalAdmisPourUnBaccalaureat(
+                    baccalaureat = it.key,
+                    nombreAdmis = totalAdmisDuBaccalaureat,
+                )
+            }
         return RepartitionAdmis(
-            total = 0,
-            parBaccalaureat =
-                listOf(),
+            total = totalAdmis,
+            parBaccalaureat = repartitionsParBaccalaureats,
         )
     }
 
-    fun recupererMoyenneGeneraleDesAdmisDUneFormation(
+    private fun recupererMoyenneGeneraleDesAdmisDUneFormation(
         idBaccalaureat: String?,
         frequencesCumulees: Map<Baccalaureat, List<Int>>,
         classe: ChoixNiveau?,

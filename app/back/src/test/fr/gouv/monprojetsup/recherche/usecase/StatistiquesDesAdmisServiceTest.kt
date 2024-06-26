@@ -2,8 +2,11 @@ package fr.gouv.monprojetsup.recherche.usecase
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -163,6 +166,26 @@ class StatistiquesDesAdmisServiceTest {
             Centile(95, 18.5f),
         )
 
+    private val repartitionAdmis =
+        RepartitionAdmis(
+            total = 6915,
+            parBaccalaureat =
+                listOf(
+                    TotalAdmisPourUnBaccalaureat(
+                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                        nombreAdmis = 6677,
+                    ),
+                    TotalAdmisPourUnBaccalaureat(
+                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                        nombreAdmis = 15,
+                    ),
+                    TotalAdmisPourUnBaccalaureat(
+                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                        nombreAdmis = 223,
+                    ),
+                ),
+        )
+
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
@@ -172,7 +195,7 @@ class StatistiquesDesAdmisServiceTest {
     }
 
     @Test
-    fun `doit retourner la moyenne générale avec la gauche de l'intervalle pour la 1ere partie et la droite pour la 2nde`() {
+    fun `doit retourner la moyenne générale à la gauche de l'intervalle pour la 1ere partie et la droite pour la 2nde partie`() {
         // When
         val resultat =
             moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
@@ -183,17 +206,22 @@ class StatistiquesDesAdmisServiceTest {
 
         // Then
         val attendu =
-            MoyenneGeneraleDesAdmis(
-                baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
-                centiles =
-                    listOf(
-                        Centile(centile = 5, note = 13f),
-                        Centile(centile = 25, note = 14.5f),
-                        Centile(centile = 75, note = 17.5f),
-                        Centile(centile = 95, note = 18.5f),
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis =
+                    MoyenneGeneraleDesAdmis(
+                        baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                        centiles =
+                            listOf(
+                                Centile(centile = 5, note = 13f),
+                                Centile(centile = 25, note = 14.5f),
+                                Centile(centile = 75, note = 17.5f),
+                                Centile(centile = 95, note = 18.5f),
+                            ),
                     ),
+                repartitionAdmis = repartitionAdmis,
             )
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -208,17 +236,21 @@ class StatistiquesDesAdmisServiceTest {
 
         // Then
         val attendu =
-            MoyenneGeneraleDesAdmis(
-                baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
-                centiles =
-                    listOf(
-                        Centile(centile = 5, note = 13f),
-                        Centile(centile = 25, note = 14.5f),
-                        Centile(centile = 75, note = 17.5f),
-                        Centile(centile = 95, note = 18.5f),
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis =
+                    MoyenneGeneraleDesAdmis(
+                        baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                        centiles =
+                            listOf(
+                                Centile(centile = 5, note = 13f),
+                                Centile(centile = 25, note = 14.5f),
+                                Centile(centile = 75, note = 17.5f),
+                                Centile(centile = 95, note = 18.5f),
+                            ),
                     ),
+                repartitionAdmis = repartitionAdmis,
             )
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @ParameterizedTest
@@ -233,7 +265,12 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = null,
+                repartitionAdmis = repartitionAdmis,
+            )
+        assertThat(resultat).isEqualTo(attendu)
     }
 
     @Test
@@ -247,8 +284,12 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses),
+                repartitionAdmis = repartitionAdmis,
+            )
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -262,8 +303,12 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses),
+                repartitionAdmis = repartitionAdmis,
+            )
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -277,8 +322,12 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        val attendu = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses)
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = MoyenneGeneraleDesAdmis(baccalaureat = null, centiles = centilesTousBacConfonduses),
+                repartitionAdmis = repartitionAdmis,
+            )
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -344,17 +393,31 @@ class StatistiquesDesAdmisServiceTest {
 
         // Then
         val attendu =
-            MoyenneGeneraleDesAdmis(
-                baccalaureat = null,
-                centiles =
-                    listOf(
-                        Centile(centile = 5, note = 7.5f),
-                        Centile(centile = 25, note = 11.5f),
-                        Centile(centile = 75, note = 14.5f),
-                        Centile(centile = 95, note = 16f),
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis =
+                    MoyenneGeneraleDesAdmis(
+                        baccalaureat = null,
+                        centiles =
+                            listOf(
+                                Centile(centile = 5, note = 7.5f),
+                                Centile(centile = 25, note = 11.5f),
+                                Centile(centile = 75, note = 14.5f),
+                                Centile(centile = 95, note = 16f),
+                            ),
+                    ),
+                repartitionAdmis =
+                    RepartitionAdmis(
+                        total = 15,
+                        parBaccalaureat =
+                            listOf(
+                                TotalAdmisPourUnBaccalaureat(
+                                    baccalaureat = baccalaureat,
+                                    nombreAdmis = 15,
+                                ),
+                            ),
                     ),
             )
-        assertThat(resultat.moyenneGeneraleDesAdmis).usingRecursiveComparison().isEqualTo(attendu)
+        assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
     @Test
@@ -376,7 +439,16 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = null,
+                repartitionAdmis =
+                    RepartitionAdmis(
+                        total = 0,
+                        parBaccalaureat = listOf(TotalAdmisPourUnBaccalaureat(baccalaureat = baccalaureat, nombreAdmis = 0)),
+                    ),
+            )
+        assertThat(resultat).isEqualTo(attendu)
     }
 
     @Test
@@ -395,6 +467,11 @@ class StatistiquesDesAdmisServiceTest {
             )
 
         // Then
-        assertThat(resultat.moyenneGeneraleDesAdmis).isNull()
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = null,
+                repartitionAdmis = RepartitionAdmis(total = 0, parBaccalaureat = emptyList()),
+            )
+        assertThat(resultat).isEqualTo(attendu)
     }
 }
