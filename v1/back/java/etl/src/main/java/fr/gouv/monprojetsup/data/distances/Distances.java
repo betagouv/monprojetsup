@@ -1,14 +1,13 @@
 package fr.gouv.monprojetsup.data.distances;
 
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.data.model.cities.Coords;
 import fr.gouv.monprojetsup.data.model.cities.Distance;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
-import fr.gouv.parcoursup.carte.modele.modele.Etablissement;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

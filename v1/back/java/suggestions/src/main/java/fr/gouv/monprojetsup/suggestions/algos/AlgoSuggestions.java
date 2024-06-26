@@ -316,7 +316,9 @@ public class AlgoSuggestions {
             String key = FILIERE_PREFIX + filiere.gFlCod;
             if (filiere.apprentissage) {
                 AlgoSuggestions.apprentissage.add(key);
-                AlgoSuggestions.apprentissage.add(FILIERE_PREFIX + filiere.gFlCodeFi);
+                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
+                AlgoSuggestions.apprentissage.add(origKey);
+                AlgoSuggestions.apprentissage.add(flGroups.getOrDefault(origKey, origKey));
             }
         });
 
@@ -423,7 +425,7 @@ public class AlgoSuggestions {
 
         //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
         Set<String> filActives = backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toSet());
-        Set<String> toErase = edgesKeys.edges().keySet().stream().filter(
+        Set<String> toErase = edgesKeys.keys().stream().filter(
                 s -> s.startsWith(FILIERE_PREFIX) && !filActives.contains(s)
         ).collect(Collectors.toSet());
         //suppression des filières en app couvertes par une filière sans app,

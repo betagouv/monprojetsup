@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.model;
 
 import fr.gouv.monprojetsup.data.Constants;
 import lombok.Getter;
+import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,15 @@ public final class Edges {
     private final @NotNull Map<String, Map<String, Double>> backEdges = new HashMap<>();
 
     private boolean cleanupKeys = true;//defaults to true for not creating problems in front
+
+    public Edges() {
+    }
+
+    public Edges(Edges edges) {
+        edges.edges.forEach((k, m) -> this.edges.put(k, new HashMap<>(m)));
+        edges.backEdges.forEach((k, m) -> this.backEdges.put(k, new HashMap<>(m)));
+        this.cleanupKeys = edges.cleanupKeys;
+    }
 
     public void put(String a, Collection<String> bs) {
         bs.forEach(b -> this.put(a, b, true, 1.0));
@@ -182,8 +192,12 @@ public final class Edges {
     public @NotNull Map<String, Set<String>> edges() {
         return edges.entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
-                e -> e.getValue().keySet()
+                e -> Collections.unmodifiableSet(e.getValue().keySet())
         ));
+    }
+    public @NotNull Set<String> keys() {
+        //Returns an unmodifiable view of the keyset of edges
+        return Collections.unmodifiableSet(edges.keySet());
     }
 
     @Override
@@ -262,7 +276,7 @@ public final class Edges {
      * the specifics inherit from the generics
      *
      * @param specificToGeneric
-     * @param laxToPassMetiersPenalty
+     * @param coef
      */
     public void addEdgesFromMoreGenericItem(Map<String, String> specificToGeneric, double coef) {
 
@@ -329,5 +343,17 @@ public final class Edges {
         edges.values().forEach(m -> m.keySet().removeAll(toRemove));
         backEdges.values().forEach(m -> m.keySet().removeAll(toRemove));
 
+    }
+
+    public Map<String, Set<String>> minus(Edges edgesMetiersFilieres) {
+        val toRemove = edgesMetiersFilieres.edges();
+        Map<String, Set<String>> result = new TreeMap<>();
+        edges.forEach((s, stringDoubleMap) -> {
+            Set<String> toRemove2 = toRemove.getOrDefault(s, Set.of());
+            Set<String> newSet = new TreeSet<>(stringDoubleMap.keySet());
+            newSet.removeAll(toRemove2);
+            result.put(s, newSet);
+        });
+        return result;
     }
 }

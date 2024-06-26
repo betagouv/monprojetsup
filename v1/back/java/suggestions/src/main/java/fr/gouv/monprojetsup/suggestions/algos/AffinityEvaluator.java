@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
@@ -33,7 +34,7 @@ public class AffinityEvaluator {
 
     public static final int MAX_DISTANCE = 3;
     private static final double MULTIPLIER_FOR_UNFITTED_NOTES = 0.1;
-    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.0;
+    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.001;
 
     private static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
 
@@ -456,7 +457,7 @@ public class AffinityEvaluator {
 
 
     private double getBonusDuree(String fl, List<Paire<Double, Explanation>> expl, double weight) {
-        if (pf.duree() == null) return 0.0;
+        if (pf.duree() == null) return Config.NO_MATCH_SCORE;
         int duree = ServerData.backPsupData.getDuree(fl);
         final double result;
         switch (pf.duree().toLowerCase()) {
@@ -698,23 +699,15 @@ public class AffinityEvaluator {
         if (key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
             candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
         } else {
-            candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key).keySet());
-            if (isLas(key)) {
-                String key2 = lasCorrespondance.lasToGeneric().get(key);
-                if (key2 != null) {
-                    candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
-                    candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
-                }
-            }
-            if (reverseFlGroups.containsKey(key)) {
-                candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
-            }
+            candidates.addAll(getCandidatesMetiers(key));
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;
         if (Helpers.isFiliere(key)) {
+            explanations = getExplanations(key).getLeft();
+            /*
             val mainExpl = getExplanations(key).getLeft();
 
             Set<String> keys = ServerData.getFilieresOfGroup(key);
@@ -731,7 +724,7 @@ public class AffinityEvaluator {
                 explanations = new ArrayList<>(mainExpl);
                 explanations.addAll(subExpl);
                 explanations = Explanation.merge(explanations);
-            }
+            }*/
         } else {
             restrictPathesToTarget(key);
             explanations =
@@ -751,5 +744,27 @@ public class AffinityEvaluator {
                 explanations,
                 examples
         );
+    }
+
+    private Map<String,Set<String>> candidatesMetiersCache = new ConcurrentHashMap<>();
+
+    private Set<String> getCandidatesMetiers(String key) {
+        val result = candidatesMetiersCache.get(key);
+        if(result != null) return result;
+        Set<String> candidates = new HashSet<>(
+            onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()
+        );
+        if (isLas(key)) {
+            String key2 = lasCorrespondance.lasToGeneric().get(key);
+            if (key2 != null) {
+                candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
+                candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
+            }
+        }
+        if (reverseFlGroups.containsKey(key)) {
+            candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
+        }
+        candidatesMetiersCache.put(key, candidates);
+        return candidates;
     }
 }
