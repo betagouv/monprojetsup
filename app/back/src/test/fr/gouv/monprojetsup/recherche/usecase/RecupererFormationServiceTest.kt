@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.recherche.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
@@ -42,6 +43,9 @@ class RecupererFormationServiceTest {
 
     @Mock
     lateinit var recupererExplicationsFormationService: RecupererExplicationsFormationService
+
+    @Mock
+    lateinit var statistiquesDesAdmisService: StatistiquesDesAdmisService
 
     @InjectMocks
     lateinit var recupererFormationService: RecupererFormationService
@@ -119,6 +123,14 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl0001")).willReturn(
                 tripletsAffectations,
             )
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = null,
+                    classe = null,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
@@ -157,6 +169,7 @@ class RecupererFormationServiceTest {
                             CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
                             CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
+                    statistiquesDesAdmis = statistiquesDesAdmis,
                 ),
             )
         }
@@ -171,6 +184,14 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
             )
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = null,
+                    classe = null,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl0001")
@@ -228,6 +249,14 @@ class RecupererFormationServiceTest {
                     idFormation = "fl0001",
                 ),
             ).willReturn(explications)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -268,6 +297,7 @@ class RecupererFormationServiceTest {
                             CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
                             CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
+                    statistiquesDesAdmis = statistiquesDesAdmis,
                 ),
             )
         }
@@ -294,6 +324,14 @@ class RecupererFormationServiceTest {
                     idFormation = idFormationParente,
                 ),
             ).willReturn(explications)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormationEnfant)
@@ -334,6 +372,7 @@ class RecupererFormationServiceTest {
                             CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
                             CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
+                    statistiquesDesAdmis = statistiquesDesAdmis,
                 ),
             )
         }
@@ -356,6 +395,14 @@ class RecupererFormationServiceTest {
                     idFormation = "fl00011",
                 ),
             ).willReturn(explications)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl00011",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00011")
@@ -383,6 +430,14 @@ class RecupererFormationServiceTest {
                     idFormation = "fl0002",
                 ),
             ).willReturn(explications)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl0002",
+                ),
+            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0002")
@@ -410,6 +465,15 @@ class RecupererFormationServiceTest {
                     idFormation = "fl00014",
                 ),
             ).willReturn(explications)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl00014",
+                ),
+            ).willReturn(statistiquesDesAdmis)
+
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl00014")
 

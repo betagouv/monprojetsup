@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql
 
 class MoyenneGeneraleAdmisBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
-    lateinit var moyenneGeneraleAdmisBDDRepository: MoyenneGeneraleAdmisBDDRepository
+    lateinit var moyenneGeneraleAdmisBDDRepository: FrequencesCumuleesDesMoyenneDesAdmisBDDRepository
 
     @Test
     @Sql("classpath:moyenne_generale_admis.sql")

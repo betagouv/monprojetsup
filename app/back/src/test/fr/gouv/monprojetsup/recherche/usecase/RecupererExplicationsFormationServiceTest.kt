@@ -13,10 +13,11 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestion.TypeB
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.recherche.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.recherche.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
@@ -26,8 +27,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.mock
-import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -49,7 +48,7 @@ class RecupererExplicationsFormationServiceTest {
     lateinit var domaineRepository: DomaineRepository
 
     @Mock
-    lateinit var moyenneGeneraleDesAdmisService: MoyenneGeneraleDesAdmisService
+    lateinit var moyenneGeneraleDesAdmisService: StatistiquesDesAdmisService
 
     @InjectMocks
     lateinit var recupererExplicationsFormationService: RecupererExplicationsFormationService
@@ -78,10 +77,6 @@ class RecupererExplicationsFormationServiceTest {
     @Test
     fun `dans le cas par défaut, doit retourner par défaut`() {
         // Given
-        val moyenneGeneraleDesAdmis = mock(MoyenneGeneraleDesAdmis::class.java)
-        given(
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation("Générale", "fl0001", ChoixNiveau.TERMINALE),
-        ).willReturn(moyenneGeneraleDesAdmis)
         val explications =
             ExplicationsSuggestion(
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
@@ -114,7 +109,6 @@ class RecupererExplicationsFormationServiceTest {
                         AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
                         AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
                     ),
-                moyenneGeneraleDesAdmis = moyenneGeneraleDesAdmis,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
@@ -123,12 +117,22 @@ class RecupererExplicationsFormationServiceTest {
     fun `doit retourner les explications dureeEtudesPrevue, alternance, specialitesChoisies et moyenneGeneraleDesAdmis`() {
         // Given
         given(
-            moyenneGeneraleDesAdmisService.recupererMoyenneGeneraleDesAdmisDUneFormation(
+            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = "Générale",
                 idFormation = "fl0001",
                 classe = ChoixNiveau.TERMINALE,
             ),
-        ).willReturn(null)
+        ).willReturn(
+            StatistiquesDesAdmis(
+                repartitionAdmis =
+                    RepartitionAdmis(
+                        total = 0,
+                        parBaccalaureat =
+                            listOf(),
+                    ),
+                moyenneGeneraleDesAdmis = null,
+            ),
+        )
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
@@ -141,29 +145,6 @@ class RecupererExplicationsFormationServiceTest {
 
         // Then
         assertThat(resultat).usingRecursiveComparison().isEqualTo(ExplicationsSuggestionDetaillees())
-    }
-
-    @Test
-    fun `quand le baccalaureat est null, doit envoyer null au service de moyenne générale`() {
-        // Given
-        val profilAvecBaccalaureatNull = profil.copy(bac = null)
-        given(
-            suggestionHttpClient.recupererLesExplications(
-                profilEleve = profilAvecBaccalaureatNull,
-                idFormation = "fl0001",
-            ),
-        ).willReturn(ExplicationsSuggestion())
-
-        // When
-        recupererExplicationsFormationService.recupererExplications(profilEleve = profilAvecBaccalaureatNull, idFormation = "fl0001")
-
-        // Then
-        then(moyenneGeneraleDesAdmisService).should().recupererMoyenneGeneraleDesAdmisDUneFormation(
-            idBaccalaureat = null,
-            idFormation = "fl0001",
-            classe = ChoixNiveau.TERMINALE,
-        )
-        then(baccalaureatRepository).shouldHaveNoInteractions()
     }
 
     @Test

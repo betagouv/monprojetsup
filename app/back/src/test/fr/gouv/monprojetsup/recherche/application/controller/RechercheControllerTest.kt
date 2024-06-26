@@ -15,13 +15,15 @@ import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetail
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis
-import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
+import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.recherche.usecase.SuggestionsFormationsService
 import org.junit.jupiter.api.Nested
@@ -239,17 +241,6 @@ class RechercheControllerTest(
                             baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
                             pourcentage = 18,
                         ),
-                    moyenneGeneraleDesAdmis =
-                        MoyenneGeneraleDesAdmis(
-                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
-                            centiles =
-                                listOf(
-                                    Centile(centile = 5, note = 13f),
-                                    Centile(centile = 25, note = 14.5f),
-                                    Centile(centile = 75, note = 17f),
-                                    Centile(centile = 95, note = 18f),
-                                ),
-                        ),
                 )
             val ficheFormation =
                 FicheFormation.FicheFormationPourProfil(
@@ -312,6 +303,21 @@ class RechercheControllerTest(
                             CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
                             CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
                             CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
+                    statistiquesDesAdmis =
+                        StatistiquesDesAdmis(
+                            moyenneGeneraleDesAdmis =
+                                MoyenneGeneraleDesAdmis(
+                                    baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                                    centiles =
+                                        listOf(
+                                            Centile(centile = 5, note = 13f),
+                                            Centile(centile = 25, note = 14.5f),
+                                            Centile(centile = 75, note = 17f),
+                                            Centile(centile = 95, note = 18f),
+                                        ),
+                                ),
+                            repartitionAdmis = RepartitionAdmis(0, listOf()),
                         ),
                 )
             given(recupererFormationService.recupererFormation(unProfil, "fl680002")).willReturn(ficheFormation)
@@ -542,6 +548,11 @@ class RechercheControllerTest(
                             CriteresAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
                             CriteresAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
                             CriteresAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                        ),
+                    statistiquesDesAdmis =
+                        StatistiquesDesAdmis(
+                            repartitionAdmis = RepartitionAdmis(0, listOf()),
+                            moyenneGeneraleDesAdmis = null,
                         ),
                 )
             given(recupererFormationService.recupererFormation(null, "fl680002")).willReturn(ficheFormation)

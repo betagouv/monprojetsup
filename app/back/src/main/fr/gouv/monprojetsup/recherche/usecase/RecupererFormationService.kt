@@ -19,6 +19,7 @@ class RecupererFormationService(
     val tripletAffectationRepository: TripletAffectationRepository,
     val criteresAnalyseCandidatureRepository: CriteresAnalyseCandidatureRepository,
     val recupererExplicationsFormationService: RecupererExplicationsFormationService,
+    val statistiquesDesAdmisService: StatistiquesDesAdmisService,
 ) {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
@@ -31,6 +32,12 @@ class RecupererFormationService(
             criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(
                 valeursCriteresAnalyseCandidature = formation.valeurCriteresAnalyseCandidature,
             ).filterNot { it.pourcentage == 0 }
+        val statistiquesDesAdmis =
+            statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+                idBaccalaureat = profilEleve?.bac,
+                idFormation = formation.id,
+                classe = profilEleve?.classe,
+            )
         return if (profilEleve != null) {
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
             FicheFormation.FicheFormationPourProfil(
@@ -59,6 +66,7 @@ class RecupererFormationService(
                     ),
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = recupererExplicationsFormationService.recupererExplications(profilEleve, formation.id),
+                statistiquesDesAdmis = statistiquesDesAdmis,
             )
         } else {
             FicheFormation.FicheFormationSansProfil(
@@ -73,6 +81,7 @@ class RecupererFormationService(
                 communes = tripletsAffectations.map { it.commune }.distinct(),
                 metiers = formation.metiers,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
+                statistiquesDesAdmis = statistiquesDesAdmis,
             )
         }
     }
