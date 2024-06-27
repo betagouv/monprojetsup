@@ -802,9 +802,6 @@ export function postLoad() {
 
   //create ungroup structure
   createGroupToKeysCorrespondance();
-
-  //create metiers to formatiosn
-  createMetiersToFormations();
 }
 
 export function createKeysForGroups() {
@@ -821,27 +818,6 @@ export function createKeysForGroups() {
   for (const group of data.domainesPro) {
     group.key = "group_domaine_pro_" + i++;
   }
-}
-
-function createMetiersToFormations() {
-  data.liensFormationsMetiers = {};
-  for (const [met, fils] of Object.entries(data.metiersToFormations)) {
-    data.liensFormationsMetiers[met] = fils;
-    for (const key of fils) {
-      if (!(key in data.liensFormationsMetiers)) {
-        data.liensFormationsMetiers[key] = [];
-      }
-      data.liensFormationsMetiers[key].push(met);
-    }
-  }
-}
-
-export function getLiensMetiersFormations(key) {
-  return data.liensFormationsMetiers[key];
-}
-
-export function getLiensSecteursMetiers(key) {
-  return data.secteursToMetiers[key];
 }
 
 export function getAsKeyLabelArray(l) {
