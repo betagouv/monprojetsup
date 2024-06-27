@@ -324,7 +324,7 @@ public class AffinityEvaluator {
         if (percentage >= Config.SEUIL_TYPE_BAC_FULL_MATCH) bonus = 1.0;
         else
             bonus = (percentage - Config.SEUIL_TYPE_BAC_NO_MATCH) / (Config.SEUIL_TYPE_BAC_FULL_MATCH - Config.SEUIL_TYPE_BAC_NO_MATCH);
-        if (expl != null) {
+        if (expl != null && nbAdmisBac != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
             expl.add(
                     new Paire<>(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), pf.bac()))
             );

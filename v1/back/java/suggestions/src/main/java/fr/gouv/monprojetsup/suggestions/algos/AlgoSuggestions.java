@@ -112,9 +112,9 @@ public class AlgoSuggestions {
 
         static {
             quotas = new EnumMap<>(SuggestionDiversityQuota.class);
+            quotas.put(SuggestionDiversityQuota.BAC, 0.9);
             quotas.put(SuggestionDiversityQuota.NOT_SMALL, 0.75);
-            quotas.put(SuggestionDiversityQuota.NOT_BIG, 0.75);
-            quotas.put(SuggestionDiversityQuota.BAC, 0.5);
+            quotas.put(SuggestionDiversityQuota.NOT_BIG, 0.5);
             quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
         }
 
