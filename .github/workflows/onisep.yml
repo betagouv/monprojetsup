@@ -1,0 +1,36 @@
+name: ONISEP Repository
+
+on:
+  workflow_call:
+    secrets:
+      GITLAB_ONISEP_SSH_KEY:
+        required: true
+
+env:
+  REMOTE_BRANCH: ${{ github.ref == 'refs/heads/prod' && 'prod' ||  'integration'  }}
+
+jobs:
+  pushToOnisepRepository:
+    name: Push 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.GITLAB_ONISEP_SSH_KEY }}
+
+    - name: Add repository to known hosts
+      run: ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
+
+    - name: Add ONISEP Repository
+      run: git remote add onisep ${{ vars.GITLAB_ONISEP_REPOSITORY }}
+
+    - name: Fetch ONISEP Repository
+      run: git fetch onisep
+    
+    - name: Push changes to correct branch
+      run: git push --force-with-lease onisep HEAD:${{ env.REMOTE_BRANCH }}
+  

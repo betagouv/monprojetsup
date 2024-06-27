@@ -1,0 +1,25 @@
+name: Main Pipeline
+
+on:
+  push:
+    branches:
+      - prod
+      - demo
+  pull_request:
+
+jobs:
+  checkFrontend: 
+    name: Frontend
+    uses: ./.github/workflows/frontend.yml
+
+  checkBackend: 
+    name: Backend
+    uses: ./.github/workflows/backend.yml
+
+  pushToOnisep: 
+    name: ONISEP Repository
+    if: ${{ github.event_name == 'push' }}
+    needs: [checkFrontend, checkBackend]
+    uses: ./.github/workflows/onisep.yml
+    secrets:
+      GITLAB_ONISEP_SSH_KEY: "${{ secrets.GITLAB_ONISEP_SSH_KEY }}"
