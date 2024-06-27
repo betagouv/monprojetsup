@@ -153,8 +153,8 @@ public class AlgoSuggestions {
         //computing interests of all alive filieres
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
 
-        Map<String, Affinite> affinites = backPsupData.filActives().stream()
-                .map(Constants::gFlCodToFrontId)
+        Map<String, Affinite> affinites =
+                filieresFront.stream()
                 .collect(Collectors.toMap(
                         fl -> flGroups.getOrDefault(fl,fl),
                         affinityEvaluator::getAffinityEvaluation,
@@ -180,10 +180,11 @@ public class AlgoSuggestions {
         //rounding to 6 digits
         double finalMaxScore = maxScore;
         affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
-        return affinites.entrySet().stream()
+        val sorted =  affinites.entrySet().stream()
                 .map(Pair::of)
                 .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite))
                 .toList();
+        return sorted;
     }
 
 
@@ -215,18 +216,25 @@ public class AlgoSuggestions {
 
             Pair<String, Affinite> choice;
 
-            Map<String, Integer> scores = affinities.stream().collect(Collectors.toMap(
+            val candidates = affinities.stream().filter(c -> c.getRight().affinite > 0).toList();
+
+            Map<String, Integer> scores =
+                    candidates.stream()
+                            .collect(Collectors.toMap(
                     Pair::getLeft,
                     p -> p.getRight().getNbQuotasSatisfied(minScoreForQuota)
             ));
 
             int maxScore = scores.values().stream().max(Integer::compareTo).orElse(0);
 
-            choice = affinities.stream()
+            choice = candidates.stream()
                     .filter(a -> scores.getOrDefault(a.getLeft(), 0) >= maxScore)
                     .findFirst().orElse(null);
 
-            if(choice == null) throw new IllegalStateException("No choice found");
+            if(choice == null) {
+                //can happen when all scores are zer
+                choice = affinities.getFirst();
+            }
 
             result.add(Pair.of(choice.getLeft(), choice.getRight().affinite));
             affinities.remove(choice);
