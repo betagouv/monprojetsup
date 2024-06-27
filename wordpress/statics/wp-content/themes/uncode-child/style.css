@@ -1,0 +1,22 @@
+/*
+Theme Name: Uncode Child
+Description: Child theme for Uncode theme
+Author: Undsgn™
+Author URI: http://www.undsgn.com
+Template: uncode
+Version: 1.0.0
+Text Domain: uncode
+*/
+
+
+
+
+@media (max-width: 959px) {
+    .main-container .row-container .row-parent.unequal {
+        padding: 0px !important;
+    }
+	
+	.no-bottom-padding {
+		padding-bottom:0px !important;
+	}
+}
