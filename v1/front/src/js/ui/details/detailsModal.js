@@ -214,12 +214,7 @@ export function getChoiceDetails(
   if (!hideFormations || data.isFiliere(id) || data.isSecteur(id)) {
     //todo: use exemples
     if (exemples === undefined || exemples == []) {
-      exemples = data.isSecteur(id)
-        ? data.getLiensSecteursMetiers(id)
-        : data.getLiensMetiersFormations(id);
-      if (exemples) {
-        exemples.sort((a, b) => 0.5 - Math.random());
-      }
+      exemples == [];
     }
 
     const autres = data.getAsKeyLabelArray(exemples);
