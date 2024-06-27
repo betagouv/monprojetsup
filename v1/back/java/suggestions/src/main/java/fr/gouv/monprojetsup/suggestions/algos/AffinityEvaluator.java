@@ -34,7 +34,8 @@ public class AffinityEvaluator {
 
     public static final int MAX_DISTANCE = 3;
     private static final double MULTIPLIER_FOR_UNFITTED_NOTES = 0.1;
-    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.001;
+    private static final double MULTIPLIER_FOR_UNFITTED_BAC = 0.000;
+    private static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
 
     private static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
 
@@ -315,8 +316,8 @@ public class AffinityEvaluator {
         if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
         Integer nbAdmisTousBac = ServerData.statistiques.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
         Integer nbAdmisBac = ServerData.statistiques.getNbAdmis(grp, pf.bac());
-        if(nbAdmisTousBac != null && nbAdmisBac == null) return Config.NO_MATCH_SCORE;
-        if (nbAdmisBac == null || nbAdmisTousBac == null) return 1.0 - MULTIPLIER_FOR_UNFITTED_BAC;
+        if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
+        if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = 1.0 * nbAdmisBac / nbAdmisTousBac;
         if (percentage <= Config.SEUIL_TYPE_BAC_NO_MATCH) return Config.NO_MATCH_SCORE;
         final double bonus;
