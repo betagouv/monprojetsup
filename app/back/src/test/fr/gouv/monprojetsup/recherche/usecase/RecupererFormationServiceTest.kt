@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.CriteresAnalyseCandidature
 import fr.gouv.monprojetsup.recherche.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.recherche.domain.entity.Lien
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
@@ -64,20 +65,30 @@ class RecupererFormationServiceTest {
             descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
             descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
             formationsAssociees = listOf("fl0010", "fl0012"),
-            liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+            liens =
+                listOf(
+                    Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
+                ),
             metiers =
                 listOf(
                     MetierDetaille(
                         id = "MET_001",
                         nom = "Fleuriste",
                         descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                        liens =
+                            listOf(
+                                Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                            ),
                     ),
                     MetierDetaille(
                         id = "MET_002",
                         nom = "Fleuriste événementiel",
                         descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                        liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                        liens =
+                            listOf(
+                                Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                            ),
                     ),
                 ),
             valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
@@ -145,20 +156,39 @@ class RecupererFormationServiceTest {
                     descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
                     descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
                     descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir sur Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
+                            ),
+                            Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
+                        ),
                     metiers =
                         listOf(
                             MetierDetaille(
                                 id = "MET_001",
                                 nom = "Fleuriste",
                                 descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                             MetierDetaille(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
                                 descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                         ),
                     communes = listOf("Paris", "Marseille", "Caen"),
@@ -271,20 +301,39 @@ class RecupererFormationServiceTest {
                     descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
                     descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
                     descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir sur Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
+                            ),
+                            Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
+                        ),
                     metiersTriesParAffinites =
                         listOf(
                             MetierDetaille(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
                                 descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                             MetierDetaille(
                                 id = "MET_001",
                                 nom = "Fleuriste",
                                 descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                         ),
                     communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
@@ -346,20 +395,39 @@ class RecupererFormationServiceTest {
                     descriptifAttendus = "Il est attendu des candidats de démontrer une solide compréhension des techniques ...",
                     descriptifDiplome = "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du ..",
                     descriptifConseils = "Nous vous conseillons de développer une sensibilité artistique et de rester informé ...",
-                    liens = listOf("https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir sur Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
+                            ),
+                            Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
+                        ),
                     metiersTriesParAffinites =
                         listOf(
                             MetierDetaille(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
                                 descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                             MetierDetaille(
                                 id = "MET_001",
                                 nom = "Fleuriste",
                                 descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                    ),
                             ),
                         ),
                     communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),

@@ -1,10 +1,12 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.entity
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.Type
 
 @Entity
 @Table(name = "metier")
@@ -18,6 +20,10 @@ class MetierEntity {
 
     @Column(name = "descriptif_general", nullable = true)
     var descriptifGeneral: String? = null
+
+    @Type(JsonType::class)
+    @Column(name = "liens", columnDefinition = "jsonb")
+    var liens = arrayListOf<LienEntity>()
 
     fun toMetier() =
         Metier(

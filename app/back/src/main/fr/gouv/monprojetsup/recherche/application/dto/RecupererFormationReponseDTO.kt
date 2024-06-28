@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.recherche.domain.entity.Lien
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
@@ -39,7 +40,7 @@ data class RecupererFormationReponseDTO(
         constructor(ficheFormation: FicheFormation) : this(
             id = ficheFormation.id,
             nom = ficheFormation.nom,
-            idsFormationsAssociees = ficheFormation.formationsAssociees ?: emptyList(),
+            idsFormationsAssociees = ficheFormation.formationsAssociees,
             descriptifFormation = ficheFormation.descriptifGeneral,
             descriptifDiplome = ficheFormation.descriptifDiplome,
             descriptifAttendus = ficheFormation.descriptifAttendus,
@@ -53,7 +54,7 @@ data class RecupererFormationReponseDTO(
                     is FicheFormation.FicheFormationSansProfil -> null
                 },
             descriptifConseils = ficheFormation.descriptifConseils,
-            liens = emptyList(), // TODO #66
+            liens = ficheFormation.liens.map { LiensDTO(it) },
             villes = ficheFormation.communes,
             metiers =
                 ficheFormation.metiers.map { metier ->
@@ -77,7 +78,12 @@ data class RecupererFormationReponseDTO(
         data class LiensDTO(
             val nom: String,
             val url: String,
-        )
+        ) {
+            constructor(lien: Lien) : this(
+                nom = lien.nom,
+                url = lien.url,
+            )
+        }
 
         data class CriteresAnalyseCandidatureDTO(
             val nom: String,
@@ -123,7 +129,7 @@ data class RecupererFormationReponseDTO(
                 id = metier.id,
                 nom = metier.nom,
                 descriptif = metier.descriptif,
-                liens = emptyList(), // TODO #66
+                liens = metier.liens.map { LiensDTO(it) },
             )
         }
 

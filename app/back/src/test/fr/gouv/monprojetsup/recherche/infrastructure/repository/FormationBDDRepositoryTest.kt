@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.recherche.domain.entity.Lien
 import fr.gouv.monprojetsup.recherche.domain.entity.Metier
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import org.assertj.core.api.Assertions.assertThat
@@ -110,7 +111,17 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                     formationsAssociees = listOf("fl0010", "fl0012"),
-                    liens = emptyList(),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir la fiche Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
+                            ),
+                            Lien(
+                                nom = "Voir la fiche France Travail",
+                                url = "https://candidat.francetravail.fr/formations/detail/3139962/true",
+                            ),
+                        ),
                     valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
@@ -135,7 +146,17 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
                                         "en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler " +
                                         "en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                                liens = emptyList(),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                        Lien(
+                                            nom = "Voir la fiche HelloWork",
+                                            url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
+                                        ),
+                                    ),
                             ),
                         ),
                 ),
@@ -176,7 +197,17 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                         "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
                             "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                     formationsAssociees = listOf("fl0010", "fl0012"),
-                    liens = emptyList(),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir la fiche Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
+                            ),
+                            Lien(
+                                nom = "Voir la fiche France Travail",
+                                url = "https://candidat.francetravail.fr/formations/detail/3139962/true",
+                            ),
+                        ),
                     valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
                     metiers =
                         listOf(
@@ -202,7 +233,17 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                         "des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel " +
                                         "peut travailler en boutique, en grande surface, en jardinerie ou en atelier de " +
                                         "composition florale.",
-                                liens = emptyList(),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                        ),
+                                        Lien(
+                                            nom = "Voir la fiche HelloWork",
+                                            url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
+                                        ),
+                                    ),
                             ),
                         ),
                 ),
@@ -232,7 +273,13 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     descriptifDiplome = null,
                     descriptifConseils = "",
                     formationsAssociees = listOf("fl0005"),
-                    liens = emptyList(),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir la fiche Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire",
+                            ),
+                        ),
                     metiers = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
                 ),

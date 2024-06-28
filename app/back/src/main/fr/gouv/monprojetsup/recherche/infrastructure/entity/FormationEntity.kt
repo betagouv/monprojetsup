@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.recherche.infrastructure.entity
 
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -59,6 +60,10 @@ class FormationDetailleeEntity {
     @Type(ListArrayType::class)
     @Column(name = "criteres_analyse", columnDefinition = "int[]")
     lateinit var criteresAnalyse: List<Int>
+
+    @Type(JsonType::class)
+    @Column(name = "liens", columnDefinition = "jsonb")
+    var liens = arrayListOf<LienEntity>()
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
     lateinit var metiers: List<FormationMetierEntity>
