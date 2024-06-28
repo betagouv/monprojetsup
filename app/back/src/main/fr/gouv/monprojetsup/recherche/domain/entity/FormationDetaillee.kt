@@ -7,8 +7,8 @@ data class FormationDetaillee(
     val descriptifAttendus: String?,
     val descriptifDiplome: String?,
     val descriptifConseils: String?,
-    val formationsAssociees: List<String>?,
-    val liens: List<String>?,
+    val formationsAssociees: List<String>,
+    val liens: List<Lien>,
     val valeurCriteresAnalyseCandidature: List<Int>,
     val metiers: List<MetierDetaille>,
 )

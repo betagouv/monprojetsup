@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.recherche.application.controller
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationReponseDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RechercheFormationRequeteDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationReponseDTO
+import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationReponseDTO.FormationDetailleDTO
 import fr.gouv.monprojetsup.recherche.application.dto.RecupererFormationRequeteDTO
 import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.recherche.usecase.RecupererFormationService
@@ -54,7 +55,7 @@ class RechercheController(
                 idFormation = idFormation,
             )
         return RecupererFormationReponseDTO(
-            formation = RecupererFormationReponseDTO.FormationDetailleDTO(ficheFormation),
+            formation = FormationDetailleDTO(ficheFormation),
             explications =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->

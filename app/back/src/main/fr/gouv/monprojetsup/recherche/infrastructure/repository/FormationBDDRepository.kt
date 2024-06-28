@@ -37,17 +37,18 @@ class FormationBDDRepository(
                 nom = formation.label,
                 descriptifGeneral = formation.descriptifGeneral,
                 descriptifAttendus = formation.descriptifAttendus,
-                liens = emptyList(), // TODO #66
+                liens = formation.liens.map { it.toLien() },
                 metiers =
-                    formation.metiers.map { metierEntity ->
+                    formation.metiers.map { formationMetierEntity ->
+                        val metier = formationMetierEntity.metier
                         MetierDetaille(
-                            id = metierEntity.metier.id,
-                            nom = metierEntity.metier.label,
-                            descriptif = metierEntity.metier.descriptifGeneral,
-                            liens = emptyList(), // TODO #66
+                            id = metier.id,
+                            nom = metier.label,
+                            descriptif = metier.descriptifGeneral,
+                            liens = metier.liens.map { it.toLien() },
                         )
                     },
-                formationsAssociees = formation.formationsAssociees,
+                formationsAssociees = formation.formationsAssociees ?: emptyList(),
                 descriptifConseils = formation.descriptifConseils,
                 descriptifDiplome = formation.descriptifDiplome,
                 valeurCriteresAnalyseCandidature = formation.criteresAnalyse,

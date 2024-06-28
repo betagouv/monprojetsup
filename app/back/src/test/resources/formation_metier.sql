@@ -2,28 +2,31 @@ INSERT INTO metier
 VALUES ('MET001',
         'Fleuriste',
         'Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions florales, des plantes et des accessoires de décoration. Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
-        '{}'
-       );
+        '[]'::jsonb);
 
 INSERT INTO metier
 VALUES ('MET002', 'Fleuriste événementiel',
         'Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, des compositions florales, des plantes et des accessoires de décoration pour des événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"
+          },
+          {
+            "nom": "Voir la fiche HelloWork",
+            "url": "https://www.hellowork.com/fr-fr/metiers/fleuriste.html"
+          }
+        ]'::jsonb);
 
 INSERT INTO metier
 VALUES ('MET003', 'Architecte',
         'L architecte est un professionnel du bâtiment qui conçoit des projets de construction ou de rénovation de bâtiments. Il peut travailler sur des projets de construction de maisons individuelles, d immeubles, de bureaux, d écoles, de musées, de centres commerciaux, de stades, etc. L architecte peut travailler en agence d architecture, en bureau d études, en entreprise de construction ou en collectivité territoriale.',
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-metier/metiers/architecte"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-metier/metiers/architecte"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0001',
@@ -35,12 +38,16 @@ VALUES ('fl0001',
         'Le Certificat d''Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du système éducatif français, qui atteste l''acquisition d''une qualification professionnelle dans un métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège et s''adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.',
         '{fl0010, fl0012}',
         ARRAY [0, 50, 0, 50, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
+          },
+          {
+            "nom": "Voir la fiche France Travail",
+            "url": "https://candidat.francetravail.fr/formations/detail/3139962/true"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0002',
@@ -52,12 +59,7 @@ VALUES ('fl0002',
         'Le Baccalauréat Professionnel, communément appelé Bac Pro, est un diplôme national de niveau 4 du système éducatif français. Il est conçu pour préparer les élèves à une insertion rapide et réussie dans le monde du travail tout en leur offrant la possibilité de poursuivre leurs études supérieures s''ils le souhaitent. Le Bac Pro se prépare généralement en trois ans après la classe de troisième, ou en deux ans après l''obtention d''un Certificat d''Aptitude Professionnelle (CAP).',
         '{fl0012}',
         ARRAY [13, 50, 12, 5, 15],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/bac-pro-fleuriste"
-            }'::jsonb
-            ]);
+        '[]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0003',
@@ -69,12 +71,16 @@ VALUES ('fl0003',
         '',
         null,
         ARRAY [12, 5, 15, 13, 50],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/ensa"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/ensa"
+          },
+          {
+            "nom": "Voir les formations",
+            "url": "https://www.culture.gouv.fr/Thematiques/Architecture/Formations-recherche-et-metiers/Les-formations-d-architecte-et-de-paysagiste/Les-cursus-et-les-diplomes/Les-ecoles-nationales-superieures-d-architecture"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0004',
@@ -86,12 +92,12 @@ VALUES ('fl0004',
         null,
         '{fl0005}',
         ARRAY [100, 0, 0, 0, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0005',
@@ -103,12 +109,12 @@ VALUES ('fl0005',
         null,
         null,
         ARRAY [100, 0, 0, 0, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
+          }
+        ]'::jsonb);
 
 INSERT INTO join_metier_formation
 VALUES ('MET001', 'fl0001');

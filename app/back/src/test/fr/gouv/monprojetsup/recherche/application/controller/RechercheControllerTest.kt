@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.recherche.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
 import fr.gouv.monprojetsup.recherche.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.recherche.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.recherche.domain.entity.Lien
 import fr.gouv.monprojetsup.recherche.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.recherche.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.recherche.domain.entity.StatistiquesDesAdmis
@@ -267,8 +268,12 @@ class RechercheControllerTest(
                             "actuelles en matière de design floral pour exceller dans ce domaine.",
                     liens =
                         listOf(
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
+                            Lien(
+                                nom = "Voir sur l'ONISEP",
+                                url =
+                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                        "cycle-pluridisciplinaire-d-etudes-superieures",
+                            ),
                         ),
                     communesTrieesParAffinites =
                         listOf(
@@ -283,7 +288,13 @@ class RechercheControllerTest(
                                 descriptif =
                                     "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
                                         "exploite les données pour modéliser le territoire",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur l'ONISEP",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
+                                        ),
+                                    ),
                             ),
                             MetierDetaille(
                                 id = "MET002",
@@ -432,7 +443,12 @@ class RechercheControllerTest(
                                 }
                               ]
                             },
-                            "liens": [],
+                            "liens": [
+                              {
+                                "nom": "Voir sur l'ONISEP",
+                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                              }
+                            ],
                             "villes": [
                               "Paris  5e  Arrondissement",
                               "Paris 16e  Arrondissement"
@@ -442,7 +458,12 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "liens": []
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                  }
+                                ]
                               },
                               {
                                 "id": "MET002",
@@ -542,7 +563,13 @@ class RechercheControllerTest(
                                 descriptif =
                                     "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
                                         "exploite les données pour modéliser le territoire",
-                                liens = listOf("https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"),
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir sur l'ONISEP",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
+                                        ),
+                                    ),
                             ),
                             MetierDetaille(
                                 id = "MET002",
@@ -571,8 +598,12 @@ class RechercheControllerTest(
                             "actuelles en matière de design floral pour exceller dans ce domaine.",
                     liens =
                         listOf(
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
+                            Lien(
+                                nom = "Voir sur l'ONISEP",
+                                url =
+                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                        "cycle-pluridisciplinaire-d-etudes-superieures",
+                            ),
                         ),
                     communes =
                         listOf(
@@ -653,7 +684,12 @@ class RechercheControllerTest(
                               "total": 12,
                               "parBaccalaureat": []
                             },
-                            "liens": [],
+                            "liens": [
+                              {
+                                "nom": "Voir sur l'ONISEP",
+                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                              }
+                            ],
                             "villes": [
                               "Paris  5e  Arrondissement",
                               "Paris 16e  Arrondissement"
@@ -663,7 +699,12 @@ class RechercheControllerTest(
                                 "id": "MET001",
                                 "nom": "géomaticien/ne",
                                 "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
-                                "liens": []
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                  }
+                                ]
                               },
                               {
                                 "id": "MET002",

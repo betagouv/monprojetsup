@@ -1,4 +1,3 @@
-
 INSERT INTO formation
 VALUES ('fl0001',
         'CAP Fleuriste',
@@ -9,12 +8,12 @@ VALUES ('fl0001',
         'Le Certificat d''Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du système éducatif français, qui atteste l''acquisition d''une qualification professionnelle dans un métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège et s''adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.',
         '{fl0010, fl0012}',
         ARRAY [0, 50, 0, 50, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0002',
@@ -26,12 +25,12 @@ VALUES ('fl0002',
         'Le Baccalauréat Professionnel, communément appelé Bac Pro, est un diplôme national de niveau 4 du système éducatif français. Il est conçu pour préparer les élèves à une insertion rapide et réussie dans le monde du travail tout en leur offrant la possibilité de poursuivre leurs études supérieures s''ils le souhaitent. Le Bac Pro se prépare généralement en trois ans après la classe de troisième, ou en deux ans après l''obtention d''un Certificat d''Aptitude Professionnelle (CAP).',
         '{fl0012}',
         ARRAY [13, 50, 12, 5, 15],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/bac-pro-fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0003',
@@ -43,12 +42,12 @@ VALUES ('fl0003',
         '',
         null,
         ARRAY [12, 5, 15, 13, 50],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/ensa"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/ensa"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0004',
@@ -60,12 +59,12 @@ VALUES ('fl0004',
         null,
         '{fl0005}',
         ARRAY [100, 0, 0, 0, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
-            }'::jsonb
-            ]);
+        ' [
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
+          }
+        ]'::jsonb);
 
 INSERT INTO triplet_affectation
 VALUES ('ta0001', 'Lycée professionnel horticole de Montreuil', 'Montreuil', '93100', '{48.861, 2.443}', 'fl0001');

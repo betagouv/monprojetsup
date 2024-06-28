@@ -18,12 +18,12 @@ VALUES ('fl0001',
         'Le Certificat d''Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du système éducatif français, qui atteste l''acquisition d''une qualification professionnelle dans un métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège et s''adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.',
         '{fl0010, fl0012}',
         ARRAY [0, 50, 0, 50, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
+          }
+        ]'::jsonb);
 
 INSERT INTO formation
 VALUES ('fl0002',
@@ -35,12 +35,12 @@ VALUES ('fl0002',
         'Le Certificat d''Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du système éducatif français, qui atteste l''acquisition d''une qualification professionnelle dans un métier précis. Il est généralement obtenu après une formation de deux ans suivant la fin du collège et s''adresse principalement aux élèves souhaitant entrer rapidement dans la vie active.',
         '{fl0010, fl0012}',
         ARRAY [0, 50, 0, 50, 0],
-        ARRAY [
-            '{
-              "nom": "Voir la fiche Onisep",
-              "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
-            }'::jsonb
-            ]);
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"
+          }
+        ]'::jsonb);
 
 INSERT INTO moyenne_generale_admis
 VALUES ('2023',
