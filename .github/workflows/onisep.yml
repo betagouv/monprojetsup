@@ -6,9 +6,6 @@ on:
       GITLAB_ONISEP_SSH_KEY:
         required: true
 
-env:
-  REMOTE_BRANCH: ${{ github.ref == 'refs/heads/prod' && 'prod' ||  'integration'  }}
-
 jobs:
   pushToOnisepRepository:
     name: Push 
@@ -31,6 +28,10 @@ jobs:
     - name: Fetch ONISEP Repository
       run: git fetch onisep
     
-    - name: Push changes to correct branch
-      run: git push --force-with-lease onisep HEAD:${{ env.REMOTE_BRANCH }}
-  
+    - name: Push changes to prod branch
+      if: ${{ github.ref == 'refs/heads/prod' }}
+      run: git push --force-with-lease onisep HEAD:prod
+    
+    - name: Push changes to prod branch
+      if: ${{ github.ref == 'refs/heads/demo' }}
+      run: git push --force-with-lease onisep HEAD:integration && git push --force-with-lease onisep HEAD:uat && git push --force-with-lease onisep HEAD:preprod
