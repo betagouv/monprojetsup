@@ -1,0 +1,61 @@
+.uncode-star-rating {
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  font-size: 15px;
+  font-family: 'uncodeicon';
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+}
+.uncode-star-rating:before {
+  font-size: inherit;
+  content: "\e946\e946\e946\e946\e946";
+  float: left;
+  opacity: .5;
+  top: 0;
+  left: 0;
+}
+.uncode-star-rating span {
+  overflow: hidden;
+  float: left;
+  height: 0;
+  top: 0;
+  left: 0;
+  position: absolute;
+  padding-top: 1.5em;
+}
+.uncode-star-rating span:before {
+  font-size: inherit;
+  content: "\e946\e946\e946\e946\e946";
+  top: 0;
+  position: absolute;
+  left: 0;
+}
+.uncode-star-rating,
+.uncode_star_rating.display-inline-block:first-child:not([class*=shift_y_]) + .heading-inline {
+  margin-top: 0 !important;
+}
+.gravatar + .uncode_star_rating {
+  margin: -18px 0 9px;
+}
+.uncode_star_rating.display-inline-block + .heading-inline,
+.heading-inline + .uncode_star_rating.display-inline-block {
+  margin-left: 12px;
+}
+.uncode-star-rating-text {
+  margin-top: 0;
+  vertical-align: middle;
+}
+.uncode-star-rating-text.display-inline-block:before {
+  content: "\00a0\00a0";
+  display: inline-block;
+}
+.uncode-star-rating-text.display-block {
+  margin-top: 12px;
+}
+.uncode-star-rating-text.text-lead.display-inline-block {
+  margin-top: 0;
+}
+.uncode-star-rating-text.text-lead.display-block {
+  margin-top: 0.5em;
+}
