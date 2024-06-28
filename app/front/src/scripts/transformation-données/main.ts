@@ -231,7 +231,7 @@ const main = async () => {
         motsClefs.length > 0 ? [...new Set(motsClefs)] : null,
         eds?.recoEDS?.trim() ?? null,
         descriptif?.summaryFormation?.trim() ?? null,
-        formationsAssociées.length > 0 ? formationsAssociées : null,
+        formationsAssociées.length > 0 ? formationsAssociées.filter((fId) => fId !== formationId.trim()) : null,
         critèresAnalyse,
         liens && liens.length > 0 ? JSON.stringify(liens) : JSON.stringify([]),
       ];
