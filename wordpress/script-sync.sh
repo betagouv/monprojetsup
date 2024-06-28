@@ -54,15 +54,19 @@ check_for_changes() {
   fi
 
   if [ "$current_state" != "$previous_state" ]; then
-    echo "$current_state" > "$CACHE_FILE"
     if [ "$previous_state" != "" ]; then
       echo "Changes detected."
-	if find "$DIRECTORY_TO_WATCH" -mmin -1; then
-          submit_pull_request
+	if find "$DIRECTORY_TO_WATCH" -type f -mmin -1 | grep -q '.'; then
+	  echo "Last changes was less than 1 minutes ago. We are waiting for futher changes. Exiting."
         else
-          echo "Last changes was less than 1 minutes ago. Exiting without further action."
+	  echo "$current_state" > "$CACHE_FILE"
+	  submit_pull_request
         fi
+    else
+      echo "Non existing md5 signature for folder. Exiting for this one see you next time."
     fi
+  else
+    echo "No changes. Exiting"
   fi
 }
 
