@@ -53,7 +53,7 @@ class StatistiquesDesAdmisService(
         classe: ChoixNiveau?,
     ): MoyenneGeneraleDesAdmis? {
         return when (classe) {
-            ChoixNiveau.SECONDE, ChoixNiveau.SECONDE_STHR, ChoixNiveau.SECONDE_TMD, ChoixNiveau.NON_RENSEIGNE, null -> null
+            ChoixNiveau.SECONDE, ChoixNiveau.NON_RENSEIGNE, null -> null
             ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererStatistiquesAdmisDUneFormation(idBaccalaureat, frequencesCumulees)
         }
     }

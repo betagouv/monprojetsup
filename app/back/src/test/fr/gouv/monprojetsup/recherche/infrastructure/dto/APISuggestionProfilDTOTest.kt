@@ -56,8 +56,8 @@ class APISuggestionProfilDTOTest {
         private val profilEleveSecondeSTHR =
             ProfilEleve(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
-                classe = ChoixNiveau.SECONDE_STHR,
-                bac = "P",
+                classe = ChoixNiveau.SECONDE,
+                bac = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                 alternance = ChoixAlternance.INDIFFERENT,
                 villesPreferees = listOf("Lyon", "Caen"),
@@ -70,8 +70,8 @@ class APISuggestionProfilDTOTest {
             )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
-                classe = "secSTHR",
-                bac = "P",
+                classe = "sec",
+                bac = "STHR",
                 duree = "court",
                 alternance = "C",
                 preferencesGeographiques = listOf("Lyon", "Caen"),
@@ -87,8 +87,8 @@ class APISuggestionProfilDTOTest {
         private val profilEleveSecondeTMD =
             ProfilEleve(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
-                classe = ChoixNiveau.SECONDE_TMD,
-                bac = "PA",
+                classe = ChoixNiveau.SECONDE,
+                bac = "S2TMD",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.INTERESSE,
                 villesPreferees = emptyList(),
@@ -101,8 +101,8 @@ class APISuggestionProfilDTOTest {
             )
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
-                classe = "secTMD",
-                bac = "PA",
+                classe = "sec",
+                bac = "S2TMD",
                 duree = "long",
                 alternance = "B",
                 preferencesGeographiques = emptyList(),
@@ -119,7 +119,7 @@ class APISuggestionProfilDTOTest {
             ProfilEleve(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
                 classe = ChoixNiveau.PREMIERE,
-                bac = "S2TMD",
+                bac = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
                 villesPreferees = listOf("Lyon", "Paris"),
@@ -133,7 +133,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
                 classe = "prem",
-                bac = "S2TMD",
+                bac = "PA",
                 duree = "",
                 alternance = "A",
                 preferencesGeographiques = listOf("Lyon", "Paris"),
