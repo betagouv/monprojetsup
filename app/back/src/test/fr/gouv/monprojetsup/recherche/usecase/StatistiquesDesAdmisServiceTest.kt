@@ -254,7 +254,7 @@ class StatistiquesDesAdmisServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = ChoixNiveau::class, names = ["SECONDE", "SECONDE_STHR", "SECONDE_TMD", "NON_RENSEIGNE"])
+    @EnumSource(value = ChoixNiveau::class, names = ["SECONDE", "NON_RENSEIGNE"])
     fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
         // When
         val resultat =
