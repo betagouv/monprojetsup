@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.recherche.infrastructure.repository
 
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.recherche.domain.entity.Formation
@@ -165,87 +164,17 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation_metier.sql")
-        fun `Quand la formation est présente dans une formation associée, doit retourner la formation qui groupe`() {
+        fun `Quand la formation est présente dans une formation associée, doit throw une exception NOT FOUND`() {
             // Given
             val idFormation = "fl0010"
 
-            // When
-            val result = formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
-
-            // Then
-            assertThat(result).usingRecursiveComparison().isEqualTo(
-                FormationDetaillee(
-                    id = "fl0001",
-                    nom = "CAP Fleuriste",
-                    descriptifGeneral =
-                        "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires " +
-                            "pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. " +
-                            "Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des " +
-                            "enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet " +
-                            "d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou " +
-                            "en atelier de composition florale.",
-                    descriptifAttendus =
-                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de " +
-                            "la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que " +
-                            "les soins et l'entretien des végétaux.",
-                    descriptifDiplome =
-                        "Le Certificat d'Aptitude Professionnelle (CAP) est un diplôme national de niveau 3 du système " +
-                            "éducatif français, qui atteste l'acquisition d'une qualification professionnelle dans un métier précis. " +
-                            "Il est généralement obtenu après une formation de deux ans suivant la fin du collège et s'adresse " +
-                            "principalement aux élèves souhaitant entrer rapidement dans la vie active.",
-                    descriptifConseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des " +
-                            "tendances actuelles en matière de design floral pour exceller dans ce domaine.",
-                    formationsAssociees = listOf("fl0010", "fl0012"),
-                    liens =
-                        listOf(
-                            Lien(
-                                nom = "Voir la fiche Onisep",
-                                url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste",
-                            ),
-                            Lien(
-                                nom = "Voir la fiche France Travail",
-                                url = "https://candidat.francetravail.fr/formations/detail/3139962/true",
-                            ),
-                        ),
-                    valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
-                    metiers =
-                        listOf(
-                            MetierDetaille(
-                                id = "MET001",
-                                nom = "Fleuriste",
-                                descriptif =
-                                    "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                        "florales, des plantes et des accessoires de décoration. Il peut également " +
-                                        "être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
-                                        "en fonction de l occasion et de leur budget. Le fleuriste peut travailler en " +
-                                        "boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                                liens = emptyList(),
-                            ),
-                            MetierDetaille(
-                                id = "MET002",
-                                nom = "Fleuriste événementiel",
-                                descriptif =
-                                    "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, des " +
-                                        "compositions florales, des plantes et des accessoires de décoration pour des " +
-                                        "événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                        "Il peut également être amené à conseiller ses clients sur le choix des fleurs et " +
-                                        "des plantes en fonction de l occasion et de leur budget. Le fleuriste événementiel " +
-                                        "peut travailler en boutique, en grande surface, en jardinerie ou en atelier de " +
-                                        "composition florale.",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir la fiche Onisep",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                        ),
-                                        Lien(
-                                            nom = "Voir la fiche HelloWork",
-                                            url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
-                                        ),
-                                    ),
-                            ),
-                        ),
+            // When & Then
+            assertThatThrownBy {
+                formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+            }.isEqualTo(
+                MonProjetSupNotFoundException(
+                    code = "RECHERCHE_FORMATION",
+                    msg = "La formation fl0010 n'existe pas",
                 ),
             )
         }
@@ -288,7 +217,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation_metier.sql")
-        fun `Quand la formations n'existe pas, doit throw une erreur`() {
+        fun `Quand la formations n'existe pas, doit throw une erreur NOT FOUND`() {
             // Given
             val idFormation = "fl0007"
 
@@ -305,7 +234,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation_metier.sql")
-        fun `Quand la formations est présente dans plusieurs formations associés, doit throw une erreur`() {
+        fun `Quand la formations est présente dans plusieurs formations associés, doit throw une erreur NOT FOUND`() {
             // Given
             val idFormation = "fl0012"
 
@@ -313,26 +242,45 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             assertThatThrownBy {
                 formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
             }.isEqualTo(
-                MonProjetIllegalStateErrorException(
+                MonProjetSupNotFoundException(
                     code = "RECHERCHE_FORMATION",
-                    msg = "La formation fl0012 existe plusieurs fois entre id et dans les formations équivalentes",
+                    msg = "La formation fl0012 n'existe pas",
                 ),
             )
         }
 
         @Test
         @Sql("classpath:formation_metier.sql")
-        fun `Quand la formations est à la fois présente en tant que formation associée et entité, doit throw une erreur`() {
+        fun `Quand la formations est à la fois présente en tant que formation associée et entité, doit retourner la formation`() {
             // Given
             val idFormation = "fl0005"
 
-            // When & Then
-            assertThatThrownBy {
-                formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
-            }.isEqualTo(
-                MonProjetIllegalStateErrorException(
-                    code = "RECHERCHE_FORMATION",
-                    msg = "La formation fl0005 existe plusieurs fois entre id et dans les formations équivalentes",
+            // When
+            val result = formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+
+            // Then
+            assertThat(result).usingRecursiveComparison().isEqualTo(
+                FormationDetaillee(
+                    id = "fl0005",
+                    nom = "L1 - Géographie",
+                    descriptifGeneral =
+                        "La licence de géographie est un cursus universitaire qui explore les interactions entre les " +
+                            "environnements naturels et les sociétés humaines. Elle couvre des domaines variés comme la cartographie, " +
+                            "la géopolitique, et l'aménagement du territoire. Les diplômés peuvent poursuivre des carrières dans " +
+                            "l'urbanisme, l'environnement, la recherche, et l'enseignement.",
+                    descriptifAttendus = null,
+                    descriptifDiplome = null,
+                    descriptifConseils = "",
+                    formationsAssociees = emptyList(),
+                    liens =
+                        listOf(
+                            Lien(
+                                nom = "Voir la fiche Onisep",
+                                url = "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire",
+                            ),
+                        ),
+                    valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
+                    metiers = emptyList(),
                 ),
             )
         }

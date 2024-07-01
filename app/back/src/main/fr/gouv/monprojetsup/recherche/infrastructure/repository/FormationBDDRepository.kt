@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.recherche.domain.port.FormationRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.Throws
+import kotlin.jvm.optionals.getOrElse
 
 @Repository
 class FormationBDDRepository(
@@ -19,41 +20,34 @@ class FormationBDDRepository(
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
     override fun recupererUneFormationAvecSesMetiers(idFormation: String): FormationDetaillee {
-        val formations = formationDetailleeJPARepository.findByIdOrFormationsAssociees(idFormation)
-        if (formations.size > 1) {
-            throw MonProjetIllegalStateErrorException(
-                code = "RECHERCHE_FORMATION",
-                msg = "La formation $idFormation existe plusieurs fois entre id et dans les formations équivalentes",
-            )
-        } else if (formations.isEmpty()) {
-            throw MonProjetSupNotFoundException(
-                code = "RECHERCHE_FORMATION",
-                msg = "La formation $idFormation n'existe pas",
-            )
-        } else {
-            val formation = formations.first()
-            return FormationDetaillee(
-                id = formation.id,
-                nom = formation.label,
-                descriptifGeneral = formation.descriptifGeneral,
-                descriptifAttendus = formation.descriptifAttendus,
-                liens = formation.liens.map { it.toLien() },
-                metiers =
-                    formation.metiers.map { formationMetierEntity ->
-                        val metier = formationMetierEntity.metier
-                        MetierDetaille(
-                            id = metier.id,
-                            nom = metier.label,
-                            descriptif = metier.descriptifGeneral,
-                            liens = metier.liens.map { it.toLien() },
-                        )
-                    },
-                formationsAssociees = formation.formationsAssociees ?: emptyList(),
-                descriptifConseils = formation.descriptifConseils,
-                descriptifDiplome = formation.descriptifDiplome,
-                valeurCriteresAnalyseCandidature = formation.criteresAnalyse,
-            )
-        }
+        val formation =
+            formationDetailleeJPARepository.findById(idFormation).getOrElse {
+                throw MonProjetSupNotFoundException(
+                    code = "RECHERCHE_FORMATION",
+                    msg = "La formation $idFormation n'existe pas",
+                )
+            }
+        return FormationDetaillee(
+            id = formation.id,
+            nom = formation.label,
+            descriptifGeneral = formation.descriptifGeneral,
+            descriptifAttendus = formation.descriptifAttendus,
+            liens = formation.liens.map { it.toLien() },
+            metiers =
+                formation.metiers.map { formationMetierEntity ->
+                    val metier = formationMetierEntity.metier
+                    MetierDetaille(
+                        id = metier.id,
+                        nom = metier.label,
+                        descriptif = metier.descriptifGeneral,
+                        liens = metier.liens.map { it.toLien() },
+                    )
+                },
+            formationsAssociees = formation.formationsAssociees ?: emptyList(),
+            descriptifConseils = formation.descriptifConseils,
+            descriptifDiplome = formation.descriptifDiplome,
+            valeurCriteresAnalyseCandidature = formation.criteresAnalyse,
+        )
     }
 
     @Transactional(readOnly = true)
