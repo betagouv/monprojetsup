@@ -78,20 +78,23 @@ class RecupererExplicationsFormationServiceTest {
     fun `dans le cas par défaut, doit retourner par défaut`() {
         // Given
         val explications =
-            ExplicationsSuggestion(
-                dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                alternance = ChoixAlternance.TRES_INTERESSE,
-                specialitesChoisies =
-                    listOf(
-                        AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                        AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                        AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+            mapOf(
+                "fl0001" to
+                    ExplicationsSuggestion(
+                        dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                        alternance = ChoixAlternance.TRES_INTERESSE,
+                        specialitesChoisies =
+                            listOf(
+                                AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                                AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                                AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                            ),
                     ),
             )
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
 
@@ -136,9 +139,9 @@ class RecupererExplicationsFormationServiceTest {
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
-        ).willReturn(ExplicationsSuggestion())
+        ).willReturn(mapOf("fl0001" to ExplicationsSuggestion()))
 
         // When
         val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
@@ -151,35 +154,38 @@ class RecupererExplicationsFormationServiceTest {
     fun `doit trier et filtrer les explications géographiques`() {
         // Given
         val explications =
-            ExplicationsSuggestion(
-                geographique =
-                    listOf(
-                        ExplicationGeographique(
-                            ville = "Nantes",
-                            distanceKm = 10,
-                        ),
-                        ExplicationGeographique(
-                            ville = "Nantes",
-                            distanceKm = 85,
-                        ),
-                        ExplicationGeographique(
-                            ville = "Paris",
-                            distanceKm = 2,
-                        ),
-                        ExplicationGeographique(
-                            ville = "Paris",
-                            distanceKm = 1,
-                        ),
-                        ExplicationGeographique(
-                            ville = "Melun",
-                            distanceKm = 12,
-                        ),
+            mapOf(
+                "fl0001" to
+                    ExplicationsSuggestion(
+                        geographique =
+                            listOf(
+                                ExplicationGeographique(
+                                    ville = "Nantes",
+                                    distanceKm = 10,
+                                ),
+                                ExplicationGeographique(
+                                    ville = "Nantes",
+                                    distanceKm = 85,
+                                ),
+                                ExplicationGeographique(
+                                    ville = "Paris",
+                                    distanceKm = 2,
+                                ),
+                                ExplicationGeographique(
+                                    ville = "Paris",
+                                    distanceKm = 1,
+                                ),
+                                ExplicationGeographique(
+                                    ville = "Melun",
+                                    distanceKm = 12,
+                                ),
+                            ),
                     ),
             )
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
 
@@ -212,30 +218,33 @@ class RecupererExplicationsFormationServiceTest {
             Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
         )
         val explications =
-            ExplicationsSuggestion(
-                autoEvaluationMoyenne =
-                    AutoEvaluationMoyenne(
-                        moyenneAutoEvalue = 14.5f,
-                        rangs =
-                            ExplicationsSuggestion.RangsEchellons(
-                                rangEch25 = 12,
-                                rangEch50 = 14,
-                                rangEch75 = 16,
-                                rangEch10 = 10,
-                                rangEch90 = 17,
+            mapOf(
+                "fl0001" to
+                    ExplicationsSuggestion(
+                        autoEvaluationMoyenne =
+                            AutoEvaluationMoyenne(
+                                moyenneAutoEvalue = 14.5f,
+                                rangs =
+                                    ExplicationsSuggestion.RangsEchellons(
+                                        rangEch25 = 12,
+                                        rangEch50 = 14,
+                                        rangEch75 = 16,
+                                        rangEch10 = 10,
+                                        rangEch90 = 17,
+                                    ),
+                                baccalaureatUtilise = "Général",
                             ),
-                        baccalaureatUtilise = "Général",
-                    ),
-                typeBaccalaureat =
-                    TypeBaccalaureat(
-                        nomBaccalaureat = "Général",
-                        pourcentage = 18,
+                        typeBaccalaureat =
+                            TypeBaccalaureat(
+                                nomBaccalaureat = "Général",
+                                pourcentage = 18,
+                            ),
                     ),
             )
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
 
@@ -264,30 +273,33 @@ class RecupererExplicationsFormationServiceTest {
         // Given
         given(baccalaureatRepository.recupererUnBaccalaureatParIdExterne("Général")).willReturn(null)
         val explications =
-            ExplicationsSuggestion(
-                autoEvaluationMoyenne =
-                    AutoEvaluationMoyenne(
-                        moyenneAutoEvalue = 14.5f,
-                        rangs =
-                            ExplicationsSuggestion.RangsEchellons(
-                                rangEch25 = 12,
-                                rangEch50 = 14,
-                                rangEch75 = 16,
-                                rangEch10 = 10,
-                                rangEch90 = 17,
+            mapOf(
+                "fl0001" to
+                    ExplicationsSuggestion(
+                        autoEvaluationMoyenne =
+                            AutoEvaluationMoyenne(
+                                moyenneAutoEvalue = 14.5f,
+                                rangs =
+                                    ExplicationsSuggestion.RangsEchellons(
+                                        rangEch25 = 12,
+                                        rangEch50 = 14,
+                                        rangEch75 = 16,
+                                        rangEch10 = 10,
+                                        rangEch90 = 17,
+                                    ),
+                                baccalaureatUtilise = "Général",
                             ),
-                        baccalaureatUtilise = "Général",
-                    ),
-                typeBaccalaureat =
-                    TypeBaccalaureat(
-                        nomBaccalaureat = "Général",
-                        pourcentage = 18,
+                        typeBaccalaureat =
+                            TypeBaccalaureat(
+                                nomBaccalaureat = "Général",
+                                pourcentage = 18,
+                            ),
                     ),
             )
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
 
@@ -320,11 +332,11 @@ class RecupererExplicationsFormationServiceTest {
                 "T_ITM_1169",
                 "T_ROME_1959553899",
             )
-        val explications = ExplicationsSuggestion(interetsEtDomainesChoisis = interetsEtDomainesChoisis)
+        val explications = mapOf("fl0001" to ExplicationsSuggestion(interetsEtDomainesChoisis = interetsEtDomainesChoisis))
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
         val domaines = listOf(Domaine(id = "T_ITM_1169", nom = "défense nationale"))
@@ -347,11 +359,11 @@ class RecupererExplicationsFormationServiceTest {
     @Test
     fun `doit retourner les formations similaires`() {
         // Given
-        val explications = ExplicationsSuggestion(formationsSimilaires = listOf("fl1", "fl7"))
+        val explications = mapOf("fl0001" to ExplicationsSuggestion(formationsSimilaires = listOf("fl1", "fl7")))
         given(
             suggestionHttpClient.recupererLesExplications(
                 profilEleve = profil,
-                idFormation = "fl0001",
+                idsFormations = listOf("fl0001"),
             ),
         ).willReturn(explications)
         val formations =

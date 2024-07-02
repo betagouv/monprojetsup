@@ -30,7 +30,7 @@ class RecupererExplicationsFormationService(
         profilEleve: ProfilEleve,
         idFormation: String,
     ): ExplicationsSuggestionDetaillees {
-        val explications = suggestionHttpClient.recupererLesExplications(profilEleve, idFormation)
+        val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
         val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
             explications.interetsEtDomainesChoisis.takeUnless {
                 it.isEmpty()

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-data class AffinitesPourProfil(
+data class SuggestionsPourUnProfil(
     val metiersTriesParAffinites: List<String>,
     val formations: List<FormationAvecSonAffinite>,
 ) {

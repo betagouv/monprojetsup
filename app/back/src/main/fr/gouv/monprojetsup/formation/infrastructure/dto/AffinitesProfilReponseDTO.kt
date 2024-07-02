@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AffinitesProfilReponseDTO(
@@ -12,10 +12,10 @@ data class AffinitesProfilReponseDTO(
     val metiersTriesParAffinites: List<String>,
 ) : APISuggestionReponseDTO() {
     fun toAffinitesPourProfil() =
-        AffinitesPourProfil(
+        SuggestionsPourUnProfil(
             formations =
                 affinites.sortedByDescending { it.affinite }.map {
-                    AffinitesPourProfil.FormationAvecSonAffinite(
+                    SuggestionsPourUnProfil.FormationAvecSonAffinite(
                         idFormation = it.key,
                         tauxAffinite = it.affinite,
                     )
