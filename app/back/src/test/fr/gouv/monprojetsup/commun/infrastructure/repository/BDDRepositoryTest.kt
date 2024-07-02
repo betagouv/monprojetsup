@@ -30,7 +30,6 @@ class BDDRepositoryTest {
             "interet_sous_categorie",
             "domaine",
             "moyenne_generale_admis",
-            "repartition_admis",
             "specialite",
             "critere_analyse_candidature",
             "domaine_categorie",
