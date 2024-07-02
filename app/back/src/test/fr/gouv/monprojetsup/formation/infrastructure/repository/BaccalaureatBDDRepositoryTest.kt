@@ -12,6 +12,20 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var baccalaureatBDDRepository: BaccalaureatBDDRepository
 
+    private val bacPro =
+        Baccalaureat(
+            id = "Professionnel",
+            nom = "Série Pro",
+            idExterne = "P",
+        )
+
+    private val bacGeneral =
+        Baccalaureat(
+            id = "Général",
+            nom = "Série Générale",
+            idExterne = "Générale",
+        )
+
     @Nested
     inner class RecupererUnBaccalaureatParIdExterne {
         @Test
@@ -24,13 +38,7 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
             val result = baccalaureatBDDRepository.recupererUnBaccalaureatParIdExterne(idExterne)
 
             // Then
-            val attendu =
-                Baccalaureat(
-                    id = "Professionnelle",
-                    nom = "Série Pro",
-                    idExterne = "P",
-                )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result).isEqualTo(bacPro)
         }
 
         @Test
@@ -48,37 +56,19 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class RecupererUnBaccalaureat {
+    inner class RecupererDesBaccalaureatsParIdsExternes {
         @Test
         @Sql("classpath:baccalaureat.sql")
-        fun `Doit retourner le baccalaureat à partir de son id`() {
+        fun `Doit retourner les baccalaureat à partir de leurs ids en ignorant les inconnus`() {
             // Given
-            val id = "Professionnelle"
+            val idsExternes = listOf("P", "inconnu", "Générale", "Professionnel")
 
             // When
-            val result = baccalaureatBDDRepository.recupererUnBaccalaureat(id)
+            val result = baccalaureatBDDRepository.recupererDesBaccalaureatsParIdsExternes(idsExternes)
 
             // Then
-            val attendu =
-                Baccalaureat(
-                    id = "Professionnelle",
-                    nom = "Série Pro",
-                    idExterne = "P",
-                )
+            val attendu = listOf(bacGeneral, bacPro)
             assertThat(result).isEqualTo(attendu)
-        }
-
-        @Test
-        @Sql("classpath:baccalaureat.sql")
-        fun `Si l'id n'existe pas, doit retourner null`() {
-            // Given
-            val idExterne = "P"
-
-            // When
-            val result = baccalaureatBDDRepository.recupererUnBaccalaureat(idExterne)
-
-            // Then
-            assertThat(result).isNull()
         }
     }
 }

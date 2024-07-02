@@ -15,12 +15,7 @@ class BaccalaureatBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun recupererUnBaccalaureat(id: String): Baccalaureat? {
-        return baccalaureatJPARepository.findById(id).orElse(null)?.toBaccalaureat()
-    }
-
-    @Transactional(readOnly = true)
-    override fun recupererTousLesBaccalaureats(): List<Baccalaureat> {
-        return baccalaureatJPARepository.findAll().map { it.toBaccalaureat() }
+    override fun recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats: List<String>): List<Baccalaureat> {
+        return baccalaureatJPARepository.findAllByIdExterneIn(idsExternesBaccalaureats).map { it.toBaccalaureat() }
     }
 }

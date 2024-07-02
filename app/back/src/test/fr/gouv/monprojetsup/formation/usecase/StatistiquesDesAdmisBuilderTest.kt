@@ -7,23 +7,15 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import org.mockito.BDDMockito.given
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class StatistiquesDesAdmisServiceTest {
-    @Mock
-    lateinit var frequencesCumuleesDesMoyenneDesAdmisRepository: FrequencesCumuleesDesMoyenneDesAdmisRepository
-
-    @InjectMocks
-    lateinit var moyenneGeneraleDesAdmisService: StatistiquesDesAdmisService
+class StatistiquesDesAdmisBuilderTest {
+    private val statistiquesDesAdmisBuilder = StatistiquesDesAdmisBuilder()
 
     private val frequencesCumulees =
         mapOf(
@@ -189,18 +181,15 @@ class StatistiquesDesAdmisServiceTest {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs(idFormation = "fl0001")).willReturn(
-            frequencesCumulees,
-        )
     }
 
     @Test
     fun `doit retourner la moyenne générale à la gauche de l'intervalle pour la 1ere partie et la droite pour la 2nde partie`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Générale",
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -228,9 +217,9 @@ class StatistiquesDesAdmisServiceTest {
     fun `si en premiere ou terminal, doit retourner la moyenne générale`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Générale",
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = ChoixNiveau.PREMIERE,
             )
 
@@ -258,10 +247,29 @@ class StatistiquesDesAdmisServiceTest {
     fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Générale",
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = classe,
+            )
+
+        // Then
+        val attendu =
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis = null,
+                repartitionAdmis = repartitionAdmis,
+            )
+        assertThat(resultat).isEqualTo(attendu)
+    }
+
+    @Test
+    fun `si la classe est null, doit retourner null`() {
+        // When
+        val resultat =
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
+                idBaccalaureat = "Générale",
+                frequencesCumulees = frequencesCumulees,
+                classe = null,
             )
 
         // Then
@@ -277,9 +285,9 @@ class StatistiquesDesAdmisServiceTest {
     fun `si le baccalaureat est null, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = null,
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -296,9 +304,9 @@ class StatistiquesDesAdmisServiceTest {
     fun `si l'id du baccalaureat n'est pas dans la liste retournée, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Pro",
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -315,9 +323,9 @@ class StatistiquesDesAdmisServiceTest {
     fun `si moins de 30 admis pour le baccalaureat dans la formation, doit retourner pour tous les baccalauréats confondus`() {
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "STMG",
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesCumulees,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -380,14 +388,12 @@ class StatistiquesDesAdmisServiceTest {
                         15, // 19,5 - 20
                     ),
             )
-        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
-            frequencesAvecMoinsDe30AdmisAuTotal,
-        )
+
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = baccalaureat.id,
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesAvecMoinsDe30AdmisAuTotal,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -422,19 +428,15 @@ class StatistiquesDesAdmisServiceTest {
 
     @Test
     fun `si la liste de fréquence cumulées est vide, alors doit retourner null`() {
+        // Given
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
-        val frequencesAvecMoinsDe30AdmisAuTotal =
-            mapOf(
-                baccalaureat to emptyList<Int>(),
-            )
-        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
-            frequencesAvecMoinsDe30AdmisAuTotal,
-        )
+        val frequencesAvecMoinsDe30AdmisAuTotal = mapOf(baccalaureat to emptyList<Int>())
+
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = baccalaureat.id,
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesAvecMoinsDe30AdmisAuTotal,
                 classe = ChoixNiveau.TERMINALE,
             )
 
@@ -453,16 +455,15 @@ class StatistiquesDesAdmisServiceTest {
 
     @Test
     fun `si le retour du repository est vide, alors doit retourner null`() {
+        // Given
         val baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
         val frequencesAvecMoinsDe30AdmisAuTotal = emptyMap<Baccalaureat, List<Int>>()
-        given(frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeToutLesBacs("fl0001")).willReturn(
-            frequencesAvecMoinsDe30AdmisAuTotal,
-        )
+
         // When
         val resultat =
-            moyenneGeneraleDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = baccalaureat.id,
-                idFormation = "fl0001",
+                frequencesCumulees = frequencesAvecMoinsDe30AdmisAuTotal,
                 classe = ChoixNiveau.TERMINALE,
             )
 

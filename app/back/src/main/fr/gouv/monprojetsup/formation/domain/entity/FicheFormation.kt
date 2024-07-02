@@ -11,8 +11,8 @@ sealed class FicheFormation(
     open val liens: List<Lien>,
     open val metiers: List<MetierDetaille>,
     open val communes: List<String>,
-    open val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
-    open val statistiquesDesAdmis: StatistiquesDesAdmis,
+    open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
+    open val statistiquesDesAdmis: StatistiquesDesAdmis?,
 ) {
     data class FicheFormationSansProfil(
         override val id: String,
@@ -25,7 +25,7 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val metiers: List<MetierDetaille>,
         override val communes: List<String>,
-        override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
+        override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis,
     ) : FicheFormation(
             id = id,
@@ -51,12 +51,12 @@ sealed class FicheFormation(
         override val descriptifConseils: String?,
         override val formationsAssociees: List<String>,
         override val liens: List<Lien>,
-        override val criteresAnalyseCandidature: List<CriteresAnalyseCandidature>,
-        override val statistiquesDesAdmis: StatistiquesDesAdmis,
+        override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
+        override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<MetierDetaille>,
         val communesTrieesParAffinites: List<String>,
-        val explications: ExplicationsSuggestionDetaillees,
+        val explications: ExplicationsSuggestionDetaillees?,
     ) : FicheFormation(
             id = id,
             nom = nom,

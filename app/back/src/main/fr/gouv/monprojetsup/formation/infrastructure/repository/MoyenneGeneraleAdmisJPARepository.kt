@@ -8,4 +8,9 @@ interface MoyenneGeneraleAdmisJPARepository : JpaRepository<MoyenneGeneraleAdmis
         annee: String,
         idFormation: String,
     ): List<MoyenneGeneraleAdmisEntity>
+
+    fun findAllByAnneeAndIdFormationIn(
+        annee: String,
+        idsFormations: List<String>,
+    ): List<MoyenneGeneraleAdmisEntity>
 }

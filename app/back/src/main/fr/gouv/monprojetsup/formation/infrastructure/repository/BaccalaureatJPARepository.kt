@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface BaccalaureatJPARepository : JpaRepository<BaccalaureatEntity, String> {
     fun findByIdExterne(idExterne: String): BaccalaureatEntity?
+
+    fun findAllByIdExterneIn(idsExterne: List<String>): List<BaccalaureatEntity>
 }

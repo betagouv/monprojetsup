@@ -150,7 +150,7 @@ class ProfilDTO(
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
             alternance = ChoixAlternance.deserialiseApplication(alternance),
             formationsChoisies = formations,
-            villesPreferees = villes?.map { it.nom },
+            communesPreferees = villes?.map { it.nom },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
