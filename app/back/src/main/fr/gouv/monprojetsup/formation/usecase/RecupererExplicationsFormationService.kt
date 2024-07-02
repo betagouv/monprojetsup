@@ -28,6 +28,73 @@ class RecupererExplicationsFormationService(
 ) {
     fun recupererExplications(
         profilEleve: ProfilEleve,
+        idsFormations: List<String>,
+    ): Map<String, ExplicationsSuggestionDetaillees> {
+        val explicationsParFormation: Map<String, ExplicationsSuggestion?> =
+            suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
+        val (domaines: List<Domaine>?, interets: Map<String, InteretSousCategorie>?) =
+            explicationsParFormation.flatMap { it.value?.interetsEtDomainesChoisis ?: emptyList() }.takeUnless {
+                it.isEmpty()
+            }?.let {
+                val domainesEtInteretsDistincts = it.distinct()
+                val domaines = domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)
+                val interets = interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)
+                Pair(domaines, interets)
+            } ?: Pair(emptyList(), emptyMap())
+        val formationsSimilaires =
+            explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() }.takeUnless {
+                it.isEmpty()
+            }?.let {
+                formationRepository.recupererLesNomsDesFormations(it.distinct())
+            } ?: emptyList()
+        val idsExternesBaccalaureats =
+            (
+                explicationsParFormation.mapNotNull { it.value?.autoEvaluationMoyenne?.baccalaureatUtilise } +
+                    explicationsParFormation.mapNotNull { it.value?.typeBaccalaureat?.nomBaccalaureat }
+            ).distinct()
+        val baccalaureats = baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats)
+        return idsFormations.associateWith {
+            val explications: ExplicationsSuggestion? = explicationsParFormation[it]
+            ExplicationsSuggestionDetaillees(
+                geographique = filtrerEtTrier(explicationsGeographique = explications?.geographique ?: emptyList()),
+                dureeEtudesPrevue = explications?.dureeEtudesPrevue,
+                alternance = explications?.alternance,
+                specialitesChoisies = explications?.specialitesChoisies ?: emptyList(),
+                formationsSimilaires =
+                    explications?.formationsSimilaires?.mapNotNull { formationId ->
+                        formationsSimilaires.firstOrNull { formation -> formation.id == formationId }
+                    } ?: emptyList(),
+                interets =
+                    explications?.interetsEtDomainesChoisis?.mapNotNull { interetOuDomaineId ->
+                        interets[interetOuDomaineId]
+                    }?.distinct() ?: emptyList(),
+                domaines =
+                    explications?.interetsEtDomainesChoisis?.mapNotNull { interetOuDomaineId ->
+                        domaines.firstOrNull { domaine -> domaine.id == interetOuDomaineId }
+                    } ?: emptyList(),
+                explicationAutoEvaluationMoyenne =
+                    explications?.autoEvaluationMoyenne?.let { autoEvaluationMoyenne ->
+                        explicationAutoEvaluationMoyenne(
+                            baccalaureats.firstOrNull {
+                                    baccalaureat ->
+                                baccalaureat.idExterne == autoEvaluationMoyenne.baccalaureatUtilise
+                            },
+                            autoEvaluationMoyenne,
+                        )
+                    },
+                explicationTypeBaccalaureat =
+                    explications?.typeBaccalaureat?.let { typeBaccalaureat ->
+                        explicationTypeBaccalaureat(
+                            baccalaureats.firstOrNull { baccalaureat -> baccalaureat.idExterne == typeBaccalaureat.nomBaccalaureat },
+                            typeBaccalaureat,
+                        )
+                    },
+            )
+        }
+    }
+
+    fun recupererExplications(
+        profilEleve: ProfilEleve,
         idFormation: String,
     ): ExplicationsSuggestionDetaillees {
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
@@ -36,7 +103,7 @@ class RecupererExplicationsFormationService(
                 it.isEmpty()
             }?.let {
                 val domaines = domaineRepository.recupererLesDomaines(it)
-                val interets = interetRepository.recupererLesSousCategoriesDInterets(it)
+                val interets = interetRepository.recupererLesSousCategoriesDInterets(it).map { entry -> entry.value }.distinct()
                 Pair(domaines, interets)
             } ?: Pair(emptyList(), emptyList())
         val formationsSimilaires =
@@ -66,27 +133,42 @@ class RecupererExplicationsFormationService(
     private fun recupererExplicationAutoEvaluationMoyenne(explications: ExplicationsSuggestion): ExplicationAutoEvaluationMoyenne? {
         return explications.autoEvaluationMoyenne?.let {
             val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.baccalaureatUtilise)
-            ExplicationAutoEvaluationMoyenne(
-                baccalaureatUtilise = baccalaureat ?: Baccalaureat(it.baccalaureatUtilise, it.baccalaureatUtilise, it.baccalaureatUtilise),
-                moyenneAutoEvalue = it.moyenneAutoEvalue,
-                basIntervalleNotes = it.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
-                hautIntervalleNotes = it.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
-            )
+            explicationAutoEvaluationMoyenne(baccalaureat, it)
         }
     }
+
+    private fun explicationAutoEvaluationMoyenne(
+        baccalaureat: Baccalaureat?,
+        autoEvaluationMoyenne: ExplicationsSuggestion.AutoEvaluationMoyenne,
+    ) = ExplicationAutoEvaluationMoyenne(
+        baccalaureatUtilise =
+            baccalaureat ?: Baccalaureat(
+                id = autoEvaluationMoyenne.baccalaureatUtilise,
+                idExterne = autoEvaluationMoyenne.baccalaureatUtilise,
+                nom = autoEvaluationMoyenne.baccalaureatUtilise,
+            ),
+        moyenneAutoEvalue = autoEvaluationMoyenne.moyenneAutoEvalue,
+        basIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
+        hautIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
+    )
 
     private fun recupererExplicationTypeBaccalaureat(typeBaccalaureat: TypeBaccalaureat?): ExplicationTypeBaccalaureat? {
         return typeBaccalaureat?.let {
             val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.nomBaccalaureat)
-            ExplicationTypeBaccalaureat(
-                baccalaureat =
-                    baccalaureat ?: Baccalaureat(
-                        it.nomBaccalaureat,
-                        it.nomBaccalaureat,
-                        it.nomBaccalaureat,
-                    ),
-                pourcentage = it.pourcentage,
-            )
+            explicationTypeBaccalaureat(baccalaureat, it)
         }
     }
+
+    private fun explicationTypeBaccalaureat(
+        baccalaureat: Baccalaureat?,
+        it: TypeBaccalaureat,
+    ) = ExplicationTypeBaccalaureat(
+        baccalaureat =
+            baccalaureat ?: Baccalaureat(
+                it.nomBaccalaureat,
+                it.nomBaccalaureat,
+                it.nomBaccalaureat,
+            ),
+        pourcentage = it.pourcentage,
+    )
 }

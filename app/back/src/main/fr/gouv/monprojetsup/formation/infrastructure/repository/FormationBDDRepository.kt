@@ -4,63 +4,57 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorExcep
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.formation.domain.entity.Metier
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.formation.infrastructure.entity.FormationDetailleeEntity
+import org.slf4j.Logger
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import kotlin.jvm.Throws
 import kotlin.jvm.optionals.getOrElse
 
 @Repository
 class FormationBDDRepository(
     val formationJPARepository: FormationJPARepository,
     val formationDetailleeJPARepository: FormationDetailleeJPARepository,
+    val logger: Logger,
 ) : FormationRepository {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
     override fun recupererUneFormationAvecSesMetiers(idFormation: String): FormationDetaillee {
-        val formation =
+        val formation: FormationDetailleeEntity =
             formationDetailleeJPARepository.findById(idFormation).getOrElse {
                 throw MonProjetSupNotFoundException(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation $idFormation n'existe pas",
                 )
             }
-        return FormationDetaillee(
-            id = formation.id,
-            nom = formation.label,
-            descriptifGeneral = formation.descriptifGeneral,
-            descriptifAttendus = formation.descriptifAttendus,
-            liens = formation.liens.map { it.toLien() },
-            metiers =
-                formation.metiers.map { formationMetierEntity ->
-                    val metier = formationMetierEntity.metier
-                    MetierDetaille(
-                        id = metier.id,
-                        nom = metier.label,
-                        descriptif = metier.descriptifGeneral,
-                        liens = metier.liens.map { it.toLien() },
-                    )
-                },
-            formationsAssociees = formation.formationsAssociees ?: emptyList(),
-            descriptifConseils = formation.descriptifConseils,
-            descriptifDiplome = formation.descriptifDiplome,
-            valeurCriteresAnalyseCandidature = formation.criteresAnalyse,
-        )
+        return formation.toFormationDetaille()
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): Map<Formation, List<Metier>> {
-        val formations = formationJPARepository.findAllByIdIn(idsFormations)
-        return formations.associate { formationEntity ->
-            formationEntity.toFormation() to formationEntity.metiers.map { it.metier.toMetier() }
+    override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<FormationDetaillee> {
+        val formations = formationDetailleeJPARepository.findAllByIdIn(idsFormations)
+        return idsFormations.mapNotNull { idFormation ->
+            val formation = formations.firstOrNull { formation -> formation.id == idFormation }
+            if (formation == null) {
+                logguerFormationInconnue(idFormation)
+            }
+            formation?.toFormationDetaille()
         }
     }
 
     @Transactional(readOnly = true)
     override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<Formation> {
         val formations = formationJPARepository.findAllByIdIn(idsFormations)
-        return formations.map { Formation(it.id, it.label) }
+        return idsFormations.mapNotNull { idFormation ->
+            val formation = formations.firstOrNull { formation -> formation.id == idFormation }
+            if (formation == null) {
+                logguerFormationInconnue(idFormation)
+            }
+            formation?.toFormation()
+        }
+    }
+
+    private fun logguerFormationInconnue(idFormation: String) {
+        logger.error("La formation $idFormation n'est pas présente en base")
     }
 }

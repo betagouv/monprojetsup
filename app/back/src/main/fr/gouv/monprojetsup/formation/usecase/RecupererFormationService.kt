@@ -4,22 +4,20 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorExcep
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.formation.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
 import org.springframework.stereotype.Service
-import kotlin.math.roundToInt
 
 @Service
 class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
-    val tripletAffectationRepository: TripletAffectationRepository,
-    val criteresAnalyseCandidatureRepository: CriteresAnalyseCandidatureRepository,
+    val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
+    val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     val recupererExplicationsFormationService: RecupererExplicationsFormationService,
-    val statistiquesDesAdmisService: StatistiquesDesAdmisService,
+    val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
+    val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
+    val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
@@ -27,13 +25,9 @@ class RecupererFormationService(
         idFormation: String,
     ): FicheFormation {
         val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)
-        val tripletsAffectations = tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(formation.id)
-        val criteresAnalyseCandidature =
-            criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(
-                valeursCriteresAnalyseCandidature = formation.valeurCriteresAnalyseCandidature,
-            ).filterNot { it.pourcentage == 0 }
+        val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)
         val statistiquesDesAdmis =
-            statistiquesDesAdmisService.recupererStatistiquesAdmisDUneFormation(
+            statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
                 idBaccalaureat = profilEleve?.bac,
                 idFormation = formation.id,
                 classe = profilEleve?.classe,
@@ -50,19 +44,19 @@ class RecupererFormationService(
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
                 tauxAffinite =
-                    calculDuTauxDAffinite(
+                    calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                         formationAvecLeurAffinite = affinitesFormationEtMetier.formations,
                         idFormation = formation.id,
                     ),
                 metiersTriesParAffinites =
-                    TrieParProfilBuilder.trierMetiersParAffinites(
+                    metiersTriesParProfilBuilder.trierMetiersParAffinites(
                         metiers = formation.metiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
                 communesTrieesParAffinites =
-                    TrieParProfilBuilder.getNomCommunesTriesParAffinites(
-                        tripletsAffectation = tripletsAffectations,
-                        communesFavorites = profilEleve.villesPreferees,
+                    recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
+                        idFormation = formation.id,
+                        communesFavorites = profilEleve.communesPreferees,
                     ),
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = recupererExplicationsFormationService.recupererExplications(profilEleve, formation.id),
@@ -78,18 +72,11 @@ class RecupererFormationService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                communes = tripletsAffectations.map { it.commune }.distinct(),
+                communes = recupererCommunesDUneFormationService.recupererNomCommunes(formation.id),
                 metiers = formation.metiers,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,
             )
         }
-    }
-
-    private fun calculDuTauxDAffinite(
-        formationAvecLeurAffinite: List<FormationAvecSonAffinite>,
-        idFormation: String,
-    ): Int {
-        return formationAvecLeurAffinite.firstOrNull { it.idFormation == idFormation }?.tauxAffinite?.let { (it * 100).roundToInt() } ?: 0
     }
 }

@@ -1,9 +1,15 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
-import fr.gouv.monprojetsup.formation.domain.entity.CriteresAnalyseCandidature
+import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
+import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
+import org.mockito.Mockito.mock
+import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
@@ -11,103 +17,148 @@ class CriteresAnalyseCandidatureBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var criteresAnalyseCandidatureBDDRepository: CriteresAnalyseCandidatureBDDRepository
 
-    @Test
-    @Sql("classpath:critere_analyse_candidature.sql")
-    fun `Doit retourner la liste des critères d'analyse de candidature`() {
-        // Given
-        val valeursCriteresAnalyseCandidature = listOf(0, 5, 29, 63, 3)
+    private val criteresAnalyseDeBonneTaille = listOf(0, 5, 29, 63, 3)
+    private val criteresAnalyseTropLongs = listOf(0, 0, 29, 33, 0, 18, 20)
+    private val criteresAnalyseTropCourts = listOf(71, 0, 29)
 
-        // When
-        val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(valeursCriteresAnalyseCandidature)
+    private val attenduCriteresAnalyseDeBonneTaille =
+        listOf(
+            CritereAnalyseCandidature(
+                nom = "Compétences académiques",
+                pourcentage = 0,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                pourcentage = 5,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Résultats académiques",
+                pourcentage = 29,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Savoir-être",
+                pourcentage = 63,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Motivation, connaissance",
+                pourcentage = 3,
+            ),
+        )
+    private val attenduCriteresAnalyseTropLongs =
+        listOf(
+            CritereAnalyseCandidature(
+                nom = "Compétences académiques",
+                pourcentage = 0,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                pourcentage = 0,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Résultats académiques",
+                pourcentage = 29,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Savoir-être",
+                pourcentage = 33,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Motivation, connaissance",
+                pourcentage = 0,
+            ),
+        )
+    private val attenduCriteresAnalyseTropCourts =
+        listOf(
+            CritereAnalyseCandidature(
+                nom = "Compétences académiques",
+                pourcentage = 71,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                pourcentage = 0,
+            ),
+            CritereAnalyseCandidature(
+                nom = "Résultats académiques",
+                pourcentage = 29,
+            ),
+        )
 
-        // Then
-        val attendu =
-            listOf(
-                CriteresAnalyseCandidature(
-                    nom = "Compétences académiques",
-                    pourcentage = 0,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                    pourcentage = 5,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Résultats académiques",
-                    pourcentage = 29,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Savoir-être",
-                    pourcentage = 63,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Motivation, connaissance",
-                    pourcentage = 3,
-                ),
-            )
-        assertThat(result).isEqualTo(attendu)
+    @Nested
+    inner class RecupererLesCriteresDUneFormation {
+        @Test
+        @Sql("classpath:critere_analyse_candidature.sql")
+        fun `Doit retourner la liste des critères d'analyse de candidature`() {
+            // When
+            val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(criteresAnalyseDeBonneTaille)
+
+            // Then
+            assertThat(result).isEqualTo(attenduCriteresAnalyseDeBonneTaille)
+        }
+
+        @Test
+        @Sql("classpath:critere_analyse_candidature.sql")
+        fun `Si un critère manque, doit retourner la liste des critères d'analyse de candidature sans ce dernier`() {
+            // When
+            val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(criteresAnalyseTropLongs)
+
+            // Then
+            assertThat(result).isEqualTo(attenduCriteresAnalyseTropLongs)
+        }
+
+        @Test
+        @Sql("classpath:critere_analyse_candidature.sql")
+        fun `Si une valeur de critère manque, doit retourner la liste des critères d'analyse de candidature sans cette dernière`() {
+            // When
+            val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(criteresAnalyseTropCourts)
+
+            // Then
+            assertThat(result).isEqualTo(attenduCriteresAnalyseTropCourts)
+        }
     }
 
-    @Test
-    @Sql("classpath:critere_analyse_candidature.sql")
-    fun `Si un critère manque, doit retourner la liste des critères d'analyse de candidature sans ce dernier`() {
-        // Given
-        val valeursCriteresAnalyseCandidature = listOf(0, 0, 29, 63, 0, 8)
+    @Nested
+    inner class RecupererLesCriteresDeFormations {
+        private val formation1: FormationDetaillee =
+            mock(FormationDetaillee::class.java).apply {
+                given(id).willReturn("fl1")
+                given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseDeBonneTaille)
+            }
 
-        // When
-        val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(valeursCriteresAnalyseCandidature)
+        private val formation2: FormationDetaillee =
+            mock(FormationDetaillee::class.java).apply {
+                given(id).willReturn("fl2")
+                given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseTropLongs)
+            }
 
-        // Then
-        val attendu =
-            listOf(
-                CriteresAnalyseCandidature(
-                    nom = "Compétences académiques",
-                    pourcentage = 0,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                    pourcentage = 0,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Résultats académiques",
-                    pourcentage = 29,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Savoir-être",
-                    pourcentage = 63,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Motivation, connaissance",
-                    pourcentage = 0,
-                ),
-            )
-        assertThat(result).isEqualTo(attendu)
-    }
+        private val formation3: FormationDetaillee =
+            mock(FormationDetaillee::class.java).apply {
+                given(id).willReturn("fl3")
+                given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseTropCourts)
+            }
 
-    @Test
-    @Sql("classpath:critere_analyse_candidature.sql")
-    fun `Si une valeur de critère manque, doit retourner la liste des critères d'analyse de candidature sans cette dernière`() {
-        // Given
-        val valeursCriteresAnalyseCandidature = listOf(71, 0, 29)
+        @BeforeEach
+        fun setup() {
+            MockitoAnnotations.openMocks(this)
+        }
 
-        // When
-        val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDUneFormation(valeursCriteresAnalyseCandidature)
+        @Test
+        @Sql("classpath:critere_analyse_candidature.sql")
+        fun `Doit retourner la liste des critères d'analyse de candidature pour chaque formation`() {
+            // Given
+            val formations = listOf(formation1, formation2, formation3)
 
-        // Then
-        val attendu =
-            listOf(
-                CriteresAnalyseCandidature(
-                    nom = "Compétences académiques",
-                    pourcentage = 71,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                    pourcentage = 0,
-                ),
-                CriteresAnalyseCandidature(
-                    nom = "Résultats académiques",
-                    pourcentage = 29,
-                ),
-            )
-        assertThat(result).isEqualTo(attendu)
+            // When
+            val result = criteresAnalyseCandidatureBDDRepository.recupererLesCriteresDeFormations(formations)
+
+            // Then
+            val attendu =
+                mapOf(
+                    "fl1" to attenduCriteresAnalyseDeBonneTaille,
+                    "fl2" to attenduCriteresAnalyseTropLongs,
+                    "fl3" to attenduCriteresAnalyseTropCourts,
+                )
+
+            assertThat(result).isEqualTo(attendu)
+        }
     }
 }

@@ -65,7 +65,7 @@ class SuggestionApiHttpClientTest {
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            villesPreferees = listOf("Paris"),
+            communesPreferees = listOf("Paris"),
             specialites = listOf("1001", "1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
@@ -1063,7 +1063,7 @@ class SuggestionApiHttpClientTest {
                     "id=adcf627c-36dd-4df5-897b-159443a6d49c, classe=TERMINALE, bac=Générale, specialites=[1001, 1049], " +
                     "domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
                     "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersChoisis=[MET_123, MET_456], " +
-                    "dureeEtudesPrevue=OPTIONS_OUVERTES, alternance=PAS_INTERESSE, villesPreferees=[Paris], " +
+                    "dureeEtudesPrevue=OPTIONS_OUVERTES, alternance=PAS_INTERESSE, communesPreferees=[Paris], " +
                     "formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
             )
         }

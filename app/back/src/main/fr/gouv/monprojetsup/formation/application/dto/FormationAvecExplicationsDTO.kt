@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.CriteresAnalyseCandidature
+import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.Domaine
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -21,6 +21,15 @@ data class FormationAvecExplicationsDTO(
     val formation: FicheFormationDTO,
     val explications: ExplicationsDTO?,
 ) {
+    constructor(ficheFormation: FicheFormation) : this(
+        formation = FicheFormationDTO(ficheFormation),
+        explications =
+            when (ficheFormation) {
+                is FicheFormation.FicheFormationPourProfil -> ficheFormation.explications?.let { ExplicationsDTO(it) }
+                is FicheFormation.FicheFormationSansProfil -> null
+            },
+    )
+
     data class FicheFormationDTO(
         val id: String,
         val nom: String,
@@ -47,7 +56,7 @@ data class FormationAvecExplicationsDTO(
             moyenneGeneraleDesAdmis =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        ficheFormation.statistiquesDesAdmis.moyenneGeneraleDesAdmis?.let {
+                        ficheFormation.statistiquesDesAdmis?.moyenneGeneraleDesAdmis?.let {
                             MoyenneGeneraleDesAdmisDTO(it)
                         }
 
@@ -66,9 +75,11 @@ data class FormationAvecExplicationsDTO(
                     is FicheFormation.FicheFormationSansProfil -> null
                 },
             repartitionAdmisAnneePrecedente =
-                RepartitionAdmisAnneePrecedenteDTO(
-                    ficheFormation.statistiquesDesAdmis.repartitionAdmis,
-                ),
+                ficheFormation.statistiquesDesAdmis?.repartitionAdmis?.let {
+                    RepartitionAdmisAnneePrecedenteDTO(
+                        it,
+                    )
+                },
             criteresAnalyseCandidature =
                 ficheFormation.criteresAnalyseCandidature.map {
                     CriteresAnalyseCandidatureDTO(it)
@@ -89,10 +100,10 @@ data class FormationAvecExplicationsDTO(
             val nom: String,
             val pourcentage: Int,
         ) {
-            constructor(criteresAnalyseCandidature: CriteresAnalyseCandidature) :
+            constructor(critereAnalyseCandidature: CritereAnalyseCandidature) :
                 this(
-                    criteresAnalyseCandidature.nom,
-                    criteresAnalyseCandidature.pourcentage,
+                    critereAnalyseCandidature.nom,
+                    critereAnalyseCandidature.pourcentage,
                 )
         }
 

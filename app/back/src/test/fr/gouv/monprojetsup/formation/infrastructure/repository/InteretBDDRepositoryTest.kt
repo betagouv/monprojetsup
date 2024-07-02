@@ -31,9 +31,10 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
 
         // Then
         val attendu =
-            listOf(
-                InteretSousCategorie(id = "voyage", nom = "Voyager"),
-                InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues"),
+            mapOf(
+                "T_ROME_326548351" to InteretSousCategorie(id = "voyage", nom = "Voyager"),
+                "T_ROME_934089965" to InteretSousCategorie(id = "voyage", nom = "Voyager"),
+                "T_ROME_1825212206" to InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues"),
             )
         assertThat(result).isEqualTo(attendu)
     }
@@ -48,7 +49,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
         val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
 
         // Then
-        val attendu = emptyList<InteretSousCategorie>()
+        val attendu = emptyMap<String, InteretSousCategorie>()
         assertThat(result).isEqualTo(attendu)
     }
 }

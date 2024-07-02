@@ -1,9 +1,7 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO
-import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.FicheFormationDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsAvecExplicationsDTO
-import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesReponseDTO
 import fr.gouv.monprojetsup.formation.application.dto.ProfilObligatoireRequeteDTO
 import fr.gouv.monprojetsup.formation.application.dto.ProfilOptionnelRequeteDTO
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
@@ -25,24 +23,15 @@ class FormationController(
     @PostMapping("/suggestions")
     fun postSuggestions(
         @RequestBody suggestionsFormationsRequeteDTO: ProfilObligatoireRequeteDTO,
-    ): FormationsCourtesReponseDTO {
-        val formationsPourProfil =
+    ): FormationsAvecExplicationsDTO {
+        val formationsPourProfil: List<FicheFormation.FicheFormationPourProfil> =
             suggestionsFormationsService.suggererFormations(
                 profilEleve = suggestionsFormationsRequeteDTO.profil.toProfil(),
                 deLIndex = 0,
                 aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
             )
-        return FormationsCourtesReponseDTO(
-            formations =
-                formationsPourProfil.map { formationPourProfil ->
-                    FormationsCourtesReponseDTO.FormationDTO(
-                        id = formationPourProfil.id,
-                        nom = formationPourProfil.nom,
-                        tauxAffinite = formationPourProfil.tauxAffinite,
-                        villes = formationPourProfil.communesTrieesParAffinites,
-                        metiers = formationPourProfil.metiersTriesParAffinites,
-                    )
-                },
+        return FormationsAvecExplicationsDTO(
+            formations = formationsPourProfil.map { FormationAvecExplicationsDTO(it) },
         )
     }
 
@@ -56,17 +45,7 @@ class FormationController(
                 profilEleve = profilOptionnelRequeteDTO.profil?.toProfil(),
                 idFormation = idFormation,
             )
-        return FormationAvecExplicationsDTO(
-            formation = FicheFormationDTO(ficheFormation),
-            explications =
-                when (ficheFormation) {
-                    is FicheFormation.FicheFormationPourProfil ->
-                        FormationAvecExplicationsDTO.ExplicationsDTO(
-                            ficheFormation.explications,
-                        )
-                    is FicheFormation.FicheFormationSansProfil -> null
-                },
-        )
+        return FormationAvecExplicationsDTO(ficheFormation)
     }
 
     @PostMapping("/recherche")
