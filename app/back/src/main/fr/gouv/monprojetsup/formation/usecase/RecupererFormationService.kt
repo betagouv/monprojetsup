@@ -2,9 +2,9 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
@@ -39,7 +39,7 @@ class RecupererFormationService(
                 classe = profilEleve?.classe,
             )
         return if (profilEleve != null) {
-            val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
+            val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve)
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,

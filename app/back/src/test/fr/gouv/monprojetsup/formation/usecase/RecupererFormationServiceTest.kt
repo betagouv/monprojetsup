@@ -1,7 +1,5 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
@@ -13,6 +11,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
@@ -249,8 +249,8 @@ class RecupererFormationServiceTest {
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             )
 
-        private val affinitesPourProfil =
-            AffinitesPourProfil(
+        private val suggestionsPourUnProfil =
+            SuggestionsPourUnProfil(
                 metiersTriesParAffinites = listOf("MET_123", "MET_002", "MET_456", "MET_001"),
                 formations =
                     listOf(
@@ -271,7 +271,7 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0001")).willReturn(
                 tripletsAffectations,
             )
-            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
             val explications = mock(ExplicationsSuggestionDetaillees::class.java)
             given(
                 recupererExplicationsFormationService.recupererExplications(
@@ -361,7 +361,7 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00011")).willReturn(
                 tripletsAffectations,
             )
-            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
             val explications = mock(ExplicationsSuggestionDetaillees::class.java)
             given(
                 recupererExplicationsFormationService.recupererExplications(
@@ -396,7 +396,7 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl0002")).willReturn(
                 tripletsAffectations,
             )
-            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
             val explications = mock(ExplicationsSuggestionDetaillees::class.java)
             given(
                 recupererExplicationsFormationService.recupererExplications(
@@ -431,7 +431,7 @@ class RecupererFormationServiceTest {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation("fl00014")).willReturn(
                 tripletsAffectations,
             )
-            given(suggestionHttpClient.recupererLesAffinitees(profilEleve = profil)).willReturn(affinitesPourProfil)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
             val explications = mock(ExplicationsSuggestionDetaillees::class.java)
             given(
                 recupererExplicationsFormationService.recupererExplications(

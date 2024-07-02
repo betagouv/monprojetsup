@@ -22,7 +22,7 @@ class SuggestionsFormationsService(
         deLIndex: Int,
         aLIndex: Int,
     ): List<FormationPourProfil> {
-        val affinitesFormationEtMetier = suggestionHttpClient.recupererLesAffinitees(profilEleve)
+        val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve)
         val idsDesPremieresFormationsTriesParAffinites =
             affinitesFormationEtMetier.formations.sortedByDescending {
                 it.tauxAffinite

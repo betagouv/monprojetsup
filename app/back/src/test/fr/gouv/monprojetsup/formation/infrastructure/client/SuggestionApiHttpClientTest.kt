@@ -2,12 +2,9 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
@@ -17,6 +14,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.AutoE
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.Specialite
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.SpecialitesRepository
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
@@ -33,11 +32,13 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.slf4j.Logger
 import java.net.ConnectException
 
 class SuggestionApiHttpClientTest {
@@ -46,6 +47,9 @@ class SuggestionApiHttpClientTest {
 
     @Mock
     lateinit var specialitesRepository: SpecialitesRepository
+
+    @Mock
+    lateinit var logger: Logger
 
     @Captor
     lateinit var requeteCaptor: ArgumentCaptor<Request>
@@ -79,11 +83,12 @@ class SuggestionApiHttpClientTest {
                 objectMapper = objectMapper,
                 httpClient = httpClient,
                 specialitesRepository = specialitesRepository,
+                logger = logger,
             )
     }
 
     @Nested
-    inner class RecupererLesAffinitees {
+    inner class RecupererLesSuggestions {
         @Test
         fun `doit retourner les AffinitesPourProfil avec les formations triées par affinitées`() {
             // Given
@@ -172,11 +177,11 @@ class SuggestionApiHttpClientTest {
             given(callMock.execute()).willReturn(reponse)
 
             // When
-            val result = suggestionApiHttpClient.recupererLesAffinitees(unProfil)
+            val result = suggestionApiHttpClient.recupererLesSuggestions(unProfil)
 
             // Then
             val attendu =
-                AffinitesPourProfil(
+                SuggestionsPourUnProfil(
                     formations =
                         listOf(
                             FormationAvecSonAffinite(idFormation = "fl680002", tauxAffinite = 0.9f),
@@ -320,7 +325,7 @@ class SuggestionApiHttpClientTest {
                 )
 
             // When
-            suggestionApiHttpClient.recupererLesAffinitees(unProfil)
+            suggestionApiHttpClient.recupererLesSuggestions(unProfil)
 
             // Then
             assertThat(requeteCaptor.value.url.toString()).isEqualTo("http://localhost:8080/suggestions")
@@ -393,7 +398,7 @@ class SuggestionApiHttpClientTest {
 
             // When & Then
             assertThatThrownBy {
-                suggestionApiHttpClient.recupererLesAffinitees(unProfil)
+                suggestionApiHttpClient.recupererLesSuggestions(unProfil)
             }.isEqualTo(
                 MonProjetSupInternalErrorException(
                     code = "ERREUR_API_SUGGESTIONS_CONNEXION",
@@ -468,7 +473,7 @@ class SuggestionApiHttpClientTest {
 
             // When & Then
             assertThatThrownBy {
-                suggestionApiHttpClient.recupererLesAffinitees(unProfil)
+                suggestionApiHttpClient.recupererLesSuggestions(unProfil)
             }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
                 .hasMessage(
                     "Erreur lors de la désérialisation de la réponse de l'API de suggestions pour la classe " +
@@ -612,69 +617,72 @@ class SuggestionApiHttpClientTest {
             given(callMock.execute()).willReturn(reponse)
 
             // When
-            val result = suggestionApiHttpClient.recupererLesExplications(unProfil, "fl2014")
+            val result = suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl2014"))
 
             // Then
             val attendu =
-                ExplicationsSuggestion(
-                    geographique =
-                        listOf(
-                            ExplicationGeographique(
-                                ville = "Nantes",
-                                distanceKm = 1,
-                            ),
-                            ExplicationGeographique(
-                                ville = "Nantes",
-                                distanceKm = 85,
-                            ),
-                            ExplicationGeographique(
-                                ville = "Paris",
-                                distanceKm = 20,
-                            ),
-                            ExplicationGeographique(
-                                ville = "Paris",
-                                distanceKm = 25,
-                            ),
-                        ),
-                    formationsSimilaires = listOf("fl1", "fl7"),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    alternance = ChoixAlternance.TRES_INTERESSE,
-                    specialitesChoisies =
-                        listOf(
-                            AffiniteSpecialite("specialiteA", 12),
-                            AffiniteSpecialite("specialiteB", 10),
-                            AffiniteSpecialite("specialiteC", 89),
-                        ),
-                    typeBaccalaureat =
-                        TypeBaccalaureat(
-                            nomBaccalaureat = "Général",
-                            pourcentage = 18,
-                        ),
-                    autoEvaluationMoyenne =
-                        AutoEvaluationMoyenne(
-                            moyenneAutoEvalue = 14.5f,
-                            rangs =
-                                ExplicationsSuggestion.RangsEchellons(
-                                    rangEch25 = 12,
-                                    rangEch50 = 14,
-                                    rangEch75 = 16,
-                                    rangEch10 = 10,
-                                    rangEch90 = 17,
+                mapOf(
+                    "fl2014" to
+                        ExplicationsSuggestion(
+                            geographique =
+                                listOf(
+                                    ExplicationGeographique(
+                                        ville = "Nantes",
+                                        distanceKm = 1,
+                                    ),
+                                    ExplicationGeographique(
+                                        ville = "Nantes",
+                                        distanceKm = 85,
+                                    ),
+                                    ExplicationGeographique(
+                                        ville = "Paris",
+                                        distanceKm = 20,
+                                    ),
+                                    ExplicationGeographique(
+                                        ville = "Paris",
+                                        distanceKm = 25,
+                                    ),
                                 ),
-                            baccalaureatUtilise = "Général",
-                        ),
-                    interetsEtDomainesChoisis =
-                        listOf(
-                            "T_ROME_731379930",
-                            "T_IDEO2_4812",
-                            "T_ROME_803089798",
+                            formationsSimilaires = listOf("fl1", "fl7"),
+                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                            alternance = ChoixAlternance.TRES_INTERESSE,
+                            specialitesChoisies =
+                                listOf(
+                                    AffiniteSpecialite("specialiteA", 12),
+                                    AffiniteSpecialite("specialiteB", 10),
+                                    AffiniteSpecialite("specialiteC", 89),
+                                ),
+                            typeBaccalaureat =
+                                TypeBaccalaureat(
+                                    nomBaccalaureat = "Général",
+                                    pourcentage = 18,
+                                ),
+                            autoEvaluationMoyenne =
+                                AutoEvaluationMoyenne(
+                                    moyenneAutoEvalue = 14.5f,
+                                    rangs =
+                                        ExplicationsSuggestion.RangsEchellons(
+                                            rangEch25 = 12,
+                                            rangEch50 = 14,
+                                            rangEch75 = 16,
+                                            rangEch10 = 10,
+                                            rangEch90 = 17,
+                                        ),
+                                    baccalaureatUtilise = "Général",
+                                ),
+                            interetsEtDomainesChoisis =
+                                listOf(
+                                    "T_ROME_731379930",
+                                    "T_IDEO2_4812",
+                                    "T_ROME_803089798",
+                                ),
                         ),
                 )
             assertThat(result).isEqualTo(attendu)
         }
 
         @Test
-        fun `doit retourner les explications pour la formation donnée avec a null les données manquantes`() {
+        fun `doit retourner les explications pour les formations données avec a null les données manquantes`() {
             // Given
             val url = "http://localhost:8080/explanations"
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -761,26 +769,30 @@ class SuggestionApiHttpClientTest {
             given(callMock.execute()).willReturn(reponse)
 
             // When
-            val result = suggestionApiHttpClient.recupererLesExplications(unProfil, "fl2014")
+            val result = suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl2014", "fl2015"))
 
             // Then
             val attendu =
-                ExplicationsSuggestion(
-                    geographique =
-                        listOf(
-                            ExplicationGeographique(
-                                ville = "Nantes",
-                                distanceKm = 1,
-                            ),
-                            ExplicationGeographique(
-                                ville = "Nantes",
-                                distanceKm = 85,
-                            ),
+                mapOf(
+                    "fl2014" to
+                        ExplicationsSuggestion(
+                            geographique =
+                                listOf(
+                                    ExplicationGeographique(
+                                        ville = "Nantes",
+                                        distanceKm = 1,
+                                    ),
+                                    ExplicationGeographique(
+                                        ville = "Nantes",
+                                        distanceKm = 85,
+                                    ),
+                                ),
+                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                            interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
                         ),
-                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                    interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
+                    "fl2015" to ExplicationsSuggestion(dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE),
                 )
-            assertThat(result).isEqualTo(attendu)
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
         }
 
         @Test
@@ -884,7 +896,7 @@ class SuggestionApiHttpClientTest {
                 )
 
             // When
-            suggestionApiHttpClient.recupererLesExplications(unProfil, "fl2014")
+            suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl2014"))
 
             // Then
             assertThat(requeteCaptor.value.url.toString()).isEqualTo("http://localhost:8080/explanations")
@@ -949,7 +961,7 @@ class SuggestionApiHttpClientTest {
         }
 
         @Test
-        fun `si la formation n'est pas dans la liste retournée, doit throw MonProjetIllegalStateErrorException`() {
+        fun `si une formation n'est pas dans la liste retournée, doit log une erreur et renvoyer la liste avec ses explications à null`() {
             // Given
             val url = "http://localhost:8080/explanations"
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -1035,14 +1047,24 @@ class SuggestionApiHttpClientTest {
                     .body(reponseBody).build()
             given(callMock.execute()).willReturn(reponse)
 
-            // When & Then
-            assertThatThrownBy {
-                suggestionApiHttpClient.recupererLesExplications(unProfil, "fl1")
-            }.isEqualTo(
-                MonProjetIllegalStateErrorException(
-                    code = "ERREUR_API_SUGGESTIONS_EXPLANATION",
-                    msg = "La clé de la formation fl1 n'est pas présente dans la liste retournée par l'API suggestion",
+            // When
+            val resultat = suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl1"))
+
+            // Then
+            assertThat(resultat).isEqualTo(
+                mapOf(
+                    "fl1" to null,
                 ),
+            )
+            then(
+                logger,
+            ).should().error(
+                "Les formations [fl1] n'ont pas d'explications renvoyées pour le profil élève suivant ProfilEleve(" +
+                    "id=adcf627c-36dd-4df5-897b-159443a6d49c, classe=TERMINALE, bac=Générale, specialites=[1001, 1049], " +
+                    "domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
+                    "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersChoisis=[MET_123, MET_456], " +
+                    "dureeEtudesPrevue=OPTIONS_OUVERTES, alternance=PAS_INTERESSE, villesPreferees=[Paris], " +
+                    "formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
             )
         }
 
@@ -1056,7 +1078,7 @@ class SuggestionApiHttpClientTest {
 
             // When & Then
             assertThatThrownBy {
-                suggestionApiHttpClient.recupererLesExplications(unProfil, "fl1")
+                suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl1"))
             }.isEqualTo(
                 MonProjetSupInternalErrorException(
                     code = "ERREUR_API_SUGGESTIONS_CONNEXION",
@@ -1089,7 +1111,7 @@ class SuggestionApiHttpClientTest {
 
             // When & Then
             assertThatThrownBy {
-                suggestionApiHttpClient.recupererLesExplications(unProfil, "fl1")
+                suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl1"))
             }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
                 .hasMessage(
                     "Erreur lors de la désérialisation de la réponse de l'API de suggestions pour la classe " +

@@ -3,9 +3,9 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SpecialitesRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
@@ -19,6 +19,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
@@ -30,9 +31,10 @@ class SuggestionApiHttpClient(
     private val objectMapper: ObjectMapper,
     private val httpClient: OkHttpClient,
     private val specialitesRepository: SpecialitesRepository,
+    private val logger: Logger,
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesAffinitees(profilEleve: ProfilEleve): AffinitesPourProfil {
+    override fun recupererLesSuggestions(profilEleve: ProfilEleve): SuggestionsPourUnProfil {
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/suggestions",
@@ -45,28 +47,31 @@ class SuggestionApiHttpClient(
     @Throws(MonProjetSupInternalErrorException::class, MonProjetIllegalStateErrorException::class)
     override fun recupererLesExplications(
         profilEleve: ProfilEleve,
-        idFormation: String,
-    ): ExplicationsSuggestion {
+        idsFormations: List<String>,
+    ): Map<String, ExplicationsSuggestion?> {
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/explanations",
                 requeteDTO =
                     ExplicationFormationPourUnProfilRequeteDTO(
                         profil = creerAPISuggestionProfilDTO(profilEleve),
-                        formations = listOf(idFormation),
+                        formations = idsFormations,
                     ),
                 classDeserialise = ExplicationFormationPourUnProfilReponseDTO::class,
-            )
-        val explicationsDeLaFormation =
-            try {
-                reponseDTO.resultats.first { it.cle == idFormation }
-            } catch (e: Exception) {
-                throw MonProjetIllegalStateErrorException(
-                    "ERREUR_API_SUGGESTIONS_EXPLANATION",
-                    "La clé de la formation $idFormation n'est pas présente dans la liste retournée par l'API suggestion",
-                )
+            ).resultats
+        val explications =
+            idsFormations.associateWith {
+                    idFormation ->
+                reponseDTO.firstOrNull { it.cle == idFormation }?.toExplicationsSuggestion()
             }
-        return explicationsDeLaFormation.toExplicationsSuggestion()
+        val formationsSansExplications = explications.filter { it.value == null }
+        if (formationsSansExplications.isNotEmpty()) {
+            logger.error(
+                "Les formations ${formationsSansExplications.map { it.key }} n'ont pas d'explications renvoyées " +
+                    "pour le profil élève suivant $profilEleve",
+            )
+        }
+        return explications
     }
 
     private fun <T : APISuggestionReponseDTO> appelerAPISuggestion(

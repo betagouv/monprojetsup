@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil
-import fr.gouv.monprojetsup.formation.domain.entity.AffinitesPourProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationPourProfil
 import fr.gouv.monprojetsup.formation.domain.entity.Metier
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
@@ -583,7 +583,7 @@ class SuggestionsFormationsServiceTest {
     }
 
     private val affinitesFormationEtMetier =
-        AffinitesPourProfil(
+        SuggestionsPourUnProfil(
             metiersTriesParAffinites = metiersTriesParAffinites,
             formations = formations,
         )
@@ -596,7 +596,7 @@ class SuggestionsFormationsServiceTest {
                 given(this.villesPreferees).willReturn(listOf("Paris"))
             }
 
-        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         val formationsEtLeursMetiers =
             mapOf(
@@ -762,7 +762,7 @@ class SuggestionsFormationsServiceTest {
                 given(this.villesPreferees).willReturn(listOf("Paris", "Caen"))
             }
 
-        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         val formationsEtLeursMetiers =
             mapOf(
@@ -871,11 +871,11 @@ class SuggestionsFormationsServiceTest {
             }
 
         val affinitesFormationEtMetierVides =
-            AffinitesPourProfil(
+            SuggestionsPourUnProfil(
                 metiersTriesParAffinites = emptyList(),
                 formations = emptyList(),
             )
-        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetierVides)
+        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetierVides)
         given(formationRepository.recupererLesFormationsAvecLeursMetiers(emptyList())).willReturn(emptyMap())
         given(tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(emptyList())).willReturn(emptyMap())
 
@@ -895,11 +895,11 @@ class SuggestionsFormationsServiceTest {
             }
 
         val affinitesFormationEtMetier =
-            AffinitesPourProfil(
+            SuggestionsPourUnProfil(
                 metiersTriesParAffinites = metiersTriesParAffinites,
                 formations = formations,
             )
-        given(suggestionHttpClient.recupererLesAffinitees(profilEleve)).willReturn(affinitesFormationEtMetier)
+        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
         // When & Then
         assertThatThrownBy {
