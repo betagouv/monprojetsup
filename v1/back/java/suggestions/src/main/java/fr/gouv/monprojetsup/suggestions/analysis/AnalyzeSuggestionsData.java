@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
@@ -40,6 +42,8 @@ public class AnalyzeSuggestionsData {
 
         AlgoSuggestions.initialize();
 
+        outputDoDiff();
+
         outputMlData();
 
         outputRelatedToHealth();
@@ -55,6 +59,34 @@ public class AnalyzeSuggestionsData {
         outputFormationsSansThemes();
 
 
+    }
+
+    private static void outputDoDiff() {
+        String filename = "tags_recommendations_diff.csv";
+        val datas = CsvTools.readCSV(filename, ',');
+        List<String> headers = List.of("key", "formations", "reco_formations", "common_form", "diff_form_reco", "diff_reco_form");
+        val tt = new TypeToken<List<String>>(){}.getType();
+        try (CsvTools csv = new CsvTools("tags_recommendations_diff_hr.csv", ';')) {
+            csv.appendHeaders(List.of("tag", "reference", "suggestions", "matched","missed", "added"));
+            Gson gson = new Gson();
+            for (Map<String, String> data : datas) {
+                boolean first = true;
+                for(val h : headers) {
+                    String val = data.get(h);
+                    if(first) {
+                        csv.append(val);
+                        first = false;
+                    } else {
+                        List<String> vals = gson.fromJson(val, tt);
+                        val labels = vals.stream().map(ServerData::getDebugLabel).sorted().toList();
+                        csv.append("\"" + String.join("\n", labels) + "\"");
+                    }
+                }
+                csv.newLine();
+            }
+        } catch (IOException e) {
+            log.error("error writing file: {}", filename);
+        }
     }
 
     public record MlData(String key, String label, List<Data> texts) {
