@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.tools.csv;
 
+import com.opencsv.CSVReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -30,14 +31,17 @@ public class CsvTools implements Closeable {
     public static List<Map<String,String>> readCSV(String path, char separator) {
         List<Map<String,String>> data = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line = br.readLine();
-            if(line == null) {
-                throw new RuntimeException("Cannot read csv");
+            CSVReader csvReader = new CSVReader(br, separator);
+
+            String[] values = csvReader.readNext();
+            if(values == null) {
+                throw new RuntimeException("Cannot read csv / empty csv '" + path );
             }
-            String[] header = line.split(String.valueOf(separator), -1);
-            int headerSize = header.length;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(String.valueOf(separator), -1);
+            int headerSize = values.length;
+            String[] header = values;
+
+            // we are going to read data line by line
+            while ((values = csvReader.readNext()) != null) {
                 if(values.length == headerSize) {
                     Map<String,String> entry = new HashMap<>();
                     for(int i = 0; i < headerSize; i++) {
@@ -45,7 +49,7 @@ public class CsvTools implements Closeable {
                     }
                     data.add(entry);
                 } else {
-                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + line);
+                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + values);
                 }
             }
         } catch (IOException ex) {
