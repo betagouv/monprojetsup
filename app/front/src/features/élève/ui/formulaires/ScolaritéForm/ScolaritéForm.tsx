@@ -26,7 +26,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
       noValidate
       onSubmit={mettreÀJourÉlève}
     >
-      <div className="grid grid-flow-row gap-8 md:grid-flow-col">
+      <div className="grid grid-flow-row gap-8 md:grid-cols-[1fr_1fr]">
         <ListeDéroulante
           label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
           obligatoire

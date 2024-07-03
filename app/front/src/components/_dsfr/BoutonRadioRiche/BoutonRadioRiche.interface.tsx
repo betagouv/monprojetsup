@@ -6,11 +6,13 @@ export type BoutonRadioRicheProps = {
     label: string;
     description?: string;
     pictogramme: string;
+    cochéParDéfaut?: boolean;
   }>;
   status?: {
     type: "désactivé" | "erreur" | "succès";
     message?: string;
   };
+  auChangementValeurSélectionnée?: (valeur: string) => void;
   obligatoire?: boolean;
   registerHookForm?: {};
 };

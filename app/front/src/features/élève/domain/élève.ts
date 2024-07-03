@@ -10,7 +10,7 @@ export const duréeÉtudesPrévueVersTraduction = (duréeÉtudesPrévue: Durée�
     case "longue":
       return i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.LONGUE.LABEL;
     default:
-      return i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.OPTIONS_OUVERTES.LABEL;
+      return i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.INDIFFÉRENT.LABEL;
   }
 };
 

@@ -1,4 +1,4 @@
-import { type FormationsFormProps } from "./FormationsForm.interface";
+import { type FormationsFormProps, type SituationFormationsÉlève } from "./FormationsForm.interface";
 import useFormationsForm from "./useFormationsForm";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
@@ -8,9 +8,8 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
   const {
     mettreÀJourÉlève,
     situationFormationsOptions,
-    erreurs,
-    register,
     valeurSituationFormations,
+    setValeurSituationFormations,
     auChangementDesFormationsSélectionnées,
     formationsSuggérées,
     formationsSélectionnéesParDéfaut,
@@ -25,13 +24,9 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
+        auChangementValeurSélectionnée={(valeur) => setValeurSituationFormations(valeur as SituationFormationsÉlève)}
         légende={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
-        obligatoire
         options={situationFormationsOptions}
-        registerHookForm={register("situationFormations")}
-        status={
-          erreurs.situationFormations ? { type: "erreur", message: erreurs.situationFormations.message } : undefined
-        }
       />
       {valeurSituationFormations === "quelques_pistes" && formationsSélectionnéesParDéfaut && (
         <div className="mt-12">

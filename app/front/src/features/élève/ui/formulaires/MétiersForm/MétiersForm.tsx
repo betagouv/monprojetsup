@@ -1,4 +1,4 @@
-import { type MétiersFormProps } from "./MétiersForm.interface";
+import { type MétiersFormProps, type SituationMétiersÉlève } from "./MétiersForm.interface";
 import useMétiersForm from "./useMétiersForm";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
@@ -8,9 +8,8 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
   const {
     mettreÀJourÉlève,
     situationMétiersOptions,
-    erreurs,
-    register,
     valeurSituationMétiers,
+    setValeurSituationMétiers,
     auChangementDesMétiersSélectionnés,
     métiersSuggérés,
     métiersSélectionnésParDéfaut,
@@ -25,12 +24,10 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
+        auChangementValeurSélectionnée={(valeur) => setValeurSituationMétiers(valeur as SituationMétiersÉlève)}
         description={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
         légende={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
-        obligatoire
         options={situationMétiersOptions}
-        registerHookForm={register("situationMétiers")}
-        status={erreurs.situationMétiers ? { type: "erreur", message: erreurs.situationMétiers.message } : undefined}
       />
       {valeurSituationMétiers === "quelques_pistes" && métiersSélectionnésParDéfaut && (
         <div className="mt-12">

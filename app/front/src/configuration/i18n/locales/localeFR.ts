@@ -111,13 +111,7 @@ export const localeFR = {
         LABEL: "Classe actuelle",
         OPTIONS: {
           SECONDE: {
-            LABEL: "Seconde Générale et Technologique",
-          },
-          SECONDE_STHR: {
-            LABEL: "Seconde STHR",
-          },
-          SECONDE_TMD: {
-            LABEL: "Seconde TMD",
+            LABEL: "Seconde",
           },
           PREMIÈRE: {
             LABEL: "Première",
@@ -185,7 +179,7 @@ export const localeFR = {
         LABEL: "Durée des études",
         DESCRIPTION: "Temps d’études que tu envisages après le bac",
         OPTIONS: {
-          OPTIONS_OUVERTES: {
+          INDIFFÉRENT: {
             LABEL: "Je garde mes options ouvertes",
           },
           COURTE: {
@@ -217,19 +211,8 @@ export const localeFR = {
           },
         },
       },
-      SITUATION_VILLES: {
-        LÉGENDE: "Où souhaites-tu étudier ?",
-        OPTIONS: {
-          AUCUNE_IDÉE: {
-            LABEL: "Aucune idée",
-          },
-          QUELQUES_PISTES: {
-            LABEL: "J’ai quelques villes en tête",
-          },
-        },
-      },
       VILLES_ENVISAGÉES: {
-        LABEL: "Villes",
+        LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
       },
