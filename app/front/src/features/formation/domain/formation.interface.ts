@@ -1,3 +1,5 @@
+import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
+
 export type Formation = {
   id: string;
   nom: string;
@@ -38,6 +40,43 @@ export type Formation = {
     }>;
   }>;
   affinité?: number;
+  explications: {
+    villes: Array<{
+      nom: string;
+      distanceKm: number;
+    }>;
+    formationsSimilaires: Array<{
+      id: string;
+      nom: string;
+    }>;
+    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+    alternance: AlternanceÉlève | null;
+    intêretsEtDomainesChoisis: {
+      intêrets: Array<{
+        id: string;
+        nom: string;
+      }>;
+      domaines: Array<{
+        id: string;
+        nom: string;
+      }>;
+    };
+    spécialitésChoisies: Array<{
+      nom: string;
+      pourcentageChoisiAnnéePrécédente: number;
+    }>;
+    typeBaccalaureat: {
+      id: string;
+      nom: string;
+      pourcentageAdmisAnnéePrécédente: number;
+    };
+    autoEvaluationMoyenne: {
+      moyenne: number;
+      médiane: number;
+      idBacUtilisé: string;
+      nomBacUtilisé: string;
+    };
+  } | null;
 };
 
 export type FormationAperçu = {

@@ -119,6 +119,69 @@ export class formationInMemoryRepository implements FormationRepository {
           liens: [],
         },
       ],
+      explications: {
+        villes: [
+          {
+            nom: "Rouen",
+            distanceKm: 12,
+          },
+          {
+            nom: "Marseille",
+            distanceKm: 120,
+          },
+        ],
+        formationsSimilaires: [
+          {
+            id: "fl0002",
+            nom: "Formation similaire 1",
+          },
+        ],
+        duréeÉtudesPrévue: "longue",
+        alternance: "interesse",
+        intêretsEtDomainesChoisis: {
+          intêrets: [
+            {
+              id: "id1",
+              nom: "intêret 1",
+            },
+            {
+              id: "id2",
+              nom: "intêret 2",
+            },
+          ],
+          domaines: [
+            {
+              id: "id1",
+              nom: "domaine 1",
+            },
+            {
+              id: "id2",
+              nom: "domaine 2",
+            },
+          ],
+        },
+        spécialitésChoisies: [
+          {
+            nom: "spécialité 1",
+            pourcentageChoisiAnnéePrécédente: 12,
+          },
+          {
+            nom: "spécialité 2",
+            pourcentageChoisiAnnéePrécédente: 24,
+          },
+        ],
+        typeBaccalaureat: {
+          id: "idBac2",
+          nom: "Bac Général",
+          pourcentageAdmisAnnéePrécédente: 34,
+        },
+        autoEvaluationMoyenne: {
+          moyenne: 12,
+          médiane: 13,
+          idBacUtilisé: "idBac2",
+          nomBacUtilisé: "Bac Général",
+        },
+      },
     },
     {
       id: "fl1000210",
@@ -138,6 +201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002002",
@@ -157,6 +221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002003",
@@ -176,6 +241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002004",
@@ -195,6 +261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002005",
@@ -214,6 +281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002006",
@@ -233,6 +301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002007",
@@ -252,6 +321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002008",
@@ -271,6 +341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002009",
@@ -290,6 +361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002010",
@@ -309,6 +381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002011",
@@ -328,6 +401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002012",
@@ -347,6 +421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002013",
@@ -366,6 +441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002014",
@@ -385,6 +461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002016",
@@ -404,6 +481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002018",
@@ -423,6 +501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002019",
@@ -442,6 +521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002020",
@@ -461,6 +541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002021",
@@ -480,6 +561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002022",
@@ -499,6 +581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002023",
@@ -518,6 +601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002027",
@@ -537,6 +621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002028",
@@ -556,6 +641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002029",
@@ -575,6 +661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002030",
@@ -594,6 +681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002032",
@@ -613,6 +701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002033",
@@ -632,6 +721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002034",
@@ -651,6 +741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002035",
@@ -670,6 +761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002036",
@@ -689,6 +781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002037",
@@ -708,6 +801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002038",
@@ -727,6 +821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002039",
@@ -746,6 +841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002040",
@@ -765,6 +861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002041",
@@ -784,6 +881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002043",
@@ -803,6 +901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002044",
@@ -822,6 +921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002046",
@@ -841,6 +941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002051",
@@ -860,6 +961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002053",
@@ -879,6 +981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002066",
@@ -898,6 +1001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002079",
@@ -917,6 +1021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002089",
@@ -936,6 +1041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002090",
@@ -955,6 +1061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002091",
@@ -974,6 +1081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002092",
@@ -993,6 +1101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002093",
@@ -1012,6 +1121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1002112",
@@ -1031,6 +1141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10401",
@@ -1050,6 +1161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10402",
@@ -1069,6 +1181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10403",
@@ -1088,6 +1201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10404",
@@ -1107,6 +1221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10405",
@@ -1126,6 +1241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10406",
@@ -1145,6 +1261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10407",
@@ -1164,6 +1281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10408",
@@ -1183,6 +1301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10409",
@@ -1202,6 +1321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10410",
@@ -1221,6 +1341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10411",
@@ -1240,6 +1361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10413",
@@ -1259,6 +1381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10414",
@@ -1278,6 +1401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10415",
@@ -1297,6 +1421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10416",
@@ -1316,6 +1441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10417",
@@ -1335,6 +1461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10418",
@@ -1354,6 +1481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10419",
@@ -1373,6 +1501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10420",
@@ -1392,6 +1521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10421",
@@ -1411,6 +1541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10422",
@@ -1430,6 +1561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10423",
@@ -1449,6 +1581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10424",
@@ -1468,6 +1601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10425",
@@ -1487,6 +1621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10426",
@@ -1506,6 +1641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10427",
@@ -1525,6 +1661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10428",
@@ -1544,6 +1681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10429",
@@ -1563,6 +1701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10430",
@@ -1582,6 +1721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10431",
@@ -1601,6 +1741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10432",
@@ -1620,6 +1761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10433",
@@ -1639,6 +1781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10434",
@@ -1658,6 +1801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10435",
@@ -1677,6 +1821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10436",
@@ -1696,6 +1841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl10437",
@@ -1715,6 +1861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11",
@@ -1734,6 +1881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11401",
@@ -1753,6 +1901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11402",
@@ -1772,6 +1921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11403",
@@ -1791,6 +1941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11405",
@@ -1810,6 +1961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11406",
@@ -1829,6 +1981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11407",
@@ -1848,6 +2001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11408",
@@ -1867,6 +2021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11409",
@@ -1886,6 +2041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11410",
@@ -1905,6 +2061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11411",
@@ -1924,6 +2081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11413",
@@ -1943,6 +2101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11414",
@@ -1962,6 +2121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11415",
@@ -1981,6 +2141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11416",
@@ -2000,6 +2161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11417",
@@ -2019,6 +2181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11418",
@@ -2038,6 +2201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11419",
@@ -2057,6 +2221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11420",
@@ -2076,6 +2241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11421",
@@ -2095,6 +2261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11422",
@@ -2114,6 +2281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11423",
@@ -2133,6 +2301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11424",
@@ -2152,6 +2321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11425",
@@ -2171,6 +2341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11426",
@@ -2190,6 +2361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11427",
@@ -2209,6 +2381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11428",
@@ -2228,6 +2401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11429",
@@ -2247,6 +2421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11430",
@@ -2266,6 +2441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11431",
@@ -2285,6 +2461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11433",
@@ -2304,6 +2481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11435",
@@ -2323,6 +2501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11436",
@@ -2342,6 +2521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11437",
@@ -2361,6 +2541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl11438",
@@ -2380,6 +2561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1176",
@@ -2399,6 +2581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1183",
@@ -2418,6 +2601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl12",
@@ -2437,6 +2621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1230",
@@ -2456,6 +2641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1241",
@@ -2475,6 +2661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl13",
@@ -2494,6 +2681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1337",
@@ -2513,6 +2701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1341",
@@ -2532,6 +2721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1347",
@@ -2551,6 +2741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1348",
@@ -2570,6 +2761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1351",
@@ -2589,6 +2781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1352",
@@ -2608,6 +2801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1358",
@@ -2627,6 +2821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1363",
@@ -2646,6 +2841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1364",
@@ -2665,6 +2861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1365",
@@ -2684,6 +2881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1366",
@@ -2703,6 +2901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1367",
@@ -2722,6 +2921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1368",
@@ -2741,6 +2941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1369",
@@ -2760,6 +2961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1381",
@@ -2779,6 +2981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1382",
@@ -2798,6 +3001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1383",
@@ -2817,6 +3021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1384",
@@ -2836,6 +3041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1385",
@@ -2855,6 +3061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1388",
@@ -2874,6 +3081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1389",
@@ -2893,6 +3101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1390",
@@ -2912,6 +3121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1391",
@@ -2931,6 +3141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1392",
@@ -2950,6 +3161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1393",
@@ -2969,6 +3181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1395",
@@ -2988,6 +3201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1398",
@@ -3007,6 +3221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl14",
@@ -3026,6 +3241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1402",
@@ -3045,6 +3261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1404",
@@ -3064,6 +3281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1405",
@@ -3083,6 +3301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1409",
@@ -3102,6 +3321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1416",
@@ -3121,6 +3341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1418",
@@ -3140,6 +3361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1420",
@@ -3159,6 +3381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1421",
@@ -3178,6 +3401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1422",
@@ -3197,6 +3421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1426",
@@ -3216,6 +3441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1429",
@@ -3235,6 +3461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1432",
@@ -3254,6 +3481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1434",
@@ -3273,6 +3501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1436",
@@ -3292,6 +3521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1442",
@@ -3311,6 +3541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1443",
@@ -3330,6 +3561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1447",
@@ -3349,6 +3581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1451",
@@ -3368,6 +3601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1452",
@@ -3387,6 +3621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1453",
@@ -3406,6 +3641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1454",
@@ -3425,6 +3661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1455",
@@ -3444,6 +3681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1458",
@@ -3463,6 +3701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1460",
@@ -3482,6 +3721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1462",
@@ -3501,6 +3741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1464",
@@ -3520,6 +3761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1467",
@@ -3539,6 +3781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1485",
@@ -3558,6 +3801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1486",
@@ -3577,6 +3821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1498",
@@ -3596,6 +3841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl15",
@@ -3615,6 +3861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl16",
@@ -3634,6 +3881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1618",
@@ -3653,6 +3901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1619",
@@ -3672,6 +3921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1620",
@@ -3691,6 +3941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1623",
@@ -3710,6 +3961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1626",
@@ -3729,6 +3981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1627",
@@ -3748,6 +4001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1628",
@@ -3767,6 +4021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1629",
@@ -3786,6 +4041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1635",
@@ -3805,6 +4061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1636",
@@ -3824,6 +4081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1638",
@@ -3843,6 +4101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1639",
@@ -3862,6 +4121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1640",
@@ -3881,6 +4141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1646",
@@ -3900,6 +4161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1648",
@@ -3919,6 +4181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1649",
@@ -3938,6 +4201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1653",
@@ -3957,6 +4221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1654",
@@ -3976,6 +4241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1658",
@@ -3995,6 +4261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1659",
@@ -4014,6 +4281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1663",
@@ -4033,6 +4301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1665",
@@ -4052,6 +4321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1666",
@@ -4071,6 +4341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1668",
@@ -4090,6 +4361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1669",
@@ -4109,6 +4381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1671",
@@ -4128,6 +4401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1672",
@@ -4147,6 +4421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1673",
@@ -4166,6 +4441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1674",
@@ -4185,6 +4461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1675",
@@ -4204,6 +4481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1684",
@@ -4223,6 +4501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl17",
@@ -4242,6 +4521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1708",
@@ -4261,6 +4541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1710",
@@ -4280,6 +4561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1711",
@@ -4299,6 +4581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl177",
@@ -4318,6 +4601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl18",
@@ -4337,6 +4621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1828",
@@ -4356,6 +4641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl183",
@@ -4375,6 +4661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1831",
@@ -4394,6 +4681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1833",
@@ -4413,6 +4701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl1872",
@@ -4432,6 +4721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl19",
@@ -4451,6 +4741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2",
@@ -4470,6 +4761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2001",
@@ -4489,6 +4781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2002",
@@ -4508,6 +4801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2003",
@@ -4527,6 +4821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2004",
@@ -4546,6 +4841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2005",
@@ -4565,6 +4861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2006",
@@ -4584,6 +4881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2007",
@@ -4603,6 +4901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2008",
@@ -4622,6 +4921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2009",
@@ -4641,6 +4941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2010",
@@ -4660,6 +4961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2011",
@@ -4679,6 +4981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2012",
@@ -4698,6 +5001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2013",
@@ -4717,6 +5021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2014",
@@ -4736,6 +5041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2015",
@@ -4755,6 +5061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2016",
@@ -4774,6 +5081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2017",
@@ -4793,6 +5101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2018",
@@ -4812,6 +5121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2019",
@@ -4831,6 +5141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2020",
@@ -4850,6 +5161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2021",
@@ -4869,6 +5181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2022",
@@ -4888,6 +5201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2023",
@@ -4907,6 +5221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2024",
@@ -4926,6 +5241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2025",
@@ -4945,6 +5261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2026",
@@ -4964,6 +5281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2027",
@@ -4983,6 +5301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2028",
@@ -5002,6 +5321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2029",
@@ -5021,6 +5341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2030",
@@ -5040,6 +5361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2031",
@@ -5059,6 +5381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2032",
@@ -5078,6 +5401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2033",
@@ -5097,6 +5421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2034",
@@ -5116,6 +5441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2035",
@@ -5135,6 +5461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2036",
@@ -5154,6 +5481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2037",
@@ -5173,6 +5501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2038",
@@ -5192,6 +5521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2039",
@@ -5211,6 +5541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2040",
@@ -5230,6 +5561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2041",
@@ -5249,6 +5581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2042",
@@ -5268,6 +5601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2043",
@@ -5287,6 +5621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2044",
@@ -5306,6 +5641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2046",
@@ -5325,6 +5661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2047",
@@ -5344,6 +5681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2050",
@@ -5363,6 +5701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2051",
@@ -5382,6 +5721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2052",
@@ -5401,6 +5741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2053",
@@ -5420,6 +5761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2054",
@@ -5439,6 +5781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2055",
@@ -5458,6 +5801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2057",
@@ -5477,6 +5821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2060",
@@ -5496,6 +5841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2061",
@@ -5515,6 +5861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2062",
@@ -5534,6 +5881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2063",
@@ -5553,6 +5901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2064",
@@ -5572,6 +5921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2065",
@@ -5591,6 +5941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2066",
@@ -5610,6 +5961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2067",
@@ -5629,6 +5981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2068",
@@ -5648,6 +6001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2070",
@@ -5667,6 +6021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2071",
@@ -5686,6 +6041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2072",
@@ -5705,6 +6061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2073",
@@ -5724,6 +6081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2075",
@@ -5743,6 +6101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2077",
@@ -5762,6 +6121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2078",
@@ -5781,6 +6141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2079",
@@ -5800,6 +6161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2080",
@@ -5819,6 +6181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2083",
@@ -5838,6 +6201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2084",
@@ -5857,6 +6221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2087",
@@ -5876,6 +6241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2088",
@@ -5895,6 +6261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2089",
@@ -5914,6 +6281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2090",
@@ -5933,6 +6301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2091",
@@ -5952,6 +6321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2092",
@@ -5971,6 +6341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2093",
@@ -5990,6 +6361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2094",
@@ -6009,6 +6381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2095",
@@ -6028,6 +6401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2096",
@@ -6047,6 +6421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl210",
@@ -6066,6 +6441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2100",
@@ -6085,6 +6461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2110",
@@ -6104,6 +6481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2111",
@@ -6123,6 +6501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2112",
@@ -6142,6 +6521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2113",
@@ -6161,6 +6541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2115",
@@ -6180,6 +6561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2116",
@@ -6199,6 +6581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2117",
@@ -6218,6 +6601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl2118",
@@ -6237,6 +6621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl23",
@@ -6256,6 +6641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl230",
@@ -6275,6 +6661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl231",
@@ -6294,6 +6681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl24",
@@ -6313,6 +6701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl240",
@@ -6332,6 +6721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl241",
@@ -6351,6 +6741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl242",
@@ -6370,6 +6761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl25",
@@ -6389,6 +6781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl250",
@@ -6408,6 +6801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl250001",
@@ -6427,6 +6821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl251",
@@ -6446,6 +6841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl252",
@@ -6465,6 +6861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl253",
@@ -6484,6 +6881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl260001",
@@ -6503,6 +6901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl270",
@@ -6522,6 +6921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl271",
@@ -6541,6 +6941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl290",
@@ -6560,6 +6961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl291",
@@ -6579,6 +6981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3",
@@ -6598,6 +7001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3004",
@@ -6617,6 +7021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3017",
@@ -6636,6 +7041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3018",
@@ -6655,6 +7061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3027",
@@ -6674,6 +7081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3031",
@@ -6693,6 +7101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3036",
@@ -6712,6 +7121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3037",
@@ -6731,6 +7141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl31",
@@ -6750,6 +7161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl32",
@@ -6769,6 +7181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl3206",
@@ -6788,6 +7201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl324",
@@ -6807,6 +7221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl33",
@@ -6826,6 +7241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl337",
@@ -6845,6 +7261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl34",
@@ -6864,6 +7281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl341",
@@ -6883,6 +7301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl347",
@@ -6902,6 +7321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl348",
@@ -6921,6 +7341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl351",
@@ -6940,6 +7361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl352",
@@ -6959,6 +7381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl358",
@@ -6978,6 +7401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl363",
@@ -6997,6 +7421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl364",
@@ -7016,6 +7441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl365",
@@ -7035,6 +7461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl366",
@@ -7054,6 +7481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl367",
@@ -7073,6 +7501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl368",
@@ -7092,6 +7521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl369",
@@ -7111,6 +7541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl381",
@@ -7130,6 +7561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl382",
@@ -7149,6 +7581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl383",
@@ -7168,6 +7601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl384",
@@ -7187,6 +7621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl385",
@@ -7206,6 +7641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl388",
@@ -7225,6 +7661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl389",
@@ -7244,6 +7681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl390",
@@ -7263,6 +7701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl391",
@@ -7282,6 +7721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl392",
@@ -7301,6 +7741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl393",
@@ -7320,6 +7761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl395",
@@ -7339,6 +7781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl398",
@@ -7358,6 +7801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4",
@@ -7377,6 +7821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4005",
@@ -7396,6 +7841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4010",
@@ -7415,6 +7861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4012",
@@ -7434,6 +7881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl402",
@@ -7453,6 +7901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4020",
@@ -7472,6 +7921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4032",
@@ -7491,6 +7941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4033",
@@ -7510,6 +7961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4034",
@@ -7529,6 +7981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4035",
@@ -7548,6 +8001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4036",
@@ -7567,6 +8021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4037",
@@ -7586,6 +8041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4038",
@@ -7605,6 +8061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4039",
@@ -7624,6 +8081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl404",
@@ -7643,6 +8101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4040",
@@ -7662,6 +8121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4041",
@@ -7681,6 +8141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4042",
@@ -7700,6 +8161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4043",
@@ -7719,6 +8181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4044",
@@ -7738,6 +8201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl405",
@@ -7757,6 +8221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4073",
@@ -7776,6 +8241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl409",
@@ -7795,6 +8261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl41",
@@ -7814,6 +8281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl416",
@@ -7833,6 +8301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl418",
@@ -7852,6 +8321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl420",
@@ -7871,6 +8341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl421",
@@ -7890,6 +8361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl422",
@@ -7909,6 +8381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl426",
@@ -7928,6 +8401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl429",
@@ -7947,6 +8421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl432",
@@ -7966,6 +8441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl4327",
@@ -7985,6 +8461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl434",
@@ -8004,6 +8481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl436",
@@ -8023,6 +8501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl442",
@@ -8042,6 +8521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl443",
@@ -8061,6 +8541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl447",
@@ -8080,6 +8561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl451",
@@ -8099,6 +8581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl452",
@@ -8118,6 +8601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl453",
@@ -8137,6 +8621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl454",
@@ -8156,6 +8641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl455",
@@ -8175,6 +8661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl458",
@@ -8194,6 +8681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl460",
@@ -8213,6 +8701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl462",
@@ -8232,6 +8721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl464",
@@ -8251,6 +8741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl467",
@@ -8270,6 +8761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl470",
@@ -8289,6 +8781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl477",
@@ -8308,6 +8801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481",
@@ -8327,6 +8821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481002",
@@ -8346,6 +8841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481005",
@@ -8365,6 +8861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481006",
@@ -8384,6 +8881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481008",
@@ -8403,6 +8901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481010",
@@ -8422,6 +8921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481011",
@@ -8441,6 +8941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481012",
@@ -8460,6 +8961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481015",
@@ -8479,6 +8981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481017",
@@ -8498,6 +9001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481018",
@@ -8517,6 +9021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481020",
@@ -8536,6 +9041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481021",
@@ -8555,6 +9061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481023",
@@ -8574,6 +9081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481031",
@@ -8593,6 +9101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481032",
@@ -8612,6 +9121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl481033",
@@ -8631,6 +9141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl485",
@@ -8650,6 +9161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl486",
@@ -8669,6 +9181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490000",
@@ -8688,6 +9201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490001",
@@ -8707,6 +9221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490002",
@@ -8726,6 +9241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490003",
@@ -8745,6 +9261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490004",
@@ -8764,6 +9281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490006",
@@ -8783,6 +9301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490008",
@@ -8802,6 +9321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490009",
@@ -8821,6 +9341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490010",
@@ -8840,6 +9361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490011",
@@ -8859,6 +9381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490012",
@@ -8878,6 +9401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490015",
@@ -8897,6 +9421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490016",
@@ -8916,6 +9441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490017",
@@ -8935,6 +9461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490018",
@@ -8954,6 +9481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490020",
@@ -8973,6 +9501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490021",
@@ -8992,6 +9521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490022",
@@ -9011,6 +9541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490023",
@@ -9030,6 +9561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490024",
@@ -9049,6 +9581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490025",
@@ -9068,6 +9601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490026",
@@ -9087,6 +9621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490027",
@@ -9106,6 +9641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490029",
@@ -9125,6 +9661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490030",
@@ -9144,6 +9681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490031",
@@ -9163,6 +9701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490032",
@@ -9182,6 +9721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490033",
@@ -9201,6 +9741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl490034",
@@ -9220,6 +9761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491008",
@@ -9239,6 +9781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491011",
@@ -9258,6 +9801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491022",
@@ -9277,6 +9821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491024",
@@ -9296,6 +9841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491025",
@@ -9315,6 +9861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491026",
@@ -9334,6 +9881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl491031",
@@ -9353,6 +9901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl498",
@@ -9372,6 +9921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl5",
@@ -9391,6 +9941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl51",
@@ -9410,6 +9961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl52",
@@ -9429,6 +9981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl53",
@@ -9448,6 +10001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl54",
@@ -9467,6 +10021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550001",
@@ -9486,6 +10041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550002",
@@ -9505,6 +10061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550003",
@@ -9524,6 +10081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550004",
@@ -9543,6 +10101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550005",
@@ -9562,6 +10121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550006",
@@ -9581,6 +10141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl550007",
@@ -9600,6 +10161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl551002",
@@ -9619,6 +10181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl560001",
@@ -9638,6 +10201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl560002",
@@ -9657,6 +10221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl560003",
@@ -9676,6 +10241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl560004",
@@ -9695,6 +10261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl561001",
@@ -9714,6 +10281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl561002",
@@ -9733,6 +10301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl561003",
@@ -9752,6 +10321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl561004",
@@ -9771,6 +10341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl5891",
@@ -9790,6 +10361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6",
@@ -9809,6 +10381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl610001",
@@ -9828,6 +10401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl610002",
@@ -9847,6 +10421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl612",
@@ -9866,6 +10441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl616",
@@ -9885,6 +10461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl617",
@@ -9904,6 +10481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl618",
@@ -9923,6 +10501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl619",
@@ -9942,6 +10521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620",
@@ -9961,6 +10541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620082",
@@ -9980,6 +10561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620103",
@@ -9999,6 +10581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620110",
@@ -10018,6 +10601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620123",
@@ -10037,6 +10621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620124",
@@ -10056,6 +10641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620125",
@@ -10075,6 +10661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl620126",
@@ -10094,6 +10681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl621082",
@@ -10113,6 +10701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl621103",
@@ -10132,6 +10721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl621110",
@@ -10151,6 +10741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl621124",
@@ -10170,6 +10761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl621126",
@@ -10189,6 +10781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl622",
@@ -10208,6 +10801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl623",
@@ -10227,6 +10821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl624",
@@ -10246,6 +10841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl626",
@@ -10265,6 +10861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl627",
@@ -10284,6 +10881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl628",
@@ -10303,6 +10901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl629",
@@ -10322,6 +10921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl630",
@@ -10341,6 +10941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6335",
@@ -10360,6 +10961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6336",
@@ -10379,6 +10981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6337",
@@ -10398,6 +11001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl635",
@@ -10417,6 +11021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6350",
@@ -10436,6 +11041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl636",
@@ -10455,6 +11061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl638",
@@ -10474,6 +11081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl639",
@@ -10493,6 +11101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640",
@@ -10512,6 +11121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640002",
@@ -10531,6 +11141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640004",
@@ -10550,6 +11161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640007",
@@ -10569,6 +11181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl64001",
@@ -10588,6 +11201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640010",
@@ -10607,6 +11221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640012",
@@ -10626,6 +11241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640015",
@@ -10645,6 +11261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640016",
@@ -10664,6 +11281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640021",
@@ -10683,6 +11301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640022",
@@ -10702,6 +11321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640028",
@@ -10721,6 +11341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640032",
@@ -10740,6 +11361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640034",
@@ -10759,6 +11381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640035",
@@ -10778,6 +11401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640039",
@@ -10797,6 +11421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640051",
@@ -10816,6 +11441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl640052",
@@ -10835,6 +11461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641001",
@@ -10854,6 +11481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641026",
@@ -10873,6 +11501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641027",
@@ -10892,6 +11521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641032",
@@ -10911,6 +11541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641038",
@@ -10930,6 +11561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl641039",
@@ -10949,6 +11581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl646",
@@ -10968,6 +11601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl648",
@@ -10987,6 +11621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl649",
@@ -11006,6 +11641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl650002",
@@ -11025,6 +11661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl650004",
@@ -11044,6 +11681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl650005",
@@ -11063,6 +11701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl650007",
@@ -11082,6 +11721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl650022",
@@ -11101,6 +11741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl653",
@@ -11120,6 +11761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl654",
@@ -11139,6 +11781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl656002",
@@ -11158,6 +11801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl658",
@@ -11177,6 +11821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl659",
@@ -11196,6 +11841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660001",
@@ -11215,6 +11861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660002",
@@ -11234,6 +11881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660003",
@@ -11253,6 +11901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660004",
@@ -11272,6 +11921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660005",
@@ -11291,6 +11941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660006",
@@ -11310,6 +11961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660007",
@@ -11329,6 +11981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660008",
@@ -11348,6 +12001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660009",
@@ -11367,6 +12021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660010",
@@ -11386,6 +12041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl660011",
@@ -11405,6 +12061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661",
@@ -11424,6 +12081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661002",
@@ -11443,6 +12101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661003",
@@ -11462,6 +12121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661004",
@@ -11481,6 +12141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661005",
@@ -11500,6 +12161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661006",
@@ -11519,6 +12181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661007",
@@ -11538,6 +12201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661008",
@@ -11557,6 +12221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661009",
@@ -11576,6 +12241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661010",
@@ -11595,6 +12261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl661011",
@@ -11614,6 +12281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl663",
@@ -11633,6 +12301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl664",
@@ -11652,6 +12321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl665",
@@ -11671,6 +12341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl666",
@@ -11690,6 +12361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl668",
@@ -11709,6 +12381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl669",
@@ -11728,6 +12401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl671",
@@ -11747,6 +12421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl672",
@@ -11766,6 +12441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl673",
@@ -11785,6 +12461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680",
@@ -11804,6 +12481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680001",
@@ -11823,6 +12501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680002",
@@ -11842,6 +12521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680003",
@@ -11861,6 +12541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680004",
@@ -11880,6 +12561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680006",
@@ -11899,6 +12581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680007",
@@ -11918,6 +12601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680008",
@@ -11937,6 +12621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680009",
@@ -11956,6 +12641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680010",
@@ -11975,6 +12661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680011",
@@ -11994,6 +12681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680012",
@@ -12013,6 +12701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680013",
@@ -12032,6 +12721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680014",
@@ -12051,6 +12741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680015",
@@ -12070,6 +12761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680016",
@@ -12089,6 +12781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680017",
@@ -12108,6 +12801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680018",
@@ -12127,6 +12821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl680019",
@@ -12146,6 +12841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6863",
@@ -12165,6 +12861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6864",
@@ -12184,6 +12881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6865",
@@ -12203,6 +12901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6869",
@@ -12222,6 +12921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6870",
@@ -12241,6 +12941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6872",
@@ -12260,6 +12961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl6873",
@@ -12279,6 +12981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl688",
@@ -12298,6 +13001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl690",
@@ -12317,6 +13021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl690025",
@@ -12336,6 +13041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691003",
@@ -12355,6 +13061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691004",
@@ -12374,6 +13081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691016",
@@ -12393,6 +13101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691022",
@@ -12412,6 +13121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691027",
@@ -12431,6 +13141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691029",
@@ -12450,6 +13161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691031",
@@ -12469,6 +13181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691032",
@@ -12488,6 +13201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691033",
@@ -12507,6 +13221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691034",
@@ -12526,6 +13241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691041",
@@ -12545,6 +13261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691044",
@@ -12564,6 +13281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691048",
@@ -12583,6 +13301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691052",
@@ -12602,6 +13321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691054",
@@ -12621,6 +13341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691056",
@@ -12640,6 +13361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691057",
@@ -12659,6 +13381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691058",
@@ -12678,6 +13401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691064",
@@ -12697,6 +13421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691068",
@@ -12716,6 +13441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691069",
@@ -12735,6 +13461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691070",
@@ -12754,6 +13481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691074",
@@ -12773,6 +13501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691075",
@@ -12792,6 +13521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691081",
@@ -12811,6 +13541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691091",
@@ -12830,6 +13561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691094",
@@ -12849,6 +13581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691095",
@@ -12868,6 +13601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691099",
@@ -12887,6 +13621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691102",
@@ -12906,6 +13641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691103",
@@ -12925,6 +13661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691109",
@@ -12944,6 +13681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691118",
@@ -12963,6 +13701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691120",
@@ -12982,6 +13721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691129",
@@ -13001,6 +13741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691132",
@@ -13020,6 +13761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691133",
@@ -13039,6 +13781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691134",
@@ -13058,6 +13801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691135",
@@ -13077,6 +13821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691140",
@@ -13096,6 +13841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691142",
@@ -13115,6 +13861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691147",
@@ -13134,6 +13881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691149",
@@ -13153,6 +13901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691150",
@@ -13172,6 +13921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691151",
@@ -13191,6 +13941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691153",
@@ -13210,6 +13961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691166",
@@ -13229,6 +13981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691167",
@@ -13248,6 +14001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691172",
@@ -13267,6 +14021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691182",
@@ -13286,6 +14041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691183",
@@ -13305,6 +14061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691185",
@@ -13324,6 +14081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691186",
@@ -13343,6 +14101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl691188",
@@ -13362,6 +14121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl699",
@@ -13381,6 +14141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl7",
@@ -13400,6 +14161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl711",
@@ -13419,6 +14181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl713",
@@ -13438,6 +14201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl714",
@@ -13457,6 +14221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl715",
@@ -13476,6 +14241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl716",
@@ -13495,6 +14261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720000",
@@ -13514,6 +14281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720003",
@@ -13533,6 +14301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720005",
@@ -13552,6 +14321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720007",
@@ -13571,6 +14341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720008",
@@ -13590,6 +14361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720009",
@@ -13609,6 +14381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl720010",
@@ -13628,6 +14401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl721006",
@@ -13647,6 +14421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750001",
@@ -13666,6 +14441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750013",
@@ -13685,6 +14461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750020",
@@ -13704,6 +14481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750021",
@@ -13723,6 +14501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750022",
@@ -13742,6 +14521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750101",
@@ -13761,6 +14541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750115",
@@ -13780,6 +14561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750117",
@@ -13799,6 +14581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750121",
@@ -13818,6 +14601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750123",
@@ -13837,6 +14621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750127",
@@ -13856,6 +14641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl750128",
@@ -13875,6 +14661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl751108",
@@ -13894,6 +14681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl751124",
@@ -13913,6 +14701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl781013",
@@ -13932,6 +14721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl8",
@@ -13951,6 +14741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810001",
@@ -13970,6 +14761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810002",
@@ -13989,6 +14781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810003",
@@ -14008,6 +14801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810004",
@@ -14027,6 +14821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810006",
@@ -14046,6 +14841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810007",
@@ -14065,6 +14861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810008",
@@ -14084,6 +14881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810010",
@@ -14103,6 +14901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810011",
@@ -14122,6 +14921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810012",
@@ -14141,6 +14941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810013",
@@ -14160,6 +14961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810014",
@@ -14179,6 +14981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810015",
@@ -14198,6 +15001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810016",
@@ -14217,6 +15021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810017",
@@ -14236,6 +15041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810018",
@@ -14255,6 +15061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810019",
@@ -14274,6 +15081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810020",
@@ -14293,6 +15101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810021",
@@ -14312,6 +15121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810022",
@@ -14331,6 +15141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810502",
@@ -14350,6 +15161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810504",
@@ -14369,6 +15181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810505",
@@ -14388,6 +15201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810506",
@@ -14407,6 +15221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810507",
@@ -14426,6 +15241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810508",
@@ -14445,6 +15261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810509",
@@ -14464,6 +15281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810510",
@@ -14483,6 +15301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810511",
@@ -14502,6 +15321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810512",
@@ -14521,6 +15341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810513",
@@ -14540,6 +15361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810514",
@@ -14559,6 +15381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810515",
@@ -14578,6 +15401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810516",
@@ -14597,6 +15421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810518",
@@ -14616,6 +15441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl810519",
@@ -14635,6 +15461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811001",
@@ -14654,6 +15481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811003",
@@ -14673,6 +15501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811004",
@@ -14692,6 +15521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811006",
@@ -14711,6 +15541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811007",
@@ -14730,6 +15561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811008",
@@ -14749,6 +15581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811010",
@@ -14768,6 +15601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811011",
@@ -14787,6 +15621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811012",
@@ -14806,6 +15641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811013",
@@ -14825,6 +15661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811014",
@@ -14844,6 +15681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811016",
@@ -14863,6 +15701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811022",
@@ -14882,6 +15721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811502",
@@ -14901,6 +15741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811504",
@@ -14920,6 +15761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811505",
@@ -14939,6 +15781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811506",
@@ -14958,6 +15801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811509",
@@ -14977,6 +15821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811511",
@@ -14996,6 +15841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl811518",
@@ -15015,6 +15861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl824",
@@ -15034,6 +15881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl825",
@@ -15053,6 +15901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl826",
@@ -15072,6 +15921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl828",
@@ -15091,6 +15941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl830",
@@ -15110,6 +15961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl830001",
@@ -15129,6 +15981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl830002",
@@ -15148,6 +16001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl833",
@@ -15167,6 +16021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl834",
@@ -15186,6 +16041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl836",
@@ -15205,6 +16061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl839",
@@ -15224,6 +16081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840000",
@@ -15243,6 +16101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840001",
@@ -15262,6 +16121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840002",
@@ -15281,6 +16141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840003",
@@ -15300,6 +16161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840004",
@@ -15319,6 +16181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840005",
@@ -15338,6 +16201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840006",
@@ -15357,6 +16221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840007",
@@ -15376,6 +16241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840008",
@@ -15395,6 +16261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840009",
@@ -15414,6 +16281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840010",
@@ -15433,6 +16301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840011",
@@ -15452,6 +16321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840012",
@@ -15471,6 +16341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl840013",
@@ -15490,6 +16361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl842",
@@ -15509,6 +16381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl844",
@@ -15528,6 +16401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl845001",
@@ -15547,6 +16421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl845002",
@@ -15566,6 +16441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl846003",
@@ -15585,6 +16461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl847008",
@@ -15604,6 +16481,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl849",
@@ -15623,6 +16501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl850",
@@ -15642,6 +16521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl850003",
@@ -15661,6 +16541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl850007",
@@ -15680,6 +16561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl850009",
@@ -15699,6 +16581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl85001",
@@ -15718,6 +16601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl850010",
@@ -15737,6 +16621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl851",
@@ -15756,6 +16641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl865",
@@ -15775,6 +16661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl872",
@@ -15794,6 +16681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl874",
@@ -15813,6 +16701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl877",
@@ -15832,6 +16721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl879",
@@ -15851,6 +16741,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl880001",
@@ -15870,6 +16761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl880002",
@@ -15889,6 +16781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl890001",
@@ -15908,6 +16801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl890002",
@@ -15927,6 +16821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl891001",
@@ -15946,6 +16841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl892001",
@@ -15965,6 +16861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl893",
@@ -15984,6 +16881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl894",
@@ -16003,6 +16901,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl898",
@@ -16022,6 +16921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl984",
@@ -16041,6 +16941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl985",
@@ -16060,6 +16961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl992",
@@ -16079,6 +16981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fl994",
@@ -16098,6 +17001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr22",
@@ -16117,6 +17021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr26000",
@@ -16136,6 +17041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr44",
@@ -16155,6 +17061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr63",
@@ -16174,6 +17081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr64",
@@ -16193,6 +17101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr640",
@@ -16212,6 +17121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr641",
@@ -16231,6 +17141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr70",
@@ -16250,6 +17161,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr75000",
@@ -16269,6 +17181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr75001",
@@ -16288,6 +17201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr78",
@@ -16307,6 +17221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr83",
@@ -16326,6 +17241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr84500",
@@ -16345,6 +17261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr84600",
@@ -16364,6 +17281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr85",
@@ -16383,6 +17301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr86",
@@ -16402,6 +17321,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr89000",
@@ -16421,6 +17341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr89100",
@@ -16440,6 +17361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr89200",
@@ -16459,6 +17381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
     {
       id: "fr90",
@@ -16478,6 +17401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      explications: null,
     },
   ];
 
