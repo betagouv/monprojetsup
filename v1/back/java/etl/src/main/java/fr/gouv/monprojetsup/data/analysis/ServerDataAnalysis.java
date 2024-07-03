@@ -344,8 +344,8 @@ public class ServerDataAnalysis {
         val  data = CsvTools.readCSV(s, ',');
         List<List<String>> lines = new ArrayList<>();
         for (Map<String, String> line : data) {
-            String key1 = line.get("\"key1\"").replace("\"", "");
-            String key2 = line.get("\"key2\"").replace("\"", "");;
+            String key1 = line.get("key1");
+            String key2 = line.get("key2");
             if (isMetier(key1) && isFiliere(key2)) {
                 String lib1 = getLabel(key1, key1);
                 String lib2 = getLabel(key2, key2);
