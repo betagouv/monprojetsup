@@ -44,15 +44,11 @@ export class SQLHandler {
 
             if (typeof valeur === "string") {
               if (valeur.startsWith("[{")) {
-                return `ARRAY [${valeur
-                  .replace(/'/gu, "''")
-                  .replace(/^\[/gu, "'")
-                  .replace(/\]$/gu, "'")
-                  .replace(/"\},\{"/gu, "\"}','{\"")}]::jsonb[]`;
+                return `'${valeur.replace(/'/gu, "''")}'::jsonb`;
               }
 
               if (valeur === "[]") {
-                return "ARRAY []::jsonb[]";
+                return "'[]'::jsonb";
               }
 
               return `'${valeur.replace(/'/gu, "''")}'`;

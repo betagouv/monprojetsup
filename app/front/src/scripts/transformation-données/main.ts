@@ -177,7 +177,7 @@ const main = async () => {
       descriptif_diplome   text,
       formations_associees varchar(20)[],
       criteres_analyse     integer[]    not null,
-      liens                jsonb[]      not null
+      liens                jsonb      not null
   */
   const formations = Object.entries(données.labels)
     .filter(([id]) => id.startsWith("fl") || id.startsWith("fr"))
@@ -231,7 +231,7 @@ const main = async () => {
         motsClefs.length > 0 ? [...new Set(motsClefs)] : null,
         eds?.recoEDS?.trim() ?? null,
         descriptif?.summaryFormation?.trim() ?? null,
-        formationsAssociées.length > 0 ? formationsAssociées : null,
+        formationsAssociées.length > 0 ? formationsAssociées.filter((fId) => fId !== formationId.trim()) : null,
         critèresAnalyse,
         liens && liens.length > 0 ? JSON.stringify(liens) : JSON.stringify([]),
       ];
@@ -261,7 +261,7 @@ const main = async () => {
       id                 varchar(20)  not null primary key,
       label              varchar(300) not null,
       descriptif_general text,
-      liens              jsonb[]      not null
+      liens              jsonb      not null
   */
   const métiers = Object.entries(données.labels)
     .filter(([id]) => id.startsWith("MET_"))
@@ -282,34 +282,6 @@ const main = async () => {
   const insertMétiers = sqlHandler.générerInsert("metier", ["id", "label", "descriptif_general", "liens"], métiers);
   requêteSQL.push(insertMétiers);
   sqlHandler.créerFichier("metier", insertMétiers);
-
-  /*  JOIN_METIER_FORMATION
-      metier_id    varchar(20) not null references metier,
-      formation_id varchar(20) not null references formation,
-  */
-  const métierFormation = Object.entries(données.liensMetiersFormations)
-    .flatMap(([métierId, formationIds]) => {
-      if (!données.labels[métierId]) return undefined;
-
-      return formationIds
-        .map((formationId) => {
-          if (formations.some((formation) => formation[0] === formationId))
-            return [métierId.trim(), formationId.trim()];
-
-          return undefined;
-        })
-        .filter((mf): mf is string[] => mf !== undefined);
-    })
-    .filter((mf): mf is string[] => mf !== undefined);
-
-  const insertMétierFormation = sqlHandler.générerInsert(
-    "join_metier_formation",
-    ["metier_id", "formation_id"],
-    métierFormation,
-    false,
-  );
-  requêteSQL.push(insertMétierFormation);
-  sqlHandler.créerFichier("join_metier_formation", insertMétierFormation);
 
   /*  TRIPLET_AFFECTATION
       id                        varchar(20)        not null primary key,
@@ -385,74 +357,23 @@ const main = async () => {
   requêteSQL.push(insertMoyenneGénéraleAdmis);
   sqlHandler.créerFichier("moyenne_generale_admis", insertMoyenneGénéraleAdmis);
 
-  /*  REPARTITION_ADMIS
-      annee        varchar(4)   not null,
-      id_formation varchar(200) not null references formation,
-      id_bac       varchar      not null references baccalaureat,
-      nombre_admis integer      not null,
+  /*  JOIN_BACCALAUREAT_SPECIALITE
+      baccalaureat_id        varchar    not null references baccalaureat,
+      specialite_id          varchar    not null references specialite,
   */
-  const répartitionAdmis = Object.entries(données.nombreAdmisParBac)
-    .flatMap(([formationId, bacs]) => {
-      return Object.entries(bacs).map(([bacId, nbAdmis]) => {
-        if (
-          !baccalaureat.some((bac) => bac[0] === bacId) ||
-          !formations.some((formation) => formation[0] === formationId)
-        )
-          return undefined;
-        return ["2023", formationId.trim(), bacId.trim(), nbAdmis];
-      });
-    })
-    .filter((répartition): répartition is string[] => répartition !== undefined);
+  const baccalaureatSpécialité = Object.entries(données.specialites.specialitesParBac).flatMap(
+    ([bacId, spécialitéIds]) =>
+      spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId.trim(), spécialitéId.toString().trim()]),
+  );
 
-  const insertRépartitionAdmis = sqlHandler.générerInsert(
-    "repartition_admis",
-    ["annee", "id_formation", "id_bac", "nombre_admis"],
-    répartitionAdmis,
+  const insertBaccalaureatSpécialité = sqlHandler.générerInsert(
+    "join_baccalaureat_specialite",
+    ["baccalaureat_id", "specialite_id"],
+    baccalaureatSpécialité,
     false,
   );
-  requêteSQL.push(insertRépartitionAdmis);
-  sqlHandler.créerFichier("repartition_admis", insertRépartitionAdmis);
-
-  // Créer les matières
-  // const matières = Object.entries(données.matieres).map(([id, label]) => [id, label]);
-  // const insertMatières = sqlHandler.générerInsert("matieres", ["id", "label"], matières);
-  // requêteSQL.push(insertMatières);
-
-  // Créer les secteurs
-  // const secteurs = Object.entries(données.labels)
-  //   .filter(([id]) => id.startsWith("SEC_"))
-  //   .map(([id]) => [id, données.labels[id]]);
-  // const insertSecteurs = sqlHandler.générerInsert("secteurs", ["id", "label"], secteurs);
-  // requêteSQL.push(insertSecteurs);
-
-  // Créer bacs_specialites
-  // const bacsSpécialités = Object.entries(données.specialites.specialitesParBac).flatMap(([bacId, spécialitéIds]) =>
-  //   spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId, spécialitéId.toString()]),
-  // );
-  // const insertBacsSpécialités = sqlHandler.générerInsert(
-  //   "bacs_specialites",
-  //   ["bac_id", "specialite_id"],
-  //   bacsSpécialités,
-  //   false,
-  // );
-  // requêteSQL.push(insertBacsSpécialités);
-
-  // Créer metiers_secteurs
-  // const métiersSecteurs = Object.entries(données.liensSecteursMetiers).flatMap(([secteurId, métierIds]) =>
-  //   métierIds
-  //     .map((métierId) => {
-  //       if (!données.labels[métierId]) return undefined;
-  //       return [secteurId, métierId];
-  //     })
-  //     .filter((métierSecteur): métierSecteur is string[] => métierSecteur !== undefined),
-  // );
-  // const insertMétiersSecteurs = sqlHandler.générerInsert(
-  //   "metiers_secteurs",
-  //   ["secteur_id", "metier_id"],
-  //   métiersSecteurs,
-  //   false,
-  // );
-  // requêteSQL.push(insertMétiersSecteurs);
+  requêteSQL.push(insertBaccalaureatSpécialité);
+  sqlHandler.créerFichier("join_baccalaureat_specialite", insertBaccalaureatSpécialité);
 
   // Générer fichier final
   sqlHandler.créerFichier("insert", requêteSQL.join("\n"));

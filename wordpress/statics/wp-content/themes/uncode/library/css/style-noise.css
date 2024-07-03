@@ -1,0 +1,14 @@
+.uncode-canvas-bg-noise-wrap {
+  height: 100.1%;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100.1%;
+  transition: opacity 1s;
+}
+.uncode-canvas-bg-noise-wrap-loaded {
+  opacity: 1;
+}
