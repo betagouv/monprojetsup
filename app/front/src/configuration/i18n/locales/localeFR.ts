@@ -70,9 +70,8 @@ export const localeFR = {
       INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
       ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
       ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
-      MOYENNE:
-        "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière, la moitié des bacheliers de série",
-      MOYENNE_SUITE: "avaient une moyenne de",
+      MOYENNE: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière, de série",
+      MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l'intervalle",
     },
   },
   ÉLÈVE: {

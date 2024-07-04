@@ -4,6 +4,7 @@ import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoye
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { Fragment } from "react/jsx-runtime";
 
 const trierTableauParPourcentage = <T extends { pourcentage: number }>(tableau: T[]): T[] => {
   return [...tableau].sort((a, b) => b.pourcentage - a.pourcentage);
@@ -29,9 +30,13 @@ const OngletCritèresFicheFormation = ({
           </div>
           <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
             {trierTableauParPourcentage(répartitionParBac).map((bac) => (
-              <li key={bac.idBac}>
-                <Badge titre={`${bac.nomBac} ${bac.pourcentage}%`} />
-              </li>
+              <Fragment key={bac.idBac}>
+                {bac.pourcentage !== 0 && (
+                  <li>
+                    <Badge titre={`${bac.idBac} ${bac.pourcentage}%`} />
+                  </li>
+                )}
+              </Fragment>
             ))}
           </ul>
         </div>
@@ -49,21 +54,22 @@ const OngletCritèresFicheFormation = ({
           </div>
           <ul className="m-0 grid list-none justify-start gap-4 p-0">
             {trierTableauParPourcentage(critèresAnalyse).map((critère) => (
-              <li
-                className="grid grid-flow-col justify-start gap-2 font-medium"
-                key={critère.nom}
-              >
-                <span
-                  aria-hidden="true"
-                  className="fr-icon-check-line fr-icon--sm text-[--artwork-minor-green-emeraude]"
-                />
-                {`${critère.nom} (${critère.pourcentage}%)`}
-              </li>
+              <Fragment key={critère.nom}>
+                {critère.pourcentage !== 0 && (
+                  <li className="grid grid-flow-col justify-start gap-2 font-medium">
+                    <span
+                      aria-hidden="true"
+                      className="fr-icon-check-line fr-icon--sm text-[--artwork-minor-green-emeraude]"
+                    />
+                    {`${critère.nom} (${critère.pourcentage}%)`}
+                  </li>
+                )}
+              </Fragment>
             ))}
           </ul>
         </div>
       )}
-      {moyenneGénérale.centilles.length > 0 && (
+      {moyenneGénérale.centiles.length > 0 && (
         <div>
           <hr className="mb-2 mt-8" />
           <div className="*:mb-4">
@@ -74,7 +80,7 @@ const OngletCritèresFicheFormation = ({
               {i18n.PAGE_FORMATION.MOYENNE_GÉNÉRALE} ({moyenneGénérale.nomBac})
             </Titre>
           </div>
-          <GraphiqueRépartitionMoyenne notes={moyenneGénérale.centilles.map((centille) => centille.note)} />
+          <GraphiqueRépartitionMoyenne notes={moyenneGénérale.centiles.map((centile) => centile.note)} />
         </div>
       )}
       {descriptifAttendus && descriptifAttendus !== "" && (

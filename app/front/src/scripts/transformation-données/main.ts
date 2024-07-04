@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import { JSONHandler } from "./jsonHandler/jsonHandler";
-import { type Données } from "./main.interface";
+import { type Données, type RéponseApiAdresse } from "./main.interface";
 import { SQLHandler } from "./sqlHandler/sqlHandler";
 import path from "node:path";
 
@@ -23,6 +24,38 @@ import path from "node:path";
  ***********************************************************************
  */
 
+const trouverCommuneÀPartirDesCoordonnées = async (latitude: string, longitude: string) => {
+  const paramètresDeRequête = new URLSearchParams();
+  paramètresDeRequête.set("lat", latitude);
+  paramètresDeRequête.set("lon", longitude);
+  paramètresDeRequête.set("limit", "1");
+
+  // Pas trop aggressif avec l'api d'adresse
+  await new Promise((resolve) => {
+    setTimeout(resolve, 50);
+  });
+
+  try {
+    const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?${paramètresDeRequête.toString()}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    if (!response?.ok) {
+      console.log("Erreur dans l'appel à l'api adresse pour la recherche ", { latitude }, { longitude });
+      return undefined;
+    }
+
+    return (await response.json()) as RéponseApiAdresse;
+  } catch (error) {
+    console.log("Erreur dans l'appel à l'api adresse pour la recherche ", { latitude }, { longitude }, error);
+    return undefined;
+  }
+};
+
+// eslint-disable-next-line consistent-return
 const main = async () => {
   const MOYENNE_GENERALE_CODE = "-1";
   let données = {} as Données;
@@ -221,7 +254,7 @@ const main = async () => {
 
       const liens = Object.entries(données.urls)
         .find(([id]) => id === formationId)?.[1]
-        ?.map((lien) => ({ label: lien.label.trim(), url: lien.uri.trim() }));
+        ?.map((lien) => ({ nom: lien.label.trim(), url: lien.uri.trim() }));
 
       return [
         formationId.trim(),
@@ -270,7 +303,7 @@ const main = async () => {
 
       const liens = Object.entries(données.urls)
         .find(([id]) => id === métierId)?.[1]
-        ?.map((lien) => ({ label: lien.label.trim(), url: lien.uri.trim() }));
+        ?.map((lien) => ({ nom: lien.label.trim(), url: lien.uri.trim() }));
 
       return [
         métierId.trim(),
@@ -291,33 +324,58 @@ const main = async () => {
       coordonnees_geographiques double precision[] not null,
       id_formation              varchar(20)        not null references formation
   */
-  const tripletAffectation = Object.entries(données.psupData.formations.formations)
-    .map(([tripleAffectationId, ta]) => {
-      const formationId = `fl${ta.gFlCod}`;
-      let formationIdAssociée = formationId;
+  const triplets = [];
+  const historiqueRequêtesApi: Record<string, { ville: string; codeInseeVille: string }> = {};
+  const tripletsInconnus: Record<string, { ta: string; latitude: string; longitude: string }> = {};
 
-      if (!formations.some((formation) => formation[0] === formationId)) {
-        const formationParenteId = formations.find((formation) => formation[7]?.includes(formationId))?.[0];
+  for (const [tripleAffectationId, ta] of Object.entries(données.psupData.formations.formations)) {
+    const formationId = `fl${ta.gFlCod}`;
+    let formationIdAssociée = formationId;
 
-        if (!formationParenteId) return undefined;
-        formationIdAssociée = formationParenteId;
+    if (!formations.some((formation) => formation[0] === formationId)) {
+      const formationParenteId = formations.find((formation) => formation[7]?.includes(formationId))?.[0];
+
+      if (!formationParenteId) return undefined;
+      formationIdAssociée = formationParenteId;
+    }
+
+    const identifiantCoordonnées = `${ta.lat.toString()}${ta.lng.toString()}`;
+
+    if (!historiqueRequêtesApi[identifiantCoordonnées]) {
+      const détailsGéo = await trouverCommuneÀPartirDesCoordonnées(ta.lat.toString(), ta.lng.toString());
+
+      if (détailsGéo?.features[0]?.properties?.city && détailsGéo?.features[0]?.properties?.citycode) {
+        historiqueRequêtesApi[identifiantCoordonnées] = {
+          ville: détailsGéo?.features[0]?.properties?.city,
+          codeInseeVille: détailsGéo?.features[0]?.properties?.citycode,
+        };
+      } else if (!tripletsInconnus[identifiantCoordonnées]) {
+        tripletsInconnus[identifiantCoordonnées] = {
+          ta: `ta${tripleAffectationId}`,
+          latitude: ta.lat.toString(),
+          longitude: ta.lng.toString(),
+        };
       }
+    }
 
-      return [
-        `ta${tripleAffectationId}`,
-        ta.libelle,
-        ta.commune,
-        ta.codeCommune,
-        [ta.lat, ta.lng],
-        formationIdAssociée,
-      ];
-    })
-    .filter((ta): ta is string[] => ta !== undefined);
+    triplets.push([
+      `ta${tripleAffectationId}`,
+      ta.libelle,
+      historiqueRequêtesApi?.[identifiantCoordonnées]?.ville ?? "",
+      historiqueRequêtesApi?.[identifiantCoordonnées]?.codeInseeVille ?? "",
+      [ta.lat, ta.lng],
+      formationIdAssociée,
+    ]);
+  }
+
+  triplets.filter((ta): ta is string[] => ta !== undefined);
+
+  console.log("Triplets sans villes", JSON.stringify(tripletsInconnus), Object.entries(tripletsInconnus).length);
 
   const insertTripLetAffectation = sqlHandler.générerInsert(
     "triplet_affectation",
     ["id", "nom", "commune", "code_commune", "coordonnees_geographiques", "id_formation"],
-    tripletAffectation,
+    triplets,
   );
   requêteSQL.push(insertTripLetAffectation);
   sqlHandler.créerFichier("triplet_affectation", insertTripLetAffectation);

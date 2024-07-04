@@ -17,8 +17,8 @@ export type Formation = {
     moyenneGénérale: {
       idBac: string | null;
       nomBac: string | null;
-      centilles: Array<{
-        centille: number;
+      centiles: Array<{
+        centile: number;
         note: number;
       }>;
     };
@@ -39,7 +39,7 @@ export type Formation = {
       url: string;
     }>;
   }>;
-  affinité?: number;
+  affinité: number | null;
   explications: {
     villes: Array<{
       nom: string;
@@ -63,19 +63,20 @@ export type Formation = {
     };
     spécialitésChoisies: Array<{
       nom: string;
-      pourcentageChoisiAnnéePrécédente: number;
+      pourcentageAdmisAnnéePrécédente: number;
     }>;
     typeBaccalaureat: {
       id: string;
       nom: string;
       pourcentageAdmisAnnéePrécédente: number;
-    };
+    } | null;
     autoEvaluationMoyenne: {
       moyenne: number;
-      médiane: number;
+      intervalBas: number;
+      intervalHaut: number;
       idBacUtilisé: string;
       nomBacUtilisé: string;
-    };
+    } | null;
   } | null;
 };
 

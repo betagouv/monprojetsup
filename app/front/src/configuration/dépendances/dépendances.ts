@@ -15,6 +15,7 @@ import { CréerÉlèveUseCase } from "@/features/élève/usecase/CréerÉlève";
 import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourÉlève";
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerÉlève";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
+import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
 import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
 import { RécupérerAperçusFormationsUseCase } from "@/features/formation/usecase/RécupérerAperçusFormations";
@@ -39,6 +40,8 @@ export class Dépendances {
   private readonly _élèveRepository: ÉlèveRepository;
 
   private readonly _formationRepository: FormationRepository;
+
+  private readonly _formationHttpRepository: FormationRepository;
 
   private readonly _métierRepository: MétierRepository;
 
@@ -83,6 +86,7 @@ export class Dépendances {
     this._httpClient = new HttpClient(this._logger);
     this._élèveRepository = new élèveSessionStorageRepository();
     this._formationRepository = new formationInMemoryRepository();
+    this._formationHttpRepository = new formationHttpRepository(this._httpClient);
     this._métierRepository = new métierInMemoryRepository();
     this._bacRepository = new bacInMemoryRepository();
     this._domaineProfessionnelRepository = new domaineProfessionnelInMemoryRepository();
@@ -96,7 +100,7 @@ export class Dépendances {
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
     this.récupérerAperçusFormationsUseCase = new RécupérerAperçusFormationsUseCase(this._formationRepository);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
-    this.récupérerDétailFormationUseCase = new RécupérerDétailFormationUseCase(this._formationRepository);
+    this.récupérerDétailFormationUseCase = new RécupérerDétailFormationUseCase(this._formationHttpRepository);
     this.rechercherVillesUseCase = new RechercherVillesUseCase(this._villeRepository);
     this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
     this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);

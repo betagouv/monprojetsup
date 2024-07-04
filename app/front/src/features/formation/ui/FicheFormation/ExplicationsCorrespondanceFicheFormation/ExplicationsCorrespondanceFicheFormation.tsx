@@ -24,7 +24,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {explications.autoEvaluationMoyenne && (
           <ExplicationCorrespondanceÉlementFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.MOYENNE}
-            texteMisEnAvant={`${explications.autoEvaluationMoyenne.nomBacUtilisé} ${i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.MOYENNE_SUITE} ${explications.autoEvaluationMoyenne.médiane}/20`}
+            texteMisEnAvant={`${explications.autoEvaluationMoyenne.nomBacUtilisé} ${i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.MOYENNE_SUITE} [${explications.autoEvaluationMoyenne.intervalBas},${explications.autoEvaluationMoyenne.intervalHaut}]`}
           />
         )}
         {explications.duréeÉtudesPrévue && (

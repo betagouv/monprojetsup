@@ -4,12 +4,12 @@ import { type ILogger } from "@/services/logger/logger.interface";
 export class HttpClient implements IHttpClient {
   public constructor(private readonly _logger: ILogger) {}
 
-  public fetch = async <O extends {}>(options: HttpClientOptions): Promise<O | undefined> => {
-    const { endpoint, method, body, contentType, headers } = options;
+  public récupérer = async <O extends {}>(options: HttpClientOptions): Promise<O | undefined> => {
+    const { endpoint, méthode, body, contentType, headers } = options;
 
     try {
       const response = await fetch(endpoint, {
-        method,
+        method: méthode,
         body: JSON.stringify(body),
         headers: {
           "content-type": contentType ?? "application/json",
@@ -18,13 +18,13 @@ export class HttpClient implements IHttpClient {
       });
 
       if (!response?.ok) {
-        this._logger.error({ endpoint, method, body, status: response.status });
+        this._logger.error({ endpoint, méthode, body, status: response.status });
         return undefined;
       }
 
       return (await response.json()) as O;
     } catch (error) {
-      this._logger.error({ endpoint, method, body, error });
+      this._logger.error({ endpoint, méthode, body, error });
       return undefined;
     }
   };

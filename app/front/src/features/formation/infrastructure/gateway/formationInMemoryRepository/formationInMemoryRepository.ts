@@ -23,21 +23,21 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: "Générale",
           nomBac: "Série Générale",
-          centilles: [
+          centiles: [
             {
-              centille: 5,
+              centile: 5,
               note: 10,
             },
             {
-              centille: 25,
+              centile: 25,
               note: 12,
             },
             {
-              centille: 75,
+              centile: 75,
               note: 15,
             },
             {
-              centille: 95,
+              centile: 95,
               note: 17,
             },
           ],
@@ -119,6 +119,7 @@ export class formationInMemoryRepository implements FormationRepository {
           liens: [],
         },
       ],
+      affinité: null,
       explications: {
         villes: [
           {
@@ -163,11 +164,11 @@ export class formationInMemoryRepository implements FormationRepository {
         spécialitésChoisies: [
           {
             nom: "spécialité 1",
-            pourcentageChoisiAnnéePrécédente: 12,
+            pourcentageAdmisAnnéePrécédente: 12,
           },
           {
             nom: "spécialité 2",
-            pourcentageChoisiAnnéePrécédente: 24,
+            pourcentageAdmisAnnéePrécédente: 24,
           },
         ],
         typeBaccalaureat: {
@@ -177,7 +178,8 @@ export class formationInMemoryRepository implements FormationRepository {
         },
         autoEvaluationMoyenne: {
           moyenne: 12,
-          médiane: 13,
+          intervalBas: 12,
+          intervalHaut: 14,
           idBacUtilisé: "idBac2",
           nomBacUtilisé: "Bac Général",
         },
@@ -193,7 +195,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -201,6 +203,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -213,7 +216,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -221,6 +224,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -233,7 +237,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -241,6 +245,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -253,7 +258,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -261,6 +266,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -273,7 +279,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -281,6 +287,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -293,7 +300,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -301,6 +308,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -313,7 +321,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -321,6 +329,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -333,7 +342,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -341,6 +350,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -353,7 +363,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -361,6 +371,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -373,7 +384,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -381,6 +392,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -393,7 +405,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -401,6 +413,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -413,7 +426,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -421,6 +434,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -433,7 +447,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -441,6 +455,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -453,7 +468,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -461,6 +476,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -473,7 +489,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -481,6 +497,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -493,7 +510,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -501,6 +518,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -513,7 +531,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -521,6 +539,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -533,7 +552,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -541,6 +560,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -553,7 +573,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -561,6 +581,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -573,7 +594,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -581,6 +602,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -593,7 +615,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -601,6 +623,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -613,7 +636,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -621,6 +644,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -633,7 +657,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -641,6 +665,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -653,7 +678,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -661,6 +686,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -673,7 +699,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -681,6 +707,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -693,7 +720,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -701,6 +728,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -713,7 +741,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -721,6 +749,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -733,7 +762,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -741,6 +770,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -753,7 +783,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -761,6 +791,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -773,7 +804,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -781,6 +812,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -793,7 +825,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -801,6 +833,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -813,7 +846,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -821,6 +854,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -833,7 +867,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -841,6 +875,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -853,7 +888,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -861,6 +896,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -873,7 +909,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -881,6 +917,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -893,7 +930,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -901,6 +938,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -913,7 +951,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -921,6 +959,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -933,7 +972,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -941,6 +980,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -953,7 +993,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -961,6 +1001,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -973,7 +1014,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -981,6 +1022,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -993,7 +1035,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1001,6 +1043,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1013,7 +1056,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1021,6 +1064,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1033,7 +1077,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1041,6 +1085,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1053,7 +1098,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1061,6 +1106,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1073,7 +1119,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1081,6 +1127,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1093,7 +1140,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1101,6 +1148,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1113,7 +1161,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1121,6 +1169,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1133,7 +1182,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1141,6 +1190,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1153,7 +1203,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1161,6 +1211,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1173,7 +1224,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1181,6 +1232,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1193,7 +1245,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1201,6 +1253,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1213,7 +1266,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1221,6 +1274,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1233,7 +1287,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1241,6 +1295,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1253,7 +1308,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1261,6 +1316,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1273,7 +1329,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1281,6 +1337,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1293,7 +1350,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1301,6 +1358,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1313,7 +1371,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1321,6 +1379,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1333,7 +1392,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1341,6 +1400,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1353,7 +1413,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1361,6 +1421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1373,7 +1434,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1381,6 +1442,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1393,7 +1455,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1401,6 +1463,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1413,7 +1476,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1421,6 +1484,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1433,7 +1497,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1441,6 +1505,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1453,7 +1518,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1461,6 +1526,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1473,7 +1539,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1481,6 +1547,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1493,7 +1560,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1501,6 +1568,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1513,7 +1581,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1521,6 +1589,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1533,7 +1602,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1541,6 +1610,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1553,7 +1623,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1561,6 +1631,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1573,7 +1644,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1581,6 +1652,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1593,7 +1665,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1601,6 +1673,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1613,7 +1686,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1621,6 +1694,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1633,7 +1707,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1641,6 +1715,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1653,7 +1728,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1661,6 +1736,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1673,7 +1749,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1681,6 +1757,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1693,7 +1770,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1701,6 +1778,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1713,7 +1791,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1721,6 +1799,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1733,7 +1812,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1741,6 +1820,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1753,7 +1833,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1761,6 +1841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1773,7 +1854,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1781,6 +1862,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1793,7 +1875,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1801,6 +1883,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1813,7 +1896,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1821,6 +1904,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1833,7 +1917,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1841,6 +1925,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1853,7 +1938,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1861,6 +1946,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1873,7 +1959,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1881,6 +1967,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1893,7 +1980,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1901,6 +1988,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1913,7 +2001,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1921,6 +2009,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1933,7 +2022,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1941,6 +2030,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1953,7 +2043,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1961,6 +2051,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1973,7 +2064,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -1981,6 +2072,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -1993,7 +2085,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2001,6 +2093,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2013,7 +2106,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2021,6 +2114,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2033,7 +2127,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2041,6 +2135,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2053,7 +2148,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2061,6 +2156,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2073,7 +2169,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2081,6 +2177,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2093,7 +2190,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2101,6 +2198,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2113,7 +2211,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2121,6 +2219,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2133,7 +2232,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2141,6 +2240,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2153,7 +2253,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2161,6 +2261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2173,7 +2274,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2181,6 +2282,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2193,7 +2295,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2201,6 +2303,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2213,7 +2316,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2221,6 +2324,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2233,7 +2337,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2241,6 +2345,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2253,7 +2358,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2261,6 +2366,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2273,7 +2379,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2281,6 +2387,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2293,7 +2400,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2301,6 +2408,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2313,7 +2421,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2321,6 +2429,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2333,7 +2442,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2341,6 +2450,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2353,7 +2463,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2361,6 +2471,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2373,7 +2484,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2381,6 +2492,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2393,7 +2505,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2401,6 +2513,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2413,7 +2526,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2421,6 +2534,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2433,7 +2547,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2441,6 +2555,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2453,7 +2568,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2461,6 +2576,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2473,7 +2589,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2481,6 +2597,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2493,7 +2610,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2501,6 +2618,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2513,7 +2631,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2521,6 +2639,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2533,7 +2652,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2541,6 +2660,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2553,7 +2673,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2561,6 +2681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2573,7 +2694,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2581,6 +2702,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2593,7 +2715,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2601,6 +2723,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2613,7 +2736,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2621,6 +2744,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2633,7 +2757,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2641,6 +2765,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2653,7 +2778,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2661,6 +2786,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2673,7 +2799,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2681,6 +2807,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2693,7 +2820,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2701,6 +2828,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2713,7 +2841,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2721,6 +2849,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2733,7 +2862,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2741,6 +2870,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2753,7 +2883,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2761,6 +2891,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2773,7 +2904,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2781,6 +2912,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2793,7 +2925,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2801,6 +2933,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2813,7 +2946,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2821,6 +2954,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2833,7 +2967,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2841,6 +2975,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2853,7 +2988,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2861,6 +2996,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2873,7 +3009,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2881,6 +3017,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2893,7 +3030,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2901,6 +3038,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2913,7 +3051,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2921,6 +3059,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2933,7 +3072,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2941,6 +3080,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2953,7 +3093,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2961,6 +3101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2973,7 +3114,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -2981,6 +3122,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -2993,7 +3135,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3001,6 +3143,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3013,7 +3156,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3021,6 +3164,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3033,7 +3177,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3041,6 +3185,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3053,7 +3198,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3061,6 +3206,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3073,7 +3219,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3081,6 +3227,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3093,7 +3240,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3101,6 +3248,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3113,7 +3261,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3121,6 +3269,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3133,7 +3282,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3141,6 +3290,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3153,7 +3303,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3161,6 +3311,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3173,7 +3324,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3181,6 +3332,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3193,7 +3345,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3201,6 +3353,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3213,7 +3366,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3221,6 +3374,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3233,7 +3387,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3241,6 +3395,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3253,7 +3408,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3261,6 +3416,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3273,7 +3429,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3281,6 +3437,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3293,7 +3450,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3301,6 +3458,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3313,7 +3471,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3321,6 +3479,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3333,7 +3492,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3341,6 +3500,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3353,7 +3513,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3361,6 +3521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3373,7 +3534,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3381,6 +3542,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3393,7 +3555,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3401,6 +3563,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3413,7 +3576,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3421,6 +3584,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3433,7 +3597,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3441,6 +3605,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3453,7 +3618,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3461,6 +3626,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3473,7 +3639,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3481,6 +3647,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3493,7 +3660,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3501,6 +3668,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3513,7 +3681,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3521,6 +3689,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3533,7 +3702,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3541,6 +3710,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3553,7 +3723,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3561,6 +3731,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3573,7 +3744,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3581,6 +3752,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3593,7 +3765,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3601,6 +3773,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3613,7 +3786,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3621,6 +3794,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3633,7 +3807,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3641,6 +3815,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3653,7 +3828,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3661,6 +3836,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3673,7 +3849,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3681,6 +3857,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3693,7 +3870,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3701,6 +3878,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3713,7 +3891,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3721,6 +3899,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3733,7 +3912,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3741,6 +3920,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3753,7 +3933,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3761,6 +3941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3773,7 +3954,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3781,6 +3962,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3793,7 +3975,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3801,6 +3983,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3813,7 +3996,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3821,6 +4004,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3833,7 +4017,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3841,6 +4025,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3853,7 +4038,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3861,6 +4046,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3873,7 +4059,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3881,6 +4067,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3893,7 +4080,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3901,6 +4088,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3913,7 +4101,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3921,6 +4109,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3933,7 +4122,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3941,6 +4130,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3953,7 +4143,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3961,6 +4151,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3973,7 +4164,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -3981,6 +4172,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -3993,7 +4185,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4001,6 +4193,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4013,7 +4206,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4021,6 +4214,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4033,7 +4227,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4041,6 +4235,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4053,7 +4248,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4061,6 +4256,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4073,7 +4269,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4081,6 +4277,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4093,7 +4290,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4101,6 +4298,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4113,7 +4311,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4121,6 +4319,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4133,7 +4332,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4141,6 +4340,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4153,7 +4353,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4161,6 +4361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4173,7 +4374,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4181,6 +4382,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4193,7 +4395,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4201,6 +4403,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4213,7 +4416,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4221,6 +4424,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4233,7 +4437,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4241,6 +4445,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4253,7 +4458,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4261,6 +4466,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4273,7 +4479,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4281,6 +4487,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4293,7 +4500,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4301,6 +4508,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4313,7 +4521,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4321,6 +4529,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4333,7 +4542,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4341,6 +4550,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4353,7 +4563,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4361,6 +4571,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4373,7 +4584,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4381,6 +4592,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4393,7 +4605,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4401,6 +4613,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4413,7 +4626,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4421,6 +4634,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4433,7 +4647,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4441,6 +4655,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4453,7 +4668,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4461,6 +4676,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4473,7 +4689,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4481,6 +4697,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4493,7 +4710,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4501,6 +4718,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4513,7 +4731,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4521,6 +4739,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4533,7 +4752,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4541,6 +4760,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4553,7 +4773,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4561,6 +4781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4573,7 +4794,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4581,6 +4802,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4593,7 +4815,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4601,6 +4823,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4613,7 +4836,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4621,6 +4844,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4633,7 +4857,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4641,6 +4865,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4653,7 +4878,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4661,6 +4886,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4673,7 +4899,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4681,6 +4907,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4693,7 +4920,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4701,6 +4928,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4713,7 +4941,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4721,6 +4949,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4733,7 +4962,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4741,6 +4970,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4753,7 +4983,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4761,6 +4991,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4773,7 +5004,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4781,6 +5012,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4793,7 +5025,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4801,6 +5033,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4813,7 +5046,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4821,6 +5054,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4833,7 +5067,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4841,6 +5075,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4853,7 +5088,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4861,6 +5096,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4873,7 +5109,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4881,6 +5117,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4893,7 +5130,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4901,6 +5138,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4913,7 +5151,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4921,6 +5159,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4933,7 +5172,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4941,6 +5180,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4953,7 +5193,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4961,6 +5201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4973,7 +5214,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -4981,6 +5222,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -4993,7 +5235,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5001,6 +5243,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5013,7 +5256,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5021,6 +5264,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5033,7 +5277,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5041,6 +5285,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5053,7 +5298,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5061,6 +5306,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5073,7 +5319,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5081,6 +5327,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5093,7 +5340,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5101,6 +5348,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5113,7 +5361,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5121,6 +5369,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5133,7 +5382,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5141,6 +5390,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5153,7 +5403,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5161,6 +5411,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5173,7 +5424,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5181,6 +5432,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5193,7 +5445,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5201,6 +5453,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5213,7 +5466,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5221,6 +5474,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5233,7 +5487,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5241,6 +5495,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5253,7 +5508,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5261,6 +5516,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5273,7 +5529,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5281,6 +5537,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5293,7 +5550,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5301,6 +5558,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5313,7 +5571,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5321,6 +5579,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5333,7 +5592,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5341,6 +5600,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5353,7 +5613,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5361,6 +5621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5373,7 +5634,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5381,6 +5642,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5393,7 +5655,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5401,6 +5663,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5413,7 +5676,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5421,6 +5684,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5433,7 +5697,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5441,6 +5705,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5453,7 +5718,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5461,6 +5726,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5473,7 +5739,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5481,6 +5747,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5493,7 +5760,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5501,6 +5768,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5513,7 +5781,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5521,6 +5789,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5533,7 +5802,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5541,6 +5810,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5553,7 +5823,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5561,6 +5831,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5573,7 +5844,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5581,6 +5852,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5593,7 +5865,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5601,6 +5873,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5613,7 +5886,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5621,6 +5894,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5633,7 +5907,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5641,6 +5915,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5653,7 +5928,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5661,6 +5936,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5673,7 +5949,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5681,6 +5957,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5693,7 +5970,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5701,6 +5978,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5713,7 +5991,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5721,6 +5999,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5733,7 +6012,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5741,6 +6020,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5753,7 +6033,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5761,6 +6041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5773,7 +6054,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5781,6 +6062,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5793,7 +6075,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5801,6 +6083,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5813,7 +6096,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5821,6 +6104,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5833,7 +6117,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5841,6 +6125,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5853,7 +6138,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5861,6 +6146,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5873,7 +6159,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5881,6 +6167,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5893,7 +6180,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5901,6 +6188,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5913,7 +6201,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5921,6 +6209,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5933,7 +6222,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5941,6 +6230,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5953,7 +6243,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5961,6 +6251,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5973,7 +6264,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -5981,6 +6272,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -5993,7 +6285,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6001,6 +6293,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6013,7 +6306,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6021,6 +6314,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6033,7 +6327,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6041,6 +6335,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6053,7 +6348,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6061,6 +6356,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6073,7 +6369,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6081,6 +6377,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6093,7 +6390,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6101,6 +6398,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6113,7 +6411,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6121,6 +6419,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6133,7 +6432,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6141,6 +6440,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6153,7 +6453,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6161,6 +6461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6173,7 +6474,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6181,6 +6482,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6193,7 +6495,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6201,6 +6503,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6213,7 +6516,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6221,6 +6524,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6233,7 +6537,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6241,6 +6545,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6253,7 +6558,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6261,6 +6566,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6273,7 +6579,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6281,6 +6587,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6293,7 +6600,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6301,6 +6608,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6313,7 +6621,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6321,6 +6629,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6333,7 +6642,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6341,6 +6650,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6353,7 +6663,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6361,6 +6671,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6373,7 +6684,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6381,6 +6692,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6393,7 +6705,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6401,6 +6713,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6413,7 +6726,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6421,6 +6734,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6433,7 +6747,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6441,6 +6755,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6453,7 +6768,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6461,6 +6776,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6473,7 +6789,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6481,6 +6797,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6493,7 +6810,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6501,6 +6818,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6513,7 +6831,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6521,6 +6839,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6533,7 +6852,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6541,6 +6860,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6553,7 +6873,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6561,6 +6881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6573,7 +6894,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6581,6 +6902,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6593,7 +6915,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6601,6 +6923,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6613,7 +6936,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6621,6 +6944,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6633,7 +6957,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6641,6 +6965,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6653,7 +6978,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6661,6 +6986,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6673,7 +6999,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6681,6 +7007,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6693,7 +7020,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6701,6 +7028,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6713,7 +7041,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6721,6 +7049,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6733,7 +7062,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6741,6 +7070,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6753,7 +7083,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6761,6 +7091,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6773,7 +7104,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6781,6 +7112,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6793,7 +7125,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6801,6 +7133,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6813,7 +7146,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6821,6 +7154,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6833,7 +7167,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6841,6 +7175,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6853,7 +7188,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6861,6 +7196,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6873,7 +7209,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6881,6 +7217,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6893,7 +7230,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6901,6 +7238,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6913,7 +7251,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6921,6 +7259,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6933,7 +7272,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6941,6 +7280,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6953,7 +7293,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6961,6 +7301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6973,7 +7314,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -6981,6 +7322,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -6993,7 +7335,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7001,6 +7343,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7013,7 +7356,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7021,6 +7364,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7033,7 +7377,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7041,6 +7385,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7053,7 +7398,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7061,6 +7406,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7073,7 +7419,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7081,6 +7427,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7093,7 +7440,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7101,6 +7448,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7113,7 +7461,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7121,6 +7469,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7133,7 +7482,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7141,6 +7490,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7153,7 +7503,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7161,6 +7511,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7173,7 +7524,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7181,6 +7532,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7193,7 +7545,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7201,6 +7553,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7213,7 +7566,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7221,6 +7574,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7233,7 +7587,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7241,6 +7595,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7253,7 +7608,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7261,6 +7616,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7273,7 +7629,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7281,6 +7637,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7293,7 +7650,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7301,6 +7658,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7313,7 +7671,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7321,6 +7679,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7333,7 +7692,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7341,6 +7700,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7353,7 +7713,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7361,6 +7721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7373,7 +7734,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7381,6 +7742,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7393,7 +7755,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7401,6 +7763,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7413,7 +7776,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7421,6 +7784,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7433,7 +7797,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7441,6 +7805,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7453,7 +7818,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7461,6 +7826,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7473,7 +7839,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7481,6 +7847,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7493,7 +7860,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7501,6 +7868,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7513,7 +7881,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7521,6 +7889,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7533,7 +7902,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7541,6 +7910,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7553,7 +7923,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7561,6 +7931,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7573,7 +7944,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7581,6 +7952,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7593,7 +7965,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7601,6 +7973,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7613,7 +7986,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7621,6 +7994,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7633,7 +8007,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7641,6 +8015,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7653,7 +8028,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7661,6 +8036,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7673,7 +8049,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7681,6 +8057,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7693,7 +8070,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7701,6 +8078,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7713,7 +8091,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7721,6 +8099,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7733,7 +8112,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7741,6 +8120,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7753,7 +8133,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7761,6 +8141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7773,7 +8154,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7781,6 +8162,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7793,7 +8175,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7801,6 +8183,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7813,7 +8196,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7821,6 +8204,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7833,7 +8217,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7841,6 +8225,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7853,7 +8238,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7861,6 +8246,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7873,7 +8259,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7881,6 +8267,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7893,7 +8280,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7901,6 +8288,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7913,7 +8301,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7921,6 +8309,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7933,7 +8322,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7941,6 +8330,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7953,7 +8343,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7961,6 +8351,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7973,7 +8364,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -7981,6 +8372,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -7993,7 +8385,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8001,6 +8393,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8013,7 +8406,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8021,6 +8414,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8033,7 +8427,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8041,6 +8435,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8053,7 +8448,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8061,6 +8456,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8073,7 +8469,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8081,6 +8477,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8093,7 +8490,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8101,6 +8498,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8113,7 +8511,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8121,6 +8519,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8133,7 +8532,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8141,6 +8540,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8153,7 +8553,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8161,6 +8561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8173,7 +8574,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8181,6 +8582,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8193,7 +8595,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8201,6 +8603,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8213,7 +8616,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8221,6 +8624,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8233,7 +8637,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8241,6 +8645,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8253,7 +8658,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8261,6 +8666,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8273,7 +8679,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8281,6 +8687,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8293,7 +8700,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8301,6 +8708,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8313,7 +8721,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8321,6 +8729,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8333,7 +8742,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8341,6 +8750,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8353,7 +8763,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8361,6 +8771,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8373,7 +8784,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8381,6 +8792,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8393,7 +8805,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8401,6 +8813,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8413,7 +8826,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8421,6 +8834,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8433,7 +8847,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8441,6 +8855,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8453,7 +8868,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8461,6 +8876,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8473,7 +8889,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8481,6 +8897,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8493,7 +8910,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8501,6 +8918,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8513,7 +8931,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8521,6 +8939,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8533,7 +8952,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8541,6 +8960,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8553,7 +8973,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8561,6 +8981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8573,7 +8994,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8581,6 +9002,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8593,7 +9015,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8601,6 +9023,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8613,7 +9036,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8621,6 +9044,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8633,7 +9057,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8641,6 +9065,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8653,7 +9078,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8661,6 +9086,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8673,7 +9099,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8681,6 +9107,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8693,7 +9120,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8701,6 +9128,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8713,7 +9141,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8721,6 +9149,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8733,7 +9162,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8741,6 +9170,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8753,7 +9183,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8761,6 +9191,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8773,7 +9204,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8781,6 +9212,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8793,7 +9225,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8801,6 +9233,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8813,7 +9246,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8821,6 +9254,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8833,7 +9267,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8841,6 +9275,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8853,7 +9288,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8861,6 +9296,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8873,7 +9309,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8881,6 +9317,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8893,7 +9330,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8901,6 +9338,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8913,7 +9351,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8921,6 +9359,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8933,7 +9372,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8941,6 +9380,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8953,7 +9393,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8961,6 +9401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8973,7 +9414,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -8981,6 +9422,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -8993,7 +9435,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9001,6 +9443,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9013,7 +9456,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9021,6 +9464,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9033,7 +9477,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9041,6 +9485,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9053,7 +9498,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9061,6 +9506,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9073,7 +9519,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9081,6 +9527,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9093,7 +9540,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9101,6 +9548,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9113,7 +9561,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9121,6 +9569,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9133,7 +9582,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9141,6 +9590,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9153,7 +9603,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9161,6 +9611,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9173,7 +9624,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9181,6 +9632,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9193,7 +9645,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9201,6 +9653,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9213,7 +9666,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9221,6 +9674,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9233,7 +9687,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9241,6 +9695,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9253,7 +9708,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9261,6 +9716,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9273,7 +9729,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9281,6 +9737,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9293,7 +9750,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9301,6 +9758,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9313,7 +9771,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9321,6 +9779,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9333,7 +9792,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9341,6 +9800,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9353,7 +9813,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9361,6 +9821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9373,7 +9834,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9381,6 +9842,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9393,7 +9855,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9401,6 +9863,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9413,7 +9876,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9421,6 +9884,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9433,7 +9897,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9441,6 +9905,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9453,7 +9918,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9461,6 +9926,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9473,7 +9939,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9481,6 +9947,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9493,7 +9960,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9501,6 +9968,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9513,7 +9981,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9521,6 +9989,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9533,7 +10002,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9541,6 +10010,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9553,7 +10023,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9561,6 +10031,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9573,7 +10044,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9581,6 +10052,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9593,7 +10065,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9601,6 +10073,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9613,7 +10086,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9621,6 +10094,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9633,7 +10107,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9641,6 +10115,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9653,7 +10128,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9661,6 +10136,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9673,7 +10149,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9681,6 +10157,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9693,7 +10170,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9701,6 +10178,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9713,7 +10191,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9721,6 +10199,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9733,7 +10212,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9741,6 +10220,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9753,7 +10233,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9761,6 +10241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9773,7 +10254,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9781,6 +10262,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9793,7 +10275,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9801,6 +10283,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9813,7 +10296,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9821,6 +10304,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9833,7 +10317,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9841,6 +10325,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9853,7 +10338,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9861,6 +10346,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9873,7 +10359,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9881,6 +10367,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9893,7 +10380,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9901,6 +10388,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9913,7 +10401,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9921,6 +10409,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9933,7 +10422,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9941,6 +10430,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9953,7 +10443,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9961,6 +10451,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9973,7 +10464,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -9981,6 +10472,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -9993,7 +10485,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10001,6 +10493,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10013,7 +10506,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10021,6 +10514,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10033,7 +10527,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10041,6 +10535,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10053,7 +10548,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10061,6 +10556,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10073,7 +10569,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10081,6 +10577,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10093,7 +10590,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10101,6 +10598,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10113,7 +10611,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10121,6 +10619,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10133,7 +10632,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10141,6 +10640,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10153,7 +10653,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10161,6 +10661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10173,7 +10674,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10181,6 +10682,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10193,7 +10695,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10201,6 +10703,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10213,7 +10716,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10221,6 +10724,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10233,7 +10737,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10241,6 +10745,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10253,7 +10758,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10261,6 +10766,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10273,7 +10779,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10281,6 +10787,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10293,7 +10800,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10301,6 +10808,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10313,7 +10821,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10321,6 +10829,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10333,7 +10842,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10341,6 +10850,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10353,7 +10863,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10361,6 +10871,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10373,7 +10884,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10381,6 +10892,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10393,7 +10905,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10401,6 +10913,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10413,7 +10926,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10421,6 +10934,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10433,7 +10947,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10441,6 +10955,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10453,7 +10968,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10461,6 +10976,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10473,7 +10989,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10481,6 +10997,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10493,7 +11010,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10501,6 +11018,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10513,7 +11031,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10521,6 +11039,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10533,7 +11052,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10541,6 +11060,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10553,7 +11073,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10561,6 +11081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10573,7 +11094,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10581,6 +11102,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10593,7 +11115,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10601,6 +11123,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10613,7 +11136,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10621,6 +11144,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10633,7 +11157,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10641,6 +11165,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10653,7 +11178,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10661,6 +11186,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10673,7 +11199,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10681,6 +11207,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10693,7 +11220,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10701,6 +11228,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10713,7 +11241,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10721,6 +11249,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10733,7 +11262,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10741,6 +11270,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10753,7 +11283,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10761,6 +11291,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10773,7 +11304,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10781,6 +11312,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10793,7 +11325,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10801,6 +11333,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10813,7 +11346,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10821,6 +11354,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10833,7 +11367,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10841,6 +11375,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10853,7 +11388,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10861,6 +11396,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10873,7 +11409,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10881,6 +11417,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10893,7 +11430,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10901,6 +11438,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10913,7 +11451,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10921,6 +11459,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10933,7 +11472,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10941,6 +11480,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10953,7 +11493,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10961,6 +11501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10973,7 +11514,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -10981,6 +11522,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -10993,7 +11535,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11001,6 +11543,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11013,7 +11556,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11021,6 +11564,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11033,7 +11577,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11041,6 +11585,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11053,7 +11598,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11061,6 +11606,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11073,7 +11619,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11081,6 +11627,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11093,7 +11640,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11101,6 +11648,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11113,7 +11661,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11121,6 +11669,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11133,7 +11682,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11141,6 +11690,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11153,7 +11703,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11161,6 +11711,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11173,7 +11724,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11181,6 +11732,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11193,7 +11745,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11201,6 +11753,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11213,7 +11766,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11221,6 +11774,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11233,7 +11787,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11241,6 +11795,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11253,7 +11808,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11261,6 +11816,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11273,7 +11829,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11281,6 +11837,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11293,7 +11850,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11301,6 +11858,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11313,7 +11871,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11321,6 +11879,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11333,7 +11892,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11341,6 +11900,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11353,7 +11913,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11361,6 +11921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11373,7 +11934,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11381,6 +11942,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11393,7 +11955,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11401,6 +11963,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11413,7 +11976,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11421,6 +11984,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11433,7 +11997,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11441,6 +12005,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11453,7 +12018,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11461,6 +12026,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11473,7 +12039,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11481,6 +12047,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11493,7 +12060,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11501,6 +12068,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11513,7 +12081,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11521,6 +12089,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11533,7 +12102,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11541,6 +12110,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11553,7 +12123,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11561,6 +12131,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11573,7 +12144,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11581,6 +12152,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11593,7 +12165,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11601,6 +12173,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11613,7 +12186,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11621,6 +12194,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11633,7 +12207,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11641,6 +12215,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11653,7 +12228,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11661,6 +12236,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11673,7 +12249,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11681,6 +12257,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11693,7 +12270,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11701,6 +12278,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11713,7 +12291,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11721,6 +12299,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11733,7 +12312,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11741,6 +12320,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11753,7 +12333,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11761,6 +12341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11773,7 +12354,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11781,6 +12362,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11793,7 +12375,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11801,6 +12383,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11813,7 +12396,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11821,6 +12404,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11833,7 +12417,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11841,6 +12425,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11853,7 +12438,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11861,6 +12446,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11873,7 +12459,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11881,6 +12467,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11893,7 +12480,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11901,6 +12488,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11913,7 +12501,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11921,6 +12509,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11933,7 +12522,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11941,6 +12530,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11953,7 +12543,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11961,6 +12551,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11973,7 +12564,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -11981,6 +12572,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -11993,7 +12585,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12001,6 +12593,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12013,7 +12606,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12021,6 +12614,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12033,7 +12627,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12041,6 +12635,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12053,7 +12648,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12061,6 +12656,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12073,7 +12669,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12081,6 +12677,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12093,7 +12690,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12101,6 +12698,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12113,7 +12711,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12121,6 +12719,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12133,7 +12732,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12141,6 +12740,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12153,7 +12753,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12161,6 +12761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12173,7 +12774,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12181,6 +12782,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12193,7 +12795,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12201,6 +12803,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12213,7 +12816,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12221,6 +12824,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12233,7 +12837,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12241,6 +12845,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12253,7 +12858,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12261,6 +12866,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12273,7 +12879,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12281,6 +12887,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12293,7 +12900,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12301,6 +12908,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12313,7 +12921,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12321,6 +12929,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12333,7 +12942,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12341,6 +12950,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12353,7 +12963,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12361,6 +12971,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12373,7 +12984,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12381,6 +12992,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12393,7 +13005,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12401,6 +13013,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12413,7 +13026,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12421,6 +13034,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12433,7 +13047,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12441,6 +13055,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12453,7 +13068,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12461,6 +13076,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12473,7 +13089,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12481,6 +13097,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12493,7 +13110,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12501,6 +13118,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12513,7 +13131,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12521,6 +13139,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12533,7 +13152,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12541,6 +13160,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12553,7 +13173,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12561,6 +13181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12573,7 +13194,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12581,6 +13202,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12593,7 +13215,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12601,6 +13223,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12613,7 +13236,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12621,6 +13244,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12633,7 +13257,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12641,6 +13265,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12653,7 +13278,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12661,6 +13286,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12673,7 +13299,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12681,6 +13307,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12693,7 +13320,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12701,6 +13328,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12713,7 +13341,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12721,6 +13349,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12733,7 +13362,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12741,6 +13370,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12753,7 +13383,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12761,6 +13391,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12773,7 +13404,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12781,6 +13412,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12793,7 +13425,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12801,6 +13433,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12813,7 +13446,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12821,6 +13454,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12833,7 +13467,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12841,6 +13475,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12853,7 +13488,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12861,6 +13496,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12873,7 +13509,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12881,6 +13517,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12893,7 +13530,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12901,6 +13538,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12913,7 +13551,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12921,6 +13559,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12933,7 +13572,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12941,6 +13580,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12953,7 +13593,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12961,6 +13601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12973,7 +13614,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -12981,6 +13622,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -12993,7 +13635,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13001,6 +13643,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13013,7 +13656,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13021,6 +13664,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13033,7 +13677,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13041,6 +13685,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13053,7 +13698,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13061,6 +13706,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13073,7 +13719,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13081,6 +13727,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13093,7 +13740,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13101,6 +13748,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13113,7 +13761,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13121,6 +13769,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13133,7 +13782,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13141,6 +13790,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13153,7 +13803,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13161,6 +13811,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13173,7 +13824,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13181,6 +13832,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13193,7 +13845,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13201,6 +13853,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13213,7 +13866,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13221,6 +13874,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13233,7 +13887,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13241,6 +13895,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13253,7 +13908,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13261,6 +13916,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13273,7 +13929,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13281,6 +13937,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13293,7 +13950,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13301,6 +13958,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13313,7 +13971,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13321,6 +13979,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13333,7 +13992,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13341,6 +14000,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13353,7 +14013,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13361,6 +14021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13373,7 +14034,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13381,6 +14042,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13393,7 +14055,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13401,6 +14063,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13413,7 +14076,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13421,6 +14084,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13433,7 +14097,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13441,6 +14105,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13453,7 +14118,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13461,6 +14126,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13473,7 +14139,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13481,6 +14147,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13493,7 +14160,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13501,6 +14168,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13513,7 +14181,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13521,6 +14189,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13533,7 +14202,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13541,6 +14210,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13553,7 +14223,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13561,6 +14231,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13573,7 +14244,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13581,6 +14252,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13593,7 +14265,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13601,6 +14273,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13613,7 +14286,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13621,6 +14294,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13633,7 +14307,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13641,6 +14315,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13653,7 +14328,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13661,6 +14336,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13673,7 +14349,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13681,6 +14357,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13693,7 +14370,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13701,6 +14378,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13713,7 +14391,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13721,6 +14399,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13733,7 +14412,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13741,6 +14420,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13753,7 +14433,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13761,6 +14441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13773,7 +14454,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13781,6 +14462,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13793,7 +14475,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13801,6 +14483,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13813,7 +14496,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13821,6 +14504,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13833,7 +14517,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13841,6 +14525,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13853,7 +14538,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13861,6 +14546,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13873,7 +14559,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13881,6 +14567,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13893,7 +14580,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13901,6 +14588,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13913,7 +14601,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13921,6 +14609,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13933,7 +14622,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13941,6 +14630,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13953,7 +14643,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13961,6 +14651,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13973,7 +14664,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -13981,6 +14672,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -13993,7 +14685,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14001,6 +14693,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14013,7 +14706,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14021,6 +14714,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14033,7 +14727,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14041,6 +14735,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14053,7 +14748,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14061,6 +14756,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14073,7 +14769,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14081,6 +14777,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14093,7 +14790,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14101,6 +14798,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14113,7 +14811,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14121,6 +14819,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14133,7 +14832,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14141,6 +14840,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14153,7 +14853,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14161,6 +14861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14173,7 +14874,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14181,6 +14882,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14193,7 +14895,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14201,6 +14903,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14213,7 +14916,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14221,6 +14924,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14233,7 +14937,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14241,6 +14945,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14253,7 +14958,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14261,6 +14966,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14273,7 +14979,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14281,6 +14987,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14293,7 +15000,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14301,6 +15008,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14313,7 +15021,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14321,6 +15029,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14333,7 +15042,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14341,6 +15050,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14353,7 +15063,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14361,6 +15071,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14373,7 +15084,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14381,6 +15092,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14393,7 +15105,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14401,6 +15113,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14413,7 +15126,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14421,6 +15134,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14433,7 +15147,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14441,6 +15155,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14453,7 +15168,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14461,6 +15176,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14473,7 +15189,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14481,6 +15197,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14493,7 +15210,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14501,6 +15218,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14513,7 +15231,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14521,6 +15239,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14533,7 +15252,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14541,6 +15260,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14553,7 +15273,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14561,6 +15281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14573,7 +15294,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14581,6 +15302,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14593,7 +15315,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14601,6 +15323,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14613,7 +15336,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14621,6 +15344,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14633,7 +15357,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14641,6 +15365,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14653,7 +15378,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14661,6 +15386,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14673,7 +15399,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14681,6 +15407,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14693,7 +15420,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14701,6 +15428,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14713,7 +15441,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14721,6 +15449,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14733,7 +15462,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14741,6 +15470,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14753,7 +15483,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14761,6 +15491,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14773,7 +15504,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14781,6 +15512,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14793,7 +15525,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14801,6 +15533,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14813,7 +15546,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14821,6 +15554,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14833,7 +15567,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14841,6 +15575,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14853,7 +15588,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14861,6 +15596,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14873,7 +15609,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14881,6 +15617,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14893,7 +15630,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14901,6 +15638,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14913,7 +15651,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14921,6 +15659,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14933,7 +15672,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14941,6 +15680,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14953,7 +15693,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14961,6 +15701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14973,7 +15714,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -14981,6 +15722,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -14993,7 +15735,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15001,6 +15743,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15013,7 +15756,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15021,6 +15764,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15033,7 +15777,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15041,6 +15785,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15053,7 +15798,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15061,6 +15806,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15073,7 +15819,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15081,6 +15827,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15093,7 +15840,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15101,6 +15848,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15113,7 +15861,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15121,6 +15869,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15133,7 +15882,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15141,6 +15890,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15153,7 +15903,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15161,6 +15911,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15173,7 +15924,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15181,6 +15932,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15193,7 +15945,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15201,6 +15953,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15213,7 +15966,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15221,6 +15974,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15233,7 +15987,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15241,6 +15995,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15253,7 +16008,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15261,6 +16016,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15273,7 +16029,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15281,6 +16037,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15293,7 +16050,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15301,6 +16058,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15313,7 +16071,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15321,6 +16079,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15333,7 +16092,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15341,6 +16100,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15353,7 +16113,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15361,6 +16121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15373,7 +16134,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15381,6 +16142,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15393,7 +16155,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15401,6 +16163,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15413,7 +16176,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15421,6 +16184,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15433,7 +16197,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15441,6 +16205,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15453,7 +16218,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15461,6 +16226,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15473,7 +16239,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15481,6 +16247,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15493,7 +16260,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15501,6 +16268,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15513,7 +16281,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15521,6 +16289,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15533,7 +16302,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15541,6 +16310,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15553,7 +16323,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15561,6 +16331,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15573,7 +16344,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15581,6 +16352,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15593,7 +16365,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15601,6 +16373,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15613,7 +16386,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15621,6 +16394,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15633,7 +16407,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15641,6 +16415,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15653,7 +16428,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15661,6 +16436,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15673,7 +16449,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15681,6 +16457,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15693,7 +16470,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15701,6 +16478,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15713,7 +16491,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15721,6 +16499,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15733,7 +16512,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15741,6 +16520,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15753,7 +16533,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15761,6 +16541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15773,7 +16554,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15781,6 +16562,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15793,7 +16575,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15801,6 +16583,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15813,7 +16596,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15821,6 +16604,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15833,7 +16617,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15841,6 +16625,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15853,7 +16638,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15861,6 +16646,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15873,7 +16659,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15881,6 +16667,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15893,7 +16680,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15901,6 +16688,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15913,7 +16701,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15921,6 +16709,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15933,7 +16722,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15941,6 +16730,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15953,7 +16743,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15961,6 +16751,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15973,7 +16764,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -15981,6 +16772,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -15993,7 +16785,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16001,6 +16793,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16013,7 +16806,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16021,6 +16814,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16033,7 +16827,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16041,6 +16835,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16053,7 +16848,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16061,6 +16856,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16073,7 +16869,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16081,6 +16877,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16093,7 +16890,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16101,6 +16898,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16113,7 +16911,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16121,6 +16919,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16133,7 +16932,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16141,6 +16940,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16153,7 +16953,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16161,6 +16961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16173,7 +16974,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16181,6 +16982,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16193,7 +16995,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16201,6 +17003,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16213,7 +17016,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16221,6 +17024,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16233,7 +17037,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16241,6 +17045,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16253,7 +17058,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16261,6 +17066,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16273,7 +17079,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16281,6 +17087,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16293,7 +17100,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16301,6 +17108,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16313,7 +17121,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16321,6 +17129,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16333,7 +17142,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16341,6 +17150,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16353,7 +17163,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16361,6 +17171,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16373,7 +17184,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16381,6 +17192,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16393,7 +17205,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16401,6 +17213,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16413,7 +17226,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16421,6 +17234,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16433,7 +17247,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16441,6 +17255,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16453,7 +17268,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16461,6 +17276,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16473,7 +17289,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16481,6 +17297,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16493,7 +17310,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16501,6 +17318,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16513,7 +17331,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16521,6 +17339,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16533,7 +17352,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16541,6 +17360,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16553,7 +17373,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16561,6 +17381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16573,7 +17394,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16581,6 +17402,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16593,7 +17415,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16601,6 +17423,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16613,7 +17436,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16621,6 +17444,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16633,7 +17457,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16641,6 +17465,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16653,7 +17478,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16661,6 +17486,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16673,7 +17499,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16681,6 +17507,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16693,7 +17520,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16701,6 +17528,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16713,7 +17541,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16721,6 +17549,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16733,7 +17562,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16741,6 +17570,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16753,7 +17583,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16761,6 +17591,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16773,7 +17604,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16781,6 +17612,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16793,7 +17625,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16801,6 +17633,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16813,7 +17646,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16821,6 +17654,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16833,7 +17667,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16841,6 +17675,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16853,7 +17688,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16861,6 +17696,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16873,7 +17709,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16881,6 +17717,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16893,7 +17730,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16901,6 +17738,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16913,7 +17751,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16921,6 +17759,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16933,7 +17772,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16941,6 +17780,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16953,7 +17793,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16961,6 +17801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16973,7 +17814,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -16981,6 +17822,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -16993,7 +17835,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17001,6 +17843,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17013,7 +17856,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17021,6 +17864,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17033,7 +17877,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17041,6 +17885,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17053,7 +17898,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17061,6 +17906,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17073,7 +17919,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17081,6 +17927,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17093,7 +17940,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17101,6 +17948,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17113,7 +17961,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17121,6 +17969,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17133,7 +17982,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17141,6 +17990,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17153,7 +18003,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17161,6 +18011,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17173,7 +18024,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17181,6 +18032,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17193,7 +18045,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17201,6 +18053,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17213,7 +18066,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17221,6 +18074,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17233,7 +18087,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17241,6 +18095,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17253,7 +18108,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17261,6 +18116,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17273,7 +18129,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17281,6 +18137,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17293,7 +18150,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17301,6 +18158,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17313,7 +18171,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17321,6 +18179,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17333,7 +18192,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17341,6 +18200,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17353,7 +18213,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17361,6 +18221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17373,7 +18234,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17381,6 +18242,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
     {
@@ -17393,7 +18255,7 @@ export class formationInMemoryRepository implements FormationRepository {
         moyenneGénérale: {
           idBac: null,
           nomBac: null,
-          centilles: [],
+          centiles: [],
         },
         répartition: { parBac: [] },
         total: null,
@@ -17401,6 +18263,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
+      affinité: null,
       explications: null,
     },
   ];
