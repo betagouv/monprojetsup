@@ -34,3 +34,6 @@ build/
 
 ### JDD ###
 /src/main/resources/db/jdd/**
+
+### DOCKER ENV ####
+.env

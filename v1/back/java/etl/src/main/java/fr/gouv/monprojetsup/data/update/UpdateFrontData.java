@@ -203,7 +203,7 @@ public class UpdateFrontData {
         private static void addMpsdescriptifs(Descriptifs descriptifs) {
             val lines = CsvTools.readCSV(
                     DataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH),
-                    '\t');
+                    ',');
             String keyFlFr;
             String keyDescFormation;
             String keyDescFiliere;
@@ -215,7 +215,7 @@ public class UpdateFrontData {
                 throw new IllegalStateException("No data in " + DataSources.RESUMES_MPS_PATH);
             }
             val line0 = lines.get(0);
-            keyFlFr = line0.keySet().stream().filter(k -> k.contains("pac")).findAny().orElse(null);
+            keyFlFr = line0.keySet().stream().filter(k -> k.contains("code")).findAny().orElse(null);
             keyDescFormation = line0.keySet().stream().filter(k -> k.contains("formation VLauriane")).findAny().orElse(null);
             keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("spécialité")).findAny().orElse(null);
 

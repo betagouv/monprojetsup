@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.update;
 
 import com.google.gson.GsonBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
@@ -23,7 +24,7 @@ public class UpdateScrapFormations {
 
     private static final Logger LOGGER = Logger.getLogger(UpdateScrapFormations.class.getSimpleName());
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CsvValidationException {
 
         Descriptifs descriptifs;
         try {

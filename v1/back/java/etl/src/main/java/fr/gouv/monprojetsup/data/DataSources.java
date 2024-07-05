@@ -39,7 +39,7 @@ public class DataSources {
     public static final String ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH = "onisep_scrap/summaries.json";
     public static final String ONISEP_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
 
-    public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.tsv";
+    public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
     public static final String PROFILS_EXPERTS_MPS_PATH = "mps/profilsExperts.json";
     /* Onisep LG */
     public static final String THEMATIQUES_FORMATIONS_PAIRES_PATH = "indexation_psup_thematiques/ideo_thematiques_cod.json";
