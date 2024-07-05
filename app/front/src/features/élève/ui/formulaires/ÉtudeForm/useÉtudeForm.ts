@@ -1,10 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import {
-  type AlternanceOptions,
-  type DuréeÉtudesPrévueOptions,
-  type SituationVillesOptions,
-  type useÉtudeFormArgs,
-} from "./ÉtudeForm.interface";
+import { type AlternanceOptions, type DuréeÉtudesPrévueOptions, type useÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -24,18 +19,12 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     };
   }, []);
 
-  const { register, erreurs, mettreÀJourÉlève, getValues, setValue, watch } = useÉlèveForm({
+  const { register, erreurs, mettreÀJourÉlève, getValues, setValue } = useÉlèveForm({
     schémaValidation: étudeValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const valeurSituationVilles = watch("situationVilles");
-
-  const villesSélectionnéesParDéfaut = useMemo(
-    () => getValues("villes"),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getValues, valeurSituationVilles],
-  );
+  const villesSélectionnéesParDéfaut = useMemo(() => getValues("villes"), [getValues]);
 
   const {
     data: villes,
@@ -47,12 +36,6 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     rechercherVilles();
   }, [rechercheVille, rechercherVilles]);
 
-  useEffect(() => {
-    if (valeurSituationVilles === "aucune_idee") {
-      setValue("villes", []);
-    }
-  }, [setValue, valeurSituationVilles]);
-
   const auChangementDesVillesSélectionnées = (villesSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
       "villes",
@@ -62,8 +45,8 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
 
   const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions = [
     {
-      valeur: "options_ouvertes",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.OPTIONS_OUVERTES.LABEL,
+      valeur: "indifferent",
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.INDIFFÉRENT.LABEL,
     },
     {
       valeur: "courte",
@@ -98,25 +81,12 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     },
   ];
 
-  const situationVillesOptions: SituationVillesOptions = [
-    {
-      valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.AUCUNE_IDÉE.LABEL,
-    },
-    {
-      valeur: "quelques_pistes",
-      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.QUELQUES_PISTES.LABEL,
-    },
-  ];
-
   return {
     mettreÀJourÉlève,
     erreurs,
     register,
     duréeÉtudesPrévueOptions,
     alternanceOptions,
-    situationVillesOptions,
-    valeurSituationVilles,
     villesSuggérées: villes?.map(villeVersOptionVille) ?? [],
     villesSélectionnéesParDéfaut: villesSélectionnéesParDéfaut?.map(villeVersOptionVille) ?? [],
     rechercheVillesEnCours,

@@ -1,3 +1,4 @@
+import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondanceFicheFormation/ExplicationsCorrespondanceFicheFormation";
 import { type FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
 import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
@@ -127,7 +128,12 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
           onglets={générerLesOnglets()}
         />
       </div>
-      <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
+      <div className="mb-12">
+        <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
+      </div>
+      <div className="mb-12">
+        {formation.explications && <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />}
+      </div>
     </div>
   );
 };

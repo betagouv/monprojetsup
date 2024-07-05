@@ -56,6 +56,24 @@ export const localeFR = {
       QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
+    EXPLICATIONS_CORRESPONDANCE_PROFIL: {
+      TITRE: "Pourquoi cette formation devrait te plaire",
+      VILLES: "Plusieurs établissements proposant cette formation se trouvent à proximité des villes",
+      BAC: "Idéal si tu as un",
+      SPÉCIALITÉS:
+        "Les lycéennes et lycéens admis dans cette formation l'année dernière, avaient choisi ce(s) spécialité(s)",
+      DURÉE_FORMATION: "La durée de la formation est",
+      ALTERNANCE: "Formation réalisable",
+      ALTERNANCE_SUITE: "en alternance",
+      FORMATIONS_SIMILAIRES:
+        "Les candidates et candidats sur Parcoursup s'intéressant à cette formation s'intéressent également à",
+      INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
+      ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
+      ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
+      MOYENNE:
+        "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière, la moitié des bacheliers de série",
+      MOYENNE_SUITE: "avaient une moyenne de",
+    },
   },
   ÉLÈVE: {
     PROJET: {
@@ -93,13 +111,7 @@ export const localeFR = {
         LABEL: "Classe actuelle",
         OPTIONS: {
           SECONDE: {
-            LABEL: "Seconde Générale et Technologique",
-          },
-          SECONDE_STHR: {
-            LABEL: "Seconde STHR",
-          },
-          SECONDE_TMD: {
-            LABEL: "Seconde TMD",
+            LABEL: "Seconde",
           },
           PREMIÈRE: {
             LABEL: "Première",
@@ -167,7 +179,7 @@ export const localeFR = {
         LABEL: "Durée des études",
         DESCRIPTION: "Temps d’études que tu envisages après le bac",
         OPTIONS: {
-          OPTIONS_OUVERTES: {
+          INDIFFÉRENT: {
             LABEL: "Je garde mes options ouvertes",
           },
           COURTE: {
@@ -199,19 +211,8 @@ export const localeFR = {
           },
         },
       },
-      SITUATION_VILLES: {
-        LÉGENDE: "Où souhaites-tu étudier ?",
-        OPTIONS: {
-          AUCUNE_IDÉE: {
-            LABEL: "Aucune idée",
-          },
-          QUELQUES_PISTES: {
-            LABEL: "J’ai quelques villes en tête",
-          },
-        },
-      },
       VILLES_ENVISAGÉES: {
-        LABEL: "Villes",
+        LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
       },

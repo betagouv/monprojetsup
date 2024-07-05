@@ -1,5 +1,5 @@
 import { type BoutonRadioRicheProps } from "./BoutonRadioRiche.interface";
-import { useId } from "react";
+import { useId, useState } from "react";
 
 const BoutonRadioRiche = ({
   légende,
@@ -8,8 +8,10 @@ const BoutonRadioRiche = ({
   status,
   obligatoire = false,
   registerHookForm,
+  auChangementValeurSélectionnée,
 }: BoutonRadioRicheProps) => {
   const id = useId();
+  const [valeurCochée, setValeurCochée] = useState<string>();
 
   const estEnColonne = options.length <= 2;
 
@@ -42,9 +44,14 @@ const BoutonRadioRiche = ({
           >
             <div className={`fr-radio-group fr-radio-rich ${estEnColonne ? "h-full" : ""}`}>
               <input
+                checked={valeurCochée === option.valeur || (option.cochéParDéfaut && !valeurCochée)}
                 disabled={status?.type === "désactivé"}
                 id={option.valeur}
                 name={id}
+                onChange={(event) => {
+                  setValeurCochée(event.target.value);
+                  auChangementValeurSélectionnée?.(event.target.value);
+                }}
                 required={obligatoire ?? false}
                 type="radio"
                 value={option.valeur}
