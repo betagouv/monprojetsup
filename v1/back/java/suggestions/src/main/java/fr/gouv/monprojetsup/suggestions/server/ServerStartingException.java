@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.suggestions.server;
 
 public class ServerStartingException extends RuntimeException {
 

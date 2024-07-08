@@ -1,13 +1,12 @@
 package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,11 +17,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static fr.gouv.monprojetsup.data.distances.Distances.distanceCaches;
 import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
 import static java.lang.Math.min;
 
 @Service
-public class GetDetailsService extends MyService<GetDetailsService.Request, GetDetailsService.Response> {
+public class GetDetailsService extends MyAppService<GetDetailsService.Request, GetDetailsService.Response> {
 
 
     public GetDetailsService() {
@@ -157,8 +157,13 @@ public class GetDetailsService extends MyService<GetDetailsService.Request, GetD
         return cities.stream().flatMap(city ->
                         flKeys.stream()
                                 .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
-                                        : getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
+                                        ? getGeoExplanations(
+                                                ServerData.reverseFlGroups.get(key),
+                                                city,
+                                                maxFormationsPerFiliere,
+                                                distanceCaches
+                                        ).stream()
+                                        : getGeoExplanations(List.of(key), city, maxFormationsPerFiliere, distanceCaches).stream()
                                 )
                 ).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ExplanationGeo::distance))

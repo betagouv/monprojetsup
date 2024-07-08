@@ -20,7 +20,6 @@
 		<module>app</module>
 		<module>etl</module>
 		<module>suggestions</module>
-        <module>common</module>
     </modules>
 
     <properties>

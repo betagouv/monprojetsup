@@ -1,10 +1,8 @@
-package fr.gouv.monprojetsup.suggestions.services;
+package fr.gouv.monprojetsup.app.server;
 
-import fr.gouv.monprojetsup.common.server.ErrorResponse;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import fr.gouv.monprojetsup.suggestions.server.Exceptions;
-import fr.gouv.monprojetsup.suggestions.server.Log;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
+import fr.gouv.monprojetsup.app.db.DBExceptions;
+import fr.gouv.monprojetsup.app.log.Log;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,16 +16,14 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.MyService<T,U> {
+public abstract class MyAppService<T,U> extends MyService<T,U> {
 
-    protected MyService(@NotNull Type classT) {
-       super(classT);
+
+    protected MyAppService(@NotNull Type classT) {
+        super(classT);
     }
 
-    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
-
-    @Override
-    public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+    public static ErrorResponse handleAnException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,
@@ -35,7 +31,7 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
             ));
         }
         Log.logTrace("handleException", e.getMessage());
-        if (e instanceof Exceptions.UserInputException) {
+        if (e instanceof DBExceptions.UserInputException) {
             Log.logBackError(e);
             //for those we do not include the stacktrace in the message
             return new ErrorResponse(new ResponseHeader(
@@ -53,12 +49,22 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
                 e.printStackTrace(new PrintWriter(out));
                 if (o != null) {
                     String buffer = o.toString();
+                    int i = buffer.indexOf("password=");
+                    if (i >= 0) {
+                        int j = buffer.indexOf(",", i);
+                        if (j >= 0) {
+                            buffer = buffer.substring(0, i) + "password=***" + buffer.substring(j);
+                        } else {
+                            buffer = buffer.substring(0, i) + "password=***";
+                        }
+                    }
                     out.append(buffer).append(System.lineSeparator());
                 }
 
                 String error = out.toString();
                 log.warn(error);
                 error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
+                Log.logBackError(error);
                 return new ErrorResponse(new ResponseHeader(
                         ResponseHeader.SERVER_ERROR,
                         error
@@ -69,7 +75,7 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
 
     @Override
     protected boolean isServerReady() {
-        return SuggestionServer.isReady();
+        return WebServer.isInitialized();
     }
 
 }

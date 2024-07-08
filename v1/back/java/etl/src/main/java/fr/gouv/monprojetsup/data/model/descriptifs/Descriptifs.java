@@ -168,14 +168,18 @@ public record Descriptifs(
     public String getDescriptifGeneralFront(@NotNull String flCod) {
         val desc = keyToDescriptifs.get(flCod);
         if(desc == null) return null;
-        return desc.getDescriptifGeneralFront();
+        return removeHtml(desc.getDescriptifGeneralFront());
+    }
+
+    private String removeHtml(String descriptifGeneralFront) {
+        return null;
     }
 
     @Nullable
     public String getDescriptifDiplomeFront(@NotNull String flCod) {
         val desc = keyToDescriptifs.get(flCod);
         if(desc == null) return null;
-        return desc.getDescriptifDiplomeFront();
+        return removeHtml(desc.getDescriptifDiplomeFront());
     }
 
 

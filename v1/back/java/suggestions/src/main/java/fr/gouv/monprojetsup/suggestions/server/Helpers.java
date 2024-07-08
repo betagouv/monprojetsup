@@ -1,10 +1,12 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.suggestions.server;
 
 import com.google.gson.Gson;
 import com.google.json.JsonSanitizer;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 

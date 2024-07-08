@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.app.services.profiles;
 
 import fr.gouv.monprojetsup.app.db.DB;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.Helpers;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.Server;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.info.SearchService;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.common.server.Server;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import lombok.val;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.app.services.info.SearchService.getDetails;
 
 @Service
-public class GetMySelectionService extends MyService<Server.BasicRequest, SearchService.Response> {
+public class GetMySelectionService extends MyAppService<Server.BasicRequest, SearchService.Response> {
 
     public GetMySelectionService() {
         super(Server.BasicRequest.class);

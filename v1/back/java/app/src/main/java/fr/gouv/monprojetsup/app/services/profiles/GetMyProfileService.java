@@ -1,17 +1,14 @@
 package fr.gouv.monprojetsup.app.services.profiles;
 
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
-import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.common.server.Server;
+import fr.gouv.monprojetsup.app.server.*;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetMyProfileService extends MyService<Server.BasicRequest, GetMyProfileService.Response> {
+public class GetMyProfileService extends MyAppService<Server.BasicRequest, GetMyProfileService.Response> {
 
     public GetMyProfileService() {
         super(Server.BasicRequest.class);

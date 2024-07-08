@@ -1,12 +1,9 @@
 package fr.gouv.monprojetsup.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fr.gouv.monprojetsup.common.Sanitizer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SuggestionDTO(
@@ -25,7 +22,7 @@ public record SuggestionDTO(
 
     public SuggestionDTO sanitize() {
         return new SuggestionDTO(
-                Sanitizer.sanitize(fl),
+                fl,
                 status,
                 score
         );

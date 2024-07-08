@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.services.admin;
 
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModerateAccountCreationHandler extends MyService<ModerateAccountCreationHandler.Request, GetAdminInfosService.Response> {
+public class ModerateAccountCreationHandler extends MyAppService<ModerateAccountCreationHandler.Request, GetAdminInfosService.Response> {
 
     public ModerateAccountCreationHandler() {
         super(Request.class);

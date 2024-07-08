@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.distances;
 
-import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
+import fr.gouv.monprojetsup.data.tools.ConcurrentBoundedMapQueue;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
@@ -40,7 +40,10 @@ public class Distances {
      * @param cityName the city name
      * @return the minimal distance of the city to a etablissement providing this filiere
      */
-    public static @NotNull List<ExplanationGeo> getGeoExplanations(String flKey, String cityName) {
+    public static @NotNull List<ExplanationGeo> getGeoExplanations(
+            String flKey,
+            String cityName,
+            ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches) {
         Paire<String, String> p = new Paire<>(flKey, cityName);
 
         val l = distanceCaches.get(p);
@@ -84,9 +87,14 @@ public class Distances {
         return e;
     }
 
-    public static @NotNull List<ExplanationGeo> getGeoExplanations(Collection<String> flKeys, String cityName, int maxResultsPerNode) {
+    public static @NotNull List<ExplanationGeo> getGeoExplanations(
+            Collection<String> flKeys,
+            String cityName,
+            int maxResultsPerNode,
+            ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches
+    ) {
         return
-                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName).stream().limit(maxResultsPerNode))
+                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, distanceCaches).stream().limit(maxResultsPerNode))
                         .filter(Objects::nonNull)
                         .sorted(Comparator.comparing(ExplanationGeo::distance))
                         .toList();

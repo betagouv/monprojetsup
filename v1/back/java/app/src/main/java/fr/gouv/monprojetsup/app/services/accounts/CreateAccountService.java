@@ -1,16 +1,16 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
 import fr.gouv.monprojetsup.app.db.DBExceptions;
-import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.model.User;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateAccountService extends MyService<CreateAccountService.Request, CreateAccountService.Response> {
+public class CreateAccountService extends MyAppService<CreateAccountService.Request, CreateAccountService.Response> {
 
     public CreateAccountService() {
         super(Request.class);

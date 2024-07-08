@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.app.server;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

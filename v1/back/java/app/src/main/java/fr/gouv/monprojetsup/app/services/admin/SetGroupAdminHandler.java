@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.app.services.admin;
 
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SetGroupAdminHandler extends MyService<SetGroupAdminHandler.Request, GetAdminInfosService.Response> {
+public class SetGroupAdminHandler extends MyAppService<SetGroupAdminHandler.Request, GetAdminInfosService.Response> {
 
     public SetGroupAdminHandler() {
         super(Request.class);

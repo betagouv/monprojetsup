@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
+import fr.gouv.monprojetsup.app.server.Server
 import fr.gouv.monprojetsup.app.services.log.LogErrorService
 import fr.gouv.monprojetsup.app.services.log.TraceEventService
-import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping

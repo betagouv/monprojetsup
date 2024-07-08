@@ -1,22 +1,21 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.db.model.User;
-import fr.gouv.monprojetsup.common.server.ServerStartingException;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
+import fr.gouv.monprojetsup.app.db.model.User;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
 import fr.gouv.monprojetsup.app.log.Log;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.ServerStartingException;
 import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jose4j.lang.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class PasswordLoginService extends MyService<PasswordLoginService.Request, PasswordLoginService.Response> {
+public class PasswordLoginService extends MyAppService<PasswordLoginService.Request, PasswordLoginService.Response> {
 
     public PasswordLoginService() {
         super(Request.class);

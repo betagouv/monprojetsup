@@ -5,12 +5,12 @@ import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
 import fr.gouv.monprojetsup.app.services.teacher.GetAdminInfosService;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SetModerationHandler extends MyService<SetModerationHandler.Request, GetAdminInfosService.Response> {
+public class SetModerationHandler extends MyAppService<SetModerationHandler.Request, GetAdminInfosService.Response> {
 
     public SetModerationHandler() {
         super(Request.class);
