@@ -55,7 +55,7 @@ public class UpdateFrontData {
             Metiers metiers,
             Thematiques thematiques,
             Interets interets,
-            Map<String, Set<Descriptifs.Link>> urls,
+            Map<String, List<Descriptifs.Link>> urls,
             Map<String, String> groups,
             Map<String, List<String>> labelsTypes,
             Map<String, String> constants, //stats nationales sur moyenne générale et moyennes au bac
@@ -86,9 +86,6 @@ public class UpdateFrontData {
             Descriptifs descriptifs = loadDescriptifs(onisepData, groups, lasCorrespondance.lasToGeneric());
 
 
-
-            Map<String, Set<Descriptifs.Link>> urls = new TreeMap<>();
-
             /* we cannot do tthat anymore... need to do it by hand for the moment... and should be a dynmaic call in the future
             List<String> declaredfields = Arrays.stream(ProfileDTO.class.getDeclaredFields()).map(f -> f.getName()).toList();
              */
@@ -105,6 +102,8 @@ public class UpdateFrontData {
                     "choices"
             );
             LOGGER.info("Declared fields in ProfileDTO " + declaredfields);
+
+            val urls = updateLinks(onisepData, links, lasCorrespondance.lasToGeneric(), descriptifs);
 
             DataContainer answer = new DataContainer(
                     SpecialitesLoader.load(ServerData.statistiques),
@@ -138,7 +137,6 @@ public class UpdateFrontData {
                     declaredfields
             );
 
-            answer.updateLinks(onisepData, links, lasCorrespondance.lasToGeneric());
 
             Serialisation.toJsonFile("urls.json", answer.urls, true);
 
@@ -275,50 +273,57 @@ public class UpdateFrontData {
             }
         }
 
-        private void addUrl(String key, String uri) {
-            addUrl(key, uri, ServerData.getLabel(key));
-        }
-        private void addUrl(String key, String uri, String label) {
+        private static void addUrl(String key, String uri, String label, Map<String, List<Descriptifs.Link>> urls) {
             if (uri != null && !uri.isEmpty()) {
                 if (uri.contains("www.terminales2022-2023.fr")) {
-                    throw new RuntimeException("deprecated url");
+                    //deprecated uri
+                    return;
                 }
                 val url = Descriptifs.toAvenirs(uri, label);
-                urls.computeIfAbsent(cleanup(key), z -> new HashSet<>()).add(url);
+                val liste = urls.computeIfAbsent(cleanup(key), z -> new ArrayList<>());
+                if(!liste.contains(url)) liste.add(url);
             }
         }
 
-        private void clearUrls(String key) {
-            urls.remove(cleanup(key));
-        }
+        public static Map<String, List<Descriptifs.Link>> updateLinks(
+                OnisepData onisepData,
+                Map<String, Descriptifs.Link> links,
+                Map<String, String> lasCorrespondance,
+                Descriptifs descriptifs
+        ) {
+            val urls = new HashMap<String, List<Descriptifs.Link>>();
+            onisepData.metiers().metiers().forEach((s, metier) -> addUrl(
+                    s,
+                    "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/" + s.replace('_', '.'),
+                    metier.lib(), urls
+            ));
 
-        public void updateLinks(OnisepData onisepData, Map<String, Descriptifs.Link> links, Map<String, String> lasCorrespondance) {
-            urls.clear();
             for (val entry : links.entrySet()) {
-                addUrl(entry.getKey(), entry.getValue().uri(), entry.getValue().label());
+                addUrl(entry.getKey(), entry.getValue().uri(), entry.getValue().label(), urls);
             }
             onisepData.metiers().metiers().values().forEach(metier -> {
                 if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
-                    addUrl(metier.id(), metier.urlRome(), metier.libRome());
+                    addUrl(metier.id(), metier.urlRome(), metier.libRome(), urls);
                 }
             });
             onisepData.domainesWeb().domaines().forEach(domainePro
-                    -> addUrl(cleanup(domainePro.id()), domainePro.url(), domainePro.nom())
+                    -> addUrl(cleanup(domainePro.id()), domainePro.url(), domainePro.nom(), urls)
             );
             descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
                 if (descriptif.isCorrectedUrl()) {
-                    clearUrls(key);
+                    urls.remove(cleanup(key));
                 }
-                Collection<String> urls = descriptif.multiUrls();
-                if (urls != null) {
-                    urls.forEach(url2 -> addUrl(key, url2, url2));
+                Collection<String> multiUrls = descriptif.multiUrls();
+                if (multiUrls != null) {
+                    multiUrls.forEach(url2 -> addUrl(key, url2, url2, urls));
                 }
             });
-            addUrl(gFlCodToFrontId(PASS_FL_COD), URL_ARTICLE_PAS_LAS, "Les études de santé");
+            addUrl(gFlCodToFrontId(PASS_FL_COD), URL_ARTICLE_PAS_LAS, "Les études de santé", urls);
             lasCorrespondance.forEach((keyLas, keyGen) -> {
-                addUrl(keyLas, URL_ARTICLE_PAS_LAS,"Les études de santé");
-                urls.getOrDefault(keyGen, Collections.emptySet()).forEach(s -> addUrl(keyLas, s.uri(), s.label()));
+                addUrl(keyLas, URL_ARTICLE_PAS_LAS,"Les études de santé", urls);
+                urls.getOrDefault(keyGen, List.of()).forEach(s -> addUrl(keyLas, s.uri(), s.label(), urls));
             });
+            return urls;
         }
     }
 
@@ -366,7 +371,7 @@ public class UpdateFrontData {
         );
         Map<String, GrilleAnalyse> grilles = GrilleAnalyse.getGrilles(psupData);
 
-        DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds, grilles, GrilleAnalyse.labels);
+        DataContainer data2 = DataContainer.load(psupData, onisepData, urls, data.getLASCorrespondance(), eds, grilles, GrilleAnalyse.getLabelsMap());
 
         LOGGER.info("Mise à jour de " + DataSources.getFrontSrcPath());
         try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(Path.of(DataSources.getFrontSrcPath())))) {

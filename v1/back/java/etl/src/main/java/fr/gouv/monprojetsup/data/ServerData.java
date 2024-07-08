@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
 
 @Slf4j
@@ -66,8 +65,8 @@ public class ServerData {
     //regroupement des filieres
     public static Map<String, String> flGroups = null;
 
-    protected static final Map<String, List<Formation>> filToFormations = new HashMap<>();
-    protected static final Map<String, String> formationsToFilieres = new HashMap<>();
+    protected static final Map<String, List<Formation>> grpToFormations = new HashMap<>();
+    protected static final Map<String, String> formationsToGrp = new HashMap<>();
 
     public static CitiesBack cities = null;
     /*
@@ -103,11 +102,6 @@ public class ServerData {
         backPsupData.filActives().addAll(statistiques.getLasFlCodes());
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
-        reverseFlGroups.forEach((key, value) -> {
-            if(value.size() > 1) {
-                filToFormations.put(key, value.stream().flatMap(f -> filToFormations.getOrDefault(f, List.of()).stream()).collect(Collectors.toList()));
-            }
-        });
 
 
         ServerData.specialites = SpecialitesLoader.load(ServerData.statistiques);
@@ -115,8 +109,8 @@ public class ServerData {
         /* can be deleted afte rnext data update */
         ServerData.statistiques.removeSmallPopulations();
         ServerData.statistiques.rebuildMiddle50();
-        ServerData.statistiques.createGroupAdmisStatistique(reverseFlGroups);
-        ServerData.statistiques.createGroupAdmisStatistique(getLasToGtaMapping());
+        ServerData.statistiques.createGroupAdmisStatistique(flGroups);
+        ServerData.statistiques.createGroupAdmisStatistique(getGtaToLasMapping());
 
         ServerData.updateLabelsForDebug();
 
@@ -132,12 +126,12 @@ public class ServerData {
         computeFilieresFront();
 
         for (String s : filieresFront) {
-            if (filToFormations.getOrDefault(s, List.of()).isEmpty())
+            if (grpToFormations.getOrDefault(s, List.of()).isEmpty())
                 LOGGER.warning("No formations for " + s);
                 //throw new RuntimeException("No formations for " + s);
         }
 
-        filToFormations.forEach((key, value) -> {
+        grpToFormations.forEach((key, value) -> {
             nbFormations.put(key, value.size());
             capacity.put(key, value.stream().mapToInt(f -> f.capacite).sum());
         });
@@ -166,9 +160,29 @@ public class ServerData {
     }
 
     private static void computeFilieresFront() {
-        filieresFront.addAll(backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).toList());
-        filieresFront.removeAll(flGroups.keySet());
-        filieresFront.addAll(flGroups.values());
+        ServerData.filieresFront.clear();
+        ServerData.filieresFront.addAll(
+                computeFilieresFront(backPsupData)
+        );
+    }
+    @NotNull
+    public static List<@NotNull String> computeFilieresFront(@NotNull PsupData backendData) {
+        return computeFilieresFront(
+                backendData.filActives(),
+                backendData.getCorrespondances()
+        );
+    }
+
+
+    private static List<@NotNull String> computeFilieresFront(
+            Collection<Integer> filActives,
+            Map<String,String> flGroups
+    ) {
+        val result = new ArrayList<>(filActives.stream().map(Constants::gFlCodToFrontId).toList());
+        result.removeAll(flGroups.keySet());
+        result.addAll(flGroups.values());
+        Collections.sort(result);
+        return result;
     }
 
     private static void initTagSources() throws IOException {
@@ -188,9 +202,7 @@ public class ServerData {
                 LOGGER.warning("Excluding label in search for  " + filiere + " since it has no label");
             }
             getMetiersAssocies(filiere, metiersVersFormations).forEach(
-                    metier -> {
-                        tagsSources.add(getLabel(metier), filiere);
-                    });
+                    metier -> tagsSources.add(getLabel(metier), filiere));
         });
 
         tagsSources.normalize();
@@ -200,15 +212,19 @@ public class ServerData {
     }
 
     private static Collection<String> getMetiersAssocies(String filiere, Map<String, Set<String>> metiersVersFormations) {
-        Set<String> result = new HashSet<>();
-        result.addAll(metiersVersFormations.entrySet().stream().filter(e -> e.getValue().contains(filiere)).map(Map.Entry::getKey).collect(Collectors.toSet()));
+        Set<String> result = new HashSet<>(
+                metiersVersFormations.entrySet().stream()
+                        .filter(e -> e.getValue().contains(filiere))
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toSet())
+        );
         if(statistiques.getLASCorrespondance().isLas(filiere)) {
             result.addAll(getMetiersAssocies(gFlCodToFrontId(PASS_FL_COD), metiersVersFormations));
         }
         if(reverseFlGroups.containsKey(filiere)) {
             result.addAll(reverseFlGroups.get(filiere)
                     .stream()
-                    .filter(f -> f != filiere)
+                    .filter(f -> !f.equals(filiere))
                     .flatMap(f -> getMetiersAssocies(f, metiersVersFormations).stream()).collect(Collectors.toSet()));
         }
         return result;
@@ -219,22 +235,20 @@ public class ServerData {
         backPsupData.filActives().forEach(gFlCod -> {
             String key = Constants.gFlCodToFrontId(gFlCod);
             String label = getDebugLabel(key);
-            if(label != null) {
-                val attendus = backPsupData.getAttendus(gFlCod);
-                val recoPrem = backPsupData.getRecoPremGeneriques(gFlCod);
-                val recoTerm = backPsupData.getRecoTermGeneriques(gFlCod);
-                if(attendus != null) {
-                    val p = Pair.of("attendus", attendus);
-                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
-                }
-                if(recoPrem != null) {
-                    val p = Pair.of("recoPrem", recoPrem);
-                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
-                }
-                if(recoTerm != null) {
-                    val p = Pair.of("recoTerm", recoTerm);
-                    result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
-                }
+            val attendus = backPsupData.getAttendus(gFlCod);
+            val recoPrem = backPsupData.getRecoPremGeneriques(gFlCod);
+            val recoTerm = backPsupData.getRecoTermGeneriques(gFlCod);
+            if(attendus != null) {
+                val p = Pair.of("attendus", attendus);
+                result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+            }
+            if(recoPrem != null) {
+                val p = Pair.of("recoPrem", recoPrem);
+                result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
+            }
+            if(recoTerm != null) {
+                val p = Pair.of("recoTerm", recoTerm);
+                result.computeIfAbsent(p, z -> new ArrayList<>()).add(label);
             }
         });
         return result;
@@ -249,26 +263,11 @@ public class ServerData {
         backPsupData = backendData.psupData();
         backPsupData.cleanup();//should be useless but it does not harm...
 
-        val groupes = backPsupData.getCorrespondances();
-
-        backPsupData.formations().formations.values()
-                .forEach(f -> {
-                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
-                    String filKey = Constants.gFlCodToFrontId(gFlCod);
-                    String forKey = Constants.gTaCodToFrontId(f.gTaCod);
-                    filToFormations
-                            .computeIfAbsent(filKey, z -> new ArrayList<>())
-                            .add(f);
-                    val grKey = groupes.get(filKey);
-                    if(Objects.nonNull(grKey)) {
-                        filToFormations
-                                .computeIfAbsent(grKey, z -> new ArrayList<>())
-                                .add(f);
-                        formationsToFilieres.put(forKey, grKey);
-                    } else {
-                        formationsToFilieres.put(forKey, filKey);
-                    }
-                });
+        val ftf = backPsupData.getGroupesToFormations();
+        grpToFormations.clear();
+        grpToFormations.putAll(ftf);
+        formationsToGrp.clear();
+        ftf.forEach((key, value) -> value.forEach(f -> formationsToGrp.put(gTaCodToFrontId(f.gTaCod), key)));
 
         ServerData.cities = new CitiesBack(backendData.cities().cities());
 
@@ -278,27 +277,22 @@ public class ServerData {
         ServerData.statistiques = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
     }
 
-    private static Map<String, Set<String>> getLasToGtaMapping() {
-        //fl1002033
-        Set<String> lasCodes = ServerData.statistiques.getLASCorrespondance().lasToGeneric().keySet();
-        return
-                lasCodes
-                        .stream()
-                        .collect(Collectors.toMap(
-                                        las -> las,
-                                        las -> filToFormations.getOrDefault(las, List.of())
-                                                .stream()
-                                                .map(f ->  FORMATION_PREFIX + f.gTaCod)
-                                                .collect(Collectors.toSet())
-                                )
-                        );
+    private static Map<String, String> getGtaToLasMapping() {
+        return getGtaToLasMapping(backPsupData, ServerData.statistiques);
     }
 
-    public static String getGroupOfFiliere(String fl) {
-        return flGroups.getOrDefault(fl,fl);
-    }
-    public static Set<String> getFilieresOfGroup(String fl) {
-        return  reverseFlGroups.getOrDefault(fl, Set.of(fl));
+    public static Map<String, String> getGtaToLasMapping(PsupData backPsupData, PsupStatistiques statistiques) {
+        val grpToFormations = backPsupData.getGroupesToFormations();
+        Set<String> lasCodes = statistiques.getLASCorrespondance().lasToGeneric().keySet();
+        Map<String, String> result = new HashMap<>();
+        lasCodes.forEach(las -> {
+            val formations = grpToFormations.getOrDefault(las, List.of());
+            formations.forEach(formation -> {
+                result.put(gTaCodToFrontId(formation.gTaCod), las);
+            });
+        });
+        return result;
+
     }
 
     private static void updateLabelsForDebug() {
@@ -391,7 +385,6 @@ public class ServerData {
                                 !includeProfDetails
                         )
         );
-        //statFil.stats().entrySet().removeIf(e -> e.getValue().nbAdmis() == null);
 
         if(includeProfDetails) {
             Map<String, StatsContainers.DetailFormation> statsFormations = new HashMap<>();
@@ -439,7 +432,7 @@ public class ServerData {
      * @return the list of formations
      */
     public static List<Formation> getFormationsFromFil(String fl) {
-        return filToFormations
+        return grpToFormations
                 .getOrDefault(fl, Collections.emptyList());
     }
 
@@ -475,14 +468,13 @@ public class ServerData {
 
     }
 
-    public static Set<String> getMetiersPass(Map<String, Set<String>> metiersVersFormation) throws IOException {
+    public static Set<String> getMetiersPass(Map<String, Set<String>> metiersVersFormation) {
         String passKey =  Constants.gFlCodToFrontId(PASS_FL_COD);
 
-        Set<String> metiersPass = metiersVersFormation.entrySet().stream()
+        return metiersVersFormation.entrySet().stream()
                 .filter(e -> e.getValue().contains( passKey))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
-        return metiersPass;
     }
 
 
@@ -495,7 +487,7 @@ public class ServerData {
     }
 
     public static Map<String, String> getFormationTofilieres() {
-        return new HashMap<>(formationsToFilieres);
+        return new HashMap<>(formationsToGrp);
     }
 
 }

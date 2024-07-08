@@ -4,10 +4,12 @@ import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
@@ -35,7 +37,7 @@ public record TagsSources(
     }
 
     public void add(String tag, String source) {
-        if(tag != null && tag.length() >= 3) {
+        if (tag != null && tag.length() >= 3) {
             sources.computeIfAbsent(tag, z -> new HashSet<>()).add(source);
         }
     }
@@ -69,20 +71,20 @@ public record TagsSources(
 
     }
 
-    public Map<String,Integer> getScores(List<String> tags, Set<String> candidates) {
+    public Map<String, Integer> getScores(List<String> tags, Set<String> candidates) {
 
-        Map<String,Integer> result = new HashMap<>();
+        Map<String, Integer> result = new HashMap<>();
 
-        for(String tag : tags) {
+        for (String tag : tags) {
 
             String cleanTag = normalize(tag);
 
             candidates.forEach(candidate -> {
                 String label = ServerData.getLabel(candidate);
-                if(label != null) {
+                if (label != null) {
                     String cleanLabel = normalize(label);
-                    if(cleanLabel.startsWith(cleanTag) || cleanLabel.contains(" " + cleanTag) || cleanLabel.contains("(" + cleanTag) ) {
-                        result.put(candidate, max(result.getOrDefault(candidate, 0) , 8));
+                    if (cleanLabel.startsWith(cleanTag) || cleanLabel.contains(" " + cleanTag) || cleanLabel.contains("(" + cleanTag)) {
+                        result.put(candidate, max(result.getOrDefault(candidate, 0), 8));
                     }
                 }
             });
@@ -93,11 +95,11 @@ public record TagsSources(
                 int score = 0;
                 if (k.equals(cleanTag)) score = 4;
                 else if (k.startsWith(cleanTag)) score = 2;
-                else if(k.contains(cleanTag)) score = 1;
-                if(score > 0) {
+                else if (k.contains(cleanTag)) score = 1;
+                if (score > 0) {
                     for (String candidate : value) {
                         if (candidates.contains(candidate)) {
-                            result.put(candidate, result.getOrDefault(candidate, 0) | score );
+                            result.put(candidate, result.getOrDefault(candidate, 0) | score);
                         }
                     }
                 }
@@ -107,7 +109,7 @@ public record TagsSources(
         ServerData.reverseFlGroups.forEach((flGroup, fls) -> {
             int score = fls.stream().map(fl -> result.getOrDefault(fl, 0)).reduce(0, Integer::max);
             score = max(result.getOrDefault(flGroup, 0), score);
-            if(score > 0) {
+            if (score > 0) {
                 result.put(flGroup, score);
             }
         });
@@ -135,4 +137,16 @@ public record TagsSources(
         });
     }
 
+    @NotNull
+    public Map<String, List<String>> getKeyToTags() {
+        Map<String, Set<String>> result = new HashMap<>();
+        sources.forEach((tag, keys) -> keys.forEach(key -> result.computeIfAbsent(key, z -> new HashSet<>()).add(tag.toLowerCase().trim())));
+        return result.entrySet().stream()
+                .collect(
+                        Collectors.toMap(
+                                e -> e.getKey(),
+                                e -> new ArrayList(e.getValue())
+                        )
+                );
+    }
 }
