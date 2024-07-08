@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common;
+package fr.gouv.monprojetsup.app.tools;
 
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;

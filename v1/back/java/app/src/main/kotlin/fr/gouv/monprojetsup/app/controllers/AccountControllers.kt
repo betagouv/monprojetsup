@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
+import fr.gouv.monprojetsup.app.server.Server
+import fr.gouv.monprojetsup.app.server.Server.BasicResponse
 import fr.gouv.monprojetsup.app.services.accounts.*
-import fr.gouv.monprojetsup.common.server.Server
-import fr.gouv.monprojetsup.common.server.Server.BasicResponse
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

@@ -5,20 +5,17 @@ import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.db.model.Group;
 import fr.gouv.monprojetsup.app.db.model.User;
 import fr.gouv.monprojetsup.app.mail.AccountManagementEmails;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.Server;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.accounts.PasswordLoginService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import fr.gouv.monprojetsup.common.server.Server;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
-public class SwitchToNewRefProfileRoleService extends MyService<Server.BasicRequest, CreateAccountService.Response> {
+public class SwitchToNewRefProfileRoleService extends MyAppService<Server.BasicRequest, CreateAccountService.Response> {
 
     public SwitchToNewRefProfileRoleService() {
         super(Server.BasicRequest.class);

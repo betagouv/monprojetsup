@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.common.server.ServerStartingException;
-import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.ServerStartingException;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import io.jsonwebtoken.Claims;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 
 @Service
-public class OidcLoginService extends MyService<OidcLoginService.JwtEncoded, PasswordLoginService.Response> {
+public class OidcLoginService extends MyAppService<OidcLoginService.JwtEncoded, PasswordLoginService.Response> {
 
     public OidcLoginService() {
         super(String.class);

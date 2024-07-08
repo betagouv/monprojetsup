@@ -1,17 +1,17 @@
 package fr.gouv.monprojetsup.app.services.teacher;
 
-import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import fr.gouv.monprojetsup.common.server.Server;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.Server;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetAdminInfosService extends MyService<Server.BasicRequest, GetAdminInfosService.Response> {
+public class GetAdminInfosService extends MyAppService<Server.BasicRequest, GetAdminInfosService.Response> {
 
     public GetAdminInfosService() {
         super(Server.BasicRequest.class);

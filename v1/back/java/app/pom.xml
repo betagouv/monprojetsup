@@ -140,15 +140,14 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>fr.gouv.monprojetsup</groupId>
-			<artifactId>common</artifactId>
-			<version>1.4.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mikesamuel</groupId>
+			<artifactId>json-sanitizer</artifactId>
+			<version>1.2.3</version>
 		</dependency>
 
 	</dependencies>

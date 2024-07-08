@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.app.services.profiles;
 
-import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.model.Message;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.Helpers;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class GetMessagesService extends MyService<GetMessagesService.Request, GetMessagesService.Response> {
+public class GetMessagesService extends MyAppService<GetMessagesService.Request, GetMessagesService.Response> {
 
     public GetMessagesService() {
         super(Request.class);

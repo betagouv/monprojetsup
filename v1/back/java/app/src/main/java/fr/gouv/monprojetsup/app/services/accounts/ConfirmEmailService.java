@@ -1,16 +1,16 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.mail.AccountManagementEmails;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConfirmEmailService extends MyService<ConfirmEmailService.Request, ConfirmEmailService.Response> {
+public class ConfirmEmailService extends MyAppService<ConfirmEmailService.Request, ConfirmEmailService.Response> {
 
     public ConfirmEmailService() {
         super(Request.class);

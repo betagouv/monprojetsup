@@ -14,7 +14,7 @@ import fr.gouv.monprojetsup.app.server.WebServerConfig;
 import fr.gouv.monprojetsup.app.services.accounts.CreateAccountService;
 import fr.gouv.monprojetsup.app.services.accounts.PasswordLoginService;
 import fr.gouv.monprojetsup.app.services.teacher.GetGroupDetailsService;
-import fr.gouv.monprojetsup.common.Sanitizer;
+import fr.gouv.monprojetsup.app.tools.Sanitizer;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import lombok.val;

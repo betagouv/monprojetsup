@@ -1,13 +1,13 @@
 package fr.gouv.monprojetsup.app.services.log;
 
-import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.common.server.Server;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TraceEventService extends MyService<TraceEventService.Request, Server.BasicResponse> {
+public class TraceEventService extends MyAppService<TraceEventService.Request, Server.BasicResponse> {
 
     public TraceEventService() {
         super(Request.class);

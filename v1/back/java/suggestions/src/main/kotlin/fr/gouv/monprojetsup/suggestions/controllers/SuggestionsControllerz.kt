@@ -3,8 +3,6 @@ package fr.gouv.monprojetsup.suggestions.controllers
 import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.data.ServerData
 import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO
-import fr.gouv.monprojetsup.data.dto.SortMetiersByAffinityServiceDTO
-import fr.gouv.monprojetsup.data.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
 import fr.gouv.monprojetsup.suggestions.services.*
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService.EXPLANATIONS_ENDPOINT

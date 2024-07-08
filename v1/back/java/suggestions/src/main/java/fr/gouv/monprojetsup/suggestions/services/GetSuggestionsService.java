@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GetSuggestionsService extends MyService<GetAffinitiesServiceDTO.Request, GetAffinitiesServiceDTO.Response> {
+public class GetSuggestionsService extends MySuggService<GetAffinitiesServiceDTO.Request, GetAffinitiesServiceDTO.Response> {
 
     public final static  String SUGGESTIONS_ENDPOINT = "suggestions";
 

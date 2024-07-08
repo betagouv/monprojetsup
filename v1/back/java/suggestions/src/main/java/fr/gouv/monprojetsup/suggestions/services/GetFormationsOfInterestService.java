@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class GetFormationsOfInterestService extends MyService<GetFormationsOfInterestService.Request, GetFormationsOfInterestService.Response> {
+public class GetFormationsOfInterestService extends MySuggService<GetFormationsOfInterestService.Request, GetFormationsOfInterestService.Response> {
 
 
     public GetFormationsOfInterestService() {
@@ -25,8 +25,8 @@ public class GetFormationsOfInterestService extends MyService<GetFormationsOfInt
         return cities.stream().flatMap(city ->
                         flKeys.stream()
                                 .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? Distances.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
-                                        : Distances.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
+                                        ? Distances.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere, Distances.distanceCaches).stream()
+                                        : Distances.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere, Distances.distanceCaches).stream()
                                 )
                 ).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ExplanationGeo::distance))

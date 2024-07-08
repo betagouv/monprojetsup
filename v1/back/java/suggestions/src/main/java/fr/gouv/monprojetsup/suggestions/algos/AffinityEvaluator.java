@@ -441,7 +441,7 @@ public class AffinityEvaluator {
         if (pf.geo_pref() == null || pf.geo_pref().isEmpty()) return bonus;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = Distances.getGeoExplanations(fl, cityName);
+            @NotNull val result = Distances.getGeoExplanations(fl, cityName, Distances.distanceCaches);
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));

@@ -1,19 +1,11 @@
 package fr.gouv.monprojetsup.app
 
 
-import fr.gouv.monprojetsup.app.server.MyService
 import fr.gouv.monprojetsup.app.server.WebServer
-import fr.gouv.monprojetsup.common.server.MyServiceException
-import fr.gouv.monprojetsup.common.server.WritePidToFile
-import jakarta.servlet.http.HttpServletRequest
-import jdk.jshell.spi.ExecutionControl.UserException
+import fr.gouv.monprojetsup.app.server.WritePidToFile
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 
 @SpringBootApplication

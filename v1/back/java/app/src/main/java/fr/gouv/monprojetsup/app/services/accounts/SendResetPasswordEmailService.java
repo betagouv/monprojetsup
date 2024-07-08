@@ -1,19 +1,20 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.mail.AccountManagementEmails;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.WebServer;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
 
 @Service
-public class SendResetPasswordEmailService extends MyService<SendResetPasswordEmailService.Request, SendResetPasswordEmailService.Response> {
+@Slf4j
+public class SendResetPasswordEmailService extends MyAppService<SendResetPasswordEmailService.Request, SendResetPasswordEmailService.Response> {
 
     public SendResetPasswordEmailService() {
         super(Request.class);
@@ -41,9 +42,9 @@ public class SendResetPasswordEmailService extends MyService<SendResetPasswordEm
             try {
                 @NotNull String confirmationToken = WebServer.db().generateUserEmailResetToken(login);
                 AccountManagementEmails.sendResetPasswordEmail(login, confirmationToken);
-                LOGGER.info("sending reset password email to " + login +  " token " + confirmationToken);
+                Log.logTrace("back", "sending reset password email to " + login +  " token " + confirmationToken);
             } catch (DBExceptions.UnknownUserException e) {
-                LOGGER.info("failed to send reset password email " + e.getMessage());
+                Log.logTrace("back", "failed to send reset password email " + e.getMessage());
             }
         }
         return new Response();

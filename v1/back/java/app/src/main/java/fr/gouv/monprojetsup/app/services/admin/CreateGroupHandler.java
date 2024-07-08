@@ -1,19 +1,19 @@
 package fr.gouv.monprojetsup.app.services.admin;
 
-import fr.gouv.monprojetsup.app.db.DBExceptions;
-import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.db.DB;
+import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
+import fr.gouv.monprojetsup.app.server.Helpers;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.teacher.GetAdminInfosService;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.app.server.MyService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import static fr.gouv.monprojetsup.common.server.Helpers.NULL_DATA;
+import static fr.gouv.monprojetsup.app.server.Helpers.NULL_DATA;
 
 @Service
-public class CreateGroupHandler extends MyService<CreateGroupHandler.Request, GetAdminInfosService.Response> {
+public class CreateGroupHandler extends MyAppService<CreateGroupHandler.Request, GetAdminInfosService.Response> {
 
     public CreateGroupHandler() {
         super(Request.class);

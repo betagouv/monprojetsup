@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.common.Sanitizer;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.data.model.Explanation;

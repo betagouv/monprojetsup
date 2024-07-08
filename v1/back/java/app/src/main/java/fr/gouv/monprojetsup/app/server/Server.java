@@ -1,5 +1,6 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.app.server;
 
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;

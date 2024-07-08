@@ -1,9 +1,12 @@
 package fr.gouv.monprojetsup.app.server;
 
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.common.server.ErrorResponse;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,32 +16,74 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
-import java.util.Objects;
+import java.net.URI;
+
+import static fr.gouv.monprojetsup.app.server.Helpers.NULL_DATA;
+import static fr.gouv.monprojetsup.app.server.Helpers.getSanitizedBuffer;
 
 @Slf4j
 @Service
-public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.MyService<T,U> {
+public abstract class MyService<T,U> implements HttpHandler {
 
+    private final Type classT;
 
     protected MyService(@NotNull Type classT) {
-        super(classT);
+       this.classT = classT;
     }
 
     @Override
-    public ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
-        return handleAnException(e, o, uri);
+    public synchronized void handle(@NotNull HttpExchange exchange) {
+        T req = null;
+        try {
+            req = extractRequest(exchange);
+            if (req == null) throw new RuntimeException(NULL_DATA);
+            if(!WebServer.isInitialized()) {
+                throw new ServerStartingException();
+            }
+            U ans = handleRequest(req);
+            Helpers.write(ans, exchange);
+        } catch (Exception e) {
+            try {
+                URI uri = exchange.getRequestURI();
+                ErrorResponse response = handleException(e, req, uri == null ? null : uri.toString() );
+                Helpers.write(response, exchange);
+            }  catch (Exception ignored) {
+                //ignored
+            }
+        }
     }
 
-    public static ErrorResponse handleAnException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+    protected abstract @NotNull U handleRequest(@NotNull T req) throws Exception;
+
+    private @NotNull T extractRequest(@NotNull HttpExchange t) throws IOException {
+        String buffer = getSanitizedBuffer(t);
+        try {
+            T req = new Gson().fromJson(buffer, classT);
+            if (req == null) throw new RuntimeException(NULL_DATA);
+            return req;
+        } catch (Exception e) {
+            throw new RuntimeException("extractRequest failed on buffer " + (buffer == null ? "null" : buffer), e);
+        }
+    };
+
+    public static ErrorResponse handleException(@Nullable Throwable e, @Nullable Object o, @Nullable String uri) throws IOException {
+        Log.logTrace("handleException", e.getMessage());
         if( e == null) {
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.SERVER_ERROR,
                     "Null exception"
             ));
         }
-        Log.logTrace("handleException", e.getMessage());
         if (e instanceof DBExceptions.UserInputException) {
-            Log.logBackError(e);
+            String error = e.getMessage();
+            if(e instanceof DBExceptions.InvalidTokenException) {
+                Helpers.LOGGER.warning(error);
+                error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
+            }
+            if(!(e instanceof DBExceptions.UserInputException.InvalidPasswordException)
+            && !(e instanceof Authenticator.TokenInvalidException)) {
+                Log.logBackError(error);
+            }
             //for those we do not include the stacktrace in the message
             return new ErrorResponse(new ResponseHeader(
                     ResponseHeader.USER_ERROR,
@@ -48,10 +93,16 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
             //unexpected: we log the error and send back the stacktrace (should be removed in prod)
             try (StringWriter out = new StringWriter()) {
                 try {
-                    out.append(Objects.requireNonNullElse(uri, "Null URI")).append(System.lineSeparator()).append(System.lineSeparator());
+                    if (uri != null) {
+                        out.append(uri).append(System.lineSeparator()).append(System.lineSeparator());
+                    } else {
+                        out.append("Null URI").append(System.lineSeparator()).append(System.lineSeparator());
+                    }
+                    //out.append(t.getRemoteAddress().toString());
+                    //out.append(t.getLocalAddress().toString());
                 } catch (Exception ignores) {
                 }
-                out.append(e.getMessage()).append(System.lineSeparator());
+                out.append(e.getMessage() + System.lineSeparator());
                 e.printStackTrace(new PrintWriter(out));
                 if (o != null) {
                     String buffer = o.toString();
@@ -64,11 +115,11 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
                             buffer = buffer.substring(0, i) + "password=***";
                         }
                     }
-                    out.append(buffer).append(System.lineSeparator());
+                    out.append(buffer + System.lineSeparator());
                 }
 
                 String error = out.toString();
-                log.warn(error);
+                Helpers.LOGGER.warning(error);
                 error = "<p>" + error.replace(System.lineSeparator(), "<br/>") + "</p>";
                 Log.logBackError(error);
                 return new ErrorResponse(new ResponseHeader(
@@ -79,9 +130,13 @@ public abstract class MyService<T,U> extends fr.gouv.monprojetsup.common.server.
         }
     }
 
-    @Override
-    protected boolean isServerReady() {
-        return WebServer.isInitialized();
+    public @NotNull U handleRequestAndExceptions(@NotNull T req) throws MyServiceException {
+        try {
+            return handleRequest(req);
+        } catch (Exception e) {
+            throw new MyServiceException(e, req);
+        }
     }
 
+    protected abstract boolean isServerReady();
 }

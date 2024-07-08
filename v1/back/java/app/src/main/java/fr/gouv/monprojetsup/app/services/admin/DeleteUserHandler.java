@@ -1,17 +1,17 @@
 package fr.gouv.monprojetsup.app.services.admin;
 
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.app.server.MyService;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.AdminInfosDTO;
+import fr.gouv.monprojetsup.app.server.Helpers;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.teacher.GetAdminInfosService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DeleteUserHandler extends MyService<DeleteUserHandler.Request, GetAdminInfosService.Response> {
+public class DeleteUserHandler extends MyAppService<DeleteUserHandler.Request, GetAdminInfosService.Response> {
 
     public DeleteUserHandler() {
         super(Request.class);

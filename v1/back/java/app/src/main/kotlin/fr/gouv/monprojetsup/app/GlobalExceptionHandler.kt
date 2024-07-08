@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.app
 
-import fr.gouv.monprojetsup.app.server.MyService
-import fr.gouv.monprojetsup.common.server.MyServiceException
-import fr.gouv.monprojetsup.common.server.ServerStartingException
+import fr.gouv.monprojetsup.app.server.MyAppService.handleAnException
+import fr.gouv.monprojetsup.app.server.MyServiceException
+import fr.gouv.monprojetsup.app.server.ServerStartingException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -22,7 +22,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(MyServiceException::class)
     fun handleRMyServiceException(ex: MyServiceException, request: WebRequest?): ResponseEntity<*> {
         val inner = ex.cause
-        val response = MyService.handleAnException(inner, ex.request, if (request != null) request.toString() else null)
+        val response = handleAnException(inner, ex.request, if (request != null) request.toString() else null)
 
         return ResponseEntity<Any>(response, HttpStatus.OK)
     }
@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ServerStartingException::class)
     fun handleRMyServiceException(ex: ServerStartingException, request: WebRequest?): ResponseEntity<*> {
         val inner = ex.cause
-        val response = MyService.handleAnException(inner, ex.message, null)
+        val response = handleAnException(inner, ex.message, null)
         return ResponseEntity<Any>(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

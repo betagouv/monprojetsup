@@ -2,13 +2,13 @@ package fr.gouv.monprojetsup.app.services.accounts;
 
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SetNewPasswordService extends MyService<SetNewPasswordService.Request, SetNewPasswordService.Response> {
+public class SetNewPasswordService extends MyAppService<SetNewPasswordService.Request, SetNewPasswordService.Response> {
 
     public SetNewPasswordService() {
         super(Request.class);

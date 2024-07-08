@@ -1,17 +1,17 @@
 package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.db.model.Lycee;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.Server;
 import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import fr.gouv.monprojetsup.common.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GetLyceesService extends MyService<Server.EmptyRequest, GetLyceesService.Response> {
+public class GetLyceesService extends MyAppService<Server.EmptyRequest, GetLyceesService.Response> {
 
     public GetLyceesService() {
         super(Server.EmptyRequest.class);

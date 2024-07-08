@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.tools;
+package fr.gouv.monprojetsup.data.tools;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

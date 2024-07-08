@@ -28,7 +28,6 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.common.server.Helpers.LOGGER;
 import static fr.gouv.monprojetsup.data.Constants.*;
 
 
@@ -127,8 +126,7 @@ public class ServerData {
 
         for (String s : filieresFront) {
             if (grpToFormations.getOrDefault(s, List.of()).isEmpty())
-                LOGGER.warning("No formations for " + s);
-                //throw new RuntimeException("No formations for " + s);
+                throw new RuntimeException("No formations for " + s);
         }
 
         grpToFormations.forEach((key, value) -> {
@@ -204,7 +202,7 @@ public class ServerData {
                     tagsSources.add("IFSI", filiere);
                 }
             } else {
-                LOGGER.warning("Excluding label in search for  " + filiere + " since it has no label");
+                //LOGGER.warning("Excluding label in search for  " + filiere + " since it has no label");
             }
             getMetiersAssocies(filiere, metiersVersFormations).forEach(
                     metier -> tagsSources.add(getLabel(metier), filiere));

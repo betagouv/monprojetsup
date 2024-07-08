@@ -1,14 +1,15 @@
-package fr.gouv.monprojetsup.data.services;
+package fr.gouv.monprojetsup.app.services.info;
 
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetSimpleStatsService extends MyService<GetSimpleStatsService.Request, GetSimpleStatsService.Response> {
+public class GetSimpleStatsService extends MyAppService<GetSimpleStatsService.Request, GetSimpleStatsService.Response> {
 
     public GetSimpleStatsService() {
         super(Request.class);

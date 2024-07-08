@@ -1,12 +1,10 @@
 package fr.gouv.monprojetsup.app.dto;
 
-import fr.gouv.monprojetsup.app.db.model.Profile;
-import fr.gouv.monprojetsup.common.Sanitizer;
+import fr.gouv.monprojetsup.app.tools.Sanitizer;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,7 +79,7 @@ public record ProfileDb(
                         .stream()
                         .collect(Collectors.toMap(
                                 e -> Sanitizer.sanitize(e.getKey()),
-                                e -> e.getValue().sanitize()
+                                e -> e.getValue()
                         )),
                 Sanitizer.sanitize(statut),
                  new ArrayList<>(retours == null ? Collections.emptyList() : retours.stream()

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.common.tools.ConcurrentBoundedMapQueue;
+import fr.gouv.monprojetsup.data.tools.ConcurrentBoundedMapQueue;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;

@@ -4,9 +4,8 @@ import com.google.gson.Gson;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
@@ -30,10 +29,11 @@ import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.distances.Distances.distanceCaches;
 import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
 
 @Service
-public class SearchService extends MyService<SearchService.Request, SearchService.Response> {
+public class SearchService extends MyAppService<SearchService.Request, SearchService.Response> {
 
     protected static final boolean USE_LOCAL_URL = true;
 
@@ -311,8 +311,8 @@ public class SearchService extends MyService<SearchService.Request, SearchServic
         return cities.stream().flatMap(city ->
                         flKeys.stream()
                                 .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere).stream()
-                                        : getGeoExplanations(List.of(key), city, maxFormationsPerFiliere).stream()
+                                        ? getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere, distanceCaches).stream()
+                                        : getGeoExplanations(List.of(key), city, maxFormationsPerFiliere, distanceCaches).stream()
                                 )
                 ).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ExplanationGeo::distance))

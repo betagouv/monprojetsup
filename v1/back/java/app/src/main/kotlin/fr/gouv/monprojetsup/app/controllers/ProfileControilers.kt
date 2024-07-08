@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.app.controllers
 
 import fr.gouv.monprojetsup.app.BASE_PATH
+import fr.gouv.monprojetsup.app.server.Server
 import fr.gouv.monprojetsup.app.services.info.SearchService
 import fr.gouv.monprojetsup.app.services.profiles.*
-import fr.gouv.monprojetsup.common.server.Server
 import org.springframework.web.bind.annotation.*
 
 @RestController

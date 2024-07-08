@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.data.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

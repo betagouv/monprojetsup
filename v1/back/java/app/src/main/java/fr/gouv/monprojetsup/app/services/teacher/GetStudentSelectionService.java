@@ -3,20 +3,16 @@ package fr.gouv.monprojetsup.app.services.teacher;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
-import fr.gouv.monprojetsup.app.server.MyService;
+import fr.gouv.monprojetsup.app.server.Helpers;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.info.SearchService;
-import fr.gouv.monprojetsup.app.services.profiles.GetMySelectionService;
-import fr.gouv.monprojetsup.common.server.Helpers;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
-import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +22,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.app.services.info.SearchService.getDetails;
 
 @Service
-public class GetStudentSelectionService extends MyService<GetStudentProfileService.Request, GetStudentSelectionService.Response> {
+public class GetStudentSelectionService extends MyAppService<GetStudentProfileService.Request, GetStudentSelectionService.Response> {
 
     public GetStudentSelectionService() {
         super(GetStudentProfileService.Request.class);

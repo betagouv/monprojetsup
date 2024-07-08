@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GetExplanationsAndExamplesService extends MyService<GetExplanationsAndExamplesServiceDTO.Request, GetExplanationsAndExamplesServiceDTO.Response> {
+public class GetExplanationsAndExamplesService extends MySuggService<GetExplanationsAndExamplesServiceDTO.Request, GetExplanationsAndExamplesServiceDTO.Response> {
 
     public static final  String EXPLANATIONS_ENDPOINT = "explanations";
 

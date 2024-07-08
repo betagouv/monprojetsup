@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.dto;
 
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;

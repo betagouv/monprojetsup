@@ -1,17 +1,17 @@
 package fr.gouv.monprojetsup.app.services.accounts;
 
-import fr.gouv.monprojetsup.app.server.MyService;
-import fr.gouv.monprojetsup.common.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.auth.Authenticator;
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.common.server.Server;
+import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.Server;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import static fr.gouv.monprojetsup.app.db.DB.authenticator;
 
 @Service
-public class DisconnectService extends MyService<Server.BasicRequest, DisconnectService.Response> {
+public class DisconnectService extends MyAppService<Server.BasicRequest, DisconnectService.Response> {
 
     public DisconnectService() {
         super(Server.BasicRequest.class);

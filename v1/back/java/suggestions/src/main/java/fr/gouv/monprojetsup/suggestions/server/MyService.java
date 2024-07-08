@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.common.server;
+package fr.gouv.monprojetsup.suggestions.server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
