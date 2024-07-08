@@ -53,6 +53,7 @@ class FormationDetailleeEntity {
     @Column(name = "descriptif_attendu", nullable = true)
     var descriptifAttendus: String? = null
 
+    @Type(ListArrayType::class)
     @Column(name = "mots_clefs", nullable = true)
     var motsClefs: List<String>? = null
 
