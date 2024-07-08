@@ -33,6 +33,8 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 @SpringBootApplication
 @ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
@@ -128,10 +130,14 @@ class MyApplicationRunner : ApplicationRunner {
 		carte: JsonCarte
 	) {
 		//le référentiel est formations front
-		val formations = ServerData.computeFilieresFront(psupData)
+		val formations = ServerData.computeFilieresFront(
+			psupData,
+			stats.lasFlCodes
+		)
 
 		LOGGER.info("Calcul des correspondance")
-		val groups: Map<String, String> = psupData.correspondances
+		val groups = psupData.correspondances
+		val reverseGroups = revert(groups)
 		val lasCorrespondance = stats.lasCorrespondance
 
 		LOGGER.info("Génération des descriptifs")
@@ -162,10 +168,7 @@ class MyApplicationRunner : ApplicationRunner {
 		formations.forEach { flCod ->
 			val entity = FormationDetailleeEntity()
 			entity.id = flCod
-			val label = stats.labels.get(flCod)
-			if (label == null) {
-				throw RuntimeException("Pas de label pour la formation $flCod")
-			}
+			val label = stats.labels.get(flCod) ?: throw RuntimeException("Pas de label pour la formation $flCod")
 			entity.label = label
 			entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(flCod)
 			entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(flCod)
@@ -177,13 +180,16 @@ class MyApplicationRunner : ApplicationRunner {
 				entity.descriptifConseils = attendus.getConseilsFront()
 				entity.descriptifAttendus = attendus.getAttendusFront()
 			}
-			entity.formationsAssociees = listOf()
-			val grille = grilles.get(flCod)
+
+			entity.formationsAssociees = ArrayList(reverseGroups.getOrDefault(flCod, setOf(flCod)))
+
+			val grille = grilles[flCod]
 			if (grille == null) {
 				entity.criteresAnalyse = listOf()
 			} else {
 				entity.criteresAnalyse = grille.criteresFront
 			}
+
 			val urlListe = urls.getOrDefault(flCod, ArrayList())
 			entity.liens = urlListe.map { link ->
 				LienEntity(link.label, link.uri)
@@ -199,6 +205,17 @@ class MyApplicationRunner : ApplicationRunner {
 
 			formationsdb.save(entity)
 		}
+
+	}
+
+	private fun revert(groups: Map<String, String>): Map<String,Set<String>> {
+		val reverseGroups = HashMap<String, MutableSet<String>>()
+		groups.forEach { (key: String, value: String) ->
+			reverseGroups.computeIfAbsent(
+				value
+			) { HashSet() }.add(key)
+		}
+		return reverseGroups
 
 	}
 
