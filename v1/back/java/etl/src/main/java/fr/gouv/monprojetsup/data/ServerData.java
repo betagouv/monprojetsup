@@ -162,13 +162,18 @@ public class ServerData {
     private static void computeFilieresFront() {
         ServerData.filieresFront.clear();
         ServerData.filieresFront.addAll(
-                computeFilieresFront(backPsupData)
+                computeFilieresFront(backPsupData, statistiques.getLasFlCodes())
         );
     }
     @NotNull
-    public static List<@NotNull String> computeFilieresFront(@NotNull PsupData backendData) {
+    public static List<@NotNull String> computeFilieresFront(
+            @NotNull PsupData backendData,
+            @NotNull Collection<Integer> lasFlCodes
+            ) {
+        val filActives  = backendData.filActives();
+        filActives.addAll(lasFlCodes);
         return computeFilieresFront(
-                backendData.filActives(),
+                filActives,
                 backendData.getCorrespondances()
         );
     }
