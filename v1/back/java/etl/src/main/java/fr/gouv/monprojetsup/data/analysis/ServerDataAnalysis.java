@@ -640,7 +640,7 @@ public class ServerDataAnalysis {
                 data.getLASCorrespondance(),
                 eds,
                 grilles,
-                GrilleAnalyse.labels
+                GrilleAnalyse.getLabelsMap()
         );
 
         val headers =List.of(

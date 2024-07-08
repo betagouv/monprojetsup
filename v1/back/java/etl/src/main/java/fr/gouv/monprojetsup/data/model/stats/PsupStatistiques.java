@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.model.stats;
 
-import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.data.update.onisep.OnisepData;
+import fr.gouv.monprojetsup.data.update.psup.PsupData;
 import fr.parcoursup.carte.algos.AlgoCarteEntree;
 import fr.parcoursup.carte.algos.Filiere;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,7 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MIN_POPULATION_SIZE_FOR_STATS;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MOYENNE_BAC_CODE;
 import static fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParMatiere.getStatAgregee;
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
@@ -439,9 +440,12 @@ public class PsupStatistiques implements Serializable {
         );
     }
 
-    public void createGroupAdmisStatistique(Map<String, Set<String>> flGroups) {
-        flGroups.forEach(this::createGroupAdmisStatistique);
+    public void createGroupAdmisStatistique(@NotNull Map<String, String> flGroups) {
+        Map<String, Set<String>> reverseFlGroups = new HashMap<>();
+        flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
+        reverseFlGroups.forEach(this::createGroupAdmisStatistique);
     }
+
 
     private void createGroupAdmisStatistique(
             String newGroup,

@@ -3,9 +3,9 @@ package fr.gouv.monprojetsup.data.update.psup;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
+import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.parcoursup.carte.algos.tools.Paire;
-import io.micrometer.observation.Observation;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
@@ -498,13 +498,14 @@ public record PsupData(
                                     && name.startsWith("C_JA_CGV_")
                                     && comment != null) {
                         String shortKey = name.substring("C_JA_CGV_".length());
+                        /*
                         if(GrilleAnalyse.labels.containsKey(shortKey)) {
                             int i = comment.indexOf(":");
                             if (i > 0) {
                                 String commentCleaned = comment.substring(i+1).trim();
                                 GrilleAnalyse.labels.put(shortKey, commentCleaned);
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -535,7 +536,7 @@ public record PsupData(
                 if(m.containsKey("C_JA_COD")) {
                     int cja = Integer.parseInt(m.get("C_JA_COD"));
                     if(juryToFils.containsKey(cja)) {
-                        for (val key : GrilleAnalyse.labels.keySet()) {
+                        for (val key : GrilleAnalyse.getLabelsMap().keySet()) {
                             String fullKey = "C_JA_CGV_" + key + "_PRC";
                             String pctStr = m.getOrDefault(fullKey, "0");
                             int pct = Integer.parseInt(pctStr);
@@ -583,4 +584,20 @@ public record PsupData(
     }
 
 
+    public Map<String, List<Formation>> getGroupesToFormations() {
+
+        val groupes = getCorrespondances();
+        Map<String, List<Formation>> result = new HashMap<>();
+        formations().formations.values()
+                .forEach(f -> {
+                    int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
+                    String filKey = Constants.gFlCodToFrontId(gFlCod);
+                    String forKey = Constants.gTaCodToFrontId(f.gTaCod);
+                    val grKey = groupes.getOrDefault(filKey, filKey);
+                    result
+                            .computeIfAbsent(grKey, z -> new ArrayList<>())
+                            .add(f);
+                });
+        return result;
+    }
 }

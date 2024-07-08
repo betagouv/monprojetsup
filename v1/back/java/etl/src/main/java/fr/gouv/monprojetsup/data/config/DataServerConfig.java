@@ -18,6 +18,11 @@ public final class DataServerConfig {
 
     public static DataServerConfig config;
 
+    public static void setDataRootDirectory(String dataRootDirectory) {
+        config = new DataServerConfig();
+        config.dataRootDirectory = dataRootDirectory;
+    }
+
     public static DataServerConfig load() throws IOException {
 
         DataServerConfig result;
