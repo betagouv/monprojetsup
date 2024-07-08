@@ -1,7 +1,8 @@
 package fr.gouv.monprojetsup.data.model.thematiques;
 
-import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.ThematiquesOnisep;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,38 @@ public record Thematiques(
     }
 
 
+    public static List<Category> loadthematiques() {
+        Map<String, Category> groupes = new HashMap<>();
+        List<Category> categories = new ArrayList<>();
+
+        String groupe = "";
+        String emojig = "";
+        for (Map<String, String> stringStringMap : CsvTools.readCSV(DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH), '\t')) {
+            String id = stringStringMap.get("id").trim();
+            String regroupement = stringStringMap.get("regroupement").trim();
+            if(!regroupement.isEmpty()) {
+                groupe = regroupement;
+                String emojiGroupe = stringStringMap.get("Emoji");
+                if(!emojiGroupe.isEmpty()) {
+                    emojig = emojiGroupe;
+                } else {
+                    throw new RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
+                }
+            }
+            String emoji = stringStringMap.getOrDefault("Emojis","").trim();
+            String label = stringStringMap.getOrDefault("label","").trim();
+            if(groupe.isEmpty()) throw new RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
+            if(emojig.isEmpty()) throw new RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH);
+            Category cat = groupes.get(groupe);
+            if(cat  == null) {
+                cat = new Category(groupe, emojig, new ArrayList<>());
+                groupes.put(groupe, cat);
+                categories.add(cat);
+            }
+            cat.items.add(new Item(id, label, emoji));
+        }
+        return categories;
+    }
     private Thematiques(@NotNull ThematiquesOnisep thematiques) {
         this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new ArrayList<>());
 

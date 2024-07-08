@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
 import lombok.Data;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -163,18 +164,32 @@ public record Descriptifs(
         this.keyToDescriptifs.putAll(descriptifs.keyToDescriptifs);
     }
 
+    @Nullable
+    public String getDescriptifGeneralFront(@NotNull String flCod) {
+        val desc = keyToDescriptifs.get(flCod);
+        if(desc == null) return null;
+        return desc.getDescriptifGeneralFront();
+    }
+
+    @Nullable
+    public String getDescriptifDiplomeFront(@NotNull String flCod) {
+        val desc = keyToDescriptifs.get(flCod);
+        if(desc == null) return null;
+        return desc.getDescriptifDiplomeFront();
+    }
+
 
     @Data
     public static final class Descriptif {
-        private  String presentation;
-        private  String poursuite;
-        private  String metiers;
-        private  @Nullable String url;
-        private  String error;
-        private  @NotNull String type;
-        private  Set<String> multiUrls = new HashSet<>();
-        private  String summary;
-        private  String summaryFormation;
+        private String presentation;
+        private String poursuite;
+        private String metiers;
+        private @Nullable String url;
+        private String error;
+        private @NotNull String type;
+        private Set<String> multiUrls = new HashSet<>();
+        private String summary;
+        private String summaryFormation;
         private Map<String, String> mpsData = new HashMap<>();
         private boolean correctedUrl = false;
 
@@ -199,151 +214,151 @@ public record Descriptifs(
             this.url = url;
             this.error = error;
             this.type = type;
-            if(multiUrls != null) this.multiUrls.addAll(multiUrls);
+            if (multiUrls != null) this.multiUrls.addAll(multiUrls);
             this.summary = summary;
             this.summaryFormation = summaryFormation;
             this.mpsData.putAll(mpsData);
         }
 
 
-            public Descriptif(String presentation, String url, String type) {
-                this(presentation, null, null, url, null, type, null, null, null, new HashMap<>());
+        public Descriptif(String presentation, String url, String type) {
+            this(presentation, null, null, url, null, type, null, null, null, new HashMap<>());
+        }
+
+        public Descriptif(String summary, String summaryFormation, String url, String type) {
+            this(null, null, null, url, null, type, null, summary, summaryFormation, new HashMap<>());
+        }
+
+        public Descriptif(Map<String, String> mpsData) {
+            this(null, null, null, null, null, "summary", null, null, null, mpsData);
+        }
+
+
+        public static Descriptif addToDescriptif(String addendum, Descriptif o) {
+            if (o == null) {
+                return new Descriptif(addendum, null, "addendum from null");
             }
-
-            public Descriptif(String summary, String summaryFormation, String url, String type) {
-                this(null, null, null, url, null, type, null, summary, summaryFormation, new HashMap<>());
+            if (o.type.equals("error")) {
+                return new Descriptif(addendum, o.url, "addedndum from error");
             }
+            return new Descriptif(
+                    addendum + o.presentation,
+                    o.poursuite,
+                    o.metiers,
+                    o.url,
+                    o.error,
+                    "addendum + " + o.type,
+                    o.multiUrls,
+                    o.summary,
+                    o.summaryFormation,
+                    new HashMap<>()
+            );
+        }
 
-            public Descriptif(Map<String, String> mpsData) {
-                this(null, null, null, null, null, "summary", null, null, null, mpsData);
+        public static Descriptif mergeDescriptifs(List<Descriptif> descriptifs) {
+            if (descriptifs.isEmpty()) {
+                return new Descriptif("", null, null, null, "empty merge", "error", null, null, null, new HashMap<>());
+            } else if (descriptifs.size() == 1) {
+                return descriptifs.get(0);
             }
+            String presentation = descriptifs.stream().map(d -> d.presentation)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .reduce((s, s2) -> s + "<br/>" + s2
+                    ).orElse("");
+            String poursuite = descriptifs.stream().map(d -> d.poursuite)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .reduce((s, s2) -> s + "<br/>" + s2
+                    ).orElse(null);
+            String metiers = descriptifs.stream().map(d -> d.metiers)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .reduce((s, s2) -> s + "<br/>" + s2
+                    ).orElse(null);
+            String summaries = descriptifs.stream().map(d -> d.summary)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .reduce((s, s2) -> s + "<br/>" + s2
+                    ).orElse(null);
+            String summariesFormations = descriptifs.stream().map(d -> d.summaryFormation)
+                    .filter(d -> d != null && !d.isEmpty())
+                    .findAny().orElse(null);
+            List<String> urls = descriptifs.stream().map(d -> d.url).filter(u -> u != null && !u.isEmpty()).distinct().toList();
+            return new Descriptif(presentation, poursuite, metiers, urls.isEmpty() ? null : urls.get(0), null, "merge", urls, summaries, summariesFormations, new HashMap<>());
+        }
 
-
-            public static Descriptif addToDescriptif(String addendum, Descriptif o) {
-                if (o == null) {
-                    return new Descriptif(addendum, null, "addendum from null");
-                }
-                if (o.type.equals("error")) {
-                    return new Descriptif(addendum, o.url, "addedndum from error");
-                }
+        public static Descriptif setSummary(Descriptif o, String summary) {
+            if (o == null) {
+                return new Descriptif(summary, null, "summary");
+            } else {
                 return new Descriptif(
-                        addendum + o.presentation,
+                        o.presentation,
                         o.poursuite,
                         o.metiers,
                         o.url,
                         o.error,
-                        "addendum + " + o.type,
+                        o.type,
                         o.multiUrls,
-                        o.summary,
-                        o.summaryFormation,
+                        summary,
+                        null,
                         new HashMap<>()
                 );
             }
-
-            public static Descriptif mergeDescriptifs(List<Descriptif> descriptifs) {
-                if (descriptifs.isEmpty()) {
-                    return new Descriptif("", null, null, null, "empty merge", "error", null, null, null, new HashMap<>());
-                } else if (descriptifs.size() == 1) {
-                    return descriptifs.get(0);
-                }
-                String presentation = descriptifs.stream().map(d -> d.presentation)
-                        .filter(d -> d != null && !d.isEmpty())
-                        .reduce((s, s2) -> s + "<br/>" + s2
-                        ).orElse("");
-                String poursuite = descriptifs.stream().map(d -> d.poursuite)
-                        .filter(d -> d != null && !d.isEmpty())
-                        .reduce((s, s2) -> s + "<br/>" + s2
-                        ).orElse(null);
-                String metiers = descriptifs.stream().map(d -> d.metiers)
-                        .filter(d -> d != null && !d.isEmpty())
-                        .reduce((s, s2) -> s + "<br/>" + s2
-                        ).orElse(null);
-                String summaries = descriptifs.stream().map(d -> d.summary)
-                        .filter(d -> d != null && !d.isEmpty())
-                        .reduce((s, s2) -> s + "<br/>" + s2
-                        ).orElse(null);
-                String summariesFormations = descriptifs.stream().map(d -> d.summaryFormation)
-                        .filter(d -> d != null && !d.isEmpty())
-                        .findAny().orElse(null);
-                List<String> urls = descriptifs.stream().map(d -> d.url).filter(u -> u != null && !u.isEmpty()).distinct().toList();
-                return new Descriptif(presentation, poursuite, metiers, urls.isEmpty() ? null : urls.get(0), null, "merge", urls, summaries, summariesFormations, new HashMap<>());
-            }
-
-            public static Descriptif setSummary(Descriptif o, String summary) {
-                if (o == null) {
-                    return new Descriptif(summary, null, "summary");
-                } else {
-                    return new Descriptif(
-                            o.presentation,
-                            o.poursuite,
-                            o.metiers,
-                            o.url,
-                            o.error,
-                            o.type,
-                            o.multiUrls,
-                            summary,
-                            null,
-                            new HashMap<>()
-                    );
-                }
-            }
+        }
 
         public static Descriptif setSummaries(
-                    Descriptif o,
-                    String summaryFormation,
-                    String summaryFiliere
-            ) {
-                if (o == null) {
-                    return new Descriptif(summaryFormation, summaryFiliere, null, "summary");
-                } else {
-                    return new Descriptif(
-                            o.presentation,
-                            o.poursuite,
-                            o.metiers,
-                            o.url,
-                            o.error,
-                            o.type,
-                            o.multiUrls,
-                            summaryFiliere,
-                            summaryFormation,
-                            new HashMap<>()
-                    );
-                }
+                Descriptif o,
+                String summaryFormation,
+                String summaryFiliere
+        ) {
+            if (o == null) {
+                return new Descriptif(summaryFormation, summaryFiliere, null, "summary");
+            } else {
+                return new Descriptif(
+                        o.presentation,
+                        o.poursuite,
+                        o.metiers,
+                        o.url,
+                        o.error,
+                        o.type,
+                        o.multiUrls,
+                        summaryFiliere,
+                        summaryFormation,
+                        new HashMap<>()
+                );
             }
+        }
 
-            public boolean hasError() {
-                return error != null;
-            }
+        public boolean hasError() {
+            return error != null;
+        }
 
-            public boolean isRedirectedToDefaultPage() {
-                return error != null && error.startsWith("redirected to");
-            }
+        public boolean isRedirectedToDefaultPage() {
+            return error != null && error.startsWith("redirected to");
+        }
 
-            public boolean isOutDated() {
-                return error != null && error.startsWith("www.terminales2021");
-            }
+        public boolean isOutDated() {
+            return error != null && error.startsWith("www.terminales2021");
+        }
 
-            public boolean isRecherche() {
-                return error != null && error.startsWith("recherche");
-            }
+        public boolean isRecherche() {
+            return error != null && error.startsWith("recherche");
+        }
 
-            public String getFrontRendering() {
-                if (summary != null) return summary;
-                StringBuilder b = new StringBuilder();
-                if (presentation != null) {
-                    b.append("<p>" + presentation + "</p>");
-                }
-                if (poursuite != null) {
-                    b.append("<br/><br/>").append("<p>" + poursuite + "</p>");
-                }
-                if (metiers != null) {
-                    b.append("<br/><br/>").append("<p>" + metiers + "</p>");
-                }
-                String result = b.toString();
-                result = result.replace("<h3>", "<br>");
-                result = result.replace("</h3>", "<br/>");
-                return result;
+        public String getFrontRendering() {
+            if (summary != null) return summary;
+            StringBuilder b = new StringBuilder();
+            if (presentation != null) {
+                b.append("<p>" + presentation + "</p>");
             }
+            if (poursuite != null) {
+                b.append("<br/><br/>").append("<p>" + poursuite + "</p>");
+            }
+            if (metiers != null) {
+                b.append("<br/><br/>").append("<p>" + metiers + "</p>");
+            }
+            String result = b.toString();
+            result = result.replace("<h3>", "<br>");
+            result = result.replace("</h3>", "<br/>");
+            return result;
+        }
 
         public String presentation() {
             return presentation;
@@ -413,6 +428,18 @@ public record Descriptifs(
         public boolean isViable() {
             return (mpsData != null && !mpsData.isEmpty()) || (error == null || error.isEmpty());
         }
+
+        public @Nullable String getDescriptifGeneralFront() {
+            if (summary != null && !summary.isEmpty()) return summary;
+            if (presentation != null && !presentation.isEmpty()) return presentation;
+            return null;
+        }
+
+        public String getDescriptifDiplomeFront() {
+            if (summaryFormation != null && !summaryFormation.isEmpty()) return summaryFormation;
+            return null;
+        }
+
     }
 
     public static Descriptif getError(String error, @NotNull String url) {

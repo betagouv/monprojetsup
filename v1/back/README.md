@@ -108,3 +108,24 @@ mvn exec:java -f../etl/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.data.Update
 
 
 
+### update the etl postgre database of the v2 of the app
+
+
+
+Install the jar fr.gouv.monprojetsup-entities by typing, from the root of the directory
+
+```
+mvn -f "app/back/pom.xml" clean package install -DskipTests=true
+```
+
+Set the environment variable `MPS_DATA_DIR` to the path containing the data files,
+typicall the directory created when cloning the data git repo.
+
+Also set the environment variables APP_DB_HOST_NAME, APP_DB_PORT_EXPOSED, APP_DB_NAME, APP_DB_USER
+necessary to access the db.
+
+
+```
+mvn clean install -f"v1/back/java/pom.xml"
+mvn exec:java -f "v1/back/java/etl/pom.xml" -Dexec.mainClass=fr.gouv.monprojetsup.etl.ApplicationEtlKt
+```
