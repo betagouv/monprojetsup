@@ -2,19 +2,17 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.config.DataServerConfig;
-import fr.gouv.monprojetsup.data.model.Edges;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.monprojetsup.data.update.UpdateFrontData;
-import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
-import fr.gouv.monprojetsup.data.update.onisep.billy.PsupToOnisepLines;
-import fr.gouv.monprojetsup.data.update.psup.PsupData;
+import fr.gouv.monprojetsup.suggestions.data.DataSources;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.suggestions.data.model.Edges;
+import fr.gouv.monprojetsup.suggestions.data.model.descriptifs.Descriptifs;
+import fr.gouv.monprojetsup.suggestions.data.model.metiers.MetiersScrapped;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.suggestions.data.update.onisep.FichesMetierOnisep;
+import fr.gouv.monprojetsup.suggestions.data.update.psup.PsupData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,11 +22,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
-import static fr.gouv.monprojetsup.data.DataSources.BACK_PSUP_DATA_FILENAME;
-import static fr.gouv.monprojetsup.data.DataSources.ONISEP_FICHES_METIERS;
-import static fr.gouv.monprojetsup.data.Helpers.*;
-import static fr.gouv.monprojetsup.data.ServerData.*;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.FORMATION_PREFIX;
+import static fr.gouv.monprojetsup.suggestions.data.DataSources.BACK_PSUP_DATA_FILENAME;
+import static fr.gouv.monprojetsup.suggestions.data.DataSources.ONISEP_FICHES_METIERS;
+import static fr.gouv.monprojetsup.suggestions.data.Helpers.*;
+import static fr.gouv.monprojetsup.suggestions.data.ServerData.getLabel;
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.edgesKeys;
 
 @Slf4j
@@ -104,11 +102,7 @@ public class AnalyzeSuggestionsData {
                 MetiersScrapped.class
         );
 
-        Descriptifs descriptifs1 = UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
-        );
+        Descriptifs descriptifs1 = ServerData.getDescriptifs();
 
         val psupData =  Serialisation.fromZippedJson(
                 DataSources.getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
@@ -138,7 +132,7 @@ public class AnalyzeSuggestionsData {
                         texts.add(new MlData.Data("descriptifs_psup_debouches", descriptif2.debouches()));
                     }
                 });
-                datas.add(new MlData(key, getLabel(key), texts));
+                datas.add(new MlData(key, ServerData.getLabel(key), texts));
             }
 
         });
@@ -279,12 +273,13 @@ public class AnalyzeSuggestionsData {
                 formationsSansMetiers.values(),
                 true);
 
-        Map<String, String> billys = onisepData.billy().psupToIdeo2().stream()
+        Map<String, String> billys =  new HashMap<>();
+        /*onisepData.billy().psupToIdeo2().stream()
                 .collect(Collectors.toMap(
                         PsupToOnisepLines.PsupToOnisepLine::G_FL_COD,
                         PsupToOnisepLines.PsupToOnisepLine::IDS_IDEO2
                 ));
-
+        */
         try(CsvTools csv = new CsvTools("formations_psup_sans_metiers.csv",',')) {
             csv.appendHeaders(List.of("id", "LIS_ID_ONI2","label"));
             formationsSansMetiers.entrySet().stream()
@@ -308,7 +303,7 @@ public class AnalyzeSuggestionsData {
     }
     private static void outputSemanticGraph() throws IOException {
         Edges edgesLabels = new Edges();
-        edgesLabels.createLabelledGraphFrom(edgesKeys, statistiques.labels);
+        edgesLabels.createLabelledGraphFrom(edgesKeys, ServerData.getLabels());
         Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
     }
 

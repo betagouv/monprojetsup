@@ -1,9 +1,10 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
+import fr.gouv.monprojetsup.suggestions.server.MySuggService;
+import fr.gouv.monprojetsup.suggestions.server.ResponseHeader;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,14 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
         if(flKeys == null || cities == null || flKeys.isEmpty() || cities.isEmpty()) return Collections.emptyList();
         return cities.stream().flatMap(city ->
                         flKeys.stream()
-                                .flatMap(key -> ServerData.reverseFlGroups.containsKey(key)
-                                        ? Distances.getGeoExplanations(ServerData.reverseFlGroups.get(key), city, maxFormationsPerFiliere, Distances.distanceCaches).stream()
-                                        : Distances.getGeoExplanations(List.of(key), city, maxFormationsPerFiliere, Distances.distanceCaches).stream()
+                                .flatMap(key ->
+                                        ExplanationGeo
+                                                .getGeoExplanations(
+                                                        ServerData.getChildrenOfGroup(key),
+                                                        city,
+                                                        maxFormationsPerFiliere,
+                                                        CachedGeoExplanations.distanceCaches
+                                                ).stream()
                                 )
                 ).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ExplanationGeo::distance))

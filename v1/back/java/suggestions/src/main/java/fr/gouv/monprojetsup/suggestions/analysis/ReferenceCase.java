@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 
 import java.util.ArrayList;

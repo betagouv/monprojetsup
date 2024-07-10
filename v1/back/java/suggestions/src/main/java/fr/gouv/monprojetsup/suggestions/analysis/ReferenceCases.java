@@ -1,16 +1,15 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO;
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.model.Explanation;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import lombok.val;
@@ -27,13 +26,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.getDebugLabel;
+import static fr.gouv.monprojetsup.suggestions.data.ServerData.getDebugLabel;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
 
@@ -191,17 +189,7 @@ public record ReferenceCases(
 
         SuggestionServer.loadConfig();
 
-        try {
-            ServerData.statistiques = new PsupStatistiques();
-            ServerData.statistiques.labels =
-                    Serialisation.<Map<String,String>>fromJsonFile(
-                            "labelsDebug.json",
-                            Map.class
-                    );
-        } catch (Exception e) {
-            SuggestionServer server = new SuggestionServer();
-            server.init();
-        }
+        ServerData.initStatistiques();
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(

@@ -5,20 +5,26 @@ import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.MyAppService;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.dto.*;
-import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO.Affinity;
-import fr.gouv.monprojetsup.data.model.Explanation;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Affinity;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,17 +35,15 @@ import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.distances.Distances.distanceCaches;
-import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
+import static fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations.distanceCaches;
+import static fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo.getGeoExplanations;
+
 
 @Service
 public class SearchService extends MyAppService<SearchService.Request, SearchService.Response> {
 
-    protected static final boolean USE_LOCAL_URL = true;
-
-    public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
-    public static final String REMOTE_URL = "https://monprojetsup.fr/";
-
+    @Value("${suggestions.api.url}")
+    String suggUrl = "http://localhost:8004/api/1.2/";
 
     public SearchService() {
         super(Request.class);
@@ -207,20 +211,20 @@ public class SearchService extends MyAppService<SearchService.Request, SearchSer
     }
 
     //
-    private static Pair<List<Affinity>, List<String>> getSuggestions(ProfileDTO profile) throws IOException, InterruptedException {
+    private Pair<List<Affinity>, List<String>> getSuggestions(ProfileDTO profile) throws IOException, InterruptedException {
         val request = new GetAffinitiesServiceDTO.Request(profile);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions", request);
+        String responseJson = post(suggUrl + "suggestions", request);
         val response = new Gson().fromJson(responseJson, GetAffinitiesServiceDTO.Response.class);
         return Pair.of(response.affinites(), response.metiers());
     }
 
     @NotNull
-    private static List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsandExamples(
+    private List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsandExamples(
             ProfileDTO profile,
             List<String> keys)
             throws IOException, InterruptedException {
         val request = new GetExplanationsAndExamplesServiceDTO.Request(profile, keys);
-        String responseJson = post((USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "explanations", request);
+        String responseJson = post(suggUrl + "explanations", request);
         val response = new Gson().fromJson(responseJson, GetExplanationsAndExamplesServiceDTO.Response.class);
         return response.liste();
     }
@@ -250,7 +254,7 @@ public class SearchService extends MyAppService<SearchService.Request, SearchSer
      * @param searchScores the search scores
      * @return the details
      */
-    public static List<ResultatRecherche> getDetails(
+    public List<ResultatRecherche> getDetails(
             ProfileDTO pf,
             List<String> keys,
             @NotNull Map<String, Double> affinites,

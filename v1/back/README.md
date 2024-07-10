@@ -75,7 +75,7 @@ From within a temporary working directory, typically `monprojetsup/back/java/tmp
 - On a server: run the script `monprojetsup/back/server/start_server.sh`
 - On a local computer
 
-`mvn clean compile exec:java -f../suggestions/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.app.ApplicationMpsKt`
+`mvn clean compile exec:java -f../app/pom.xml -Dexec.mainClass=fr.gouv.monprojetsup.app.ApplicationMpsKt`
 
 ### 	
 

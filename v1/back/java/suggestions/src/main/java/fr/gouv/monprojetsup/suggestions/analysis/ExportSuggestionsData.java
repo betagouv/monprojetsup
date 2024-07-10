@@ -1,14 +1,14 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.Edges;
-import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.update.onisep.LienThematiqueFormation;
-import fr.gouv.monprojetsup.data.update.onisep.LienThematiqueFormation2;
+import fr.gouv.monprojetsup.suggestions.data.Constants;
+import fr.gouv.monprojetsup.suggestions.data.DataSources;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.model.Edges;
+import fr.gouv.monprojetsup.suggestions.data.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.data.update.onisep.LienThematiqueFormation;
+import fr.gouv.monprojetsup.suggestions.data.update.onisep.LienThematiqueFormation2;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,8 +17,7 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.getLabel;
-import static fr.gouv.monprojetsup.data.ServerData.onisepData;
+import static fr.gouv.monprojetsup.suggestions.data.ServerData.getLabel;
 
 @Slf4j
 public class ExportSuggestionsData {
@@ -51,7 +50,7 @@ public class ExportSuggestionsData {
 
     private static void exportNewEdgesFromNewThematiques() throws IOException {
         /* ******************** NOUVELLES THEMATIQUES **********************************/
-        Thematiques thematiques = Thematiques.load();
+        Thematiques thematiques = ServerData.getThematiques();
 
         Edges edgesThematiquesFilieres = new Edges();
         Serialisation.fromJsonFile(
@@ -75,8 +74,8 @@ public class ExportSuggestionsData {
                 .collect(Collectors.groupingBy(LienThematiqueFormation2.ThematiqueFormationPaireOnisep2::flCod))
                 .entrySet()
                 .stream().collect(Collectors.toMap(
-                                e -> getLabel(e.getKey(), e.getKey()),
-                                e -> e.getValue().stream().map(d -> getLabel(d.Themas(), d.Themas())).toList()
+                                e -> ServerData.getLabel(e.getKey(), e.getKey()),
+                                e -> e.getValue().stream().map(d -> ServerData.getLabel(d.Themas(), d.Themas())).toList()
                         )
                 );
         Serialisation.toJsonFile("newEdges.json", newEdges, true);
@@ -131,9 +130,9 @@ public class ExportSuggestionsData {
 
         /* ** stats ***/
         Map<String, Long> stats = new TreeMap<>();
-        stats.put("métiers onisep", (long) onisepData.metiers().metiers().size());
+        stats.put("métiers onisep", (long) ServerData.getNbMetiersOnisep());
         stats.put("métiers graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.MET_PREFIX)).count());
-        stats.put("thèmes dans les données onisep", (long) onisepData.thematiques().thematiques().size());
+        stats.put("thèmes dans les données onisep", (long) ServerData.getNbThematiquesOnisep());
         stats.put("thèmes graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.THEME_PREFIX)).count());
         stats.put("formations graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(Helpers::isFiliere).count());
         stats.put("secteurs d'activité", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)).count());
@@ -194,7 +193,7 @@ public class ExportSuggestionsData {
 
     protected static void exportTypesFormationsPsup() throws IOException {
         Serialisation.toJsonFile("typesFormationsPsup.json",
-                new TreeMap<>(ServerData.backPsupData.formations().typesMacros),
+                new TreeMap<>(ServerData.getTypesMacros()),
                 true
         );
 

@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.suggestions.security.SecurityConfig
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
+import fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
@@ -25,7 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
         GetExplanationsAndExamplesService::class,
         GetFormationsOfInterestService::class,
         GetSuggestionsService::class,
-        SuggestionServer::class,
+        GetSimpleStatsService::class,
+        SuggestionServer::class
     ]
 )
 @WebMvcTest(controllers = [SuggestionsControllerz::class])

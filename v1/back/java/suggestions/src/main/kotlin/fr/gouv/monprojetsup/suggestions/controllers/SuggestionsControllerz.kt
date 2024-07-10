@@ -1,8 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.controllers
 
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO
-import fr.gouv.monprojetsup.data.ServerData
-import fr.gouv.monprojetsup.data.dto.GetAffinitiesServiceDTO
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
+import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.BASE_PATH
 import fr.gouv.monprojetsup.suggestions.services.*
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService.EXPLANATIONS_ENDPOINT
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.servers.Server
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.jetbrains.annotations.NotNull
 import org.springframework.web.bind.annotation.*
 
 
@@ -62,16 +60,6 @@ class SuggestionsControllerz(
     @Operation(summary = "Récupère une liste de formations d'affectation d'un ou plusieurs types, les plus proches d'une liste de villes données.")
     @PostMapping("/foi")
     fun getFormationsOfInterest(@RequestBody request : GetFormationsOfInterestService.Request): GetFormationsOfInterestService.Response = getFormationsOfInterestService.handleRequestAndExceptions(request)
-
-
-    @Operation(summary = "Fournit le libellé associé à une clé formation, métier ou secteur d'activité.")
-    @GetMapping("/label")
-    fun getLabel(
-        @RequestParam("key") @Parameter(name = "key", description = "clé", example = "fl1")  @NotNull key: String
-    ): String {
-        return ServerData.getLabel(key, "")
-    }
-
 
     @Operation(summary = "Vérifie la santé du service.")
     @GetMapping("/ping")

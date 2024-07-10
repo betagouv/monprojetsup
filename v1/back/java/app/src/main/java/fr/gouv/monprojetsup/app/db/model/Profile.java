@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.app.db.model;
 
 import fr.gouv.monprojetsup.app.db.DBTools;
-import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.dto.ProfileUpdateDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.app.db.model.User.normalizeUser;
 import static fr.gouv.monprojetsup.data.Helpers.*;
-import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.*;
+import static fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO.*;
 
 @Data
 @AllArgsConstructor

@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.db.model.Lycee;
 import fr.gouv.monprojetsup.app.server.MyAppService;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.server.Server;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import org.jetbrains.annotations.NotNull;

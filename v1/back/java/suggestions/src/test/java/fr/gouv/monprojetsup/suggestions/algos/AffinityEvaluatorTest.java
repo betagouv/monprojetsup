@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,13 +34,9 @@ public class AffinityEvaluatorTest {
 
     @Test
     public void testDataLoadOk() {
-        assertNotNull(ServerData.backPsupData);
-        assertNotNull(ServerData.backPsupData.filActives());
-        assertFalse(ServerData.backPsupData.filActives().isEmpty());
-
-        assertNotNull(ServerData.statistiques);
-        assertNotNull(ServerData.statistiques.nomsFilieres);
-        assertFalse(ServerData.statistiques.nomsFilieres.isEmpty());
+        assertNotNull(ServerData.getDescriptifs());
+        /** etc */
+        assertFalse(ServerData.getLabels().isEmpty());
     }
 
 

@@ -1,23 +1,20 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.config.DataServerConfig;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
+import fr.gouv.monprojetsup.suggestions.data.DataSources;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import static fr.gouv.monprojetsup.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
+import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.useRemoteUrl;
 
 public class Simulate {
@@ -37,17 +34,7 @@ public class Simulate {
 
         DataServerConfig.load();
 
-        LOGGER.info("Loading config...");
-        try {
-            ServerData.statistiques = new PsupStatistiques();
-            ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                    "labelsDebug.json",
-                    Map.class
-            );
-        } catch (Exception e) {
-            SuggestionServer server = new SuggestionServer();
-            server.init();
-        }
+        ServerData.initStatistiques();
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
