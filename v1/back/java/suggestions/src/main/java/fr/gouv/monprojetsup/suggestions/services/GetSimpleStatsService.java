@@ -1,8 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
-import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.server.MySuggService;
+import fr.gouv.monprojetsup.suggestions.server.ResponseHeader;
+import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.app.server;
 
 import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.log.Log;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

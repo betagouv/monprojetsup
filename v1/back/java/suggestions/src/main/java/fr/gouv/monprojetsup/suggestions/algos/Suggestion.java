@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.model.Explanation;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static fr.gouv.monprojetsup.data.Constants.BR;
-import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_PENDING;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.BR;
+import static fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO.SUGG_PENDING;
 import static java.lang.System.lineSeparator;
 
 /**

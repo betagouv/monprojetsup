@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.model.descriptifs;
 
 
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.update.onisep.SecteursPro;
@@ -168,18 +169,14 @@ public record Descriptifs(
     public String getDescriptifGeneralFront(@NotNull String flCod) {
         val desc = keyToDescriptifs.get(flCod);
         if(desc == null) return null;
-        return removeHtml(desc.getDescriptifGeneralFront());
-    }
-
-    private String removeHtml(String descriptifGeneralFront) {
-        return null;
+        return Helpers.removeHtml(desc.getDescriptifGeneralFront());
     }
 
     @Nullable
     public String getDescriptifDiplomeFront(@NotNull String flCod) {
         val desc = keyToDescriptifs.get(flCod);
         if(desc == null) return null;
-        return removeHtml(desc.getDescriptifDiplomeFront());
+        return Helpers.removeHtml(desc.getDescriptifDiplomeFront());
     }
 
 

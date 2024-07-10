@@ -1,17 +1,15 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.Explanation;
-import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.model.stats.Statistique;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
+import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.data.model.stats.Statistique;
+import fr.gouv.monprojetsup.suggestions.dto.*;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,12 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.ServerData.*;
-import static fr.gouv.monprojetsup.data.ServerData.onisepData;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.*;
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.*;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.*;
 import static java.util.Map.entry;
@@ -64,11 +59,11 @@ public class AffinityEvaluator {
      */
     private void addAlreadyKnown(String key) {
         alreadyKnown.add(key);
-        String grp = flGroups.get(key);
+        String grp = ServerData.getGroup(key);
         if (grp != null) {
             alreadyKnown.add(grp);
         }
-        Collection<String> grps = ServerData.reverseFlGroups.get(key);
+        Collection<String> grps = ServerData.getChildrenOfGroup(key);
         if (grps != null) {
             alreadyKnown.addAll(grps);
         }
@@ -77,7 +72,7 @@ public class AffinityEvaluator {
     private void addRejected(String key) {
         rejected.add(key);
         //NB: we do NOT generalize  using flGroups
-        Collection<String> grps = ServerData.reverseFlGroups.get(key);
+        Collection<String> grps = ServerData.getChildrenOfGroup(key);
         if (grps != null) {
             rejected.addAll(grps);
         }
@@ -103,7 +98,7 @@ public class AffinityEvaluator {
 
         //precomputing candidats for filieres similaires
         for (String fl : flApproved) {
-            Map<String, Integer> sim = ServerData.backPsupData.getFilieresSimilaires(fl, pf.bacIndex());
+            Map<String, Integer> sim = ServerData.getFilieresSimilaires(fl, pf.bacIndex());
             if (sim != null) {
                 candidatsSimilaires.addAll(sim.keySet());
             }
@@ -116,7 +111,7 @@ public class AffinityEvaluator {
         if(pf.interests() != null) {
             pf.interests().forEach(key -> {
                 nonZeroScores.add(key);
-                nonZeroScores.addAll(onisepData.interets().expansion().getOrDefault(key, Collections.emptyList()));
+                nonZeroScores.addAll(ServerData.getInterestsExpansion(key));
             });
         }
 
@@ -314,8 +309,8 @@ public class AffinityEvaluator {
 
     private double getBonusTypeBac(String grp, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
-        Integer nbAdmisTousBac = ServerData.statistiques.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
-        Integer nbAdmisBac = ServerData.statistiques.getNbAdmis(grp, pf.bac());
+        Integer nbAdmisTousBac = ServerData.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
+        Integer nbAdmisBac = ServerData.getNbAdmis(grp, pf.bac());
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = 1.0 * nbAdmisBac / nbAdmisTousBac;
@@ -324,7 +319,7 @@ public class AffinityEvaluator {
         if (percentage >= Config.SEUIL_TYPE_BAC_FULL_MATCH) bonus = 1.0;
         else
             bonus = (percentage - Config.SEUIL_TYPE_BAC_NO_MATCH) / (Config.SEUIL_TYPE_BAC_FULL_MATCH - Config.SEUIL_TYPE_BAC_NO_MATCH);
-        if (expl != null && nbAdmisBac != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
+        if (expl != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
             expl.add(
                     new Paire<>(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), pf.bac()))
             );
@@ -335,7 +330,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
-        Pair<String, Statistique> stats = ServerData.statistiques.getStatsBac(fl, pf.bac());
+        Pair<String, Statistique> stats = ServerData.getStatsBac(fl, pf.bac());
         String moyBacEstimee = pf.moygen();
         return getBonusNotes(expl, weight, stats, moyBacEstimee);
     }
@@ -441,7 +436,7 @@ public class AffinityEvaluator {
         if (pf.geo_pref() == null || pf.geo_pref().isEmpty()) return bonus;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = Distances.getGeoExplanations(fl, cityName, Distances.distanceCaches);
+            @NotNull val result = ExplanationGeo.getGeoExplanations(fl, cityName, CachedGeoExplanations.distanceCaches);
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
@@ -459,7 +454,7 @@ public class AffinityEvaluator {
 
     private double getBonusDuree(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
-        int duree = ServerData.backPsupData.getDuree(fl);
+        int duree = ServerData.getDuree(fl);
         final double result;
         switch (pf.duree().toLowerCase()) {
             case "court" -> {
@@ -491,7 +486,7 @@ public class AffinityEvaluator {
     ) {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
-        Map<String, Integer> sim = ServerData.backPsupData.getFilieresSimilaires(fl, bacIndex);
+        Map<String, Integer> sim = ServerData.getFilieresSimilaires(fl, bacIndex);
         if (sim == null) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
@@ -653,7 +648,7 @@ public class AffinityEvaluator {
                 }
             }
             if (iMtCod != null) {
-                Double stat = ServerData.statistiques.getStatsSpecialite(fl, iMtCod);
+                Double stat = ServerData.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {
                     stats.put(s, stat);
                 }
@@ -698,9 +693,9 @@ public class AffinityEvaluator {
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
         if (key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
-            candidates.addAll(liensSecteursMetiers.getOrDefault(key, Collections.emptySet()));
+            candidates.addAll(ServerData.getMetiersFromSecteur(key));
         } else {
-            candidates.addAll(getCandidatesMetiers(key));
+            candidates.addAll(ServerData.getAllCandidatesMetiers(key));
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
@@ -708,24 +703,6 @@ public class AffinityEvaluator {
         List<Explanation> explanations;
         if (Helpers.isFiliere(key)) {
             explanations = getExplanations(key).getLeft();
-            /*
-            val mainExpl = getExplanations(key).getLeft();
-
-            Set<String> keys = ServerData.getFilieresOfGroup(key);
-
-            val subExpl = keys.stream()
-                    .filter(k -> !k.equals(key))
-                    .flatMap(e -> getExplanations(e).getLeft().stream())
-                    .filter(e -> e != null && e.isInheritableFromSingleFormationToItsGroup())
-                    .toList();
-
-            if (subExpl.isEmpty()) {
-                explanations = mainExpl;
-            } else {
-                explanations = new ArrayList<>(mainExpl);
-                explanations.addAll(subExpl);
-                explanations = Explanation.merge(explanations);
-            }*/
         } else {
             restrictPathesToTarget(key);
             explanations =
@@ -747,25 +724,4 @@ public class AffinityEvaluator {
         );
     }
 
-    private Map<String,Set<String>> candidatesMetiersCache = new ConcurrentHashMap<>();
-
-    private Set<String> getCandidatesMetiers(String key) {
-        val result = candidatesMetiersCache.get(key);
-        if(result != null) return result;
-        Set<String> candidates = new HashSet<>(
-            onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()
-        );
-        if (isLas(key)) {
-            String key2 = lasCorrespondance.lasToGeneric().get(key);
-            if (key2 != null) {
-                candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet());
-                candidates.addAll(onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet());
-            }
-        }
-        if (reverseFlGroups.containsKey(key)) {
-            candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
-        }
-        candidatesMetiersCache.put(key, candidates);
-        return candidates;
-    }
 }

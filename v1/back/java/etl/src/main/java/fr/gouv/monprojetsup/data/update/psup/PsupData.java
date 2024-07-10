@@ -592,7 +592,6 @@ public record PsupData(
                 .forEach(f -> {
                     int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT: f.gFlCod;
                     String filKey = Constants.gFlCodToFrontId(gFlCod);
-                    String forKey = Constants.gTaCodToFrontId(f.gTaCod);
                     val grKey = groupes.getOrDefault(filKey, filKey);
                     result
                             .computeIfAbsent(grKey, z -> new ArrayList<>())

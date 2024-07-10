@@ -1,10 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -20,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
 
@@ -34,11 +33,7 @@ public class Evaluate {
     public static void main(String[] args) throws Exception {
 
         try {
-            ServerData.statistiques = new PsupStatistiques();
-            ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                    "labelsDebug.json",
-                    Map.class
-            );
+            ServerData.loadStatistiques();
             labelsNoDebug = Serialisation.fromJsonFile(
                     "labelsNoDebug.json",
                     Map.class

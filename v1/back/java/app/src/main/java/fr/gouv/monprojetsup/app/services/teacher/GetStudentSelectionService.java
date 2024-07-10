@@ -5,25 +5,26 @@ import fr.gouv.monprojetsup.app.db.DBExceptions;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.server.Helpers;
 import fr.gouv.monprojetsup.app.server.MyAppService;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.info.SearchService;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.app.services.info.SearchService.getDetails;
-
 @Service
 public class GetStudentSelectionService extends MyAppService<GetStudentProfileService.Request, GetStudentSelectionService.Response> {
 
+    @Autowired
+    SearchService searchService;
     public GetStudentSelectionService() {
         super(GetStudentProfileService.Request.class);
     }
@@ -74,7 +75,7 @@ public class GetStudentSelectionService extends MyAppService<GetStudentProfileSe
 
         List<String> keys = profile.suggApproved().stream().map(SuggestionDTO::fl).toList();
 
-        final @NotNull List<SearchService.ResultatRecherche> suggestions = getDetails(
+        final @NotNull List<SearchService.ResultatRecherche> suggestions = searchService.getDetails(
                 profile,
                 keys,
                 keys.stream().collect(Collectors.toMap(k -> k, k -> 1.0)),

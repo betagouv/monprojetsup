@@ -1,16 +1,12 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
 
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.analysis.Simulate.REF_CASES_WITH_SUGGESTIONS;
@@ -21,16 +17,7 @@ public class GenerateExpertsDocs {
     public static void main(String[] args) throws Exception {
 
 
-        try {
-            ServerData.statistiques = new PsupStatistiques();
-            ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                    "labelsDebug.json",
-                    Map.class
-            );
-        } catch (Exception e) {
-            SuggestionServer server = new SuggestionServer();
-            server.init();
-        }
+        ServerData.initStatistiques();
 
 
         //load Map<String, ProfileDTO> profiles = new HashMap<>(); from profilsExperts.json

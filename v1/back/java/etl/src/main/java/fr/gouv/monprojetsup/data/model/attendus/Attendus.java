@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.Helpers.removeHtml;
+
 public record Attendus(
         String attendus,
         String recoEDS,
@@ -21,7 +23,7 @@ public record Attendus(
     @Nullable
     public String getConseilsFront() {
         if(recoEDS != null && !recoEDS.isEmpty()) {
-            return recoEDS;
+            return removeHtml(recoEDS);
         }
         return null;
     }
@@ -29,7 +31,7 @@ public record Attendus(
     @Nullable
     public String getAttendusFront() {
         if(attendus != null && !attendus.isEmpty()) {
-            return attendus;
+            return removeHtml(attendus);
         }
         return null;
     }

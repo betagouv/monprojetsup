@@ -1,5 +1,5 @@
 package fr.gouv.monprojetsup.app.security
-import fr.gouv.monprojetsup.app.CustomUserDetailsService
+import fr.gouv.monprojetsup.app.AppCustomUserDetailsService
 import fr.gouv.monprojetsup.app.auth.Authenticator
 import fr.gouv.monprojetsup.app.db.dbimpl.DBMongo
 import jakarta.servlet.http.HttpServletRequest
@@ -24,8 +24,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
-    private val customUserDetailsService: CustomUserDetailsService,
+class AppSecurityConfig(
+    private val customUserDetailsService: AppCustomUserDetailsService,
     private val authenticator: Authenticator,
     private val db : DBMongo
     ) {

@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.data;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Helpers {
     /* ************************************************************************
@@ -22,5 +24,14 @@ public class Helpers {
     public static boolean isInteret(@NotNull String key) {
         return key.startsWith(Constants.CENTRE_INTERETS_ONISEP)
                 || key.startsWith(Constants.CENTRE_INTERETS_ROME);
+    }
+
+    public static String removeHtml(@Nullable String txt) {
+        if(txt == null) return null;
+        var res = StringEscapeUtils.unescapeHtml4(txt);
+        //remove any html tag
+        res = res.replaceAll("<[^>]*>", "");
+        //replace any html character by utf8
+        return res;
     }
 }

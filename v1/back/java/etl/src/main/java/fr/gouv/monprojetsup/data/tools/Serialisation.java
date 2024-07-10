@@ -2,13 +2,10 @@ package fr.gouv.monprojetsup.data.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.update.psup.OrientationConfig;
 import fr.parcoursup.carte.exceptions.AccesDonneesException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -88,18 +85,6 @@ public class Serialisation {
         }
     }
 
-    public static <T> T load(OrientationConfig config, Class<T> classe, String suffix) throws IOException, ClassNotFoundException, JAXBException {
-        String prefix = classe.getTypeName() + suffix;
-        String filename = config.getInputFilename(prefix);
-        if(config.inputJson) {
-            return fromZippedJson(filename, classe);
-        } else if(config.inputObj) {
-            return fromZippedObject(filename, classe);
-        } else {
-            throw new NotImplementedException();
-        }
-    }
-
     public static void toZippedJson(String path, Object object, boolean prettyPrint) throws IOException {
         ZipOutputStream out = new ZipOutputStream(
                 new BufferedOutputStream(
@@ -149,19 +134,6 @@ public class Serialisation {
         oos.writeObject(obj);
         oos.close();
         out.close();
-    }
-
-
-    public static <T> void save(OrientationConfig config, Class<T> classe, T object, String suffix) throws IOException, AccesDonneesException {
-        String prefix = classe.getTypeName() + suffix;
-        String filename = config.getOutputFilename(prefix);
-        if(config.outputJson) {
-            toZippedJson(filename  + ".json.zip", object, true);
-        } else if(config.outputObj) {
-            toZippedObject(filename, object);
-        } else {
-            throw new NotImplementedException();
-        }
     }
 
     public static Map<String,List<Map<String, String>>> exportSelectToObject(Connection conn, Map<String, String> sqls) throws AccesDonneesException, IOException, SQLException {

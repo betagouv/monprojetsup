@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.app.services.profiles;
 import fr.gouv.monprojetsup.app.db.DB;
 import fr.gouv.monprojetsup.app.dto.ProfileDb;
 import fr.gouv.monprojetsup.app.server.*;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

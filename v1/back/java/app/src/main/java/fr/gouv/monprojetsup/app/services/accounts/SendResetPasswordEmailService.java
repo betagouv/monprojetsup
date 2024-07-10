@@ -5,7 +5,7 @@ import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.mail.AccountManagementEmails;
 import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.WebServer;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

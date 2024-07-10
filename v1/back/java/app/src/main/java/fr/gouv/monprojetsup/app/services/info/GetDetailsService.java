@@ -2,12 +2,12 @@ package fr.gouv.monprojetsup.app.services.info;
 
 import fr.gouv.monprojetsup.app.log.Log;
 import fr.gouv.monprojetsup.app.server.MyAppService;
-import fr.gouv.monprojetsup.data.dto.ResponseHeader;
+import fr.gouv.monprojetsup.app.server.ResponseHeader;
 import fr.gouv.monprojetsup.data.ServerData;
 import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.dto.ExplanationGeo;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.val;
@@ -17,9 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static fr.gouv.monprojetsup.data.distances.Distances.distanceCaches;
-import static fr.gouv.monprojetsup.data.distances.Distances.getGeoExplanations;
-import static java.lang.Math.min;
+import static fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations.distanceCaches;
+import static fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo.getGeoExplanations;
 
 @Service
 public class GetDetailsService extends MyAppService<GetDetailsService.Request, GetDetailsService.Response> {
@@ -105,8 +104,6 @@ public class GetDetailsService extends MyAppService<GetDetailsService.Request, G
      */
     public static List<ResultatRecherche> getDetails(ProfileDTO pf, List<String> keys) {
 
-
-
         List<ResultatRecherche> result = new ArrayList<>();
 
         keys.forEach(key -> {
@@ -127,7 +124,7 @@ public class GetDetailsService extends MyAppService<GetDetailsService.Request, G
             ).forEach(e ->
                     citiesDistances.put(
                             e.city(),
-                            min(citiesDistances.getOrDefault(e.city(), Integer.MAX_VALUE), e.distance())
+                            Math.min(citiesDistances.getOrDefault(e.city(), Integer.MAX_VALUE), e.distance())
                     )
             );
 

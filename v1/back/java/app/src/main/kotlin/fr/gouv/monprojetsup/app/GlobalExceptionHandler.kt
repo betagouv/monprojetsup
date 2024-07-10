@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.app
 import fr.gouv.monprojetsup.app.server.MyAppService.handleAnException
 import fr.gouv.monprojetsup.app.server.MyServiceException
 import fr.gouv.monprojetsup.app.server.ServerStartingException
+import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -11,7 +12,8 @@ import org.springframework.web.context.request.WebRequest
 
 
 @ControllerAdvice
-class GlobalExceptionHandler {
+@Primary
+class AppGlobalExceptionHandler {
 
     // Generic exception handler
     @ExceptionHandler(Exception::class)

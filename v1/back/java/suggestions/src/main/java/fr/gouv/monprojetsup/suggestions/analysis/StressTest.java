@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 

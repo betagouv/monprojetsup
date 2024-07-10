@@ -168,23 +168,29 @@ public class ServerData {
             @NotNull PsupData backendData,
             @NotNull Collection<Integer> lasFlCodes
             ) {
+
         val filActives  = backendData.filActives();
+
         filActives.addAll(lasFlCodes);
+
         return computeFilieresFront(
                 filActives,
-                backendData.getCorrespondances()
+                backendData.getCorrespondances(),
+                backendData.getGroupesToFormations().keySet()
         );
     }
 
 
     private static List<@NotNull String> computeFilieresFront(
             Collection<Integer> filActives,
-            Map<String,String> flGroups
+            Map<String,String> flGroups,
+            Set<String> groupesWithAtLeastOneFormation
     ) {
         val result = new ArrayList<>(filActives.stream().map(Constants::gFlCodToFrontId).toList());
         result.removeAll(flGroups.keySet());
         result.addAll(flGroups.values());
         Collections.sort(result);
+        result.retainAll(groupesWithAtLeastOneFormation);
         return result;
     }
 

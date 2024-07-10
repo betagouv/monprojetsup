@@ -1,14 +1,14 @@
 package fr.gouv.monprojetsup.app.dto;
 
 import fr.gouv.monprojetsup.app.tools.Sanitizer;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.dto.SuggestionDTO.SUGG_APPROVED;
+import static fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO.SUGG_APPROVED;
 
 
 public record ProfileDb(

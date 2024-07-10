@@ -6,17 +6,16 @@ import fr.gouv.monprojetsup.app.server.MyAppService;
 import fr.gouv.monprojetsup.app.server.Server;
 import fr.gouv.monprojetsup.app.server.WebServer;
 import fr.gouv.monprojetsup.app.services.info.SearchService;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static fr.gouv.monprojetsup.app.services.info.SearchService.getDetails;
 
 @Service
 public class GetMySelectionService extends MyAppService<Server.BasicRequest, SearchService.Response> {
@@ -25,6 +24,9 @@ public class GetMySelectionService extends MyAppService<Server.BasicRequest, Sea
         super(Server.BasicRequest.class);
     }
 
+
+    @Autowired
+    SearchService searchService;
 
     @Override
     protected @NotNull SearchService.Response handleRequest(@NotNull Server.BasicRequest req) throws Exception {
@@ -37,7 +39,7 @@ public class GetMySelectionService extends MyAppService<Server.BasicRequest, Sea
 
         List<String> keys = profile.suggApproved().stream().map(SuggestionDTO::fl).toList();
 
-        final @NotNull List<SearchService.ResultatRecherche> suggestions = getDetails(
+        final @NotNull List<SearchService.ResultatRecherche> suggestions = searchService.getDetails(
                 profile,
                 keys,
                 keys.stream().collect(Collectors.toMap(k -> k, k -> 1.0)),

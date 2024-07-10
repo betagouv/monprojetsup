@@ -1,7 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.server.MySuggService;
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

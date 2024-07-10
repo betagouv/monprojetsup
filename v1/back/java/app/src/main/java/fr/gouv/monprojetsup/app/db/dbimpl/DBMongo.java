@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import fr.gouv.monprojetsup.app.db.model.*;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.app.auth.Credential;
 import fr.gouv.monprojetsup.app.db.DB;

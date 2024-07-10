@@ -1,16 +1,15 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.data.tools.ConcurrentBoundedMapQueue;
-import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.dto.GetExplanationsAndExamplesServiceDTO;
-import fr.gouv.monprojetsup.data.dto.ProfileDTO;
-import fr.gouv.monprojetsup.data.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.data.model.Edges;
-import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.model.Edges;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
+import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
+import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,9 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.ServerData.*;
-import static fr.gouv.monprojetsup.data.update.onisep.OnisepData.EDGES_INTERETS_METIERS_WEIGHT;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.gFlCodToFrontId;
+import static fr.gouv.monprojetsup.suggestions.data.ServerData.p75Capacity;
+import static fr.gouv.monprojetsup.suggestions.data.ServerData.p90NbFormations;
 import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
 
@@ -154,12 +154,10 @@ public class AlgoSuggestions {
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
 
         Map<String, Affinite> affinites =
-                filieresFront.stream()
+                ServerData.getFilieresFront().stream()
                 .collect(Collectors.toMap(
-                        fl -> flGroups.getOrDefault(fl,fl),
-                        affinityEvaluator::getAffinityEvaluation,
-                        Affinite::max,
-                        TreeMap::new
+                        fl -> fl,
+                        affinityEvaluator::getAffinityEvaluation
                 ));
 
 
@@ -313,25 +311,18 @@ public class AlgoSuggestions {
     public static void initialize() throws IOException {
 
 
-        createGraph();
+        ServerData.createGraph();
 
-        ServerData.specialites.specialites().forEach((iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod));
+        ServerData.getSpecialites().forEach(
+                (iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod)
+        );
 
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(ServerData.specialites.specialitesParBac().keySet());
+        bacsWithSpecialites.addAll(ServerData.getBacsWithSpecialite());
 
-        backPsupData.formations().filieres.values().forEach(filiere -> {
-            String key = FILIERE_PREFIX + filiere.gFlCod;
-            if (filiere.apprentissage) {
-                AlgoSuggestions.apprentissage.add(key);
-                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
-                AlgoSuggestions.apprentissage.add(origKey);
-                AlgoSuggestions.apprentissage.add(flGroups.getOrDefault(origKey, origKey));
-            }
-        });
+        List<Pair<String,String>> app = ServerData.getApprentissage();
 
-
-        lasCorrespondance = statistiques.getLASCorrespondance();
+        lasCorrespondance = ServerData.getLASCorrespondance();
 
         relatedToHealth.addAll(edgesKeys
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
@@ -356,97 +347,6 @@ public class AlgoSuggestions {
     }
 
     private AlgoSuggestions() {
-    }
-
-    public static void createGraph() throws IOException {
-        LOGGER.info("Creating global graph");
-        edgesKeys.clear();
-
-        backPsupData.filActives().forEach(flcod -> edgesKeys.addNode(gFlCodToFrontId(flcod)));
-
-
-
-
-        /* intégration des relations étendues aux graphes */
-        Map<String, Set<String>> metiersVersFormations = ServerData.getMetiersVersFormations();
-        val metiersPass = ServerData.getMetiersPass(metiersVersFormations);
-        val lasCorr = ServerData.statistiques.getLASCorrespondance();
-
-        metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasCorr.isLas(fil) && metiersPass.contains(metier)) {
-                edgesKeys.put(metier, fil, true, LASS_TO_PASS_METIERS_PENALTY);
-                /*last evolutiion was t extend metiers generation to all metiers of onisep
-                        and to use this 0.25 coef. That pushes up PCSI on profile #1*/
-
-            } else {
-                edgesKeys.put(metier, fil, true, 1.0);
-            }
-        }));
-
-        edgesKeys.putAll(onisepData.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT);
-        edgesKeys.putAll(onisepData.edgesFilieresThematiques());
-        edgesKeys.putAll(onisepData.edgesThematiquesMetiers());
-
-        //ajout des secteurs d'activité
-        onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
-            String keyMetier = cleanup(fiche.identifiant());
-            if(fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
-                fiche.secteurs_activite().secteur_activite().forEach(secteur -> {
-                    String keySecteur = cleanup(secteur.id());
-                    edgesKeys.put(keyMetier, keySecteur, true, 1.0);
-                });
-
-                if(fiche.metiers_associes() != null && fiche.metiers_associes().metier_associe() != null) {
-                    fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
-                        String keyMetierAssocie = cleanup(metierAssocie.id());
-                        edgesKeys.put(keyMetier, keyMetierAssocie, true, 0.75);
-                    });
-                }
-            }
-        });
-
-        //ajout taxonomie thèmes (aujourd'hui plate)
-        onisepData.thematiques().parents().forEach(edgesKeys::put);
-
-        //ajout des correspondances de groupes
-        flGroups.forEach((s, s2) -> edgesKeys.put(s,s2,true,1.0));
-        edgesKeys.addEdgesFromMoreGenericItem(flGroups, 1.0);
-
-        LOGGER.info("Restricting graph to the prestar of recos");
-        Set<String> before = new HashSet<>(edgesKeys.nodes());
-        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
-                Helpers::isFiliere
-        ).collect(Collectors.toSet());
-        Set<String> useful = edgesKeys.preStar(recoNodes);
-        edgesKeys.retainAll(useful);
-        Set<String> after = new HashSet<>(edgesKeys.nodes());
-        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
-        before.removeAll(after);
-        LOGGER.info("Total nb of edges+ " + edgesKeys.size());
-
-        //LAS inheritance, oth from their mother licence and from PASS
-        edgesKeys.addEdgesFromMoreGenericItem(lasCorr.lasToGeneric(), 1.0);
-
-        val corr = new HashMap<>(lasCorr.lasToGeneric());
-        corr.entrySet().forEach(e -> e.setValue(Constants.gFlCodToFrontId(PASS_FL_COD)));
-        edgesKeys.addEdgesFromMoreGenericItem(corr, LASS_TO_PASS_METIERS_PENALTY);
-
-        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
-        Set<String> filActives = backPsupData.filActives().stream().map(Constants::gFlCodToFrontId).collect(Collectors.toSet());
-        Set<String> toErase = edgesKeys.keys().stream().filter(
-                s -> s.startsWith(FILIERE_PREFIX) && !filActives.contains(s)
-        ).collect(Collectors.toSet());
-        //suppression des filières en app couvertes par une filière sans app,
-        toErase.addAll(
-                backPsupData.getFormationsenAppAvecEquivalentSansApp(filActives)
-                        .stream().map(Constants::gFlCodToFrontId)
-                        .collect(Collectors.toSet())
-        );
-        //on conserve les groupes en supprimant de la suppression
-        toErase.removeAll(flGroups.values());
-        toErase.removeAll(lasCorr.lasToGeneric().keySet());
-        edgesKeys.eraseNodes(toErase);
-
     }
 
     private static final int PATHES_CACHE_SIZE = 1000;  //1000 is enough ?
@@ -491,7 +391,7 @@ public class AlgoSuggestions {
                         + "<br>\nnodes in graph: " + edgesKeys.nodes().size()
                 + "<br>\nedges in graph: " + edgesKeys.size()
                 + "<br>\npathes cache size " + pathsFromDistances.size()
-                + "<br>\ndistance cache size " + Distances.distanceCaches.size();
+                + "<br>\ndistance cache size " + CachedGeoExplanations.distanceCaches.size();
 
     }
 
