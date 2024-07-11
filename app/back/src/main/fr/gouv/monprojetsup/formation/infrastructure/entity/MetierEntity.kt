@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -26,7 +26,7 @@ class MetierEntity {
     var liens = arrayListOf<LienEntity>()
 
     fun toMetierDetaille() =
-        MetierDetaille(
+        Metier(
             id = id,
             nom = label,
             descriptif = descriptifGeneral,

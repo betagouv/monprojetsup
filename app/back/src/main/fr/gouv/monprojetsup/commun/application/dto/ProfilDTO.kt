@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.formation.application.dto
+package fr.gouv.monprojetsup.commun.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
@@ -27,7 +27,7 @@ class ProfilDTO(
         description = "Classe actuelle",
         example = "terminale",
         required = false,
-        allowableValues = ["seconde", "seconde_sthr", "seconde_tmd", "premiere", "terminale"],
+        allowableValues = ["seconde", "premiere", "terminale"],
     )
     @JsonProperty("classe")
     val classe: String?,
@@ -37,8 +37,8 @@ class ProfilDTO(
         required = false,
         allowableValues = ["NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"],
     )
-    @JsonProperty("bac")
-    val bac: String?,
+    @JsonProperty("baccalaureat")
+    val baccalaureat: String?,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -69,14 +69,6 @@ class ProfilDTO(
     )
     @JsonProperty("centresInterets")
     val centresInterets: List<String>?,
-    @Schema(
-        description = "L'état de situation des idées de métiers de l'élève",
-        example = "quelques_pistes",
-        required = false,
-        allowableValues = ["aucune_idee", "quelques_pistes"],
-    )
-    @JsonProperty("situationMetiers")
-    val situationMetiers: String?,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -85,13 +77,13 @@ class ProfilDTO(
                 required = false,
             ),
     )
-    @JsonProperty("metiers")
-    val metiers: List<String>?,
+    @JsonProperty("metiersFavoris")
+    val metiersFavoris: List<String>?,
     @Schema(
         description = "Durée envisagée des études",
-        example = "options_ouvertes",
+        example = "indifferent",
         required = false,
-        allowableValues = ["options_ouvertes", "courte", "longue", "aucune_idee"],
+        allowableValues = ["indifferent", "courte", "longue", "aucune_idee"],
     )
     @JsonProperty("dureeEtudesPrevue")
     val dureeEtudesPrevue: String?,
@@ -103,34 +95,17 @@ class ProfilDTO(
     )
     @JsonProperty("alternance")
     val alternance: String?,
-    @Schema(
-        description = "L'état de situation des idées de villes de l'élève",
-        example = "quelques_pistes",
-        required = false,
-        allowableValues = ["aucune_idee", "quelques_pistes"],
-    )
-    @JsonProperty("situationVilles")
-    val situationVilles: String?,
     @ArraySchema(
         arraySchema =
             Schema(
                 description = "Villes préférées pour étudier",
                 required = false,
             ),
-    )
-    @JsonProperty("villes")
-    val villes: List<VilleDTO>?,
+    ) @JsonProperty("communesFavorites")
+    val communesFavorites: List<CommuneDTO>?,
     @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14", required = false)
     @JsonProperty("moyenneGenerale")
     val moyenneGenerale: Float?,
-    @Schema(
-        description = "L'état de situation des idées de formations de l'élève",
-        example = "quelques_pistes",
-        required = false,
-        allowableValues = ["aucune_idee", "quelques_pistes"],
-    )
-    @JsonProperty("situationFormations")
-    val situationFormations: String?,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -139,26 +114,26 @@ class ProfilDTO(
                 required = false,
             ),
     )
-    @JsonProperty("formations")
-    val formations: List<String>?,
+    @JsonProperty("formationsFavorites")
+    val formationsFavorites: List<String>?,
 ) {
     fun toProfil() =
         ProfilEleve(
             id = id,
             classe = ChoixNiveau.deserialiseApplication(classe),
-            bac = bac,
+            bac = baccalaureat,
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
             alternance = ChoixAlternance.deserialiseApplication(alternance),
-            formationsChoisies = formations,
-            communesPreferees = villes?.map { it.nom },
+            formationsChoisies = formationsFavorites,
+            communesPreferees = communesFavorites?.map { it.nom },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
-            metiersChoisis = metiers,
+            metiersChoisis = metiersFavoris,
             domainesInterets = domaines,
         )
 
-    class VilleDTO(
+    class CommuneDTO(
         @Schema(description = "Code Insee de la ville", example = "75015", required = true)
         @JsonProperty("codeInsee")
         val codeInsee: String,

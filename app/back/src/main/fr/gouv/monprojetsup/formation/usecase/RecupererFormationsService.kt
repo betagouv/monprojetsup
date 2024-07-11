@@ -11,14 +11,14 @@ class RecupererFormationsService(
     val formationRepository: FormationRepository,
     val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
-    val recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService,
+    val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
     fun recupererFichesFormationPourProfil(
         profilEleve: ProfilEleve,
-        affinitesFormationEtMetier: SuggestionsPourUnProfil,
+        suggestionsPourUnProfil: SuggestionsPourUnProfil,
         idsFormations: List<String>,
     ): List<FicheFormation.FicheFormationPourProfil> {
         val formations = formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
@@ -31,7 +31,7 @@ class RecupererFormationsService(
                 classe = profilEleve.classe,
             )
         val explications =
-            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+            recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                 profilEleve,
                 idsDesFormationsRetournees,
             )
@@ -53,13 +53,13 @@ class RecupererFormationsService(
                 liens = formation.liens,
                 tauxAffinite =
                     calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
-                        formationAvecLeurAffinite = affinitesFormationEtMetier.formations,
+                        formationAvecLeurAffinite = suggestionsPourUnProfil.formations,
                         idFormation = formation.id,
                     ),
                 metiersTriesParAffinites =
                     metiersTriesParProfilBuilder.trierMetiersParAffinites(
                         metiers = exemplesDeMetiersDeLaFormation,
-                        idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
+                        idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
                 communesTrieesParAffinites = communes[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),

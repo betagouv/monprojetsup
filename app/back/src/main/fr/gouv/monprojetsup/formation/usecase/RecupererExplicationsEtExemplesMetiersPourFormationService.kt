@@ -10,7 +10,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.formation.domain.port.DomaineRepository
@@ -18,10 +17,11 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
 import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.springframework.stereotype.Service
 
 @Service
-class RecupererExplicationsEtExemplesMetiersFormationService(
+class RecupererExplicationsEtExemplesMetiersPourFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val baccalaureatRepository: BaccalaureatRepository,
@@ -32,7 +32,7 @@ class RecupererExplicationsEtExemplesMetiersFormationService(
     fun recupererExplicationsEtExemplesDeMetiers(
         profilEleve: ProfilEleve,
         idsFormations: List<String>,
-    ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<MetierDetaille>>> {
+    ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
         val explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?> =
             suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
         val (domaines: List<Domaine>?, interets: Map<String, InteretSousCategorie>?) =
@@ -106,7 +106,7 @@ class RecupererExplicationsEtExemplesMetiersFormationService(
     fun recupererExplicationsEtExemplesDeMetiers(
         profilEleve: ProfilEleve,
         idFormation: String,
-    ): Pair<ExplicationsSuggestionDetaillees, List<MetierDetaille>> {
+    ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
         val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
             explications.interetsEtDomainesChoisis.takeUnless {

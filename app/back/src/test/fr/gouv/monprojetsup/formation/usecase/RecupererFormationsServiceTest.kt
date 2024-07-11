@@ -1,17 +1,17 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ class RecupererFormationsServiceTest {
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
 
     @Mock
-    lateinit var recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
+    lateinit var recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService
 
     @Mock
     lateinit var statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService
@@ -63,9 +63,9 @@ class RecupererFormationsServiceTest {
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
         val formationsAvecAffinites = listOf(formationAvecSonAffinite1, formationAvecSonAffinite2, formationAvecSonAffinite3)
         val affinitesFormationEtMetier = mock(SuggestionsPourUnProfil::class.java)
-        val metier234 = mock(MetierDetaille::class.java)
-        val metier123 = mock(MetierDetaille::class.java)
-        val metier534 = mock(MetierDetaille::class.java)
+        val metier234 = mock(Metier::class.java)
+        val metier123 = mock(Metier::class.java)
+        val metier534 = mock(Metier::class.java)
         val metiersTriesParAffinites = listOf("MET_234", "MET_123", "MET_534")
         given(affinitesFormationEtMetier.formations).willReturn(formationsAvecAffinites)
         given(affinitesFormationEtMetier.metiersTriesParAffinites).willReturn(metiersTriesParAffinites)
@@ -74,7 +74,7 @@ class RecupererFormationsServiceTest {
         val lien2 = mock(Lien::class.java)
         val formations =
             listOf(
-                FormationDetaillee(
+                Formation(
                     id = "fl0001",
                     nom = "L1 - Mathématique",
                     descriptifGeneral = "Descriptif general fl0001",
@@ -85,7 +85,7 @@ class RecupererFormationsServiceTest {
                     liens = listOf(lien1, lien2),
                     valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
                 ),
-                FormationDetaillee(
+                Formation(
                     id = "fl0003",
                     nom = "CAP Patisserie",
                     descriptifGeneral = "Descriptif general fl0003",
@@ -131,7 +131,7 @@ class RecupererFormationsServiceTest {
         val explications =
             mapOf("fl0001" to Pair(explicationsFL0001, exemplesMetiersFL0001), "fl0003" to Pair(explicationsFL0003, exemplesMetiersFL0003))
         given(
-            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+            recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                 profilEleve,
                 listOf("fl0001", "fl0003"),
             ),
@@ -225,7 +225,7 @@ class RecupererFormationsServiceTest {
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
         val formationsAvecAffinites = listOf(formationAvecSonAffinite1, formationAvecSonAffinite2, formationAvecSonAffinite3)
         val affinitesFormationEtMetier = mock(SuggestionsPourUnProfil::class.java)
-        val metier534 = mock(MetierDetaille::class.java)
+        val metier534 = mock(Metier::class.java)
         val metiersTriesParAffinites = listOf("MET_234", "MET_123", "MET_534")
         given(affinitesFormationEtMetier.formations).willReturn(formationsAvecAffinites)
         given(affinitesFormationEtMetier.metiersTriesParAffinites).willReturn(metiersTriesParAffinites)
@@ -234,7 +234,7 @@ class RecupererFormationsServiceTest {
         val lien2 = mock(Lien::class.java)
         val formations =
             listOf(
-                FormationDetaillee(
+                Formation(
                     id = "fl0001",
                     nom = "L1 - Mathématique",
                     descriptifGeneral = "Descriptif general fl0001",
@@ -245,7 +245,7 @@ class RecupererFormationsServiceTest {
                     liens = listOf(lien1, lien2),
                     valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
                 ),
-                FormationDetaillee(
+                Formation(
                     id = "fl0003",
                     nom = "CAP Patisserie",
                     descriptifGeneral = "Descriptif general fl0003",
@@ -283,7 +283,7 @@ class RecupererFormationsServiceTest {
         val explicationsFL0001 = mock(ExplicationsSuggestionDetaillees::class.java)
         val explications = mapOf("fl0001" to Pair(explicationsFL0001, exemplesMetiersFL0001))
         given(
-            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+            recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                 profilEleve,
                 listOf("fl0001", "fl0003"),
             ),

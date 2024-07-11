@@ -14,7 +14,7 @@ class RecupererFormationService(
     val formationRepository: FormationRepository,
     val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
-    val recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService,
+    val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -35,7 +35,7 @@ class RecupererFormationService(
         return if (profilEleve != null) {
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve)
             val (explications, exemplesDeMetiers) =
-                recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                     profilEleve,
                     formation.id,
                 )

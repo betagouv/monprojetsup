@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -118,20 +118,20 @@ class CriteresAnalyseCandidatureBDDRepositoryTest : BDDRepositoryTest() {
 
     @Nested
     inner class RecupererLesCriteresDeFormations {
-        private val formation1: FormationDetaillee =
-            mock(FormationDetaillee::class.java).apply {
+        private val formation1: Formation =
+            mock(Formation::class.java).apply {
                 given(id).willReturn("fl1")
                 given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseDeBonneTaille)
             }
 
-        private val formation2: FormationDetaillee =
-            mock(FormationDetaillee::class.java).apply {
+        private val formation2: Formation =
+            mock(Formation::class.java).apply {
                 given(id).willReturn("fl2")
                 given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseTropLongs)
             }
 
-        private val formation3: FormationDetaillee =
-            mock(FormationDetaillee::class.java).apply {
+        private val formation3: Formation =
+            mock(Formation::class.java).apply {
                 given(id).willReturn("fl3")
                 given(valeurCriteresAnalyseCandidature).willReturn(criteresAnalyseTropCourts)
             }

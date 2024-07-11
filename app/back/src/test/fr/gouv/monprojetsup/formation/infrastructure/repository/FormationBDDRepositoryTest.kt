@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +30,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var formationBDDRepository: FormationBDDRepository
 
     private val formationFL0001 =
-        FormationDetaillee(
+        Formation(
             id = "fl0001",
             nom = "CAP Fleuriste",
             descriptifGeneral =
@@ -91,7 +91,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             val formationFL0002 =
-                FormationDetaillee(
+                Formation(
                     id = "fl0002",
                     nom = "Bac pro Fleuriste",
                     descriptifGeneral =
@@ -117,7 +117,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     valeurCriteresAnalyseCandidature = listOf(13, 50, 12, 5, 15),
                 )
             val formationFL0004 =
-                FormationDetaillee(
+                Formation(
                     id = "fl0004",
                     nom = "L1 - Histoire",
                     descriptifGeneral =
@@ -150,7 +150,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             val result = formationBDDRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
 
             // Then
-            assertThat(result).isEqualTo(emptyList<FormationDetaillee>())
+            assertThat(result).isEqualTo(emptyList<Formation>())
             then(logger).should().error("La formation fl0007 n'est pas présente en base")
             then(logger).should().error("La formation fl0008 n'est pas présente en base")
             then(logger).should().error("La formation fl0009 n'est pas présente en base")
@@ -201,7 +201,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             assertThat(result).isEqualTo(
-                FormationDetaillee(
+                Formation(
                     id = "fl0004",
                     nom = "L1 - Histoire",
                     descriptifGeneral =
@@ -270,7 +270,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             assertThat(result).usingRecursiveComparison().isEqualTo(
-                FormationDetaillee(
+                Formation(
                     id = "fl0005",
                     nom = "L1 - Géographie",
                     descriptifGeneral =
@@ -309,9 +309,9 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 listOf(
-                    Formation(id = "fl0001", nom = "CAP Fleuriste"),
-                    Formation(id = "fl0003", nom = "ENSA"),
-                    Formation(id = "fl0002", nom = "Bac pro Fleuriste"),
+                    FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
+                    FormationCourte(id = "fl0003", nom = "ENSA"),
+                    FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
             then(logger).should().error("La formation idInconnu n'est pas présente en base")

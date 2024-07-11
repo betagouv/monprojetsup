@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.port.CriteresAnalyseCandidatureRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -75,7 +75,7 @@ class CritereAnalyseCandidatureServiceTest {
     fun `pour une formation donnée, doit filtrer les critères à 0`() {
         // Given
         val valeurCriteresAnalyseCandidature = listOf(0, 5, 29, 63, 3)
-        val formation = mock(FormationDetaillee::class.java)
+        val formation = mock(Formation::class.java)
         given(formation.valeurCriteresAnalyseCandidature).willReturn(valeurCriteresAnalyseCandidature)
         given(criteresAnalyseCandidatureRepository.recupererLesCriteresDUneFormation(valeurCriteresAnalyseCandidature)).willReturn(
             critereAnalyseCandidatureFormation1,
@@ -110,12 +110,12 @@ class CritereAnalyseCandidatureServiceTest {
     @Test
     fun `pour plusieurs formations données, doit filtrer leurs critères à 0`() {
         val valeurCriteresAnalyseCandidature1 = listOf(0, 5, 29, 63, 3)
-        val formation1 = mock(FormationDetaillee::class.java)
+        val formation1 = mock(Formation::class.java)
 
         given(formation1.valeurCriteresAnalyseCandidature).willReturn(valeurCriteresAnalyseCandidature1)
 
         val valeurCriteresAnalyseCandidature2 = listOf(0, 5, 29, 63, 3)
-        val formation2 = mock(FormationDetaillee::class.java)
+        val formation2 = mock(Formation::class.java)
         given(formation1.valeurCriteresAnalyseCandidature).willReturn(valeurCriteresAnalyseCandidature2)
         val formations = listOf(formation2, formation1)
         given(criteresAnalyseCandidatureRepository.recupererLesCriteresDeFormations(formations)).willReturn(

@@ -1,5 +1,8 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
+
 sealed class FicheFormation(
     open val id: String,
     open val nom: String,
@@ -9,7 +12,7 @@ sealed class FicheFormation(
     open val descriptifConseils: String?,
     open val formationsAssociees: List<String>,
     open val liens: List<Lien>,
-    open val metiers: List<MetierDetaille>,
+    open val metiers: List<Metier>,
     open val communes: List<String>,
     open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
     open val statistiquesDesAdmis: StatistiquesDesAdmis?,
@@ -23,7 +26,7 @@ sealed class FicheFormation(
         override val descriptifConseils: String?,
         override val formationsAssociees: List<String>,
         override val liens: List<Lien>,
-        override val metiers: List<MetierDetaille>,
+        override val metiers: List<Metier>,
         override val communes: List<String>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis,
@@ -54,7 +57,7 @@ sealed class FicheFormation(
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         val tauxAffinite: Int,
-        val metiersTriesParAffinites: List<MetierDetaille>,
+        val metiersTriesParAffinites: List<Metier>,
         val communesTrieesParAffinites: List<String>,
         val explications: ExplicationsSuggestionDetaillees?,
     ) : FicheFormation(

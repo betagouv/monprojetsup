@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.formation.domain.entity
+package fr.gouv.monprojetsup.commun.domain.entity
 
 data class Lien(
     val nom: String,

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
 
@@ -9,9 +9,9 @@ class MetiersTriesParProfilBuilder(
     val logger: Logger,
 ) {
     fun trierMetiersParAffinites(
-        metiers: List<MetierDetaille>,
+        metiers: List<Metier>,
         idsMetierTriesParAffinite: List<String>,
-    ): List<MetierDetaille> {
+    ): List<Metier> {
         val metiersSansAffinites = mutableListOf<String>()
         val idMetiersEtLeurIndex = idsMetierTriesParAffinite.mapIndexed { index, idMetier -> Pair(idMetier, index) }.toMap()
         val metiersTries =

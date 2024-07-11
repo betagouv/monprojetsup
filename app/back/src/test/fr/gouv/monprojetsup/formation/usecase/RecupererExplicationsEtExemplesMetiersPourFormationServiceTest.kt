@@ -13,9 +13,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.Formation
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.formation.domain.port.DomaineRepository
@@ -23,6 +22,7 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
 import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -33,7 +33,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
+class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
     @Mock
     lateinit var suggestionHttpClient: SuggestionHttpClient
 
@@ -53,7 +53,7 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
     lateinit var metierRepository: MetierRepository
 
     @InjectMocks
-    lateinit var recupererExplicationsEtExemplesDeMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
+    lateinit var recupererExplicationsEtExemplesDeMetiersFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService
 
     @BeforeEach
     fun setup() {
@@ -69,7 +69,7 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
             classe = ChoixNiveau.TERMINALE,
             bac = "Générale",
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
+            dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
             communesPreferees = listOf("Caen"),
             specialites = listOf("1001", "1049"),
@@ -387,12 +387,12 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
                     idsFormations = listOf("fl0001"),
                 ),
             ).willReturn(explications)
-            val formations =
+            val formationCourtes =
                 listOf(
-                    Formation(id = "fl1", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
-                    Formation(id = "fl7", nom = "Classe préparatoire aux études supérieures - Littéraire"),
+                    FormationCourte(id = "fl1", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
+                    FormationCourte(id = "fl7", nom = "Classe préparatoire aux études supérieures - Littéraire"),
                 )
-            given(formationRepository.recupererLesNomsDesFormations(listOf("fl1", "fl7"))).willReturn(formations)
+            given(formationRepository.recupererLesNomsDesFormations(listOf("fl1", "fl7"))).willReturn(formationCourtes)
             // When
             val resultat =
                 recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
@@ -401,7 +401,7 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
                 )
 
             // Then
-            assertThat(resultat.first.formationsSimilaires).usingRecursiveComparison().isEqualTo(formations)
+            assertThat(resultat.first.formationsSimilaires).usingRecursiveComparison().isEqualTo(formationCourtes)
         }
 
         @Test
@@ -417,9 +417,9 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
                     idsFormations = listOf("fl0001"),
                 ),
             ).willReturn(explications)
-            val metier12 = mock(MetierDetaille::class.java)
-            val metier534 = mock(MetierDetaille::class.java)
-            val metier96 = mock(MetierDetaille::class.java)
+            val metier12 = mock(Metier::class.java)
+            val metier534 = mock(Metier::class.java)
+            val metier96 = mock(Metier::class.java)
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
             given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
 
@@ -459,7 +459,7 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
             // Then
             val attendu =
                 mapOf(
-                    "fl0001" to Pair(ExplicationsSuggestionDetaillees(), emptyList<MetierDetaille>()),
+                    "fl0001" to Pair(ExplicationsSuggestionDetaillees(), emptyList<Metier>()),
                     "fl0002" to Pair(ExplicationsSuggestionDetaillees(), emptyList()),
                     "fl0003" to Pair(ExplicationsSuggestionDetaillees(), emptyList()),
                 )
@@ -579,18 +579,18 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
             val formationsDistinctes = listOf("fl12", "fl79", "fl1", "fl7")
             given(formationRepository.recupererLesNomsDesFormations(formationsDistinctes)).willReturn(
                 listOf(
-                    Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
-                    Formation(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
-                    Formation(id = "fl1", nom = "L1 - Psychologie"),
-                    Formation(id = "fl7", nom = "L1 - Philosophie"),
+                    FormationCourte(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                    FormationCourte(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 ),
             )
             val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005", "fl0006")
-            val metier12 = mock(MetierDetaille::class.java)
+            val metier12 = mock(Metier::class.java)
             given(metier12.id).willReturn("MET_12")
-            val metier534 = mock(MetierDetaille::class.java)
+            val metier534 = mock(Metier::class.java)
             given(metier534.id).willReturn("MET_534")
-            val metier96 = mock(MetierDetaille::class.java)
+            val metier96 = mock(Metier::class.java)
             given(metier96.id).willReturn("MET_96")
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
             given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
@@ -690,8 +690,8 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
                                     ),
                                 formationsSimilaires =
                                     listOf(
-                                        Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
-                                        Formation(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
+                                        FormationCourte(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                        FormationCourte(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
                                     ),
                             ),
                             emptyList(),
@@ -709,9 +709,9 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
                                     ),
                                 formationsSimilaires =
                                     listOf(
-                                        Formation(id = "fl1", nom = "L1 - Psychologie"),
-                                        Formation(id = "fl7", nom = "L1 - Philosophie"),
-                                        Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                        FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                                        FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                                        FormationCourte(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
                                     ),
                             ),
                             emptyList(),

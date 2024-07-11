@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.never
@@ -72,167 +73,187 @@ class SuggestionsFormationsServiceTest {
             formations = formations,
         )
 
-    @Test
-    fun `quand les 5 premieres formations, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+    @Nested
+    inner class SuggererFormations {
+        @Test
+        fun `quand les 5 premieres formations, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
-        val idsFormationsTriesParAffinite =
-            listOf(
-                "fl52",
-                "fl41",
-                "fr83",
-                "fl2073",
-                "fl252",
+            val idsFormationsTriesParAffinite =
+                listOf(
+                    "fl52",
+                    "fl41",
+                    "fr83",
+                    "fl2073",
+                    "fl252",
+                )
+
+            // When
+            suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 5)
+
+            // Then
+            then(recupererFormationsService).should().recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = affinitesFormationEtMetier,
+                idsFormations = idsFormationsTriesParAffinite,
             )
+        }
 
-        // When
-        suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 5)
+        @Test
+        fun `quand 10 formations sont demandés, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
-        // Then
-        then(recupererFormationsService).should().recupererFichesFormationPourProfil(
-            profilEleve = profilEleve,
-            affinitesFormationEtMetier = affinitesFormationEtMetier,
-            idsFormations = idsFormationsTriesParAffinite,
-        )
-    }
+            val idsFormationsTriesParAffinite =
+                listOf(
+                    "fl680003",
+                    "fl2022",
+                    "fl2010",
+                    "fl2018",
+                    "fl840010",
+                    "fl240",
+                    "fl2034",
+                    "fl2019",
+                    "fl2051",
+                    "fl2110",
+                )
 
-    @Test
-    fun `quand 10 formations sont demandés, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+            // When
+            suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 8, aLIndex = 18)
 
-        val idsFormationsTriesParAffinite =
-            listOf(
-                "fl680003",
-                "fl2022",
-                "fl2010",
-                "fl2018",
-                "fl840010",
-                "fl240",
-                "fl2034",
-                "fl2019",
-                "fl2051",
-                "fl2110",
+            // Then
+            then(recupererFormationsService).should().recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = affinitesFormationEtMetier,
+                idsFormations = idsFormationsTriesParAffinite,
             )
+        }
 
-        // When
-        suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 8, aLIndex = 18)
+        @Test
+        fun `quand plus de formations demandés qu'il y en a, doit appeler le service avec toutes les formations classées par affinité`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
-        // Then
-        then(recupererFormationsService).should().recupererFichesFormationPourProfil(
-            profilEleve = profilEleve,
-            affinitesFormationEtMetier = affinitesFormationEtMetier,
-            idsFormations = idsFormationsTriesParAffinite,
-        )
-    }
+            val idsFormationsTriesParAffinite =
+                listOf(
+                    "fl52",
+                    "fl41",
+                    "fr83",
+                    "fl2073",
+                    "fl252",
+                    "fr22",
+                    "fl2016",
+                    "fl2118",
+                    "fl680003",
+                    "fl2022",
+                    "fl2010",
+                    "fl2018",
+                    "fl840010",
+                    "fl240",
+                    "fl2034",
+                    "fl2019",
+                    "fl2051",
+                    "fl2110",
+                    "fl2044",
+                    "fl2009",
+                    "fl2090",
+                    "fl2046",
+                )
 
-    @Test
-    fun `quand plus de formations demandés qu'il y en a, doit appeler le service avec toutes les formations classées par affinité`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+            // When
+            suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 30)
 
-        val idsFormationsTriesParAffinite =
-            listOf(
-                "fl52",
-                "fl41",
-                "fr83",
-                "fl2073",
-                "fl252",
-                "fr22",
-                "fl2016",
-                "fl2118",
-                "fl680003",
-                "fl2022",
-                "fl2010",
-                "fl2018",
-                "fl840010",
-                "fl240",
-                "fl2034",
-                "fl2019",
-                "fl2051",
-                "fl2110",
-                "fl2044",
-                "fl2009",
-                "fl2090",
-                "fl2046",
+            // Then
+            then(recupererFormationsService).should().recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = affinitesFormationEtMetier,
+                idsFormations = idsFormationsTriesParAffinite,
             )
+        }
 
-        // When
-        suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 30)
+        @Test
+        fun `quand les index des formations demandés sont en dehors de la liste, renvoyer liste vide`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
-        // Then
-        then(recupererFormationsService).should().recupererFichesFormationPourProfil(
-            profilEleve = profilEleve,
-            affinitesFormationEtMetier = affinitesFormationEtMetier,
-            idsFormations = idsFormationsTriesParAffinite,
-        )
-    }
+            // When
+            val resultat = suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 50, aLIndex = 60)
 
-    @Test
-    fun `quand les index des formations demandés sont en dehors de la liste, renvoyer liste vide`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
-
-        // When
-        val resultat = suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 50, aLIndex = 60)
-
-        // Then
-        assertThat(resultat).isEqualTo(emptyList<FicheFormation.FicheFormationPourProfil>())
-        then(recupererFormationsService).should(never()).recupererFichesFormationPourProfil(
-            profilEleve = profilEleve,
-            affinitesFormationEtMetier = affinitesFormationEtMetier,
-            idsFormations = emptyList(),
-        )
-    }
-
-    @Test
-    fun `quand l'API suggestion nous retourne des listes vides, alors on doit les retourner une liste vide`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        val affinitesFormationEtMetierVides =
-            SuggestionsPourUnProfil(
-                metiersTriesParAffinites = emptyList(),
-                formations = emptyList(),
+            // Then
+            assertThat(resultat).isEqualTo(emptyList<FicheFormation.FicheFormationPourProfil>())
+            then(recupererFormationsService).should(never()).recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = affinitesFormationEtMetier,
+                idsFormations = emptyList(),
             )
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetierVides)
+        }
 
-        // When
-        val resultat = suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 5)
+        @Test
+        fun `quand l'API suggestion nous retourne des listes vides, alors on doit les retourner une liste vide`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            val affinitesFormationEtMetierVides =
+                SuggestionsPourUnProfil(
+                    metiersTriesParAffinites = emptyList(),
+                    formations = emptyList(),
+                )
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetierVides)
 
-        // Then
-        assertThat(resultat).isEqualTo(emptyList<FicheFormation.FicheFormationPourProfil>())
-        then(recupererFormationsService).should(never()).recupererFichesFormationPourProfil(
-            profilEleve = profilEleve,
-            affinitesFormationEtMetier = affinitesFormationEtMetierVides,
-            idsFormations = emptyList(),
-        )
+            // When
+            val resultat = suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 0, aLIndex = 5)
+
+            // Then
+            assertThat(resultat).isEqualTo(emptyList<FicheFormation.FicheFormationPourProfil>())
+            then(recupererFormationsService).should(never()).recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = affinitesFormationEtMetierVides,
+                idsFormations = emptyList(),
+            )
+        }
+
+        @Test
+        fun `quand l'index est négatif, alors doit throw une erreur`() {
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+
+            // When & Then
+            assertThatThrownBy {
+                suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = -3, aLIndex = 5)
+            }.isInstanceOf(IndexOutOfBoundsException::class.java)
+        }
+
+        @Test
+        fun `quand les indexs sont inversés, alors on doit throw une exception`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+
+            // When & Then
+            assertThatThrownBy {
+                suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 5, aLIndex = 0)
+            }.isInstanceOf(IllegalArgumentException::class.java)
+        }
     }
 
-    @Test
-    fun `quand l'index est négatif, alors doit throw une erreur`() {
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
+    @Nested
+    inner class RecupererToutesLesSuggestionsPourUnProfil {
+        @Test
+        fun `doit appeler le client et renvoyer sa réponse`() {
+            // Given
+            val profilEleve = mock(ProfilEleve::class.java)
+            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(suggestionsPourUnProfil)
 
-        // When & Then
-        assertThatThrownBy {
-            suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = -3, aLIndex = 5)
-        }.isInstanceOf(IndexOutOfBoundsException::class.java)
-    }
+            // When
+            val resultat = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve = profilEleve)
 
-    @Test
-    fun `quand les indexs sont inversés, alors on doit throw une exception`() {
-        // Given
-        val profilEleve = mock(ProfilEleve::class.java)
-        given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
-
-        // When & Then
-        assertThatThrownBy {
-            suggestionsFormationsService.suggererFormations(profilEleve = profilEleve, deLIndex = 5, aLIndex = 0)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+            // Then
+            assertThat(resultat).isEqualTo(suggestionsPourUnProfil)
+        }
     }
 }

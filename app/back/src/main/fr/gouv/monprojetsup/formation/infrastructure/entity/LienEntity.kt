@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import java.io.Serializable
 
 data class LienEntity(
