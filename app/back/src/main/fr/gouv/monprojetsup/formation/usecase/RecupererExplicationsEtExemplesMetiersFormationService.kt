@@ -4,33 +4,36 @@ import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.Domaine
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.formation.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
+import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.springframework.stereotype.Service
 
 @Service
-class RecupererExplicationsFormationService(
+class RecupererExplicationsEtExemplesMetiersFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val baccalaureatRepository: BaccalaureatRepository,
     val interetRepository: InteretRepository,
     val domaineRepository: DomaineRepository,
+    val metierRepository: MetierRepository,
 ) {
-    fun recupererExplications(
+    fun recupererExplicationsEtExemplesDeMetiers(
         profilEleve: ProfilEleve,
         idsFormations: List<String>,
-    ): Map<String, ExplicationsSuggestionDetaillees> {
-        val explicationsParFormation: Map<String, ExplicationsSuggestion?> =
+    ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<MetierDetaille>>> {
+        val explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?> =
             suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
         val (domaines: List<Domaine>?, interets: Map<String, InteretSousCategorie>?) =
             explicationsParFormation.flatMap { it.value?.interetsEtDomainesChoisis ?: emptyList() }.takeUnless {
@@ -54,7 +57,7 @@ class RecupererExplicationsFormationService(
             ).distinct()
         val baccalaureats = baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats)
         return idsFormations.associateWith {
-            val explications: ExplicationsSuggestion? = explicationsParFormation[it]
+            val explications: ExplicationsSuggestionEtExemplesMetiers? = explicationsParFormation[it]
             ExplicationsSuggestionDetaillees(
                 geographique = filtrerEtTrier(explicationsGeographique = explications?.geographique ?: emptyList()),
                 dureeEtudesPrevue = explications?.dureeEtudesPrevue,
@@ -75,8 +78,7 @@ class RecupererExplicationsFormationService(
                 explicationAutoEvaluationMoyenne =
                     explications?.autoEvaluationMoyenne?.let { autoEvaluationMoyenne ->
                         explicationAutoEvaluationMoyenne(
-                            baccalaureats.firstOrNull {
-                                    baccalaureat ->
+                            baccalaureats.firstOrNull { baccalaureat ->
                                 baccalaureat.idExterne == autoEvaluationMoyenne.baccalaureatUtilise
                             },
                             autoEvaluationMoyenne,
@@ -89,14 +91,18 @@ class RecupererExplicationsFormationService(
                             typeBaccalaureat,
                         )
                     },
+            ) to (
+                explications?.exemplesDeMetiers?.let { metiers ->
+                    metierRepository.recupererLesMetiersDetailles(metiers)
+                } ?: emptyList()
             )
         }
     }
 
-    fun recupererExplications(
+    fun recupererExplicationsEtExemplesDeMetiers(
         profilEleve: ProfilEleve,
         idFormation: String,
-    ): ExplicationsSuggestionDetaillees {
+    ): Pair<ExplicationsSuggestionDetaillees, List<MetierDetaille>> {
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
         val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
             explications.interetsEtDomainesChoisis.takeUnless {
@@ -122,7 +128,10 @@ class RecupererExplicationsFormationService(
             domaines = domaines,
             explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
-        )
+        ) to
+            explications.exemplesDeMetiers.let { metiers ->
+                metierRepository.recupererLesMetiersDetailles(metiers)
+            }
     }
 
     private fun filtrerEtTrier(explicationsGeographique: List<ExplicationGeographique>): List<ExplicationGeographique> {
@@ -130,7 +139,9 @@ class RecupererExplicationsFormationService(
         return explicationsGeographiquesFiltrees
     }
 
-    private fun recupererExplicationAutoEvaluationMoyenne(explications: ExplicationsSuggestion): ExplicationAutoEvaluationMoyenne? {
+    private fun recupererExplicationAutoEvaluationMoyenne(
+        explications: ExplicationsSuggestionEtExemplesMetiers,
+    ): ExplicationAutoEvaluationMoyenne? {
         return explications.autoEvaluationMoyenne?.let {
             val baccalaureat = baccalaureatRepository.recupererUnBaccalaureatParIdExterne(it.baccalaureatUtilise)
             explicationAutoEvaluationMoyenne(baccalaureat, it)
@@ -139,7 +150,7 @@ class RecupererExplicationsFormationService(
 
     private fun explicationAutoEvaluationMoyenne(
         baccalaureat: Baccalaureat?,
-        autoEvaluationMoyenne: ExplicationsSuggestion.AutoEvaluationMoyenne,
+        autoEvaluationMoyenne: ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne,
     ) = ExplicationAutoEvaluationMoyenne(
         baccalaureatUtilise =
             baccalaureat ?: Baccalaureat(

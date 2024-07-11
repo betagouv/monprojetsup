@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExplicationFormationPourUnProfilReponseDTO(
@@ -24,9 +24,9 @@ data class ExplicationEtExemplesDTO(
     @JsonProperty(value = "examples")
     val exemplesDeMetiersTriesParAffinitesDecroissantes: List<String>?,
 ) {
-    fun toExplicationsSuggestion(): ExplicationsSuggestion {
+    fun toExplicationsSuggestion(): ExplicationsSuggestionEtExemplesMetiers {
         return explications?.let {
-            ExplicationsSuggestion(
+            ExplicationsSuggestionEtExemplesMetiers(
                 geographique =
                     explications.flatMap { it.geographiques ?: emptyList() }
                         .mapNotNull { explicationGeographique ->
@@ -68,8 +68,9 @@ data class ExplicationEtExemplesDTO(
                 interetsEtDomainesChoisis =
                     explications.recupererUniqueValeur { it.tags != null }?.tags?.codesInteretsEtDomaines
                         ?: emptyList(),
+                exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )
-        } ?: ExplicationsSuggestion()
+        } ?: ExplicationsSuggestionEtExemplesMetiers()
     }
 }
 
@@ -101,7 +102,7 @@ data class APISuggestionExplicationTypeBacDTO(
     val bac: String,
 ) {
     fun toTypeBaccalaureat() =
-        ExplicationsSuggestion.TypeBaccalaureat(
+        ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat(
             nomBaccalaureat = bac,
             pourcentage = pourcentage,
         )
@@ -139,7 +140,7 @@ data class APISuggestionExplicationNotesDTO(
     val bacUtilise: String,
 ) {
     fun toAutoEvaluationMoyenne() =
-        ExplicationsSuggestion.AutoEvaluationMoyenne(
+        ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne(
             moyenneAutoEvalue = moyenneAutoEvalue.toFloat(),
             rangs = mediane.toRangsEchellons(),
             baccalaureatUtilise = bacUtilise,
@@ -160,7 +161,7 @@ data class Mediane(
     val rangEch90: Int,
 ) {
     fun toRangsEchellons() =
-        ExplicationsSuggestion.RangsEchellons(
+        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
             rangEch25 = rangEch25,
             rangEch50 = rangEch50,
             rangEch75 = rangEch75,

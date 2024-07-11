@@ -32,7 +32,7 @@ class RecupererFormationsServiceTest {
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
 
     @Mock
-    lateinit var recupererExplicationsFormationService: RecupererExplicationsFormationService
+    lateinit var recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
 
     @Mock
     lateinit var statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService
@@ -127,8 +127,17 @@ class RecupererFormationsServiceTest {
         ).willReturn(statistiquesDesAdmis)
         val explicationsFL0001 = mock(ExplicationsSuggestionDetaillees::class.java)
         val explicationsFL0003 = mock(ExplicationsSuggestionDetaillees::class.java)
-        val explications = mapOf("fl0001" to explicationsFL0001, "fl0003" to explicationsFL0003)
-        given(recupererExplicationsFormationService.recupererExplications(profilEleve, listOf("fl0001", "fl0003"))).willReturn(explications)
+
+        val exemplesMetiersFL0001 = listOf(metier534, metier123)
+        val exemplesMetiersFL0003 = listOf(metier534, metier234)
+        val explications =
+            mapOf("fl0001" to Pair(explicationsFL0001, exemplesMetiersFL0001), "fl0003" to Pair(explicationsFL0003, exemplesMetiersFL0003))
+        given(
+            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                profilEleve,
+                listOf("fl0001", "fl0003"),
+            ),
+        ).willReturn(explications)
         val communesParFormations =
             mapOf(
                 "fl0001" to listOf("Paris", "Lyon", "Sartrouville"),
@@ -154,16 +163,16 @@ class RecupererFormationsServiceTest {
         ).willReturn(87)
         given(
             metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                metiers = listOf(metier123, metier234),
+                metiers = exemplesMetiersFL0001,
                 idsMetierTriesParAffinite = metiersTriesParAffinites,
             ),
-        ).willReturn(listOf(metier234, metier123))
+        ).willReturn(listOf(metier123, metier534))
         given(
             metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                metiers = listOf(metier534, metier123, metier234),
+                metiers = exemplesMetiersFL0003,
                 idsMetierTriesParAffinite = metiersTriesParAffinites,
             ),
-        ).willReturn(listOf(metier234, metier123, metier534))
+        ).willReturn(listOf(metier234, metier534))
 
         // When
         val resultat = recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations)
@@ -182,7 +191,7 @@ class RecupererFormationsServiceTest {
                 criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0001, critere2AnalyseCandidatureFL0001),
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
-                metiersTriesParAffinites = listOf(metier234, metier123),
+                metiersTriesParAffinites = listOf(metier123, metier534),
                 communesTrieesParAffinites = listOf("Paris", "Lyon", "Sartrouville"),
                 explications = explicationsFL0001,
             )
@@ -199,7 +208,7 @@ class RecupererFormationsServiceTest {
                 criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0003),
                 statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                 tauxAffinite = 87,
-                metiersTriesParAffinites = listOf(metier234, metier123, metier534),
+                metiersTriesParAffinites = listOf(metier234, metier534),
                 communesTrieesParAffinites = listOf("Strasbourg", "Houilles"),
                 explications = explicationsFL0003,
             )
@@ -276,9 +285,15 @@ class RecupererFormationsServiceTest {
                 classe = ChoixNiveau.TERMINALE,
             ),
         ).willReturn(statistiquesDesAdmis)
+        val exemplesMetiersFL0001 = listOf(metier534)
         val explicationsFL0001 = mock(ExplicationsSuggestionDetaillees::class.java)
-        val explications = mapOf("fl0001" to explicationsFL0001)
-        given(recupererExplicationsFormationService.recupererExplications(profilEleve, listOf("fl0001", "fl0003"))).willReturn(explications)
+        val explications = mapOf("fl0001" to Pair(explicationsFL0001, exemplesMetiersFL0001))
+        given(
+            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                profilEleve,
+                listOf("fl0001", "fl0003"),
+            ),
+        ).willReturn(explications)
         val communesParFormations =
             mapOf(
                 "fl0001" to listOf("Paris", "Lyon", "Sartrouville"),
@@ -303,16 +318,16 @@ class RecupererFormationsServiceTest {
         ).willReturn(0)
         given(
             metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                metiers = listOf(metier123, metier234),
+                metiers = listOf(metier534),
                 idsMetierTriesParAffinite = metiersTriesParAffinites,
             ),
-        ).willReturn(listOf(metier234, metier123))
+        ).willReturn(listOf(metier534))
         given(
             metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                metiers = listOf(metier534, metier123, metier234),
+                metiers = emptyList(),
                 idsMetierTriesParAffinite = metiersTriesParAffinites,
             ),
-        ).willReturn(listOf(metier234, metier123, metier534))
+        ).willReturn(emptyList())
 
         // When
         val resultat = recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations)
@@ -331,7 +346,7 @@ class RecupererFormationsServiceTest {
                 criteresAnalyseCandidature = listOf(critereAnalyseCandidatureFL0001, critere2AnalyseCandidatureFL0001),
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
-                metiersTriesParAffinites = listOf(metier234, metier123),
+                metiersTriesParAffinites = listOf(metier534),
                 communesTrieesParAffinites = listOf("Paris", "Lyon", "Sartrouville"),
                 explications = explicationsFL0001,
             )
@@ -348,7 +363,7 @@ class RecupererFormationsServiceTest {
                 criteresAnalyseCandidature = emptyList(),
                 statistiquesDesAdmis = null,
                 tauxAffinite = 0,
-                metiersTriesParAffinites = listOf(metier234, metier123, metier534),
+                metiersTriesParAffinites = emptyList(),
                 communesTrieesParAffinites = emptyList(),
                 explications = null,
             )

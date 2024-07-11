@@ -14,7 +14,7 @@ class RecupererFormationService(
     val formationRepository: FormationRepository,
     val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
-    val recupererExplicationsFormationService: RecupererExplicationsFormationService,
+    val recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -34,6 +34,11 @@ class RecupererFormationService(
             )
         return if (profilEleve != null) {
             val affinitesFormationEtMetier = suggestionHttpClient.recupererLesSuggestions(profilEleve)
+            val (explications, exemplesDeMetiers) =
+                recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve,
+                    formation.id,
+                )
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -50,7 +55,7 @@ class RecupererFormationService(
                     ),
                 metiersTriesParAffinites =
                     metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                        metiers = formation.metiers,
+                        metiers = exemplesDeMetiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
                 communesTrieesParAffinites =
@@ -59,7 +64,7 @@ class RecupererFormationService(
                         communesFavorites = profilEleve.communesPreferees,
                     ),
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
-                explications = recupererExplicationsFormationService.recupererExplications(profilEleve, formation.id),
+                explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,
             )
         } else {

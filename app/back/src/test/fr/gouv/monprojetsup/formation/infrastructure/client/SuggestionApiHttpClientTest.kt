@@ -9,9 +9,9 @@ import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.AutoEvaluationMoyenne
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.Specialite
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
@@ -623,7 +623,7 @@ class SuggestionApiHttpClientTest {
             val attendu =
                 mapOf(
                     "fl2014" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             geographique =
                                 listOf(
                                     ExplicationGeographique(
@@ -661,7 +661,7 @@ class SuggestionApiHttpClientTest {
                                 AutoEvaluationMoyenne(
                                     moyenneAutoEvalue = 14.5f,
                                     rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
+                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
                                             rangEch50 = 14,
                                             rangEch75 = 16,
@@ -675,6 +675,15 @@ class SuggestionApiHttpClientTest {
                                     "T_ROME_731379930",
                                     "T_IDEO2_4812",
                                     "T_ROME_803089798",
+                                ),
+                            exemplesDeMetiers =
+                                listOf(
+                                    "MET_361",
+                                    "MET_592",
+                                    "MET_871",
+                                    "MET_342",
+                                    "MET_884",
+                                    "MET_634",
                                 ),
                         ),
                 )
@@ -775,7 +784,7 @@ class SuggestionApiHttpClientTest {
             val attendu =
                 mapOf(
                     "fl2014" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             geographique =
                                 listOf(
                                     ExplicationGeographique(
@@ -789,8 +798,34 @@ class SuggestionApiHttpClientTest {
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                             interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
+                            exemplesDeMetiers =
+                                listOf(
+                                    "MET_361",
+                                    "MET_592",
+                                    "MET_871",
+                                    "MET_342",
+                                    "MET_884",
+                                    "MET_634",
+                                ),
                         ),
-                    "fl2015" to ExplicationsSuggestion(dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE),
+                    "fl2015" to
+                        ExplicationsSuggestionEtExemplesMetiers(
+                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                            exemplesDeMetiers =
+                                listOf(
+                                    "MET_639",
+                                    "MET_292",
+                                    "MET_890",
+                                    "MET_277",
+                                    "MET_51",
+                                    "MET_85",
+                                    "MET_423",
+                                    "MET_43",
+                                    "MET_278",
+                                    "MET_431",
+                                    "MET_557",
+                                ),
+                        ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
         }

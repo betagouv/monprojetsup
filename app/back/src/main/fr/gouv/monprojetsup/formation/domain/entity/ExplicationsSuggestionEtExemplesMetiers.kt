@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.formation.domain.entity
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 
-data class ExplicationsSuggestion(
+data class ExplicationsSuggestionEtExemplesMetiers(
     val geographique: List<ExplicationGeographique> = emptyList(),
     val formationsSimilaires: List<String> = emptyList(),
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
@@ -12,6 +12,7 @@ data class ExplicationsSuggestion(
     val typeBaccalaureat: TypeBaccalaureat? = null,
     val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
     val interetsEtDomainesChoisis: List<String> = emptyList(),
+    val exemplesDeMetiers: List<String> = emptyList(),
 ) {
     data class AutoEvaluationMoyenne(
         val moyenneAutoEvalue: Float,
