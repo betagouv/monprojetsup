@@ -64,6 +64,8 @@ public class ServerDataAnalysis {
 
         exportCentresDinteretsEtThemes();
 
+        exportTypesFormationsPsup();
+
         outputResumesDescriptifsFormationsEtMetiersExtraits();
 
         exportLiensDomainesMetiers();
@@ -339,6 +341,15 @@ public class ServerDataAnalysis {
     private static void exportDataHeleneBaffin() throws IOException, CsvValidationException {
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_avec_heritage.csv");
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_sans_heritage.csv");
+    }
+
+    private static void exportTypesFormationsPsup() throws IOException {
+        Serialisation.toJsonFile("typesFormationsPsup.json",
+                new TreeMap<>(ServerData.getTypesMacros()),
+                true
+        );
+
+
     }
 
     private static void exportCsvMetierToFiliereCorr(String s) throws IOException, CsvValidationException {

@@ -71,18 +71,8 @@ public class DataSources {
     @Setter
     private static String rootDirectory = "./";
 
-    /* the data file downloaded by the front clients */
-    public static String getFrontSrcPath() {
-        return getRootDirectory() + "frontendData.zip";
-    }
-
-    /* one of the data files used by the server */
-    public static String getBackDataFilePath() {
-        return getRootDirectory() + "backendData.zip";
-    }
-
     public static String getSourceDataFilePath(String filename) {
-        String dir = DataServerConfig.config.getDataRootDirectory();
+        String dir = DataServerConfig.getDataRootDirectory();
         String pathWithSpace = dir + "data/" + filename;
         val path = java.nio.file.Path.of(pathWithSpace);
         return path.toString();

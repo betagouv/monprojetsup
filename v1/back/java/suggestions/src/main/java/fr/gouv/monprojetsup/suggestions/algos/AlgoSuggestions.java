@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.suggestions.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.data.Constants.gFlCodToFrontId;
-import static fr.gouv.monprojetsup.suggestions.data.ServerData.p75Capacity;
-import static fr.gouv.monprojetsup.suggestions.data.ServerData.p90NbFormations;
 import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
 
@@ -48,6 +46,8 @@ public class AlgoSuggestions {
 
     //utilisé par suggestions
     public static Map<String, Integer> codesSpecialites = new HashMap<>();
+    public static int p90NbFormations;
+    public static int p75Capacity;
 
     protected static PsupStatistiques.LASCorrespondance lasCorrespondance;
 
@@ -58,8 +58,8 @@ public class AlgoSuggestions {
 
     public static double getBigCapacityScore(String fl) {
 
-        int nbFormations = ServerData.getNbFormations(fl);
-        int capacity = ServerData.getCapacity(fl);
+        int nbFormations = SuggestionsData.getNbFormations(fl);
+        int capacity = SuggestionsData.getCapacity(fl);
 
         double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
         double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
@@ -154,7 +154,7 @@ public class AlgoSuggestions {
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg);
 
         Map<String, Affinite> affinites =
-                ServerData.getFilieresFront().stream()
+                SuggestionsData.getFilieresFront().stream()
                 .collect(Collectors.toMap(
                         fl -> fl,
                         affinityEvaluator::getAffinityEvaluation
@@ -311,18 +311,18 @@ public class AlgoSuggestions {
     public static void initialize() throws IOException {
 
 
-        ServerData.createGraph();
+        SuggestionsData.createGraph();
 
-        ServerData.getSpecialites().forEach(
+        SuggestionsData.getSpecialites().forEach(
                 (iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod)
         );
 
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(ServerData.getBacsWithSpecialite());
+        bacsWithSpecialites.addAll(SuggestionsData.getBacsWithSpecialite());
 
-        List<Pair<String,String>> app = ServerData.getApprentissage();
+        List<Pair<String,String>> app = SuggestionsData.getApprentissage();
 
-        lasCorrespondance = ServerData.getLASCorrespondance();
+        lasCorrespondance = SuggestionsData.getLASCorrespondance();
 
         relatedToHealth.addAll(edgesKeys
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))

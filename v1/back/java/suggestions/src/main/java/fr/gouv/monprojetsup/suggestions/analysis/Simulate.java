@@ -2,8 +2,7 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.suggestions.data.DataSources;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
-import fr.gouv.monprojetsup.suggestions.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import lombok.val;
@@ -13,9 +12,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.useRemoteUrl;
 import static fr.gouv.monprojetsup.suggestions.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
 import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.analysis.ReferenceCases.useRemoteUrl;
 
 public class Simulate {
 
@@ -32,9 +31,7 @@ public class Simulate {
         //we want the server in debug mode, with full explanations
         useRemoteUrl(false);
 
-        DataServerConfig.load();
-
-        ServerData.initStatistiques();
+        SuggestionsData.initStatistiques();
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(

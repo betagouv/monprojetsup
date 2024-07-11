@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -48,7 +49,7 @@ class ApplicationEtl
 
 @Component
 @ConditionalOnProperty(name = ["etl.runner.enabled"], havingValue = "true", matchIfMissing = true)
-class EtlApplicationRunner : ApplicationRunner {
+class EtlApplicationRunner : CommandLineRunner {
 
 	@Autowired
 	lateinit var baccalaureatBDD: BaccalaureatDb
@@ -72,7 +73,7 @@ class EtlApplicationRunner : ApplicationRunner {
 	lateinit var dataRootDirectory: String
 
 	private val LOGGER: Logger = Logger.getLogger(ApplicationEtl::class.java.simpleName)
-	override fun run(args: ApplicationArguments) {
+	override fun run(vararg args: String?) {
 		println("Hello, World! ApplicationEtl has started.")
 
 		DataServerConfig.setDataRootDirectory(dataRootDirectory)

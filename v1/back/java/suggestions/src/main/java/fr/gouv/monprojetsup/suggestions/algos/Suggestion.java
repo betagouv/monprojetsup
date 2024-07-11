@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +48,7 @@ public record Suggestion(
 
     public String humanReadable() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t" + ServerData.getDebugLabel(fl));
+        sb.append("\t" + SuggestionsData.getDebugLabel(fl));
         sb.append(lineSeparator());
         sb.append(lineSeparator());
         if(expl != null) {

@@ -499,5 +499,8 @@ public class ServerData {
         return new HashMap<>(formationsToGrp);
     }
 
+    public static Map<Integer, String> getTypesMacros() {
+        return backPsupData.formations().typesMacros;
+    }
 }
 
