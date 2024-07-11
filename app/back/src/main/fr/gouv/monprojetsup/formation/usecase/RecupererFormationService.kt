@@ -78,7 +78,7 @@ class RecupererFormationService(
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
                 communes = recupererCommunesDUneFormationService.recupererNomCommunes(formation.id),
-                metiers = formation.metiers,
+                metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,
             )

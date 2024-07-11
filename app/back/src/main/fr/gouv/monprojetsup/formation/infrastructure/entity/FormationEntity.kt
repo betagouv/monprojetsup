@@ -2,14 +2,11 @@ package fr.gouv.monprojetsup.formation.infrastructure.entity
 
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
@@ -64,9 +61,6 @@ class FormationDetailleeEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "formation")
-    lateinit var metiers: List<FormationMetierEntity>
-
     fun toFormationDetaille() =
         FormationDetaillee(
             id = id,
@@ -74,16 +68,6 @@ class FormationDetailleeEntity {
             descriptifGeneral = descriptifGeneral,
             descriptifAttendus = descriptifAttendus,
             liens = liens.map { it.toLien() },
-            metiers =
-                metiers.map { formationMetierEntity ->
-                    val metier = formationMetierEntity.metier
-                    MetierDetaille(
-                        id = metier.id,
-                        nom = metier.label,
-                        descriptif = metier.descriptifGeneral,
-                        liens = metier.liens.map { it.toLien() },
-                    )
-                },
             formationsAssociees = formationsAssociees ?: emptyList(),
             descriptifConseils = descriptifConseils,
             descriptifDiplome = descriptifDiplome,

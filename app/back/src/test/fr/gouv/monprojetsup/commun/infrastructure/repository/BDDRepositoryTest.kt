@@ -24,7 +24,6 @@ class BDDRepositoryTest {
     fun setUp() {
         JdbcTestUtils.deleteFromTables(
             jdbcTemplate,
-            "join_metier_formation",
             "triplet_affectation",
             "interet",
             "interet_sous_categorie",

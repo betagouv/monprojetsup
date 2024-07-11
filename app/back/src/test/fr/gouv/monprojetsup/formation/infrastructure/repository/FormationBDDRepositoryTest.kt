@@ -5,7 +5,6 @@ import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
 import fr.gouv.monprojetsup.formation.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -66,42 +65,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 ),
             valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
-            metiers =
-                listOf(
-                    MetierDetaille(
-                        id = "MET001",
-                        nom = "Fleuriste",
-                        descriptif =
-                            "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
-                                "jardinerie ou en atelier de composition florale.",
-                        liens = emptyList(),
-                    ),
-                    MetierDetaille(
-                        id = "MET002",
-                        nom = "Fleuriste événementiel",
-                        descriptif =
-                            "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                "des compositions florales, des plantes et des accessoires de décoration pour des " +
-                                "événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                "Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
-                                "en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler " +
-                                "en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                        liens =
-                            listOf(
-                                Lien(
-                                    nom = "Voir la fiche Onisep",
-                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                ),
-                                Lien(
-                                    nom = "Voir la fiche HelloWork",
-                                    url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
-                                ),
-                            ),
-                    ),
-                ),
         )
 
     @BeforeEach
@@ -118,7 +81,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     @Nested
     inner class RecupererLesFormationsAvecLeursMetiers {
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Doit retourner les formations avec leurs métiers associés dans l'ordre demandé`() {
             // Given
             val idsFormations = listOf("fl0002", "fl0001", "fl0004")
@@ -152,42 +115,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     formationsAssociees = listOf("fl0012"),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(13, 50, 12, 5, 15),
-                    metiers =
-                        listOf(
-                            MetierDetaille(
-                                id = "MET001",
-                                nom = "Fleuriste",
-                                descriptif =
-                                    "Le fleuriste est un artisan qui confectionne et vend des bouquets, des compositions " +
-                                        "florales, des plantes et des accessoires de décoration. Il peut également être amené à " +
-                                        "conseiller ses clients sur le choix des fleurs et des plantes en fonction de l occasion " +
-                                        "et de leur budget. Le fleuriste peut travailler en boutique, en grande surface, en " +
-                                        "jardinerie ou en atelier de composition florale.",
-                                liens = emptyList(),
-                            ),
-                            MetierDetaille(
-                                id = "MET002",
-                                nom = "Fleuriste événementiel",
-                                descriptif =
-                                    "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets, " +
-                                        "des compositions florales, des plantes et des accessoires de décoration pour des " +
-                                        "événements particuliers (mariages, baptêmes, anniversaires, réceptions, etc.). " +
-                                        "Il peut également être amené à conseiller ses clients sur le choix des fleurs et des plantes " +
-                                        "en fonction de l occasion et de leur budget. Le fleuriste événementiel peut travailler " +
-                                        "en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir la fiche Onisep",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                        ),
-                                        Lien(
-                                            nom = "Voir la fiche HelloWork",
-                                            url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
-                                        ),
-                                    ),
-                            ),
-                        ),
                 )
             val formationFL0004 =
                 FormationDetaillee(
@@ -209,13 +136,12 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
-                    metiers = emptyList(),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(listOf(formationFL0002, formationFL0001, formationFL0004))
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand les formations n'existent pas, doit retourner la map vide et les logguer`() {
             // Given
             val idsFormations = listOf("fl0007", "fl0008", "fl0009")
@@ -235,7 +161,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     @Nested
     inner class RecupererUneFormationAvecSesMetiers {
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Doit retourner la formation détaillée`() {
             // Given
             val idFormation = "fl0001"
@@ -248,7 +174,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand la formation est présente dans une formation associée, doit throw une exception NOT FOUND`() {
             // Given
             val idFormation = "fl0010"
@@ -265,7 +191,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand la formation n'a pas de métiers associés, doit retourner sa liste vide`() {
             // Given
             val idFormation = "fl0004"
@@ -294,14 +220,13 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                                 url = "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire",
                             ),
                         ),
-                    metiers = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
                 ),
             )
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand la formations n'existe pas, doit throw une erreur NOT FOUND`() {
             // Given
             val idFormation = "fl0007"
@@ -318,7 +243,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand la formations est présente dans plusieurs formations associés, doit throw une erreur NOT FOUND`() {
             // Given
             val idFormation = "fl0012"
@@ -335,7 +260,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Quand la formations est à la fois présente en tant que formation associée et entité, doit retourner la formation`() {
             // Given
             val idFormation = "fl0005"
@@ -365,7 +290,6 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
-                    metiers = emptyList(),
                 ),
             )
         }
@@ -374,7 +298,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     @Nested
     inner class RecupererLesNomsDesFormations {
         @Test
-        @Sql("classpath:formation_metier.sql")
+        @Sql("classpath:formation.sql")
         fun `Doit retourner les noms des formations dans l'ordre demandé en ignorant celles inconnues et les loggant`() {
             // Given
             val idsFormations = listOf("fl0001", "idInconnu", "fl0003", "", "fl0002")
