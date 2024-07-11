@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SpecialitesRepository
@@ -48,7 +48,7 @@ class SuggestionApiHttpClient(
     override fun recupererLesExplications(
         profilEleve: ProfilEleve,
         idsFormations: List<String>,
-    ): Map<String, ExplicationsSuggestion?> {
+    ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/explanations",

@@ -11,7 +11,7 @@ class RecupererFormationsService(
     val formationRepository: FormationRepository,
     val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
-    val recupererExplicationsFormationService: RecupererExplicationsFormationService,
+    val recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -30,13 +30,18 @@ class RecupererFormationsService(
                 idsFormations = idsDesFormationsRetournees,
                 classe = profilEleve.classe,
             )
-        val explications = recupererExplicationsFormationService.recupererExplications(profilEleve, idsDesFormationsRetournees)
+        val explications =
+            recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                profilEleve,
+                idsDesFormationsRetournees,
+            )
         val communes =
             recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                 idsDesFormationsRetournees,
                 profilEleve.communesPreferees,
             )
         return formations.map { formation ->
+            val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -53,12 +58,12 @@ class RecupererFormationsService(
                     ),
                 metiersTriesParAffinites =
                     metiersTriesParProfilBuilder.trierMetiersParAffinites(
-                        metiers = formation.metiers,
+                        metiers = exemplesDeMetiersDeLaFormation,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
                 communesTrieesParAffinites = communes[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
-                explications = explications[formation.id],
+                explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
             )
         }

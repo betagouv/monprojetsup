@@ -40,7 +40,7 @@ class RecupererFormationServiceTest {
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
 
     @Mock
-    lateinit var recupererExplicationsFormationService: RecupererExplicationsFormationService
+    lateinit var recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
 
     @Mock
     lateinit var statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService
@@ -255,33 +255,56 @@ class RecupererFormationServiceTest {
                 listOf("Caen", "Paris", "Marseille"),
             )
             given(
-                metiersTriesParProfilBuilder.trierMetiersParAffinites(
+                calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                     listOf(
-                        MetierDetaille(
-                            id = "MET_001",
-                            nom = "Fleuriste",
-                            descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                            liens =
-                                listOf(
-                                    Lien(
-                                        nom = "Voir sur Onisep",
-                                        url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                    ),
-                                ),
-                        ),
-                        MetierDetaille(
-                            id = "MET_002",
-                            nom = "Fleuriste événementiel",
-                            descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                            liens =
-                                listOf(
-                                    Lien(
-                                        nom = "Voir sur Onisep",
-                                        url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                    ),
-                                ),
-                        ),
+                        FormationAvecSonAffinite(idFormation = "fl00012", tauxAffinite = 0.9f),
+                        FormationAvecSonAffinite(idFormation = "fl0001", tauxAffinite = 0.7f),
+                        FormationAvecSonAffinite(idFormation = "fl00014", tauxAffinite = 0.6648471f),
+                        FormationAvecSonAffinite(idFormation = "fl0002", tauxAffinite = 0.1250544f),
                     ),
+                    "fl0001",
+                ),
+            ).willReturn(70)
+            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
+            val metiersSuggeres =
+                listOf(
+                    MetierDetaille(
+                        id = "MET_456",
+                        nom = "Fleuriste bis",
+                        descriptif = "Descriptif MET_456",
+                        liens = emptyList(),
+                    ),
+                    MetierDetaille(
+                        id = "MET_001",
+                        nom = "Fleuriste",
+                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
+                        liens =
+                            listOf(
+                                Lien(
+                                    nom = "Voir sur Onisep",
+                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
+                                ),
+                            ),
+                    ),
+                )
+            val explicationsEtExemplesMetiers = Pair(mock(ExplicationsSuggestionDetaillees::class.java), metiersSuggeres)
+            given(
+                recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(explicationsEtExemplesMetiers)
+            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
+            given(
+                statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
+                    idBaccalaureat = "Générale",
+                    classe = ChoixNiveau.TERMINALE,
+                    idFormation = "fl0001",
+                ),
+            ).willReturn(statistiquesDesAdmis)
+            given(
+                metiersTriesParProfilBuilder.trierMetiersParAffinites(
+                    metiersSuggeres,
                     listOf("MET_123", "MET_002", "MET_456", "MET_001"),
                 ),
             ).willReturn(
@@ -299,46 +322,13 @@ class RecupererFormationServiceTest {
                             ),
                     ),
                     MetierDetaille(
-                        id = "MET_001",
-                        nom = "Fleuriste",
-                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                        liens =
-                            listOf(
-                                Lien(
-                                    nom = "Voir sur Onisep",
-                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                ),
-                            ),
+                        id = "MET_456",
+                        nom = "Fleuriste bis",
+                        descriptif = "Descriptif MET_456",
+                        liens = emptyList(),
                     ),
                 ),
             )
-            given(
-                calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
-                    listOf(
-                        FormationAvecSonAffinite(idFormation = "fl00012", tauxAffinite = 0.9f),
-                        FormationAvecSonAffinite(idFormation = "fl0001", tauxAffinite = 0.7f),
-                        FormationAvecSonAffinite(idFormation = "fl00014", tauxAffinite = 0.6648471f),
-                        FormationAvecSonAffinite(idFormation = "fl0002", tauxAffinite = 0.1250544f),
-                    ),
-                    "fl0001",
-                ),
-            ).willReturn(70)
-            given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
-            val explications = mock(ExplicationsSuggestionDetaillees::class.java)
-            given(
-                recupererExplicationsFormationService.recupererExplications(
-                    profilEleve = profil,
-                    idFormation = "fl0001",
-                ),
-            ).willReturn(explications)
-            val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
-            given(
-                statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
-                    idBaccalaureat = "Générale",
-                    classe = ChoixNiveau.TERMINALE,
-                    idFormation = "fl0001",
-                ),
-            ).willReturn(statistiquesDesAdmis)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -376,21 +366,15 @@ class RecupererFormationServiceTest {
                                     ),
                             ),
                             MetierDetaille(
-                                id = "MET_001",
-                                nom = "Fleuriste",
-                                descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir sur Onisep",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                        ),
-                                    ),
+                                id = "MET_456",
+                                nom = "Fleuriste bis",
+                                descriptif = "Descriptif MET_456",
+                                liens = emptyList(),
                             ),
                         ),
                     communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
                     tauxAffinite = 70,
-                    explications = explications,
+                    explications = explicationsEtExemplesMetiers.first,
                     criteresAnalyseCandidature =
                         listOf(
                             CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),

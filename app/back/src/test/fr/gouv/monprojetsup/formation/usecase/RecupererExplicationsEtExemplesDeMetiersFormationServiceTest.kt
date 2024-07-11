@@ -7,30 +7,33 @@ import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.Domaine
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.AutoEvaluationMoyenne
-import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestion.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.formation.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
+import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.mock
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class RecupererExplicationsFormationServiceTest {
+class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
     @Mock
     lateinit var suggestionHttpClient: SuggestionHttpClient
 
@@ -46,8 +49,11 @@ class RecupererExplicationsFormationServiceTest {
     @Mock
     lateinit var domaineRepository: DomaineRepository
 
+    @Mock
+    lateinit var metierRepository: MetierRepository
+
     @InjectMocks
-    lateinit var recupererExplicationsFormationService: RecupererExplicationsFormationService
+    lateinit var recupererExplicationsEtExemplesDeMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
 
     @BeforeEach
     fun setup() {
@@ -82,7 +88,7 @@ class RecupererExplicationsFormationServiceTest {
             val explications =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                             alternance = ChoixAlternance.TRES_INTERESSE,
                             specialitesChoisies =
@@ -101,7 +107,11 @@ class RecupererExplicationsFormationServiceTest {
             ).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
             val attendu =
@@ -115,7 +125,7 @@ class RecupererExplicationsFormationServiceTest {
                             AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
                         ),
                 )
-            assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
+            assertThat(resultat.first).usingRecursiveComparison().isEqualTo(attendu)
         }
 
         @Test
@@ -126,13 +136,17 @@ class RecupererExplicationsFormationServiceTest {
                     profilEleve = profil,
                     idsFormations = listOf("fl0001"),
                 ),
-            ).willReturn(mapOf("fl0001" to ExplicationsSuggestion()))
+            ).willReturn(mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers()))
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
-            assertThat(resultat).usingRecursiveComparison().isEqualTo(ExplicationsSuggestionDetaillees())
+            assertThat(resultat.first).usingRecursiveComparison().isEqualTo(ExplicationsSuggestionDetaillees())
         }
 
         @Test
@@ -141,7 +155,7 @@ class RecupererExplicationsFormationServiceTest {
             val explications =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             geographique =
                                 listOf(
                                     ExplicationGeographique(
@@ -175,7 +189,11 @@ class RecupererExplicationsFormationServiceTest {
             ).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
             val attendu =
@@ -193,7 +211,7 @@ class RecupererExplicationsFormationServiceTest {
                         distanceKm = 12,
                     ),
                 )
-            assertThat(resultat.geographique).usingRecursiveComparison().isEqualTo(attendu)
+            assertThat(resultat.first.geographique).usingRecursiveComparison().isEqualTo(attendu)
         }
 
         @Test
@@ -203,12 +221,12 @@ class RecupererExplicationsFormationServiceTest {
             val explications =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
                                     moyenneAutoEvalue = 14.5f,
                                     rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
+                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
                                             rangEch50 = 14,
                                             rangEch75 = 16,
@@ -232,10 +250,14 @@ class RecupererExplicationsFormationServiceTest {
             ).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
-            assertThat(resultat.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
                 ExplicationAutoEvaluationMoyenne(
                     moyenneAutoEvalue = 14.5f,
                     hautIntervalleNotes = 8f,
@@ -243,7 +265,7 @@ class RecupererExplicationsFormationServiceTest {
                     baccalaureatUtilise = bacGeneral,
                 ),
             )
-            assertThat(resultat.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
                 ExplicationTypeBaccalaureat(
                     baccalaureat = bacGeneral,
                     pourcentage = 18,
@@ -258,12 +280,12 @@ class RecupererExplicationsFormationServiceTest {
             val explications =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
                                     moyenneAutoEvalue = 14.5f,
                                     rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
+                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
                                             rangEch50 = 14,
                                             rangEch75 = 16,
@@ -287,10 +309,14 @@ class RecupererExplicationsFormationServiceTest {
             ).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
-            assertThat(resultat.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.explicationAutoEvaluationMoyenne).usingRecursiveComparison().isEqualTo(
                 ExplicationAutoEvaluationMoyenne(
                     moyenneAutoEvalue = 14.5f,
                     hautIntervalleNotes = 8f,
@@ -298,7 +324,7 @@ class RecupererExplicationsFormationServiceTest {
                     baccalaureatUtilise = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
                 ),
             )
-            assertThat(resultat.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
                 ExplicationTypeBaccalaureat(
                     baccalaureat = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
                     pourcentage = 18,
@@ -316,7 +342,8 @@ class RecupererExplicationsFormationServiceTest {
                     "T_ITM_1169",
                     "T_ROME_1959553899",
                 )
-            val explications = mapOf("fl0001" to ExplicationsSuggestion(interetsEtDomainesChoisis = interetsEtDomainesChoisis))
+            val explications =
+                mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(interetsEtDomainesChoisis = interetsEtDomainesChoisis))
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -334,22 +361,26 @@ class RecupererExplicationsFormationServiceTest {
             given(interetRepository.recupererLesSousCategoriesDInterets(interetsEtDomainesChoisis)).willReturn(interets)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
-            assertThat(resultat.interets).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.interets).usingRecursiveComparison().isEqualTo(
                 listOf(
                     InteretSousCategorie(id = "travail_manuel_creer", nom = "Créer quelque chose de mes mains"),
                     InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
                 ),
             )
-            assertThat(resultat.domaines).usingRecursiveComparison().isEqualTo(domaines)
+            assertThat(resultat.first.domaines).usingRecursiveComparison().isEqualTo(domaines)
         }
 
         @Test
         fun `doit retourner les formations similaires`() {
             // Given
-            val explications = mapOf("fl0001" to ExplicationsSuggestion(formationsSimilaires = listOf("fl1", "fl7")))
+            val explications = mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(formationsSimilaires = listOf("fl1", "fl7")))
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -363,10 +394,44 @@ class RecupererExplicationsFormationServiceTest {
                 )
             given(formationRepository.recupererLesNomsDesFormations(listOf("fl1", "fl7"))).willReturn(formations)
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idFormation = "fl0001")
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
 
             // Then
-            assertThat(resultat.formationsSimilaires).usingRecursiveComparison().isEqualTo(formations)
+            assertThat(resultat.first.formationsSimilaires).usingRecursiveComparison().isEqualTo(formations)
+        }
+
+        @Test
+        fun `doit retourner les exemples de métiers`() {
+            // Given
+            val explications =
+                mapOf(
+                    "fl0001" to ExplicationsSuggestionEtExemplesMetiers(exemplesDeMetiers = listOf("MET_12", "MET_534", "MET_96")),
+                )
+            given(
+                suggestionHttpClient.recupererLesExplications(
+                    profilEleve = profil,
+                    idsFormations = listOf("fl0001"),
+                ),
+            ).willReturn(explications)
+            val metier12 = mock(MetierDetaille::class.java)
+            val metier534 = mock(MetierDetaille::class.java)
+            val metier96 = mock(MetierDetaille::class.java)
+            val exemplesDeMetiers = listOf(metier12, metier534, metier96)
+            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
+
+            // When
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
+
+            // Then
+            assertThat(resultat.second).usingRecursiveComparison().isEqualTo(exemplesDeMetiers)
         }
     }
 
@@ -377,22 +442,26 @@ class RecupererExplicationsFormationServiceTest {
             // Given
             val explications =
                 mapOf(
-                    "fl0001" to ExplicationsSuggestion(),
+                    "fl0001" to ExplicationsSuggestionEtExemplesMetiers(),
                     "fl0002" to null,
-                    "fl0003" to ExplicationsSuggestion(),
+                    "fl0003" to ExplicationsSuggestionEtExemplesMetiers(),
                 )
             val idsFormations = listOf("fl0001", "fl0002", "fl0003")
             given(suggestionHttpClient.recupererLesExplications(profil, idsFormations)).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profil, idsFormations)
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profil,
+                    idsFormations,
+                )
 
             // Then
             val attendu =
                 mapOf(
-                    "fl0001" to ExplicationsSuggestionDetaillees(),
-                    "fl0002" to ExplicationsSuggestionDetaillees(),
-                    "fl0003" to ExplicationsSuggestionDetaillees(),
+                    "fl0001" to Pair(ExplicationsSuggestionDetaillees(), emptyList<MetierDetaille>()),
+                    "fl0002" to Pair(ExplicationsSuggestionDetaillees(), emptyList()),
+                    "fl0003" to Pair(ExplicationsSuggestionDetaillees(), emptyList()),
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
         }
@@ -403,7 +472,7 @@ class RecupererExplicationsFormationServiceTest {
             val explications =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                             alternance = ChoixAlternance.TRES_INTERESSE,
                             specialitesChoisies =
@@ -414,7 +483,7 @@ class RecupererExplicationsFormationServiceTest {
                                 ),
                         ),
                     "fl0002" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             geographique =
                                 listOf(
                                     ExplicationGeographique(
@@ -442,7 +511,7 @@ class RecupererExplicationsFormationServiceTest {
                                 AutoEvaluationMoyenne(
                                     moyenneAutoEvalue = 14.5f,
                                     rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
+                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 10,
                                             rangEch50 = 14,
                                             rangEch75 = 15,
@@ -458,12 +527,12 @@ class RecupererExplicationsFormationServiceTest {
                                 ),
                         ),
                     "fl0003" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
                                     moyenneAutoEvalue = 14.5f,
                                     rangs =
-                                        ExplicationsSuggestion.RangsEchellons(
+                                        ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
                                             rangEch50 = 14,
                                             rangEch75 = 16,
@@ -479,15 +548,16 @@ class RecupererExplicationsFormationServiceTest {
                                 ),
                         ),
                     "fl0004" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812"),
                             formationsSimilaires = listOf("fl12", "fl79"),
                         ),
                     "fl0005" to
-                        ExplicationsSuggestion(
+                        ExplicationsSuggestionEtExemplesMetiers(
                             interetsEtDomainesChoisis = listOf("T_ITM_723", "T_ROME_1959553899"),
                             formationsSimilaires = listOf("fl1", "fl7", "fl12"),
                         ),
+                    "fl0006" to ExplicationsSuggestionEtExemplesMetiers(exemplesDeMetiers = listOf("MET_12", "MET_534", "MET_96")),
                 )
             given(baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(listOf("Général", "STMG", "P"))).willReturn(
                 listOf(bacGeneral, bacPro, bacSTMG),
@@ -515,7 +585,12 @@ class RecupererExplicationsFormationServiceTest {
                     Formation(id = "fl7", nom = "L1 - Philosophie"),
                 ),
             )
-            val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005")
+            val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005", "fl0006")
+            val metier12 = mock(MetierDetaille::class.java)
+            val metier534 = mock(MetierDetaille::class.java)
+            val metier96 = mock(MetierDetaille::class.java)
+            val exemplesDeMetiers = listOf(metier12, metier534, metier96)
+            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -524,101 +599,121 @@ class RecupererExplicationsFormationServiceTest {
             ).willReturn(explications)
 
             // When
-            val resultat = recupererExplicationsFormationService.recupererExplications(profilEleve = profil, idsFormations = idsFormations)
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idsFormations = idsFormations,
+                )
 
             // Then
             val attendu =
                 mapOf(
                     "fl0001" to
-                        ExplicationsSuggestionDetaillees(
-                            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            alternance = ChoixAlternance.TRES_INTERESSE,
-                            specialitesChoisies =
-                                listOf(
-                                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                                ),
+                        Pair(
+                            ExplicationsSuggestionDetaillees(
+                                dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                                alternance = ChoixAlternance.TRES_INTERESSE,
+                                specialitesChoisies =
+                                    listOf(
+                                        AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
+                                        AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
+                                        AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                                    ),
+                            ),
+                            emptyList(),
                         ),
                     "fl0002" to
-                        ExplicationsSuggestionDetaillees(
-                            geographique =
-                                listOf(
-                                    ExplicationGeographique(
-                                        ville = "Paris",
-                                        distanceKm = 1,
+                        Pair(
+                            ExplicationsSuggestionDetaillees(
+                                geographique =
+                                    listOf(
+                                        ExplicationGeographique(
+                                            ville = "Paris",
+                                            distanceKm = 1,
+                                        ),
+                                        ExplicationGeographique(
+                                            ville = "Nantes",
+                                            distanceKm = 10,
+                                        ),
+                                        ExplicationGeographique(
+                                            ville = "Melun",
+                                            distanceKm = 12,
+                                        ),
                                     ),
-                                    ExplicationGeographique(
-                                        ville = "Nantes",
-                                        distanceKm = 10,
+                                explicationAutoEvaluationMoyenne =
+                                    ExplicationAutoEvaluationMoyenne(
+                                        moyenneAutoEvalue = 14.5f,
+                                        hautIntervalleNotes = 7.5f,
+                                        basIntervalleNotes = 5f,
+                                        baccalaureatUtilise = bacGeneral,
                                     ),
-                                    ExplicationGeographique(
-                                        ville = "Melun",
-                                        distanceKm = 12,
+                                explicationTypeBaccalaureat =
+                                    ExplicationTypeBaccalaureat(
+                                        baccalaureat = bacPro,
+                                        pourcentage = 30,
                                     ),
-                                ),
-                            explicationAutoEvaluationMoyenne =
-                                ExplicationAutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
-                                    hautIntervalleNotes = 7.5f,
-                                    basIntervalleNotes = 5f,
-                                    baccalaureatUtilise = bacGeneral,
-                                ),
-                            explicationTypeBaccalaureat =
-                                ExplicationTypeBaccalaureat(
-                                    baccalaureat = bacPro,
-                                    pourcentage = 30,
-                                ),
+                            ),
+                            emptyList(),
                         ),
                     "fl0003" to
-                        ExplicationsSuggestionDetaillees(
-                            explicationAutoEvaluationMoyenne =
-                                ExplicationAutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
-                                    hautIntervalleNotes = 8f,
-                                    basIntervalleNotes = 6f,
-                                    baccalaureatUtilise = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
-                                ),
-                            explicationTypeBaccalaureat =
-                                ExplicationTypeBaccalaureat(
-                                    baccalaureat = bacGeneral,
-                                    pourcentage = 18,
-                                ),
+                        Pair(
+                            ExplicationsSuggestionDetaillees(
+                                explicationAutoEvaluationMoyenne =
+                                    ExplicationAutoEvaluationMoyenne(
+                                        moyenneAutoEvalue = 14.5f,
+                                        hautIntervalleNotes = 8f,
+                                        basIntervalleNotes = 6f,
+                                        baccalaureatUtilise = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                                    ),
+                                explicationTypeBaccalaureat =
+                                    ExplicationTypeBaccalaureat(
+                                        baccalaureat = bacGeneral,
+                                        pourcentage = 18,
+                                    ),
+                            ),
+                            emptyList(),
                         ),
                     "fl0004" to
-                        ExplicationsSuggestionDetaillees(
-                            interets =
-                                listOf(
-                                    InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
-                                    InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
-                                ),
-                            domaines =
-                                listOf(
-                                    Domaine(id = "T_ITM_1169", nom = "défense nationale"),
-                                ),
-                            formationsSimilaires =
-                                listOf(
-                                    Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
-                                    Formation(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
-                                ),
+                        Pair(
+                            ExplicationsSuggestionDetaillees(
+                                interets =
+                                    listOf(
+                                        InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
+                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
+                                    ),
+                                domaines =
+                                    listOf(
+                                        Domaine(id = "T_ITM_1169", nom = "défense nationale"),
+                                    ),
+                                formationsSimilaires =
+                                    listOf(
+                                        Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                        Formation(id = "fl79", nom = "L1 - Gestion - en apprentissage"),
+                                    ),
+                            ),
+                            emptyList(),
                         ),
                     "fl0005" to
-                        ExplicationsSuggestionDetaillees(
-                            interets =
-                                listOf(
-                                    InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
-                                ),
-                            domaines =
-                                listOf(
-                                    Domaine(id = "T_ITM_723", nom = "arts du spectacle"),
-                                ),
-                            formationsSimilaires =
-                                listOf(
-                                    Formation(id = "fl1", nom = "L1 - Psychologie"),
-                                    Formation(id = "fl7", nom = "L1 - Philosophie"),
-                                    Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
-                                ),
+                        Pair(
+                            ExplicationsSuggestionDetaillees(
+                                interets =
+                                    listOf(
+                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
+                                    ),
+                                domaines =
+                                    listOf(
+                                        Domaine(id = "T_ITM_723", nom = "arts du spectacle"),
+                                    ),
+                                formationsSimilaires =
+                                    listOf(
+                                        Formation(id = "fl1", nom = "L1 - Psychologie"),
+                                        Formation(id = "fl7", nom = "L1 - Philosophie"),
+                                        Formation(id = "fl12", nom = "CS - Sommellerie - en apprentissage"),
+                                    ),
+                            ),
+                            emptyList(),
                         ),
+                    "fl0006" to Pair(ExplicationsSuggestionDetaillees(), exemplesDeMetiers),
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
         }
