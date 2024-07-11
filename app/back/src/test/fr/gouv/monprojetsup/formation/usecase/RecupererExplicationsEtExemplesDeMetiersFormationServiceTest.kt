@@ -587,8 +587,11 @@ class RecupererExplicationsEtExemplesDeMetiersFormationServiceTest {
             )
             val idsFormations = listOf("fl0001", "fl0002", "fl0003", "fl0004", "fl0005", "fl0006")
             val metier12 = mock(MetierDetaille::class.java)
+            given(metier12.id).willReturn("MET_12")
             val metier534 = mock(MetierDetaille::class.java)
+            given(metier534.id).willReturn("MET_534")
             val metier96 = mock(MetierDetaille::class.java)
+            given(metier96.id).willReturn("MET_96")
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
             given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
             given(

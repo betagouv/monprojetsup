@@ -56,6 +56,8 @@ class RecupererExplicationsEtExemplesMetiersFormationService(
                     explicationsParFormation.mapNotNull { it.value?.typeBaccalaureat?.nomBaccalaureat }
             ).distinct()
         val baccalaureats = baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats)
+        val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }.distinct()
+        val metiers = metierRepository.recupererLesMetiersDetailles(idsDesMetiers)
         return idsFormations.associateWith {
             val explications: ExplicationsSuggestionEtExemplesMetiers? = explicationsParFormation[it]
             ExplicationsSuggestionDetaillees(
@@ -92,8 +94,10 @@ class RecupererExplicationsEtExemplesMetiersFormationService(
                         )
                     },
             ) to (
-                explications?.exemplesDeMetiers?.let { metiers ->
-                    metierRepository.recupererLesMetiersDetailles(metiers)
+                explications?.exemplesDeMetiers?.let { idsMetiers ->
+                    idsMetiers.mapNotNull { idMetier ->
+                        metiers.firstOrNull { it.id == idMetier }
+                    }
                 } ?: emptyList()
             )
         }

@@ -68,6 +68,6 @@ class FormationController(
     }
 
     companion object {
-        private const val NOMBRE_FORMATIONS_SUGGEREES = 50
+        private const val NOMBRE_FORMATIONS_SUGGEREES = 30
     }
 }

@@ -115,7 +115,7 @@ class FormationControllerTest(
         }
         """.trimIndent()
 
-    val explications =
+    private val explications =
         ExplicationsSuggestionDetaillees(
             geographique =
                 listOf(
@@ -272,7 +272,7 @@ class FormationControllerTest(
         fun `si le service réussi, doit retourner 200 avec une liste des fiches formations suggérées`() {
             // Given
             given(
-                suggestionsFormationsService.suggererFormations(profilEleve = unProfil, deLIndex = 0, aLIndex = 50),
+                suggestionsFormationsService.suggererFormations(profilEleve = unProfil, deLIndex = 0, aLIndex = 30),
             ).willReturn(
                 listOf(
                     ficheFormation,
@@ -525,7 +525,7 @@ class FormationControllerTest(
                     msg = "Erreur lors de la connexion à l'API de suggestions",
                     origine = ConnectException("Connection refused"),
                 )
-            Mockito.`when`(suggestionsFormationsService.suggererFormations(unProfil, 0, 50)).thenThrow(uneException)
+            Mockito.`when`(suggestionsFormationsService.suggererFormations(unProfil, 0, 30)).thenThrow(uneException)
 
             // when-then
             mvc.perform(
