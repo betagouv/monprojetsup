@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.application.dto
 
+import fr.gouv.monprojetsup.commun.application.dto.LienDTO
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.Domaine
@@ -8,14 +9,13 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetail
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.Formation
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
+import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 
 data class FormationAvecExplicationsDTO(
     val formation: FicheFormationDTO,
@@ -41,9 +41,9 @@ data class FormationAvecExplicationsDTO(
         val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmisDTO?,
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
-        val liens: List<LiensDTO>,
+        val liens: List<LienDTO>,
         val villes: List<String>,
-        val metiers: List<MetierDetailleDTO>,
+        val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
     ) {
         constructor(ficheFormation: FicheFormation) : this(
@@ -63,11 +63,11 @@ data class FormationAvecExplicationsDTO(
                     is FicheFormation.FicheFormationSansProfil -> null
                 },
             descriptifConseils = ficheFormation.descriptifConseils,
-            liens = ficheFormation.liens.map { LiensDTO(it) },
+            liens = ficheFormation.liens.map { LienDTO(it) },
             villes = ficheFormation.communes,
             metiers =
                 ficheFormation.metiers.map { metier ->
-                    MetierDetailleDTO(metier)
+                    MetierDTO(metier)
                 },
             tauxAffinite =
                 when (ficheFormation) {
@@ -85,16 +85,6 @@ data class FormationAvecExplicationsDTO(
                     CriteresAnalyseCandidatureDTO(it)
                 },
         )
-
-        data class LiensDTO(
-            val nom: String,
-            val url: String,
-        ) {
-            constructor(lien: Lien) : this(
-                nom = lien.nom,
-                url = lien.url,
-            )
-        }
 
         data class CriteresAnalyseCandidatureDTO(
             val nom: String,
@@ -128,20 +118,6 @@ data class FormationAvecExplicationsDTO(
                         nombreAdmis = totalAdmisPourUnBaccalaureat.nombreAdmis,
                     )
             }
-        }
-
-        data class MetierDetailleDTO(
-            val id: String,
-            val nom: String,
-            val descriptif: String?,
-            val liens: List<LiensDTO>,
-        ) {
-            constructor(metier: MetierDetaille) : this(
-                id = metier.id,
-                nom = metier.nom,
-                descriptif = metier.descriptif,
-                liens = metier.liens.map { LiensDTO(it) },
-            )
         }
 
         data class MoyenneGeneraleDesAdmisDTO(
@@ -227,7 +203,7 @@ data class FormationAvecExplicationsDTO(
         val id: String,
         val nom: String,
     ) {
-        constructor(formation: Formation) : this(id = formation.id, nom = formation.nom)
+        constructor(formationCourte: FormationCourte) : this(id = formationCourte.id, nom = formationCourte.nom)
     }
 
     data class AffiniteSpecialiteDTO(

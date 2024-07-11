@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
 enum class ChoixDureeEtudesPrevue(val jsonValeur: String, val apiSuggestionValeur: String) {
-    OPTIONS_OUVERTES(jsonValeur = "options_ouvertes", apiSuggestionValeur = "indiff"),
+    INDIFFERENT(jsonValeur = "indifferent", apiSuggestionValeur = "indiff"),
     COURTE(jsonValeur = "courte", apiSuggestionValeur = "court"),
     LONGUE(jsonValeur = "longue", apiSuggestionValeur = "long"),
     AUCUNE_IDEE(jsonValeur = "aucune_idee", apiSuggestionValeur = ""),

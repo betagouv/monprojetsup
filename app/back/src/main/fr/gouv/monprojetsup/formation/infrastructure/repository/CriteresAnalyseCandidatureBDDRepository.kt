@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.port.CriteresAnalyseCandidatureRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.CritereAnalyseCandidatureEntity
 import org.springframework.stereotype.Repository
@@ -18,7 +18,7 @@ class CriteresAnalyseCandidatureBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesCriteresDeFormations(formations: List<FormationDetaillee>): Map<String, List<CritereAnalyseCandidature>> {
+    override fun recupererLesCriteresDeFormations(formations: List<Formation>): Map<String, List<CritereAnalyseCandidature>> {
         val criteresAnalyseCandidature = criteresAnalyseCandidatureJPARepository.findAll()
         return formations.associate {
             it.id to

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,13 +19,13 @@ class MetiersTriesParProfilBuilderTest {
     @InjectMocks
     lateinit var builder: MetiersTriesParProfilBuilder
 
-    private val metierDetaille1 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_1") }
-    private val metierDetaille2 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_2") }
-    private val metierDetaille3 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_3") }
-    private val metierDetaille4 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_4") }
-    private val metierDetaille5 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_5") }
-    private val metierDetaille6 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_6") }
-    private val metierDetaille7 = mock(MetierDetaille::class.java).apply { given(id).willReturn("MET_7") }
+    private val metierDetaille1 = mock(Metier::class.java).apply { given(id).willReturn("MET_1") }
+    private val metierDetaille2 = mock(Metier::class.java).apply { given(id).willReturn("MET_2") }
+    private val metierDetaille3 = mock(Metier::class.java).apply { given(id).willReturn("MET_3") }
+    private val metierDetaille4 = mock(Metier::class.java).apply { given(id).willReturn("MET_4") }
+    private val metierDetaille5 = mock(Metier::class.java).apply { given(id).willReturn("MET_5") }
+    private val metierDetaille6 = mock(Metier::class.java).apply { given(id).willReturn("MET_6") }
+    private val metierDetaille7 = mock(Metier::class.java).apply { given(id).willReturn("MET_7") }
 
     @BeforeEach
     fun setup() {

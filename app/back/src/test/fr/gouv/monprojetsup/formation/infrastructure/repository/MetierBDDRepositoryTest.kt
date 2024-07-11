@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,7 +45,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
         // Then
         val attendu =
             listOf(
-                MetierDetaille(
+                Metier(
                     id = "MET003",
                     nom = "Architecte",
                     descriptif =
@@ -62,7 +62,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                 ),
-                MetierDetaille(
+                Metier(
                     id = "MET002",
                     nom = "Fleuriste événementiel",
                     descriptif = null,
@@ -78,7 +78,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                 ),
-                MetierDetaille(
+                Metier(
                     id = "MET001",
                     nom = "Fleuriste",
                     descriptif =
@@ -103,7 +103,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
         val result = metierBDDRepository.recupererLesMetiersDetailles(ids)
 
         // Then
-        val attendu = emptyList<MetierDetaille>()
+        val attendu = emptyList<Metier>()
         assertThat(result).isEqualTo(attendu)
     }
 }

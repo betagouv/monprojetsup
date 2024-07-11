@@ -39,7 +39,7 @@ data class ExplicationsSuggestionDetaillees(
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     val alternance: ChoixAlternance? = null,
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
-    val formationsSimilaires: List<Formation> = emptyList(),
+    val formationsSimilaires: List<FormationCourte> = emptyList(),
     val interets: List<InteretSousCategorie> = emptyList(),
     val domaines: List<Domaine> = emptyList(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,

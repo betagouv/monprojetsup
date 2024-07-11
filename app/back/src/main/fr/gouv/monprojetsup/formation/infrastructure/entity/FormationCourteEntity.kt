@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
@@ -12,7 +12,7 @@ import org.hibernate.annotations.Type
 
 @Entity
 @Table(name = "formation")
-class FormationEntity {
+class FormationCourteEntity {
     @Id
     @Column(name = "id", nullable = false)
     lateinit var id: String
@@ -20,8 +20,8 @@ class FormationEntity {
     @Column(name = "label", nullable = false)
     lateinit var label: String
 
-    fun toFormation() =
-        Formation(
+    fun toFormationCourte() =
+        FormationCourte(
             id = id,
             nom = label,
         )
@@ -61,8 +61,8 @@ class FormationDetailleeEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
-    fun toFormationDetaille() =
-        FormationDetaillee(
+    fun toFormation() =
+        Formation(
             id = id,
             nom = label,
             descriptifGeneral = descriptifGeneral,

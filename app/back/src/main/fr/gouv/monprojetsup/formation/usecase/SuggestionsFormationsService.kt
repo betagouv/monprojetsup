@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import org.springframework.stereotype.Service
@@ -27,10 +28,15 @@ class SuggestionsFormationsService(
         } else {
             recupererFormationsService.recupererFichesFormationPourProfil(
                 profilEleve = profilEleve,
-                affinitesFormationEtMetier = affinitesFormationEtMetier,
+                suggestionsPourUnProfil = affinitesFormationEtMetier,
                 idsFormations = idsDesFormationsTries,
             )
         }
+    }
+
+    @Throws(MonProjetSupInternalErrorException::class)
+    fun recupererToutesLesSuggestionsPourUnProfil(profilEleve: ProfilEleve): SuggestionsPourUnProfil {
+        return suggestionHttpClient.recupererLesSuggestions(profilEleve)
     }
 
     private fun recupererLesIdsDesFormationsTries(

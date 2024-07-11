@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.FormationDetailleeEntity
 import org.slf4j.Logger
@@ -19,7 +19,7 @@ class FormationBDDRepository(
 ) : FormationRepository {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
-    override fun recupererUneFormationAvecSesMetiers(idFormation: String): FormationDetaillee {
+    override fun recupererUneFormationAvecSesMetiers(idFormation: String): Formation {
         val formation: FormationDetailleeEntity =
             formationDetailleeJPARepository.findById(idFormation).getOrElse {
                 throw MonProjetSupNotFoundException(
@@ -27,30 +27,30 @@ class FormationBDDRepository(
                     msg = "La formation $idFormation n'existe pas",
                 )
             }
-        return formation.toFormationDetaille()
+        return formation.toFormation()
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<FormationDetaillee> {
+    override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<Formation> {
         val formations = formationDetailleeJPARepository.findAllByIdIn(idsFormations)
         return idsFormations.mapNotNull { idFormation ->
             val formation = formations.firstOrNull { formation -> formation.id == idFormation }
             if (formation == null) {
                 logguerFormationInconnue(idFormation)
             }
-            formation?.toFormationDetaille()
+            formation?.toFormation()
         }
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<Formation> {
+    override fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte> {
         val formations = formationJPARepository.findAllByIdIn(idsFormations)
         return idsFormations.mapNotNull { idFormation ->
             val formation = formations.firstOrNull { formation -> formation.id == idFormation }
             if (formation == null) {
                 logguerFormationInconnue(idFormation)
             }
-            formation?.toFormation()
+            formation?.toFormationCourte()
         }
     }
 

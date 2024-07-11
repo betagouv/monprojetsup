@@ -1,20 +1,20 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationDetaillee
-import fr.gouv.monprojetsup.formation.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.MetierDetaille
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -40,7 +40,7 @@ class RecupererFormationServiceTest {
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
 
     @Mock
-    lateinit var recupererExplicationsEtExemplesMetiersFormationService: RecupererExplicationsEtExemplesMetiersFormationService
+    lateinit var recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService
 
     @Mock
     lateinit var statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService
@@ -59,8 +59,8 @@ class RecupererFormationServiceTest {
         MockitoAnnotations.openMocks(this)
     }
 
-    private val formationDetaillee =
-        FormationDetaillee(
+    private val formation =
+        Formation(
             id = "fl0001",
             nom = "CAP Fleuriste",
             descriptifGeneral = "Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les ...",
@@ -89,10 +89,10 @@ class RecupererFormationServiceTest {
         @Test
         fun `doit retourner une fiche formation sans le profil`() {
             // Given
-            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formationDetaillee)).willReturn(
+            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
             given(recupererCommunesDUneFormationService.recupererNomCommunes(idFormation = "fl0001")).willReturn(
                 listOf("Paris", "Marseille", "Caen"),
             )
@@ -143,10 +143,10 @@ class RecupererFormationServiceTest {
         @Test
         fun `ne doit pas appeler le suggestionHttpClient`() {
             // Given
-            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formationDetaillee)).willReturn(
+            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
             given(recupererCommunesDUneFormationService.recupererNomCommunes("fl0001")).willReturn(
                 listOf("Paris", "Marseille", "Caen"),
             )
@@ -174,7 +174,7 @@ class RecupererFormationServiceTest {
                 id = "adcf627c-36dd-4df5-897b-159443a6d49c",
                 classe = ChoixNiveau.TERMINALE,
                 bac = "Générale",
-                dureeEtudesPrevue = ChoixDureeEtudesPrevue.OPTIONS_OUVERTES,
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesPreferees = listOf("Caen"),
                 specialites = listOf("1001", "1049"),
@@ -200,10 +200,10 @@ class RecupererFormationServiceTest {
         @Test
         fun `doit retourner une fiche formation avec les explications`() {
             // Given
-            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formationDetaillee)).willReturn(
+            given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formationDetaillee)
+            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
             given(recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites("fl0001", listOf("Caen"))).willReturn(
                 listOf("Caen", "Paris", "Marseille"),
             )
@@ -221,13 +221,13 @@ class RecupererFormationServiceTest {
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
             val metiersSuggeres =
                 listOf(
-                    MetierDetaille(
+                    Metier(
                         id = "MET_456",
                         nom = "Fleuriste bis",
                         descriptif = "Descriptif MET_456",
                         liens = emptyList(),
                     ),
-                    MetierDetaille(
+                    Metier(
                         id = "MET_001",
                         nom = "Fleuriste",
                         descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
@@ -242,7 +242,7 @@ class RecupererFormationServiceTest {
                 )
             val explicationsEtExemplesMetiers = Pair(mock(ExplicationsSuggestionDetaillees::class.java), metiersSuggeres)
             given(
-                recupererExplicationsEtExemplesMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                recupererExplicationsEtExemplesMetiersPourFormationService.recupererExplicationsEtExemplesDeMetiers(
                     profilEleve = profil,
                     idFormation = "fl0001",
                 ),
@@ -262,7 +262,7 @@ class RecupererFormationServiceTest {
                 ),
             ).willReturn(
                 listOf(
-                    MetierDetaille(
+                    Metier(
                         id = "MET_002",
                         nom = "Fleuriste événementiel",
                         descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
@@ -274,7 +274,7 @@ class RecupererFormationServiceTest {
                                 ),
                             ),
                     ),
-                    MetierDetaille(
+                    Metier(
                         id = "MET_456",
                         nom = "Fleuriste bis",
                         descriptif = "Descriptif MET_456",
@@ -306,7 +306,7 @@ class RecupererFormationServiceTest {
                         ),
                     metiersTriesParAffinites =
                         listOf(
-                            MetierDetaille(
+                            Metier(
                                 id = "MET_002",
                                 nom = "Fleuriste événementiel",
                                 descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
@@ -318,7 +318,7 @@ class RecupererFormationServiceTest {
                                         ),
                                     ),
                             ),
-                            MetierDetaille(
+                            Metier(
                                 id = "MET_456",
                                 nom = "Fleuriste bis",
                                 descriptif = "Descriptif MET_456",
