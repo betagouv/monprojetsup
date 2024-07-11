@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
@@ -59,11 +59,11 @@ public class AffinityEvaluator {
      */
     private void addAlreadyKnown(String key) {
         alreadyKnown.add(key);
-        String grp = ServerData.getGroup(key);
+        String grp = SuggestionsData.getGroup(key);
         if (grp != null) {
             alreadyKnown.add(grp);
         }
-        Collection<String> grps = ServerData.getChildrenOfGroup(key);
+        Collection<String> grps = SuggestionsData.getChildrenOfGroup(key);
         if (grps != null) {
             alreadyKnown.addAll(grps);
         }
@@ -72,7 +72,7 @@ public class AffinityEvaluator {
     private void addRejected(String key) {
         rejected.add(key);
         //NB: we do NOT generalize  using flGroups
-        Collection<String> grps = ServerData.getChildrenOfGroup(key);
+        Collection<String> grps = SuggestionsData.getChildrenOfGroup(key);
         if (grps != null) {
             rejected.addAll(grps);
         }
@@ -98,7 +98,7 @@ public class AffinityEvaluator {
 
         //precomputing candidats for filieres similaires
         for (String fl : flApproved) {
-            Map<String, Integer> sim = ServerData.getFilieresSimilaires(fl, pf.bacIndex());
+            Map<String, Integer> sim = SuggestionsData.getFilieresSimilaires(fl, pf.bacIndex());
             if (sim != null) {
                 candidatsSimilaires.addAll(sim.keySet());
             }
@@ -111,7 +111,7 @@ public class AffinityEvaluator {
         if(pf.interests() != null) {
             pf.interests().forEach(key -> {
                 nonZeroScores.add(key);
-                nonZeroScores.addAll(ServerData.getInterestsExpansion(key));
+                nonZeroScores.addAll(SuggestionsData.getInterestsExpansion(key));
             });
         }
 
@@ -309,8 +309,8 @@ public class AffinityEvaluator {
 
     private double getBonusTypeBac(String grp, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
-        Integer nbAdmisTousBac = ServerData.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
-        Integer nbAdmisBac = ServerData.getNbAdmis(grp, pf.bac());
+        Integer nbAdmisTousBac = SuggestionsData.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
+        Integer nbAdmisBac = SuggestionsData.getNbAdmis(grp, pf.bac());
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = 1.0 * nbAdmisBac / nbAdmisTousBac;
@@ -330,7 +330,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
-        Pair<String, Statistique> stats = ServerData.getStatsBac(fl, pf.bac());
+        Pair<String, Statistique> stats = SuggestionsData.getStatsBac(fl, pf.bac());
         String moyBacEstimee = pf.moygen();
         return getBonusNotes(expl, weight, stats, moyBacEstimee);
     }
@@ -454,7 +454,7 @@ public class AffinityEvaluator {
 
     private double getBonusDuree(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
-        int duree = ServerData.getDuree(fl);
+        int duree = SuggestionsData.getDuree(fl);
         final double result;
         switch (pf.duree().toLowerCase()) {
             case "court" -> {
@@ -486,7 +486,7 @@ public class AffinityEvaluator {
     ) {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
-        Map<String, Integer> sim = ServerData.getFilieresSimilaires(fl, bacIndex);
+        Map<String, Integer> sim = SuggestionsData.getFilieresSimilaires(fl, bacIndex);
         if (sim == null) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
@@ -552,7 +552,7 @@ public class AffinityEvaluator {
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
-                        + ServerData.getDebugLabel(e.getKey()))
+                        + SuggestionsData.getDebugLabel(e.getKey()))
                 .collect(Collectors.joining(
                         "\n\t", "\n\t", "\n"
                 )) + ").";
@@ -648,7 +648,7 @@ public class AffinityEvaluator {
                 }
             }
             if (iMtCod != null) {
-                Double stat = ServerData.getStatsSpecialite(fl, iMtCod);
+                Double stat = SuggestionsData.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {
                     stats.put(s, stat);
                 }
@@ -693,9 +693,9 @@ public class AffinityEvaluator {
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
         if (key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
-            candidates.addAll(ServerData.getMetiersFromSecteur(key));
+            candidates.addAll(SuggestionsData.getMetiersFromSecteur(key));
         } else {
-            candidates.addAll(ServerData.getAllCandidatesMetiers(key));
+            candidates.addAll(SuggestionsData.getAllCandidatesMetiers(key));
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);

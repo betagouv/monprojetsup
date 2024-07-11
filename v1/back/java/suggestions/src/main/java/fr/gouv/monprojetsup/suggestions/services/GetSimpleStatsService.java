@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
 import fr.gouv.monprojetsup.suggestions.server.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
@@ -33,7 +33,7 @@ public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.R
 
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
-        @NotNull StatsContainers.SimpleStatGroupParBac stats = ServerData.getSimpleGroupStats(
+        @NotNull StatsContainers.SimpleStatGroupParBac stats = SuggestionsData.getSimpleGroupStats(
                 req.bac(),
                 req.key
         );

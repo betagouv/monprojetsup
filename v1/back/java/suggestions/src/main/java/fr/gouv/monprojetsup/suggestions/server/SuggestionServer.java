@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class SuggestionServer extends Server {
         config = SuggestionsServerConfig.load();
 
         LOGGER.info("Loading data for suggestion Server...");
-        ServerData.load();
+        SuggestionsData.load();
 
         LOGGER.info("Initializing details ");
         AlgoSuggestions.initialize();

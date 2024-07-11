@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 import fr.gouv.monprojetsup.suggestions.data.Constants;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.distances.Distances;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.Distance;
@@ -43,10 +43,10 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
         List<Formation> fors = Collections.emptyList();
         ///attention aux groupes
         if (flKey.startsWith(FILIERE_PREFIX)) {
-            fors = ServerData.getFormationsFromFil(flKey);
+            fors = SuggestionsData.getFormationsFromFil(flKey);
         } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
             int gTaCod = Integer.parseInt(flKey.substring(2));
-            Formation f = ServerData.getFormation(gTaCod);
+            Formation f = SuggestionsData.getFormation(gTaCod);
             if (f != null) {
                 fors = List.of(f);
             }

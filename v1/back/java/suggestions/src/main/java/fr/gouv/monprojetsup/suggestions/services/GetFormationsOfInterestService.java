@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
@@ -28,7 +28,7 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
                                 .flatMap(key ->
                                         ExplanationGeo
                                                 .getGeoExplanations(
-                                                        ServerData.getChildrenOfGroup(key),
+                                                        SuggestionsData.getChildrenOfGroup(key),
                                                         city,
                                                         maxFormationsPerFiliere,
                                                         CachedGeoExplanations.distanceCaches

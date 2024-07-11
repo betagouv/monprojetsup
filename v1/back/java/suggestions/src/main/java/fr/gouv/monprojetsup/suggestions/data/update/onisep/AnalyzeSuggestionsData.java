@@ -2,18 +2,17 @@ package fr.gouv.monprojetsup.suggestions.data.update.onisep;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.data.Constants;
 import fr.gouv.monprojetsup.suggestions.data.DataSources;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
-import fr.gouv.monprojetsup.suggestions.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.suggestions.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.suggestions.data.update.psup.PsupData;
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
-import fr.gouv.monprojetsup.suggestions.data.Constants;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,9 +28,7 @@ public class AnalyzeSuggestionsData {
 
     public static void main(String[] args) throws Exception {
 
-        DataServerConfig.load();
-
-        ServerData.load();
+        SuggestionsData.load();
 
         AlgoSuggestions.initialize();
 
@@ -71,7 +68,7 @@ public class AnalyzeSuggestionsData {
                         first = false;
                     } else {
                         List<String> vals = gson.fromJson(val, tt);
-                        val labels = vals.stream().map(ServerData::getDebugLabel).sorted().toList();
+                        val labels = vals.stream().map(SuggestionsData::getDebugLabel).sorted().toList();
                         csv.append("\"" + String.join("\n", labels) + "\"");
                     }
                 }
@@ -97,7 +94,7 @@ public class AnalyzeSuggestionsData {
                 MetiersScrapped.class
         );
 
-        Descriptifs descriptifs1 = ServerData.getDescriptifs();
+        Descriptifs descriptifs1 = SuggestionsData.getDescriptifs();
 
         val psupData =  Serialisation.fromZippedJson(
                 DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
@@ -118,7 +115,7 @@ public class AnalyzeSuggestionsData {
                 if (descriptif1 != null) {
                     texts.add(new MlData.Data("descriptifs_onisep", descriptif1));
                 }
-                val formations = ServerData.getFormationsFromFil(key);
+                val formations = SuggestionsData.getFormationsFromFil(key);
                 formations.forEach(f -> {
                     val descriptif2 = descriptifsIndexedByGta.get(f.gTaCod);
                     if (descriptif2 != null) {
@@ -127,7 +124,7 @@ public class AnalyzeSuggestionsData {
                         texts.add(new MlData.Data("descriptifs_psup_debouches", descriptif2.debouches()));
                     }
                 });
-                datas.add(new MlData(key, ServerData.getLabel(key), texts));
+                datas.add(new MlData(key, SuggestionsData.getLabel(key), texts));
             }
 
         });
@@ -156,7 +153,7 @@ public class AnalyzeSuggestionsData {
                 if (scrapped != null) {
                     texts.add(new MlData.Data(DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH, scrapped));
                 }
-                datas.add(new MlData(key, ServerData.getLabel(key), texts));
+                datas.add(new MlData(key, SuggestionsData.getLabel(key), texts));
             }
 
         });
@@ -166,13 +163,13 @@ public class AnalyzeSuggestionsData {
         Map<String, List<String>> tags = new HashMap<>();
         AlgoSuggestions.edgesKeys.keys().forEach(key -> {
             if (Helpers.isTheme(key) || Helpers.isInteret(key)) {
-                tags.computeIfAbsent(ServerData.getLabel(key), k -> new ArrayList<>()).add(key);
+                tags.computeIfAbsent(SuggestionsData.getLabel(key), k -> new ArrayList<>()).add(key);
             }
         });
         Serialisation.toJsonFile("ml_tags.json", tags, true);
 
 
-        val gtaToFil = ServerData.getFormationTofilieres();
+        val gtaToFil = SuggestionsData.getFormationTofilieres();
         List<Set<String>> voeuxParCandidat =
                 psupData.voeuxParCandidat().stream().map(
                         voeux -> voeux.stream().map(
@@ -190,14 +187,14 @@ public class AnalyzeSuggestionsData {
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> ServerData.getDebugLabel(e.getKey()))
+                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes.json",
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> ServerData.getDebugLabel(e.getKey()))
+                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
@@ -205,14 +202,14 @@ public class AnalyzeSuggestionsData {
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || Helpers.isMetier(f)))
-                        .map(e -> ServerData.getDebugLabel(e.getKey()))
+                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes_ni_formation.json",
                 AlgoSuggestions.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || Helpers.isFiliere(f)))
-                        .map(e -> ServerData.getDebugLabel(e.getKey()))
+                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
@@ -226,7 +223,7 @@ public class AnalyzeSuggestionsData {
         Map<String, String> metiersSansFormations = edgesKeys.edges().entrySet().stream()
                 .filter(e -> Helpers.isMetier(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isFiliere))
-                .map(e -> Pair.of(e.getKey(), ServerData.getDebugLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), SuggestionsData.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -258,7 +255,7 @@ public class AnalyzeSuggestionsData {
         Map<String, String> formationsSansMetiers = edgesKeys.edges().entrySet().stream()
                 .filter(e -> Helpers.isFiliere(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isMetier))
-                .map(e -> Pair.of(e.getKey(), ServerData.getDebugLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), SuggestionsData.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("groupe") && !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -299,7 +296,7 @@ public class AnalyzeSuggestionsData {
     }
     private static void outputSemanticGraph() throws IOException {
         Edges edgesLabels = new Edges();
-        edgesLabels.createLabelledGraphFrom(edgesKeys, ServerData.getLabels());
+        edgesLabels.createLabelledGraphFrom(edgesKeys, SuggestionsData.getLabels());
         Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
     }
 
@@ -307,7 +304,7 @@ public class AnalyzeSuggestionsData {
         /* formations liés aux métiers de la santé */
         Serialisation.toJsonFile("relatedToHealth.json",
                 AlgoSuggestions.getRelatedToHealth()
-                        .stream().map(ServerData::getDebugLabel)
+                        .stream().map(SuggestionsData::getDebugLabel)
                         .toList()
                 , true);
 

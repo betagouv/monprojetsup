@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.analysis;
 
 import com.google.gson.Gson;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.data.ServerData.getDebugLabel;
+import static fr.gouv.monprojetsup.suggestions.data.SuggestionsData.getDebugLabel;
 import static java.lang.Math.min;
 import static java.lang.System.lineSeparator;
 
@@ -66,13 +66,13 @@ public record ReferenceCases(
 
     public static String toExplanationString2(List<String> interests, String sep) {
         return interests == null ? "" : interests.stream()
-                .map(ServerData::getDebugLabel)
+                .map(SuggestionsData::getDebugLabel)
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
     public static String toExplanations(List<String> list, String sep) {
         return list == null ? "" : list.stream()
-                .map(ServerData::getDebugLabel)
+                .map(SuggestionsData::getDebugLabel)
                 .reduce(sep + sep, (a, b) -> a + "\n" + sep + sep + b);
     }
 
@@ -139,7 +139,7 @@ public record ReferenceCases(
             fos.write(lineSeparator() + STAR_SEP + lineSeparator());
 
             val suggestions = result.suggestions();
-            fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> ServerData.getDebugLabel(e.fl()))
+            fos.write("Suggestions effectuées par l'algorithme:\n\n" + suggestions.stream().map(e -> SuggestionsData.getDebugLabel(e.fl()))
                     .collect(Collectors.joining("\n\t", "\t", "\n")));
 
             if (includeDetails) {
@@ -189,7 +189,7 @@ public record ReferenceCases(
 
         SuggestionServer.loadConfig();
 
-        ServerData.initStatistiques();
+        SuggestionsData.initStatistiques();
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
@@ -219,7 +219,7 @@ public record ReferenceCases(
             if(refCase.suggestions() != null) {
                 fos.append("\n\n" + STAR_SEP);
                 fos.append("Suggestions calculées par algorithme:\n\n").append(refCase.suggestions().stream()
-                        .map(e -> ServerData.getDebugLabel(e.fl()))
+                        .map(e -> SuggestionsData.getDebugLabel(e.fl()))
                         .collect(Collectors.joining("\n\t", "\t", "\n")));
             }
         }

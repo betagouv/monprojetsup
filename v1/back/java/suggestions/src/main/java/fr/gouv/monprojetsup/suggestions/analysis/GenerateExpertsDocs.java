@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.analysis;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +17,7 @@ public class GenerateExpertsDocs {
     public static void main(String[] args) throws Exception {
 
 
-        ServerData.initStatistiques();
+        SuggestionsData.initStatistiques();
 
 
         //load Map<String, ProfileDTO> profiles = new HashMap<>(); from profilsExperts.json
@@ -62,7 +62,7 @@ public class GenerateExpertsDocs {
     }
 
     private static List<String> toHumanReadable(List<String> filieres) {
-        return filieres.stream().map(f -> ServerData.getLabel(f,f)).toList();
+        return filieres.stream().map(f -> SuggestionsData.getLabel(f,f)).toList();
     }
 
 

@@ -6,21 +6,40 @@ import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Statistique;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.data.model.thematiques.Thematiques;
+import jakarta.annotation.PostConstruct;
 import lombok.val;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.isLas;
 
-public class ServerData {
-    public static int p90NbFormations;
-    public static int p50Capacity;
-    public static int p75Capacity;
-    public static int p90Capacity;
+@Component
+public class SuggestionsData {
+
+        private final Map<String,String> labels = new HashMap<>();
+
+    @PostConstruct
+    private void load() {
+        throw new NotImplementedException("Not implemented yet");
+    }
+
+    public String getLabel(String key, String key1) {
+            return labels.getOrDefault(key, key1);
+    }
+
+    public static String getLabel(String key) {
+        throw new NotImplementedException("Not implemented yet");
+    }
+
+    public static @NotNull Map<String, String> getLabels() {
+        /* statistiques.labels*/
+        throw new NotImplementedException("Not implemented yet");
+    }
 
     public static Collection<String> getChildrenOfGroup(String key) {
         //).reverseFlGroups.getOrDefault(key, List.of(key)
@@ -96,16 +115,16 @@ public class ServerData {
             val result = candidatesMetiersCache.get(key);
             if(result != null) return result;
             Set<String> candidates = new HashSet<>(
-                    ServerData.getCandidatesMetiers(key)
+                    SuggestionsData.getCandidatesMetiers(key)
             );
             if (isLas(key)) {
                 String key2 = getGenericFromLas(key);
                 if (key2 != null) {
-                    candidates.addAll(ServerData.getMetiersfromfiliere(key2));
-                    candidates.addAll(ServerData.getPassMetiers());
+                    candidates.addAll(SuggestionsData.getMetiersfromfiliere(key2));
+                    candidates.addAll(SuggestionsData.getPassMetiers());
                 }
             }
-            candidates.addAll(ServerData.getMetiersfromGroup(key));
+            candidates.addAll(SuggestionsData.getMetiersfromGroup(key));
             candidatesMetiersCache.put(key, candidates);
             return candidates;
     }
@@ -184,10 +203,6 @@ public class ServerData {
         throw new NotImplementedException("Not implemented yet");
     }
 
-    public static void load() {
-        throw new NotImplementedException("Not implemented yet");
-    }
-
     public static Descriptifs getDescriptifs() {
         /* UpdateFrontData.DataContainer.loadDescriptifs(
                 onisepData,
@@ -200,14 +215,6 @@ public class ServerData {
 
     public static Thematiques getThematiques() {
         /*Thematiques.load();*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static String getLabel(String key, String key1) {
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static String getLabel(String key) {
         throw new NotImplementedException("Not implemented yet");
     }
 
@@ -346,8 +353,4 @@ public class ServerData {
         throw new NotImplementedException("Not implemented yet");
     }
 
-    public static @NotNull Map<String, String> getLabels() {
-        /* statistiques.labels*/
-        throw new NotImplementedException("Not implemented yet");
-    }
 }

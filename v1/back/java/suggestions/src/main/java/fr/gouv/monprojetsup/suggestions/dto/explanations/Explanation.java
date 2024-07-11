@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ record ExplanationTag(List<Path> pathes) {
         return pathes.stream()
                 .filter(p -> p.nodes() != null && !p.nodes().isEmpty())
                 .sorted(Comparator.comparingDouble(Path::score).reversed())
-                .map(p -> df.format(p.score()) +  p.nodes().stream().map(ServerData::getDebugLabel).collect(Collectors.joining(" -> ")))
+                .map(p -> df.format(p.score()) +  p.nodes().stream().map(SuggestionsData::getDebugLabel).collect(Collectors.joining(" -> ")))
                 .collect(Collectors.joining("\n\t", "\t", "\n"));
     }
 
@@ -59,22 +59,22 @@ record ExplanationTagShort(List<String> ns) {
         String ssb = ns().stream()
                 .filter(s -> Helpers.isFiliere(s))
                 .sorted().map(
-                        ServerData::getDebugLabel
+                        SuggestionsData::getDebugLabel
                 ).collect(Collectors.joining(sep, "\t", "\n")) +
                 ns().stream()
                         .filter(s -> Helpers.isMetier(s))
                         .sorted().map(
-                                ServerData::getDebugLabel
+                                SuggestionsData::getDebugLabel
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
                 ns().stream()
                         .filter(s -> Helpers.isTheme(s))
                         .sorted().map(
-                                ServerData::getDebugLabel
+                                SuggestionsData::getDebugLabel
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
                 ns().stream()
                         .filter(s -> Helpers.isInteret(s))
                         .sorted().map(
-                                ServerData::getDebugLabel
+                                SuggestionsData::getDebugLabel
                         ).collect(Collectors.joining(sep, "\n\t", "\n"));
 
         return ssb;

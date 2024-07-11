@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.data.distances;
 
-import fr.gouv.monprojetsup.suggestions.data.ServerData;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
 import fr.gouv.monprojetsup.suggestions.data.tools.GeodeticDistance;
@@ -20,7 +20,7 @@ public class Distances {
         List<Coords> cities = favorites.stream().flatMap(
                 cityName -> cityClientKeyToCities.getOrDefault(cityName, List.of()).stream()).distinct().toList();
 
-        val formations = ServerData.getFormationsFromFil(flKey);
+        val formations = SuggestionsData.getFormationsFromFil(flKey);
 
         if (cities.isEmpty()) {
             val l = new ArrayList<>(formations);
