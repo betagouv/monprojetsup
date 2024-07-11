@@ -10,5 +10,4 @@ data class FormationDetaillee(
     val formationsAssociees: List<String>,
     val liens: List<Lien>,
     val valeurCriteresAnalyseCandidature: List<Int>,
-    val metiers: List<MetierDetaille>,
 )

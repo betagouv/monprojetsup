@@ -84,7 +84,6 @@ class RecupererFormationsServiceTest {
                     formationsAssociees = listOf("fl0004", "fl0003"),
                     liens = listOf(lien1, lien2),
                     valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
-                    metiers = listOf(metier123, metier234),
                 ),
                 FormationDetaillee(
                     id = "fl0003",
@@ -96,7 +95,6 @@ class RecupererFormationsServiceTest {
                     formationsAssociees = emptyList(),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
-                    metiers = listOf(metier534, metier123, metier234),
                 ),
             )
         given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
@@ -227,8 +225,6 @@ class RecupererFormationsServiceTest {
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
         val formationsAvecAffinites = listOf(formationAvecSonAffinite1, formationAvecSonAffinite2, formationAvecSonAffinite3)
         val affinitesFormationEtMetier = mock(SuggestionsPourUnProfil::class.java)
-        val metier234 = mock(MetierDetaille::class.java)
-        val metier123 = mock(MetierDetaille::class.java)
         val metier534 = mock(MetierDetaille::class.java)
         val metiersTriesParAffinites = listOf("MET_234", "MET_123", "MET_534")
         given(affinitesFormationEtMetier.formations).willReturn(formationsAvecAffinites)
@@ -248,7 +244,6 @@ class RecupererFormationsServiceTest {
                     formationsAssociees = listOf("fl0004", "fl0003"),
                     liens = listOf(lien1, lien2),
                     valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
-                    metiers = listOf(metier123, metier234),
                 ),
                 FormationDetaillee(
                     id = "fl0003",
@@ -260,7 +255,6 @@ class RecupererFormationsServiceTest {
                     formationsAssociees = emptyList(),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
-                    metiers = listOf(metier534, metier123, metier234),
                 ),
             )
         given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)

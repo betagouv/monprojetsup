@@ -73,27 +73,6 @@ class RecupererFormationServiceTest {
                     Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-formation/formations/cap-fleuriste"),
                     Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                 ),
-            metiers =
-                listOf(
-                    MetierDetaille(
-                        id = "MET_001",
-                        nom = "Fleuriste",
-                        descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                        liens =
-                            listOf(
-                                Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                            ),
-                    ),
-                    MetierDetaille(
-                        id = "MET_002",
-                        nom = "Fleuriste événementiel",
-                        descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                        liens =
-                            listOf(
-                                Lien(nom = "Voir sur Onisep", url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste"),
-                            ),
-                    ),
-                ),
             valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
         )
 
@@ -108,7 +87,7 @@ class RecupererFormationServiceTest {
     @Nested
     inner class ProfilNull {
         @Test
-        fun `doit retourner une fiche formation sans le profil avec les criteres filtrant ceux à 0`() {
+        fun `doit retourner une fiche formation sans le profil`() {
             // Given
             given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formationDetaillee)).willReturn(
                 criteresAnalyseCandidature,
@@ -147,33 +126,7 @@ class RecupererFormationServiceTest {
                             ),
                             Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                         ),
-                    metiers =
-                        listOf(
-                            MetierDetaille(
-                                id = "MET_001",
-                                nom = "Fleuriste",
-                                descriptif = "Le fleuriste est un artisan qui confectionne et vend des bouquets, des ...",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir sur Onisep",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                        ),
-                                    ),
-                            ),
-                            MetierDetaille(
-                                id = "MET_002",
-                                nom = "Fleuriste événementiel",
-                                descriptif = "Le fleuriste événementiel est un artisan qui confectionne et vend des bouquets ...",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir sur Onisep",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
-                                        ),
-                                    ),
-                            ),
-                        ),
+                    metiers = emptyList(),
                     communes = listOf("Paris", "Marseille", "Caen"),
                     criteresAnalyseCandidature =
                         listOf(
