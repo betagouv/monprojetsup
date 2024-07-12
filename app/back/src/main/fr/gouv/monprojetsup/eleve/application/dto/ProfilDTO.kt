@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -121,6 +122,7 @@ class ProfilDTO(
     fun toProfil() =
         ProfilEleve(
             id = id,
+            situation = SituationAvanceeProjetSup.deserialiseApplication(situation),
             classe = ChoixNiveau.deserialiseApplication(classe),
             bac = baccalaureat,
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),

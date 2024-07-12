@@ -16,6 +16,7 @@ import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -173,6 +174,7 @@ class RecupererFormationServiceTest {
         private val profil =
             ProfilEleve(
                 id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 bac = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,

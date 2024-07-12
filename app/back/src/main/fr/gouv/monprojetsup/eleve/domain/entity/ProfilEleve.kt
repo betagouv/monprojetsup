@@ -3,9 +3,11 @@ package fr.gouv.monprojetsup.eleve.domain.entity
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 
 data class ProfilEleve(
     val id: String,
+    val situation: SituationAvanceeProjetSup,
     val classe: ChoixNiveau,
     val bac: String?,
     val specialites: List<String>?,
