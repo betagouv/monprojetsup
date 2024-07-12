@@ -17,6 +17,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Specialite
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.SpecialitesRepository
+import fr.gouv.monprojetsup.formation.entity.Communes
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -65,7 +66,7 @@ class SuggestionApiHttpClientTest {
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            communesPreferees = listOf("Paris"),
+            communesPreferees = listOf(Communes.PARIS),
             specialites = listOf("1001", "1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
@@ -1098,8 +1099,8 @@ class SuggestionApiHttpClientTest {
                     "id=adcf627c-36dd-4df5-897b-159443a6d49c, classe=TERMINALE, bac=Générale, specialites=[1001, 1049], " +
                     "domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
                     "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersChoisis=[MET_123, MET_456], " +
-                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, communesPreferees=[Paris], " +
-                    "formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
+                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, communesPreferees=[Commune(codeInsee=75015, nom=Paris, " +
+                    "latitude=48.851227, longitude=2.2885659)], formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
             )
         }
 

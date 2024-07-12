@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -57,7 +58,7 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve::class.java)
         given(profilEleve.bac).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesPreferees).willReturn(listOf("Paris", "Lyon", "Strasbourg"))
+        given(profilEleve.communesPreferees).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -144,7 +145,7 @@ class RecupererFormationsServiceTest {
         given(
             recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                 idsDesPremieresFormationsTriesParAffinites = listOf("fl0001", "fl0003"),
-                communesFavorites = listOf("Paris", "Lyon", "Strasbourg"),
+                communesFavorites = listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG),
             ),
         ).willReturn(communesParFormations)
         given(
@@ -219,7 +220,7 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve::class.java)
         given(profilEleve.bac).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesPreferees).willReturn(listOf("Paris", "Lyon", "Strasbourg"))
+        given(profilEleve.communesPreferees).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -295,7 +296,7 @@ class RecupererFormationsServiceTest {
         given(
             recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                 idsDesPremieresFormationsTriesParAffinites = listOf("fl0001", "fl0003"),
-                communesFavorites = listOf("Paris", "Lyon", "Strasbourg"),
+                communesFavorites = listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG),
             ),
         ).willReturn(communesParFormations)
         given(

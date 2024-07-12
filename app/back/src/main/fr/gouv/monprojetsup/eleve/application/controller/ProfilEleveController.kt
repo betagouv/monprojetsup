@@ -46,8 +46,8 @@ class ProfilEleveController() {
                         CommuneDTO(
                             codeInsee = "75015",
                             nom = "Paris",
-                            latitude = 2.2885659f,
-                            longitude = 48.8512252f,
+                            longitude = 2.2885659f,
+                            latitude = 48.8512252f,
                         ),
                     ),
                 moyenneGenerale = 15.5f,

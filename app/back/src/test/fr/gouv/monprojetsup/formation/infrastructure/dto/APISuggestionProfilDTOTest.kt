@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.entity.Communes
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -19,7 +20,7 @@ class APISuggestionProfilDTOTest {
                 bac = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesPreferees = listOf("Paris", "Marseille"),
+                communesPreferees = listOf(Communes.PARIS, Communes.MARSEILLE),
                 specialites = listOf("1056", "1054"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 10.5f,
@@ -60,7 +61,7 @@ class APISuggestionProfilDTOTest {
                 bac = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                 alternance = ChoixAlternance.INDIFFERENT,
-                communesPreferees = listOf("Lyon", "Caen"),
+                communesPreferees = listOf(Communes.LYON, Communes.CAEN),
                 specialites = listOf("1053", "1055"),
                 centresInterets = emptyList(),
                 moyenneGenerale = 19.5f,
@@ -122,7 +123,7 @@ class APISuggestionProfilDTOTest {
                 bac = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
-                communesPreferees = listOf("Lyon", "Paris"),
+                communesPreferees = listOf(Communes.LYON, Communes.PARIS),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
                 moyenneGenerale = 4.9f,
@@ -150,7 +151,7 @@ class APISuggestionProfilDTOTest {
                 bac = "NC",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesPreferees = listOf("Paris", "Marseille"),
+                communesPreferees = listOf(Communes.PARIS, Communes.MARSEILLE),
                 specialites = listOf("1056", "1054"),
                 centresInterets = null,
                 moyenneGenerale = 10.5f,

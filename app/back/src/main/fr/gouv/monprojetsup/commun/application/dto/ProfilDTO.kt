@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.formation.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
@@ -125,7 +126,7 @@ class ProfilDTO(
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
             alternance = ChoixAlternance.deserialiseApplication(alternance),
             formationsChoisies = formationsFavorites,
-            communesPreferees = communesFavorites?.map { it.nom },
+            communesPreferees = communesFavorites?.map { it.toCommune() },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
@@ -140,11 +141,19 @@ class ProfilDTO(
         @Schema(description = "Dénomination de la ville", example = "Paris", required = true)
         @JsonProperty("nom")
         val nom: String,
-        @Schema(description = "Latitude de la ville", example = "2.2885659", required = true)
+        @Schema(description = "Latitude de la ville", example = "48.8512252", required = true)
         @JsonProperty("latitude")
         val latitude: Float,
-        @Schema(description = "Longitude de la ville", example = "48.8512252", required = true)
+        @Schema(description = "Longitude de la ville", example = "2.2885659", required = true)
         @JsonProperty("longitude")
         val longitude: Float,
-    )
+    ) {
+        fun toCommune() =
+            Commune(
+                codeInsee = codeInsee,
+                nom = nom,
+                latitude = latitude,
+                longitude = longitude,
+            )
+    }
 }
