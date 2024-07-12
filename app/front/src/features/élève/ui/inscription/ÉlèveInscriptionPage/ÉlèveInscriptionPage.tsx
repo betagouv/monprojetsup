@@ -22,7 +22,7 @@ import {
   indexÉtapeActuelleÉtapesInscriptionÉlèveStore,
 } from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ScrollRestoration, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Suspense } from "react";
 
 const ÉlèveInscriptionPage = () => {
@@ -113,7 +113,6 @@ const ÉlèveInscriptionPage = () => {
         </div>
         <p className="fr-text--lg mb-12">{préambuleÀAfficher()}</p>
         <Suspense fallback={<AnimationChargement />}>
-          <ScrollRestoration />
           {composantÀAfficher()}
           <hr className="mt-12" />
           <div className={`fr-grid-row ${étapePrécédente ? "justify-between" : "justify-end"}`}>

@@ -1,5 +1,6 @@
 const pages = {
-  ACCUEIL: "Accueil",
+  TABLEAU_DE_BORD: "Tableau de bord",
+  PROFIL: "Mon profil",
   PLAN_DU_SITE: "Plan du site",
   ACCESSIBILITÉ: "Accessibilité: non conforme",
   MENTIONS_LÉGALES: "Mentions légales",
@@ -18,6 +19,9 @@ export const localeFR = {
   },
   ENTÊTE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
+    SE_CONNECTER: "Se connecter",
+    MON_ESPACE: "Mon espace",
+    PLATEFORME_AVENIRS: "Plateforme Avenir(s)",
   },
   PIED_DE_PAGE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
@@ -30,7 +34,9 @@ export const localeFR = {
     },
   },
   NAVIGATION: {
-    ACCUEIL: pages.ACCUEIL,
+    TABLEAU_DE_BORD: pages.TABLEAU_DE_BORD,
+    FORMATIONS: "Explorer les formations",
+    SÉLECTION: "Consulter ma sélection",
   },
   PAGE_RECHERCHE: {
     TITRE: "Rechercher une formation ou un métier",
@@ -252,11 +258,7 @@ export const localeFR = {
         CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
       },
     },
-    PROFIL: {
-      TITRE: "Mon Profil",
-    },
     TABLEAU_DE_BORD: {
-      TITRE_PAGE: "Tableau de bord",
       TITRE: "Bienvenue dans ton espace MPS",
       MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
       CARTES: {
@@ -285,8 +287,13 @@ export const localeFR = {
       },
     },
   },
-  PAGE_ACCUEIL: {
-    TITLE: pages.ACCUEIL,
+  PAGE_TABLEAU_DE_BORD: {
+    TITRE_PAGE: pages.TABLEAU_DE_BORD,
+  },
+  PAGE_PROFIL: {
+    TITRE_PAGE: pages.PROFIL,
+    TITRE: pages.PROFIL,
+    SE_DÉCONNECTER: "Se déconnecter",
   },
   COMMUN: {
     FERMER: "Fermer",

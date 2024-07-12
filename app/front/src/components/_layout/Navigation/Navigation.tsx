@@ -5,12 +5,12 @@ import { Link } from "@tanstack/react-router";
 const Navigation = () => {
   const pages: Array<{ titre: string; href: keyof (typeof router)["routesByPath"] }> = [
     {
-      titre: i18n.PAGE_ACCUEIL.TITLE,
+      titre: i18n.NAVIGATION.TABLEAU_DE_BORD,
       href: "/",
     },
     {
-      titre: "Inscription",
-      href: "/eleve/inscription/projet",
+      titre: i18n.NAVIGATION.FORMATIONS,
+      href: "/formations/$formationId",
     },
   ];
 

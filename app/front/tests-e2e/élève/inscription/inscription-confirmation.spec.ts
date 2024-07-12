@@ -8,9 +8,9 @@ test.describe("Inscription élève - Confirmation", () => {
 
     // WHEN
     await page.getByRole("link", { name: i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.BOUTON_ACTION }).click();
-    await page.waitForURL("/eleve/tableau-de-bord");
+    await page.waitForURL("/");
 
     // THEN
-    expect(page.url()).toMatch("/eleve/tableau-de-bord");
+    expect(page.url()).toMatch("/");
   });
 });

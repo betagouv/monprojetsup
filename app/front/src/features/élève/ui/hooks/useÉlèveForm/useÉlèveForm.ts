@@ -4,10 +4,11 @@ import { dépendances } from "@/configuration/dépendances/dépendances";
 import { queryClient } from "@/configuration/lib/tanstack-query";
 import { élèveQueryOptions } from "@/features/élève/ui/options";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuFormulaireAvecSuccès }: UseÉlèveFormArgs) {
+  const { data: valeursParDéfaut } = useQuery(élèveQueryOptions);
   const {
     register,
     handleSubmit,
@@ -17,7 +18,7 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
     formState: { errors, dirtyFields },
   } = useForm<ÉlèveInformationsModifiables>({
     resolver: zodResolver(schémaValidation),
-    defaultValues: queryClient.getQueryData(élèveQueryOptions.queryKey),
+    defaultValues: valeursParDéfaut,
   });
 
   const mutationÉlève = useMutation({

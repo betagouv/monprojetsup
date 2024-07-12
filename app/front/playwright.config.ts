@@ -18,6 +18,9 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run build && npm run preview",
+    env: {
+      VITE_TEST_MODE: "true",
+    },
     url: "http://localhost:4173",
     reuseExistingServer: false,
   },
