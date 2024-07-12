@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.`when`
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
@@ -45,7 +46,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.ConnectException
 
-@WebMvcTest(controllers = [FormationController::class])
+@WebMvcTest(controllers = [FormationController::class], excludeAutoConfiguration = [SecurityAutoConfiguration::class])
 class FormationControllerTest(
     @Autowired val mvc: MockMvc,
 ) {
