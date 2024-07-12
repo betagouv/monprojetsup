@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 
 data class Formation(
     val id: String,

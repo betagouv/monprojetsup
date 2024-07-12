@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationCourteDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsAvecExplicationsDTO
@@ -8,14 +8,11 @@ import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesDTO
 import fr.gouv.monprojetsup.formation.application.dto.ProfilObligatoireRequeteDTO
 import fr.gouv.monprojetsup.formation.application.dto.ProfilOptionnelRequeteDTO
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
-import fr.gouv.monprojetsup.formation.domain.entity.Domaine
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
@@ -25,6 +22,9 @@ import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

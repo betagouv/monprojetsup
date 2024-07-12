@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
+import fr.gouv.monprojetsup.commun.lien.infrastructure.entity.LienEntity
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import io.hypersistence.utils.hibernate.type.array.ListArrayType

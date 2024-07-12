@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

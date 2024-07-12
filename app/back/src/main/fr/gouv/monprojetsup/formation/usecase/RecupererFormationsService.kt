@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import org.springframework.stereotype.Service

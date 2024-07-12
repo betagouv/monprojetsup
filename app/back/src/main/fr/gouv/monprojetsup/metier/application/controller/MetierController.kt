@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.metier.application.controller
 
-import fr.gouv.monprojetsup.commun.application.dto.LienDTO
+import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetiersCourtsDTO

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.entity
 
-import fr.gouv.monprojetsup.formation.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 
 object Communes {
     val GRENOBLE =

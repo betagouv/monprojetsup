@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
 

@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+
 data class StatistiquesDesAdmis(
     val repartitionAdmis: RepartitionAdmis,
     val moyenneGeneraleDesAdmis: MoyenneGeneraleDesAdmis?,

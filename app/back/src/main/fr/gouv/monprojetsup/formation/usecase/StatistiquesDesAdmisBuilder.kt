@@ -2,12 +2,12 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMAL
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.springframework.stereotype.Service
 
 @Service

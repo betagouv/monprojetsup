@@ -1,21 +1,22 @@
 package fr.gouv.monprojetsup.formation.application.dto
 
-import fr.gouv.monprojetsup.commun.application.dto.LienDTO
+import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
-import fr.gouv.monprojetsup.formation.domain.entity.Domaine
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
-import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
+import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
+import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 
 data class FormationAvecExplicationsDTO(
     val formation: FicheFormationDTO,

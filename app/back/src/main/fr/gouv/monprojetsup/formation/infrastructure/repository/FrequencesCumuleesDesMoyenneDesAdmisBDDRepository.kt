@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
