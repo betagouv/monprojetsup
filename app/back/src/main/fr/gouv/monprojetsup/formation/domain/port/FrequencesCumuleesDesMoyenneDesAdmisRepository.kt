@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.domain.port
 
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 
 interface FrequencesCumuleesDesMoyenneDesAdmisRepository {
     fun recupererFrequencesCumuleesDeTousLesBacs(idFormation: String): Map<Baccalaureat, List<Int>>

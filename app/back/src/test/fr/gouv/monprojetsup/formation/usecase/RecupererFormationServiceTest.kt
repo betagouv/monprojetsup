@@ -1,14 +1,11 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
@@ -16,6 +13,9 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested

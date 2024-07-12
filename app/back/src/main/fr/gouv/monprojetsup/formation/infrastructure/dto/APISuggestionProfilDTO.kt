@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionProfilDTO(

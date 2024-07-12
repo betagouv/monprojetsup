@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.metier.domain.entity
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 
 data class Metier(
     val id: String,

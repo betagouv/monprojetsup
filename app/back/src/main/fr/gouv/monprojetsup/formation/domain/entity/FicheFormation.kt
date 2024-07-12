@@ -1,7 +1,8 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 
 sealed class FicheFormation(
     open val id: String,

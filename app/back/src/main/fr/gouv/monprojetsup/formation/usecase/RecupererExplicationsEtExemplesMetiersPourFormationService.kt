@@ -1,23 +1,23 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
-import fr.gouv.monprojetsup.formation.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.Domaine
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.formation.domain.port.BaccalaureatRepository
-import fr.gouv.monprojetsup.formation.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
-import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
-import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
+import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
+import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
 import org.springframework.stereotype.Service
 
 @Service

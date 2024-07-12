@@ -2,6 +2,10 @@ package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 
 data class ExplicationsSuggestionEtExemplesMetiers(
     val geographique: List<ExplicationGeographique> = emptyList(),

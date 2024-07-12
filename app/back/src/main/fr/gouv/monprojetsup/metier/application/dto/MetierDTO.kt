@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.metier.application.dto
 
-import fr.gouv.monprojetsup.commun.application.dto.LienDTO
+import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 
 data class MetierDTO(

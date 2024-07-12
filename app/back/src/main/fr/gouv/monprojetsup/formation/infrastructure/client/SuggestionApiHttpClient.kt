@@ -3,10 +3,9 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
-import fr.gouv.monprojetsup.formation.domain.port.SpecialitesRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionReponseDTO
@@ -15,6 +14,7 @@ import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDT
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffinitesProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilRequeteDTO
+import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request

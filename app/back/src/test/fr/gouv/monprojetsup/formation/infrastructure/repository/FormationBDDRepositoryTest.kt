@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
-import fr.gouv.monprojetsup.commun.domain.entity.Lien
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import org.assertj.core.api.Assertions.assertThat

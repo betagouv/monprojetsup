@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.formation.infrastructure.dto
 
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.formation.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments

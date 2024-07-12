@@ -1,7 +1,8 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
-import fr.gouv.monprojetsup.formation.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
-import fr.gouv.monprojetsup.commun.application.dto.ProfilDTO
-import fr.gouv.monprojetsup.commun.application.dto.ProfilDTO.CommuneDTO
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO.CommuneDTO
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import okhttp3.ResponseBody
 import okhttp3.internal.EMPTY_RESPONSE
 import org.springframework.web.bind.annotation.GetMapping

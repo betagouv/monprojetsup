@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.commun.utilitaires.recupererUniqueValeur
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.formation.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExplicationFormationPourUnProfilReponseDTO(

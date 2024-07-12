@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.formation.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
