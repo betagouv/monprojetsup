@@ -541,9 +541,9 @@ class MetierController {
         )
     }
 
-    @GetMapping("/recherche/detaillee")
-    fun getRechercheMetierDetaillee(
-        @RequestParam recherche: String,
+    @GetMapping
+    fun getMetiers(
+        @RequestParam ids: List<String>,
     ): MetiersDTO {
         val metiers =
             listOf(
@@ -602,13 +602,6 @@ class MetierController {
                         ),
                 ),
             )
-        return MetiersDTO(
-            metiers.filter {
-                (
-                    it.nom.contains(recherche, true) ||
-                        it.descriptif?.contains(recherche, true) == true
-                ) || it.liens.map { it.nom }.any { it.contains(recherche, true) }
-            },
-        )
+        return MetiersDTO(metiers)
     }
 }
