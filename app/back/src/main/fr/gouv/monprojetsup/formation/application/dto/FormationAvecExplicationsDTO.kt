@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
+import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.InteretsEtDomainesDTO.InteretDTO
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -15,7 +16,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 
 data class FormationAvecExplicationsDTO(
@@ -184,20 +185,13 @@ data class FormationAvecExplicationsDTO(
     data class InteretsEtDomainesDTO(
         val interets: List<InteretDTO>,
         val domaines: List<DomaineDTO>,
-    )
-
-    data class InteretDTO(
-        val id: String,
-        val nom: String,
     ) {
-        constructor(interet: InteretSousCategorie) : this(id = interet.id, nom = interet.nom)
-    }
-
-    data class DomaineDTO(
-        val id: String,
-        val nom: String,
-    ) {
-        constructor(domaine: Domaine) : this(id = domaine.id, nom = domaine.nom)
+        data class InteretDTO(
+            val id: String,
+            val nom: String,
+        ) {
+            constructor(interet: InteretSousCategorie) : this(id = interet.id, nom = interet.nom)
+        }
     }
 
     data class FormationSimilaireDTO(

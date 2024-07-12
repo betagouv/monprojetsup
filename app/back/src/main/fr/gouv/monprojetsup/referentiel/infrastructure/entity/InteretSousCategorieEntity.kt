@@ -16,9 +16,16 @@ class InteretSousCategorieEntity {
     @Column(name = "nom", nullable = false)
     lateinit var nom: String
 
+    @Column(name = "emoji", nullable = false)
+    lateinit var emoji: String
+
+    @Column(name = "id_categorie", nullable = false)
+    lateinit var idCategorie: String
+
     fun toInteretSousCategorie() =
         InteretSousCategorie(
             id = id,
             nom = nom,
+            emoji = emoji,
         )
 }

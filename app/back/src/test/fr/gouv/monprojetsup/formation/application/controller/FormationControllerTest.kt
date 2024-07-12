@@ -144,24 +144,24 @@ class FormationControllerTest(
                 ),
             domaines =
                 listOf(
-                    Domaine(id = "T_ITM_1356", nom = "soin aux animaux"),
+                    Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
                 ),
-            interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres")),
+            interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
             explicationAutoEvaluationMoyenne =
                 ExplicationAutoEvaluationMoyenne(
-                    baccalaureatUtilise = Baccalaureat("Générale", "Générale", "Série Générale"),
+                    baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
                     moyenneAutoEvalue = 15f,
                     basIntervalleNotes = 14f,
                     hautIntervalleNotes = 16f,
                 ),
             formationsSimilaires =
                 listOf(
-                    FormationCourte("fl1", "CPGE MPSI"),
-                    FormationCourte("fl7", "BUT Informatique"),
+                    FormationCourte(id = "fl1", nom = "CPGE MPSI"),
+                    FormationCourte(id = "fl7", nom = "BUT Informatique"),
                 ),
             explicationTypeBaccalaureat =
                 ExplicationTypeBaccalaureat(
-                    baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
                     pourcentage = 18,
                 ),
         )
