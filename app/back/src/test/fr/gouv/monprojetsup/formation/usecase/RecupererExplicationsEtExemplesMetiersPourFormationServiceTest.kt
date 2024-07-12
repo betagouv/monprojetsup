@@ -22,6 +22,7 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.InteretRepository
 import fr.gouv.monprojetsup.formation.domain.port.MetierRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -71,7 +72,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            communesPreferees = listOf("Caen"),
+            communesPreferees = listOf(Communes.CAEN),
             specialites = listOf("1001", "1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,

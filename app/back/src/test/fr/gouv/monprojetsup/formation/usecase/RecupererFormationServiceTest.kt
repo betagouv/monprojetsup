@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -176,7 +177,7 @@ class RecupererFormationServiceTest {
                 bac = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesPreferees = listOf("Caen"),
+                communesPreferees = listOf(Communes.CAEN),
                 specialites = listOf("1001", "1049"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,
@@ -204,7 +205,7 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            given(recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites("fl0001", listOf("Caen"))).willReturn(
+            given(recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites("fl0001", listOf(Communes.CAEN))).willReturn(
                 listOf("Caen", "Paris", "Marseille"),
             )
             given(

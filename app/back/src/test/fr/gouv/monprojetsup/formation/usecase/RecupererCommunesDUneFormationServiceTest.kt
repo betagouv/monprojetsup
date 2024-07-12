@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.formation.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.entity.Communes
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -28,7 +30,7 @@ class RecupererCommunesDUneFormationServiceTest {
         @Test
         fun `les communes doivent être ordonnées par affinités et enlever les doublons`() {
             // Given
-            val communesFavorites = listOf("Paris", "Caen")
+            val communesFavorites = listOf(Communes.PARIS, Communes.CAEN)
             val idsFormation =
                 listOf(
                     "fl680002",
@@ -88,7 +90,7 @@ class RecupererCommunesDUneFormationServiceTest {
         @Test
         fun `si la liste des communes favorites est vide, doit juste enlever les doublons`() {
             // Given
-            val communesFavorites = emptyList<String>()
+            val communesFavorites = emptyList<Commune>()
             val idsFormation =
                 listOf(
                     "fl680002",
@@ -211,7 +213,7 @@ class RecupererCommunesDUneFormationServiceTest {
         @Test
         fun `les communes doivent être ordonnées par affinités et enlever les doublons`() {
             // Given
-            val communesFavorites = listOf("Lyon", "Grenoble", "Paris")
+            val communesFavorites = listOf(Communes.LYON, Communes.GRENOBLE, Communes.PARIS)
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
                 listOf(
                     TripletAffectation("ta3", "Paris"),
@@ -235,7 +237,7 @@ class RecupererCommunesDUneFormationServiceTest {
         @Test
         fun `si la liste des communes favorites est vide, doit juste enlever les doublons`() {
             // Given
-            val communesFavorites = emptyList<String>()
+            val communesFavorites = emptyList<Commune>()
             given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
                 listOf(
                     TripletAffectation("ta3", "Paris"),

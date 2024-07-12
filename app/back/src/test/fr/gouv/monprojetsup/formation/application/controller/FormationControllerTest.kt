@@ -25,6 +25,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
@@ -64,7 +65,7 @@ class FormationControllerTest(
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            communesPreferees = listOf("Paris"),
+            communesPreferees = listOf(Communes.PARIS),
             specialites = listOf("1056", "1054"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
@@ -104,8 +105,8 @@ class FormationControllerTest(
               {
                 "codeInsee": "75015",
                 "nom": "Paris",
-                "latitude": 2.2885659,
-                "longitude": 48.8512252
+                "longitude": 2.2885659,
+                "latitude": 48.8512252
               }
             ],
             "moyenneGenerale": 14,

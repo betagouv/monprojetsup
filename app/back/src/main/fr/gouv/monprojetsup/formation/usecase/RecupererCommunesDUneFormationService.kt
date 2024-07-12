@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.formation.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
 import org.springframework.stereotype.Service
@@ -10,7 +11,7 @@ class RecupererCommunesDUneFormationService(
 ) {
     fun recupererNomCommunesTriesParAffinites(
         idsDesPremieresFormationsTriesParAffinites: List<String>,
-        communesFavorites: List<String>?,
+        communesFavorites: List<Commune>?,
     ): Map<String, List<String>> {
         val tripletsAffectations: Map<String, List<TripletAffectation>> =
             tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(
@@ -27,7 +28,7 @@ class RecupererCommunesDUneFormationService(
 
     fun recupererNomCommunesTriesParAffinites(
         idFormation: String,
-        communesFavorites: List<String>?,
+        communesFavorites: List<Commune>?,
     ): List<String> {
         val tripletsAffectations = tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation)
         return recupererNomCommunesTriesParAffinites(tripletsAffectations, communesFavorites)
@@ -40,13 +41,13 @@ class RecupererCommunesDUneFormationService(
 
     private fun recupererNomCommunesTriesParAffinites(
         tripletsAffectation: List<TripletAffectation>,
-        communesFavorites: List<String>?,
+        communesFavorites: List<Commune>?,
     ): List<String> {
         val communesDesAffectations = tripletsAffectation.map { it.commune }.distinct()
         val communesTrieesParAffinites: MutableList<String> = mutableListOf()
         communesFavorites?.forEach { commune ->
-            if (communesDesAffectations.contains(commune)) {
-                communesTrieesParAffinites.add(commune)
+            if (communesDesAffectations.contains(commune.nom)) {
+                communesTrieesParAffinites.add(commune.nom)
             }
         }
         communesDesAffectations.forEach { commune ->
