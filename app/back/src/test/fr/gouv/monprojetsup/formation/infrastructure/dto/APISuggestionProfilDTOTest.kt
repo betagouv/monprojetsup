@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -16,6 +17,7 @@ class APISuggestionProfilDTOTest {
         private val profilEleveSeconde =
             ProfilEleve(
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
                 bac = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
@@ -57,6 +59,7 @@ class APISuggestionProfilDTOTest {
         private val profilEleveSecondeSTHR =
             ProfilEleve(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
+                situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
                 bac = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
@@ -88,6 +91,7 @@ class APISuggestionProfilDTOTest {
         private val profilEleveSecondeTMD =
             ProfilEleve(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
+                situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
                 bac = "S2TMD",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
@@ -119,6 +123,7 @@ class APISuggestionProfilDTOTest {
         private val profilElevePremiere =
             ProfilEleve(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
+                situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
                 bac = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
@@ -147,6 +152,7 @@ class APISuggestionProfilDTOTest {
         private val profilEleveTerminal =
             ProfilEleve(
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
+                situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 bac = "NC",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
@@ -178,6 +184,7 @@ class APISuggestionProfilDTOTest {
         private val profilEleveNull =
             ProfilEleve(
                 id = "unknown",
+                situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.NON_RENSEIGNE,
                 bac = null,
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.NON_RENSEIGNE,

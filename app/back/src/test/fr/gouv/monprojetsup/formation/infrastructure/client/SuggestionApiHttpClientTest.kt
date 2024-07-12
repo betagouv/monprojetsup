@@ -16,6 +16,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import okhttp3.Call
@@ -62,6 +63,7 @@ class SuggestionApiHttpClientTest {
     private val unProfil =
         ProfilEleve(
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+            situation = SituationAvanceeProjetSup.PROJET_PRECIS,
             classe = ChoixNiveau.TERMINALE,
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
@@ -1096,11 +1098,12 @@ class SuggestionApiHttpClientTest {
                 logger,
             ).should().error(
                 "Les formations [fl1] n'ont pas d'explications renvoyées pour le profil élève suivant ProfilEleve(" +
-                    "id=adcf627c-36dd-4df5-897b-159443a6d49c, classe=TERMINALE, bac=Générale, specialites=[1001, 1049], " +
-                    "domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
+                    "id=adcf627c-36dd-4df5-897b-159443a6d49c, situation=PROJET_PRECIS, classe=TERMINALE, bac=Générale, " +
+                    "specialites=[1001, 1049], domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
                     "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersChoisis=[MET_123, MET_456], " +
-                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, communesPreferees=[Commune(codeInsee=75015, nom=Paris, " +
-                    "latitude=48.851227, longitude=2.2885659)], formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
+                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, communesPreferees=[" +
+                    "Commune(codeInsee=75015, nom=Paris, latitude=48.851227, longitude=2.2885659)], " +
+                    "formationsChoisies=[fl1234, fl5678], moyenneGenerale=14.0)",
             )
         }
 

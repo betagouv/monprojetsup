@@ -30,6 +30,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.`when`
@@ -62,6 +63,7 @@ class FormationControllerTest(
     private val unProfil =
         ProfilEleve(
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+            situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.TERMINALE,
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,

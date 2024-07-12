@@ -21,6 +21,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
@@ -68,6 +69,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
     private val profil =
         ProfilEleve(
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+            situation = SituationAvanceeProjetSup.PROJET_PRECIS,
             classe = ChoixNiveau.TERMINALE,
             bac = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
