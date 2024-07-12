@@ -353,12 +353,22 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     idsFormations = listOf("fl0001"),
                 ),
             ).willReturn(explications)
-            val domaines = listOf(Domaine(id = "T_ITM_1169", nom = "défense nationale"))
+            val domaines = listOf(Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"))
             val interets =
                 mapOf(
-                    "T_ROME_1573349427" to InteretSousCategorie(id = "travail_manuel_creer", nom = "Créer quelque chose de mes mains"),
-                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
-                    "T_ROME_1959553899" to InteretSousCategorie(id = "travail_manuel_creer", nom = "Créer quelque chose de mes mains"),
+                    "T_ROME_1573349427" to
+                        InteretSousCategorie(
+                            id = "travail_manuel_creer",
+                            nom = "Créer quelque chose de mes mains",
+                            emoji = "\uD83E\uDE9B",
+                        ),
+                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
+                    "T_ROME_1959553899" to
+                        InteretSousCategorie(
+                            id = "travail_manuel_creer",
+                            nom = "Créer quelque chose de mes mains",
+                            emoji = "\uD83E\uDE9B",
+                        ),
                 )
             given(domaineRepository.recupererLesDomaines(interetsEtDomainesChoisis)).willReturn(domaines)
             given(interetRepository.recupererLesSousCategoriesDInterets(interetsEtDomainesChoisis)).willReturn(interets)
@@ -373,8 +383,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             // Then
             assertThat(resultat.first.interets).usingRecursiveComparison().isEqualTo(
                 listOf(
-                    InteretSousCategorie(id = "travail_manuel_creer", nom = "Créer quelque chose de mes mains"),
-                    InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
+                    InteretSousCategorie(
+                        id = "travail_manuel_creer",
+                        nom = "Créer quelque chose de mes mains",
+                        emoji = "\uD83E\uDE9B",
+                    ),
+                    InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
                 ),
             )
             assertThat(resultat.first.domaines).usingRecursiveComparison().isEqualTo(domaines)
@@ -568,15 +582,15 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val domainesEtInteretsDistincts = listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812", "T_ITM_723")
             given(domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)).willReturn(
                 listOf(
-                    Domaine(id = "T_ITM_1169", nom = "défense nationale"),
-                    Domaine(id = "T_ITM_723", nom = "arts du spectacle"),
+                    Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"),
+                    Domaine(id = "T_ITM_723", nom = "arts du spectacle", emoji = "\uD83C\uDFAD"),
                 ),
             )
             given(interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)).willReturn(
                 mapOf(
-                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
-                    "T_ROME_1959553899" to InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
-                    "T_IDEO2_4812" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
+                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
+                    "T_ROME_1959553899" to InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
+                    "T_IDEO2_4812" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
                 ),
             )
             val formationsDistinctes = listOf("fl12", "fl79", "fl1", "fl7")
@@ -684,12 +698,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             ExplicationsSuggestionDetaillees(
                                 interets =
                                     listOf(
-                                        InteretSousCategorie(id = "aider_autres", nom = "Aider les autres"),
-                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
+                                        InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
+                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
                                     ),
                                 domaines =
                                     listOf(
-                                        Domaine(id = "T_ITM_1169", nom = "défense nationale"),
+                                        Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"),
                                     ),
                                 formationsSimilaires =
                                     listOf(
@@ -704,11 +718,11 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             ExplicationsSuggestionDetaillees(
                                 interets =
                                     listOf(
-                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler"),
+                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
                                     ),
                                 domaines =
                                     listOf(
-                                        Domaine(id = "T_ITM_723", nom = "arts du spectacle"),
+                                        Domaine(id = "T_ITM_723", nom = "arts du spectacle", emoji = "\uD83C\uDFAD"),
                                     ),
                                 formationsSimilaires =
                                     listOf(

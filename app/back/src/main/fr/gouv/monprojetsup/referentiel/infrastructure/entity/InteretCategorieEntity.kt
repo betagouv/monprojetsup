@@ -1,14 +1,16 @@
 package fr.gouv.monprojetsup.referentiel.infrastructure.entity
 
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "domaine")
-class DomaineEntity {
+@Table(name = "interet_categorie")
+class InteretCategorieEntity {
     @Id
     @Column(name = "id", nullable = false)
     lateinit var id: String
@@ -19,11 +21,11 @@ class DomaineEntity {
     @Column(name = "emoji", nullable = false)
     lateinit var emoji: String
 
-    @Column(name = "id_categorie", nullable = false)
-    lateinit var idCategorie: String
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "idCategorie")
+    lateinit var sousCategories: List<InteretSousCategorieEntity>
 
-    fun toDomaine() =
-        Domaine(
+    fun toInteretCategorie() =
+        InteretCategorie(
             id = id,
             nom = nom,
             emoji = emoji,

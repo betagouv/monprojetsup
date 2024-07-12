@@ -1073,6 +1073,7 @@ class FormationController(
                                         Domaine(
                                             id = "T_ITM_1534",
                                             nom = "mécanique",
+                                            emoji = "\uD83D\uDD27",
                                         ),
                                     ),
                                 explicationAutoEvaluationMoyenne =
@@ -1284,10 +1285,12 @@ class FormationController(
                                         InteretSousCategorie(
                                             id = "chiffres_jongler",
                                             nom = "Jongler avec les chiffres",
+                                            emoji = "\uD83D\uDCAF",
                                         ),
                                         InteretSousCategorie(
                                             id = "aider_autres",
                                             nom = "Aider les autres",
+                                            emoji = "\uD83E\uDEC2",
                                         ),
                                     ),
                                 domaines =
@@ -1295,18 +1298,22 @@ class FormationController(
                                         Domaine(
                                             id = "T_ITM_1054",
                                             nom = "philosophie",
+                                            emoji = "\uD83D\uDCD6",
                                         ),
                                         Domaine(
                                             id = "T_ITM_1351",
                                             nom = "agriculture",
+                                            emoji = "\uD83E\uDD55",
                                         ),
                                         Domaine(
                                             id = "T_ITM_1534",
                                             nom = "mécanique",
+                                            emoji = "\uD83D\uDD27",
                                         ),
                                         Domaine(
                                             id = "T_ITM_1248",
                                             nom = "bâtiment - construction",
+                                            emoji = "\uD83D\uDEA7",
                                         ),
                                     ),
                                 explicationAutoEvaluationMoyenne =

@@ -3,6 +3,9 @@ VALUES ('agriculture_alimentaire',
         'Agriculture et Alimentation',
         '🥕');
 
+INSERT INTO domaine_categorie
+VALUES ('commerce', 'Commerce', '🏢');
+
 INSERT INTO domaine
 VALUES ('animaux',
         'Soins aux animaux',

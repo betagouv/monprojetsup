@@ -3,6 +3,11 @@ VALUES ('decouvrir_monde',
         'Découvrir le monde',
         '🌎');
 
+INSERT INTO interet_categorie
+VALUES ('rechercher',
+        'Découvrir, enquêter et rechercher',
+        '🧐');
+
 INSERT INTO interet_sous_categorie
 VALUES ('voyage',
         'Voyager',
