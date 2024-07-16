@@ -145,7 +145,7 @@
 		</dependency>
         <dependency>
             <groupId>fr.gouv.monprojetsup</groupId>
-            <artifactId>suggestions</artifactId>
+            <artifactId>common</artifactId>
 			<version>1.4.1</version>
 			<scope>compile</scope>
         </dependency>
