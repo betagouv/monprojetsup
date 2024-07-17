@@ -52,11 +52,13 @@ public class AffinityEvaluator {
     private final boolean isInterestedinHealth;
     private final Set<String> rejected =  new HashSet<>();
     private final SuggestionsData data;
+    private final AlgoSuggestions algo;
 
-    public AffinityEvaluator(ProfileDTO pf, Config cfg, SuggestionsData data) {
+    public AffinityEvaluator(ProfileDTO pf, Config cfg, SuggestionsData data, AlgoSuggestions algo) {
         this.cfg = cfg;
         this.pf = pf;
         this.data = data;
+        this.algo = algo;
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
@@ -96,13 +98,13 @@ public class AffinityEvaluator {
         //autres formations
         nonZeroScores.addAll(approved.stream().map(SuggestionDTO::fl).toList());
 
-        isInterestedinHealth = isRelatedToHealth(nonZeroScores);
+        isInterestedinHealth = algo.isRelatedToHealth(nonZeroScores);
 
         //tag --> node --> distance
         pathesFromTagsIndexedByTarget =
                 nonZeroScores.stream()
                         .flatMap(
-                                n -> AlgoSuggestions
+                                n -> algo
                                         .computePathesFrom(n, MAX_DISTANCE)
                                         .entrySet().stream()
                         )
@@ -113,6 +115,17 @@ public class AffinityEvaluator {
                                 e -> e.getValue().stream().flatMap(f -> f.getValue().stream()).toList()
                         )
                         );
+    }
+
+    public double getBigCapacityScore(String fl) {
+
+        int nbFormations = data.getNbFormations(fl);
+        int capacity = data.getCapacity(fl);
+
+        double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
+        double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
+        return capacityScore * nbFormationsScore;
+
     }
 
     /* the public entry points */
@@ -199,7 +212,7 @@ public class AffinityEvaluator {
         final int bacIndex = pf.bacIndex();
 
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
-        if (isLas(fl) && !isInterestedinHealth) {
+        if (algo.isLas(fl) && !isInterestedinHealth) {
             return Affinite.getNoMatch();
         }
 
@@ -265,7 +278,7 @@ public class AffinityEvaluator {
 
         double moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
         double bacMultiplier = getMultiplier(BONUS_TYPE_BAC, scores.getOrDefault(Config.BONUS_TYPE_BAC, 0.0));
-        double bigCapacityScore = AlgoSuggestions.getBigCapacityScore(fl);
+        double bigCapacityScore = getBigCapacityScore(fl);
         double smallCapacityScore = AlgoSuggestions.getSmallCapacityScore(fl);
 
         EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
@@ -287,8 +300,8 @@ public class AffinityEvaluator {
 
     private double getBonusTypeBac(String grp, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
-        Integer nbAdmisTousBac = SuggestionsData.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
-        Integer nbAdmisBac = SuggestionsData.getNbAdmis(grp, pf.bac());
+        Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
+        Integer nbAdmisBac = data.getNbAdmis(grp, pf.bac());
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = 1.0 * nbAdmisBac / nbAdmisTousBac;
@@ -308,7 +321,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
-        Pair<String, Statistique> stats = SuggestionsData.getStatsBac(fl, pf.bac());
+        Pair<String, Statistique> stats = data.getStatsBac(fl, pf.bac());
         String moyBacEstimee = pf.moygen();
         return getBonusNotes(expl, weight, stats, moyBacEstimee);
     }
@@ -414,7 +427,12 @@ public class AffinityEvaluator {
         if (pf.geo_pref() == null || pf.geo_pref().isEmpty()) return bonus;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = ExplanationGeo.getGeoExplanations(fl, cityName, CachedGeoExplanations.distanceCaches);
+            @NotNull val result = ExplanationGeo.getGeoExplanations(
+                    fl,
+                    cityName,
+                    data.getFormations(fl),
+                    CachedGeoExplanations.distanceCaches
+            );
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
@@ -432,7 +450,7 @@ public class AffinityEvaluator {
 
     private double getBonusDuree(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
-        int duree = SuggestionsData.getDuree(fl);
+        int duree = data.getDuree(fl);
         final double result;
         switch (pf.duree().toLowerCase()) {
             case "court" -> {
@@ -530,7 +548,7 @@ public class AffinityEvaluator {
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
-                        + SuggestionsData.getDebugLabel(e.getKey()))
+                        + data.getDebugLabel(e.getKey()))
                 .collect(Collectors.joining(
                         "\n\t", "\n\t", "\n"
                 )) + ").";
@@ -598,7 +616,7 @@ public class AffinityEvaluator {
 
     private double getBonusApprentissage(String grp, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.apprentissage() == null) return 0.0;
-        boolean isApp = AlgoSuggestions.existsInApprentissage(grp);
+        boolean isApp = algo.existsInApprentissage(grp);
         double resultat = switch (pf.apprentissage()) {
             case "A" -> isApp ? 2.0 : -1.0;
             case "B" -> isApp ? 1.0 : 0.0;
@@ -612,12 +630,12 @@ public class AffinityEvaluator {
     }
 
     private double getBonusSpecialites(String fl, List<Paire<Double, Explanation>> expl, double weight) {
-        if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !AlgoSuggestions.hasSpecialitesInTerminale(pf.bac()))
+        if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !algo.hasSpecialitesInTerminale(pf.bac()))
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
             //Décodage soit par nom spécialité soit par code
-            Integer iMtCod = codesSpecialites.get(s);
+            Integer iMtCod = algo.codesSpecialites.get(s);
             if(iMtCod == null) {
                 try {
                     iMtCod = Integer.parseInt(s);
@@ -626,7 +644,7 @@ public class AffinityEvaluator {
                 }
             }
             if (iMtCod != null) {
-                Double stat = SuggestionsData.getStatsSpecialite(fl, iMtCod);
+                Double stat = data.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {
                     stats.put(s, stat);
                 }
@@ -671,9 +689,9 @@ public class AffinityEvaluator {
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>();
         if (key.startsWith(SEC_ACT_PREFIX_IN_GRAPH)) {
-            candidates.addAll(SuggestionsData.getMetiersFromSecteur(key));
+            candidates.addAll(data.getMetiersFromSecteur(key));
         } else {
-            candidates.addAll(SuggestionsData.getAllCandidatesMetiers(key));
+            candidates.addAll(data.getAllCandidatesMetiers(key));
         }
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);

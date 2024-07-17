@@ -1,8 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
@@ -15,6 +16,8 @@ public class SuggestionServer extends Server {
     @Getter
     private static SuggestionsServerConfig config;
 
+    private final AlgoSuggestions algo;
+
     public static boolean isReady() {
         return true;
     }
@@ -23,13 +26,15 @@ public class SuggestionServer extends Server {
         throw new RuntimeException("Unimplemented");
     }
 
-    public void init(SuggestionsData data) throws Exception {
+    @Autowired
+    public SuggestionServer(AlgoSuggestions algo) {
+        this.algo = algo;
+    }
+    @PostConstruct
+    private void init() throws Exception {
 
         LOGGER.info("Loading config...");
         config = SuggestionsServerConfig.load();
-
-        LOGGER.info("Initializing details ");
-        AlgoSuggestions.initialize();
 
         LOGGER.info("Suggestion Server Initialized ");
 

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,11 +18,20 @@ import java.util.*;
 public class GetFormationsOfInterestService extends MySuggService<GetFormationsOfInterestService.Request, GetFormationsOfInterestService.Response> {
 
 
-    public GetFormationsOfInterestService() {
+    private final SuggestionsData data;
+
+    @Autowired
+    public GetFormationsOfInterestService(
+            SuggestionsData data
+    ) {
         super(Request.class);
+        this.data = data;
     }
 
-    public static List<ExplanationGeo> getGeographicInterests(@Nullable List<String> flKeys, @Nullable Set<String> cities, int maxFormationsPerFiliere) {
+    public List<ExplanationGeo> getGeographicInterests(
+            @Nullable List<String> flKeys,
+            @Nullable Set<String> cities,
+            int maxFormationsPerFiliere) {
         if(flKeys == null || cities == null || flKeys.isEmpty() || cities.isEmpty()) return Collections.emptyList();
         return cities.stream().flatMap(city ->
                         flKeys.stream()
@@ -30,6 +41,7 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
                                                         List.of(key),
                                                         city,
                                                         maxFormationsPerFiliere,
+                                                        data.getFormations(key),
                                                         CachedGeoExplanations.distanceCaches
                                                 ).stream()
                                 )

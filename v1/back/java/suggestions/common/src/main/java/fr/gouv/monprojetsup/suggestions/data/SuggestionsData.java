@@ -5,32 +5,52 @@ import fr.gouv.monprojetsup.suggestions.data.model.formations.Formation;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Statistique;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
-import fr.gouv.monprojetsup.suggestions.data.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.suggestions.data.update.psup.FormationsSimilaires;
 import jakarta.annotation.PostConstruct;
-import lombok.val;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.isLas;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.FORMATION_PREFIX;
 
 @Component
 public class SuggestionsData {
 
+    private static Map<String, Descriptifs.Descriptif> descriptifs;
+    private List<String> filieresFront;
     private final Map<String,String> labels = new HashMap<>();
     private final Map<String,List<String>> relatedInterests = new HashMap<>();
-
+    private PsupStatistiques statistiques;
     private FormationsSimilaires filieresSimilaires;
+    private final Map<String,List<Formation>> formations = new HashMap<>();
+    private final Map<String,Integer> capacities = new HashMap<>();
+    private final Map<String,Integer> durees = new HashMap<>();
+    private final Map<String,Set<String>> candidatesMetiers = new HashMap<>();
+
+    private final Map<String, Set<String>> liensSecteursMetiers = new HashMap<>();
+
+    private Set<String> lasFilieres = new HashSet<>();
+    private Map<Integer, String> specialites;
+    private Set<String> bacsWithSpecialite;
+    private Set<String> apprentissage;
 
     @PostConstruct
     private void load() {
         //load stats
-        SuggestionsData.loadStatistiques();
+        this.statistiques = new PsupStatistiques();
+
+        //load filieresFront
+
+                /*
+                  this.statistiques = new PsupStatistiques();
+        ServerData.statistiques.labels = Serialisation.fromJsonFile(
+                "labelsDebug.json",
+                Map.class
+        );*/
+
         //load labels
 
         //load relatedInterests
@@ -39,20 +59,87 @@ public class SuggestionsData {
         //load filieres similaires backpsupdata
         //inherit groups but not too much....
 
+        //init formations
+        //includes both fl and fr and gta codes
+        //        /*        List<Formation> fors = Collections.emptyList();
+        //        ///attention aux groupes
+        //        if (flKey.startsWith(FILIERE_PREFIX)) {
+        //            fors = SuggestionsData.getFormationsFromFil(flKey);
+        //        } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
+        //            int gTaCod = Integer.parseInt(flKey.substring(2));
+        //            Formation f = SuggestionsData.getFormation(gTaCod);
+        //            if (f != null) {
+        //                fors = List.of(f);
+        //            }
+        //        }
+        //        */
+        //        //should include groups
+
+        //init caapcities
+        formations.forEach((key, value) -> capacities.put(key, value.size()));
+
         //        throw new NotImplementedException("Not implemented yet");
-        throw new NotImplementedException("Not implemented yet");
-    }
 
-    public static void loadStatistiques() {
+        //init cities
                 /*
-                  this.statistiques = new PsupStatistiques();
-        ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                "labelsDebug.json",
-                Map.class
-        );*/
-        throw new NotImplementedException("Not implemented yet");
-    }
+        log.info("Double indexation des villes");
+        CitiesBack cities = ServerData.cities;
+        Distances.init(cities);*/
 
+        //init dures from psup data
+
+        //init candidatesMetiers
+        /*            val result = candidatesMetiers.get(key);
+            if(result != null) return result;
+            Set<String> candidates = new HashSet<>(
+                    getCandidatesMetiers(key) // onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()
+            );
+            if (isLas(key)) {
+                String key2 = getGenericFromLas(key); // lasCorrespondance.lasToGeneric().get(key)
+        if (key2 != null) {
+                    candidates.addAll(getMetiersfromfiliere(key2)); //onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet()
+                    candidates.addAll(getPassMetiers());//(key2) onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet()
+                }
+            }
+            candidates.addAll(getMetiersfromGroup(key));
+                //if (reverseFlGroups.containsKey(key)) {
+                //candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
+                //}
+            candidatesMetiers.put(key, candidates);
+            return candidates;
+
+         //liensSecteursMetiers
+
+        //lasFilieres
+
+        //specialites
+        ServerData.specialites.specialites()
+
+        //bacs with spcialites
+        ServerData.specialites.specialitesParBac().keySet()
+
+        //apprentissage
+          backPsupData.formations().filieres.values().forEach(filiere -> {
+            String key = FILIERE_PREFIX + filiere.gFlCod;
+            if (filiere.apprentissage) {
+                apprentissage.add(key);
+                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
+                apprentissage.add(origKey);
+                apprentissage.add(flGroups.getOrDefault(origKey, origKey));
+            }
+        });
+
+        //descriptifs
+                /* UpdateFrontData.DataContainer.loadDescriptifs(
+                onisepData,
+                backPsupData.getCorrespondances(),
+                statistiques.getLASCorrespondance().lasToGeneric()
+        );
+
+         */
+
+        //throw new NotImplementedException("Not implemented yet");
+    }
 
     public String getLabel(String key, String key1) {
             return labels.getOrDefault(key, key1);
@@ -61,12 +148,14 @@ public class SuggestionsData {
     public String getLabel(String key) {
         return labels.get(key);
     }
+    public String getDebugLabel(String key) {
+        return getLabel(key, key);
+    }
 
     public @NotNull Map<String, String> getLabels() {
         //return an immutable map of labels
         return Collections.unmodifiableMap(labels);
     }
-
 
     public List<String> getAllRelatedInterests(@NotNull Collection<String> keys) {
         return keys.stream().flatMap(key -> relatedInterests.getOrDefault(key, List.of()).stream()).toList();
@@ -76,193 +165,133 @@ public class SuggestionsData {
         return filieresSimilaires.get(fl,i);
     }
 
-    public static List<Formation> getFormationsFromFil(String flKey) {
-        //should include groups
-        throw new NotImplementedException("Not implemented yet");
+    public @NotNull List<Formation> getFormations(String key) {
+        return formations.getOrDefault(key, Collections.emptyList());
     }
 
-    public static void initCities() {
-        /*
-        log.info("Double indexation des villes");
-        CitiesBack cities = ServerData.cities;
-        Distances.init(cities);*/
-        throw new NotImplementedException("Not implemented yet");
+    public Integer getNbAdmis(String grp, String code) {
+        return statistiques.getNbAdmis(grp, code);
     }
 
-    public static Integer getNbAdmis(String grp, String tousBacsCode) {
-        /*Integer nbAdmisTousBac = ServerData.statistiques.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
-        Integer nbAdmisBac = ServerData.statistiques.getNbAdmis(grp, pf.bac());
-        */
-        throw new NotImplementedException("Not implemented yet");
+    public int getDuree(String fl) {
+        return durees.getOrDefault(fl, 3);
     }
 
-    public static int getDuree(String fl) {
-        /* int duree = ServerData.backPsupData.getDuree(fl);*/
-        throw new NotImplementedException("Not implemented yet");
+    public Pair<String, Statistique> getStatsBac(String fl, String bac) {
+        return statistiques.getStatsBac(fl, bac);
     }
 
-    public static Pair<String, Statistique> getStatsBac(String fl, String bac) {
-        /* Pair<String, Statistique> stats = ServerData.statistiques.getStatsBac(fl, pf.bac());*/
-        throw new NotImplementedException("Not implemented yet");
+    public Double getStatsSpecialite(String fl, Integer iMtCod) {
+        return statistiques.getStatsSpecialite(fl, iMtCod);
     }
 
-    public static String getDebugLabel(String key) {
-        throw new NotImplementedException("Not implemented yet");
+    public Set<String> getAllCandidatesMetiers(String key) {
+        return candidatesMetiers.getOrDefault(key, Collections.emptySet());
     }
 
-    public static Double getStatsSpecialite(String fl, Integer iMtCod) {
-        /*Double stat = ServerData.statistiques.getStatsSpecialite(fl, iMtCod);*/
-        throw new NotImplementedException("Not implemented yet");
+    public Collection<String> getMetiersFromSecteur(String key) {
+        return liensSecteursMetiers.getOrDefault(key, Collections.emptySet());
     }
 
-
-    private final static Map<String,Set<String>> candidatesMetiersCache = new ConcurrentHashMap<>();
-
-    public static Set<String> getAllCandidatesMetiers(String key) {
-            val result = candidatesMetiersCache.get(key);
-            if(result != null) return result;
-            Set<String> candidates = new HashSet<>(
-                    SuggestionsData.getCandidatesMetiers(key)
-            );
-            if (isLas(key)) {
-                String key2 = getGenericFromLas(key);
-                if (key2 != null) {
-                    candidates.addAll(SuggestionsData.getMetiersfromfiliere(key2));
-                    candidates.addAll(SuggestionsData.getPassMetiers());
-                }
-            }
-            candidates.addAll(SuggestionsData.getMetiersfromGroup(key));
-            candidatesMetiersCache.put(key, candidates);
-            return candidates;
+    public int getNbFormations(String fl) {
+        return formations.getOrDefault(fl, Collections.emptyList()).size();
     }
 
-    private static String getGenericFromLas(String key) {
-        /* lasCorrespondance.lasToGeneric().get(key)*/
-        throw new NotImplementedException("Not implemented yet");
+    public int getCapacity(String fl) {
+        return capacities.getOrDefault(fl, 0);
     }
 
-    private static int getCandidatesMetiers(String key) {
-        /*onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()*/
-        throw new NotImplementedException("Not implemented yet");
-
+    public Collection<String> getFilieresFront() {
+        return Collections.unmodifiableList(filieresFront);
     }
 
-    private static Collection<String> getMetiersfromfiliere(String key2) {
-        /* onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet() */
-        throw new NotImplementedException("Not implemented yet");
+    public Map<Integer, String> getSpecialites() {
+        return Collections.unmodifiableMap(specialites);
     }
 
-    private static Collection<String> getPassMetiers() {
-        /*(key2) onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet()*/
-        throw new NotImplementedException("Not implemented yet");
+    public Set<String> getApprentissage() {
+       return Collections.unmodifiableSet(apprentissage);
     }
 
-    private static Collection<String> getMetiersfromGroup(String key) {
-        /*        if (reverseFlGroups.containsKey(key)) {
-            candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
-        }*/
-        throw new NotImplementedException("Not implemented yet");
+    public Set<String> getBacsWithSpecialite() {
+        return Collections.unmodifiableSet(bacsWithSpecialite);
     }
 
-    public static Collection<String> getMetiersFromSecteur(String key) {
-        /* liensSecteursMetiers.getOrDefault(key, Collections.emptySet())*/
-        throw new NotImplementedException("Not implemented yet");
+    public static Map<String, Descriptifs.Descriptif> getDescriptifs() {
+        return Collections.unmodifiableMap(descriptifs);
     }
 
-    public static int getNbFormations(String fl) {
-        throw new NotImplementedException("Not implemented yet");
+    /**
+     * utilisé pour l'envoi des stats aux élèves
+     *
+     * @param bac le bac
+     * @param g le groupe
+     * @return les détails
+     */
+    public @NotNull StatsContainers.SimpleStatGroupParBac getSimpleGroupStats(@Nullable String bac, String g) {
+        if(bac == null) bac = PsupStatistiques.TOUS_BACS_CODE;
+        return getDetailedGroupStats(bac, g, false).stat();
     }
 
-    public static int getCapacity(String fl) {
-        throw new NotImplementedException("Not implemented yet");
+    /**
+     * utilisé pour l'envoi des stats aux profs
+     * @param bac le bac
+     * @param g le groupe
+     * @return les stats
+     */
+    private StatsContainers.DetailFiliere getDetailedGroupStats(@NotNull String bac, String g) {
+        return getDetailedGroupStats(bac, g, true);
     }
-
-    public static Collection<String> getFilieresFront() {
-        /* filieresFront */
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static PsupStatistiques.LASCorrespondance getLASCorrespondance() {
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static Map<Integer, String> getSpecialites() {
-        /*ServerData.specialites.specialites().forEach((iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod));*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static List<Pair<String, String>> getApprentissage() {
-        /*         backPsupData.formations().filieres.values().forEach(filiere -> {
-            String key = FILIERE_PREFIX + filiere.gFlCod;
-            if (filiere.apprentissage) {
-                AlgoSuggestions.apprentissage.add(key);
-                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
-                AlgoSuggestions.apprentissage.add(origKey);
-                AlgoSuggestions.apprentissage.add(flGroups.getOrDefault(origKey, origKey));
-            }
-        });
-        */
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static Collection<String> getBacsWithSpecialite() {
-        /*ServerData.specialites.specialitesParBac().keySet()*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static Descriptifs getDescriptifs() {
-        /* UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
+    private StatsContainers.DetailFiliere getDetailedGroupStats(@NotNull String bac, String g, boolean includeProfDetails) {
+        StatsContainers.SimpleStatGroupParBac statFil
+                = new StatsContainers.SimpleStatGroupParBac(
+                statistiques.getGroupStats(
+                        g,
+                        bac,
+                        !includeProfDetails
+                )
         );
-        */
-        throw new NotImplementedException("Not implemented yet");
-    }
 
-    public static Thematiques getThematiques() {
-        /*Thematiques.load();*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-
-    public static int getNbMetiersOnisep() {
-        /* onisepData.metiers().metiers().size())*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static int getNbThematiquesOnisep() {
-        /* onisepData.thematiques().thematiques().size());*/
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static Comparator<? super Object> getTypesMacros() {
-        /*  .backPsupData.formations().typesMacros */
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static void initStatistiques() {
-        /*        try {
-            ServerData.statistiques =  new PsupStatistiques();
-            ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                    "labelsDebug.json",
-                    Map.class
+        if(includeProfDetails) {
+            Map<String, StatsContainers.DetailFormation> statsFormations = new HashMap<>();
+            try {
+                List<Formation> fors = formations.getOrDefault(g, List.of());
+                fors.forEach(f -> {
+                    try {
+                        String fr = FORMATION_PREFIX + f.gTaCod;
+                        StatsContainers.SimpleStatGroupParBac statFor = new StatsContainers.SimpleStatGroupParBac(
+                                statistiques.getGroupStats(
+                                        fr,
+                                        bac,
+                                        !includeProfDetails)
+                        );
+                        statFor.stats().entrySet().removeIf(e -> e.getValue().statsScol().isEmpty());
+                        statsFormations.put(fr, new StatsContainers.DetailFormation(
+                                f.libelle,
+                                fr,
+                                statFor
+                        ));
+                    } catch (Exception ignored) {
+                        //ignored
+                    }
+                });
+            } catch (Exception ignored) {
+                //ignore
+            }
+            return new StatsContainers.DetailFiliere(
+                    g,
+                    statFil,
+                    statsFormations
             );
-        } catch (Exception e) {
-            SuggestionServer server = new SuggestionServer();
-            server.init();
+        } else {
+            return new StatsContainers.DetailFiliere(
+                    g,
+                    statFil,
+                    null
+            );
         }
-        */
-        throw new NotImplementedException("Not implemented yet");
     }
 
-    public static Formation getFormation(int gTaCod) {
-        throw new NotImplementedException("Not implemented yet");
-    }
-
-    public static StatsContainers.SimpleStatGroupParBac getSimpleGroupStats(String bac, String key) {
-        throw new NotImplementedException("Not implemented yet");
-    }
 
     public static void createGraph() {
         /*
@@ -356,8 +385,13 @@ public class SuggestionsData {
         * */
     }
 
-    public static Map<String,String> getFormationTofilieres() {
-        throw new NotImplementedException("Not implemented yet");
+    public Map<String,String> getFormationToFilieres() {
+        Map<String,String> result = new HashMap<>();
+        formations.forEach((key, value) -> value.forEach(f -> result.put(FORMATION_PREFIX + f.gTaCod, key)));
+        return result;
     }
 
+    public Set<String> getLASFilieres() {
+        return lasFilieres;
+    }
 }

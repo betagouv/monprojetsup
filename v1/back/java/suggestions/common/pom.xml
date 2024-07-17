@@ -79,6 +79,10 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>1.9.23</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

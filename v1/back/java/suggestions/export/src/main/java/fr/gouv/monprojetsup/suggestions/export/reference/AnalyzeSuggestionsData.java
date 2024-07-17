@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions.edgesKeys;
 import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 
 @Slf4j
@@ -25,15 +24,17 @@ import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 public class AnalyzeSuggestionsData {
 
     private final SuggestionsData data;
+    private final AlgoSuggestions algo;
 
     @Autowired
-    public AnalyzeSuggestionsData(SuggestionsData data) {
+    public AnalyzeSuggestionsData(
+            SuggestionsData data,
+            AlgoSuggestions algo) {
         this.data = data;
+        this.algo = algo;
     }
 
     public void analyze() throws Exception {
-
-        AlgoSuggestions.initialize();
 
         outputRelatedToHealth();
 
@@ -51,49 +52,49 @@ public class AnalyzeSuggestionsData {
     }
 
 
-    private static void outputFormationsSansThemes() throws IOException {
+    private void outputFormationsSansThemes() throws IOException {
 
         Serialisation.toJsonFile("formations_sans_themes.json",
-                AlgoSuggestions.edgesKeys.edges().entrySet().stream()
+                algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes.json",
-                AlgoSuggestions.edgesKeys.edges().entrySet().stream()
+                algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
         Serialisation.toJsonFile("formations_sans_themes_ni_metier.json",
-                AlgoSuggestions.edgesKeys.edges().entrySet().stream()
+                algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || Helpers.isMetier(f)))
-                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes_ni_formation.json",
-                AlgoSuggestions.edgesKeys.edges().entrySet().stream()
+                algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || isFiliere(f)))
-                        .map(e -> SuggestionsData.getDebugLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
 
     }
 
-    private static void outputMetiersSansFormations() throws IOException {
+    private void outputMetiersSansFormations() throws IOException {
 
 
 
-        Map<String, String> metiersSansFormations = edgesKeys.edges().entrySet().stream()
+        Map<String, String> metiersSansFormations = algo.edgesKeys.edges().entrySet().stream()
                 .filter(e -> Helpers.isMetier(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isFiliere))
-                .map(e -> Pair.of(e.getKey(), SuggestionsData.getDebugLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), data.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -121,11 +122,11 @@ public class AnalyzeSuggestionsData {
 
     }
 
-    private static void outputFormationsSansMetiers() throws IOException {
-        Map<String, String> formationsSansMetiers = edgesKeys.edges().entrySet().stream()
+    private void outputFormationsSansMetiers() throws IOException {
+        Map<String, String> formationsSansMetiers = algo.edgesKeys.edges().entrySet().stream()
                 .filter(e -> isFiliere(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isMetier))
-                .map(e -> Pair.of(e.getKey(), SuggestionsData.getDebugLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), data.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("groupe") && !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -161,19 +162,19 @@ public class AnalyzeSuggestionsData {
     }
 
     private void outputGraph() throws IOException {
-        Serialisation.toJsonFile("graph.json", edgesKeys.edges(), true);
+        Serialisation.toJsonFile("graph.json", algo.edgesKeys.edges(), true);
     }
     private void outputSemanticGraph() throws IOException {
         Edges edgesLabels = new Edges();
-        edgesLabels.createLabelledGraphFrom(edgesKeys, data.getLabels());
+        edgesLabels.createLabelledGraphFrom(algo.edgesKeys, data.getLabels());
         Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
     }
 
     private void outputRelatedToHealth() throws IOException {
         /* formations liés aux métiers de la santé */
         Serialisation.toJsonFile("relatedToHealth.json",
-                AlgoSuggestions.getRelatedToHealth()
-                        .stream().map(SuggestionsData::getDebugLabel)
+                algo.getRelatedToHealth()
+                        .stream().map(key -> data.getDebugLabel(key))
                         .toList()
                 , true);
 

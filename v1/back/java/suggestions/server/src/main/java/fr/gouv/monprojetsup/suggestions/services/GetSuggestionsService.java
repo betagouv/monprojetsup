@@ -42,6 +42,6 @@ public class GetSuggestionsService extends MySuggService<GetAffinitiesServiceDTO
     }
 
     public String checkHealth() {
-        return "OK" + "\n" + AlgoSuggestions.getStats();
+        return "OK" + "\n" + algo.getStats();
     }
 }

@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
 import lombok.AllArgsConstructor;
@@ -20,13 +19,6 @@ record ExplanationApprentissage (String option) {}
 
 record ExplanationTag(List<Path> pathes) {
     static DecimalFormat df = new DecimalFormat("#.#####");
-    public String toExplanation() {
-        return pathes.stream()
-                .filter(p -> p.nodes() != null && !p.nodes().isEmpty())
-                .sorted(Comparator.comparingDouble(Path::score).reversed())
-                .map(p -> df.format(p.score()) +  p.nodes().stream().map(SuggestionsData::getDebugLabel).collect(Collectors.joining(" -> ")))
-                .collect(Collectors.joining("\n\t", "\t", "\n"));
-    }
 
 }
 
@@ -51,30 +43,27 @@ record ExplanationTagShort(List<String> ns) {
         return new ExplanationTagShort(nodes.stream().toList());
     }
 
-    public String toExplanation() {
-        return toExplanation(",");
-    }
-    public String toExplanation(String sep) {
+    public String toExplanation(String sep, Map<String,String> labels) {
 
         String ssb = ns().stream()
-                .filter(s -> Helpers.isFiliere(s))
+                .filter(Helpers::isFiliere)
                 .sorted().map(
-                        SuggestionsData::getDebugLabel
+                        z -> labels.getOrDefault(z,z)
                 ).collect(Collectors.joining(sep, "\t", "\n")) +
                 ns().stream()
-                        .filter(s -> Helpers.isMetier(s))
+                        .filter(Helpers::isMetier)
                         .sorted().map(
-                                SuggestionsData::getDebugLabel
+                                z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
                 ns().stream()
-                        .filter(s -> Helpers.isTheme(s))
+                        .filter(Helpers::isTheme)
                         .sorted().map(
-                                SuggestionsData::getDebugLabel
+                                z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
                 ns().stream()
-                        .filter(s -> Helpers.isInteret(s))
+                        .filter(Helpers::isInteret)
                         .sorted().map(
-                                SuggestionsData::getDebugLabel
+                                z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n"));
 
         return ssb;
@@ -263,20 +252,18 @@ public class Explanation {
         return e;
     }
 
-    public String toHumanReadable() {
+    public String toHumanReadable(Map<String,String> labels) {
         StringBuilder sb = new StringBuilder();
         if(geo != null) {
-            geo.forEach(explanationGeo -> {
-                sb.append("préférence géographique:")
-                        .append(" ville=")
-                        .append(explanationGeo.city())
-                        .append(" distance=")
-                        .append(explanationGeo.distance()).append("\n");
-            });
+            geo.forEach(explanationGeo -> sb.append("préférence géographique:")
+                    .append(" ville=")
+                    .append(explanationGeo.city())
+                    .append(" distance=")
+                    .append(explanationGeo.distance()).append("\n"));
         }
         if(app != null) sb.append("Apprentissage: ").append(app.option()).append("\n");
         if(tags != null) {
-            sb.append("Lien avec:\n\n").append(tags.toExplanation("\n\t")).append("\n");
+            sb.append("Lien avec:\n\n").append(tags.toExplanation("\n\t", labels)).append("\n");
         }
         if(dur != null) sb.append("Durée: ").append(dur.option()).append("\n");
         if(simi != null) sb.append("Similarité: ").append(simi.fl()).append("\n");
@@ -287,12 +274,13 @@ public class Explanation {
         return sb.toString();
     }
 
-    public String toExplanation() {
+
+    public String toExplanation(Map<String,String> labels) {
         StringBuilder sb = new StringBuilder();
         if(geo != null) sb.append("geo=").append(geo).append("\n");
         if(app != null) sb.append("app=").append(app).append("\n");
-        if(tag != null) sb.append("tag=").append(tag.toExplanation()).append("\n");
-        if(tags != null) sb.append("tags=").append(tags.toExplanation()).append("\n");
+        //if(tag != null) sb.append("tag=").append(tag.toExplanation(labels)).append("\n");
+        if(tags != null) sb.append("tags=").append(tags.toExplanation("\n\t", labels)).append("\n");
         if(dur != null) sb.append("dur=").append(dur).append("\n");
         if(simi != null) sb.append("simi=").append(simi).append("\n");
         if(tbac != null) sb.append("tbac=").append(tbac).append("\n");

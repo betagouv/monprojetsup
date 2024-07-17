@@ -27,10 +27,12 @@ import java.util.stream.Collectors;
 public class GenerateMlDocs {
 
     private final SuggestionsData data;
+    private final AlgoSuggestions algo;
 
     @Autowired
-    public GenerateMlDocs(SuggestionsData data) {
+    public GenerateMlDocs(SuggestionsData data, AlgoSuggestions algo) {
         this.data = data;
+        this.algo = algo;
     }
 
     public void outputMlData() throws IOException {
@@ -42,7 +44,7 @@ public class GenerateMlDocs {
                 MetiersScrapped.class
         );
 
-        Descriptifs descriptifs1 = SuggestionsData.getDescriptifs();
+        Map<String, Descriptifs.Descriptif> descriptifs1 = SuggestionsData.getDescriptifs();
 
         val psupData =  Serialisation.fromZippedJson(
                 DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
@@ -55,7 +57,7 @@ public class GenerateMlDocs {
 
 
 
-        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
+        algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isFiliere(key)) {
                 //ajouter les descriptifs parcoursup
                 List<MlData.Data> texts = new ArrayList<>();
@@ -63,7 +65,7 @@ public class GenerateMlDocs {
                 if (descriptif1 != null) {
                     texts.add(new MlData.Data("descriptifs_onisep", descriptif1));
                 }
-                val formations = SuggestionsData.getFormationsFromFil(key);
+                val formations = data.getFormations(key);
                 formations.forEach(f -> {
                     val descriptif2 = descriptifsIndexedByGta.get(f.gTaCod);
                     if (descriptif2 != null) {
@@ -80,7 +82,7 @@ public class GenerateMlDocs {
         Serialisation.toJsonFile("ml_formations.json", datas, true);
 
         datas.clear();
-        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
+        algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isMetier(key)) {
                 //ajouter les descriptifs parcoursup
                 List<MlData.Data> texts = new ArrayList<>();
@@ -109,7 +111,7 @@ public class GenerateMlDocs {
         Serialisation.toJsonFile("ml_metiers.json", datas, true);
 
         Map<String, List<String>> tags = new HashMap<>();
-        AlgoSuggestions.edgesKeys.keys().forEach(key -> {
+        algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isTheme(key) || Helpers.isInteret(key)) {
                 tags.computeIfAbsent(data.getLabel(key), k -> new ArrayList<>()).add(key);
             }
@@ -117,7 +119,7 @@ public class GenerateMlDocs {
         Serialisation.toJsonFile("ml_tags.json", tags, true);
 
 
-        val gtaToFil = SuggestionsData.getFormationTofilieres();
+        val gtaToFil = data.getFormationToFilieres();
         List<Set<String>> voeuxParCandidat =
                 psupData.voeuxParCandidat().stream().map(
                         voeux -> voeux.stream().map(
@@ -136,16 +138,16 @@ public class GenerateMlDocs {
         try (CsvTools csv = new CsvTools("tags_recommendations_diff_hr.csv", ';')) {
             csv.appendHeaders(List.of("tag", "reference", "suggestions", "matched","missed", "added"));
             Gson gson = new Gson();
-            for (Map<String, String> data : datas) {
+            for (Map<String, String> d : datas) {
                 boolean first = true;
                 for(val h : headers) {
-                    String val = data.get(h);
+                    String val = d.get(h);
                     if(first) {
                         csv.append(val);
                         first = false;
                     } else {
                         List<String> vals = gson.fromJson(val, tt);
-                        val labels = vals.stream().map(SuggestionsData::getDebugLabel).sorted().toList();
+                        val labels = vals.stream().map(z -> data.getDebugLabel(z)).sorted().toList();
                         csv.append("\"" + String.join("\n", labels) + "\"");
                     }
                 }

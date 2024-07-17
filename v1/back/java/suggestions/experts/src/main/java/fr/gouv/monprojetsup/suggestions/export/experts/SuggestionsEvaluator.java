@@ -1,13 +1,14 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
-import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -19,33 +20,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.export.experts.Simulate.LOGGER;
-import static fr.gouv.monprojetsup.suggestions.export.experts.Simulate.REF_CASES_WITH_SUGGESTIONS;
+import static fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator.LOGGER;
+import static fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS;
 
-public class Evaluate {
+@Component
+public class SuggestionsEvaluator {
 
+
+    private final SuggestionsData data;
+
+    @Autowired
+    public SuggestionsEvaluator(SuggestionsData data) {
+        this.data = data;
+    }
 
     private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
 
     static Map<String, String> labelsNoDebug;
 
-    public static void main(String[] args) throws Exception {
+    public void evaluate() throws Exception {
 
-        try {
-            SuggestionsData.loadStatistiques();
-            labelsNoDebug = Serialisation.fromJsonFile(
-                    "labelsNoDebug.json",
-                    Map.class
-            );
-        } catch (Exception e) {
-            SuggestionServer server = new SuggestionServer();
-            server.init();
-        }
 
         ReferenceCases cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
 
-        cases.toDetails("details", true);
+        cases.toDetails("details", true, data.getLabels());
 
 
         try (
@@ -54,7 +52,7 @@ public class Evaluate {
                         StandardCharsets.UTF_8
                 )
         ) {
-            fos.write(cases.resume());
+            fos.write(cases.resume(data.getLabels()));
         }
 
         boolean stopOnFirstKO = true;
@@ -88,8 +86,8 @@ public class Evaluate {
                         .stream().filter(s -> Helpers.isFiliere(s.fl()) )
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
-                String worst = worstExpl == null ? "null" : worstExpl.humanReadable();
-                String worstName = worstExpl == null ? "null" : SuggestionsData.getDebugLabel(worstExpl.fl());
+                String worst = worstExpl == null ? "null" : worstExpl.humanReadable(data.getLabels());
+                String worstName = worstExpl == null ? "null" : data.getDebugLabel(worstExpl.fl());
 
                 if(refCase.expectations() != null && !refCase.expectations().isEmpty()) {
                     fos.write("\n\n\n***********************************************\n");
@@ -115,7 +113,7 @@ public class Evaluate {
                                             StandardCharsets.UTF_8
                                     )
                             ) {
-                                fos2.write(ReferenceCases.toExplanationString(refCase.pf()));
+                                fos2.write(ReferenceCases.toExplanationString(refCase.pf(), data.getLabels()));
                                 fos2.write("\n\n************ MISSED EXPECTATION ******************\n");
                                 fos2.write("\n\t" + expectation
                                         + "\n\n\t\twas overtaken by \n\n\t"
@@ -125,7 +123,7 @@ public class Evaluate {
                                 if (cod == null) {
                                     fos2.write("could not find '" + expectation + "'");
                                 } else {
-                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod));
+                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod, data.getLabels()));
                                 }
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");
@@ -144,7 +142,7 @@ public class Evaluate {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
                                 .filter(s -> Helpers.isFiliere(s.fl()))
-                                .map(e -> getOKPrefix(refCase, e.fl()) + SuggestionsData.getDebugLabel(e.fl()))
+                                .map(e -> getOKPrefix(refCase, e.fl()) + data.getDebugLabel(e.fl()))
                                 .collect(Collectors.joining("\n", "", "\n")));
                     }
 

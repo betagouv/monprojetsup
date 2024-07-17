@@ -1,3 +1,4 @@
+import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData
 import fr.gouv.monprojetsup.suggestions.server.config.SecurityConfig
 import fr.gouv.monprojetsup.suggestions.server.controllers.SuggestionsControllerz
@@ -33,16 +34,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SuggestionsControllerzTest(
     @Autowired val mvc: MockMvc,
-    @Autowired val data: SuggestionsData
+    @Autowired val algo: AlgoSuggestions
 ) {
 
     @Autowired
     lateinit var webServer: SuggestionServer
-
-    @BeforeAll
-    fun setUp() {
-        webServer.init(data)
-    }
 
     @Nested
     inner class `Quand on appelle la route des suggestions` {

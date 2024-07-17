@@ -4,12 +4,12 @@ import fr.gouv.monprojetsup.suggestions.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
-import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.suggestions.data.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algos.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algos.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.gFlCodToFrontId;
 
 @Component
 public class AlgoSuggestions {
@@ -42,9 +42,9 @@ public class AlgoSuggestions {
     private final SuggestionsData data;
 
     /* les relations entre les différents indices dans les nomenclatures */
-    public static final Edges edgesKeys = new Edges();
+    public final Edges edgesKeys = new Edges();
 
-    protected static final Set<String> apprentissage = new HashSet<>();
+    private Set<String> apprentissage;
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
 
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
@@ -55,27 +55,17 @@ public class AlgoSuggestions {
     private static final int MIN_NB_FORMATIONS_FOR_PENALTY = 50;
 
     //utilisé par suggestions
-    public static Map<String, Integer> codesSpecialites = new HashMap<>();
+    public Map<String, Integer> codesSpecialites = new HashMap<>();
     public static int p90NbFormations;
     public static int p75Capacity;
 
-    protected static PsupStatistiques.LASCorrespondance lasCorrespondance;
+    protected Set<String> lasFilieres;
 
     @Getter
-    protected static final Set<String> relatedToHealth = new HashSet<>();
+    protected final Set<String> relatedToHealth = new HashSet<>();
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
-    public static double getBigCapacityScore(String fl) {
-
-        int nbFormations = SuggestionsData.getNbFormations(fl);
-        int capacity = SuggestionsData.getCapacity(fl);
-
-        double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
-        double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
-        return capacityScore * nbFormationsScore;
-
-    }
     public static double getSmallCapacityScore(String fl) {
         return 1.0;
         /*
@@ -161,15 +151,14 @@ public class AlgoSuggestions {
             return List.of();
         }
         //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, data);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, data, this);
 
         Map<String, Affinite> affinites =
-                SuggestionsData.getFilieresFront().stream()
+                data.getFilieresFront().stream()
                 .collect(Collectors.toMap(
                         fl -> fl,
                         affinityEvaluator::getAffinityEvaluation
                 ));
-
 
         //computing maximal score for etalonnage
         double maxScore = affinites.values().stream().mapToDouble(aff -> aff.affinite).max().orElse(1.0) / MAX_AFFINITY_PERCENT;
@@ -188,11 +177,10 @@ public class AlgoSuggestions {
         //rounding to 6 digits
         double finalMaxScore = maxScore;
         affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
-        val sorted =  affinites.entrySet().stream()
+        return affinites.entrySet().stream()
                 .map(Pair::of)
                 .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite))
                 .toList();
-        return sorted;
     }
 
 
@@ -280,7 +268,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, cfg, data).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, cfg, data, this).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -303,7 +291,7 @@ public class AlgoSuggestions {
         if(profile == null) {
             return List.of();
         }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg, data);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg, data, this);
 
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
@@ -318,27 +306,27 @@ public class AlgoSuggestions {
     /**
      * Preccmpute some data used to to details details
      */
-    public static void initialize() throws IOException {
-
+    @PostConstruct
+    void initialize() throws IOException {
 
         SuggestionsData.createGraph();
 
-        SuggestionsData.getSpecialites().forEach(
-                (iMtCod, s) -> AlgoSuggestions.codesSpecialites.put(s, iMtCod)
+        data.getSpecialites().forEach(
+                (iMtCod, s) -> codesSpecialites.put(s, iMtCod)
         );
 
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(SuggestionsData.getBacsWithSpecialite());
+        bacsWithSpecialites.addAll(data.getBacsWithSpecialite());
 
-        List<Pair<String,String>> app = SuggestionsData.getApprentissage();
+        apprentissage = data.getApprentissage();
 
-        lasCorrespondance = SuggestionsData.getLASCorrespondance();
+        lasFilieres = data.getLASFilieres();
 
         relatedToHealth.addAll(edgesKeys
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
                 .keySet());
         relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.addAll(lasCorrespondance.lasToGeneric().keySet());
+        relatedToHealth.addAll(lasFilieres);
     }
 
 
@@ -346,13 +334,13 @@ public class AlgoSuggestions {
      * @param bac the bac
      * @return true if the bac is specified and it has three or more different specialites in terminale
      */
-    public static boolean hasSpecialitesInTerminale(String bac) {
+    public boolean hasSpecialitesInTerminale(String bac) {
         return bac == null || bac.isEmpty() || bacsWithSpecialites.contains(bac);
     }
 
-    private static final Set<String> bacsWithSpecialites = new HashSet<>();
+    private final Set<String> bacsWithSpecialites = new HashSet<>();
 
-    public static boolean existsInApprentissage(String grp) {
+    public boolean existsInApprentissage(String grp) {
         return apprentissage.contains(grp);
     }
 
@@ -366,7 +354,7 @@ public class AlgoSuggestions {
      * @param maxDistance the max distance
      * @return a map of pathes indexed by last node
      */
-    public static Map<String,List<Path>> computePathesFrom(String n, int maxDistance) {
+    public Map<String,List<Path>> computePathesFrom(String n, int maxDistance) {
         Pair<String, Integer> key = Pair.of(n, maxDistance);
 
         Map<String,List<Path>> result = pathsFromDistances.get(key);
@@ -383,16 +371,16 @@ public class AlgoSuggestions {
         return result2;
     }
 
-    public static boolean isRelatedToHealth(Set<String> nonZeroScores) {
+    public boolean isRelatedToHealth(Set<String> nonZeroScores) {
         return relatedToHealth.stream()
                 .anyMatch(nonZeroScores::contains);
     }
 
-    public static boolean isLas(String fl) {
-        return lasCorrespondance.isLas(fl);
+    public boolean isLas(String fl) {
+        return lasFilieres.contains(fl);
     }
 
-    public static String getStats() {
+    public String getStats() {
         return
                 "<br>\ndetails served since last boot: " + counter.get()
                         + "<br>\nnodes in graph: " + edgesKeys.nodes().size()

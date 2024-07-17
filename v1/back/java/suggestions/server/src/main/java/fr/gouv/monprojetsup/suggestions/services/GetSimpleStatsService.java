@@ -6,13 +6,20 @@ import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.Request, GetSimpleStatsService.Response> {
 
-    public GetSimpleStatsService() {
+    private final SuggestionsData data;
+
+    @Autowired
+    public GetSimpleStatsService(
+            SuggestionsData data
+    ) {
         super(Request.class);
+        this.data = data;
     }
 
     public record Request(
@@ -33,7 +40,7 @@ public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.R
 
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
-        @NotNull StatsContainers.SimpleStatGroupParBac stats = SuggestionsData.getSimpleGroupStats(
+        @NotNull StatsContainers.SimpleStatGroupParBac stats = data.getSimpleGroupStats(
                 req.bac(),
                 req.key
         );
