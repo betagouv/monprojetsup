@@ -9,30 +9,36 @@ import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.suggestions.export.experts.ReferenceCases.useRemoteUrl;
-import static fr.gouv.monprojetsup.suggestions.data.DataSources.PROFILS_EXPERTS_MPS_PATH;
-import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 
-public class Simulate {
+@Component
+public class SuggestionsGenerator {
 
-    public static final Logger LOGGER = Logger.getLogger(Simulate.class.getName());
+    private final SuggestionsData data;
+
+    @Autowired
+    public SuggestionsGenerator(SuggestionsData data) {
+        this.data = data;
+    }
+
+    public static final Logger LOGGER = Logger.getLogger(SuggestionsGenerator.class.getName());
     public static final String REF_CASES_WITH_SUGGESTIONS = "refCasesWithSuggestions.json";
 
     private static final Integer RESTRICT_TO_INDEX = null;
 
     private static final boolean ONLY_FORMATIONS = true;
 
-    public static void simulate() throws Exception {
+    public void generate() throws Exception {
 
 
         //we want the server in debug mode, with full explanations
         useRemoteUrl(false);
-
-        SuggestionsData.initStatistiques();
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
@@ -44,7 +50,7 @@ public class Simulate {
 
 
         LOGGER.info("Retrieving details and explanations...");
-        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX);
+        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getLabels());
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(

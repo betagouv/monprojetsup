@@ -3,8 +3,11 @@ package fr.gouv.monprojetsup.suggestions.server.controllers
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.server.BASE_PATH
-import fr.gouv.monprojetsup.suggestions.services.*
+import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService.EXPLANATIONS_ENDPOINT
+import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
+import fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService
+import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService.SUGGESTIONS_ENDPOINT
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
@@ -28,10 +31,10 @@ import org.springframework.web.bind.annotation.*
 
 
 class SuggestionsControllerz(
-    private val getExplanationsAndExamplesService: fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService,
-    private val getFormationsOfInterestService: fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService,
-    private val getSuggestionsService: fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService,
-    private val getSimpleStatsService: fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService
+    private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
+    private val getFormationsOfInterestService: GetFormationsOfInterestService,
+    private val getSuggestionsService: GetSuggestionsService,
+    private val getSimpleStatsService: GetSimpleStatsService
 ) {
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/$SUGGESTIONS_ENDPOINT")
@@ -46,8 +49,8 @@ class SuggestionsControllerz(
     fun getStats(
         @RequestParam("key")  @Parameter(name = "key", description = "clé de la formation", example = "fl1") key: String,
         @RequestParam("bac", required = false)  @Parameter(name = "key", description = "type de bac", example = "STMG") bac: String?
-    ): fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService.Response {
-        return getSimpleStatsService.handleRequestAndExceptions(fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService.Request(bac, key))
+    ): GetSimpleStatsService.Response {
+        return getSimpleStatsService.handleRequestAndExceptions(GetSimpleStatsService.Request(bac, key))
     }
 
     @Operation(summary = "Produit des explications au sujet de l'affinité d'un profil à une formation.",
@@ -59,7 +62,7 @@ class SuggestionsControllerz(
 
     @Operation(summary = "Récupère une liste de formations d'affectation d'un ou plusieurs types, les plus proches d'une liste de villes données.")
     @PostMapping("/foi")
-    fun getFormationsOfInterest(@RequestBody request : fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService.Request): fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService.Response = getFormationsOfInterestService.handleRequestAndExceptions(request)
+    fun getFormationsOfInterest(@RequestBody request : GetFormationsOfInterestService.Request): GetFormationsOfInterestService.Response = getFormationsOfInterestService.handleRequestAndExceptions(request)
 
     @Operation(summary = "Vérifie la santé du service.")
     @GetMapping("/ping")

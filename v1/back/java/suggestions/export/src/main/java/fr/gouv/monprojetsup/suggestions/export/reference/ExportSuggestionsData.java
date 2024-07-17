@@ -2,36 +2,34 @@ package fr.gouv.monprojetsup.suggestions.export.reference;
 
 import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.Constants;
-import fr.gouv.monprojetsup.suggestions.data.DataSources;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.data.model.Edges;
-import fr.gouv.monprojetsup.suggestions.data.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
-import fr.gouv.monprojetsup.suggestions.data.update.onisep.LienThematiqueFormation;
-import fr.gouv.monprojetsup.suggestions.data.update.onisep.LienThematiqueFormation2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class ExportSuggestionsData {
 
-    public static final Logger LOGGER = Logger.getLogger(ExportSuggestionsData.class.getName());
+    private final SuggestionsData data;
+    private final AlgoSuggestions algo;
 
     @Autowired
-    private SuggestionsData data;
+    public ExportSuggestionsData(
+            SuggestionsData data,
+            AlgoSuggestions algo) {
+        this.data = data;
+        this.algo = algo;
+    }
 
     public void export() throws Exception {
 
-        log.info("Initializing details ");
-        AlgoSuggestions.initialize();
 
         exportGraphStats();
 
@@ -43,51 +41,17 @@ public class ExportSuggestionsData {
 
         exportGroupsWithNoThemes();
 
-        exportNewEdgesFromNewThematiques();
 
     }
 
-    private void exportNewEdgesFromNewThematiques() throws IOException {
-        /* ******************** NOUVELLES THEMATIQUES **********************************/
-        Thematiques thematiques = SuggestionsData.getThematiques();
-
-        Edges edgesThematiquesFilieres = new Edges();
-        Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_FORMATIONS_PAIRES_PATH),
-                LienThematiqueFormation.class
-        ).paires().forEach(
-                p -> edgesThematiquesFilieres.put(
-                        Constants.gFlCodToFrontId(p.gFlCod()),
-                        thematiques.representatives(p.item())
-                )
-        );
-
-        LienThematiqueFormation2 indexThematiqueFormation2 = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.THEMATIQUES_FORMATIONS_PAIRES_v2_PATH),
-                LienThematiqueFormation2.class
-        );
-        Map<String, List<String>> newEdges
-                = indexThematiqueFormation2.paires()
-                .stream()
-                .filter(p -> AlgoSuggestions.edgesKeys.hasNode(p.flCod()) && !edgesThematiquesFilieres.hasEdge(p.flCod(), p.Themas()))
-                .collect(Collectors.groupingBy(LienThematiqueFormation2.ThematiqueFormationPaireOnisep2::flCod))
-                .entrySet()
-                .stream().collect(Collectors.toMap(
-                                e -> data.getLabel(e.getKey(), e.getKey()),
-                                e -> e.getValue().stream().map(d -> data.getLabel(d.Themas(), d.Themas())).toList()
-                        )
-                );
-        Serialisation.toJsonFile("newEdges.json", newEdges, true);
-
-    }
 
 
     private void exportGroupsWithNoThemes() throws IOException {
         /* *** formations sans themes associés  ****/
-        Map<String, String> groupsWithNoTheme = AlgoSuggestions.edgesKeys.edges()
+        Map<String, String> groupsWithNoTheme = algo.edgesKeys.edges()
                 .entrySet().stream().filter(e ->
                         e.getKey().startsWith(Constants.FILIERE_PREFIX)
-                                && AlgoSuggestions.edgesKeys.getPredecessors(e.getKey())
+                                && algo.edgesKeys.getPredecessors(e.getKey())
                                 .keySet().stream().filter(s -> s.startsWith(Constants.THEME_PREFIX)).findAny().isEmpty()
                 )
                 //.filter(p -> flGroups.getOrDefault(p.getKey(),p.getKey()).equals(p.getKey()))
@@ -98,9 +62,9 @@ public class ExportSuggestionsData {
                 );
         Serialisation.toJsonFile("filieresWithNoTheme.json", groupsWithNoTheme, true);
         Map<String, List<String>> filieresWithTheme = new TreeMap<>();
-        AlgoSuggestions.edgesKeys.edges().forEach((s, strings) -> {
+        algo.edgesKeys.edges().forEach((s, strings) -> {
             if (s.startsWith(Constants.FILIERE_PREFIX)) {
-                List<String> themes = AlgoSuggestions.edgesKeys.getPredecessors(s)
+                List<String> themes = algo.edgesKeys.getPredecessors(s)
                         .keySet().stream().filter(t -> t.startsWith(Constants.THEME_PREFIX))
                         .map(t -> data.getLabel(t, t))
                         .sorted()
@@ -114,7 +78,7 @@ public class ExportSuggestionsData {
 
     private void exportGroupsWithNoMetiers() throws IOException {
         /* *** formations sans métiers associés ****/
-        List<String> groupsWithNoMetiers = AlgoSuggestions.edgesKeys.edges()
+        List<String> groupsWithNoMetiers = algo.edgesKeys.edges()
                 .entrySet().stream().filter(
                         e -> Helpers.isFiliere(e.getKey())
                                 && e.getValue().stream().noneMatch(Helpers::isMetier)
@@ -125,30 +89,30 @@ public class ExportSuggestionsData {
 
     }
 
-    private static void exportGraphStats() throws IOException {
+    private void exportGraphStats() throws IOException {
 
         /* ** stats ***/
         Map<String, Long> stats = new TreeMap<>();
-        stats.put("métiers onisep", (long) SuggestionsData.getNbMetiersOnisep());
-        stats.put("métiers graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.MET_PREFIX)).count());
-        stats.put("thèmes dans les données onisep", (long) SuggestionsData.getNbThematiquesOnisep());
-        stats.put("thèmes graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.THEME_PREFIX)).count());
-        stats.put("formations graphe", AlgoSuggestions.edgesKeys.nodes().stream().filter(Helpers::isFiliere).count());
-        stats.put("secteurs d'activité", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)).count());
-        stats.put("centres d'intérêts", AlgoSuggestions.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.CENTRE_INTERETS_ROME) || n.startsWith(Constants.CENTRE_INTERETS_ONISEP)).count());
+        //stats.put("métiers onisep", (long) SuggestionsData.getNbMetiersOnisep());
+        stats.put("métiers graphe", algo.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.MET_PREFIX)).count());
+        //stats.put("thèmes dans les données onisep", (long) SuggestionsData.getNbThematiquesOnisep());
+        stats.put("thèmes graphe", algo.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.THEME_PREFIX)).count());
+        stats.put("formations graphe", algo.edgesKeys.nodes().stream().filter(Helpers::isFiliere).count());
+        stats.put("secteurs d'activité", algo.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)).count());
+        stats.put("centres d'intérêts", algo.edgesKeys.nodes().stream().filter(n -> n.startsWith(Constants.CENTRE_INTERETS_ROME) || n.startsWith(Constants.CENTRE_INTERETS_ONISEP)).count());
         Serialisation.toJsonFile("stats.json", stats, true);
 
     }
 
-    protected static void exportCorrSecteursMetiers() throws IOException {
+    protected void exportCorrSecteursMetiers() throws IOException {
 
         Map<String, List<String>> themesMetiers = new HashMap<>();
-        AlgoSuggestions.edgesKeys.edges().forEach((s, strings) -> {
+        algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = SuggestionsData.getDebugLabel(s);
+                String labelTheme = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(SuggestionsData::getDebugLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 themesMetiers.put(labelTheme, metiers);
             }
@@ -162,12 +126,12 @@ public class ExportSuggestionsData {
 
         Map<String, List<String>> secteursMetiers = new HashMap<>();
         Map<String, List<String>> metiersSecteurs = new HashMap<>();
-        AlgoSuggestions.edgesKeys.edges().forEach((s, strings) -> {
+        algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)) {
-                String secteur = SuggestionsData.getDebugLabel(s);
+                String secteur = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(SuggestionsData::getDebugLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 secteursMetiers.put(secteur, metiers);
                 metiers.forEach(met -> metiersSecteurs.computeIfAbsent(met, z -> new ArrayList<>()).add(secteur));
@@ -190,15 +154,15 @@ public class ExportSuggestionsData {
 
     }
 
-    protected static void exportCorrThemesFilieres() throws IOException {
+    protected void exportCorrThemesFilieres() throws IOException {
 
         Map<String, List<String>> themesFilieres = new HashMap<>();
-        AlgoSuggestions.edgesKeys.edges().forEach((s, strings) -> {
+        algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = SuggestionsData.getDebugLabel(s);
+                String labelTheme = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.FILIERE_PREFIX) || m.startsWith(Constants.TYPE_FORMATION_PREFIX))
-                        .map(SuggestionsData::getDebugLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 themesFilieres.put(labelTheme, metiers);
             }

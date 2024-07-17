@@ -12,35 +12,35 @@ import java.util.List;
 
 
 @Component
-public class GenerateExpertsDocs {
+public class DocsGenerator {
 
 
     private final SuggestionsData data;
+    private final SuggestionsGenerator suggestionsGenerator;
 
     @Autowired
-    public GenerateExpertsDocs(SuggestionsData data) {
+    public DocsGenerator(SuggestionsData data, SuggestionsGenerator suggestionsGenerator)
+    {
         this.data = data;
+        this.suggestionsGenerator = suggestionsGenerator;
     }
 
     public void generate() throws Exception {
 
 
-        SuggestionsData.initStatistiques();
-
-
         //load Map<String, ProfileDTO> profiles = new HashMap<>(); from profilsExperts.json
         ReferenceCases cases;
         try {
-            cases = ReferenceCases.loadFromFile(Simulate.REF_CASES_WITH_SUGGESTIONS);
+            cases = ReferenceCases.loadFromFile(SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS);
         } catch (Exception e) {
-            Simulate.LOGGER.info("Generating ref profiles");
-            Simulate.simulate();
-            cases = ReferenceCases.loadFromFile(Simulate.REF_CASES_WITH_SUGGESTIONS);
+            SuggestionsGenerator.LOGGER.info("Generating ref profiles");
+            suggestionsGenerator.generate();
+            cases = ReferenceCases.loadFromFile(SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS);
         }
 
         cases = toHumanReadable(cases);
 
-        cases.toDetails("détails", true);
+        cases.toDetails("détails", true, data.getLabels());
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
@@ -48,10 +48,10 @@ public class GenerateExpertsDocs {
                         StandardCharsets.UTF_8
                 )
         ) {
-            fos.write(cases.resume());
+            fos.write(cases.resume(data.getLabels()));
         }
 
-        cases.resumeCsv("profiles_expectations_suggestions.csv");
+        cases.resumeCsv("profiles_expectations_suggestions.csv", data.getLabels());
 
     }
 

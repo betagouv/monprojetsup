@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.suggestions.algos;
 
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import org.jetbrains.annotations.Nullable;
@@ -9,6 +8,7 @@ import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static fr.gouv.monprojetsup.suggestions.data.Constants.BR;
 import static fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO.SUGG_PENDING;
@@ -46,9 +46,9 @@ public record Suggestion(
                 );
     }
 
-    public String humanReadable() {
+    public String humanReadable(Map<String,String> labels) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t" + SuggestionsData.getDebugLabel(fl));
+        sb.append("\t" + labels.getOrDefault(fl,fl));
         sb.append(lineSeparator());
         sb.append(lineSeparator());
         if(expl != null) {
@@ -57,7 +57,7 @@ public record Suggestion(
                     continue;
                 }
                 sb.append("\n");
-                sb.append(e.toHumanReadable().replace(BR, ""));
+                sb.append(e.toHumanReadable(labels).replace(BR, ""));
             }
         }
         return sb.toString();

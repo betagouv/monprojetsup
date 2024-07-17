@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.data.distances;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.CitiesBack;
 import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
+import fr.gouv.monprojetsup.suggestions.data.model.formations.Formation;
 import fr.gouv.monprojetsup.suggestions.data.tools.GeodeticDistance;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -14,40 +15,6 @@ import static java.lang.Math.min;
 @Slf4j
 public class Distances {
     private static final Map<String, List<Coords>> cityClientKeyToCities = new HashMap<>();
-
-    public static List<String> getCities(String flKey, Set<String> favorites) {
-
-        List<Coords> cities = favorites.stream().flatMap(
-                cityName -> cityClientKeyToCities.getOrDefault(cityName, List.of()).stream()).distinct().toList();
-
-        val formations = SuggestionsData.getFormationsFromFil(flKey);
-
-        if (cities.isEmpty()) {
-            val l = new ArrayList<>(formations);
-            Collections.shuffle(l);
-            return l
-                    .stream()
-                    .map(f -> f.commune)
-                    .filter(Objects::nonNull)
-                    .toList();
-
-        }
-
-        Map<String, Double> citiesDistances = new HashMap<>();
-
-        formations
-                .stream()
-                .filter(f -> f.lat != null)
-                .forEach(f -> {
-                    double distance = cities.stream().mapToDouble(c -> GeodeticDistance.distance(c.gps_lat(), c.gps_lng(), f.lat, f.lng))
-                            .min().orElse(Double.MAX_VALUE);
-                    if (f.commune != null && !f.commune.isEmpty()) {
-                        citiesDistances.put(f.commune, min(citiesDistances.getOrDefault(f.commune, Double.MAX_VALUE), distance));
-                    }
-                });
-
-        return citiesDistances.keySet().stream().sorted(Comparator.comparing(citiesDistances::get)).toList();
-    }
 
     public static void init(CitiesBack cities) {
         //double indexation par nom et par zip code

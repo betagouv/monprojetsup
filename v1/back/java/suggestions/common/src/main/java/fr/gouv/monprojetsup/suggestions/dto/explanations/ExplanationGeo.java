@@ -23,14 +23,16 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
     /**
      * computes minimal distance between a city and a filiere
      *
-     * @param flKey     the node, either "fl123" or "fr1223"
-     * @param cityName the city name
+     * @param flKey             the node, either "fl123" or "fr1223"
+     * @param cityName          the city name
      * @return the minimal distance of the city to a etablissement providing this filiere
      */
     public static @NotNull List<ExplanationGeo> getGeoExplanations(
             String flKey,
             String cityName,
-            ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches) {
+            List<Formation> fors,
+            ConcurrentBoundedMapQueue<Paire<String, String>,
+                    List<ExplanationGeo>> distanceCaches) {
         Paire<String, String> p = new Paire<>(flKey, cityName);
 
         val l = distanceCaches.get(p);
@@ -39,18 +41,6 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
         List<Coords> cities = Distances.getCity(cityName);
         if (cities == null || cities.isEmpty())
             return Collections.emptyList();
-
-        List<Formation> fors = Collections.emptyList();
-        ///attention aux groupes
-        if (flKey.startsWith(FILIERE_PREFIX)) {
-            fors = SuggestionsData.getFormationsFromFil(flKey);
-        } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
-            int gTaCod = Integer.parseInt(flKey.substring(2));
-            Formation f = SuggestionsData.getFormation(gTaCod);
-            if (f != null) {
-                fors = List.of(f);
-            }
-        }
 
         List<Pair<String, Coords>> coords = fors.stream()
                 .filter(f -> f.lng != null && f.lat != null)
@@ -78,17 +68,15 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
             Collection<String> flKeys,
             String cityName,
             int maxResultsPerNode,
+            List<Formation> fors,
             ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches
     ) {
         return
-                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, distanceCaches).stream().limit(maxResultsPerNode))
+                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, fors, distanceCaches)
+                                .stream().limit(maxResultsPerNode))
                         .filter(Objects::nonNull)
                         .sorted(Comparator.comparing(ExplanationGeo::distance))
                         .toList();
     }
 
-    public ExplanationGeo merge2(ExplanationGeo other) {
-        if (other == null) return this;
-        return (this.distance <= other.distance) ? this : other;
-    }
 }
