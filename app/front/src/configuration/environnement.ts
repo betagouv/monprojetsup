@@ -8,7 +8,7 @@ export const env = createEnv({
     VITE_PUBLIC_WEBSITE_URL: z.string().url(),
     VITE_KEYCLOAK_ROYAUME_URL: z.string().url(),
     VITE_KEYCLOAK_CLIENT_ID: z.string(),
-    VITE_KEYCLOAK_CLIENT_SECRET: z.string(),
+    VITE_KEYCLOAK_CLIENT_SECRET: import.meta.env.VITE_TEST_MODE === "true" ? z.string().optional() : z.string(),
     VITE_TEST_MODE: z
       .string()
       .refine((variable) => variable === "true" || variable === "false")
