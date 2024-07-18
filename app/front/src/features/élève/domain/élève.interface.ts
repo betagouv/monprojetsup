@@ -1,22 +1,17 @@
 import { type Ville } from "@/features/ville/domain/ville.interface";
 
 export type Élève = {
-  id: string;
-  nom: string;
-  prénom: string;
-  nomUtilisateur: string;
-  email?: string;
-  situation?: SituationÉlève;
-  classe?: ClasseÉlève;
-  bac?: string;
-  spécialités?: string[];
-  domaines?: string[];
-  centresIntêrets?: string[];
-  métiers?: string[];
-  duréeÉtudesPrévue?: DuréeÉtudesPrévueÉlève;
-  alternance?: AlternanceÉlève;
-  villes?: Ville[];
-  formations?: string[];
+  situation: SituationÉlève | null;
+  classe: ClasseÉlève | null;
+  bac: string | null;
+  spécialités: string[] | null;
+  domaines: string[] | null;
+  centresIntêrets: string[] | null;
+  métiersFavoris: string[] | null;
+  duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+  alternance: AlternanceÉlève | null;
+  communesFavorites: Ville[] | null;
+  formationsFavorites: string[] | null;
 };
 
 export const situationÉlève = ["aucune_idee", "quelques_pistes", "projet_precis"] as const;

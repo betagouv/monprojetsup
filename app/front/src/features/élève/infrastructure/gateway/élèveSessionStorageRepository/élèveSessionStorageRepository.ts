@@ -1,39 +1,39 @@
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
-export class élèveSessionStorageRepository implements ÉlèveRepository {
+export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
   private _SESSION_STORAGE_PREFIX = "élève";
 
-  public async récupérer(): Promise<Élève | undefined> {
+  private _élève: Élève = {
+    situation: null,
+    classe: null,
+    bac: null,
+    spécialités: null,
+    domaines: null,
+    centresIntêrets: null,
+    métiersFavoris: null,
+    duréeÉtudesPrévue: null,
+    alternance: null,
+    communesFavorites: null,
+    formationsFavorites: null,
+  };
+
+  public async récupérerProfil(): Promise<Élève | undefined> {
     const élève = sessionStorage.getItem(this._SESSION_STORAGE_PREFIX);
 
-    if (!élève) return undefined;
+    if (élève) {
+      this._élève = JSON.parse(élève);
+    } else {
+      sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(this._élève));
+    }
 
-    return JSON.parse(élève);
+    return this._élève;
   }
 
-  public async mettreÀJour(données: Partial<Omit<Élève, "id">>): Promise<Élève | undefined> {
-    const élève = await this.récupérer();
+  public async mettreÀJourProfil(élève: Élève): Promise<Élève | undefined> {
+    this._élève = élève;
+    sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(this._élève));
 
-    if (!élève) return undefined;
-
-    const élèveMisÀJour: Élève = { ...élève, ...données };
-
-    sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(élèveMisÀJour));
-
-    return élèveMisÀJour;
-  }
-
-  public async créer(): Promise<Élève> {
-    const élève = {
-      id: Date.now().toString(),
-      nom: "Nom",
-      prénom: "Prénom",
-      nomUtilisateur: "nomUtilisateur",
-      email: "example@example.com",
-    };
-
-    sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(élève));
-    return élève;
+    return this._élève;
   }
 }

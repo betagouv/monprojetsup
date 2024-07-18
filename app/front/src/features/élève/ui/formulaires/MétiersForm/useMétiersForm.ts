@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès }: useMétiersFormArgs) {
+  const NOM_ATTRIBUT = "métiersFavoris";
   const [rechercheMétier, setRechercheMétier] = useState<string>();
   const [valeurSituationMétiers, setValeurSituationMétiers] = useState<SituationMétiersÉlève>();
 
@@ -26,7 +27,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const métiersSélectionnésParDéfaut = useMemo(() => getValues("métiers"), [getValues, valeurSituationMétiers]);
+  const métiersSélectionnésParDéfaut = useMemo(() => getValues(NOM_ATTRIBUT), [getValues, valeurSituationMétiers]);
 
   useEffect(() => {
     if (métiersSélectionnésParDéfaut && métiersSélectionnésParDéfaut.length > 0) {
@@ -42,7 +43,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
   } = useQuery(rechercheMétiersQueryOptions(rechercheMétier));
 
   const { data: aperçusMétiersSélectionnésParDéfaut } = useQuery(
-    récupérerAperçusMétiersQueryOptions(métiersSélectionnésParDéfaut),
+    récupérerAperçusMétiersQueryOptions(métiersSélectionnésParDéfaut ?? []),
   );
 
   useEffect(() => {
@@ -50,14 +51,14 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
   }, [rechercheMétier, rechercherMétiers]);
 
   useEffect(() => {
-    if (valeurSituationMétiers === "aucune_idee") {
-      setValue("métiers", []);
+    if (!métiersSélectionnésParDéfaut || valeurSituationMétiers === "aucune_idee") {
+      setValue(NOM_ATTRIBUT, []);
     }
-  }, [setValue, valeurSituationMétiers]);
+  }, [métiersSélectionnésParDéfaut, setValue, valeurSituationMétiers]);
 
   const auChangementDesMétiersSélectionnés = (métiersSélectionnés: SélecteurMultipleOption[]) => {
     setValue(
-      "métiers",
+      NOM_ATTRIBUT,
       métiersSélectionnés.map((métier) => métier.valeur),
     );
   };

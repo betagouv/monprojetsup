@@ -24,7 +24,7 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const villesSélectionnéesParDéfaut = useMemo(() => getValues("villes"), [getValues]);
+  const villesSélectionnéesParDéfaut = useMemo(() => getValues("communesFavorites"), [getValues]);
 
   const {
     data: villes,
@@ -36,9 +36,11 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     rechercherVilles();
   }, [rechercheVille, rechercherVilles]);
 
+  useEffect(() => setValue("communesFavorites", []), [setValue]);
+
   const auChangementDesVillesSélectionnées = (villesSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
-      "villes",
+      "communesFavorites",
       villesSélectionnées.map((ville) => JSON.parse(ville.valeur)),
     );
   };

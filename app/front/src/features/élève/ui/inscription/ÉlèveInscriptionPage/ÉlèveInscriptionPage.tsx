@@ -6,6 +6,7 @@ import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
 import FormationsForm from "@/features/élève/ui/formulaires/FormationsForm/FormationsForm";
@@ -13,7 +14,6 @@ import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/Intê
 import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
-import { élèveQueryOptions } from "@/features/élève/ui/options";
 import {
   étapeActuelleÉtapesInscriptionÉlèveStore,
   étapePrécédenteÉtapesInscriptionÉlèveStore,

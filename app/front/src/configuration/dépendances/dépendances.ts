@@ -1,3 +1,4 @@
+import { env } from "@/configuration/environnement";
 import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.interface";
 import { bacInMemoryRepository } from "@/features/bac/infrastructure/gateway/bacInMemoryRepository/bacInMemoryRepository";
 import { RechercherSpécialitésPourUnBacUseCase } from "@/features/bac/usecase/RechercherSpécialitésPourUnBac";
@@ -9,11 +10,11 @@ import { RécupérerCentresIntêretsGroupésParCatégorieUseCase } from "@/featu
 import { type DomaineProfessionnelRepository } from "@/features/domaineProfessionnel/infrastructure/domaineProfessionnelRepository.interface";
 import { domaineProfessionnelInMemoryRepository } from "@/features/domaineProfessionnel/infrastructure/gateway/domaineProfessionnelInMemoryRepository/domaineProfessionnelInMemoryRepository";
 import { RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase } from "@/features/domaineProfessionnel/usecase/RécupérerDomainesProfessionnelsGroupésParCatégorie";
+import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
-import { élèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
-import { CréerÉlèveUseCase } from "@/features/élève/usecase/CréerÉlève";
-import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourÉlève";
-import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerÉlève";
+import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
+import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
+import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
@@ -29,6 +30,7 @@ import { type VilleRepository } from "@/features/ville/infrastructure/villeRepos
 import { RechercherVillesUseCase } from "@/features/ville/usecase/RechercherVilles";
 import { HttpClient } from "@/services/httpClient/httpClient";
 import { Logger } from "@/services/logger/logger";
+import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
 
 export class Dépendances {
   private static instance: Dépendances;
@@ -36,6 +38,8 @@ export class Dépendances {
   private readonly _logger: Logger;
 
   private readonly _httpClient: HttpClient;
+
+  private readonly _mpsApiHttpClient: MpsApiHttpClient;
 
   private readonly _élèveRepository: ÉlèveRepository;
 
@@ -53,11 +57,9 @@ export class Dépendances {
 
   private readonly _villeRepository: VilleRepository;
 
-  public readonly créerÉlèveUseCase: CréerÉlèveUseCase;
+  public readonly mettreÀJourProfilÉlèveUseCase: MettreÀJourÉlèveUseCase;
 
-  public readonly mettreÀJourÉlèveUseCase: MettreÀJourÉlèveUseCase;
-
-  public readonly récupérerÉlèveUseCase: RécupérerÉlèveUseCase;
+  public readonly récupérerProfilÉlèveUseCase: RécupérerÉlèveUseCase;
 
   public readonly récupérerAperçusMétiersUseCase: RécupérerAperçusMétiersUseCase;
 
@@ -84,7 +86,10 @@ export class Dépendances {
   private constructor() {
     this._logger = new Logger();
     this._httpClient = new HttpClient(this._logger);
-    this._élèveRepository = new élèveSessionStorageRepository();
+    this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, env.VITE_API_URL);
+    this._élèveRepository = env.VITE_TEST_MODE
+      ? new ÉlèveSessionStorageRepository()
+      : new ÉlèveHttpRepository(this._mpsApiHttpClient);
     this._formationRepository = new formationInMemoryRepository();
     this._formationHttpRepository = new formationHttpRepository(this._httpClient);
     this._métierRepository = new métierInMemoryRepository();
@@ -93,9 +98,8 @@ export class Dépendances {
     this._centreIntêretRepository = new centreIntêretInMemoryRepository();
     this._villeRepository = new villeHTTPRepository(this._httpClient);
 
-    this.créerÉlèveUseCase = new CréerÉlèveUseCase(this._élèveRepository);
-    this.mettreÀJourÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
-    this.récupérerÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
+    this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
+    this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
     this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
     this.récupérerAperçusFormationsUseCase = new RécupérerAperçusFormationsUseCase(this._formationRepository);

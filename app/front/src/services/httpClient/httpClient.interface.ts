@@ -3,7 +3,6 @@ export type IHttpClient = {
 };
 
 export type HttpClientOptions = {
-  authorization?: string;
   body?: {};
   endpoint: string;
   méthode: "GET" | "POST";

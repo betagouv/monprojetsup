@@ -42,7 +42,7 @@ const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeT
         <FiltresGroupésParCatégorie
           auChangementFiltresSélectionnés={(filtreIdsSélectionnés) => setValue("domaines", filtreIdsSélectionnés)}
           catégories={filtresGroupésParCatégories}
-          filtreIdsSélectionnésParDéfaut={getValues("domaines")}
+          filtreIdsSélectionnésParDéfaut={getValues("domaines") ?? []}
           niveauDeTitre={niveauDeTitreCatégories}
         />
         <div

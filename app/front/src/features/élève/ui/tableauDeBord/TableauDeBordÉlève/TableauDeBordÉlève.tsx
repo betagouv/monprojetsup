@@ -4,7 +4,7 @@ import profilSVG from "@/assets/profil.svg";
 import Head from "@/components/_layout/Head/Head";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import { élèveQueryOptions } from "@/features/élève/ui/options";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import CarteTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève";
 import { type CarteTableauDeBordÉlèveProps } from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève.interface";
 import TémoignageTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/TémoignageTableauDeBordÉlève/TémoignageTableauDeBordÉlève";

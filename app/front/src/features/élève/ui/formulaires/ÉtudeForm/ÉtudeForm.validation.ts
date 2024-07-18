@@ -3,19 +3,22 @@ import { alternanceÉlève, duréeÉtudesPrévueÉlève } from "@/features/élè
 import { z } from "zod";
 
 export const étudeValidationSchema = z.object({
-  duréeÉtudesPrévue: z.enum([...duréeÉtudesPrévueÉlève, ""], {
-    errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
-  }),
-  alternance: z.enum([...alternanceÉlève, ""], {
-    errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
-  }),
-  villes: z
+  duréeÉtudesPrévue: z
+    .enum(duréeÉtudesPrévueÉlève, {
+      errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
+    })
+    .nullable(),
+  alternance: z
+    .enum(alternanceÉlève, {
+      errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
+    })
+    .nullable(),
+  communesFavorites: z
     .object({
       codeInsee: z.string(),
       nom: z.string(),
       latitude: z.number(),
       longitude: z.number(),
     })
-    .array()
-    .optional(),
+    .array(),
 });

@@ -5,6 +5,6 @@ export class RécupérerÉlèveUseCase {
   public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
 
   public async run(): Promise<Élève | undefined> {
-    return await this._élèveRepository.récupérer();
+    return await this._élèveRepository.récupérerProfil();
   }
 }

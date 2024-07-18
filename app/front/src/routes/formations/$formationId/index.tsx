@@ -1,4 +1,4 @@
-import { détailFormationQueryOptions } from "@/features/formation/ui/options";
+import { détailFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/formations/$formationId/")({

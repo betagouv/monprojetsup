@@ -8,11 +8,13 @@ import { type FormationAperçu } from "@/features/formation/domain/formation.int
 import {
   rechercheFormationsQueryOptions,
   récupérerAperçusFormationsQueryOptions,
-} from "@/features/formation/ui/options";
+} from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès }: useFormationsFormArgs) {
+  const NOM_ATTRIBUT = "formationsFavorites";
+
   const [rechercheFormation, setRechercheFormation] = useState<string>();
   const [valeurSituationFormations, setValeurSituationFormations] = useState<SituationFormationsÉlève>();
 
@@ -29,7 +31,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   });
 
   const formationsSélectionnéesParDéfaut = useMemo(
-    () => getValues("formations"),
+    () => getValues(NOM_ATTRIBUT),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getValues, valeurSituationFormations],
   );
@@ -48,7 +50,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   } = useQuery(rechercheFormationsQueryOptions(rechercheFormation));
 
   const { data: aperçusFormationsSélectionnéesParDéfaut } = useQuery(
-    récupérerAperçusFormationsQueryOptions(formationsSélectionnéesParDéfaut),
+    récupérerAperçusFormationsQueryOptions(formationsSélectionnéesParDéfaut ?? []),
   );
 
   useEffect(() => {
@@ -56,14 +58,14 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   }, [rechercheFormation, rechercherFormations]);
 
   useEffect(() => {
-    if (valeurSituationFormations === "aucune_idee") {
-      setValue("formations", []);
+    if (!formationsSélectionnéesParDéfaut || valeurSituationFormations === "aucune_idee") {
+      setValue(NOM_ATTRIBUT, []);
     }
-  }, [setValue, valeurSituationFormations]);
+  }, [formationsSélectionnéesParDéfaut, setValue, valeurSituationFormations]);
 
   const auChangementDesFormationsSélectionnées = (formationsSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
-      "formations",
+      NOM_ATTRIBUT,
       formationsSélectionnées.map((formation) => formation.valeur),
     );
   };

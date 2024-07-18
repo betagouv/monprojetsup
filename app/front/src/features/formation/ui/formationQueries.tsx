@@ -15,7 +15,7 @@ export const rechercheFormationsQueryOptions = (recherche?: string) =>
     enabled: false,
   });
 
-export const récupérerAperçusFormationsQueryOptions = (formationIds?: Array<Formation["id"]>) =>
+export const récupérerAperçusFormationsQueryOptions = (formationIds: Array<Formation["id"]>) =>
   queryOptions({
     queryKey: ["formations", "aperçu", formationIds],
     queryFn: async () => {
