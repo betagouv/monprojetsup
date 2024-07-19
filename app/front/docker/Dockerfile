@@ -1,6 +1,15 @@
 # Use an official node image as the base image
 FROM node:20-alpine3.20 AS build
 
+# Arguments declaration
+ARG VITE_APP_URL
+ARG VITE_API_URL
+ARG VITE_PUBLIC_WEBSITE_URL
+ARG VITE_KEYCLOAK_ROYAUME_URL
+ARG VITE_KEYCLOAK_CLIENT_ID
+ARG VITE_KEYCLOAK_CLIENT_SECRET
+ARG VITE_TEST_MODE
+
 # Set the working directory in the container
 WORKDIR /app
 
