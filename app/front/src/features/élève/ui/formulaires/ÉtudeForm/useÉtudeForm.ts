@@ -3,19 +3,19 @@ import { type AlternanceOptions, type DuréeÉtudesPrévueOptions, type useÉtud
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
+import { type Commune } from "@/features/commune/domain/commune.interface";
+import { rechercheCommunesQueryOptions } from "@/features/commune/ui/communeQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
-import { type Ville } from "@/features/ville/domain/ville.interface";
-import { rechercheVillesQueryOptions } from "@/features/ville/ui/options";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: useÉtudeFormArgs) {
-  const [rechercheVille, setRechercheVille] = useState<string>();
+  const [rechercheCommune, setRechercheCommune] = useState<string>();
 
-  const villeVersOptionVille = useCallback((ville: Ville) => {
+  const communeVersOptionCommune = useCallback((commune: Commune) => {
     return {
-      valeur: JSON.stringify(ville),
-      label: ville.nom,
+      valeur: JSON.stringify(commune),
+      label: commune.nom,
     };
   }, []);
 
@@ -24,24 +24,24 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const villesSélectionnéesParDéfaut = useMemo(() => getValues("communesFavorites"), [getValues]);
+  const communesSélectionnéesParDéfaut = useMemo(() => getValues("communesFavorites"), [getValues]);
 
   const {
-    data: villes,
-    refetch: rechercherVilles,
-    isFetching: rechercheVillesEnCours,
-  } = useQuery(rechercheVillesQueryOptions(rechercheVille));
+    data: communes,
+    refetch: rechercherCommunes,
+    isFetching: rechercheCommunesEnCours,
+  } = useQuery(rechercheCommunesQueryOptions(rechercheCommune));
 
   useEffect(() => {
-    rechercherVilles();
-  }, [rechercheVille, rechercherVilles]);
+    rechercherCommunes();
+  }, [rechercheCommune, rechercherCommunes]);
 
   useEffect(() => setValue("communesFavorites", []), [setValue]);
 
-  const auChangementDesVillesSélectionnées = (villesSélectionnées: SélecteurMultipleOption[]) => {
+  const auChangementDesCommunesSélectionnées = (communesSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
       "communesFavorites",
-      villesSélectionnées.map((ville) => JSON.parse(ville.valeur)),
+      communesSélectionnées.map((commune) => JSON.parse(commune.valeur)),
     );
   };
 
@@ -89,10 +89,10 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     register,
     duréeÉtudesPrévueOptions,
     alternanceOptions,
-    villesSuggérées: villes?.map(villeVersOptionVille) ?? [],
-    villesSélectionnéesParDéfaut: villesSélectionnéesParDéfaut?.map(villeVersOptionVille) ?? [],
-    rechercheVillesEnCours,
-    auChangementDesVillesSélectionnées,
-    àLaRechercheDUneVille: setRechercheVille,
+    communesSuggérées: communes?.map(communeVersOptionCommune) ?? [],
+    communesSélectionnéesParDéfaut: communesSélectionnéesParDéfaut?.map(communeVersOptionCommune) ?? [],
+    rechercheCommunesEnCours,
+    auChangementDesCommunesSélectionnées,
+    àLaRechercheDUneCommune: setRechercheCommune,
   };
 }

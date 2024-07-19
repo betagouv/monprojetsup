@@ -39,10 +39,10 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
             texteMisEnAvant={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.ALTERNANCE_SUITE}
           />
         )}
-        {explications.villes.length > 0 && (
+        {explications.communes.length > 0 && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
-            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.VILLES}
-            éléments={explications.villes.map((ville) => `${ville.nom} (${ville.distanceKm}km)`)}
+            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.COMMUNES}
+            éléments={explications.communes.map((commune) => `${commune.nom} (${commune.distanceKm}km)`)}
           />
         )}
         {explications.formationsSimilaires.length > 0 && (

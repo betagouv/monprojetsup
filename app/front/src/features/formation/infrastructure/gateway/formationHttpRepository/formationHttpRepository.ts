@@ -75,7 +75,7 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
-      villes: formationHttp.formation.villes,
+      communes: formationHttp.formation.villes,
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
         nom: métier.nom,
@@ -85,10 +85,10 @@ export class formationHttpRepository implements FormationRepository {
       affinité: formationHttp.formation.tauxAffinite ?? null,
       explications: formationHttp.explications
         ? {
-            villes:
-              formationHttp.explications.geographique.map((ville) => ({
-                nom: ville.nomVille,
-                distanceKm: ville.distanceKm,
+            communes:
+              formationHttp.explications.geographique.map((commune) => ({
+                nom: commune.nomVille,
+                distanceKm: commune.distanceKm,
               })) ?? [],
             formationsSimilaires:
               formationHttp.explications.formationsSimilaires.map((formation) => ({

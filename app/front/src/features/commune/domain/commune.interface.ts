@@ -1,4 +1,4 @@
-export type Ville = {
+export type Commune = {
   codeInsee: string;
   nom: string;
   latitude: number;

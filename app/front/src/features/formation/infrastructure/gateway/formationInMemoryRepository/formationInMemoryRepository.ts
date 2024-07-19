@@ -76,7 +76,7 @@ export class formationInMemoryRepository implements FormationRepository {
         },
         { nom: "Les compétences, méthodes de travail et savoir-faire", pourcentage: 3 },
       ],
-      villes: [
+      communes: [
         "Paris",
         "Strasbourg",
         "Nantes",
@@ -121,7 +121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       ],
       affinité: null,
       explications: {
-        villes: [
+        communes: [
           {
             nom: "Rouen",
             distanceKm: 12,
@@ -190,7 +190,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation d'ingénieur Bac + 5 -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -211,7 +211,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -232,7 +232,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Economie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -253,7 +253,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Gestion -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -274,7 +274,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Economie et gestion -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -295,7 +295,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Administration économique et sociale -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -316,7 +316,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Science politique -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -337,7 +337,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -358,7 +358,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Humanités -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -379,7 +379,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -400,7 +400,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire de l'art et archéologie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -421,7 +421,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Géographie et aménagement -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -442,7 +442,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sociologie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -463,7 +463,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Psychologie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -484,7 +484,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Philosophie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -505,7 +505,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences sociales -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -526,7 +526,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de l'Homme, Anthropologie, Ethnologie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -547,7 +547,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et Techniques des Activités Physiques et Sportives -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -568,7 +568,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences du langage -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -589,7 +589,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques et informatique appliquées aux sciences humaines et sociales -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -610,7 +610,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Information et communication -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -631,7 +631,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Musicologie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -652,7 +652,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -673,7 +673,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Langues, littératures et civilisations étrangères et régionales -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -694,7 +694,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Langues étrangères appliquées -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -715,7 +715,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Informatique -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -736,7 +736,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -757,7 +757,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Physique -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -778,7 +778,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Chimie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -799,7 +799,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Physique, chimie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -820,7 +820,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la vie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -841,7 +841,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la terre -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -862,7 +862,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la vie et de la terre -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -883,7 +883,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Electronique, énergie électrique, automatique -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -904,7 +904,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mécanique -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -925,7 +925,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences pour la santé -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -946,7 +946,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences pour l'ingénieur -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -967,7 +967,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et technologies -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -988,7 +988,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et Humanités -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1009,7 +1009,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Administration et Echanges internationaux -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1030,7 +1030,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire / Géographie -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1051,7 +1051,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit, Sciences et Innovation -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1072,7 +1072,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Pluridisciplinaire -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1093,7 +1093,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Santé et société -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1114,7 +1114,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences biomédicales -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1135,7 +1135,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de l'éducation et de la formation -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1156,7 +1156,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Tourisme -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1177,7 +1177,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences des systèmes communicants -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1198,7 +1198,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1219,7 +1219,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Enveloppe des bâtiments : conception et réalisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1240,7 +1240,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers du géomètre-topographe et de la modélisation numérique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1261,7 +1261,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Forge",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1282,7 +1282,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Pilotage des procédés",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1303,7 +1303,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Europlastics et composites à référentiel commun européen - option Pilotage et Optimisation de la production",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1324,7 +1324,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option voitures particulières",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1345,7 +1345,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option véhicules de transport routier",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1366,7 +1366,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option motocycles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1387,7 +1387,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception des processus de réalisation de produits (1ère année commune)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1408,7 +1408,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Etude et réalisation d'agencement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1429,7 +1429,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Etudes de réalisation d'un projet de communication - 1ère année commune",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1450,7 +1450,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Europlastics et composites à référentiel commun européen - option Conception d'Outillage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1471,7 +1471,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des matériels de construction et de manutention",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1492,7 +1492,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception de processus de découpe et d'emboutissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1513,7 +1513,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et industrialisation en construction navale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1534,7 +1534,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Négociation et digitalisation de la Relation Client",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1555,7 +1555,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Architectures en Métal : conception et Réalisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1576,7 +1576,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Support à l'action managériale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1597,7 +1597,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Gestion de la PME",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1618,7 +1618,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management en hôtellerie restauration",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1639,7 +1639,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management Commercial Opérationnel",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1660,7 +1660,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Gestion des transports et logistique associée",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1681,7 +1681,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management opérationnel de la sécurité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1702,7 +1702,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bioqualité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1723,7 +1723,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Commerce International",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1744,7 +1744,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mesure",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1765,7 +1765,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conseil et commercialisation de solutions techniques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1786,7 +1786,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management économique de la construction",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1807,7 +1807,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Finitions, aménagement des bâtiments: conception et réalisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1828,7 +1828,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSM - Mécatronique Navale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1849,7 +1849,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Collaborateur juriste notarial",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1870,7 +1870,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Motorisations toutes énergies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1891,7 +1891,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option D:  maintenance des ascenseurs et élévateurs",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1912,7 +1912,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Cybersécurité, Informatique et réseaux, ELectronique - Option A : Informatique et réseaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1933,7 +1933,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Cybersécurité, Informatique et réseaux, ELectronique - Option B : Electronique et réseaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1954,7 +1954,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - MPSI",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1975,7 +1975,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la chimie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -1996,7 +1996,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Enveloppe des bâtiments : conception et réalisation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2017,7 +2017,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers du géomètre-topographe et de la modélisation numérique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2038,7 +2038,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Pilotage des procédés - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2059,7 +2059,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Europlastics et composites à référentiel commun européen - option Pilotage et Optimisation de la production - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2080,7 +2080,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option voitures particulières - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2101,7 +2101,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option véhicules de transport routier - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2122,7 +2122,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des véhicules option motocycles - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2143,7 +2143,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception des processus de réalisation de produits (1ère année commune) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2164,7 +2164,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Etude et réalisation d'agencement - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2185,7 +2185,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Etudes de réalisation d'un projet de communication - 1ère année commune - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2206,7 +2206,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Europlastics et composites à référentiel commun européen - option Conception d'Outillage - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2227,7 +2227,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des matériels de construction et de manutention - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2248,7 +2248,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception de processus de découpe et d'emboutissage - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2269,7 +2269,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et industrialisation en construction navale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2290,7 +2290,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Négociation et digitalisation de la Relation Client - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2311,7 +2311,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Architectures en Métal : conception et Réalisation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2332,7 +2332,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Support à l'action managériale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2353,7 +2353,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Gestion de la PME - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2374,7 +2374,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management en hôtellerie restauration - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2395,7 +2395,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management Commercial Opérationnel - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2416,7 +2416,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Gestion des transports et logistique associée - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2437,7 +2437,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management opérationnel de la sécurité - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2458,7 +2458,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bioqualité - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2479,7 +2479,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Commerce International - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2500,7 +2500,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mesure - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2521,7 +2521,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conseil et commercialisation de solutions techniques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2542,7 +2542,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Management économique de la construction - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2563,7 +2563,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Finitions, aménagement des bâtiments: conception et réalisation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2584,7 +2584,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Collaborateur juriste notarial - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2605,7 +2605,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option D maintenance des ascenseurs et élévateurs - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2626,7 +2626,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Cybersécurité, Informatique et réseaux, ELectronique - Option A : Informatique et réseaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2647,7 +2647,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Cybersécurité, Informatique et réseaux, ELectronique - Option B : Electronique et réseaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2668,7 +2668,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Banque  - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2689,7 +2689,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien supérieur en pharmacie et cosmétique industrielles (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2710,7 +2710,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E manipulateur/trice en électroradiologie médicale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2731,7 +2731,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - PCSI",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2752,7 +2752,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation Bac + 3 - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2773,7 +2773,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles de commerce et de management Bac + 3 - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2794,7 +2794,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - PTSI",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2815,7 +2815,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Edition - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2836,7 +2836,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Environnement nucléaire - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2857,7 +2857,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Podo-orthésiste - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2878,7 +2878,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Prothésiste orthésiste - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2899,7 +2899,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Industries céramiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2920,7 +2920,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Géologie appliquée - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2941,7 +2941,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'esthétique-cosmétique-parfumerie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2962,7 +2962,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option C Systèmes éoliens - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -2983,7 +2983,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Techniques et services en matériels agricoles - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3004,7 +3004,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Prothésiste dentaire - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3025,7 +3025,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la coiffure - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3046,7 +3046,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Service et prestation des secteurs sanitaire et social - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3067,7 +3067,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Opticien-Lunetier - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3088,7 +3088,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Analyses de biologie médicale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3109,7 +3109,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Banque conseiller de clientèle - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3130,7 +3130,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Photographie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3151,7 +3151,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fonderie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3172,7 +3172,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Traitement des matériaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3193,7 +3193,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option A Systèmes de production - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3214,7 +3214,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mode-vêtements - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3235,7 +3235,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option B Systèmes énergétiques et fluidiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3256,7 +3256,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Innovations textiles - Option A : Structures - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3277,7 +3277,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Innovations textiles - Option B : Traitements - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3298,7 +3298,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mode-chaussure et maroquinerie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3319,7 +3319,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Aéronautique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3340,7 +3340,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option A génie climatique et fluidique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3361,7 +3361,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option B froid et conditionnement d'air - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3382,7 +3382,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - TB",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3403,7 +3403,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception de produits industriels - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3424,7 +3424,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et Réalisation de Systèmes Automatiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3445,7 +3445,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Contrôle industriel et régulation automatique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3466,7 +3466,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bioanalyses et contrôles - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3487,7 +3487,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bâtiment - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3508,7 +3508,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Travaux publics - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3529,7 +3529,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Systèmes constructifs bois et habitat - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3550,7 +3550,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Développement et Réalisation Bois - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3571,7 +3571,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option C domotique et bâtiment communicants - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3592,7 +3592,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Assistance technique d'ingénieur - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3613,7 +3613,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et industrialisation en microtechniques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3634,7 +3634,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et réalisation en chaudronnerie industrielle - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3655,7 +3655,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et réalisation de carrosseries - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3676,7 +3676,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Electrotechnique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3697,7 +3697,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Professions immobilières - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3718,7 +3718,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Assurance - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3739,7 +3739,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Communication - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3760,7 +3760,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : métiers de l'image - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3781,7 +3781,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : métiers du son - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3802,7 +3802,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : montage et post-production - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3823,7 +3823,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : techn. d'ingeniérie et exploit. équipements - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3844,7 +3844,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : gestion de la production - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3865,7 +3865,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Services informatiques aux organisations - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3886,7 +3886,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Diététique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3907,7 +3907,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Economie sociale familiale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3928,7 +3928,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Tourisme - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3949,7 +3949,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'eau - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3970,7 +3970,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers des Services à l'environnement - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -3991,7 +3991,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Comptabilité et gestion - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4012,7 +4012,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DTS Imagerie médicale et radiologie thérapeutique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4033,7 +4033,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - TPC",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4054,7 +4054,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - TSI",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4075,7 +4075,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option avions à moteur à pistons - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4096,7 +4096,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option hélicoptère moteur à turbines - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4117,7 +4117,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Accueil réception - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4138,7 +4138,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option avions à moteur à turbines - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4159,7 +4159,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Accueil dans transports - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4180,7 +4180,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en énergies renouvelables (option thermique) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4201,7 +4201,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en réseau électrique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4222,7 +4222,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en énergies renouvelables (option énergie électrique) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4243,7 +4243,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Organisateur de réception - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4264,7 +4264,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Peinture décoration - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4285,7 +4285,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Maintenance des installations oléohydrauliques et pneumatiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4306,7 +4306,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique - option avionique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4327,7 +4327,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - génie des équipements agricoles - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4348,7 +4348,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Agent de contrôle non destructif - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4369,7 +4369,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Analyse, conduite et stratégie de l'entreprise agricole - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4390,7 +4390,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - productions animales - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4411,7 +4411,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Viticulture-Oenologie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4432,7 +4432,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Développement, animation des territoires ruraux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4453,7 +4453,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien(ne) en soudage - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4474,7 +4474,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion et maitrise de l'eau - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4495,7 +4495,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion et protection de la nature - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4516,7 +4516,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion forestière - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4537,7 +4537,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Aménagements paysagers - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4558,7 +4558,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien(ne) en tuyauterie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4579,7 +4579,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en chaudronnerie aéronautique et spatiale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4600,7 +4600,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Animation-gestion de projets dans le secteur sportif - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4621,7 +4621,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Aquaculture - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4642,7 +4642,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire d'unité commerciale (option détailsiste / option spécialisée) (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4663,7 +4663,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Assistant(e) de direction(s) (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4684,7 +4684,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien(ne) systèmes,réseaux et sécurité  (bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4705,7 +4705,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Assistant de direction (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4726,7 +4726,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - BCPST",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4747,7 +4747,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire de Paie (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4768,7 +4768,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien(ne) supérieur(e) en méthodes et exploitation logistique (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4789,7 +4789,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DCG - Diplôme de Comptabilité et de Gestion - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4810,7 +4810,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Technicien de Laboratoire Médical",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4831,7 +4831,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - MP2I",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4852,7 +4852,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités physiques, sportives ou culturelles - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4873,7 +4873,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E manipulateur/trice en électroradiologie médicale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4894,7 +4894,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Bureautique et communication multimédia - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4915,7 +4915,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Intervention Sociale - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4936,7 +4936,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Bâtiment et travaux publics - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4957,7 +4957,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - Ecole normale supérieure Paris Saclay – arts et design",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4978,7 +4978,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Sciences politiques et sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -4999,7 +4999,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Administration publique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5020,7 +5020,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5041,7 +5041,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Economie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5062,7 +5062,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5083,7 +5083,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Economie et gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5104,7 +5104,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Administration économique et sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5125,7 +5125,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Science politique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5146,7 +5146,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences sanitaires et sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5167,7 +5167,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Humanités",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5188,7 +5188,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5209,7 +5209,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire de l'art et archéologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5230,7 +5230,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Géographie et aménagement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5251,7 +5251,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sociologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5272,7 +5272,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Psychologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5293,7 +5293,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de l'éducation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5314,7 +5314,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Philosophie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5335,7 +5335,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Théologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5356,7 +5356,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5377,7 +5377,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de l'Homme, Anthropologie, Ethnologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5398,7 +5398,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et Techniques des Activités Physiques et Sportives",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5419,7 +5419,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences du langage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5440,7 +5440,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques et informatique appliquées aux sciences humaines et sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5461,7 +5461,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Information et communication",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5482,7 +5482,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Arts",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5503,7 +5503,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Arts plastiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5524,7 +5524,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Arts du spectacle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5545,7 +5545,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Musicologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5566,7 +5566,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5587,7 +5587,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Langues, littératures et civilisations étrangères et régionales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5608,7 +5608,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Langues étrangères appliquées",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5629,7 +5629,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres, langues",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5650,7 +5650,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5671,7 +5671,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5692,7 +5692,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Physique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5713,7 +5713,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5734,7 +5734,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Physique, chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5755,7 +5755,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5776,7 +5776,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la terre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5797,7 +5797,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la vie et de la terre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5818,7 +5818,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Electronique, énergie électrique, automatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5839,7 +5839,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mécanique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5860,7 +5860,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Génie civil",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5881,7 +5881,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences pour la santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5902,7 +5902,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences pour l'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5923,7 +5923,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et technologies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5944,7 +5944,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Parcours d'Accès Spécifique Santé (PASS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5965,7 +5965,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Etudes culturelles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -5986,7 +5986,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et Humanités",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6007,7 +6007,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Etudes européennes et internationales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6028,7 +6028,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Administration et Echanges internationaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6049,7 +6049,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit français - Droit étranger",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6070,7 +6070,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Théologie Catholique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6091,7 +6091,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Théologie Protestante",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6112,7 +6112,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Cinéma",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6133,7 +6133,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la Terre et environnement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6154,7 +6154,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques, physique, chimie, informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6175,7 +6175,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres / Anglais",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6196,7 +6196,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres / Histoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6217,7 +6217,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Lettres / Sciences du langage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6238,7 +6238,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire / Géographie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6259,7 +6259,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire / Anglais",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6280,7 +6280,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire / Allemand",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6301,7 +6301,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire des Arts",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6322,7 +6322,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Cinéma et Audiovisuel",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6343,7 +6343,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Etudes théâtrales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6364,7 +6364,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Acoustique et Vibrations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6385,7 +6385,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Chimie, Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6406,7 +6406,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit, Economie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6427,7 +6427,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit, Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6448,7 +6448,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Droit, Sciences et Innovation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6469,7 +6469,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Economie, Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6490,7 +6490,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Informatique, Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6511,7 +6511,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Informatique, Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6532,7 +6532,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques, Physique et Sciences pour l'Ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6553,7 +6553,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Mathématiques, Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6574,7 +6574,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Pluridisciplinaire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6595,7 +6595,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Santé et société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6616,7 +6616,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences biomédicales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6637,7 +6637,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de l'éducation et de la formation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6658,7 +6658,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6679,7 +6679,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences, Enseignement, Médiation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6700,7 +6700,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - STAPS, Sciences pour l'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6721,7 +6721,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la Terre et Sciences Physiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6742,7 +6742,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation d'ingénieur Bac + 5",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6763,7 +6763,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences et société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6784,7 +6784,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences cognitives",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6805,7 +6805,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la transition écologique et sociétale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6826,7 +6826,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences des systèmes communicants",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6847,7 +6847,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Économie, Science politique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6868,7 +6868,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Histoire de l'art",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6889,7 +6889,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Langues, enseignement, médiation en milieu amazonien",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6910,7 +6910,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Sciences de la vigne et du vin",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6931,7 +6931,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Génie urbain",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6952,7 +6952,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ECT - Option technologique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6973,7 +6973,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Bachelors des écoles d'ingénieurs Ingénierie (Bac+3)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -6994,7 +6994,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation Bac + 4",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7015,7 +7015,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ENS Rennes D1",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7036,7 +7036,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles de commerce et de management Bac + 5",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7057,7 +7057,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles de commerce et de management Bac + 3",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7078,7 +7078,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles de commerce et de management Bac + 4",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7099,7 +7099,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ENS Cachan D2",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7120,7 +7120,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "EA-BAC5 - Architecture",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7141,7 +7141,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "EA-BAC3 - Archéologie, histoire de l'art, anthropologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7162,7 +7162,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "EA-BAC5 - Bicursus Architecture Ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7183,7 +7183,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "EA-BAC5 - Paysage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7204,7 +7204,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "EA-BAC5 - Conservation-restauration des biens culturels",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7225,7 +7225,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Véto - Formation Bac+6",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7246,7 +7246,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles supérieure d'art Bac + 5",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7267,7 +7267,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles supérieure d'art Bac + 3",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7288,7 +7288,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Sciences Po / Instituts d'études politiques - Sciences Humaines et Sociales - Grade Master",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7309,7 +7309,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Sciences Po / Instituts d'études politiques - Sciences Humaines et Sociales - Grade Licence",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7330,7 +7330,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Economie-Gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7351,7 +7351,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Gestion - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7372,7 +7372,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Sciences pour l'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7393,7 +7393,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Parcours scientifique renforcé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7414,7 +7414,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle universitaire préparatoire aux grandes écoles - Parcours Informatique, Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7435,7 +7435,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle préparatoire Physique Chimie, parcours renforcé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7456,7 +7456,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Universitaire Préparatoire aux Grandes Ecoles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7477,7 +7477,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Universitaire de Préparation aux Grandes Ecoles Scientifiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7498,7 +7498,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - Lettres",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7519,7 +7519,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - B/L - Lettres et sciences sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7540,7 +7540,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Prep'ISIMA",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7561,7 +7561,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Systèmes photoniques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7582,7 +7582,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - Ecole nationale des Chartes",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7603,7 +7603,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Edition",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7624,7 +7624,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - Option lettres et sciences humaines (St Cyr)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7645,7 +7645,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Environnement nucléaire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7666,7 +7666,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Podo-orthésiste",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7687,7 +7687,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Prothésiste orthésiste",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7708,7 +7708,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Industries céramiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7729,7 +7729,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Géologie appliquée",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7750,7 +7750,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'esthétique-cosmétique-parfumerie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7771,7 +7771,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option C Systèmes éoliens",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7792,7 +7792,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Techniques et services en matériels agricoles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7813,7 +7813,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Prothésiste dentaire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7834,7 +7834,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la coiffure",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7855,7 +7855,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Service et prestation des secteurs sanitaire et social",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7876,7 +7876,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Opticien-Lunetier",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7897,7 +7897,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Analyses de biologie médicale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7918,7 +7918,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Banque conseiller de clientèle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7939,7 +7939,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Photographie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7960,7 +7960,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fonderie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -7981,7 +7981,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Traitement des matériaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8002,7 +8002,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option A Systèmes de production",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8023,7 +8023,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mode-vêtements",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8044,7 +8044,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maintenance des systèmes - option B Systèmes énergétiques et fluidiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8065,7 +8065,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Innovations textiles - Option A : Structures",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8086,7 +8086,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Innovations textiles - Option B : Traitements",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8107,7 +8107,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de la mode-chaussure et maroquinerie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8128,7 +8128,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Aéronautique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8149,7 +8149,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option A génie climatique et fluidique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8170,7 +8170,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option B froid et conditionnement d'air",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8191,7 +8191,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Arts",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8212,7 +8212,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Economie et gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8233,7 +8233,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Histoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8254,7 +8254,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Géographie et aménagement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8275,7 +8275,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception de produits industriels",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8296,7 +8296,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences et Techniques des Activités Physiques et Sportives",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8317,7 +8317,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8338,7 +8338,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8359,7 +8359,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Physique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8380,7 +8380,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8401,7 +8401,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Physique, chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8422,7 +8422,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8443,7 +8443,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences de la terre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8464,7 +8464,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences de la vie et de la terre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8485,7 +8485,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et Réalisation de Systèmes Automatiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8506,7 +8506,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Electronique, énergie électrique, automatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8527,7 +8527,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Mécanique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8548,7 +8548,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Génie civil",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8569,7 +8569,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences pour la santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8590,7 +8590,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Sciences pour l'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8611,7 +8611,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Contrôle industriel et régulation automatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8632,7 +8632,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Acoustique et Vibrations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8653,7 +8653,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bioanalyses et contrôles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8674,7 +8674,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Sciences et Technologies Industrielles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8695,7 +8695,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Bâtiment",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8716,7 +8716,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Travaux publics",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8737,7 +8737,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Systèmes constructifs bois et habitat",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8758,7 +8758,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Développement et Réalisation Bois",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8779,7 +8779,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Fluide, énergie, domotique - option C domotique et bâtiment communicants",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8800,7 +8800,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Assistance technique d'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8821,7 +8821,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et industrialisation en microtechniques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8842,7 +8842,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et réalisation en chaudronnerie industrielle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8863,7 +8863,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Mathématique - Préparation aux écoles d'ingénieurs",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8884,7 +8884,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Conception et réalisation de carrosseries",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8905,7 +8905,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Electrotechnique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8926,7 +8926,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Professions immobilières",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8947,7 +8947,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Assurance",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8968,7 +8968,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Communication",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -8989,7 +8989,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : métiers de l'image",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9010,7 +9010,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : métiers du son",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9031,7 +9031,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : montage et post-production",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9052,7 +9052,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : techn. d'ingeniérie et exploit. équipements",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9073,7 +9073,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'audio-visuel opt : gestion de la production",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9094,7 +9094,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Services informatiques aux organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9115,7 +9115,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Diététique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9136,7 +9136,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Economie sociale familiale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9157,7 +9157,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9178,7 +9178,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'eau",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9199,7 +9199,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Biotechnologies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9220,7 +9220,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSM - Maintenance des systèmes électro-navals",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9241,7 +9241,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSM - Pêche et gestion de l'environnement marin",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9262,7 +9262,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Arboriste-élagueur - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9283,7 +9283,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite d'un élevage avicole et commercialisation des produits - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9304,7 +9304,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite d'un élevage caprin - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9325,7 +9325,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite d'un élevage ovin viande - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9346,7 +9346,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite de l'élevage porcin - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9367,7 +9367,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Constructions paysagères - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9388,7 +9388,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Education et travail des jeunes équidés - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9409,7 +9409,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Production, transformation et commercialisation des produits fermiers - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9430,7 +9430,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Commercialisation du bétail : acheteur-estimateur - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9451,7 +9451,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Technicien spécialisé en transformation laitière - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9472,7 +9472,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Apiculture - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9493,7 +9493,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Technicien cynégétique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9514,7 +9514,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite d'un élevage bovin lait - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9535,7 +9535,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Conduite d’un élevage bovin viande  - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9556,7 +9556,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Arrosage automatique : espaces verts et sols sportifs - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9577,7 +9577,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CSA - Sols sportifs engazonnés - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9598,7 +9598,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers des Services à l'environnement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9619,7 +9619,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Comptabilité et gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9640,7 +9640,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Accueil dans les transports",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9661,7 +9661,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Accueil-réception",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9682,7 +9682,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Aéronautique option avionique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9703,7 +9703,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Aéronautique option avions à moteurs à pistons",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9724,7 +9724,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Aéronautique option avions à moteurs à turbines",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9745,7 +9745,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Aéronautique option hélicoptères à moteurs à turbines",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9766,7 +9766,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Animation-gestion de projets dans le secteur sportif",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9787,7 +9787,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Art de la dorure à chaud",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9808,7 +9808,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Assistance, conseil, vente à distance",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9829,7 +9829,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Cybersécurité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9850,7 +9850,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Encadrement secteur sportif opt. activités aquatiques& de la natation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9871,7 +9871,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Encadrement secteur sportif opt. activités physiques pour tous",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9892,7 +9892,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Maintenance des installations oléohydrauliques et pneumatiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9913,7 +9913,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Maquettes et prototypes",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9934,7 +9934,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Mécatronique navale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9955,7 +9955,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Organisateur de réception",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9976,7 +9976,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Peinture décoration",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -9997,7 +9997,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Production et réparation de produits électroniques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10018,7 +10018,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Services numériques aux organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10039,7 +10039,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Sommellerie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10060,7 +10060,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Techn. en énergies renouvelables opt. a énergie électrique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10081,7 +10081,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Techn. en énergies renouvelables opt. b énergie thermique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10102,7 +10102,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en chaudronnerie aéronautique et spatiale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10123,7 +10123,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en réseaux électriques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10144,7 +10144,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) ascensoriste (service et modernisation)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10165,7 +10165,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en soudage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10186,7 +10186,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en tuyauterie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10207,7 +10207,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en peinture aéronautique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10228,7 +10228,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Vendeur-conseil en produits techniques pour l'habitat",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10249,7 +10249,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Animation-gestion de projets dans le secteur sportif - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10270,7 +10270,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Cybersécurité - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10291,7 +10291,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Production et réparation de produits électroniques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10312,7 +10312,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Sommellerie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10333,7 +10333,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Techn. en énergies renouvelables opt. a énergie électrique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10354,7 +10354,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Techn. en énergies renouvelables opt. b énergie thermique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10375,7 +10375,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CS - Technicien(ne) en soudage - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10396,7 +10396,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DTS Imagerie médicale et radiologie thérapeutique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10417,7 +10417,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Sciences économiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10438,7 +10438,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ECG - Mathématiques approfondies + HGG",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10459,7 +10459,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ECG - Mathématiques appliquées + HGG",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10480,7 +10480,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ECG - Mathématiques approfondies + ESH",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10501,7 +10501,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CPGE - ECG - Mathématiques appliquées + ESH",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10522,7 +10522,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Infirmier",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10543,7 +10543,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Ergothérapeute",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10564,7 +10564,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Certificat de capacité d'Orthophoniste",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10585,7 +10585,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Certificat de capacité d'Orthoptiste",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10606,7 +10606,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Audioprothésiste",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10627,7 +10627,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Pédicure-Podologue",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10648,7 +10648,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Psychomotricien",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10669,7 +10669,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Ergothérapeute - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10690,7 +10690,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Assistant de Service Social",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10711,7 +10711,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur de Jeunes Enfants",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10732,7 +10732,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur Spécialisé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10753,7 +10753,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur Technique Spécialisé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10774,7 +10774,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Assistant de Service Social - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10795,7 +10795,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur de Jeunes Enfants - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10816,7 +10816,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur Spécialisé - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10837,7 +10837,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Educateur Technique Spécialisé - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10858,7 +10858,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle universitaire préparatoire aux grandes écoles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10879,7 +10879,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Scientifique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10900,7 +10900,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MAN - Classe de mise à niveau au BTS Maritime Pêche et Gestion de l'Environnement Marin",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10921,7 +10921,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MAN - Mise à niveau pour l'accès au BTS MASEN",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10942,7 +10942,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MAN - Hôtellerie restauration",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10963,7 +10963,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien des services à l'énergie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -10984,7 +10984,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Maquettes et prototypes",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11005,7 +11005,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option avions à moteur à pistons",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11026,7 +11026,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option hélicoptère moteur à turbines",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11047,7 +11047,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Accueil réception",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11068,7 +11068,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en peinture aéronautique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11089,7 +11089,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Vendeur-conseil en produits techniques pour l'habitat",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11110,7 +11110,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Services numériques aux organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11131,7 +11131,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Art de la dorure à chaud",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11152,7 +11152,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Sommellerie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11173,7 +11173,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Cybersécurité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11194,7 +11194,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Production et réparation de produits électroniques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11215,7 +11215,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en peinture aéronautique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11236,7 +11236,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Vendeur-conseil en produits techniques pour l'habitat - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11257,7 +11257,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Services numériques aux organisations - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11278,7 +11278,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Sommellerie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11299,7 +11299,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Mention complémentaire - Production et réparation de produits électroniques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11320,7 +11320,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien ascensoriste, service et modernisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11341,7 +11341,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique option avions à moteur à turbines",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11362,7 +11362,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Assistance Conseil Vente à distance",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11383,7 +11383,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Accueil dans transports",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11404,7 +11404,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en énergies renouvelables (option thermique)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11425,7 +11425,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en réseau électrique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11446,7 +11446,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en énergies renouvelables (option énergie électrique)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11467,7 +11467,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Année préparatoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11488,7 +11488,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Classe Préparatoire Universitaire Mathématiques - Physique - Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11509,7 +11509,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Universitaire Préparatoire aux Grandes Ecoles - Mathématiques et Physique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11530,7 +11530,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Universitaire Préparatoire aux Grandes Ecoles - Physique et Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11551,7 +11551,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Organisateur de réception",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11572,7 +11572,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Classe Préparatoire Universitaire - Physique - Chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11593,7 +11593,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Peinture décoration",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11614,7 +11614,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Maintenance des installations oléohydrauliques et pneumatiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11635,7 +11635,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Aéronautique - option avionique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11656,7 +11656,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - génie des équipements agricoles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11677,7 +11677,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités aquatiques et de la natation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11698,7 +11698,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités équestres",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11719,7 +11719,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités physiques pour tous",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11740,7 +11740,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL - FCIL",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11761,7 +11761,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Canoë-Kayak en eau vive",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11782,7 +11782,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Golf",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11803,7 +11803,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Tennis de table",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11824,7 +11824,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Voile multi-supports jusqu'à 6 miles nautique d'un abri",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11845,7 +11845,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Judo-Jujitsu",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11866,7 +11866,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités de la forme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11887,7 +11887,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Animateur - Mention Loisirs tous publics",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11908,7 +11908,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité animateur - Mention Animation sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11929,7 +11929,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Animateur - Mention Activités du cirque",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11950,7 +11950,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Animateur - Mention Animation culturelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11971,7 +11971,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités du Canoë-Kayak et disciplines associées en mer",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -11992,7 +11992,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Voile croisière jusqu’à 200 milles nautiques d’un abri",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12013,7 +12013,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités du canoë-kayak et disciplines associées en eau vive jusqu'à classe III, en eau calme et en mer jusqu'à IV Beaufort",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12034,7 +12034,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Perfectionnement sportif - Mention Athlétisme et disciplines associées",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12055,7 +12055,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Perfectionnement sportif - Mention Triathlon et disciplines enchaînées",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12076,7 +12076,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Perfectionnement sportif - MentionVélo tout terrain",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12097,7 +12097,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Perfectionnement sportif - Mention Natation course",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12118,7 +12118,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Animation socio-éducative ou culturelle - Mention Animation sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12139,7 +12139,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS - Spécialité Animation socio-éducative ou culturelle - Mention développement de projets, territoires et réseaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12160,7 +12160,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Agent de contrôle non destructif",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12181,7 +12181,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Analyse, conduite et stratégie de l'entreprise agricole",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12202,7 +12202,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - productions animales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12223,7 +12223,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités aquatiques et de la natation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12244,7 +12244,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités équestres - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12265,7 +12265,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités gymniques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12286,7 +12286,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités physiques pour tous - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12307,7 +12307,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS - Spécialité Educateur sportif - Mention Activités de la forme - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12328,7 +12328,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Viticulture-Oenologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12349,7 +12349,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Développement, animation des territoires ruraux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12370,7 +12370,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien(ne) supérieur(e) en maintenance industrielle (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12391,7 +12391,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien(ne) en soudage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12412,7 +12412,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion et maitrise de l'eau",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12433,7 +12433,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion et protection de la nature / DE d'alpinisme-accompagnateur en moyenne montagne",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12454,7 +12454,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité biens et services pour l'agriculture",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12475,7 +12475,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité vins, bières et spiritueux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12496,7 +12496,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité alimentation et boisson",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12517,7 +12517,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité univers jardins et animaux de compagnie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12538,7 +12538,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité produit de la filière bois",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12559,7 +12559,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Agronomie et cultures durables",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12580,7 +12580,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Métiers du Végétal : Alimentation, Ornement, Environnement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12601,7 +12601,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Analyses biologiques, biotechnologiques, agricoles et environnementales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12622,7 +12622,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - QUalité, ALimentation, Innovation et Maîtrise Sanitaire (BioQUALIM) produits laitiers",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12643,7 +12643,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - QUalité, ALimentation, Innovation et Maîtrise Sanitaire (BioQUALIM) aliments et processus technologiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12664,7 +12664,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Développement de l'agriculture des régions chaudes",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12685,7 +12685,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité biens et services pour l'agriculture - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12706,7 +12706,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité vins, bières et spiritueux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12727,7 +12727,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité alimentation et boisson - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12748,7 +12748,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité univers jardins et animaux de compagnie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12769,7 +12769,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Technico-commercial - Spécialité produit de la filière bois - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12790,7 +12790,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Agronomie et cultures durables - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12811,7 +12811,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Métiers du Végétal : Alimentation, Ornement, Environnement - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12832,7 +12832,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Analyses biologiques, biotechnologiques, agricoles et environnementales - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12853,7 +12853,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - QUalité, ALimentation, Innovation et Maîtrise Sanitaire (BioQUALIM) produits laitiers - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12874,7 +12874,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - QUalité, ALimentation, Innovation et Maîtrise Sanitaire (BioQUALIM) aliments et processus technologiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12895,7 +12895,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion et protection de la nature",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12916,7 +12916,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Mécatronique navale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12937,7 +12937,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Gestion forestière",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12958,7 +12958,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Aménagements paysagers",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -12979,7 +12979,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien(ne) en tuyauterie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13000,7 +13000,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Technicien en chaudronnerie aéronautique et spatiale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13021,7 +13021,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "MC - Animation-gestion de projets dans le secteur sportif",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13042,7 +13042,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTSA - Aquaculture",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13063,7 +13063,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire d'unité commerciale (option détailsiste / option spécialisée) (bac +2)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13084,7 +13084,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D-Etab - Paysagiste concepteur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13105,7 +13105,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Humanités et société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13126,7 +13126,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13147,7 +13147,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Economie, société et droit",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13168,7 +13168,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences et société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13189,7 +13189,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Humanités, Lettres et Sociétés",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13210,7 +13210,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences pour l'ingénieur - Economie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13231,7 +13231,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences et technologies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13252,7 +13252,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences et humanités",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13273,7 +13273,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences de la transition écologique et sociétale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13294,7 +13294,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Economie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13315,7 +13315,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences de la matière",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13336,7 +13336,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences de la vie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13357,7 +13357,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences pour l'ingénieur",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13378,7 +13378,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Mobilités douces, développement durable et ouverture internationale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13399,7 +13399,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences - Environnement - Société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13420,7 +13420,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences Des Données, Société et Santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13441,7 +13441,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences des données, arts et cultures",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13462,7 +13462,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Cycle pluridisciplinaire d'Études Supérieures - Sciences sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13483,7 +13483,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Parcours mathématiques-physique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13504,7 +13504,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Parcours physique-chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13525,7 +13525,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Préparatoire Lettres  - Licence renforcée",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13546,7 +13546,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle universitaire préparatoire aux grandes écoles - Physique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13567,7 +13567,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle universitaire préparatoire aux grandes écoles - Mécanique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13588,7 +13588,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13609,7 +13609,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Parcours Informatique / Mathématiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13630,7 +13630,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Assistant ingénieur en biologie-biochimie - biotechnologies (bac +3)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13651,7 +13651,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Chargé de mission qualité, sécurité, santé au travail et environnement (Bac + 3)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13672,7 +13672,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Aumônerie protestante, médiation et société",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13693,7 +13693,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - TP - Conducteur de travaux TP (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13714,7 +13714,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel Manager d'Unité Marchande (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13735,7 +13735,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Développeur web et web mobile (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13756,7 +13756,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Décorateur merchandiser (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13777,7 +13777,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Chargé d'affaires en hautes technologies (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13798,7 +13798,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Animateur qualité sécurité environnement (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13819,7 +13819,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Développeur Informatique (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13840,7 +13840,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire en maintenance et support informatique (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13861,7 +13861,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Assistant Ressources Humaines (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13882,7 +13882,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable de chantier - bâtiment et travaux publics (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13903,7 +13903,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel Gestionnaire des opérations de transport routier de marchandises (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13924,7 +13924,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Assistant manager loisirs hébergement restauration (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13945,7 +13945,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien Expert Après-Vente Automobile (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13966,7 +13966,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable Commercial et Marketing (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -13987,7 +13987,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Organisateur de transports aériens ou maritimes de marchandises (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14008,7 +14008,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable d'affaires en immobilier (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14029,7 +14029,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Attaché(e) de Direction (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14050,7 +14050,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Graphiste concepteur (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14071,7 +14071,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Designer en communication graphique éco-responsable (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14092,7 +14092,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire comptable et fiscal (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14113,7 +14113,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Modeleur BIM du bâtiment (Bac + 2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14134,7 +14134,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable d'un point de vente (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14155,7 +14155,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Négociateur technico-commercial (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14176,7 +14176,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Assistant juridique (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14197,7 +14197,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire paie et administration sociale (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14218,7 +14218,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Chargé de gestion sociale et de projet RSE (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14239,7 +14239,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Concepteur designer UI (Bac +3)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14260,7 +14260,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Chargé de gestion et management (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14281,7 +14281,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Régisseur technique du spectacle (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14302,7 +14302,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Assistant commercial (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14323,7 +14323,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable Retail dans le Luxe (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14344,7 +14344,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Concepteur développeur d'applications (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14365,7 +14365,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Styliste de mode (Bac+2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14386,7 +14386,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Gestionnaire Administration des Ventes (Bac+2) - En apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14407,7 +14407,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Manager opérationnel en hôtellerie de luxe (Bac + 3) - En apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14428,7 +14428,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - FP - Développeur web (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14449,7 +14449,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - FP - Technicien performance industrielle (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14470,7 +14470,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Diplôme supérieur en marketing et communication (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14491,7 +14491,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Bachelor Manager dans l’hôtellerie restauration (Bac + 3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14512,7 +14512,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Conducteur de travaux aménagement finitions (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14533,7 +14533,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Bachelor Réalisateur monteur (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14554,7 +14554,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - Chef de projet logiciel et réseau (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14575,7 +14575,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - Technicien systèmes et réseaux (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14596,7 +14596,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Technicien d'exploitation de tranches de production nucléaire (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14617,7 +14617,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Titre professionnel - Technicien Spécialisé des Laboratoires, Parfum Cosmétique et Arômes (Bac+2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14638,7 +14638,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - Manager dans l'univers de la beauté (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14659,7 +14659,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - Manager en hôtellerie internationale (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14680,7 +14680,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Formation professionnelle - Chef de projet e.business (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14701,7 +14701,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable marketing et commercial spécialisé en acquisition numérique (Bac + 3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14722,7 +14722,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Technicien diagnostics immobilier (Bac +2) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14743,7 +14743,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Développeur de solutions numériques sécurisées (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14764,7 +14764,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable en développement commercial et marketing (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14785,7 +14785,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Concepteur développeur d'applications (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14806,7 +14806,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Chargé de marketing et communication (Bac +3) - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14827,7 +14827,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FP - Responsable technique en bâtiment et travaux publics (bac +2)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14848,7 +14848,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - Littéraire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14869,7 +14869,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DCG - Diplôme de Comptabilité et de Gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14890,7 +14890,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL - FCIL classe passerelle BTS",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14911,7 +14911,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL - FCIL classe passerelle BTS option service",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14932,7 +14932,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL - FCIL classe passerelle BTS option production",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14953,7 +14953,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL - Dispositif SAS - Préparation à l'apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14974,7 +14974,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Accueil d'excellence en tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -14995,7 +14995,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Bureautique et Communication Multimédia",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15016,7 +15016,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Théâtre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15037,7 +15037,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Guide nature multilingue",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15058,7 +15058,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Technicien en qualité et distribution des produits alimentaires",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15079,7 +15079,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Technicien en environnement et déchets",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15100,7 +15100,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Infrastructures numériques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15121,7 +15121,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Préparateur/Technicien en pharmacie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15142,7 +15142,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DU - Diplôme d'Université",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15163,7 +15163,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DE - Diplôme d'Etablissement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15184,7 +15184,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DU - Diplôme d'Université CAES",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15205,7 +15205,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DU - Diplôme d'Université - PAREO",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15226,7 +15226,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DU - Diplôme de spécialisation professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15247,7 +15247,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Agent d'accueil des publics de l'éducation artistique et culturelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15268,7 +15268,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Assistance à la conception numérique et à la réalisation d'objets 3D",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15289,7 +15289,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Assistant designer web",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15310,7 +15310,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Design et métiers du bois (de la forêt au salon)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15331,7 +15331,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Formation aux métiers de la sécurité et de la gendarmerie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15352,7 +15352,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Patrimoine bâti : métiers de la construction et du patrimoine",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15373,7 +15373,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Sécurité informatique : réseaux et cyber sécurité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15394,7 +15394,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Gestion touristique : hospitalités, accueil et expérience client - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15415,7 +15415,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DSP - DSP - Installateur de systèmes de production photovoltaïque - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15436,7 +15436,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme de spécialisation professionnelle - DSP - Assistant intégrateur web - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15457,7 +15457,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Classe préparatoire aux études supérieures - détailse",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15478,7 +15478,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Chimie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15499,7 +15499,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie chimique génie des procédés",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15520,7 +15520,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie civil - Construction durable",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15541,7 +15541,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie électrique et informatique industrielle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15562,7 +15562,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie industriel et maintenance",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15583,7 +15583,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie mécanique et productique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15604,7 +15604,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Hygiène Sécurité Environnement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15625,7 +15625,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Informatique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15646,7 +15646,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Mesures physiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15667,7 +15667,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Qualité, logistique industrielle et organisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15688,7 +15688,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Science et génie des matériaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15709,7 +15709,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Métiers du multimédia et de l'internet",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15730,7 +15730,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie biologique Parcours diététique et nutrition",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15751,7 +15751,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Réseaux et télécommunications",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15772,7 +15772,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Packaging, emballage et conditionnement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15793,7 +15793,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie biologique parcours sciences de l'environnement et écotechnologies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15814,7 +15814,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie biologique Parcours agronomie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15835,7 +15835,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie biologique parcours sciences de l'aliment et biotechnologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15856,7 +15856,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie biologique parcours biologie médicale et biotechnologie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15877,7 +15877,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Métiers de la Transition et de l'Efficacité Énergétiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15898,7 +15898,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Gestion des entreprises et des administrations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15919,7 +15919,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Techniques de commercialisation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15940,7 +15940,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières juridiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15961,7 +15961,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales Parcours animation sociale et socioculturelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -15982,7 +15982,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales Parcours assistance sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16003,7 +16003,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Information communication Parcours information numérique dans les organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16024,7 +16024,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales parcours coordination et gestion des établissements et services sanitaires et sociaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16045,7 +16045,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Information communication Parcours publicité",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16066,7 +16066,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Gestion administrative et commerciale des organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16087,7 +16087,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Information communication Parcours journalisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16108,7 +16108,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Information communication Parcours communication des organisations",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16129,7 +16129,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Information communication Parcours métiers du livre et du patrimoine",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16150,7 +16150,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales Parcours éducation spécialisée",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16168,10 +16168,10 @@ export class formationInMemoryRepository implements FormationRepository {
     },
     {
       id: "fl810516",
-      nom: "BUT - Carrières sociales parcours villes et territoires durables",
+      nom: "BUT - Carrières sociales parcours communes et territoires durables",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16192,7 +16192,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Management de la Logistique et des Transports",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16213,7 +16213,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Science des données",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16234,7 +16234,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Chimie - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16255,7 +16255,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie civil - Construction durable - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16276,7 +16276,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie électrique et informatique industrielle - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16297,7 +16297,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie industriel et maintenance - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16318,7 +16318,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Génie mécanique et productique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16339,7 +16339,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Hygiène Sécurité Environnement - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16360,7 +16360,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Informatique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16381,7 +16381,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Mesures physiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16402,7 +16402,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Qualité, logistique industrielle et organisation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16423,7 +16423,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Science et génie des matériaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16444,7 +16444,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Métiers du multimédia et de l'internet - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16465,7 +16465,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Réseaux et télécommunications - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16486,7 +16486,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Métiers de la Transition et de l'Efficacité Énergétiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16507,7 +16507,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Gestion des entreprises et des administrations - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16528,7 +16528,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Techniques de commercialisation - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16549,7 +16549,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières juridiques - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16570,7 +16570,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales Parcours animation sociale et socioculturelle - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16591,7 +16591,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Carrières sociales parcours coordination et gestion des établissements et services sanitaires et sociaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16612,7 +16612,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Gestion administrative et commerciale des organisations - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16633,7 +16633,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BUT - Management de la Logistique et des Transports - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16654,7 +16654,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Analyse des milieux biologiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16675,7 +16675,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation, commercialisation des services sportifs",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16696,7 +16696,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Métiers de la forme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16717,7 +16717,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités physiques, sportives ou culturelles",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16738,7 +16738,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Technicien de la mer et du littoral",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16759,7 +16759,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cycle Universitaire Préparatoire aux Grandes Écoles de commerce",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16780,7 +16780,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Droit et Culture Juridique - Classe Préparatoire (Prépa D1)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16801,7 +16801,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Intervention Sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16822,7 +16822,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Métiers des bibliothèques et de la documentation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16843,7 +16843,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Bâtiment et Construction",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16864,7 +16864,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Technologies de l'organisation dans les professions de santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16885,7 +16885,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Animation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16906,7 +16906,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Espace",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16927,7 +16927,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Événement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16948,7 +16948,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Graphisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16969,7 +16969,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Innovation sociale",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -16990,7 +16990,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Instrument",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17011,7 +17011,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Livre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17032,7 +17032,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Matériaux",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17053,7 +17053,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Mode",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17074,7 +17074,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Numérique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17095,7 +17095,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Objet",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17116,7 +17116,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Ornement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17137,7 +17137,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Patrimoine",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17158,7 +17158,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Spectacle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17179,7 +17179,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Activités physiques et sportives et inadaptations sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17200,7 +17200,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Pratique et gestion des activités physiques, sportives et de loisirs pour les publics séniors",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17221,7 +17221,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Professeur de musique",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17242,7 +17242,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "D.E Professeur de danse",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17263,7 +17263,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme national supérieur professionnel de musicien",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17284,7 +17284,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme National d'Art",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17305,7 +17305,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours agent de développement de club sportif",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17326,7 +17326,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours animation",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17347,7 +17347,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Graphisme - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17368,7 +17368,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Matériaux - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17389,7 +17389,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Numérique - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17410,7 +17410,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation valant grade de licence",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17431,7 +17431,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DN MADE - Objet - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17452,7 +17452,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités de pleine nature",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17473,7 +17473,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Formation de base aux métiers du théâtre",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17494,7 +17494,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Bâtiment et travaux publics",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17515,7 +17515,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Médiations citoyennes",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17536,7 +17536,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Webmaster et métiers de l'internet",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17557,7 +17557,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Activités physiques et sportives adaptées : déficiences intellectuelles, troubles psychiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17578,7 +17578,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles supérieures de cuisine Bac +3",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17599,7 +17599,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formation des écoles supérieures de cuisine Bac +4",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17620,7 +17620,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP-DEG - Licence professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17641,7 +17641,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP-DEG - Licence professionnelle - En apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17662,7 +17662,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP-STS - Licence professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17683,7 +17683,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP-SHS - Licence professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17704,7 +17704,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Production, contrôles et qualité des produits de santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17725,7 +17725,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Santé environnement : Techniques de laboratoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17746,7 +17746,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités aquatiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17767,7 +17767,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Préparation aux concours des écoles de commerce, Parcours Gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17788,7 +17788,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Préparation aux concours des écoles de commerce, Parcours Economie- Finance",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17809,7 +17809,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Sciences de la Vie et de la Terre : préparation aux concours B Agro et Véto (Sites Saint Charles)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17830,7 +17830,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Cursus préparatoire aux concours des grandes écoles d'ingénieurs",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17851,7 +17851,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "C.M.I - Cursus Master en Ingénierie",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17872,7 +17872,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Formations des écoles vétérinaires",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17893,7 +17893,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Maritime",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17914,7 +17914,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Année préparatoire",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17935,7 +17935,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "FCIL",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17956,7 +17956,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BPJEPS",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17977,7 +17977,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DEJEPS",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -17998,7 +17998,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme d'établissement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18019,7 +18019,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme d'Etablissement",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18040,7 +18040,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme de spécialisation professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18061,7 +18061,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Diplôme de spécialisation professionnelle",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18082,7 +18082,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Sciences, technologie, santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18103,7 +18103,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DE Spectacle vivant",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18124,7 +18124,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "DNSP Spectacle vivant",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18145,7 +18145,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Droit-économie-gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18166,7 +18166,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "CUPGE - Arts Lettres Langues",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18187,7 +18187,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP - Droit-économie-gestion",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18208,7 +18208,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP - Sciences - technologies - santé",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18229,7 +18229,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "LP -  Sciences Humaines et Sociales",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -18250,7 +18250,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "Sciences Po / Instituts d'études politiques",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       liens: [],
-      villes: [],
+      communes: [],
       admis: {
         moyenneGénérale: {
           idBac: null,

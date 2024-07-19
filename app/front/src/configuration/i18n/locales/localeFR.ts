@@ -49,7 +49,7 @@ export const localeFR = {
     ONGLET_CRITÈRES: "Critères d'admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l'année dernière",
-    VILLES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
+    COMMUNES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
     RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
@@ -64,7 +64,7 @@ export const localeFR = {
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
     EXPLICATIONS_CORRESPONDANCE_PROFIL: {
       TITRE: "Pourquoi cette formation devrait te plaire",
-      VILLES: "Plusieurs établissements proposant cette formation se trouvent à proximité des villes",
+      COMMUNES: "Plusieurs établissements proposant cette formation se trouvent à proximité des villes",
       BAC: "Idéal si tu as un",
       SPÉCIALITÉS:
         "Les lycéennes et lycéens admis dans cette formation l'année dernière, avaient choisi ce(s) spécialité(s)",
@@ -216,7 +216,7 @@ export const localeFR = {
           },
         },
       },
-      VILLES_ENVISAGÉES: {
+      COMMUNES_ENVISAGÉES: {
         LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",

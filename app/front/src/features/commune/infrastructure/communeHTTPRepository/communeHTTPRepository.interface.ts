@@ -1,4 +1,4 @@
-export type VilleHTTP = {
+export type CommuneHTTP = {
   type: "Feature";
   geometry: {
     type: "Point";
@@ -22,6 +22,6 @@ export type VilleHTTP = {
   };
 };
 
-export type RechercherVillesRéponseHTTP = {
-  features: VilleHTTP[];
+export type RechercherCommunesRéponseHTTP = {
+  features: CommuneHTTP[];
 };

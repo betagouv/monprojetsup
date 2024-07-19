@@ -29,7 +29,7 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  villes: string[];
+  communes: string[];
   métiersAccessibles: Array<{
     id: string;
     nom: string;
@@ -41,7 +41,7 @@ export type Formation = {
   }>;
   affinité: number | null;
   explications: {
-    villes: Array<{
+    communes: Array<{
       nom: string;
       distanceKm: number;
     }>;

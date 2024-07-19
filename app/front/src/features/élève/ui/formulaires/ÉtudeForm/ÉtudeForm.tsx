@@ -11,11 +11,11 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
     register,
     duréeÉtudesPrévueOptions,
     alternanceOptions,
-    auChangementDesVillesSélectionnées,
-    villesSuggérées,
-    villesSélectionnéesParDéfaut,
-    àLaRechercheDUneVille,
-    rechercheVillesEnCours,
+    auChangementDesCommunesSélectionnées,
+    communesSuggérées,
+    communesSélectionnéesParDéfaut,
+    àLaRechercheDUneCommune,
+    rechercheCommunesEnCours,
   } = useÉtudeForm({
     àLaSoumissionDuFormulaireAvecSuccès,
   });
@@ -46,14 +46,14 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
       </div>
       <div className="mt-12">
         <SélecteurMultiple
-          auChangementOptionsSélectionnées={auChangementDesVillesSélectionnées}
-          description={i18n.ÉLÈVE.ÉTUDE.VILLES_ENVISAGÉES.DESCRIPTION}
-          label={i18n.ÉLÈVE.ÉTUDE.VILLES_ENVISAGÉES.LABEL}
-          optionsSuggérées={villesSuggérées}
-          optionsSélectionnéesParDéfaut={villesSélectionnéesParDéfaut}
-          rechercheSuggestionsEnCours={rechercheVillesEnCours}
-          texteOptionsSélectionnées={i18n.ÉLÈVE.ÉTUDE.VILLES_ENVISAGÉES.SÉLECTIONNÉES}
-          àLaRechercheDUneOption={àLaRechercheDUneVille}
+          auChangementOptionsSélectionnées={auChangementDesCommunesSélectionnées}
+          description={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.DESCRIPTION}
+          label={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.LABEL}
+          optionsSuggérées={communesSuggérées}
+          optionsSélectionnéesParDéfaut={communesSélectionnéesParDéfaut}
+          rechercheSuggestionsEnCours={rechercheCommunesEnCours}
+          texteOptionsSélectionnées={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.SÉLECTIONNÉES}
+          àLaRechercheDUneOption={àLaRechercheDUneCommune}
         />
       </div>
     </form>

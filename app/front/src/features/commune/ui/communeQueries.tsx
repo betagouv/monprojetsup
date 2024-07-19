@@ -1,15 +1,15 @@
 import { dépendances } from "@/configuration/dépendances/dépendances";
 import { queryOptions } from "@tanstack/react-query";
 
-export const rechercheVillesQueryOptions = (recherche?: string) =>
+export const rechercheCommunesQueryOptions = (recherche?: string) =>
   queryOptions({
-    queryKey: ["villes", "recherche"],
+    queryKey: ["communes", "recherche"],
     queryFn: async () => {
       if (recherche === undefined) return [];
 
-      const villes = await dépendances.rechercherVillesUseCase.run(recherche);
+      const communes = await dépendances.rechercherCommunesUseCase.run(recherche);
 
-      return villes ?? [];
+      return communes ?? [];
     },
     enabled: false,
   });

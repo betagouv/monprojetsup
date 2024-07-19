@@ -1,4 +1,4 @@
-import { type Ville } from "@/features/ville/domain/ville.interface";
+import { type Commune } from "@/features/commune/domain/commune.interface";
 
 export type Élève = {
   situation: SituationÉlève | null;
@@ -10,7 +10,7 @@ export type Élève = {
   métiersFavoris: string[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
-  communesFavorites: Ville[] | null;
+  communesFavorites: Commune[] | null;
   formationsFavorites: string[] | null;
 };
 
