@@ -80,7 +80,6 @@ class FormationControllerTest(
         """
         {
           "profil": {
-            "id": "adcf627c-36dd-4df5-897b-159443a6d49c",
             "situation": "aucune_idee",
             "classe": "terminale",
             "baccalaureat": "Générale",
