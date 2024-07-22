@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   keycloakdb:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${KEYCLOAK_DB_NAME}
@@ -14,12 +14,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    ports: 
+      - 5438:${KEYCLOAK_DB_PORT}
     volumes:
       - ./keycloak/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./keycloak/db:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    image: quay.io/keycloak/keycloak:24.0
     depends_on:
       keycloakdb:
         condition: service_healthy
@@ -36,7 +38,7 @@ services:
     entrypoint: /opt/keycloak/bin/kc.sh start-dev
 
   appdb:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${APP_DB_NAME}

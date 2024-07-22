@@ -13,7 +13,15 @@ class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http {
-            authorizeHttpRequests { authorize("**", permitAll) }
+            authorizeHttpRequests {
+                authorize("/v3/api-docs/**", permitAll)
+                authorize("/swagger-resources/*", permitAll)
+                authorize("/swagger-ui/**", permitAll)
+                authorize(anyRequest, authenticated)
+            }
+            oauth2ResourceServer {
+                jwt {}
+            }
             csrf { disable() }
         }
         return http.build()
