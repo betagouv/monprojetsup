@@ -12,13 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 class ProfilDTO(
     @Schema(
-        description = "Id de l'élève",
-        example = "adcf627c-36dd-4df5-897b-159443a6d49c",
-        required = true,
-    )
-    @JsonProperty("id")
-    val id: String,
-    @Schema(
         description = "Etat d'avancée du projet de l'élève",
         example = "aucune_idee",
         required = false,
@@ -121,7 +114,7 @@ class ProfilDTO(
 ) {
     fun toProfil() =
         ProfilEleve(
-            id = id,
+            id = "adcf627c-36dd-4df5-897b-159443a6d49c",
             situation = SituationAvanceeProjetSup.deserialiseApplication(situation),
             classe = ChoixNiveau.deserialiseApplication(classe),
             bac = baccalaureat,

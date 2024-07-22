@@ -31,7 +31,6 @@ class ProfilEleveController() {
     companion object {
         private val profilMock =
             ProfilDTO(
-                id = "monEleveFictif",
                 situation = "aucune_idee",
                 classe = ChoixNiveau.TERMINALE.jsonValeur,
                 baccalaureat = "Générale",
