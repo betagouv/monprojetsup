@@ -34,3 +34,5 @@ build/
 
 ### JDD ###
 /src/main/resources/db/jdd/**
+
+secrets.properties

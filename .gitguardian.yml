@@ -2,4 +2,4 @@ version: 2
 secret:
   ignored_paths:
     - 'keycloak/init.sql'
-    - '.env'
+    - 'docker-compose.dev.yml'

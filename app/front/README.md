@@ -23,8 +23,8 @@ Elle utilise les technologies Typescript/React/ViteJS.
 - Tests End-to-End: `npx playwright test`
 
 
-## Commenter ajouter une variables d'env
-- En local, vous devez définir la variables à plusieurs endroits `.env.example`, `.env`, `.env.ci` et dans `docker/Dockerfile`
+## Comment ajouter une variables d'env
+- En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env`, `.env.ci` et dans `docker/Dockerfile`
 - Pour le déploiement vous devez demander à l'équipe en charge du gitlab Avenir(s) de vous rajouter la variable à leur script de CD pour tous les environnements (cf README.md à la racine de ce repo)
 
 ## Remarque sur les variables d'environnement existantes

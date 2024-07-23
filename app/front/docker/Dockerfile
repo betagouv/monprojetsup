@@ -1,5 +1,5 @@
 # Use an official node image as the base image
-FROM node:20-alpine3.20 AS build
+FROM node:22-alpine AS build
 
 # Arguments declaration
 ARG VITE_APP_URL
@@ -23,7 +23,7 @@ RUN npm ci
 RUN npm run build
 
 # Use an official nginx image
-FROM nginx:stable-alpine3.19
+FROM nginx:stable-alpine
 
 # Copy node build result files to the container
 COPY --from=build /app/dist /var/www/mps-front

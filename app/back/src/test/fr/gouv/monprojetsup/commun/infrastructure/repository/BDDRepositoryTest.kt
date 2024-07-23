@@ -17,8 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class BDDRepositoryTest {
-    @Autowired
-    lateinit var jdbcTemplate: JdbcTemplate
+    @Autowired lateinit var jdbcTemplate: JdbcTemplate
 
     @AfterEach
     fun setUp() {

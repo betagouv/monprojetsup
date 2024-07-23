@@ -11,15 +11,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-
 @Configuration
 class SwaggerConfig {
-
-    @Value("\${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
+    @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     lateinit var authServerUrl: String
 
     companion object {
-        private const val OAUTH_SCHEME_NAME: String = "keycloack"
+        private const val OAUTH_SCHEME_NAME: String = "keycloak"
     }
 
     @Bean
@@ -30,7 +28,7 @@ class SwaggerConfig {
             .info(
                 Info().title("MonProjetSup API")
                     .description("API du frontend MonProjetSup")
-                    .version("1.0")
+                    .version("1.0"),
             )
     }
 

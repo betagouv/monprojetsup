@@ -14,8 +14,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    ports: 
-      - 5438:${KEYCLOAK_DB_PORT}
     volumes:
       - ./keycloak/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./keycloak/db:/var/lib/postgresql/data
@@ -32,9 +30,19 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_HEALTH_ENABLED: true
     restart: always
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/health/live'
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     ports:
-      - ${KEYCLOAK_PORT}:8080
+      - ${KEYCLOAK_PORT_EXPOSED}:${KEYCLOAK_PORT}
     entrypoint: /opt/keycloak/bin/kc.sh start-dev
 
   appdb:
@@ -56,7 +64,7 @@ services:
       - ./app/db:/var/lib/postgresql/data
 
   appfront:
-    image: node:lts
+    image: node:22
     restart: on-failure
     working_dir: /root/app
     ports:
@@ -66,15 +74,26 @@ services:
     command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
 
   appback:
-    image: maven:latest
+    image: maven:3-eclipse-temurin-17-alpine
+    platform: linux/amd64
     restart: on-failure
     working_dir: /root/app
+    depends_on:
+      keycloak:
+        condition: service_healthy
     ports:
       - ${APP_BACK_PORT}:${APP_BACK_PORT}
     volumes:
       - ./app/back:/root/app
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
-      - SPRING_DATASOURCE_USERNAME=${APP_DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${APP_DB_PASSWORD}
+      - SERVER_PORT=${APP_BACK_PORT}
+      - DB_URL=jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
+      - DB_USER=${APP_DB_USER}
+      - DB_PASSWORD=${APP_DB_PASSWORD}
+      - CORS_ORIGINPATTERNS=http://appfront:${APP_FRONT_PORT},http://localhost:${APP_FRONT_PORT}
+      - SUGGESTIONS_API_URL=http://localhost:8004/api/1.2
+      - KEYCLOAK_CLIENT_ID=mps-cli
+      - KEYCLOAK_CLIENT_SECRET=anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
+      - KEYCLOAK_ROYAUME_URL=http://keycloak:${KEYCLOAK_PORT}/realms/avenirs
+      - KEYCLOAK_ROYAUME_URL_JWT_VERIF=http://localhost:${KEYCLOAK_PORT_EXPOSED}/realms/avenirs
     command: sh -c " mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.MonProjetSupApplication"
