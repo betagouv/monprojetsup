@@ -9,7 +9,7 @@ const pages = {
 } as const;
 
 const app = {
-  NOM: "Mon Projet Sup",
+  NOM: "MonProjetSup",
   DESCRIPTION: "Le guide qui facilite l’orientation des lycéens",
 } as const;
 

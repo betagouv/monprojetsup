@@ -1,46 +1,65 @@
-# Mon Projet Sup
-
+# MonProjetSup
 Ce repository est un mono-repo qui contient plusieurs applications nécessaires au fonctionnement de Mon Projet Sup
 
+
 ## Applications contenu dans le repo
-- **v1** - l'application historique (ce dossier est amené à disparaitre)
-- **etl** - Permet de transformer les fichiers référentiels en JSON afin de les écrire dans une base Redis utilisée par toutes les applications
-- **suggestions** - API permettant de générer des suggestions de formations
-- **app** - coeur de l'application Mon Projet Sup
-  - front - Frontend de tout le projet 
-  - back - API avec laquelle communique le frontend
+- **v1** - L'application historique (ce dossier est amené à disparaitre)
+- **etl** - Permet de transformer les fichiers référentiels et ajouter les données en BDD (pour le moment dans V1)
+- **suggestions** - API permettant de générer des suggestions de formations (pour le moment dans V1)
+- **keycloak** -  Gestionnaire d'authentification (n'est pas déployé, utilisé uniquement pour le dev local)
+- **wordpress** - Export statique des fichiers du WP permettant d'alimenter les pages publiques (non utilisé en local, uniquement pour le déploiement)
+- **app** - Coeur de l'application Mon Projet Sup
+  - front - Frontend Typescript/React/ViteJS
+  - back - Backend API Kotlin/Spring Boot
 
-## Prérequis
-Java, Kotlin, Docker
+## Schéma simplifié des apps et des types d'échanges en local
+![Schéma apps en local](schema-local.png)
 
-## Comment démarrer
 
-### Lancer la BDD
 
-- Lancer Docker
-- À la racine du projet lancer la commande :
-```bash
- docker compose -f docker-compose.dev.yml up appdb 
-```
+## Comment lancer le projet
+### Prérequis 
+- Démarrer Docker sur sa machine
+- S'assurer d'avoir correctement renseigné les variables d'environnement utilisés par le frontend et le backend
+  - cf [app/back/README.md](app/back/README.md)
+  - cf [app/front/README.md](app/front/README.md)
 
-### Lancer l'API
-À la racine du projet lancer la commande :
-```bash
-docker compose -f docker-compose.dev.yml up appback
-```
 
-### Lancer l'API suggestion pour certains endpoint 
+### Application MPS
+À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
+### API suggestion 
 cf [v1/back/README.md](v1/back/README.md)
 
-## Les migrations de BDD
 
-On utilise l'outil [Flyway](https://documentation.red-gate.com/flyway) pour migrer nos bases de données.
+## Les différentes URLs
+- Frontend: http://localhost:5001
+- Swagger Backend: http://localhost:5002/swagger-ui/index.html/
+- Keycloak: http://localhost:5003
 
-Il existe une CLI, mais le plus simple pour effectuer une migration reste de lancer tout simplement l'application qui effectuera elle-même les migrations.
 
-Les migrations sont répercutées dans la BDD `flyway_schema_history`. On peut s'amuser en LOCAL à les supprimer à la main lors des conflits entre ≠ branches.
+## Comment se connecter 
+Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
 
-Pour effectuer une migration, il suffit d'ajouter un script sql dans le dossier app/back/src/main/resources/db/migration.
-La nomenclature à respecter est VX_Y__nom_en_miniscule_decrivant_la_migration où X correspond à une version majeure et Y une version mineure.
+### Se connecter au Keycloak en tant qu'admin (gérer les comptes, les royaumes...)
+- Url: http://localhost:5003
+- Login: admin
+- Mot de passe: password
 
-Dans le cas de rebase, il faut penser à augmenter ce chiffre Y pour éviter les conflits avec de potentiels scripts déjà mergés par d'autres personnes.  
+### Se connecter à l'application en tant qu'élève
+- Url: http://localhost:5001
+- Login: eleve
+- Mot de passe: password
+
+### Se connecter à l'application en tant qu'enseignant
+- Url: http://localhost:5001
+- Login: enseignant
+- Mot de passe: password
+
+
+## Déploiement de l'application
+- Lors du push sur la branch `demo` ou `prod` et une fois les CI validées le code va être push sur un repo privé Gitlab appartenant à Avenir(s) sur les branches respectives correspondants aux différents environnements. 
+- Ce push va déclencher automatiquement le build et le deploy de l'application uniquement pour la branch `demo`.
+- Pour la branch `prod` il est nécessaire de le faire manuellement dans l'interface gitlab du repo Avenir(s).
+- À ce stade du projet nous n'utilisons que l'environnement `integration` et `prod` chez Avenir(s). 
+
+
