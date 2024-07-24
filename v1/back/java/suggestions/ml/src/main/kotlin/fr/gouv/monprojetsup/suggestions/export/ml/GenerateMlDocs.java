@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.export.ml;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.Constants;
 import fr.gouv.monprojetsup.suggestions.data.DataSources;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
@@ -13,6 +13,8 @@ import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.suggestions.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.suggestions.data.update.psup.PsupData;
+import fr.gouv.monprojetsup.suggestions.domain.port.VoeuxPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +30,15 @@ public class GenerateMlDocs {
 
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
+    private final VoeuxPort voeuxPort;
+    private final Map<String, String> labels;
 
     @Autowired
-    public GenerateMlDocs(SuggestionsData data, AlgoSuggestions algo) {
+    public GenerateMlDocs(SuggestionsData data, AlgoSuggestions algo, VoeuxPort voeuxPort, LabelsPort labelsPort) {
         this.data = data;
         this.algo = algo;
+        this.voeuxPort = voeuxPort;
+        this.labels = labelsPort.retrieveLabels();
     }
 
     public void outputMlData() throws IOException {
@@ -44,8 +50,6 @@ public class GenerateMlDocs {
                 MetiersScrapped.class
         );
 
-        Map<String, Descriptifs.Descriptif> descriptifs1 = SuggestionsData.getDescriptifs();
-
         val psupData =  Serialisation.fromZippedJson(
                 DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
                 PsupData.class);
@@ -55,6 +59,8 @@ public class GenerateMlDocs {
 
         List<MlData> datas = new ArrayList<>();
 
+        Map<String, Descriptifs.Descriptif> descriptifs1
+                = voeuxPort.retrieveDescriptifs();
 
 
         algo.edgesKeys.keys().forEach(key -> {
@@ -74,7 +80,7 @@ public class GenerateMlDocs {
                         texts.add(new MlData.Data("descriptifs_psup_debouches", descriptif2.debouches()));
                     }
                 });
-                datas.add(new MlData(key, data.getLabel(key), texts));
+                datas.add(new MlData(key, labels.getOrDefault(key,key), texts));
             }
 
         });
@@ -103,7 +109,7 @@ public class GenerateMlDocs {
                 if (scrapped != null) {
                     texts.add(new MlData.Data(DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH, scrapped));
                 }
-                datas.add(new MlData(key, data.getLabel(key), texts));
+                datas.add(new MlData(key, labels.getOrDefault(key,key), texts));
             }
 
         });
@@ -113,7 +119,7 @@ public class GenerateMlDocs {
         Map<String, List<String>> tags = new HashMap<>();
         algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isTheme(key) || Helpers.isInteret(key)) {
-                tags.computeIfAbsent(data.getLabel(key), k -> new ArrayList<>()).add(key);
+                tags.computeIfAbsent(labels.getOrDefault(key,key), k -> new ArrayList<>()).add(key);
             }
         });
         Serialisation.toJsonFile("ml_tags.json", tags, true);
@@ -147,8 +153,8 @@ public class GenerateMlDocs {
                         first = false;
                     } else {
                         List<String> vals = gson.fromJson(val, tt);
-                        val labels = vals.stream().map(z -> data.getDebugLabel(z)).sorted().toList();
-                        csv.append("\"" + String.join("\n", labels) + "\"");
+                        val labelsList = vals.stream().map(x -> labels.getOrDefault(x,x)).toList();
+                        csv.append("\"" + String.join("\n", labelsList) + "\"");
                     }
                 }
                 csv.newLine();

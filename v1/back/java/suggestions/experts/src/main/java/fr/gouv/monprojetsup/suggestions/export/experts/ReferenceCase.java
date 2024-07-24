@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
+import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 
 import java.util.ArrayList;
 import java.util.List;

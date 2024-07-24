@@ -2,6 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+
 	<groupId>fr.gouv.monprojetsup.suggestions</groupId>
 	<artifactId>parent</artifactId>
 	<version>1.4.1</version>
@@ -10,8 +19,8 @@
 	<description>suggestions personnalisées dans MonProjetSup</description>
 
     <modules>
-		<module>common</module>
-        <module>export</module>
+		<module>algo</module>
+		<module>export</module>
 		<module>ml</module>
 		<module>server</module>
 		<module>experts</module>
@@ -23,7 +32,6 @@
 		<kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
-		<spring.boot.version>3.3.1</spring.boot.version>
 	</properties>
 
 	<repositories>
@@ -38,9 +46,26 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
+				<version>3.3.2</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-test-junit5</artifactId>
+				<version>1.9.23</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>5.10.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-stdlib</artifactId>
+				<version>${kotlin.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

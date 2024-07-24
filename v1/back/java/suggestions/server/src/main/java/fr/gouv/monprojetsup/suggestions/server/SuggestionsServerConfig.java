@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.suggestions.algos.Config;
+import fr.gouv.monprojetsup.suggestions.algo.Config;
 import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
 import lombok.Getter;
 

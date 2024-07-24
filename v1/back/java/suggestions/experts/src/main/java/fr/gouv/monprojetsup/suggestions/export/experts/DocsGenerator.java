@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -17,12 +19,14 @@ public class DocsGenerator {
 
     private final SuggestionsData data;
     private final SuggestionsGenerator suggestionsGenerator;
+    private final Map<String, String> labels;
 
     @Autowired
-    public DocsGenerator(SuggestionsData data, SuggestionsGenerator suggestionsGenerator)
+    public DocsGenerator(SuggestionsData data, SuggestionsGenerator suggestionsGenerator, LabelsPort labelsPort)
     {
         this.data = data;
         this.suggestionsGenerator = suggestionsGenerator;
+        this.labels = labelsPort.retrieveLabels();
     }
 
     public void generate() throws Exception {
@@ -70,7 +74,7 @@ public class DocsGenerator {
     }
 
     private List<String> toHumanReadable(List<String> filieres) {
-        return filieres.stream().map(f -> data.getLabel(f,f)).toList();
+        return filieres.stream().map(f -> labels.getOrDefault(f,f)).toList();
     }
 
 

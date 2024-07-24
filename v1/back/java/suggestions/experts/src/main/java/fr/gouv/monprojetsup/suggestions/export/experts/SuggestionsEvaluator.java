@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
-import fr.gouv.monprojetsup.suggestions.algos.Suggestion;
+import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import lombok.val;
@@ -87,7 +87,7 @@ public class SuggestionsEvaluator {
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
                 String worst = worstExpl == null ? "null" : worstExpl.humanReadable(data.getLabels());
-                String worstName = worstExpl == null ? "null" : data.getDebugLabel(worstExpl.fl());
+                String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.fl());
 
                 if(refCase.expectations() != null && !refCase.expectations().isEmpty()) {
                     fos.write("\n\n\n***********************************************\n");
@@ -142,7 +142,7 @@ public class SuggestionsEvaluator {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
                                 .filter(s -> Helpers.isFiliere(s.fl()))
-                                .map(e -> getOKPrefix(refCase, e.fl()) + data.getDebugLabel(e.fl()))
+                                .map(e -> getOKPrefix(refCase, e.fl()) + data.getLabel(e.fl()))
                                 .collect(Collectors.joining("\n", "", "\n")));
                     }
 

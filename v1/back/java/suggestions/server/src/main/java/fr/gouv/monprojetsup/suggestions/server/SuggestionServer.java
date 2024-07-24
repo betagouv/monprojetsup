@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

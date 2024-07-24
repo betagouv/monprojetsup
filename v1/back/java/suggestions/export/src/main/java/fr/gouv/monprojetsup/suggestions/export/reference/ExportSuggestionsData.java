@@ -1,10 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.export.reference;
 
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.Constants;
 import fr.gouv.monprojetsup.suggestions.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,16 @@ public class ExportSuggestionsData {
 
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
+    private final Map<String, String> labels;
 
     @Autowired
     public ExportSuggestionsData(
             SuggestionsData data,
-            AlgoSuggestions algo) {
+            AlgoSuggestions algo,
+            LabelsPort labelsPort) {
         this.data = data;
         this.algo = algo;
+        this.labels = labelsPort.retrieveLabels();
     }
 
     public void export() throws Exception {
@@ -57,7 +61,7 @@ public class ExportSuggestionsData {
                 //.filter(p -> flGroups.getOrDefault(p.getKey(),p.getKey()).equals(p.getKey()))
                 .collect(Collectors.toMap(
                                 Map.Entry::getKey,
-                                e -> data.getLabel(e.getKey(), e.getKey())
+                                e -> labels.getOrDefault(e.getKey(), e.getKey())
                         )
                 );
         Serialisation.toJsonFile("filieresWithNoTheme.json", groupsWithNoTheme, true);
@@ -66,10 +70,10 @@ public class ExportSuggestionsData {
             if (s.startsWith(Constants.FILIERE_PREFIX)) {
                 List<String> themes = algo.edgesKeys.getPredecessors(s)
                         .keySet().stream().filter(t -> t.startsWith(Constants.THEME_PREFIX))
-                        .map(t -> data.getLabel(t, t))
+                        .map(t -> labels.getOrDefault(t, t))
                         .sorted()
                         .toList();
-                filieresWithTheme.put(data.getLabel(s, s), themes);
+                filieresWithTheme.put(labels.getOrDefault(s, s), themes);
             }
         });
         Serialisation.toJsonFile("filieresWithThemes.json", filieresWithTheme, true);
@@ -82,7 +86,7 @@ public class ExportSuggestionsData {
                 .entrySet().stream().filter(
                         e -> Helpers.isFiliere(e.getKey())
                                 && e.getValue().stream().noneMatch(Helpers::isMetier)
-                ).map(e -> data.getLabel(e.getKey(), e.getKey()) + " (" + e.getKey() + ")"
+                ).map(e -> labels.getOrDefault(e.getKey(), e.getKey()) + " (" + e.getKey() + ")"
                 ).sorted().toList();
 
         Serialisation.toJsonFile("groupsWithNoMetiers.json", groupsWithNoMetiers, true);
@@ -109,10 +113,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> themesMetiers = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = data.getDebugLabel(s);
+                String labelTheme = data.getLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(data::getDebugLabel)
+                        .map(data::getLabel)
                         .toList();
                 themesMetiers.put(labelTheme, metiers);
             }
@@ -128,10 +132,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> metiersSecteurs = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)) {
-                String secteur = data.getDebugLabel(s);
+                String secteur = data.getLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(data::getDebugLabel)
+                        .map(data::getLabel)
                         .toList();
                 secteursMetiers.put(secteur, metiers);
                 metiers.forEach(met -> metiersSecteurs.computeIfAbsent(met, z -> new ArrayList<>()).add(secteur));
@@ -159,10 +163,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> themesFilieres = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = data.getDebugLabel(s);
+                String labelTheme = data.getLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.FILIERE_PREFIX) || m.startsWith(Constants.TYPE_FORMATION_PREFIX))
-                        .map(data::getDebugLabel)
+                        .map(data::getLabel)
                         .toList();
                 themesFilieres.put(labelTheme, metiers);
             }

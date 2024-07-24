@@ -39,8 +39,8 @@ class SuggestionsControllerz(
     @Operation(summary = "Récupère une liste de suggestion de formations et métiers associés à un profil.")
     @PostMapping("/$SUGGESTIONS_ENDPOINT")
     fun getSuggestions(
-        @RequestBody(required = true) request : GetAffinitiesServiceDTO.Request
-    ): GetAffinitiesServiceDTO.Response {
+        @RequestBody(required = true) request : fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Request
+    ): fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO.Response {
         return getSuggestionsService.handleRequestAndExceptions(request)
     }
 
@@ -58,7 +58,7 @@ class SuggestionsControllerz(
                 "Les explications sont des éléments sur la cohérence entre les différents éléments de profil et les caractéristiques de la formation." +
                 "Par exemple la cohérence avec les préférences géographiques ou les centres d'intérêts du candidat.")
     @PostMapping("/$EXPLANATIONS_ENDPOINT")
-    fun getExplanationsAndExamples(@RequestBody request : GetExplanationsAndExamplesServiceDTO.Request): GetExplanationsAndExamplesServiceDTO.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
+    fun getExplanationsAndExamples(@RequestBody request : fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.Request): fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO.Response = getExplanationsAndExamplesService.handleRequestAndExceptions(request)
 
     @Operation(summary = "Récupère une liste de formations d'affectation d'un ou plusieurs types, les plus proches d'une liste de villes données.")
     @PostMapping("/foi")
