@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class SwaggerConfig {
+class SwaggerConfiguration {
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     lateinit var authServerUrl: String
 

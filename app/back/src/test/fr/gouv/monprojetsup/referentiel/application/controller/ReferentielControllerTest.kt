@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.referentiel.application.controller
 
+import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
+import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.CategorieDomaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -15,7 +17,6 @@ import fr.gouv.monprojetsup.referentiel.usecase.ReferentielService
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
@@ -25,13 +26,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [ReferentielController::class], excludeAutoConfiguration = [SecurityAutoConfiguration::class])
+@WebMvcTest(controllers = [ReferentielController::class])
 class ReferentielControllerTest(
     @Autowired val mvc: MockMvc,
-) {
+) : ControllerTest() {
     @MockBean
     lateinit var referentielService: ReferentielService
 
+    @ConnecteAvecUnEleve("adcf627c-36dd-4df5-897b-159443a6d49c")
     @Test
     fun `si le service réussi, doit retourner 200 avec le referentiel du parcours d'inscription`() {
         // Given
