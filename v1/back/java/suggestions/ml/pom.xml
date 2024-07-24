@@ -56,25 +56,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit5</artifactId>
-            <version>1.9.23</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>1.9.23</version>
-        </dependency>
-        <dependency>
             <groupId>fr.gouv.monprojetsup.suggestions</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>algo</artifactId>
             <version>1.4.1</version>
         </dependency>
     </dependencies>

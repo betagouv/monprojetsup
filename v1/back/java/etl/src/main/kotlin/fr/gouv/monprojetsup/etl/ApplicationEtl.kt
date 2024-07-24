@@ -86,7 +86,43 @@ class EtlApplicationRunner : CommandLineRunner {
 
 		updateFormationsDb()
 
+		updateSuggestionsDbs()
+
 		context.close()
+	}
+
+	private fun updateSuggestionsDbs() {
+			TODO("Not yet implemented")
+		/*        //ajout des secteurs d'activité
+        onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
+            String keyMetier = cleanup(fiche.identifiant());
+            if(fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
+                fiche.secteurs_activite().secteur_activite().forEach(secteur -> {
+                    String keySecteur = cleanup(secteur.id());
+                    edgesKeys.put(keyMetier, keySecteur, true, 1.0);
+                });
+
+                if(fiche.metiers_associes() != null && fiche.metiers_associes().metier_associe() != null) {
+                    fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
+                        String keyMetierAssocie = cleanup(metierAssocie.id());
+                        edgesKeys.put(keyMetier, keyMetierAssocie, true, 0.75);
+                    });
+                }
+            }
+        });
+		*/
+
+		/*
+		filieres front
+		//suppression des filières en app couvertes par une filière sans app,
+        toErase.addAll(
+                backPsupData.getFormationsenAppAvecEquivalentSansApp(filActives)
+                        .stream().map(Constants::gFlCodToFrontId)
+                        .collect(Collectors.toSet())
+        );
+		 */
+
+		/* interests <--> interests */
 	}
 
 	private fun updateFormationsDb() {

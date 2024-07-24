@@ -1,5 +1,4 @@
-import fr.gouv.monprojetsup.suggestions.algos.AlgoSuggestions
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData
+import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions
 import fr.gouv.monprojetsup.suggestions.server.config.SecurityConfig
 import fr.gouv.monprojetsup.suggestions.server.controllers.SuggestionsControllerz
 import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
@@ -7,7 +6,6 @@ import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesServi
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
 import fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

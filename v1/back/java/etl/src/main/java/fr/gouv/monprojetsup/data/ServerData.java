@@ -353,7 +353,7 @@ public class ServerData {
      * @param bac le bac
      * @param groups les groupes
      * @return les stats
-     */
+
     public static Map<String, StatsContainers.DetailFiliere> getGroupStats(@Nullable String bac, @Nullable Collection<String> groups) {
         if(groups == null) return Collections.emptyMap();
         if(bac == null) bac = PsupStatistiques.TOUS_BACS_CODE;
@@ -362,7 +362,7 @@ public class ServerData {
                 g -> g,
                 g -> getDetailedGroupStats(finalBac, g)
         ));
-    }
+    }*/
 
 
     /**
