@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.authentification.domain
+package fr.gouv.monprojetsup.authentification.domain.entity
 
 enum class Profil(val jsonValeur: String) {
     ELEVE("APP-SEC"),

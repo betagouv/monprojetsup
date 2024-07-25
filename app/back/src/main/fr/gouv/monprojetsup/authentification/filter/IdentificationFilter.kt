@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.authentification.filter
 
-import fr.gouv.monprojetsup.authentification.domain.Profil
+import fr.gouv.monprojetsup.authentification.domain.entity.Profil
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import jakarta.servlet.FilterChain

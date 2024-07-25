@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau

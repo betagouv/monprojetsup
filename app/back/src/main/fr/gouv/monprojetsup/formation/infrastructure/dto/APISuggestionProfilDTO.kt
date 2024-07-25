@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionProfilDTO(
@@ -26,14 +26,14 @@ data class APISuggestionProfilDTO(
     val choix: List<SuggestionDTO>?,
 ) {
     constructor(profilEleve: ProfilEleve, specialites: List<String>?) : this(
-        classe = profilEleve.classe.apiSuggestionValeur,
+        classe = profilEleve.classe?.apiSuggestionValeur,
         baccalaureat =
             when (profilEleve.baccalaureat) {
                 "NC" -> ""
                 else -> profilEleve.baccalaureat
             },
-        duree = profilEleve.dureeEtudesPrevue.apiSuggestionValeur,
-        alternance = profilEleve.alternance.apiSuggestionValeur,
+        duree = profilEleve.dureeEtudesPrevue?.apiSuggestionValeur,
+        alternance = profilEleve.alternance?.apiSuggestionValeur,
         preferencesGeographiques = profilEleve.communesFavorites?.map { it.nom },
         specialites = specialites,
         interets = (profilEleve.centresInterets ?: emptyList()) + (profilEleve.domainesInterets ?: emptyList()),

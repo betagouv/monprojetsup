@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.dto
 
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
