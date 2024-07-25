@@ -38,7 +38,7 @@ class RecupererFormationsService(
         val communes =
             recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                 idsDesFormationsRetournees,
-                profilEleve.communesPreferees,
+                profilEleve.communesFavorites,
             )
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
