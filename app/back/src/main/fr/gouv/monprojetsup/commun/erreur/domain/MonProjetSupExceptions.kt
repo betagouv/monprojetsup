@@ -24,6 +24,12 @@ data class MonProjetSupNotFoundException(
     val origine: Throwable? = null,
 ) : MonProjetSup4xxExceptions(code, msg, origine)
 
+data class MonProjetSupForbiddenException(
+    override val code: String,
+    val msg: String,
+    val origine: Throwable? = null,
+) : MonProjetSup4xxExceptions(code, msg, origine)
+
 data class MonProjetSupInternalErrorException(
     override val code: String,
     val msg: String,

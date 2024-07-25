@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.configuration
 
 import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter
+import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.AUTHORITY_ELEVE
+import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.AUTHORITY_ENSEIGNANT
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,6 +26,10 @@ class SecuriteConfiguration {
                 authorize("/swagger-resources/*", permitAll)
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/actuator/**", permitAll)
+                authorize("/api/v1/formations/**", hasAnyAuthority(AUTHORITY_ELEVE, AUTHORITY_ENSEIGNANT))
+                authorize("/api/v1/metiers/**", hasAnyAuthority(AUTHORITY_ELEVE, AUTHORITY_ENSEIGNANT))
+                authorize("/api/v1/profil/**", hasAuthority(AUTHORITY_ELEVE))
+                authorize("/api/v1/referentiel/**", authenticated)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer { jwt {} }

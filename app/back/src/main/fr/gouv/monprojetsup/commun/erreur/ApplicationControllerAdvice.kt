@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.commun.erreur
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import org.springframework.http.HttpStatus
@@ -33,6 +34,15 @@ class ApplicationControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleNotFound(domainError: MonProjetSupNotFoundException): ProblemDetail {
         val reponse = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+        reponse.title = domainError.code
+        reponse.detail = domainError.msg
+        return reponse
+    }
+
+    @ExceptionHandler(MonProjetSupForbiddenException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun handleNotFound(domainError: MonProjetSupForbiddenException): ProblemDetail {
+        val reponse = ProblemDetail.forStatus(HttpStatus.FORBIDDEN)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse
