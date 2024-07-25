@@ -52,3 +52,13 @@ jobs:
           APP_DB_USER: postgres
           APP_DB_PASSWORD: postgres
           APP_DB_PORT: 5432
+          SERVER_PORT: 5002
+          DB_URL: jdbc:postgresql://localhost:5432/postgres
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          CORS_ORIGINPATTERNS: http://appfront:5001,http://localhost:5002
+          SUGGESTIONS_API_URL: http://localhost:8004/api/1.2
+          KEYCLOAK_CLIENT_ID: mps-cli
+          KEYCLOAK_CLIENT_SECRET: anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
+          KEYCLOAK_ROYAUME_URL: http://localhost:5003/realms/avenirs
+          KEYCLOAK_ROYAUME_URL_JWT_VERIF: http://localhost:5003/realms/avenirs
