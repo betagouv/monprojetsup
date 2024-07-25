@@ -120,12 +120,12 @@ class ProfilDTO(
             baccalaureat = baccalaureat,
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
             alternance = ChoixAlternance.deserialiseApplication(alternance),
-            formationsChoisies = formationsFavorites,
-            communesPreferees = communesFavorites?.map { it.toCommune() },
+            formationsFavorites = formationsFavorites,
+            communesFavorites = communesFavorites?.map { it.toCommune() },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
-            metiersChoisis = metiersFavoris,
+            metiersFavoris = metiersFavoris,
             domainesInterets = domaines,
         )
 

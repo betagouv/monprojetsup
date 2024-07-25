@@ -34,15 +34,15 @@ data class APISuggestionProfilDTO(
             },
         duree = profilEleve.dureeEtudesPrevue.apiSuggestionValeur,
         alternance = profilEleve.alternance.apiSuggestionValeur,
-        preferencesGeographiques = profilEleve.communesPreferees?.map { it.nom },
+        preferencesGeographiques = profilEleve.communesFavorites?.map { it.nom },
         specialites = specialites,
         interets = (profilEleve.centresInterets ?: emptyList()) + (profilEleve.domainesInterets ?: emptyList()),
         moyenneGenerale = profilEleve.moyenneGenerale?.toString(),
         choix =
             (
-                profilEleve.metiersChoisis?.map { SuggestionDTO(it) }
+                profilEleve.metiersFavoris?.map { SuggestionDTO(it) }
                     ?: emptyList()
-            ) + (profilEleve.formationsChoisies?.map { SuggestionDTO(it) } ?: emptyList()),
+            ) + (profilEleve.formationsFavorites?.map { SuggestionDTO(it) } ?: emptyList()),
     )
 }
 

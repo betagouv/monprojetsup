@@ -21,12 +21,12 @@ class EleveBDDRepository : EleveRepository {
             baccalaureat = "S2TMD",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
             alternance = ChoixAlternance.INTERESSE,
-            communesPreferees = emptyList(),
+            communesFavorites = emptyList(),
             specialites = emptyList(),
             centresInterets = listOf("T_IDEO2_4813", "T_ROME_2092381918"),
             moyenneGenerale = null,
-            metiersChoisis = emptyList(),
-            formationsChoisies = listOf("fl0001", "fl0005"),
+            metiersFavoris = emptyList(),
+            formationsFavorites = listOf("fl0001", "fl0005"),
             domainesInterets = emptyList(),
         )
     }
@@ -39,12 +39,12 @@ class EleveBDDRepository : EleveRepository {
             baccalaureat = "S2TMD",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
             alternance = ChoixAlternance.INTERESSE,
-            communesPreferees = emptyList(),
+            communesFavorites = emptyList(),
             specialites = emptyList(),
             centresInterets = listOf("T_IDEO2_4813", "T_ROME_2092381918"),
             moyenneGenerale = null,
-            metiersChoisis = emptyList(),
-            formationsChoisies = listOf("fl0001", "fl0005"),
+            metiersFavoris = emptyList(),
+            formationsFavorites = listOf("fl0001", "fl0005"),
             domainesInterets = emptyList(),
         )
     }
