@@ -17,14 +17,18 @@ class SwaggerConfiguration {
     lateinit var authServerUrl: String
 
     companion object {
-        private const val OAUTH_SCHEME_NAME: String = "keycloak"
+        private const val JWT_SCHEME_NAME: String = "Bearer Authentification"
+        private const val OAUTH_SCHEME_NAME: String = "Keycloak Onisep"
     }
 
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
-            .components(Components().addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
-            .addSecurityItem(SecurityRequirement().addList(OAUTH_SCHEME_NAME))
+            .components(
+                Components().addSecuritySchemes(JWT_SCHEME_NAME, createAPIKeyScheme())
+                    .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()),
+            )
+            .addSecurityItem(SecurityRequirement().addList(OAUTH_SCHEME_NAME).addList(JWT_SCHEME_NAME))
             .info(
                 Info().title("MonProjetSup API")
                     .description("API du frontend MonProjetSup")
@@ -46,5 +50,11 @@ class SwaggerConfiguration {
         return OAuthFlow()
             .authorizationUrl("$authServerUrl/protocol/openid-connect/auth")
             .tokenUrl("$authServerUrl/protocol/openid-connect/token")
+    }
+
+    private fun createAPIKeyScheme(): SecurityScheme {
+        return SecurityScheme().type(SecurityScheme.Type.HTTP)
+            .bearerFormat("JWT")
+            .scheme("bearer")
     }
 }

@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.authentification.filter
 
 import fr.gouv.monprojetsup.authentification.domain.entity.Profil
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import jakarta.servlet.FilterChain
@@ -20,6 +22,9 @@ class IdentificationFilter(
 ) : OncePerRequestFilter() {
     companion object {
         const val AUTHORITY_ELEVE = "ELEVE_AUTHENTIFIE"
+        const val AUTHORITY_ENSEIGNANT = "ENSEIGNANT_AUTHENTIFIE"
+        val GRANTED_AUTHORITY_ELEVE = GrantedAuthority { AUTHORITY_ELEVE }
+        val GRANTED_AUTHORITY_ENSEIGNANT = GrantedAuthority { AUTHORITY_ENSEIGNANT }
     }
 
     override fun doFilterInternal(
@@ -38,8 +43,15 @@ class IdentificationFilter(
                     } catch (e: MonProjetSupNotFoundException) {
                         eleveRepository.creerUnEleve(idIndividu)
                     }
-                val authentication = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GrantedAuthority { AUTHORITY_ELEVE }))
-                SecurityContextHolder.getContext().authentication = authentication
+                val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_ELEVE))
+                SecurityContextHolder.getContext().authentication = authenticationEleve
+            } else if (profil == Profil.ENSEIGNANT && idIndividu != null) {
+                val authenticationEnseignant =
+                    UsernamePasswordAuthenticationToken(ProfilEnseignant, null, mutableListOf(GRANTED_AUTHORITY_ENSEIGNANT))
+                SecurityContextHolder.getContext().authentication = authenticationEnseignant
+            } else {
+                val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnecte, null, null)
+                SecurityContextHolder.getContext().authentication = authenticationToken
             }
         }
         filterChain.doFilter(request, response)
