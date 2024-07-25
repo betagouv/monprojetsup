@@ -34,12 +34,12 @@ abstract class ControllerTest {
             baccalaureat = "Générale",
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
-            communesPreferees = listOf(Communes.PARIS),
+            communesFavorites = listOf(Communes.PARIS),
             specialites = listOf("1056", "1054"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
-            metiersChoisis = listOf("MET_123", "MET_456"),
-            formationsChoisies = listOf("fl1234", "fl5678"),
+            metiersFavoris = listOf("MET_123", "MET_456"),
+            formationsFavorites = listOf("fl1234", "fl5678"),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
         )
 }

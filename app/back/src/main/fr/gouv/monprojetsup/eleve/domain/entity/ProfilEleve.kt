@@ -13,10 +13,10 @@ data class ProfilEleve(
     val specialites: List<String>?,
     val domainesInterets: List<String>?,
     val centresInterets: List<String>?,
-    val metiersChoisis: List<String>?,
+    val metiersFavoris: List<String>?,
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue,
     val alternance: ChoixAlternance,
-    val communesPreferees: List<Commune>?,
-    val formationsChoisies: List<String>?,
+    val communesFavorites: List<Commune>?,
+    val formationsFavorites: List<String>?,
     val moyenneGenerale: Float?,
 )
