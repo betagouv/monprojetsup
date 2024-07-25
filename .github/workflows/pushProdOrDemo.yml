@@ -1,11 +1,10 @@
-name: Main Pipeline
+name: Push on branch demo or prod
 
 on:
   push:
     branches:
       - prod
       - demo
-  pull_request:
 
 jobs:
   checkFrontend: 
@@ -18,7 +17,6 @@ jobs:
 
   pushToOnisep: 
     name: ONISEP Repository
-    if: ${{ github.event_name == 'push' }}
     needs: [checkFrontend, checkBackend]
     uses: ./.github/workflows/onisep.yml
     secrets:

@@ -3,3 +3,4 @@ secret:
   ignored_paths:
     - 'keycloak/init.sql'
     - 'docker-compose.dev.yml'
+    - './.github/workflows/backend.yml'
