@@ -5,6 +5,17 @@ on:
 
 env:
   WORKING_DIRECTORY: ./app/back
+  APP_DB: postgres
+  APP_DB_USERNAME: postgres
+  APP_DB_PASSWORD: postgres
+  APP_DB_PORT: 5432
+  KC_DB: postgres
+  KC_DB_USERNAME: postgres
+  KC_DB_PASSWORD: postgres
+  KC_DB_PORT: 5433
+  KC_PORT: 5003
+  JAVA_VENDOR: temurin
+  JAVA_VERSION: 17
 
 jobs:
   lint:
@@ -25,9 +36,10 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ${{ env.APP_DB }}
+          POSTGRES_USER: ${{ env.APP_DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.APP_DB_PASSWORD }}
+          PGPORT: ${{ env.APP_DB_PORT }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -35,20 +47,69 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+      keycloakdb:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ${{ env.KC_DB }}
+          POSTGRES_USER: ${{ env.KC_DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.KC_DB_PASSWORD }}
+          PGPORT: ${{ env.KC_DB_PORT }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5433
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
     steps:
       - uses: actions/checkout@v4
+      - name: Import Keycloak DB
+        run: psql -d postgresql://${{ env.KC_DB_USERNAME }}@localhost:${{ env.KC_DB_PORT }}/${{ env.KC_DB }} -f init.sql
+        working-directory: ./keycloak
+        env:
+          PGPASSWORD: ${{ env.KC_DB_PASSWORD }}
+      - name: Start Keycloak
+        run: |
+          docker run -d --name keycloak --hostname keycloak \
+          -p ${{ env.KC_PORT }}:8080 \
+          --network "$(docker network ls --format '{{.Name}}' | grep 'github')" \
+          -e "KC_DB=${{ env.KC_DB }}" \
+          -e "KC_DB_URL=jdbc:postgresql://keycloakdb:${{ env.KC_DB_PORT }}/${{ env.KC_DB }}" \
+          -e "KC_DB_USERNAME=${{ env.KC_DB_USERNAME }}" \
+          -e "KC_DB_PASSWORD=${{ env.KC_DB_PASSWORD }}" \
+          -e "KEYCLOAK_ADMIN=admin" \
+          -e "KEYCLOAK_ADMIN_PASSWORD=password" \
+          -e "KC_HEALTH_ENABLED=true" \
+          -e GITHUB_ACTIONS=true \
+          -e CI=true \
+          quay.io/keycloak/keycloak:24.0 \
+          start-dev
+      - name: Wait for Keycloak to be ready
+        run: |
+          until curl --fail http://localhost:${{ env.KC_PORT }}; do
+            echo "En attente du démarrage de Keycloak..."
+            sleep 5
+          done
+          echo "Keycloak est up"
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' 
-          java-version: '17'
+          distribution: '${{ env.JAVA_VENDOR }}' 
+          java-version: '${{ env.JAVA_VERSION }}'
       - name: Run test command
         run: mvn test
         env:
-          APP_DB_HOST_NAME: localhost
-          APP_DB_NAME: postgres
-          APP_DB_USER: postgres
-          APP_DB_PASSWORD: postgres
-          APP_DB_PORT: 5432
+          SERVER_PORT: 5002
+          DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
+          DB_USER: ${{ env.APP_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.APP_DB_PASSWORD }}
+          CORS_ORIGINPATTERNS: '*'
+          SUGGESTIONS_API_URL: http://localhost:8004/api/1.2
+          KEYCLOAK_CLIENT_ID: mps-cli
+          KEYCLOAK_CLIENT_SECRET: anfoYhY7PNxIhgEthcWdbq2P4XPJ90Aw
+          KEYCLOAK_ROYAUME_URL: http://localhost:${{ env.KC_PORT }}/realms/avenirs
+          KEYCLOAK_ROYAUME_URL_JWT_VERIF: http://localhost:${{ env.KC_PORT }}/realms/avenirs
+      - name: Stop and remove Keycloak
+        run: docker rm --force keycloak
