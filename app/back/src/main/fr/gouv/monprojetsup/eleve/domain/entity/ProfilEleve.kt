@@ -9,7 +9,7 @@ data class ProfilEleve(
     val id: String,
     val situation: SituationAvanceeProjetSup,
     val classe: ChoixNiveau,
-    val bac: String?,
+    val baccalaureat: String?,
     val specialites: List<String>?,
     val domainesInterets: List<String>?,
     val centresInterets: List<String>?,
