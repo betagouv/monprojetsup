@@ -26,7 +26,7 @@ class RecupererFormationsService(
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formations)
         val statistiquesDesAdmis =
             statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDeFormations(
-                idBaccalaureat = profilEleve.bac,
+                idBaccalaureat = profilEleve.baccalaureat,
                 idsFormations = idsDesFormationsRetournees,
                 classe = profilEleve.classe,
             )

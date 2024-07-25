@@ -19,7 +19,7 @@ class APISuggestionProfilDTOTest {
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
-                bac = "Générale",
+                baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesPreferees = listOf(Communes.PARIS, Communes.MARSEILLE),
@@ -33,7 +33,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
                 classe = "sec",
-                bac = "Générale",
+                baccalaureat = "Générale",
                 duree = "indiff",
                 alternance = "D",
                 preferencesGeographiques = listOf("Paris", "Marseille"),
@@ -61,7 +61,7 @@ class APISuggestionProfilDTOTest {
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
-                bac = "STHR",
+                baccalaureat = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                 alternance = ChoixAlternance.INDIFFERENT,
                 communesPreferees = listOf(Communes.LYON, Communes.CAEN),
@@ -75,7 +75,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
                 classe = "sec",
-                bac = "STHR",
+                baccalaureat = "STHR",
                 duree = "court",
                 alternance = "C",
                 preferencesGeographiques = listOf("Lyon", "Caen"),
@@ -93,7 +93,7 @@ class APISuggestionProfilDTOTest {
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
-                bac = "S2TMD",
+                baccalaureat = "S2TMD",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.INTERESSE,
                 communesPreferees = emptyList(),
@@ -107,7 +107,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
                 classe = "sec",
-                bac = "S2TMD",
+                baccalaureat = "S2TMD",
                 duree = "long",
                 alternance = "B",
                 preferencesGeographiques = emptyList(),
@@ -125,7 +125,7 @@ class APISuggestionProfilDTOTest {
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
-                bac = "PA",
+                baccalaureat = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
                 communesPreferees = listOf(Communes.LYON, Communes.PARIS),
@@ -139,7 +139,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
                 classe = "prem",
-                bac = "PA",
+                baccalaureat = "PA",
                 duree = "",
                 alternance = "A",
                 preferencesGeographiques = listOf("Lyon", "Paris"),
@@ -154,7 +154,7 @@ class APISuggestionProfilDTOTest {
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
-                bac = "NC",
+                baccalaureat = "NC",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesPreferees = listOf(Communes.PARIS, Communes.MARSEILLE),
@@ -168,7 +168,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTOTerminal =
             APISuggestionProfilDTO(
                 classe = "term",
-                bac = "",
+                baccalaureat = "",
                 duree = "indiff",
                 alternance = "D",
                 preferencesGeographiques = listOf("Paris", "Marseille"),
@@ -186,7 +186,7 @@ class APISuggestionProfilDTOTest {
                 id = "unknown",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.NON_RENSEIGNE,
-                bac = null,
+                baccalaureat = null,
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.NON_RENSEIGNE,
                 alternance = ChoixAlternance.NON_RENSEIGNE,
                 communesPreferees = null,
@@ -200,7 +200,7 @@ class APISuggestionProfilDTOTest {
         private val profilDTONull =
             APISuggestionProfilDTO(
                 classe = "",
-                bac = null,
+                baccalaureat = null,
                 duree = "",
                 alternance = "",
                 preferencesGeographiques = null,

@@ -9,7 +9,7 @@ data class APISuggestionProfilDTO(
     @field:JsonProperty(value = "niveau")
     val classe: String?,
     @field:JsonProperty(value = "bac")
-    val bac: String?,
+    val baccalaureat: String?,
     @field:JsonProperty(value = "duree")
     val duree: String?,
     @field:JsonProperty(value = "apprentissage")
@@ -27,10 +27,10 @@ data class APISuggestionProfilDTO(
 ) {
     constructor(profilEleve: ProfilEleve, specialites: List<String>?) : this(
         classe = profilEleve.classe.apiSuggestionValeur,
-        bac =
-            when (profilEleve.bac) {
+        baccalaureat =
+            when (profilEleve.baccalaureat) {
                 "NC" -> ""
-                else -> profilEleve.bac
+                else -> profilEleve.baccalaureat
             },
         duree = profilEleve.dureeEtudesPrevue.apiSuggestionValeur,
         alternance = profilEleve.alternance.apiSuggestionValeur,
