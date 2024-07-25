@@ -99,11 +99,11 @@ data class APISuggestionExplicationTypeBacDTO(
     @JsonProperty(value = "percentage")
     val pourcentage: Int,
     @JsonProperty(value = "bac")
-    val bac: String,
+    val nomBaccalaureat: String,
 ) {
     fun toTypeBaccalaureat() =
         ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat(
-            nomBaccalaureat = bac,
+            nomBaccalaureat = nomBaccalaureat,
             pourcentage = pourcentage,
         )
 }
