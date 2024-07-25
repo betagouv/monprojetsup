@@ -2,9 +2,9 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers

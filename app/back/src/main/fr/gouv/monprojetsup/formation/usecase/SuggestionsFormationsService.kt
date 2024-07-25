@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite

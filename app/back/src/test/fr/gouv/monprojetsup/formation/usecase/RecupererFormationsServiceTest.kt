@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation

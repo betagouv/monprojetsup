@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient

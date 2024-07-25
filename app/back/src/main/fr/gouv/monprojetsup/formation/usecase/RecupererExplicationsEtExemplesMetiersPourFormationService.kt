@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers

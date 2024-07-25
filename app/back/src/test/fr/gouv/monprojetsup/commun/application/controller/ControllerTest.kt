@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.commun.application.controller
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
 import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance

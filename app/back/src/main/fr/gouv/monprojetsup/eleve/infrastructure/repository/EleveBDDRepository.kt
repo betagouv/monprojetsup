@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.eleve.infrastructure.repository
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
