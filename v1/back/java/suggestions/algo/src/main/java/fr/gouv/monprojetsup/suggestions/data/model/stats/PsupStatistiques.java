@@ -452,7 +452,6 @@ public class PsupStatistiques implements Serializable {
                 e -> new StatsContainers.SimpleStatGroup(
                         g,
                         getNbAdmis(g,e.getKey()),
-                        /* todo: map taux bac int to bac string */ null,
                         (!onlyMoyGen && (e.getKey().equals(TOUS_BACS_CODE) || e.getKey().equals(bac))) ? getStatsSpec(g) : Collections.emptyMap(),
                         e.getKey().equals(TOUS_BACS_CODE) || e.getKey().equals(bac) ? getStatsScol(g, e.getKey(), onlyMoyGen) : Collections.emptyMap()
                         )

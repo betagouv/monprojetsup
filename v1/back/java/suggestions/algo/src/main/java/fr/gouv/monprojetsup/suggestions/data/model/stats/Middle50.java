@@ -14,7 +14,9 @@ public record Middle50(
         /* le rang de la catégorie contenant l'échantillon de rang ceil(0.75*nombre échantillons) */
         int rangEch75,
         int rangEch10,
-        int rangEch90
+        int rangEch90,
+
+        int rangMax
 ) {
 
     /**
@@ -28,7 +30,8 @@ public record Middle50(
                 IntStream.range(0, frequencesCumulees.length).filter( i -> frequencesCumulees[i]  >= Math.max(1,50 * Statistique.last(frequencesCumulees) / 100)).findFirst().orElse(-1),
                 IntStream.range(0, frequencesCumulees.length).filter( i -> frequencesCumulees[i]  >= Math.max(1,75 * Statistique.last(frequencesCumulees) / 100)).findFirst().orElse(-1),
                 IntStream.range(0, frequencesCumulees.length).filter( i -> frequencesCumulees[i]  >= Math.max(1,10 * Statistique.last(frequencesCumulees) / 100)).findFirst().orElse(-1),
-                IntStream.range(0, frequencesCumulees.length).filter( i -> frequencesCumulees[i]  >= Math.max(1,90 * Statistique.last(frequencesCumulees) / 100)).findFirst().orElse(-1)
+                IntStream.range(0, frequencesCumulees.length).filter( i -> frequencesCumulees[i]  >= Math.max(1,90 * Statistique.last(frequencesCumulees) / 100)).findFirst().orElse(-1),
+                frequencesCumulees.length
         );
     }
 

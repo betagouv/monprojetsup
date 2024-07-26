@@ -1,22 +1,34 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure.entity
 
 import fr.gouv.monprojetsup.suggestions.data.model.descriptifs.Descriptifs
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import fr.gouv.monprojetsup.suggestions.domain.entity.Voeu
+import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import org.springframework.context.annotation.Lazy
+
 
 @Entity
 @Table(name = "voeux")
 class VoeuEntity {
+    fun toVoeu() : Voeu {
+        return Voeu(
+            id,
+            formation,
+            lat,
+            lng,
+            libelle,
+            capacite,
+            descriptif!!
+        )
+    }
+
     @Id
     @Column
     val id: String = ""
 
     @Column
-    val formation : String = ""
+    var formation: String = ""
 
     @Column
     val lat : Double? = null

@@ -5,8 +5,9 @@ import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.suggestions.data.model.stats.Statistique;
-import fr.gouv.monprojetsup.suggestions.dto.*;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
+import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
@@ -19,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.data.Constants.*;
 import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.*;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
+import static fr.gouv.monprojetsup.suggestions.data.Constants.*;
 import static java.util.Map.entry;
 
 public class AffinityEvaluator {
@@ -79,7 +80,7 @@ public class AffinityEvaluator {
 
         //precomputing candidats for filieres similaires
         candidatsSimilaires = flApproved.stream().flatMap(
-                fl -> data.getFilieresSimilaires(fl, pf.bacIndex()).keySet().stream()
+                fl -> data.getFormationsSimilaires(fl, pf.bacIndex()).keySet().stream()
         ).collect(Collectors.toSet());
 
         //precomputing distance to tags
@@ -119,7 +120,7 @@ public class AffinityEvaluator {
 
     public double getBigCapacityScore(String fl) {
 
-        int nbFormations = data.getNbFormations(fl);
+        int nbFormations = data.getNbVoeux(fl);
         int capacity = data.getCapacity(fl);
 
         double capacityScore = (capacity >= p75Capacity) ? 1.0 : (double) capacity / p75Capacity;
@@ -321,7 +322,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Paire<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
-        Pair<String, Statistique> stats = data.getStatsBac(fl, pf.bac());
+        val stats = data.getStatsBac(fl, pf.bac());
         String moyBacEstimee = pf.moygen();
         return getBonusNotes(expl, weight, stats, moyBacEstimee);
     }
@@ -336,7 +337,7 @@ public class AffinityEvaluator {
     private double getBonusNotes(
             @Nullable List<Paire<Double, Explanation>> expl,
             double weight,
-            @Nullable Pair<String, Statistique> stats,
+            @Nullable Pair<String, Middle50> stats,
             @Nullable String moy) {
         if (moy == null) return Config.NO_MATCH_SCORE;
         final double autoEval;
@@ -352,7 +353,7 @@ public class AffinityEvaluator {
             return 1.0 - MULTIPLIER_FOR_UNFITTED_NOTES;
         }
         String bacUtilise = stats.getLeft();
-        Middle50 middle50 = stats.getRight().middle50();
+        Middle50 middle50 = stats.getRight();
         if (middle50 == null) {
             if (expl != null && cfg.isVerboseMode())
                 expl.add(new Paire<>(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de middle50 pour cette filiere")));
@@ -370,9 +371,9 @@ public class AffinityEvaluator {
         return bonus;
     }
 
-    private double computeBonusNotes(Pair<String, Statistique> stats, double autoEval) {
-        final Middle50 middle50 = stats.getRight().middle50();
-        int noteMaxInt = stats.getRight().frequencesCumulees().length;
+    private double computeBonusNotes(Pair<String, Middle50> stats, double autoEval) {
+        final Middle50 middle50 = stats.getRight();
+        int noteMaxInt = middle50.rangMax();
         int note = (int) (noteMaxInt * autoEval / 20);
         //avantage aux details plus exigeantes
         return (0.7 * computeAdmissibiliteNotes(middle50, note, noteMaxInt)
@@ -430,7 +431,7 @@ public class AffinityEvaluator {
             @NotNull val result = ExplanationGeo.getGeoExplanations(
                     fl,
                     cityName,
-                    data.getFormations(fl),
+                    data.getVoeuxCoords(fl),
                     CachedGeoExplanations.distanceCaches
             );
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
@@ -482,7 +483,7 @@ public class AffinityEvaluator {
     ) {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
-        Map<String, Integer> sim = data.getFilieresSimilaires(fl, bacIndex);
+        Map<String, Integer> sim = data.getFormationsSimilaires(fl, bacIndex);
         if (sim == null) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;

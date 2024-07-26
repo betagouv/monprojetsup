@@ -1,14 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure.entity
 
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50
+import fr.gouv.monprojetsup.suggestions.data.model.stats.Statistique
 import fr.gouv.monprojetsup.suggestions.domain.entity.Formation
-import fr.gouv.monprojetsup.suggestions.domain.entity.Stats
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import fr.gouv.monprojetsup.suggestions.domain.entity.StatsFormation
+import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
-import org.hibernate.type.SerializableType
 import org.hibernate.type.SqlTypes
 import java.io.Serializable
 
@@ -17,15 +14,15 @@ import java.io.Serializable
 class FormationEntity {
     fun toFormation(): Formation {
         return Formation(
-            id = id,
-            label = label,
-            capacite = capacite,
-            apprentissage = apprentissage,
-            duree = duree,
-            las = las,
-            voeux = voeux,
-            metiers = metiers,
-            stats = stats.toStats()
+            id,
+            label,
+            capacite,
+            apprentissage,
+            duree,
+            las,
+            voeux.map { it.toVoeu() },
+            metiers,
+            stats.toStats()
         )
     }
 
@@ -48,10 +45,9 @@ class FormationEntity {
     @Column(nullable = true)
     val las: String? = null
 
-    @Column
-    @JdbcTypeCode(SqlTypes.JSON)
-    //indexes dans la table des voeux
-    val voeux: List<String> = listOf()
+    @ElementCollection
+    @CollectionTable(name = "voeux", joinColumns = [JoinColumn(name = "voeux_id")])
+    val voeux: List<VoeuEntity> = listOf()
 
     @Column
     @JdbcTypeCode(SqlTypes.JSON)
@@ -59,24 +55,24 @@ class FormationEntity {
 
     data class StatsEntity (
 
-        //spécialité --> pourcentage
-        val specialites: Map<String, Int> = mapOf(),
+        //spécialité → pourcentage
+        val specialites: Map<Int, Double> = mapOf(),
 
-        //type de bac --> admissions
-        val admissions : Map<String, Middle50> = mapOf(),
+        //type de bac → admissions
+        val admissions : Map<String, Statistique> = mapOf(),
 
         val nbAdmis : Map<String, Int> = mapOf(),
 
-        //type de bac --> liste de formations similaires
-        val formationsSimilaires : Map<String, List<String>> = mapOf(),
+        //type de bac générique → formation → score
+        val formationsSimilaires : Map<Int, Map<String,Int>> = mapOf(),
 
-    ) : Serializable {
-        fun toStats(): Stats {
-            return Stats(
-                specialites = specialites,
-                admissions = admissions,
-                nbAdmis = nbAdmis,
-                formationsSimilaires = formationsSimilaires
+        ) : Serializable {
+        fun toStats(): StatsFormation {
+            return StatsFormation(
+                specialites,
+                admissions,
+                nbAdmis,
+                formationsSimilaires
             )
         }
     }

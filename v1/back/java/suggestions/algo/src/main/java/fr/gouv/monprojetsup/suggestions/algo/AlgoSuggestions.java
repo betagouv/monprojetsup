@@ -325,11 +325,11 @@ public class AlgoSuggestions {
         );
 
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(data.getBacsWithSpecialite());
+        bacsWithSpecialites.addAll(data.getBacsWithAtLeastTwoSpecialites());
 
-        apprentissage = data.getApprentissage();
+        apprentissage = data.getFormationIdsWithApprentissage();
 
-        lasFilieres = data.getLASFilieres();
+        lasFilieres = data.getLASFormations();
 
         relatedToHealth.addAll(edgesKeys
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
