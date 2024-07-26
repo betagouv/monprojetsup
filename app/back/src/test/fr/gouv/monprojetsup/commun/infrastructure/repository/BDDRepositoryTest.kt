@@ -11,7 +11,6 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 
 @DataJpaTest
-// @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = NONE)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class BDDRepositoryTest {
