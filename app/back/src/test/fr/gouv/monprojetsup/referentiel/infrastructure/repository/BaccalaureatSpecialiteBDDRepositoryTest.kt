@@ -4,13 +4,28 @@ import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
 class BaccalaureatSpecialiteBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var baccalaureatJPARepository: BaccalaureatJPARepository
+
+    @Autowired
+    lateinit var baccalaureatSpecialiteJPARepository: BaccalaureatSpecialiteJPARepository
+
     lateinit var baccalaureatSpecialiteBDDRepository: BaccalaureatSpecialiteBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        baccalaureatSpecialiteBDDRepository =
+            BaccalaureatSpecialiteBDDRepository(
+                baccalaureatJPARepository,
+                baccalaureatSpecialiteJPARepository,
+            )
+    }
 
     val speSI = Specialite(id = "4", label = "Sciences de l'ingénieur")
     val speBio = Specialite(id = "5", label = "Biologie/Ecologie")
