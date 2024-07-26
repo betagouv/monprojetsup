@@ -1,6 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.data.model.cities;
 
 public record Coords(String zip_code, String insee_code, Double gps_lat, Double gps_lng) {
+    public static Coords of(Double lat, Double lng) {
+        return new Coords(null, null, lat, lng);
+    }
     /*"login": 1,
     "department_code": "01",
     "insee_code": "01001",

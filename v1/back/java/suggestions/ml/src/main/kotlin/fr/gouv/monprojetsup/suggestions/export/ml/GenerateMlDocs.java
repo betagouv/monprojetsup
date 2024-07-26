@@ -71,9 +71,9 @@ public class GenerateMlDocs {
                 if (descriptif1 != null) {
                     texts.add(new MlData.Data("descriptifs_onisep", descriptif1));
                 }
-                val formations = data.getFormations(key);
-                formations.forEach(f -> {
-                    val descriptif2 = descriptifsIndexedByGta.get(f.gTaCod);
+                val voeux = data.getVoeuxIds(key);
+                voeux.forEach(voeuId -> {
+                    val descriptif2 = descriptifsIndexedByGta.get(voeuId);
                     if (descriptif2 != null) {
                         texts.add(new MlData.Data("descriptifs_psup_voeu", descriptif2.libVoeu()));
                         texts.add(new MlData.Data("descriptifs_psup_ens", descriptif2.enseignement()));

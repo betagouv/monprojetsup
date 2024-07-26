@@ -27,7 +27,7 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
     public static @NotNull List<ExplanationGeo> getGeoExplanations(
             String flKey,
             String cityName,
-            List<Formation> fors,
+            List<Pair<String, Coords>> coords,
             ConcurrentBoundedMapQueue<Paire<String, String>,
                     List<ExplanationGeo>> distanceCaches) {
         Paire<String, String> p = new Paire<>(flKey, cityName);
@@ -38,10 +38,6 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
         List<Coords> cities = Distances.getCity(cityName);
         if (cities == null || cities.isEmpty())
             return Collections.emptyList();
-
-        List<Pair<String, Coords>> coords = fors.stream()
-                .filter(f -> f.lng != null && f.lat != null)
-                .map(f -> Pair.of(FORMATION_PREFIX + f.gTaCod, new Coords("", "", f.lat, f.lng))).toList();
 
         if (coords.isEmpty())
             return Collections.emptyList();
@@ -65,11 +61,11 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
             Collection<String> flKeys,
             String cityName,
             int maxResultsPerNode,
-            List<Formation> fors,
+            List<Pair<String,Coords>> coords,
             ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches
     ) {
         return
-                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, fors, distanceCaches)
+                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, coords, distanceCaches)
                                 .stream().limit(maxResultsPerNode))
                         .filter(Objects::nonNull)
                         .sorted(Comparator.comparing(ExplanationGeo::distance))

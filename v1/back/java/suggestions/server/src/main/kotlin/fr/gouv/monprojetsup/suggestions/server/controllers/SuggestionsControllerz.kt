@@ -1,7 +1,5 @@
 package fr.gouv.monprojetsup.suggestions.server.controllers
 
-import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
-import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.server.BASE_PATH
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService.EXPLANATIONS_ENDPOINT

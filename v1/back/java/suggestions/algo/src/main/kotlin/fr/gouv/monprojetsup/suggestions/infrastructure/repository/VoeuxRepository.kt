@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional
 
 
 interface VoeuxJPARepository : JpaRepository<VoeuEntity, String> {
-    fun findByTyp(typ: Int): List<EdgeEntity>
-
-    fun findBySrc(src: String): List<EdgeEntity>
 
 }
 

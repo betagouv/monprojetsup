@@ -41,7 +41,7 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
                                                         List.of(key),
                                                         city,
                                                         maxFormationsPerFiliere,
-                                                        data.getFormations(key),
+                                                        data.getVoeuxCoords(key),
                                                         CachedGeoExplanations.distanceCaches
                                                 ).stream()
                                 )
