@@ -22,19 +22,48 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     services:
-      postgres:
+      # postgres:
+      #   image: postgres:16
+      #   env:
+      #     POSTGRES_DB: postgres
+      #     POSTGRES_USER: postgres
+      #     POSTGRES_PASSWORD: postgres
+      #   options: >-
+      #     --health-cmd pg_isready
+      #     --health-interval 10s
+      #     --health-timeout 5s
+      #     --health-retries 5
+      #   ports:
+      #     - 5432:5432
+      keycloakdb:
         image: postgres:16
         env:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          PGPORT: 5433
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        volumes:
+          - ./keycloak/init.sql:/docker-entrypoint-initdb.d/init.sql
+          - ./keycloak/db:/var/lib/postgresql/data
         ports:
-          - 5432:5432
+          - 5433:5433
+      keycloak:
+        image: quay.io/keycloak/keycloak:24.0
+        env:
+          KC_DB: postgres
+          KC_DB_URL: jdbc:postgresql://keycloakdb:5433/postgres
+          KC_DB_USERNAME: postgres
+          KC_DB_PASSWORD: postgres
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: password
+          KC_HEALTH_ENABLED: true
+        ports:
+          - 5003:8080
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
