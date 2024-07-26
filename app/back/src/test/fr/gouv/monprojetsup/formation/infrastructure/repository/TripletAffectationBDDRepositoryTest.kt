@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +11,14 @@ import org.springframework.test.context.jdbc.Sql
 
 class TripletAffectationBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var tripletAffectationJPARepository: TripletAffectationJPARepository
+
     lateinit var tripletAffectationBDDRepository: TripletAffectationBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        tripletAffectationBDDRepository = TripletAffectationBDDRepository(tripletAffectationJPARepository)
+    }
 
     @Nested
     inner class RecupererLesTripletsAffectationDeFormations {
