@@ -15,7 +15,14 @@ import org.springframework.test.context.jdbc.Sql
 
 class CriteresAnalyseCandidatureBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var criteresAnalyseCandidatureJPARepository: CriteresAnalyseCandidatureJPARepository
+
     lateinit var criteresAnalyseCandidatureBDDRepository: CriteresAnalyseCandidatureBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        criteresAnalyseCandidatureBDDRepository = CriteresAnalyseCandidatureBDDRepository(criteresAnalyseCandidatureJPARepository)
+    }
 
     private val criteresAnalyseDeBonneTaille = listOf(0, 5, 29, 63, 3)
     private val criteresAnalyseTropLongs = listOf(0, 0, 29, 33, 0, 18, 20)

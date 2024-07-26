@@ -4,7 +4,10 @@ import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretCategorieJPARepository
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretJPARepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +15,17 @@ import org.springframework.test.context.jdbc.Sql
 
 class InteretBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var interetJPARepository: InteretJPARepository
+
+    @Autowired
+    lateinit var interetCategorieJPARepository: InteretCategorieJPARepository
+
     lateinit var interetBDDRepository: InteretBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        interetBDDRepository = InteretBDDRepository(interetJPARepository, interetCategorieJPARepository)
+    }
 
     @Nested
     inner class RecupererLesSousCategoriesDInterets {
