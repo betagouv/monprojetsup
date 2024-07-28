@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.update.onisep.formations;
+package fr.gouv.monprojetsup.data.update.onisep.formations;
 
 import java.util.List;
 

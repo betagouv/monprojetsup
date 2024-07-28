@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data;
+package fr.gouv.monprojetsup.data;
 
 public class Constants {
     public static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod

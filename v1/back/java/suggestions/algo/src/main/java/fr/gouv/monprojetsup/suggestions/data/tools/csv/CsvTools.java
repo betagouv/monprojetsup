@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.tools.csv;
+package fr.gouv.monprojetsup.data.tools.csv;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;

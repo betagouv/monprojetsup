@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
-import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;

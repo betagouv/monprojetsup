@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.tools;
+package fr.gouv.monprojetsup.data.tools;
 
 public class GeodeticDistance
 {

@@ -1,7 +1,7 @@
-package fr.gouv.monprojetsup.suggestions.data.model;
+package fr.gouv.monprojetsup.data.model;
 
-import fr.gouv.monprojetsup.suggestions.data.Constants;
-import fr.gouv.monprojetsup.suggestions.domain.entity.Edge;
+import fr.gouv.monprojetsup.data.domain.entity.Edge;
+import fr.gouv.monprojetsup.data.Constants;
 import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutableTriple;

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.tools;
+package fr.gouv.monprojetsup.data.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

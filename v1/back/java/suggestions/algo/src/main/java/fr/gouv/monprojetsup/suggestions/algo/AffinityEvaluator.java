@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.model.Path;
+import fr.gouv.monprojetsup.data.model.stats.Middle50;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.data.model.Path;
-import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.suggestions.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.*;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
-import static fr.gouv.monprojetsup.suggestions.data.Constants.*;
 import static java.util.Map.entry;
 
 public class AffinityEvaluator {

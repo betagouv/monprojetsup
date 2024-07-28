@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
+import fr.gouv.monprojetsup.data.domain.port.LabelsPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

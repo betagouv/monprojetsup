@@ -1,16 +1,12 @@
-package fr.gouv.monprojetsup.suggestions.data.distances;
+package fr.gouv.monprojetsup.data.distances;
 
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.data.model.cities.CitiesBack;
-import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
-import fr.gouv.monprojetsup.suggestions.data.model.formations.Formation;
-import fr.gouv.monprojetsup.suggestions.data.tools.GeodeticDistance;
+import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
+import fr.gouv.monprojetsup.data.model.cities.Coords;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
-import java.util.*;
-
-import static java.lang.Math.min;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class Distances {

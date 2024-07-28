@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.suggestions.data.DataSources;
-import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutablePair;

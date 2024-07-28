@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
-import fr.gouv.monprojetsup.suggestions.data.distances.Distances;
-import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
-import fr.gouv.monprojetsup.suggestions.data.model.cities.Distance;
-import fr.gouv.monprojetsup.suggestions.data.model.formations.Formation;
+import fr.gouv.monprojetsup.data.distances.Distances;
+import fr.gouv.monprojetsup.data.model.cities.Coords;
+import fr.gouv.monprojetsup.data.model.cities.Distance;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
@@ -12,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-
-import static fr.gouv.monprojetsup.suggestions.data.Constants.FORMATION_PREFIX;
 
 public record ExplanationGeo(int distance, String city, @Nullable String form) {
 

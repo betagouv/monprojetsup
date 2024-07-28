@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data;
+package fr.gouv.monprojetsup.data;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;

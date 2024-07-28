@@ -1,6 +1,6 @@
-package fr.gouv.monprojetsup.suggestions.data;
+package fr.gouv.monprojetsup.data;
 
-import fr.gouv.monprojetsup.suggestions.data.config.DataServerConfig;
+import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
