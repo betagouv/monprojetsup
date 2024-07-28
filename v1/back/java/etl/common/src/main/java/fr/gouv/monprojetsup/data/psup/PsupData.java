@@ -1,10 +1,9 @@
 package fr.gouv.monprojetsup.data.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
@@ -14,34 +13,6 @@ import java.util.stream.Collectors;
 
 import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
 
-
-record FormationsSimilairesParBac(
-        //indexé par I_TC_COD puis par GFlCod
-        Map<Integer, Map<String, Integer>> parBac
-) {
-    public FormationsSimilairesParBac() {
-        this(new HashMap<>());
-    }
-
-    public void normalize() {
-        parBac.values().forEach(m -> {
-            if (m.size() >= 2) {
-                //bestScore is generally the same filiere, not very meaningful
-                int bestScore = m.values().stream().mapToInt(n -> n).max().orElse(0);
-                //this represents the best macth
-                int secondBestScore = m.values().stream().filter(n -> n != bestScore).mapToInt(n -> n).max().orElse(0);
-                if (secondBestScore > 0) {
-                    m.entrySet().forEach(e -> e.setValue(PsupStatistiques.SIM_FIL_MAX_WEIGHT * e.getValue() / secondBestScore));
-                }
-            } else {
-                //we drop this useless data
-                m.clear();
-            }
-        });
-        //some cleanup, may improve performances?
-        parBac.entrySet().removeIf(e -> e.getValue().isEmpty());
-    }
-}
 
 record FormationsSimilaires(
         //indexé par "fl1234""

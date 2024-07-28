@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.config;
+package fr.gouv.monprojetsup.data.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

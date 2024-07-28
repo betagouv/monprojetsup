@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.data.update.onisep.billy;
+package fr.gouv.monprojetsup.data.update.onisep.billy;
 
 
 import java.util.List;

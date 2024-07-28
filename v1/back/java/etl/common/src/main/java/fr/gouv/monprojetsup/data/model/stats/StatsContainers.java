@@ -38,7 +38,6 @@ public abstract class StatsContainers {
             String grp,
             //nombre de lycéens admis l'année précédente
             Integer nbAdmis,
-            Integer tauxAcces,
             Map<Integer, Integer> statsSpecs,
             Map<Integer, StatFront> statsScol
     ) {

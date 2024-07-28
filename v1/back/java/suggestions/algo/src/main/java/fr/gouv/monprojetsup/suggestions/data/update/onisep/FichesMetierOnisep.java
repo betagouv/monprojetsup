@@ -1,8 +1,8 @@
-package fr.gouv.monprojetsup.suggestions.data.update.onisep;
+package fr.gouv.monprojetsup.data.update.onisep;
 
-import fr.gouv.monprojetsup.suggestions.data.Constants;
-import fr.gouv.monprojetsup.suggestions.data.tools.Serialisation;
-import fr.gouv.monprojetsup.suggestions.data.DataSources;
+import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.DataSources;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
