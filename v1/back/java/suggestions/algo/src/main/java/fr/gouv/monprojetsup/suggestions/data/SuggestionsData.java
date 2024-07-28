@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.suggestions.data;
 
 import fr.gouv.monprojetsup.suggestions.data.model.cities.Coords;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.suggestions.data.model.stats.StatFront;
 import fr.gouv.monprojetsup.suggestions.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.domain.entity.Edge;
 import fr.gouv.monprojetsup.suggestions.domain.entity.Formation;
@@ -12,7 +11,6 @@ import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.domain.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
 import fr.gouv.monprojetsup.suggestions.domain.port.MatieresPort;
-import jakarta.annotation.PostConstruct;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -52,105 +50,7 @@ public class SuggestionsData {
     }
 
 
-    @PostConstruct
-    private void load() {
 
-        //load filieresFront
-
-                /*
-                  this.statistiques = new PsupStatistiques();
-        ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                "labelsDebug.json",
-                Map.class
-        );*/
-
-        //load labels
-
-        //load relatedInterests
-        /* onisepData.interets().expansion().getOrDefault(key, Collections.emptyList())*/
-
-        //load filieres similaires backpsupdata
-        //inherit groups but not too much....
-
-        //init formations
-        //includes both fl and fr and gta codes
-        //        /*        List<Formation> fors = Collections.emptyList();
-        //        ///attention aux groupes
-        //        if (flKey.startsWith(FILIERE_PREFIX)) {
-        //            fors = SuggestionsData.getFormationsFromFil(flKey);
-        //        } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
-        //            int gTaCod = Integer.parseInt(flKey.substring(2));
-        //            Formation f = SuggestionsData.getFormation(gTaCod);
-        //            if (f != null) {
-        //                fors = List.of(f);
-        //            }
-        //        }
-        //        */
-        //        //should include groups
-
-
-        //        throw new NotImplementedException("Not implemented yet");
-
-        //init cities
-                /*
-        log.info("Double indexation des villes");
-        CitiesBack cities = ServerData.cities;
-        Distances.init(cities);*/
-
-        //init dures from psup data
-
-        //init candidatesMetiers
-        /*            val result = candidatesMetiers.get(key);
-            if(result != null) return result;
-            Set<String> candidates = new HashSet<>(
-                    getCandidatesMetiers(key) // onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()
-            );
-            if (isLas(key)) {
-                String key2 = getGenericFromLas(key); // lasCorrespondance.lasToGeneric().get(key)
-        if (key2 != null) {
-                    candidates.addAll(getMetiersfromfiliere(key2)); //onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet()
-                    candidates.addAll(getPassMetiers());//(key2) onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet()
-                }
-            }
-            candidates.addAll(getMetiersfromGroup(key));
-                //if (reverseFlGroups.containsKey(key)) {
-                //candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
-                //}
-            candidatesMetiers.put(key, candidates);
-            return candidates;
-
-         //liensSecteursMetiers
-
-        //lasFilieres
-
-        //specialites
-        ServerData.specialites.specialites()
-
-        //bacs with spcialites
-        ServerData.specialites.specialitesParBac().keySet()
-
-        //apprentissage
-          backPsupData.formations().filieres.values().forEach(filiere -> {
-            String key = FILIERE_PREFIX + filiere.gFlCod;
-            if (filiere.apprentissage) {
-                apprentissage.add(key);
-                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
-                apprentissage.add(origKey);
-                apprentissage.add(flGroups.getOrDefault(origKey, origKey));
-            }
-        });
-
-        //descriptifs
-                /* UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
-        );
-
-         */
-
-        //throw new NotImplementedException("Not implemented yet");
-    }
 
     public @NotNull String getLabel(@NotNull String key) {
         return labelsPort.retrieveLabel(key).orElse(key);
@@ -273,7 +173,6 @@ public class SuggestionsData {
 
     private static @Nullable StatsContainers.SimpleStatGroup getSimpleStatGroup(String formationId, StatsFormation stats, String bac) {
         if(stats.admissions().containsKey(bac)) {
-            Map<Integer, StatFront> statsScol = new HashMap<>();
 
             val nbAdmis = stats.nbAdmis().get(bac);
             if(nbAdmis == null) return null;
