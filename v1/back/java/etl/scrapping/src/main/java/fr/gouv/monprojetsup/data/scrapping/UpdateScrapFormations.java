@@ -119,7 +119,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
         testDomHasNotChanged();
 
         //pour chaque url du type terminales2022
-        for (Map.Entry<String, String> entry : ServerData.statistiques.liensOnisep.entrySet()) {
+        for (Map.Entry<String, String> entry : serverData.liensOnisep().entrySet()) {
             String flKey = entry.getKey();
 
             //si déjà connu et pas d'erreur et correcte alors pas la peine de réessayer

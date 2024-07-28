@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -32,7 +33,7 @@ public class CsvTools implements Closeable {
         ownWriter = false;
     }
 
-    public static List<Map<String,String>> readCSV(String path, char separator) {
+    public static @NotNull List<Map<@NotNull String,@NotNull String>> readCSV(String path, char separator) {
         List<Map<String,String>> data = new ArrayList<>();
         val parser = new CSVParserBuilder().withSeparator(separator).build();
         try (BufferedReader br = new BufferedReader(new FileReader(path));

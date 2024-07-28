@@ -18,9 +18,8 @@ public record Attendus(
             PsupData psupData,
             PsupStatistiques data,
             Specialites specs,
-            boolean specifiques,
-            Map<String,String> labels) {
-        AttendusDetailles eds = AttendusDetailles.getAttendusDetailles(psupData, data, specs, labels, specifiques, false);
+            boolean specifiques) {
+        AttendusDetailles eds = AttendusDetailles.getAttendusDetailles(psupData, data, specs, specifiques, false);
         return eds.getSimplifiedFrontVersion();
     }
 

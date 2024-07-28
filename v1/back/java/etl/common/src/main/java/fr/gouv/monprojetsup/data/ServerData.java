@@ -1,18 +1,27 @@
 package fr.gouv.monprojetsup.data;
 
 import fr.gouv.monprojetsup.data.distances.Distances;
+import fr.gouv.monprojetsup.data.las.LasPassHelpers;
+import fr.gouv.monprojetsup.data.model.attendus.Attendus;
+import fr.gouv.monprojetsup.data.model.attendus.AttendusDetailles;
 import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
+import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsLoader;
+import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
+import fr.gouv.monprojetsup.data.model.interets.Interets;
+import fr.gouv.monprojetsup.data.model.metiers.Metiers;
 import fr.gouv.monprojetsup.data.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.stats.Statistique;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.data.onisep.DomainePro;
 import fr.gouv.monprojetsup.data.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
+import fr.parcoursup.carte.algos.Filiere;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,10 +53,9 @@ public class ServerData {
      ******************* DATAS ***********************************
      ****************************************************************************/
 
-    public static PsupData backPsupData;
-    public static PsupStatistiques statistiques;
-    public static OnisepData onisepData;
-    public static JsonCarte carte;
+    private PsupData backPsupData;
+    private PsupStatistiques statistiques;
+    private OnisepData onisepData;
 
     /* la liste des filières groupées visibles dans le front.
     * Définit le périmètre des résultats de recherche et des recommandations remontées au front.
@@ -86,6 +94,18 @@ public class ServerData {
     public static int p75Capacity;
     public static int p90Capacity;
 
+    public Map<Integer, fr.gouv.monprojetsup.data.model.formations.Filiere> formations() {
+        return backPsupData.formations().filieres;
+    }
+
+    public Collection<String> idMetiersOnisep() {
+        return onisepData.metiers().metiers().keySet();
+    }
+
+    public Map<String , String > liensOnisep() {
+        return statistiques.liensOnisep;
+    }
+
 
     /**
      * Load data into server
@@ -98,12 +118,10 @@ public class ServerData {
         //log.info("Loading server data...");
 
         BackEndData backendData = Serialisation.fromZippedJson(sources.getBackDataFilePath(), BackEndData.class);
-
-        ServerData.onisepData = backendData.onisepData();
-        ServerData.carte = backendData.carte();
-
+        onisepData = backendData.onisepData();
         backPsupData = backendData.psupData();
         backPsupData.cleanup();//should be useless but it does not harm...
+        statistiques = Serialisation.fromZippedJson(sources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
 
         val ftf = backPsupData.getGroupesToFormations();
         grpToFormations.clear();
@@ -113,14 +131,12 @@ public class ServerData {
 
         ServerData.cities = new CitiesBack(backendData.cities().cities());
 
-        ServerData.statistiques = Serialisation.fromZippedJson(sources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), PsupStatistiques.class);
-
         backPsupData.filActives().addAll(statistiques.getLasFlCodes());
         flGroups = new HashMap<>(backPsupData.getCorrespondances());
         flGroups.forEach((s, s2) -> reverseFlGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
 
 
-        specialites = SpecialitesLoader.load(ServerData.statistiques, sources);
+        specialites = SpecialitesLoader.load(statistiques, sources);
 
         /* can be deleted afte rnext data update */
         statistiques.removeSmallPopulations();
@@ -174,7 +190,7 @@ public class ServerData {
         return values.stream().sorted().skip(90L * values.size()  /100).findFirst().orElse(0);
     }
 
-    private static void computeFilieresFront() {
+    private void computeFilieresFront() {
         ServerData.filieresFront.clear();
         ServerData.filieresFront.addAll(
                 computeFilieresFront(backPsupData, statistiques.getLasFlCodes())
@@ -237,7 +253,7 @@ public class ServerData {
 
     }
 
-    private static Collection<String> getMetiersAssocies(String filiere, Map<String, Set<String>> metiersVersFormations) {
+    private Collection<String> getMetiersAssocies(String filiere, Map<String, Set<String>> metiersVersFormations) {
         Set<String> result = new HashSet<>(
                 metiersVersFormations.entrySet().stream()
                         .filter(e -> e.getValue().contains(filiere))
@@ -286,21 +302,7 @@ public class ServerData {
 
 
     private Map<String, String> getGtaToLasMapping() {
-        return getGtaToLasMapping(backPsupData, ServerData.statistiques);
-    }
-
-    public Map<String, String> getGtaToLasMapping(PsupData backPsupData, PsupStatistiques statistiques) {
-        val grpToFormations = backPsupData.getGroupesToFormations();
-        Set<String> lasCodes = statistiques.getLASCorrespondance().lasToGeneric().keySet();
-        Map<String, String> result = new HashMap<>();
-        lasCodes.forEach(las -> {
-            val formations = grpToFormations.getOrDefault(las, List.of());
-            formations.forEach(formation -> {
-                result.put(gTaCodToFrontId(formation.gTaCod), las);
-            });
-        });
-        return result;
-
+        return LasPassHelpers.getGtaToLasMapping(backPsupData, statistiques);
     }
 
     private void updateLabelsForDebug() {
@@ -330,7 +332,7 @@ public class ServerData {
     ************************* HELPERS to get labels associated with a key ***********************
      */
     public String getLabel(String key) {
-        return getLabel(key, ServerData.statistiques.nomsFilieres.get(key));
+        return getLabel(key, statistiques.nomsFilieres.get(key));
     }
 
     public String getDebugLabel(String key) {
@@ -338,7 +340,7 @@ public class ServerData {
     }
 
     public String getLabel(String key, String defaultValue) {
-        return ServerData.statistiques.labels.getOrDefault(key, defaultValue);
+        return statistiques.labels.getOrDefault(key, defaultValue);
     }
 
 
@@ -376,17 +378,10 @@ public class ServerData {
 
 
     public  Map<String, Set<String>> getMetiersVersFormations() throws IOException {
-
-        val descriptifs = DescriptifsLoader.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric(),
-                sources
-        );
         return onisepData.getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
                 backPsupData.getCorrespondances(),
                 statistiques.getLASCorrespondance(),
-                descriptifs
+                getDescriptifs()
         );
 
     }
@@ -413,8 +408,98 @@ public class ServerData {
         return new HashMap<>(formationsToGrp);
     }
 
-    public static Map<Integer, String> getTypesMacros() {
+    public Map<Integer, String> getTypesMacros() {
         return backPsupData.formations().typesMacros;
+    }
+
+    public Descriptifs getDescriptifs() throws IOException {
+        return DescriptifsLoader.loadDescriptifs(
+                onisepData,
+                backPsupData.getCorrespondances(),
+                statistiques.getLASCorrespondance().lasToGeneric(),
+                sources
+        );
+    }
+
+    public PsupStatistiques.LASCorrespondance getLASCorrespondance() {
+        return statistiques.getLASCorrespondance();
+    }
+
+    public Map<String, String> nomsFilieres() {
+        return statistiques.nomsFilieres;
+    }
+
+    public Map<String, String> getLabels() {
+        return statistiques.labels;
+    }
+
+    public List<Filiere> getFilieres() {
+        return statistiques.getFilieres();
+    }
+
+    public Map<String, String> getCorrespondances() {
+        return backPsupData.getCorrespondances();
+    }
+
+    public Set<Integer> las() {
+        return backPsupData.las();
+    }
+
+    public Set<Integer> filActives() {
+        return backPsupData.filActives();
+    }
+
+    public Set<String> displayedFilieres() {
+        return  backPsupData.displayedFilieres();
+    }
+
+    public AttendusDetailles getAttendusDetaills() throws IOException {
+        return AttendusDetailles.getAttendusDetailles(
+                backPsupData,
+                statistiques,
+                SpecialitesLoader.load(statistiques, sources),
+                true,
+                true);
+
+    }
+
+    public Thematiques thematiques() {
+        return onisepData.thematiques();
+    }
+
+    public FilieresToFormationsOnisep filieresToFormationsOnisep() {
+        return onisepData.filieresToFormationsOnisep();
+    }
+
+    public Interets interets() {
+        return onisepData.interets();
+    }
+
+    public Map<String, Attendus> getAttendus() throws IOException {
+        val specialites = SpecialitesLoader.load(statistiques, sources);
+        return Attendus.getAttendus(
+                backPsupData,
+                statistiques,
+                specialites,
+                false
+        );
+
+    }
+
+    public Pair<String, Statistique> getStatsMoyGen(String key, String bac) {
+        return  statistiques.getStatsMoyGen(key, bac);
+    }
+
+    public Pair<String, Statistique> getStatsBac(String key, String bac) {
+        return statistiques.getStatsBac(key, bac);
+    }
+
+    public Map<Integer, String> typesMacros() {
+        return backPsupData.formations().typesMacros;
+    }
+
+    public Metiers metiers() {
+        return onisepData.metiers();
     }
 }
 
