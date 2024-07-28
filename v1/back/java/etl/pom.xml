@@ -15,12 +15,12 @@
     <name>etl</name>
 	<description>Extract, transform, load data of MonProjetSup</description>
     <modules>
-        <module>updatedb</module>
+		<module>common</module>
 		<module>db</module>
-		<module>audit</module>
-        <module>common</module>
-        <module>updatepsup</module>
+		<module>updatepsup</module>
         <module>scrapping</module>
+		<module>updatedb</module>
+		<module>audit</module>
     </modules>
     <properties>
 		<maven.compiler.source>19</maven.compiler.source>

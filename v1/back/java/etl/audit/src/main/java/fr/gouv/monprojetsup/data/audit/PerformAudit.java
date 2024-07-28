@@ -2,31 +2,27 @@ package fr.gouv.monprojetsup.data.audit;
 
 
 import com.google.gson.reflect.TypeToken;
-import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.config.DataServerConfig;
 import fr.gouv.monprojetsup.data.model.attendus.Attendus;
 import fr.gouv.monprojetsup.data.model.attendus.AttendusDetailles;
-import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
 import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
 import fr.gouv.monprojetsup.data.model.interets.Interets;
 import fr.gouv.monprojetsup.data.model.metiers.Metiers;
-import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.model.stats.Statistique;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.monprojetsup.data.update.UpdateFrontData;
 import fr.gouv.monprojetsup.data.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.onisep.formations.Formations;
-import fr.gouv.monprojetsup.data.update.psup.PsupData;
+import fr.gouv.monprojetsup.data.psup.PsupData;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.parcoursup.carte.modele.modele.Etablissement;
 import fr.gouv.parcoursup.carte.modele.modele.Formation;
 import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
@@ -34,16 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.ServerData.*;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 /**
@@ -54,26 +49,52 @@ import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 public class PerformAudit implements CommandLineRunner {
 
     private final DataSources dataSources;
+    private final ServerData serverData;
 
-    public PerformAudit(DataSources dataSources) {
+    @Autowired
+    public PerformAudit(
+            DataSources dataSources,
+            ServerData serverData
+            ) {
         this.dataSources = dataSources;
+        this.serverData = serverData;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(PerformAudit.class, args);
     }
 
 
+    record Theme(
+            String cle,
+            String intitule,
+            List<Theme> sons
+    ) {
+
+        public long size() {
+            return 1 + sons.stream().mapToLong(Theme::size).sum();
+        }
+
+        Theme(
+                String cle,
+                String intitule
+        ) {
+            this(cle,intitule,new ArrayList<>());
+        }
+    }
+
+    record OnisepUrl(
+            String flCod,
+            String libelle,
+            String url,
+            List<String> codesIdeos) {
+
+    }
+
     @Override
     public void run(String... args) throws Exception {
 
-        DataServerConfig.load();
-
         compareActionsFormations();
-
-        ServerData.load();
-
-        DataServerConfig.load();
 
         exportCentresDinteretsEtThemes();
 
@@ -87,10 +108,10 @@ public class PerformAudit implements CommandLineRunner {
 
         exportAttendus();
 
-        Serialisation.toJsonFile("thematiques.json", ServerData.onisepData.thematiques().thematiques(), true);
+        Serialisation.toJsonFile("thematiques.json", serverData.thematiques().thematiques(), true);
 
         /* *** items sans descriptis  ****/
-        Descriptifs desc = UpdateFrontData.DataContainer.loadDescriptifs(ServerData.onisepData, ServerData.flGroups, ServerData.statistiques.getLASCorrespondance().lasToGeneric());
+        Descriptifs desc = serverData.getDescriptifs();
 
         outputMetiersSansDescriptifs(desc);
 
@@ -98,33 +119,31 @@ public class PerformAudit implements CommandLineRunner {
 
         Map<String, Set<String>> regroupements = new TreeMap<>();
         ServerData.flGroups.forEach((s, s2) -> {
-            String l = ServerData.getLabel(s, s) + " (" + s + ")";
-            String l2 = ServerData.getLabel(s2, s2) + " (" + s2 + ")";
+            String l = serverData.getLabel(s, s) + " (" + s + ")";
+            String l2 = serverData.getLabel(s2, s2) + " (" + s2 + ")";
             Set<String> set = regroupements.computeIfAbsent(l2, z -> new TreeSet<>());
             set.add(l);
-            if (ServerData.statistiques.nomsFilieres.containsKey(s2)) {
-                set.add(l2);
-            }
+            set.add(l2);
         });
         Serialisation.toJsonFile("regroupements.json", regroupements, true);
 
 
         /* ******************** JSON OUTPUT OF TAGS SOURCES **********************************/
         Map<String, Set<String>> tagsSourcesWithLabels = new HashMap<>();
-        TagsSources tagsSources = TagsSources.load(ServerData.backPsupData.getCorrespondances());
+        TagsSources tagsSources = TagsSources.loadTagsSources(serverData.getCorrespondances(), dataSources);
         tagsSources.sources().forEach((s, strings) -> {
-            Set<String> labels = strings.stream().map(ServerData::getLabel).collect(Collectors.toSet());
+            Set<String> labels = strings.stream().map(serverData::getLabel).collect(Collectors.toSet());
             tagsSourcesWithLabels.put(s, labels);
         });
         Serialisation.toJsonFile("tagsSourcesWithLabels.json", tagsSourcesWithLabels, true);
 
         /* ******************** JSON OUTPUT OF INNER DATA OF STATISTIQUES **********************************/
-        Serialisation.toJsonFile("nomsfilieresFromStatistiques.json", ServerData.statistiques.nomsFilieres, true);
+        Serialisation.toJsonFile("nomsfilieresFromStatistiques.json", serverData.nomsFilieres(), true);
 
-        Serialisation.toJsonFile("frontAllLabels.json", ServerData.statistiques.labels, true);
+        Serialisation.toJsonFile("frontAllLabels.json", serverData.getLabels(), true);
 
         Serialisation.toJsonFile("frontFormationsLabels.json",
-                ServerData.statistiques.labels.entrySet()
+                serverData.getLabels().entrySet()
                         .stream().filter(e -> Helpers.isFiliere(e.getKey()))
                         .filter(e -> !ServerData.flGroups.containsKey(e.getKey()))
                         .collect(Collectors.toMap(
@@ -134,7 +153,7 @@ public class PerformAudit implements CommandLineRunner {
                 , true);
 
         Serialisation.toJsonFile("frontMetiersLabels.json",
-                ServerData.statistiques.labels.entrySet()
+                serverData.getLabels().entrySet()
                         .stream().filter(e -> Helpers.isMetier(e.getKey()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
@@ -146,15 +165,15 @@ public class PerformAudit implements CommandLineRunner {
         Map<String, Pair<String, Integer>> las = new TreeMap<>();
 
 
-        ServerData.statistiques.getFilieres().forEach(filiere -> {
+        serverData.getFilieres().forEach(filiere -> {
             if (filiere.isLas) {
                 int flcod = filiere.cleFiliere;
                 int capacite = ServerData.getFormationsFromFil(Constants.gFlCodToFrontId(flcod))
-                        .stream().filter(f -> ServerData.backPsupData.las().contains(f.gTaCod))
+                        .stream().filter(f -> serverData.las().contains(f.gTaCod))
                         .mapToInt(f -> f.capacite)
                         .sum();
                 String key = Constants.gFlCodToFrontId(flcod);
-                las.put(key, Pair.of(ServerData.getLabel(key, key), capacite));
+                las.put(key, Pair.of(serverData.getLabel(key, key), capacite));
             }
         });
         Serialisation.toJsonFile("las.json", las, true);
@@ -162,9 +181,10 @@ public class PerformAudit implements CommandLineRunner {
         /* ******************** JSON OUTPUT OF TAXONOMIE **********************************/
         //on crée la taxonomie
         Map<String, Theme> indexTheme = new HashMap<>();
-        ServerData.onisepData.thematiques().thematiques().forEach((s, s2) -> indexTheme.computeIfAbsent(s, z -> new Theme(s, s2)));
+        val thematiques = serverData.thematiques();
+        thematiques.thematiques().forEach((s, s2) -> indexTheme.computeIfAbsent(s, z -> new Theme(s, s2)));
         Set<String> roots = new HashSet<>(indexTheme.keySet());
-        ServerData.onisepData.thematiques().parents().forEach((s, l) ->
+        thematiques.parents().forEach((s, l) ->
                 l.forEach(s2 -> {
                     Theme t = indexTheme.get(Constants.cleanup(s));
                     roots.remove(Constants.cleanup(s));
@@ -186,7 +206,7 @@ public class PerformAudit implements CommandLineRunner {
         Serialisation.toJsonFile("racines.json", racines, true);
 
         /* ******************** JSON OUTPUT OF URLS **********************************/
-        PsupToOnisepLines billyLines = Serialisation.fromJsonFile(DataSources.getSourceDataFilePath(
+        PsupToOnisepLines billyLines = Serialisation.fromJsonFile(dataSources.getSourceDataFilePath(
                         DataSources.ONISEP_PSUP_TO_IDEO_PATH),
                 PsupToOnisepLines.class
         );
@@ -202,8 +222,8 @@ public class PerformAudit implements CommandLineRunner {
                 lines.entrySet().stream()
                         .map(e -> new OnisepUrl(
                                 Constants.FILIERE_PREFIX + e.getKey(),
-                                ServerData.getLabel(Constants.FILIERE_PREFIX + e.getKey()),
-                                ServerData.statistiques.liensOnisep.get(Constants.FILIERE_PREFIX + e.getKey()),
+                                serverData.getLabel(Constants.FILIERE_PREFIX + e.getKey()),
+                                serverData.liensOnisep().get(Constants.FILIERE_PREFIX + e.getKey()),
                                 e.getValue()
                         ))
                         .sorted(Comparator.comparingInt(o -> Integer.parseInt(o.flCod.substring(2))))
@@ -215,22 +235,21 @@ public class PerformAudit implements CommandLineRunner {
 
         /* *** stats fichier xml **/
         Formations formations = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_PATH),
+                dataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_PATH),
                 Formations.class
         );
-        Set<String> knownFromXML = formations.formations().stream().map(fr.gouv.monprojetsup.data.update.onisep.formations.Formation::identifiant).collect(Collectors.toSet());
+        Set<String> knownFromXML = formations.formations().stream().map(fr.gouv.monprojetsup.data.onisep.formations.Formation::identifiant).collect(Collectors.toSet());
         Set<String> knownFromIdeoHoline = lines.values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
         knownFromIdeoHoline.retainAll(knownFromXML);
 
-        FilieresToFormationsOnisep filieres = ServerData.onisepData.filieresToFormationsOnisep();
-        PsupStatistiques data = ServerData.statistiques;
+        FilieresToFormationsOnisep filieres = serverData.filieresToFormationsOnisep();
 
         Serialisation.toJsonFile("formationsOnisepDansLaCorr.json", filieres, true);
         Set<String> connues = filieres.filieres().stream().map(FilieresToFormationsOnisep.FiliereToFormationsOnisep::gFlCod).collect(Collectors.toSet());
-        data.nomsFilieres.forEach((key, value) -> {
+        serverData.nomsFilieres().forEach((key, value) -> {
             if (!connues.contains(key)) {
                 filieres.filieres().add(new FilieresToFormationsOnisep.FiliereToFormationsOnisep(
                         key,
@@ -253,10 +272,10 @@ public class PerformAudit implements CommandLineRunner {
         Serialisation.toJsonFile("formations_sans_descriptif_details.json", copy, true);
 
         ArrayList<String> copy3 = new ArrayList<>();
-        ServerData.backPsupData.filActives().forEach(flCod -> {
+        serverData.filActives().forEach(flCod -> {
             String key = Constants.gFlCodToFrontId(flCod);
             if (!desc.keyToDescriptifs().containsKey(key)) {
-                String label = ServerData.getDebugLabel(key);
+                String label = serverData.getDebugLabel(key);
                 if (!label.contains("null")) {
                     copy3.add(label);
                 }
@@ -327,8 +346,8 @@ public class PerformAudit implements CommandLineRunner {
 
 
         Set<String> keys = new HashSet<>();
-        keys.addAll(ServerData.backPsupData.displayedFilieres());
-        keys.addAll(ServerData.onisepData.metiers().metiers().keySet());
+        keys.addAll(serverData.displayedFilieres());
+        keys.addAll(serverData.idMetiersOnisep());
 
         List<String> itemsWithNoDescriptif = keys.stream().filter(key ->
                         !desc.keyToDescriptifs().containsKey(key)
@@ -338,7 +357,7 @@ public class PerformAudit implements CommandLineRunner {
                                 && !key.startsWith(Constants.THEME_PREFIX)
                 )
                 .map(
-                        key -> ServerData.getLabel(key, key)
+                        key -> serverData.getLabel(key, key)
                 ).sorted().toList();
 
 
@@ -351,13 +370,7 @@ public class PerformAudit implements CommandLineRunner {
 
     private void performEDSAnalysis() throws IOException {
 
-            AttendusDetailles analyses = AttendusDetailles.getAttendusDetailles(
-                    ServerData.backPsupData,
-                    ServerData.statistiques,
-                    SpecialitesLoader.load(ServerData.statistiques),
-                    data,
-                    true,
-                    true);
+            AttendusDetailles analyses = serverData.getAttendusDetaills();
 
             Serialisation.toJsonFile("EDS_quali_vs_quanti.json", analyses, true);
 
@@ -366,29 +379,29 @@ public class PerformAudit implements CommandLineRunner {
     }
 
 
-    private static void exportDataHeleneBaffin() throws IOException, CsvValidationException {
+    private void exportDataHeleneBaffin() throws IOException {
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_avec_heritage.csv");
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_sans_heritage.csv");
     }
 
-    private static void exportTypesFormationsPsup() throws IOException {
+    private void exportTypesFormationsPsup() throws IOException {
         Serialisation.toJsonFile("typesFormationsPsup.json",
-                new TreeMap<>(ServerData.getTypesMacros()),
+                new TreeMap<>(serverData.getTypesMacros()),
                 true
         );
 
 
     }
 
-    private static void exportCsvMetierToFiliereCorr(String s) throws IOException, CsvValidationException {
+    private void exportCsvMetierToFiliereCorr(String s) throws IOException {
         val data = CsvTools.readCSV(s, ',');
         List<List<String>> lines = new ArrayList<>();
         for (Map<String, String> line : data) {
             String key1 = line.get("key1");
             String key2 = line.get("key2");
             if (Helpers.isMetier(key1) && Helpers.isFiliere(key2)) {
-                String lib1 = ServerData.getLabel(key1, key1);
-                String lib2 = ServerData.getLabel(key2, key2);
+                String lib1 = serverData.getLabel(key1, key1);
+                String lib2 = serverData.getLabel(key2, key2);
                 lines.add(List.of(lib1, key1.replace("_", "."), lib2, key2));
             }
         }
@@ -408,20 +421,20 @@ public class PerformAudit implements CommandLineRunner {
 
     }
 
-    private static void compareActionsFormations() throws IOException {
+    private void compareActionsFormations() throws IOException {
         List<ActionFormationOni> actionsOni = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.ONISEP_ACTIONS_FORMATIONS_PATH),
+                dataSources.getSourceDataFilePath(DataSources.ONISEP_ACTIONS_FORMATIONS_PATH),
                 new TypeToken<List<ActionFormationOni>>() {
                 }.getType()
         );
 
         JsonCarte carte = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.CARTE_JSON_PATH),
+                dataSources.getSourceDataFilePath(DataSources.CARTE_JSON_PATH),
                 JsonCarte.class
         );
 
         PsupToOnisepLines lines = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(
+                dataSources.getSourceDataFilePath(
                         DataSources.ONISEP_PSUP_TO_IDEO_PATH
                 ),
                 PsupToOnisepLines.class
@@ -495,8 +508,8 @@ public class PerformAudit implements CommandLineRunner {
 
     }
 
-    private static void exportCentresDinteretsEtThemes() throws IOException {
-        Interets interets = ServerData.onisepData.interets();
+    private void exportCentresDinteretsEtThemes() throws IOException {
+        Interets interets = serverData.interets();
         try (CsvTools csv = new CsvTools("centresInterets.csv", ',')) {
             csv.appendHeaders(List.of("id", "label"));
             interets.interets().entrySet().stream()
@@ -511,7 +524,7 @@ public class PerformAudit implements CommandLineRunner {
                         }
                     });
         }
-        Thematiques thematiques = ServerData.onisepData.thematiques();
+        Thematiques thematiques = serverData.thematiques();
         try (CsvTools csv = new CsvTools("thematiques.csv", ',')) {
             csv.appendHeaders(List.of("id", "label"));
             thematiques.thematiques().entrySet().stream()
@@ -529,8 +542,8 @@ public class PerformAudit implements CommandLineRunner {
 
     }
 
-    private static void exportAttendus() throws IOException {
-        val attendus = ServerData.getAttendusParGroupes();
+    private void exportAttendus() throws IOException {
+        val attendus = serverData.getAttendusParGroupes();
         try (CsvTools csv = new CsvTools("attendus.csv", ',')) {
             csv.appendHeaders(List.of("type", "énonce", "formations"));
             attendus.forEach((stringStringPair, strings) -> {
@@ -546,7 +559,7 @@ public class PerformAudit implements CommandLineRunner {
         }
     }
 
-    private static void exportLiensDomainesMetiers() throws IOException {
+    private void exportLiensDomainesMetiers() throws IOException {
         Map<String, List<String>> liensDomainesNomsMetiers
                 = ServerData.liensDomainesMetiers.entrySet().stream()
                 .flatMap(e -> e.getValue().stream().map(f -> Pair.of(e.getKey(), f)))
@@ -554,7 +567,7 @@ public class PerformAudit implements CommandLineRunner {
                 .entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> e.getValue().stream().map(p -> ServerData.getDebugLabel(p.getRight())).toList())
+                        e -> e.getValue().stream().map(p -> serverData.getDebugLabel(p.getRight())).toList())
                 );
         Serialisation.toJsonFile("liensDomainesNomsMetiers.json", liensDomainesNomsMetiers, true);
 
@@ -565,14 +578,14 @@ public class PerformAudit implements CommandLineRunner {
                 .entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> e.getValue().stream().map(p -> ServerData.getDebugLabel(p.getRight())).toList())
+                        e -> e.getValue().stream().map(p -> serverData.getDebugLabel(p.getRight())).toList())
                 );
         Serialisation.toJsonFile("liensSousDomainesNomsMetiers.json", liensSousDomainesNomsMetiers, true);
 
 
     }
 
-    private static void comparerMoyennesBacsEtSco() throws IOException {
+    private void comparerMoyennesBacsEtSco() throws IOException {
         /* * comparaison moyennes **/
         Map<String, Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>>> moyennes = getStatsMoyGenVsBac();
         Serialisation.toJsonFile("compMoyennes.json",
@@ -601,22 +614,22 @@ public class PerformAudit implements CommandLineRunner {
 
     }
 
-    private static Map<String, Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>>> getStatsMoyGenVsBac() {
-        Set<String> displayedFilieres = ServerData.backPsupData.displayedFilieres();
+    private Map<String, Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>>> getStatsMoyGenVsBac() {
+        Set<String> displayedFilieres = serverData.displayedFilieres();
         return displayedFilieres
                 .stream()
                 .distinct()
-                .filter(key -> ServerData.getLabel(key) != null)
+                .filter(key -> serverData.getLabel(key) != null)
                 .collect(Collectors.toMap(
-                        ServerData::getLabel,
-                        PerformAudit::getPaireMoyenne
+                        serverData::getLabel,
+                        this::getPaireMoyenne
 
                 ));
     }
 
-    private static Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>> getPaireMoyenne(String key) {
-        Pair<String, Statistique> statsMoyGen = ServerData.statistiques.getStatsMoyGen(key, PsupStatistiques.TOUS_BACS_CODE);
-        Pair<String, Statistique> statsBac = ServerData.statistiques.getStatsBac(key, PsupStatistiques.TOUS_BACS_CODE);
+    private Pair<Triple<Double, Double, Double>, Triple<Double, Double, Double>> getPaireMoyenne(String key) {
+        Pair<String, Statistique> statsMoyGen = serverData.getStatsMoyGen(key, PsupStatistiques.TOUS_BACS_CODE);
+        Pair<String, Statistique> statsBac = serverData.getStatsBac(key, PsupStatistiques.TOUS_BACS_CODE);
         Triple<Double, Double, Double> moyGen = statsMoyGen == null || statsMoyGen.getRight() == null || statsMoyGen.getRight().nb() < 200 ? null :
                 statsMoyGen.getRight().middle50().getTriple();
         Triple<Double, Double, Double> moyBac = statsBac == null || statsBac.getRight() == null || statsBac.getRight().nb() < 200 ? null :
@@ -627,11 +640,11 @@ public class PerformAudit implements CommandLineRunner {
         );
     }
 
-    private static void outputMetiersSansDescriptifs(Descriptifs desc) throws IOException {
+    private void outputMetiersSansDescriptifs(Descriptifs desc) throws IOException {
         ArrayList<String> copy4 = new ArrayList<>();
-        ServerData.onisepData.metiers().metiers().keySet().forEach(key -> {
+        serverData.idMetiersOnisep().forEach(key -> {
             if (Helpers.isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
-                String label = ServerData.getDebugLabel(key);
+                String label = serverData.getDebugLabel(key);
                 if (!label.contains("null")) {
                     copy4.add(label);
                 }
@@ -641,41 +654,27 @@ public class PerformAudit implements CommandLineRunner {
 
     }
 
-    public static void outputResumesDescriptifsFormationsEtMetiersExtraits() throws IOException {
+    public void outputResumesDescriptifsFormationsEtMetiersExtraits() throws IOException {
 
         log.info("Chargement et minimization de " + DataSources.FRONT_MID_SRC_PATH);
-        PsupStatistiques data = fromZippedJson(DataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
+        PsupStatistiques data = fromZippedJson(dataSources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), PsupStatistiques.class);
         data.removeFormations();
         data.removeSmallPopulations();
 
-        log.info("Chargement et nettoyage de " + DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
-        PsupData psupData = Serialisation.fromZippedJson(DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
+        log.info("Chargement et nettoyage de " + dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
+        PsupData psupData = Serialisation.fromZippedJson(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
         psupData.cleanup();
 
+        /*
         log.info("Ajout des liens metiers");
         Map<String, Descriptifs.Link> urls = new HashMap<>();
-        data.liensOnisep.forEach((s, s2) -> urls.put(s, new Descriptifs.Link(s2, ServerData.getLabel(s))));
-        ServerData.onisepData.metiers().metiers().forEach((s, metier) -> {
-            //onisep.fr/http/redirections/metier/slug/[identifiant]
-        });
+        data.liensOnisep.forEach((s, s2) -> urls.put(s, new Descriptifs.Link(s2, serverData.getLabel(s))));
+        serverData.idMetiersOnisep().forEach(s -> urls.put(s, new Descriptifs.Link("onisep.fr/http/redirections/metier/slug/" + s,s)));
+        */
+        Map<String, Attendus> eds = serverData.getAttendus();
 
-        Map<String, Attendus> eds = Attendus.getAttendus(
-                psupData,
-                data,
-                SpecialitesLoader.load(ServerData.statistiques),
-                false
-        );
-
-        Map<String, GrilleAnalyse> grilles = GrilleAnalyse.getGrilles(psupData);
-        UpdateFrontData.DataContainer data2 = UpdateFrontData.DataContainer.load(
-                psupData,
-                ServerData.onisepData,
-                urls,
-                data.getLASCorrespondance(),
-                eds,
-                grilles,
-                GrilleAnalyse.getLabelsMap()
-        );
+        //Map<String, GrilleAnalyse> grilles = GrilleAnalyse.getGrilles(psupData);
+        val descriptifs = serverData.getDescriptifs();
 
         val headers = List.of(
                 "code filière ou groupe (glcod)",
@@ -699,13 +698,13 @@ public class PerformAudit implements CommandLineRunner {
                     headers
             );
 
-            val lasCorr = ServerData.statistiques.getLASCorrespondance();
+            val lasCorr = serverData.getLASCorrespondance();
             for (String flStr : ServerData.filieresFront) {
 
                 if (lasCorr.isLas(flStr)) {
                     continue;
                 }
-                String label2 = ServerData.getLabel(flStr, flStr);
+                String label2 = serverData.getLabel(flStr, flStr);
                 if (label2.contains("apprentissage") || label2.contains("LAS")) {
                     continue;
                 }
@@ -720,23 +719,24 @@ public class PerformAudit implements CommandLineRunner {
                 //"code type formation",
                 //"intitule type formation",
                 int code = Integer.parseInt(flStr.substring(2));
+                val formations = serverData.formations();
                 if (flStr.startsWith("fr")) {
                     csv.append(flStr);
-                    String typeMacro = ServerData.backPsupData.formations().typesMacros.getOrDefault(code, "");
+                    String typeMacro = serverData.typesMacros().getOrDefault(code, "");
                     csv.append(typeMacro);
                 } else {
-                    Filiere fil = ServerData.backPsupData.formations().filieres.get(code);
+                    Filiere fil = formations.get(code);
                     if (fil == null) {
                         throw new RuntimeException("no data on filiere " + flStr);
                     }
                     csv.append("fr" + fil.gFrCod);
-                    String typeMacro = ServerData.backPsupData.formations().typesMacros.getOrDefault(fil.gFrCod, "");
+                    String typeMacro = serverData.typesMacros().getOrDefault(fil.gFrCod, "");
                     csv.append(typeMacro);
                 }
 
                 val listeFilieres = ServerData.reverseFlGroups.getOrDefault(flStr, Set.of(flStr));
 
-                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
+                Descriptifs.Descriptif descriptif = descriptifs.keyToDescriptifs().get(flStr);
 
                 Map<String, String> mpsData = (descriptif == null) ? Map.of() : descriptif.getMpsData();
 
@@ -746,7 +746,7 @@ public class PerformAudit implements CommandLineRunner {
                                 .stream().map(s ->
                                         Pair.of(
                                                 data.liensOnisep.getOrDefault(s, ""),
-                                                ServerData.getLabel(s)
+                                                serverData.getLabel(s)
                                         )
                                 )
                                 .filter(s -> !s.getLeft().isEmpty())
@@ -790,14 +790,14 @@ public class PerformAudit implements CommandLineRunner {
                 csv.append(listeFilieres.stream()
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().attendus() != null)
-                        .map(p -> ServerData.getLabel(p.getLeft()) + "\n" + p.getRight().attendus())
+                        .map(p -> serverData.getLabel(p.getLeft()) + "\n" + p.getRight().attendus())
                         .filter(o -> !o.isBlank()).distinct()
                         .collect(Collectors.joining("\n\n****    cas multiple    ****\n\n")));
 
                 csv.append(listeFilieres.stream()
                         .map(fl -> Pair.of(fl, eds.get(fl)))
                         .filter(p -> p.getRight() != null && p.getRight().recoEDS() != null)
-                        .map(p -> ServerData.getLabel(p.getLeft()) + "\n" + p.getRight().recoEDS())
+                        .map(p -> serverData.getLabel(p.getLeft()) + "\n" + p.getRight().recoEDS())
                         .filter(o -> !o.isBlank()).distinct()
                         .collect(Collectors.joining("\n\n****    cas multiple     ****\n\n")));
                 csv.newLine();
@@ -808,7 +808,7 @@ public class PerformAudit implements CommandLineRunner {
             csv.appendHeaders(
                     headers
             );
-            for (Map.Entry<String, Descriptifs.Descriptif> entry : data2.descriptifs().keyToDescriptifs().entrySet()) {
+            for (Map.Entry<String, Descriptifs.Descriptif> entry : descriptifs.keyToDescriptifs().entrySet()) {
                 String s = entry.getKey();
                 if (processed.contains(s)) continue;
                 val desc = entry.getValue();
@@ -833,20 +833,21 @@ public class PerformAudit implements CommandLineRunner {
             ));
 
             for (String flStr : ServerData.filieresFront) {
-                if (ServerData.statistiques.getLASCorrespondance().isLas(flStr)) {
+                if (serverData.getLASCorrespondance().isLas(flStr)) {
                     continue;
                 }
-                String label2 = ServerData.getLabel(flStr, flStr);
+                String label2 = serverData.getLabel(flStr, flStr);
                 if (label2.contains("apprentissage") || label2.contains("LAS")) {
                     continue;
                 }
 
-                Descriptifs.Descriptif descriptif = data2.descriptifs().keyToDescriptifs().get(flStr);
+                Descriptifs.Descriptif descriptif = descriptifs.keyToDescriptifs().get(flStr);
                 if (descriptif == null || descriptif.hasError() || descriptif.presentation() == null) continue;
 
                 int i = descriptif.presentation().indexOf("Exemples de métiers");
                 if (i < 0) continue;
-                List<Triple<String, String, Metiers.Metier>> triplets = new ArrayList<>(ServerData.onisepData.metiers().extractMetiers(descriptif.presentation().substring(i)));
+                List<Triple<String, String, Metiers.Metier>> triplets
+                        = new ArrayList<>(serverData.metiers().extractMetiers(descriptif.presentation().substring(i)));
                 if (triplets.isEmpty()) continue;
 
 
@@ -856,15 +857,15 @@ public class PerformAudit implements CommandLineRunner {
                 int code = Integer.parseInt(flStr.substring(2));
                 if (flStr.startsWith("fr")) {
                     csv.append(flStr);
-                    String typeMacro = ServerData.backPsupData.formations().typesMacros.getOrDefault(code, "");
+                    String typeMacro = psupData.formations().typesMacros.getOrDefault(code, "");
                     csv.append(typeMacro);
                 } else {
-                    Filiere fil = ServerData.backPsupData.formations().filieres.get(code);
+                    Filiere fil = psupData.formations().filieres.get(code);
                     if (fil == null) {
                         throw new RuntimeException("no data on filiere " + flStr);
                     }
                     csv.append("fr" + fil.gFrCod);
-                    String typeMacro = ServerData.backPsupData.formations().typesMacros.getOrDefault(fil.gFrCod, "");
+                    String typeMacro = serverData.typesMacros().getOrDefault(fil.gFrCod, "");
                     csv.append(typeMacro);
                 }
 
@@ -897,31 +898,6 @@ public class PerformAudit implements CommandLineRunner {
         }
 
 
-        static final class Theme {
-            public final String cle;
-            public final String intitule;
-            public final List<Theme> sons = new ArrayList<>();
-
-            public long size() {
-                return 1 + sons.stream().mapToLong(Theme::size).sum();
-            }
-
-            Theme(
-                    String cle,
-                    String intitule
-            ) {
-                this.cle = cle;
-                this.intitule = intitule;
-            }
-        }
-
-        record OnisepUrl(
-                String flCod,
-                String libelle,
-                String url,
-                List<String> codesIdeos) {
-
-        }
     }
 }
 

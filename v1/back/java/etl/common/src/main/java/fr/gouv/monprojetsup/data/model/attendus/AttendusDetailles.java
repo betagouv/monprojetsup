@@ -22,7 +22,6 @@ public record AttendusDetailles(
             PsupData backPsupData,
             PsupStatistiques statistiques,
             Specialites specialites,
-            Map<String,String> labels,
             boolean specifiques,
             boolean prettyPrint
     ) {
@@ -33,7 +32,7 @@ public record AttendusDetailles(
             String key = Constants.gFlCodToFrontId(gFlCod);
             String gFlLib = statistiques.nomsFilieres.get(key);
             if(gFlLib != null) {
-                String ppkey = prettyPrint ? labels.getOrDefault(key, key) : key;
+                String ppkey = prettyPrint ? statistiques.labels.getOrDefault(key, key) : key;
                 //les nbAdmisEDS
                 AttenduDetaille analysis = analyses.analyses().computeIfAbsent(ppkey, z -> new AttenduDetaille(
                         gFlCod,

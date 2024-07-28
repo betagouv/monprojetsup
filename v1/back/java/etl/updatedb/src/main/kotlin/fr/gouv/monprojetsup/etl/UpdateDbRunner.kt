@@ -1,22 +1,19 @@
 package fr.gouv.monprojetsup.etl
 
 import fr.gouv.monprojetsup.data.DataSources
-import fr.gouv.monprojetsup.etl.urls.UrlsUpdater
-import fr.gouv.monprojetsup.data.ServerData
-import fr.gouv.monprojetsup.data.ServerData.getGtaToLasMapping
 import fr.gouv.monprojetsup.data.UrlsUpdater
+import fr.gouv.monprojetsup.data.las.LasPassHelpers.getGtaToLasMapping
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsLoader
 import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.model.tags.TagsSources
 import fr.gouv.monprojetsup.data.model.thematiques.Thematiques
+import fr.gouv.monprojetsup.data.onisep.OnisepData
+import fr.gouv.monprojetsup.data.psup.PsupData
+import fr.gouv.monprojetsup.data.rome.RomeData
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools
-import fr.gouv.monprojetsup.data.update.onisep.OnisepData
-import fr.gouv.monprojetsup.data.update.psup.PsupData
-import fr.gouv.monprojetsup.data.update.rome.RomeData
 import fr.gouv.monprojetsup.formation.infrastructure.entity.*
-import fr.gouv.parcoursup.carte.modele.modele.JsonCarte
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -29,10 +26,10 @@ import java.util.logging.Logger
 @SpringBootApplication
 @ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
 @EntityScan("fr.gouv.monprojetsup.formation.infrastructure.entity")
-class ApplicationEtl
+class UpdateDbRunner
 
 	fun main(args: Array<String>) {
-		runApplication<ApplicationEtl>(*args)
+		runApplication<UpdateDbRunner>(*args)
 	}
 
 @Component
@@ -43,11 +40,11 @@ class EtlApplicationRunner(
 	private val domainesDb : DomainesDb,
 	private val domainesCategoriesDb : DomainesCategoryDb,
 	private val formationsdb : FormationsDb,
-	private val dataSources: fr.gouv.monprojetsup.data.DataSources
+	private val dataSources: DataSources
 ) : CommandLineRunner {
 
 
-	private val LOGGER: Logger = Logger.getLogger(ApplicationEtl::class.java.simpleName)
+	private val LOGGER: Logger = Logger.getLogger(UpdateDbRunner::class.java.simpleName)
 	override fun run(vararg args: String?) {
 		println("Hello, World! ApplicationEtl has started.")
 
@@ -65,7 +62,23 @@ class EtlApplicationRunner(
 
 	private fun updateSuggestionsDbs() {
 			TODO("Not yet implemented")
-		/*        //ajout des secteurs d'activité
+		/*
+
+		//if neeeded???
+
+		  		val carte = fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile(
+			dataSources.getSourceDataFilePath(DataSources.CARTE_JSON_PATH),
+			fr.gouv.parcoursup.carte.modele.modele.JsonCarte::class.java
+		)
+
+
+		LOGGER.info("Chargement de " + DataSources.CITIES_FILE_PATH)
+		val cities = fr.gouv.monprojetsup.data.model.cities.CitiesLoader.loadCitiesBack(dataSources)
+
+		//END if neeeded???
+
+
+		//ajout des secteurs d'activité
         onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
             String keyMetier = cleanup(fiche.identifiant());
             if(fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
@@ -198,47 +211,46 @@ class EtlApplicationRunner(
 
 	private fun updateFormationsDb() {
 		LOGGER.info("Chargement de " + dataSources.getSourceDataFilePath(
-			gouv.monprojetsup.data.DataSources.BACK_PSUP_DATA_FILENAME))
+			DataSources.BACK_PSUP_DATA_FILENAME))
 		val psupData = fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson(
-			dataSources.getSourceDataFilePath(gouv.monprojetsup.data.DataSources.BACK_PSUP_DATA_FILENAME),
+			dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
 			PsupData::class.java
 		)
 		psupData.cleanup()
 
 		LOGGER.info("Chargement des données Onisep")
-		val onisepData = OnisepData.fromFiles()
+		val onisepData = OnisepData.fromFiles(dataSources)
 
 		LOGGER.info("Chargement des données ROME")
-		val romeData = RomeData.load()
+		val romeData = RomeData.load(dataSources)
 		LOGGER.info("Insertion des données ROME dans les données Onisep")
 		onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
 
-		val carte = fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile(
-			dataSources.getSourceDataFilePath(CARTE_JSON_PATH),
-			gouv.parcoursup.carte.modele.modele.JsonCarte::class.java
-		)
-
-		LOGGER.info("Chargement des stats depuis " + fr.gouv.monprojetsup.data.DataSources.STATS_BACK_SRC_FILENAME)
+		LOGGER.info("Chargement des stats depuis " + DataSources.STATS_BACK_SRC_FILENAME)
 		val stats = fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson(
-			dataSources.getSourceDataFilePath(gouv.monprojetsup.data.DataSources.STATS_BACK_SRC_FILENAME),
-			gouv.monprojetsup.data.model.stats.PsupStatistiques::class.java
+			dataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
+			fr.gouv.monprojetsup.data.model.stats.PsupStatistiques::class.java
 		)
 
 		stats.createGroupAdmisStatistique(psupData.correspondances)
-		stats.createGroupAdmisStatistique(getGtaToLasMapping(psupData, stats))
+		stats.createGroupAdmisStatistique(
+			getGtaToLasMapping(
+				psupData,
+				stats
+			)
+		)
 
 		LOGGER.info("Maj des données Onisep (noms des filières et urls)")
 		stats.updateLabels(onisepData, psupData, stats.lasCorrespondance.lasToGeneric)
 
 
-		updateFormationsDb(psupData, stats, onisepData, carte)
+		updateFormationsDb(psupData, stats, onisepData)
 	}
 
 	private fun updateFormationsDb(
 		psupData: PsupData,
-		stats: fr.gouv.monprojetsup.data.model.stats.PsupStatistiques,
-		onisepData: OnisepData,
-		carte: fr.gouv.parcoursup.carte.modele.modele.JsonCarte
+		stats: PsupStatistiques,
+		onisepData: OnisepData
 	) {
 		//le référentiel est formations front
 		val formations = fr.gouv.monprojetsup.data.ServerData.computeFilieresFront(
@@ -263,13 +275,9 @@ class EtlApplicationRunner(
 		val attendus = fr.gouv.monprojetsup.data.model.attendus.Attendus.getAttendus(
 			psupData,
 			stats,
-			gouv.monprojetsup.data.model.specialites.SpecialitesLoader.load(gouv.monprojetsup.data.ServerData.statistiques),
-			false,
-			serverData
+			SpecialitesLoader.load(stats, dataSources),
+			false
 		)
-
-		LOGGER.info("Chargement de " + fr.gouv.monprojetsup.data.DataSources.CITIES_FILE_PATH)
-		val cities = fr.gouv.monprojetsup.data.model.cities.CitiesLoader.loadCitiesBack()
 
 		LOGGER.info("Ajout des liens metiers")
 		val links = HashMap<String, fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Link>()
@@ -283,25 +291,25 @@ class EtlApplicationRunner(
 			descriptifs
 		)
 
-		val grilles = fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse.getGrilles(psupData)
+		val grilles = GrilleAnalyse.getGrilles(psupData)
 
-		val tagsSources = TagsSources.loadTagsSources(groups, sources).getKeyToTags()
+		val tagsSources = TagsSources.loadTagsSources(groups, dataSources).getKeyToTags()
 
 		formationsdb.deleteAll()
 		formations.forEach { flCod ->
 			val entity = FormationDetailleeEntity()
 			entity.id = flCod
-			val label = stats.labels.get(flCod) ?: throw RuntimeException("Pas de label pour la formation $flCod")
+			val label = stats.labels[flCod] ?: throw RuntimeException("Pas de label pour la formation $flCod")
 			entity.label = label
 			entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(flCod)
 			entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(flCod)
-			val attendus = attendus.get(flCod)
-			if (attendus == null) {
+			val attendusFormation = attendus[flCod]
+			if (attendusFormation == null) {
 				entity.descriptifConseils = null
 				entity.descriptifAttendus = null
 			} else {
-				entity.descriptifConseils = attendus.getConseilsFront()
-				entity.descriptifAttendus = attendus.getAttendusFront()
+				entity.descriptifConseils = attendusFormation.getConseilsFront()
+				entity.descriptifAttendus = attendusFormation.getAttendusFront()
 			}
 
 			entity.formationsAssociees = ArrayList(reverseGroups.getOrDefault(flCod, setOf(flCod)))
@@ -318,7 +326,7 @@ class EtlApplicationRunner(
 				LienEntity(link.label, link.uri)
 			}.toCollection(ArrayList())
 
-			val motsClefs = tagsSources.get(flCod)
+			val motsClefs = tagsSources[flCod]
 			if (motsClefs == null) {
 				entity.motsClefs = listOf()
 			} else {
@@ -364,7 +372,7 @@ class EtlApplicationRunner(
 
 		//insert grilles in criteresBDDRepository
 		var i = 0
-		gouv.monprojetsup.data.model.attendus.GrilleAnalyse.labelsFront.forEach { triple ->
+		GrilleAnalyse.labelsFront.forEach { triple ->
 			val entity = CritereAnalyseCandidatureEntity()
 			entity.id = triple.left
 			entity.index = i++
@@ -378,7 +386,7 @@ class EtlApplicationRunner(
 		domainesDb.deleteAll()
 		domainesCategoriesDb.deleteAll()
 
-		val categories = loadthematiques();
+		val categories = loadthematiques()
 		var i = 0
 		categories.forEach { categorie ->
 			val entity = DomaineCategoryEntity()
@@ -407,12 +415,13 @@ class EtlApplicationRunner(
 			dataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH),
 			'\t'
 		)) {
-			val id = stringStringMap["id"]!!.trim { it <= ' ' }
-			val regroupement = stringStringMap["regroupement"]!!.trim { it <= ' ' }
-			if (!regroupement.isEmpty()) {
+			val id = stringStringMap["id"].orEmpty()
+			if(id.isEmpty()) continue
+			val regroupement = stringStringMap["regroupement"].orEmpty().trim { it <= ' ' }
+			if (regroupement.isNotEmpty()) {
 				groupe = regroupement
-				val emojiGroupe = stringStringMap["Emoji"]
-				if (!emojiGroupe!!.isEmpty()) {
+				val emojiGroupe = stringStringMap["Emoji"].orEmpty()
+				if (emojiGroupe.isNotEmpty()) {
 					emojig = emojiGroupe
 				} else {
 					throw java.lang.RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
@@ -421,7 +430,7 @@ class EtlApplicationRunner(
 			val emoji = stringStringMap.getOrDefault("Emojis", "").trim { it <= ' ' }
 			val label = stringStringMap.getOrDefault("label", "").trim { it <= ' ' }
 			if (groupe.isEmpty()) throw java.lang.RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
-			if (emojig!!.isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
+			if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
 			var cat = groupes[groupe]
 			if (cat == null) {
 				cat = Thematiques.Category(groupe, emojig, java.util.ArrayList())
