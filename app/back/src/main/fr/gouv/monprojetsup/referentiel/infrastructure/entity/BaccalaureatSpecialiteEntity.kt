@@ -19,6 +19,9 @@ class BaccalaureatSpecialiteEntity {
     @EmbeddedId
     lateinit var id: BaccalaureatSpecialiteId
 
+    @Column(name = "id_baccalaureat", insertable = false, updatable = false)
+    lateinit var idBaccalaureat: String
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_baccalaureat", insertable = false, updatable = false)
     lateinit var baccalaureat: BaccalaureatEntity

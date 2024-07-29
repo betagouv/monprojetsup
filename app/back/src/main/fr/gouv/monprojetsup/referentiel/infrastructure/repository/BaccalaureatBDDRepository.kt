@@ -15,6 +15,11 @@ class BaccalaureatBDDRepository(
     }
 
     @Transactional(readOnly = true)
+    override fun verifierBaccalaureatExiste(id: String): Boolean {
+        return baccalaureatJPARepository.existsById(id)
+    }
+
+    @Transactional(readOnly = true)
     override fun recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats: List<String>): List<Baccalaureat> {
         return baccalaureatJPARepository.findAllByIdExterneIn(idsExternesBaccalaureats).map { it.toBaccalaureat() }
     }

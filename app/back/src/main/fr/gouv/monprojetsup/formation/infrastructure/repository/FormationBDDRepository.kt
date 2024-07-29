@@ -54,6 +54,11 @@ class FormationBDDRepository(
         }
     }
 
+    @Transactional(readOnly = true)
+    override fun verifierFormationsExistent(ids: List<String>): Boolean {
+        return formationJPARepository.countAllByIdIn(ids) == ids.size
+    }
+
     private fun logguerFormationInconnue(idFormation: String) {
         logger.error("La formation $idFormation n'est pas présente en base")
     }

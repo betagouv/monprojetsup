@@ -7,4 +7,6 @@ interface InteretRepository {
     fun recupererLesSousCategoriesDInterets(idsInterets: List<String>): Map<String, InteretSousCategorie>
 
     fun recupererToutesLesCategoriesEtLeursSousCategoriesDInterets(): Map<InteretCategorie, List<InteretSousCategorie>>
+
+    fun verifierCentresInteretsExistent(ids: List<String>): Boolean
 }

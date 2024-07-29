@@ -9,4 +9,7 @@ interface EleveRepository {
     fun recupererUnEleve(id: String): ProfilEleve
 
     fun creerUnEleve(id: String): ProfilEleve
+
+    @Throws(MonProjetSupNotFoundException::class)
+    fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve)
 }

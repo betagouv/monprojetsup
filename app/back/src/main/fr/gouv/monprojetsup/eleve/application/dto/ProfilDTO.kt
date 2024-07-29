@@ -3,6 +3,10 @@ package fr.gouv.monprojetsup.eleve.application.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -123,6 +127,23 @@ class ProfilDTO(
         domaines = profilEleve.domainesInterets,
     )
 
+    fun toProfil(idEleve: String) =
+        ProfilEleve(
+            id = idEleve,
+            situation = situation?.let { SituationAvanceeProjetSup.deserialiseApplication(it) },
+            classe = classe?.let { ChoixNiveau.deserialiseApplication(it) },
+            baccalaureat = baccalaureat,
+            dureeEtudesPrevue = dureeEtudesPrevue?.let { ChoixDureeEtudesPrevue.deserialiseApplication(it) },
+            alternance = alternance?.let { ChoixAlternance.deserialiseApplication(it) },
+            formationsFavorites = formationsFavorites,
+            communesFavorites = communesFavorites?.map { it.toCommune() },
+            specialites = specialites,
+            moyenneGenerale = moyenneGenerale,
+            centresInterets = centresInterets,
+            metiersFavoris = metiersFavoris,
+            domainesInterets = domaines,
+        )
+
     class CommuneDTO(
         @Schema(description = "Code Insee de la ville", example = "75015", required = true)
         @JsonProperty("codeInsee")
@@ -143,5 +164,13 @@ class ProfilDTO(
             latitude = commune.latitude,
             longitude = commune.longitude,
         )
+
+        fun toCommune() =
+            Commune(
+                codeInsee = codeInsee,
+                nom = nom,
+                latitude = latitude,
+                longitude = longitude,
+            )
     }
 }
