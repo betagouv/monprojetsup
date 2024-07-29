@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
+import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
+import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
@@ -38,7 +40,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -56,50 +58,6 @@ class FormationControllerTest(
 
     @MockBean
     lateinit var recupererFormationsService: RecupererFormationsService
-
-    private val requete =
-        """
-        {
-          "profil": {
-            "situation": "aucune_idee",
-            "classe": "terminale",
-            "baccalaureat": "Générale",
-            "specialites": [
-              "1056",
-              "1054"
-            ],
-            "domaines": [
-              "T_ITM_1054",
-              "T_ITM_1534",
-              "T_ITM_1248",
-              "T_ITM_1351"
-            ],
-            "centresInterets": [
-              "T_ROME_2092381917",
-              "T_IDEO2_4812"
-            ],
-            "metiersFavoris": [
-              "MET_123",
-              "MET_456"
-            ],
-            "dureeEtudesPrevue": "indifferent",
-            "alternance": "pas_interesse",
-            "communesFavorites": [
-              {
-                "codeInsee": "75015",
-                "nom": "Paris",
-                "longitude": 2.2885659,
-                "latitude": 48.8512252
-              }
-            ],
-            "moyenneGenerale": 14,
-            "formationsFavorites": [
-              "fl1234",
-              "fl5678"
-            ]
-          }
-        }
-        """.trimIndent()
 
     private val explications =
         ExplicationsSuggestionDetaillees(
@@ -282,10 +240,9 @@ class FormationControllerTest(
                 ),
             )
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/suggestions").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/suggestions"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -503,6 +460,37 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si connecté en tant qu'enseignant, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/suggestions"),
+            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "UTILISATEUR_PAS_ELEVE",
+                          "status": 403,
+                          "detail": "L'utilisateur connecté n'est pas un élève",
+                          "instance": "/api/v1/formations/suggestions"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/suggestions"),
+            ).andDo(print()).andExpect(status().isForbidden)
+        }
+
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
@@ -515,10 +503,9 @@ class FormationControllerTest(
                 )
             `when`(suggestionsFormationsService.suggererFormations(unProfil, 0, 30)).thenThrow(uneException)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/suggestions").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/suggestions"),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -532,10 +519,9 @@ class FormationControllerTest(
             // Given
             `when`(recupererFormationService.recupererFormation(unProfil, "fl680002")).thenReturn(ficheFormation)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/fl680002").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/fl680002"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -728,9 +714,9 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
         @Test
-        fun `si le service réussi pour un appel sans profil, doit retourner 200 avec le détail de la formation`() {
+        fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
             val ficheFormation =
                 FicheFormation.FicheFormationSansProfil(
@@ -812,17 +798,11 @@ class FormationControllerTest(
                             moyenneGeneraleDesAdmis = null,
                         ),
                 )
-            `when`(recupererFormationService.recupererFormation(null, "fl680002")).thenReturn(ficheFormation)
+            `when`(recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002")).thenReturn(ficheFormation)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/fl680002").contentType(MediaType.APPLICATION_JSON).content(
-                    """
-                    {
-                      "profil": null
-                    }
-                    """.trimIndent(),
-                ).accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/fl680002"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -903,6 +883,15 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/fl68000"),
+            ).andDo(print()).andExpect(status().isForbidden)
+        }
+
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
@@ -914,10 +903,9 @@ class FormationControllerTest(
                 )
             `when`(recupererFormationService.recupererFormation(unProfil, "fl00010")).thenThrow(uneException)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/fl00010").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/fl00010"),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -933,10 +921,9 @@ class FormationControllerTest(
                 )
             `when`(recupererFormationService.recupererFormation(unProfil, "inconnu")).thenThrow(uneException)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations/inconnu").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations/inconnu"),
             ).andDo(print()).andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
@@ -974,10 +961,9 @@ class FormationControllerTest(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfil, toutesLesSuggestions, listOf("fl1", "fl2")),
             ).thenReturn(fichesFormations)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations?ids=fl1&ids=fl2").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
@@ -1195,6 +1181,37 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si enseignant, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations?ids=fl1&ids=fl2"),
+            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "UTILISATEUR_PAS_ELEVE",
+                          "status": 403,
+                          "detail": "L'utilisateur connecté n'est pas un élève",
+                          "instance": "/api/v1/formations"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations?ids=fl1&ids=fl2"),
+            ).andDo(print()).andExpect(status().isForbidden)
+        }
+
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
@@ -1207,10 +1224,9 @@ class FormationControllerTest(
                 )
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenThrow(uneException)
 
-            // when-then
+            // When & Then
             mvc.perform(
-                post("/api/v1/formations?ids=fl1&ids=fl2").contentType(MediaType.APPLICATION_JSON).content(requete)
-                    .accept(MediaType.APPLICATION_JSON),
+                get("/api/v1/formations?ids=fl1&ids=fl2"),
             ).andDo(print()).andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }

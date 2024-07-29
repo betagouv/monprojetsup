@@ -1,12 +1,14 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
+import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationCourteDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesDTO
-import fr.gouv.monprojetsup.formation.application.dto.ProfilObligatoireRequeteDTO
-import fr.gouv.monprojetsup.formation.application.dto.ProfilOptionnelRequeteDTO
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -25,28 +27,28 @@ import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("api/v1/formations")
 @RestController
+@RequestMapping("api/v1/formations")
+@Tag(name = "Formation", description = "API des formations proposées sur MonProjetSup")
 class FormationController(
     val suggestionsFormationsService: SuggestionsFormationsService,
     val recupererFormationService: RecupererFormationService,
     val recupererFormationsService: RecupererFormationsService,
-) {
-    @PostMapping("/suggestions")
-    fun postSuggestionsFormations(
-        @RequestBody profilObligatoireRequeteDTO: ProfilObligatoireRequeteDTO,
-    ): FormationsAvecExplicationsDTO {
+) : AuthentifieController() {
+    @GetMapping("/suggestions")
+    @Operation(summary = "Récupérer les suggestions de formations pour un profil d'élève")
+    fun getSuggestionsFormations(): FormationsAvecExplicationsDTO {
         val formationsPourProfil: List<FicheFormation.FicheFormationPourProfil> =
             suggestionsFormationsService.suggererFormations(
-                profilEleve = profilObligatoireRequeteDTO.profil.toProfil(),
+                profilEleve = recupererEleve(),
                 deLIndex = 0,
                 aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
             )
@@ -55,16 +57,16 @@ class FormationController(
         )
     }
 
-    @PostMapping("/{idformation}")
-    fun postFormation(
+    @GetMapping("/{idformation}")
+    fun getFormation(
         @PathVariable("idformation") idFormation: String,
-        @RequestBody profilOptionnelRequeteDTO: ProfilOptionnelRequeteDTO,
     ): FormationAvecExplicationsDTO {
-        val ficheFormation =
-            recupererFormationService.recupererFormation(
-                profilEleve = profilOptionnelRequeteDTO.profil?.toProfil(),
-                idFormation = idFormation,
-            )
+        val profil =
+            when (val utilisateur = recupererUtilisateur()) {
+                is ProfilEleve -> utilisateur
+                is ProfilEnseignant, ProfilConnecte -> null
+            }
+        val ficheFormation = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
         return FormationAvecExplicationsDTO(ficheFormation)
     }
 
@@ -805,12 +807,11 @@ class FormationController(
         )
     }
 
-    @PostMapping
+    @GetMapping
     fun getFormations(
         @RequestParam ids: List<String>,
-        @RequestBody profilObligatoireRequeteDTO: ProfilObligatoireRequeteDTO,
     ): FormationsAvecExplicationsDTO {
-        val profilEleve = profilObligatoireRequeteDTO.profil.toProfil()
+        val profilEleve = recupererEleve()
         val toutesLesSuggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
         val formations = recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, toutesLesSuggestions, ids)
         return FormationsAvecExplicationsDTO(formations = formations.map { FormationAvecExplicationsDTO(it) })
