@@ -1,12 +1,9 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
+import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
-import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO.CommuneDTO
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
-import okhttp3.ResponseBody
-import okhttp3.internal.EMPTY_RESPONSE
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,42 +12,16 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("api/v1/profil")
 @RestController
-class ProfilEleveController() {
+class ProfilEleveController : AuthentifieController() {
     @PostMapping
     fun postProfilEleve(
         @RequestBody profilDTO: ProfilDTO,
-    ): ResponseBody {
-        return EMPTY_RESPONSE
+    ): ResponseEntity<Unit> {
+        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping()
+    @GetMapping
     fun getProfilEleve(): ProfilDTO {
-        return profilMock
-    }
-
-    companion object {
-        private val profilMock =
-            ProfilDTO(
-                situation = "aucune_idee",
-                classe = ChoixNiveau.TERMINALE.jsonValeur,
-                baccalaureat = "Générale",
-                specialites = listOf("706", "1077"),
-                domaines = listOf("T_ITM_PERSO1", "T_ITM_1519"),
-                centresInterets = listOf("rechercher", "diriger"),
-                metiersFavoris = listOf("MET_372", "MET_373"),
-                dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT.jsonValeur,
-                alternance = ChoixAlternance.PAS_INTERESSE.jsonValeur,
-                communesFavorites =
-                    listOf(
-                        CommuneDTO(
-                            codeInsee = "75015",
-                            nom = "Paris",
-                            longitude = 2.2885659f,
-                            latitude = 48.8512252f,
-                        ),
-                    ),
-                moyenneGenerale = 15.5f,
-                formationsFavorites = listOf("fr641", "fl660007"),
-            )
+        return ProfilDTO(recupererEleve())
     }
 }

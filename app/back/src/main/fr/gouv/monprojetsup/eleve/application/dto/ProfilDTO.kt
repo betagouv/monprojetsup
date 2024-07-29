@@ -3,10 +3,6 @@ package fr.gouv.monprojetsup.eleve.application.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -112,22 +108,20 @@ class ProfilDTO(
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<String>?,
 ) {
-    fun toProfil() =
-        ProfilEleve(
-            id = "adcf627c-36dd-4df5-897b-159443a6d49c",
-            situation = SituationAvanceeProjetSup.deserialiseApplication(situation),
-            classe = ChoixNiveau.deserialiseApplication(classe),
-            baccalaureat = baccalaureat,
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.deserialiseApplication(dureeEtudesPrevue),
-            alternance = ChoixAlternance.deserialiseApplication(alternance),
-            formationsFavorites = formationsFavorites,
-            communesFavorites = communesFavorites?.map { it.toCommune() },
-            specialites = specialites,
-            moyenneGenerale = moyenneGenerale,
-            centresInterets = centresInterets,
-            metiersFavoris = metiersFavoris,
-            domainesInterets = domaines,
-        )
+    constructor(profilEleve: ProfilEleve) : this(
+        situation = profilEleve.situation?.jsonValeur,
+        classe = profilEleve.classe?.jsonValeur,
+        baccalaureat = profilEleve.baccalaureat,
+        dureeEtudesPrevue = profilEleve.dureeEtudesPrevue?.jsonValeur,
+        alternance = profilEleve.alternance?.jsonValeur,
+        formationsFavorites = profilEleve.formationsFavorites,
+        communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
+        specialites = profilEleve.specialites,
+        moyenneGenerale = profilEleve.moyenneGenerale,
+        centresInterets = profilEleve.centresInterets,
+        metiersFavoris = profilEleve.metiersFavoris,
+        domaines = profilEleve.domainesInterets,
+    )
 
     class CommuneDTO(
         @Schema(description = "Code Insee de la ville", example = "75015", required = true)
@@ -143,12 +137,11 @@ class ProfilDTO(
         @JsonProperty("longitude")
         val longitude: Float,
     ) {
-        fun toCommune() =
-            Commune(
-                codeInsee = codeInsee,
-                nom = nom,
-                latitude = latitude,
-                longitude = longitude,
-            )
+        constructor(commune: Commune) : this(
+            codeInsee = commune.codeInsee,
+            nom = commune.nom,
+            latitude = commune.latitude,
+            longitude = commune.longitude,
+        )
     }
 }
