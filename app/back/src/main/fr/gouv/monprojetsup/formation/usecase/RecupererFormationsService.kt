@@ -26,7 +26,7 @@ class RecupererFormationsService(
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formations)
         val statistiquesDesAdmis =
             statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDeFormations(
-                idBaccalaureat = profilEleve.bac,
+                idBaccalaureat = profilEleve.baccalaureat,
                 idsFormations = idsDesFormationsRetournees,
                 classe = profilEleve.classe,
             )
@@ -38,7 +38,7 @@ class RecupererFormationsService(
         val communes =
             recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                 idsDesFormationsRetournees,
-                profilEleve.communesPreferees,
+                profilEleve.communesFavorites,
             )
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())

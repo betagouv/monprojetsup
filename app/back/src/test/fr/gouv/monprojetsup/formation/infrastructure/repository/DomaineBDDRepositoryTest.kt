@@ -3,8 +3,11 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.CategorieDomaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.CategorieDomaineJPARepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.DomaineBDDRepository
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.DomaineJPARepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +15,17 @@ import org.springframework.test.context.jdbc.Sql
 
 class DomaineBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var domaineJPARepository: DomaineJPARepository
+
+    @Autowired
+    lateinit var categorieDomaineJPARepository: CategorieDomaineJPARepository
+
     lateinit var domaineBDDRepository: DomaineBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        domaineBDDRepository = DomaineBDDRepository(domaineJPARepository, categorieDomaineJPARepository)
+    }
 
     @Nested
     inner class RecupererLesDomaines {

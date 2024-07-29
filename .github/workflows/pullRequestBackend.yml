@@ -1,0 +1,12 @@
+name: Pull Request Backend
+
+on:
+  pull_request:
+    paths:
+      - 'app/back/**'
+      - '.github/**'
+
+jobs:
+  checkBackend: 
+    name: Backend
+    uses: ./.github/workflows/backend.yml

@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.referentiel.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +11,14 @@ import org.springframework.test.context.jdbc.Sql
 
 class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var baccalaureatJPARepository: BaccalaureatJPARepository
+
     lateinit var baccalaureatBDDRepository: BaccalaureatBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        baccalaureatBDDRepository = BaccalaureatBDDRepository(baccalaureatJPARepository)
+    }
 
     private val bacPro =
         Baccalaureat(

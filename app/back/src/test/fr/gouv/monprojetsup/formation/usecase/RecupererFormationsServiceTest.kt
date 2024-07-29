@@ -56,9 +56,9 @@ class RecupererFormationsServiceTest {
     fun `doit renvoyers les fiches formations pour un profil`() {
         // Given
         val profilEleve = mock(ProfilEleve::class.java)
-        given(profilEleve.bac).willReturn("Général")
+        given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesPreferees).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
+        given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -218,9 +218,9 @@ class RecupererFormationsServiceTest {
     fun `si la formation n'est pas renvoyé par les autres services, doit mettre des valeurs par défaut`() {
         // Given
         val profilEleve = mock(ProfilEleve::class.java)
-        given(profilEleve.bac).willReturn("Général")
+        given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesPreferees).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
+        given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)

@@ -6,15 +6,14 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 - **v1** - L'application historique (ce dossier est amené à disparaitre)
 - **etl** - Permet de transformer les fichiers référentiels et ajouter les données en BDD (pour le moment dans V1)
 - **suggestions** - API permettant de générer des suggestions de formations (pour le moment dans V1)
-- **keycloak** -  Gestionnaire d'authentification (n'est pas déployé, utilisé uniquement pour le dev local)
+- **keycloak** - Gestionnaire d'authentification (n'est pas déployé, utilisé uniquement pour le dev local)
 - **wordpress** - Export statique des fichiers du WP permettant d'alimenter les pages publiques (non utilisé en local, uniquement pour le déploiement)
-- **app** - Coeur de l'application Mon Projet Sup
+- **app** - Cœur de l'application Mon Projet Sup
   - front - Frontend Typescript/React/ViteJS
   - back - Backend API Kotlin/Spring Boot
 
 ## Schéma simplifié des apps et des types d'échanges en local
 ![Schéma apps en local](schema-local.png)
-
 
 
 ## Comment lancer le projet

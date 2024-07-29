@@ -28,7 +28,7 @@ class RecupererFormationService(
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)
         val statistiquesDesAdmis =
             statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
-                idBaccalaureat = profilEleve?.bac,
+                idBaccalaureat = profilEleve?.baccalaureat,
                 idFormation = formation.id,
                 classe = profilEleve?.classe,
             )
@@ -61,7 +61,7 @@ class RecupererFormationService(
                 communesTrieesParAffinites =
                     recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
                         idFormation = formation.id,
-                        communesFavorites = profilEleve.communesPreferees,
+                        communesFavorites = profilEleve.communesFavorites,
                     ),
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,

@@ -3,14 +3,23 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.SpecialiteBDDRepository
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.SpecialiteJPARepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
 class SpecialiteBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
+    lateinit var specialiteJPARepository: SpecialiteJPARepository
+
     lateinit var specialiteBDDRepository: SpecialiteBDDRepository
+
+    @BeforeEach
+    fun setup() {
+        specialiteBDDRepository = SpecialiteBDDRepository(specialiteJPARepository)
+    }
 
     @Test
     @Sql("classpath:specialite.sql")

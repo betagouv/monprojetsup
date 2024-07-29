@@ -1,10 +1,11 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
+import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
+import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
-import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -19,7 +20,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
-import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
@@ -27,16 +27,13 @@ import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
-import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.`when`
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
@@ -47,10 +44,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.ConnectException
 
-@WebMvcTest(controllers = [FormationController::class], excludeAutoConfiguration = [SecurityAutoConfiguration::class])
+@WebMvcTest(controllers = [FormationController::class])
 class FormationControllerTest(
     @Autowired val mvc: MockMvc,
-) {
+) : ControllerTest() {
     @MockBean
     lateinit var suggestionsFormationsService: SuggestionsFormationsService
 
@@ -60,22 +57,6 @@ class FormationControllerTest(
     @MockBean
     lateinit var recupererFormationsService: RecupererFormationsService
 
-    private val unProfil =
-        ProfilEleve(
-            id = "adcf627c-36dd-4df5-897b-159443a6d49c",
-            situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
-            classe = ChoixNiveau.TERMINALE,
-            bac = "Générale",
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
-            alternance = ChoixAlternance.PAS_INTERESSE,
-            communesPreferees = listOf(Communes.PARIS),
-            specialites = listOf("1056", "1054"),
-            centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-            moyenneGenerale = 14f,
-            metiersChoisis = listOf("MET_123", "MET_456"),
-            formationsChoisies = listOf("fl1234", "fl5678"),
-            domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-        )
     private val requete =
         """
         {
@@ -273,6 +254,7 @@ class FormationControllerTest(
 
     @Nested
     inner class `Quand on appelle la route de suggestions de formations` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi, doit retourner 200 avec une liste des fiches formations suggérées`() {
             // Given
@@ -521,6 +503,7 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
@@ -543,6 +526,7 @@ class FormationControllerTest(
 
     @Nested
     inner class `Quand on appelle la route de récupération d'une formation` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
@@ -744,6 +728,7 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel sans profil, doit retourner 200 avec le détail de la formation`() {
             // Given
@@ -918,6 +903,7 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
@@ -936,6 +922,7 @@ class FormationControllerTest(
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         }
 
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur not found, alors doit retourner 404`() {
             // Given
@@ -957,6 +944,7 @@ class FormationControllerTest(
 
     @Nested
     inner class `Quand on appelle la route de récupération de formations` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
@@ -1207,6 +1195,7 @@ class FormationControllerTest(
                 )
         }
 
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
