@@ -3,49 +3,35 @@ package fr.gouv.monprojetsup.eleve.infrastructure.repository
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
+import fr.gouv.monprojetsup.eleve.infrastructure.entity.ProfilEleveEntity
+import org.slf4j.Logger
 import org.springframework.stereotype.Repository
-import kotlin.jvm.Throws
+import java.util.UUID
 
 @Repository
-class EleveBDDRepository : EleveRepository {
+class EleveBDDRepository(
+    private val eleveJPARepository: EleveJPARepository,
+    private val logger: Logger,
+) : EleveRepository {
     @Throws(MonProjetSupNotFoundException::class)
     override fun recupererUnEleve(id: String): ProfilEleve {
-        return ProfilEleve(
-            id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
-            situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-            classe = ChoixNiveau.SECONDE,
-            baccalaureat = "S2TMD",
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-            alternance = ChoixAlternance.INTERESSE,
-            communesFavorites = emptyList(),
-            specialites = emptyList(),
-            centresInterets = listOf("T_IDEO2_4813", "T_ROME_2092381918"),
-            moyenneGenerale = null,
-            metiersFavoris = emptyList(),
-            formationsFavorites = listOf("fl0001", "fl0005"),
-            domainesInterets = emptyList(),
-        )
+        val eleveEntity =
+            eleveJPARepository.findById(UUID.fromString(id)).orElseThrow {
+                MonProjetSupNotFoundException(code = "ELEVE_SANS_COMPTE", msg = "L'élève n'a pas de compte")
+            }
+        return eleveEntity.toProfilEleve()
     }
 
     override fun creerUnEleve(id: String): ProfilEleve {
-        return ProfilEleve(
-            id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
-            situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-            classe = ChoixNiveau.SECONDE,
-            baccalaureat = "S2TMD",
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-            alternance = ChoixAlternance.INTERESSE,
-            communesFavorites = emptyList(),
-            specialites = emptyList(),
-            centresInterets = listOf("T_IDEO2_4813", "T_ROME_2092381918"),
-            moyenneGenerale = null,
-            metiersFavoris = emptyList(),
-            formationsFavorites = listOf("fl0001", "fl0005"),
-            domainesInterets = emptyList(),
-        )
+        val uuid = UUID.fromString(id)
+        if (eleveJPARepository.existsById(uuid)) {
+            logger.warn("L'élève $id a voulu être crée alors qu'il existe déjà en base")
+            return recupererUnEleve(id)
+        } else {
+            val entity = ProfilEleveEntity()
+            entity.id = UUID.fromString(id)
+            val entitySauvegarde = eleveJPARepository.save(entity)
+            return entitySauvegarde.toProfilEleve()
+        }
     }
 }
