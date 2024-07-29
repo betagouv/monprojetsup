@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration {
+class SecuriteConfiguration {
     @Autowired
     lateinit var identificationFilter: IdentificationFilter
 
@@ -23,6 +23,7 @@ class SecurityConfiguration {
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-resources/*", permitAll)
                 authorize("/swagger-ui/**", permitAll)
+                authorize("/actuator/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer { jwt {} }

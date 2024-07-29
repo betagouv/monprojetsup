@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.commun.application.controller
 
 import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
-import fr.gouv.monprojetsup.configuration.SecurityConfiguration
+import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
 import fr.gouv.monprojetsup.eleve.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 
 @ContextConfiguration(classes = [MonProjetSupTestConfiguration::class])
-@Import(value = [SecurityConfiguration::class])
+@Import(value = [SecuriteConfiguration::class])
 abstract class ControllerTest {
     @MockBean
     lateinit var eleveRepository: EleveRepository
