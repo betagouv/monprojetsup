@@ -12,10 +12,11 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Rename jar file 
-RUN cp target/*.?ar /usr/src/mps-backend.jar
+RUN mkdir -p /usr/src
+RUN cp target/*.jar /usr/src/mps-backend.jar
 
 # Use an official OpenJDK image as the base image
-FROM eclipse-temurin:17-jre-ubi9-minimal
+FROM eclipse-temurin:17-jre-noble
 
 # Set the working directory in the container
 WORKDIR /app
