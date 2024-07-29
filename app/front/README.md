@@ -35,3 +35,5 @@ Vous trouverez cela surement étrange (je l'éspère) de définir un secret côt
 Elle est à true dans le fichier `env.ci` et lors de l'execution des tests End-to-End. Dans les faits cela permet de contourner tous les systèmes d'authentification et de pouvoir tester le frontend de manière totalement indépendante. Pas d'inquiétude à avoir en terme de sécurité vous ne pourrez pas faire d'appel à l'API backend. 
 
 Lorsque vous êtes en mode TEST vous pouvez appeler les routes de l'application en ajoutant en paramètre `http://localhost:5001/.../?simulerCompte=élève` ou `http://localhost:5001/.../?simulerCompte=enseignant` afin de simuler la connexion avec un de ces profils (utile dans le cas de page avec la même URL mais pas le même contenu à afficher)
+
+Test
