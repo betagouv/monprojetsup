@@ -16,7 +16,13 @@ class DomaineBDDRepository(
         return domaineJPARepository.findAllByIdIn(ids).map { it.toDomaine() }
     }
 
+    @Transactional(readOnly = true)
     override fun recupererTousLesDomainesEtLeursCategories(): Map<CategorieDomaine, List<Domaine>> {
         return categorieDomaineJPARepository.findAll().associate { it.toCategorieDomaine() to it.domaines.map { it.toDomaine() } }
+    }
+
+    @Transactional(readOnly = true)
+    override fun verifierDomainesExistent(ids: List<String>): Boolean {
+        return domaineJPARepository.countAllByIdIn(ids) == ids.size
     }
 }

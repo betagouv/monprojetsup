@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface DomaineJPARepository : JpaRepository<DomaineEntity, String> {
     fun findAllByIdIn(ids: List<String>): List<DomaineEntity>
+
+    fun countAllByIdIn(ids: List<String>): Int
 }

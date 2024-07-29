@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -18,10 +19,14 @@ import org.mockito.Mock
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
+import java.util.UUID
 
 class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var eleveJPARepository: EleveJPARepository
+
+    @Autowired
+    lateinit var entityManager: EntityManager
 
     @Mock
     lateinit var logger: Logger
@@ -30,7 +35,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, logger)
+        eleveBDDRepository = EleveBDDRepository(entityManager, eleveJPARepository, logger)
     }
 
     val profil0f88 =
@@ -110,6 +115,51 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             assertThat(result).isEqualTo(profil0f88)
             then(logger).should().warn("L'élève 0f88ddd1-62ef-436e-ad3f-cf56d5d14c15 a voulu être crée alors qu'il existe déjà en base")
+        }
+    }
+
+    @Nested
+    inner class MettreAJourUnProfilEleve {
+        @Test
+        @Sql("classpath:profil_eleve.sql")
+        fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
+            // When
+            val nouveauProfil =
+                ProfilEleve(
+                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+                    situation = null,
+                    classe = null,
+                    baccalaureat = null,
+                    specialites = null,
+                    domainesInterets = null,
+                    centresInterets = null,
+                    metiersFavoris = null,
+                    dureeEtudesPrevue = null,
+                    alternance = null,
+                    communesFavorites = null,
+                    formationsFavorites = null,
+                    moyenneGenerale = null,
+                )
+            eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = nouveauProfil)
+
+            // Then
+            val resultat =
+                eleveJPARepository.findById(
+                    UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+                ).orElseThrow().toProfilEleve()
+            assertThat(resultat).usingRecursiveAssertion().isEqualTo(nouveauProfil)
+        }
+
+        @Test
+        @Sql("classpath:profil_eleve.sql")
+        fun `Quand l'élève n'existe pas, doit throw une erreur`() {
+            // Given
+            val profilInconnu = profil0f88.copy(id = "2012")
+
+            // When & Then
+            assertThatThrownBy {
+                eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = profilInconnu)
+            }.isInstanceOf(MonProjetSupNotFoundException::class.java).hasMessage("L'élève 2012 n'a pas été crée en base")
         }
     }
 }

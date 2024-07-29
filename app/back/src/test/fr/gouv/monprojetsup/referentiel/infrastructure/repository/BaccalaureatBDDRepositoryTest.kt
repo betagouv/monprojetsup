@@ -79,4 +79,33 @@ class BaccalaureatBDDRepositoryTest : BDDRepositoryTest() {
             assertThat(result).isEqualTo(attendu)
         }
     }
+
+    @Nested
+    inner class VerifierBaccalaureatExiste {
+        @Test
+        @Sql("classpath:baccalaureat.sql")
+        fun `si le baccalaureat existe, renvoyer true`() {
+            // Given
+            val idBaccalaureat = "Général"
+
+            // When
+            val result = baccalaureatBDDRepository.verifierBaccalaureatExiste(idBaccalaureat)
+
+            // Then
+            assertThat(result).isTrue()
+        }
+
+        @Test
+        @Sql("classpath:baccalaureat.sql")
+        fun `si le baccalaureat n'existe pas, renvoyer false`() {
+            // Given
+            val idBaccalaureat = "inconnu"
+
+            // When
+            val result = baccalaureatBDDRepository.verifierBaccalaureatExiste(idBaccalaureat)
+
+            // Then
+            assertThat(result).isFalse()
+        }
+    }
 }

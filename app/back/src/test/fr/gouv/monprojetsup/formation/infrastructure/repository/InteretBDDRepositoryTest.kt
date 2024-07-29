@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretCategorieJPARepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretJPARepository
+import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretSousCategorieJPARepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -18,13 +19,16 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var interetJPARepository: InteretJPARepository
 
     @Autowired
+    lateinit var interetSousCategorieJPARepository: InteretSousCategorieJPARepository
+
+    @Autowired
     lateinit var interetCategorieJPARepository: InteretCategorieJPARepository
 
     lateinit var interetBDDRepository: InteretBDDRepository
 
     @BeforeEach
     fun setup() {
-        interetBDDRepository = InteretBDDRepository(interetJPARepository, interetCategorieJPARepository)
+        interetBDDRepository = InteretBDDRepository(interetJPARepository, interetSousCategorieJPARepository, interetCategorieJPARepository)
     }
 
     @Nested
@@ -96,6 +100,41 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
                     InteretCategorie(id = "rechercher", nom = "Découvrir, enquêter et rechercher", emoji = "\uD83E\uDDD0") to emptyList(),
                 )
             assertThat(result).isEqualTo(attendu)
+        }
+    }
+
+    @Nested
+    inner class VerifierCentresInteretsExistent {
+        @Test
+        @Sql("classpath:interet.sql")
+        fun `si toutes les centres d'interêt existent, renvoyer true`() {
+            // Given
+            val ids = listOf("linguistique", "voyage")
+
+            // When
+            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+
+            // Then
+            assertThat(result).isTrue()
+        }
+
+        @Test
+        @Sql("classpath:interet.sql")
+        fun `si un des centres d'interêt n'existe pas, renvoyer false`() {
+            // Given
+            val ids =
+                listOf(
+                    "decouvrir_monde",
+                    "linguistique",
+                    "voyage",
+                    "T_ROME_1825212206",
+                )
+
+            // When
+            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+
+            // Then
+            assertThat(result).isFalse()
         }
     }
 }

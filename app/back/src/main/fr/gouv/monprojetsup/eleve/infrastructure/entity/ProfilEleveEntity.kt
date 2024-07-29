@@ -18,7 +18,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "profil_eleve")
-class ProfilEleveEntity {
+class ProfilEleveEntity() {
     @Id
     @Column(name = "id", nullable = false)
     lateinit var id: UUID
@@ -68,6 +68,22 @@ class ProfilEleveEntity {
 
     @Column(name = "moyenne_generale", nullable = true)
     var moyenneGenerale: Float? = null
+
+    constructor(profilEleve: ProfilEleve) : this() {
+        id = UUID.fromString(profilEleve.id)
+        situation = profilEleve.situation
+        classe = profilEleve.classe
+        dureeEtudesPrevue = profilEleve.dureeEtudesPrevue
+        alternance = profilEleve.alternance
+        idBaccalaureat = profilEleve.baccalaureat
+        specialites = profilEleve.specialites
+        domaines = profilEleve.domainesInterets
+        centresInterets = profilEleve.centresInterets
+        metiersFavoris = profilEleve.metiersFavoris
+        communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
+        formationsFavorites = profilEleve.formationsFavorites
+        moyenneGenerale = profilEleve.moyenneGenerale
+    }
 
     fun toProfilEleve() =
         ProfilEleve(

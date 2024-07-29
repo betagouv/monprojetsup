@@ -319,4 +319,33 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             then(logger).shouldHaveNoMoreInteractions()
         }
     }
+
+    @Nested
+    inner class VerifierFormationsExistent {
+        @Test
+        @Sql("classpath:formation.sql")
+        fun `si toutes les formations existent, renvoyer true`() {
+            // Given
+            val idsFormations = listOf("fl0001", "fl0003", "fl0002")
+
+            // When
+            val result = formationBDDRepository.verifierFormationsExistent(idsFormations)
+
+            // Then
+            assertThat(result).isTrue()
+        }
+
+        @Test
+        @Sql("classpath:formation.sql")
+        fun `si une des formations n'existe pas, renvoyer false`() {
+            // Given
+            val idsFormations = listOf("fl0001", "idInconnu", "fl0003", "fl0002")
+
+            // When
+            val result = formationBDDRepository.verifierFormationsExistent(idsFormations)
+
+            // Then
+            assertThat(result).isFalse()
+        }
+    }
 }

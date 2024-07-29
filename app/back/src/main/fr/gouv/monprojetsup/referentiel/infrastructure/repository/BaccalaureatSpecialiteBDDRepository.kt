@@ -12,6 +12,12 @@ class BaccalaureatSpecialiteBDDRepository(
     val baccalaureatSpecialiteJPARepository: BaccalaureatSpecialiteJPARepository,
 ) : BaccalaureatSpecialiteRepository {
     @Transactional(readOnly = true)
+    override fun recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat: String): List<String> {
+        val specialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureat(idBaccalaureat)
+        return specialites.map { it.id.idSpecialite }
+    }
+
+    @Transactional(readOnly = true)
     override fun recupererLesBaccalaureatsAvecLeursSpecialites(): Map<Baccalaureat, List<Specialite>> {
         val baccalaureats = baccalaureatJPARepository.findAll()
         val baccalaureatSpecialites = baccalaureatSpecialiteJPARepository.findAll()

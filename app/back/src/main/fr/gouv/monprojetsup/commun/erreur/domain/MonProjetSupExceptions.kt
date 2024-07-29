@@ -18,6 +18,12 @@ abstract class MonProjetSup5xxExceptions(
     cause: Throwable?,
 ) : MonProjetSupExceptions(code, message, cause)
 
+data class MonProjetSupBadRequestException(
+    override val code: String,
+    val msg: String,
+    val origine: Throwable? = null,
+) : MonProjetSup4xxExceptions(code, msg, origine)
+
 data class MonProjetSupNotFoundException(
     override val code: String,
     val msg: String,

@@ -22,4 +22,9 @@ class MetierBDDRepository(
             metier?.toMetierDetaille()
         }
     }
+
+    @Transactional(readOnly = true)
+    override fun verifierMetiersExistent(ids: List<String>): Boolean {
+        return metierJPARepository.countAllByIdIn(ids) == ids.size
+    }
 }

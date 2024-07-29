@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class InteretBDDRepository(
     val interetJPARepository: InteretJPARepository,
+    val interetSousCategorieJPARepository: InteretSousCategorieJPARepository,
     val interetCategorieJPARepository: InteretCategorieJPARepository,
 ) : InteretRepository {
     @Transactional(readOnly = true)
@@ -16,9 +17,15 @@ class InteretBDDRepository(
         return interetJPARepository.findAllByIdIn(idsInterets).associate { it.id to it.sousCategorie.toInteretSousCategorie() }
     }
 
+    @Transactional(readOnly = true)
     override fun recupererToutesLesCategoriesEtLeursSousCategoriesDInterets(): Map<InteretCategorie, List<InteretSousCategorie>> {
         return interetCategorieJPARepository.findAll().associate {
             it.toInteretCategorie() to it.sousCategories.map { it.toInteretSousCategorie() }
         }
+    }
+
+    @Transactional(readOnly = true)
+    override fun verifierCentresInteretsExistent(ids: List<String>): Boolean {
+        return interetSousCategorieJPARepository.countAllByIdIn(ids) == ids.size
     }
 }

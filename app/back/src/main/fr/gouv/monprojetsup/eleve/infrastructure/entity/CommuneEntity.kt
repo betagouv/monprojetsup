@@ -9,6 +9,13 @@ data class CommuneEntity(
     val latitude: Float,
     val longitude: Float,
 ) : Serializable {
+    constructor(commune: Commune) : this(
+        codeInsee = commune.codeInsee,
+        nom = commune.nom,
+        latitude = commune.latitude,
+        longitude = commune.longitude,
+    )
+
     fun toCommune() =
         Commune(
             codeInsee = codeInsee,
