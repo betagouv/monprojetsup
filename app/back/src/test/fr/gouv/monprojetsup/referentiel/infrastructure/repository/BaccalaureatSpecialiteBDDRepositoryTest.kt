@@ -17,6 +17,9 @@ class BaccalaureatSpecialiteBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var baccalaureatSpecialiteJPARepository: BaccalaureatSpecialiteJPARepository
 
+    @Autowired
+    lateinit var specialiteJPARepository: SpecialiteJPARepository
+
     lateinit var baccalaureatSpecialiteBDDRepository: BaccalaureatSpecialiteBDDRepository
 
     @BeforeEach
@@ -25,6 +28,7 @@ class BaccalaureatSpecialiteBDDRepositoryTest : BDDRepositoryTest() {
             BaccalaureatSpecialiteBDDRepository(
                 baccalaureatJPARepository,
                 baccalaureatSpecialiteJPARepository,
+                specialiteJPARepository,
             )
     }
 
