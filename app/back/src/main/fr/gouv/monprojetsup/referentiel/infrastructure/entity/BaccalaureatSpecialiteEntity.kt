@@ -4,9 +4,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -21,14 +18,6 @@ class BaccalaureatSpecialiteEntity {
 
     @Column(name = "id_baccalaureat", insertable = false, updatable = false)
     lateinit var idBaccalaureat: String
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_baccalaureat", insertable = false, updatable = false)
-    lateinit var baccalaureat: BaccalaureatEntity
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_specialite", insertable = false, updatable = false)
-    lateinit var specialite: SpecialiteEntity
 }
 
 @Embeddable

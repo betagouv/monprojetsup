@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class BaccalaureatSpecialiteBDDRepository(
     val baccalaureatJPARepository: BaccalaureatJPARepository,
     val baccalaureatSpecialiteJPARepository: BaccalaureatSpecialiteJPARepository,
+    val specialiteJPARepository: SpecialiteJPARepository,
 ) : BaccalaureatSpecialiteRepository {
     @Transactional(readOnly = true)
     override fun recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat: String): List<String> {
@@ -20,11 +21,15 @@ class BaccalaureatSpecialiteBDDRepository(
     @Transactional(readOnly = true)
     override fun recupererLesBaccalaureatsAvecLeursSpecialites(): Map<Baccalaureat, List<Specialite>> {
         val baccalaureats = baccalaureatJPARepository.findAll()
-        val baccalaureatSpecialites = baccalaureatSpecialiteJPARepository.findAll()
+        val baccalaureatSpecialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureatIn(baccalaureats.map { it.id })
+        val specialites = specialiteJPARepository.findAllByIdIn(baccalaureatSpecialites.map { it.id.idSpecialite }.distinct())
         return baccalaureats.associate { baccalaureatEntity ->
-            baccalaureatEntity.toBaccalaureat() to
-                baccalaureatSpecialites.filter { it.baccalaureat == baccalaureatEntity }
-                    .map { it.specialite.toSpecialite() }
+            val pairesBaccalaureatSpecialiteDuBaccalaureat = baccalaureatSpecialites.filter { it.idBaccalaureat == baccalaureatEntity.id }
+            val specialitesDuBac =
+                pairesBaccalaureatSpecialiteDuBaccalaureat.map { paire ->
+                    specialites.first { it.id == paire.id.idSpecialite }.toSpecialite()
+                }
+            baccalaureatEntity.toBaccalaureat() to specialitesDuBac
         }
     }
 }
