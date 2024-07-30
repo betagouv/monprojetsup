@@ -7,14 +7,9 @@ Elle utilise les technologies Typescript/React/ViteJS.
 - Avant de pouvoir démarrer l'application il est nécessaire de dupliquer le fichier `.env.example` à la racine et de le renommer en `.env.local`
 - Vous n'avez par défaut aucune modification à effectuer autre que de récupérer la valeur de `VITE_KEYCLOAK_CLIENT_SECRET` à cette URL http://localhost:5003/admin/master/console/#/avenirs/clients/99b97c1a-5f00-4304-9a17-9f8c9fa3974d/credentials (si vous ne savez pas lancer/vous connecter au keycloak -> README.md à la racine de ce repo)
 
-### Lancer le serveur pour développer
-- Si vous avez à developper sur le frontend je vous déconseille de lancer le appfront dans le docker à la racine de ce projet vous risquez d'avoir des problèmes de hotreload.
-- Assurez-vous de disposer de la dernière version de NodeJS 20
+### Lancer le serveur
+- Assurez-vous de disposer de la dernière version de NodeJS 22
 - Lancez le serveur avec `npm run dev`
-
-
-### Lancer le serveur pour utiliser simplement l'interface
-- Vous pouvez utiliser docker (explications à la racine du repo)
 
 
 ## Comment lancer les tests et linters
@@ -24,7 +19,7 @@ Elle utilise les technologies Typescript/React/ViteJS.
 
 
 ## Comment ajouter une variables d'env
-- En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env`, `.env.ci` et dans `docker/Dockerfile`
+- En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env`, `.env.ci`
 - Pour le déploiement vous devez demander à l'équipe en charge du gitlab Avenir(s) de vous rajouter la variable à leur script de CD pour tous les environnements (cf README.md à la racine de ce repo)
 
 ## Remarque sur les variables d'environnement existantes

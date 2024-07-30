@@ -19,16 +19,10 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ## Comment lancer le projet
 ### Prérequis 
 - Démarrer Docker sur sa machine
-- S'assurer d'avoir correctement renseigné les variables d'environnement utilisés par le frontend et le backend
-  - cf [app/back/README.md](app/back/README.md)
-  - cf [app/front/README.md](app/front/README.md)
-
-
-### Application MPS
-À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
-### API suggestion 
-cf [v1/back/README.md](v1/back/README.md)
-
+- À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
+- Lancer le backend en suivant les instructions de [app/back/README.md](app/back/README.md)
+- Lancer le frontend en suivant les instructions de [app/front/README.md](app/front/README.md)
+- Lancer l'api Suggestion en suivant les instructions de [v1/back/README.md](v1/back/README.md)
 
 ## Les différentes URLs
 - Frontend: http://localhost:5001
@@ -59,6 +53,6 @@ Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
 - Lors du push sur la branch `demo` ou `prod` et une fois les CI validées le code va être push sur un repo privé Gitlab appartenant à Avenir(s) sur les branches respectives correspondants aux différents environnements. 
 - Ce push va déclencher automatiquement le build et le deploy de l'application uniquement pour la branch `demo`.
 - Pour la branch `prod` il est nécessaire de le faire manuellement dans l'interface gitlab du repo Avenir(s).
-- À ce stade du projet nous n'utilisons que l'environnement `integration` et `prod` chez Avenir(s). 
+- À ce stade du projet nous n'utilisons que l'environnement `preprod` et `prod` chez Avenir(s). 
 
 
