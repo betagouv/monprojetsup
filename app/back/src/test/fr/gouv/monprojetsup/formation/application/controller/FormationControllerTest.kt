@@ -22,6 +22,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
@@ -58,6 +59,9 @@ class FormationControllerTest(
 
     @MockBean
     lateinit var recupererFormationsService: RecupererFormationsService
+
+    @MockBean
+    lateinit var rechercherFormation: RechercherFormationsService
 
     private val explications =
         ExplicationsSuggestionDetaillees(
@@ -926,6 +930,166 @@ class FormationControllerTest(
                 get("/api/v1/formations/inconnu"),
             ).andDo(print()).andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
+        }
+    }
+
+    @Nested
+    inner class `Quand on appelle la route de recherche succincte de formations` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
+            // Given
+            val rechercheL1 =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                )
+            `when`(rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1")).thenReturn(rechercheL1)
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=L1"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "id": "fl1",
+                              "nom": "L1 - Psychologie"
+                            },
+                            {
+                              "id": "fl7",
+                              "nom": "L1 - Philosophie"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
+        @Test
+        fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
+            // Given
+            val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val rechercheLongue =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+                    FormationCourte(id = "fl1000", nom = "BPJEPS"),
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
+                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
+                )
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = rechercheDe50Caracteres),
+            ).thenReturn(rechercheLongue)
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "id": "fl1",
+                              "nom": "L1 - Psychologie"
+                            },
+                            {
+                              "id": "fl7",
+                              "nom": "L1 - Philosophie"
+                            },
+                            {
+                              "id": "fl3",
+                              "nom": "CAP Pâtisserie"
+                            },
+                            {
+                              "id": "fl1000",
+                              "nom": "BPJEPS"
+                            },
+                            {
+                              "id": "fl17",
+                              "nom": "L1 - Mathématique"
+                            },
+                            {
+                              "id": "fl20",
+                              "nom": "CAP Boulangerie"
+                            },
+                            {
+                              "id": "fl10",
+                              "nom": "DUT Informatique"
+                            },
+                            {
+                              "id": "fl18",
+                              "nom": "L1 - Littérature"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=L"),
+            ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_COURTE",
+                          "status": 400,
+                          "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
+                          "instance": "/api/v1/formations/recherche/succincte"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+            // When & Then
+            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe51Caracteres"),
+            ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_LONGUE",
+                          "status": 400,
+                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "instance": "/api/v1/formations/recherche/succincte"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=test"),
+            ).andDo(print()).andExpect(status().isForbidden)
         }
     }
 
