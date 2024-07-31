@@ -1,10 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
+import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.domain.port.EdgesPort;
-import fr.gouv.monprojetsup.data.model.Edges;
-import fr.gouv.monprojetsup.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.data.model.Edges;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
@@ -39,6 +40,42 @@ public class AlgoSuggestions {
     public AlgoSuggestions(SuggestionsData data, EdgesPort edgesPort) {
         this.data = data;
         this.edgesPort = edgesPort;
+        /*		val p90NbFormations = p50(
+			nbFormations.entries.stream().filter { e: Map.Entry<String?, Int?> ->
+				ServerData.filieresFront.contains(
+					e.key
+				)
+			}.map<Int>(
+				Function<Map.Entry<String, Int>, Int> { java.util.Map.Entry.value }).toList()
+		)
+		val p50Capacity =
+			p50(
+				capacity.entries.stream().filter { e: Map.Entry<String?, Int?> ->
+					ServerData.filieresFront.contains(
+						e.key
+					)
+				}.map<Int>(
+					Function<Map.Entry<String, Int>, Int> { java.util.Map.Entry.value }).toList()
+			)
+		val p75Capacity =
+			Stats.p75(
+				capacity.entries.stream().filter { e: Map.Entry<String?, Int?> ->
+					ServerData.filieresFront.contains(
+						e.key
+					)
+				}.map<Int>(
+					Function<Map.Entry<String, Int>, Int> { java.util.Map.Entry.value }).toList()
+			)
+		val p90Capacity =
+			Stats.p90(
+				capacity.entries.stream().filter { e: Map.Entry<String?, Int?> ->
+					ServerData.filieresFront.contains(
+						e.key
+					)
+				}.map<Int>(
+					Function<Map.Entry<String, Int>, Int> { java.util.Map.Entry.value }).toList()
+			)
+        */
     }
 
     private final SuggestionsData data;
@@ -62,8 +99,8 @@ public class AlgoSuggestions {
 
     //utilisé par suggestions
     public Map<String, Integer> codesSpecialites = new HashMap<>();
-    public static int p90NbFormations;
-    public static int p75Capacity;
+    public final int p90NbFormations;
+    public final int p75Capacity;
 
     protected Set<String> lasFilieres;
 
@@ -342,7 +379,7 @@ public class AlgoSuggestions {
         LOGGER.info("Creating global graph");
         edgesKeys.clear();
 
-        edgesPort.getFilieresFront().forEach(key -> edgesKeys.addNode(key));
+        edgesPort.getFilieresFront().forEach(edgesKeys::addNode);
 
         // intégration des relations étendues aux graphes
         Map<String, Set<String>> metiersVersFormations = data.getMetiersVersFormations();
@@ -391,6 +428,9 @@ public class AlgoSuggestions {
         Set<String> toErase = edgesKeys.keys().stream().filter(
                 s -> isFiliere(s) && !filFront.contains(s)
         ).collect(Collectors.toSet());
+
+
+
         edgesKeys.eraseNodes(toErase);
 
     }

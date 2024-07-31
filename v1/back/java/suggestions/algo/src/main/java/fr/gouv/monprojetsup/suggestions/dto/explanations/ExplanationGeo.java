@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
-import fr.gouv.monprojetsup.data.distances.Distances;
-import fr.gouv.monprojetsup.data.model.cities.Coords;
-import fr.gouv.monprojetsup.data.model.cities.Distance;
+import fr.gouv.monprojetsup.suggestions.data.distances.Distances;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.Coords;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.Distance;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;

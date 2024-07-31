@@ -5,16 +5,15 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.domain.port.LabelsPort;
-import fr.gouv.monprojetsup.data.domain.port.VoeuxPort;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.data.update.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.domain.port.CandidatsPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.VoeuxPort;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.metiers.MetiersScrapped;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,20 @@ public class GenerateMlDocs {
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
     private final VoeuxPort voeuxPort;
+    private final CandidatsPort candidatsPort;
     private final Map<String, String> labels;
 
     @Autowired
-    public GenerateMlDocs(SuggestionsData data, AlgoSuggestions algo, VoeuxPort voeuxPort, LabelsPort labelsPort) {
+    public GenerateMlDocs(
+            SuggestionsData data,
+            AlgoSuggestions algo,
+            VoeuxPort voeuxPort,
+            LabelsPort labelsPort,
+            CandidatsPort candidatsPort) {
         this.data = data;
         this.algo = algo;
         this.voeuxPort = voeuxPort;
+        this.candidatsPort = candidatsPort;
         this.labels = labelsPort.retrieveLabels();
     }
 
@@ -50,18 +56,12 @@ public class GenerateMlDocs {
                 MetiersScrapped.class
         );
 
-        val psupData =  Serialisation.fromZippedJson(
-                DataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
-                PsupData.class);
 
-        val descriptifsIndexedByGta = psupData.descriptifsFormations().indexed();
-
-
+        val descriptifsIndexedByGta = voeuxPort.retrieveDescriptifs();
+        
         List<MlData> datas = new ArrayList<>();
 
-        Map<String, Descriptifs.Descriptif> descriptifs1
-                = voeuxPort.retrieveDescriptifs();
-
+        val descriptifs1 = voeuxPort.retrieveDescriptifs();
 
         algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isFiliere(key)) {
@@ -126,8 +126,8 @@ public class GenerateMlDocs {
 
 
         val gtaToFil = data.getFormationToFilieres();
-        List<Set<String>> voeuxParCandidat =
-                psupData.voeuxParCandidat().stream().map(
+        List<Set<String>> voeuxParCandidat = candidatsPort.getVoeuxParCandidat();
+        voeuxParCandidat().stream().map(
                         voeux -> voeux.stream().map(
                                 v -> gtaToFil.get(Constants.FORMATION_PREFIX + v)
                         ).filter(Objects::nonNull).collect(Collectors.toSet())

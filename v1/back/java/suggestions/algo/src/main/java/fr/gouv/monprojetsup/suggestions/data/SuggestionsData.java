@@ -1,17 +1,12 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.domain.entity.Edge;
-import fr.gouv.monprojetsup.data.domain.entity.Formation;
-import fr.gouv.monprojetsup.data.domain.entity.Matiere;
-import fr.gouv.monprojetsup.data.domain.entity.StatsFormation;
-import fr.gouv.monprojetsup.data.domain.port.EdgesPort;
-import fr.gouv.monprojetsup.data.domain.port.FormationsPort;
-import fr.gouv.monprojetsup.data.domain.port.LabelsPort;
-import fr.gouv.monprojetsup.data.domain.port.MatieresPort;
-import fr.gouv.monprojetsup.data.model.cities.Coords;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.suggestions.domain.model.*;
+import fr.gouv.monprojetsup.suggestions.domain.port.*;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.Edges;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.Coords;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.Middle50;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.StatsContainers;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +18,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE;
-import static fr.gouv.monprojetsup.data.model.stats.StatFront.getStatistique;
+import static fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
+import static fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques.TOUS_BACS_CODE;
+import static fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.StatFront.getStatistique;
 
 @Component
 public class SuggestionsData {
@@ -57,13 +52,22 @@ public class SuggestionsData {
         return labelsPort.retrieveLabel(key).orElse(key);
     }
 
+    public @NotNull String getDebugLabel(@NotNull String key) {
+        return labelsPort.retrieveDebugLabel(key).orElse(key);
+    }
+
     public @NotNull Map<String, String> getLabels() {
         //return an immutable map of labels
         return labelsPort.retrieveLabels();
     }
 
+    public @NotNull Map<String, String> getDebugLabels() {
+        //return an immutable map of labels
+        return labelsPort.retrieveDebugLabels();
+    }
+
     public List<String> getAllRelatedInterests(@NotNull Collection<String> keys) {
-        return keys.stream().flatMap(key -> edgesPort.getOutgoingEdges(key).stream()).toList();
+        return keys.stream().flatMap(key -> edgesPort.getOutgoingEdges(key, EdgesPort::TYPE_EDGE_INTEREST_TO_INTEREST).stream()).toList();
     }
 
     public @NotNull Map<String, Integer> getFormationsSimilaires(String formationId, int typeBac) {

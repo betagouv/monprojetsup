@@ -1,19 +1,34 @@
 package fr.gouv.monprojetsup.etl
 
-import fr.gouv.monprojetsup.data.DataSources
 import fr.gouv.monprojetsup.data.UrlsUpdater
-import fr.gouv.monprojetsup.data.las.LasPassHelpers.getGtaToLasMapping
-import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
-import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsLoader
-import fr.gouv.monprojetsup.data.model.specialites.SpecialitesLoader
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
-import fr.gouv.monprojetsup.data.model.tags.TagsSources
-import fr.gouv.monprojetsup.data.model.thematiques.Thematiques
-import fr.gouv.monprojetsup.data.onisep.OnisepData
-import fr.gouv.monprojetsup.data.psup.PsupData
-import fr.gouv.monprojetsup.data.rome.RomeData
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools
-import fr.gouv.monprojetsup.formation.infrastructure.entity.*
+import fr.gouv.monprojetsup.data.app.entity.*
+import fr.gouv.monprojetsup.data.app.infrastructure.app.*
+import fr.gouv.monprojetsup.suggestions.domain.Constants
+import fr.gouv.monprojetsup.suggestions.domain.model.Candidat
+import fr.gouv.monprojetsup.suggestions.domain.model.StatsFormation
+import fr.gouv.monprojetsup.suggestions.domain.model.Voeu
+import fr.gouv.monprojetsup.suggestions.domain.port.*
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources.STATS_BACK_SRC_FILENAME
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.attendus.Attendus
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.bacs.BacsLoader
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.CitiesBack
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.descriptifs.DescriptifsFormations
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.descriptifs.DescriptifsLoader
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.Formation
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.specialites.SpecialitesLoader
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.tags.TagsSources
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.thematiques.Thematiques
+import fr.gouv.monprojetsup.suggestions.infrastructure.onisep.OnisepData
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.PsupData
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.PsupData.getGtaToLasMapping
+import fr.gouv.monprojetsup.suggestions.infrastructure.rome.RomeData
+import fr.gouv.monprojetsup.suggestions.poc.BackEndData
+import fr.gouv.monprojetsup.suggestions.poc.ServerData
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation
+import fr.gouv.monprojetsup.suggestions.tools.csv.CsvTools
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -21,6 +36,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.logging.Logger
 
 @SpringBootApplication
@@ -40,7 +56,13 @@ class EtlApplicationRunner(
 	private val domainesDb : DomainesDb,
 	private val domainesCategoriesDb : DomainesCategoryDb,
 	private val formationsdb : FormationsDb,
-	private val dataSources: DataSources
+	private val dataSources: DataSources,
+	private val candidatsPort: CandidatsPort,
+	private val voeuxPort: VoeuxPort,
+	private val matieresPort: MatieresPort,
+	private val labelsPort: LabelsPort,
+	private val formationsPort: FormationsPort,
+	private val edgesPort: EdgesPort
 ) : CommandLineRunner {
 
 
@@ -61,6 +83,165 @@ class EtlApplicationRunner(
 	}
 
 	private fun updateSuggestionsDbs() {
+
+		//log.info("Loading server data...");
+		val backendData: BackEndData = Serialisation.fromZippedJson(
+			dataSources.backDataFilePath,
+			BackEndData::class.java
+		)
+		val onisepData = backendData.onisepData
+		val backPsupData = backendData.psupData
+		backPsupData.cleanup() //should be useless but it does not harm...
+		val statistiques =
+			Serialisation.fromZippedJson(
+				/* path = */ dataSources.getSourceDataFilePath(STATS_BACK_SRC_FILENAME),
+				/* type = */ PsupStatistiques::class.java
+			)
+
+		val grpToFormations = backPsupData.getFormationToVoeux()
+		val formationsToGrp = HashMap<String,String>()
+		grpToFormations.forEach { (key, value) ->
+			value.forEach { f ->
+				formationsToGrp[Constants.gTaCodToFrontId(f.gTaCod)] = key
+			}
+		}
+
+		val cities = CitiesBack(backendData.cities.cities)
+
+		backPsupData.filActives.addAll(statistiques.lasFlCodes)
+
+		val psupKeyToMpsKey = Collections.unmodifiableMap(backPsupData.getPsupKeyToMpsKey())
+
+		val mpsKeyToPsupKeys = HashMap<String,MutableSet<String>>()
+		psupKeyToMpsKey.forEach { (s, s2) ->
+			mpsKeyToPsupKeys.computeIfAbsent(s2) { HashSet() }.add(s)
+		}
+
+		val specialites = SpecialitesLoader.load(
+				statistiques,
+				dataSources
+			)
+
+
+		/* can be deleted after next data update */
+		statistiques.removeSmallPopulations()
+		statistiques.rebuildMiddle50()
+		statistiques.createGroupAdmisStatistique(
+			psupKeyToMpsKey
+		)
+		statistiques.createGroupAdmisStatistique(
+			getGtaToLasMapping(backPsupData)
+		)
+
+		statistiques.updateLabels(onisepData, backPsupData)
+		val debugLabels = HashMap(statistiques.labels)
+		mpsKeyToPsupKeys.forEach { (key, value) ->
+			debugLabels[key] = statistiques.labels[key] + ServerData.GROUPE_INFIX + value.toString()
+		}
+
+		val filieresFront = computeFilieresFront(backPsupData, statistiques.lasFlCodes)
+		val nbFormations = HashMap<String,Int>()
+		val capacities = HashMap<String,Int>()
+		grpToFormations.forEach { (key, value) ->
+			nbFormations[key] = value.size
+			capacities[key] = value.stream()
+				.mapToInt { f: Formation -> f.capacite }
+				.sum()
+		}
+		val descriptifs = DescriptifsLoader.loadDescriptifs(
+			onisepData,
+			backPsupData.psupKeyToMpsKey,
+			backPsupData.lasMpsKeys,
+			dataSources
+		)
+
+		val metiersVersFormations = onisepData.getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+			backPsupData.psupKeyToMpsKey,
+			backPsupData.genericToLas,
+			descriptifs
+		)
+
+		val passKey = Constants.gFlCodToFrontId(Constants.PASS_FL_COD)
+		val metiersPass = metiersVersFormations
+			.filter { it.value.contains(passKey) }
+			.map { it.key }
+			.toSet()
+
+		val formationsVersMetiers = HashMap<String,MutableSet<String>>()
+
+		val lasMpsKeys = backPsupData.lasMpsKeys
+		metiersVersFormations.forEach { (metier, formations) ->
+			formations.forEach { f ->
+				val metiers = formationsVersMetiers.computeIfAbsent(f) { _ -> HashSet() }
+				metiers.add(metier)
+				if (lasMpsKeys.contains(f)) {
+					metiers.addAll(metiersPass)
+				}
+				val father = psupKeyToMpsKey[f]
+				if(father != null) {
+					val metiersFather = formationsVersMetiers.computeIfAbsent(father) { _ -> HashSet() }
+					metiersFather.addAll(metiers)
+				}
+			}
+		}
+
+		val tagsSources = TagsSources.loadTagsSources(
+			backPsupData.getPsupKeyToMpsKey(),
+			dataSources
+		)
+		filieresFront.forEach { formation ->
+				val label: String = statistiques.labels.getOrDefault(formation, formation)
+				tagsSources.add(label, formation)
+				if (label.contains("L1")) {
+					tagsSources.add("licence", formation)
+				}
+				if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
+					tagsSources.add("IFSI", formation)
+				}
+				metiersVersFormations[formation]?.forEach { metier ->
+					val label = statistiques.labels[metier]
+					if(label != null) {
+						tagsSources.add(
+							label,
+							formation
+						)
+					}
+				}
+		}
+		tagsSources.normalize()
+
+
+		//1. candidats
+		val candidats = backPsupData.voeuxParCandidat.map { voeux -> Candidat(voeux) }
+		candidatsPort.saveAll(candidats)
+
+		//2. edges
+		updateEdgesDb(onisepData, backPsupData);
+
+		//3. labels
+		//4. matieres
+		//5. voeux
+		val voeux = backPsupData.voeux
+		voeuxPort.saveAll(voeux)
+
+
+		//6. formations
+		updatesFormationsDb(
+			backPsupData,
+			statistiques,
+			filieresFront,
+			debugLabels,
+			capacities,
+			voeux,
+			mpsKeyToPsupKeys,
+			formationsVersMetiers
+		)
+
+		//Serialisation.toJsonFile("tagsSources.json", ServerData.tagsSources, true)
+
+
+		//Candidats
+
 			TODO("Not yet implemented")
 		/*
 
@@ -75,37 +256,11 @@ class EtlApplicationRunner(
 		LOGGER.info("Chargement de " + DataSources.CITIES_FILE_PATH)
 		val cities = fr.gouv.monprojetsup.data.model.cities.CitiesLoader.loadCitiesBack(dataSources)
 
-		//END if neeeded???
+		//END if needed???
 
 
-		//ajout des secteurs d'activité
-        onisepData.fichesMetiers().metiers().metier().forEach(fiche -> {
-            String keyMetier = cleanup(fiche.identifiant());
-            if(fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
-                fiche.secteurs_activite().secteur_activite().forEach(secteur -> {
-                    String keySecteur = cleanup(secteur.id());
-                    edgesKeys.put(keyMetier, keySecteur, true, 1.0);
-                });
-
-                if(fiche.metiers_associes() != null && fiche.metiers_associes().metier_associe() != null) {
-                    fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
-                        String keyMetierAssocie = cleanup(metierAssocie.id());
-                        edgesKeys.put(keyMetier, keyMetierAssocie, true, 0.75);
-                    });
-                }
-            }
-        });
 		*/
 
-		/*
-		filieres front
-		//suppression des filières en app couvertes par une filière sans app,
-        toErase.addAll(
-                backPsupData.getFormationsenAppAvecEquivalentSansApp(filActives)
-                        .stream().map(Constants::gFlCodToFrontId)
-                        .collect(Collectors.toSet())
-        );
-		 */
 
 		/* interests <--> interests */
 
@@ -148,53 +303,23 @@ class EtlApplicationRunner(
 			//        throw new NotImplementedException("Not implemented yet");
 
 			//init cities
-			/*
-        log.info("Double indexation des villes");
+		/*log.info("Double indexation des villes");
         CitiesBack cities = ServerData.cities;
-        Distances.init(cities);*/
+        Distances.init(cities);
 
-			//init dures from psup data
+		//init dures from psup data
 
-			//init candidatesMetiers
-			/*            val result = candidatesMetiers.get(key);
-            if(result != null) return result;
-            Set<String> candidates = new HashSet<>(
-                    getCandidatesMetiers(key) // onisepData.edgesMetiersFilieres().getSuccessors(key).keySet()
-            );
-            if (isLas(key)) {
-                String key2 = getGenericFromLas(key); // lasCorrespondance.lasToGeneric().get(key)
-        if (key2 != null) {
-                    candidates.addAll(getMetiersfromfiliere(key2)); //onisepData.edgesMetiersFilieres().getSuccessors(key2).keySet()
-                    candidates.addAll(getPassMetiers());//(key2) onisepData.edgesMetiersFilieres().getSuccessors(gFlCodToFrontId(PASS_FL_COD)).keySet()
-                }
-            }
-            candidates.addAll(getMetiersfromGroup(key));
-                //if (reverseFlGroups.containsKey(key)) {
-                //candidates.addAll(reverseFlGroups.get(key).stream().flatMap(g -> onisepData.edgesMetiersFilieres().getSuccessors(g).keySet().stream()).toList());
-                //}
-            candidatesMetiers.put(key, candidates);
-            return candidates;
-
-         //liensSecteursMetiers
+		//liensSecteursMetiers
 
         //lasFilieres
 
-        //specialites
-        ServerData.specialites.specialites()
+        //nbAdmisParSpecialite
+        ServerData.nbAdmisParSpecialite.nbAdmisParSpecialite()
 
         //bacs with spcialites
-        ServerData.specialites.specialitesParBac().keySet()
+        ServerData.nbAdmisParSpecialite.specialitesParBac().keySet()
 
-        //apprentissage
-          backPsupData.formations().filieres.values().forEach(filiere -> {
-            String key = FILIERE_PREFIX + filiere.gFlCod;
-            if (filiere.apprentissage) {
-                apprentissage.add(key);
-                String origKey = FILIERE_PREFIX + filiere.gFlCodeFi;
-                apprentissage.add(origKey);
-                apprentissage.add(flGroups.getOrDefault(origKey, origKey));
-            }
-        });
+
 
         //descriptifs
                 / * UpdateFrontData.DataContainer.loadDescriptifs(
@@ -209,10 +334,69 @@ class EtlApplicationRunner(
 
 	}
 
+	private fun updatesFormationsDb(
+		backPsupData: PsupData,
+		statistiques: PsupStatistiques,
+		filieresFront: List<String>,
+		debugLabels: HashMap<String, String>,
+		capacities: HashMap<String, Int>,
+		voeux: List<Voeu>,
+		mpsKeyToPsupKeys: HashMap<String, MutableSet<String>>,
+		formationsVersMetiers: HashMap<String, MutableSet<String>>
+	) {
+		val formations = HashSet<fr.gouv.monprojetsup.suggestions.domain.model.Formation>()
+		val psupKeyToMpsKey = backPsupData.psupKeyToMpsKey
+		val apprentissage = backPsupData.getApprentissage()
+		val lasToGeneric = backPsupData.lasToGeneric
+
+		filieresFront.forEach { mpsKey ->
+			val voeuxFormation = voeux.filter { it.formation == mpsKey }
+			val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, setOf(mpsKey))
+			val metiers = formationsVersMetiers[mpsKey] ?: HashSet()
+			val stats = StatsFormation(
+				statistiques.getStatsMoyGenParBac(mpsKey),
+				statistiques.getNbAdmisParBac(mpsKey),
+				statistiques.getStatsSpec(mpsKey),
+				backPsupData.getStatsFilSim(psupKeys)
+			)
+			val formation = fr.gouv.monprojetsup.suggestions.domain.model.Formation(
+				mpsKey,
+				statistiques.labels.getOrDefault(mpsKey,mpsKey),
+				debugLabels.getOrDefault(mpsKey,mpsKey),
+				capacities.getOrDefault(mpsKey,0),
+				apprentissage.contains(mpsKey),
+				psupKeys.map { fps -> backPsupData.getDuree(fps, psupKeyToMpsKey) }.minOrNull() ?: 5,
+				lasToGeneric[mpsKey],
+				voeuxFormation,
+				ArrayList(metiers),
+				stats,
+				ArrayList(psupKeys)
+				)
+			formations.add(formation)
+		}
+		formationsPort.saveAll(formations)
+	}
+
+	private fun updateEdgesDb(onisepData: OnisepData, psupData : PsupData) {
+		val psupKeyToMpsKey = psupData.psupKeyToMpsKey
+		val lasToGeneric = psupData.lasToGeneric;
+		val lasToPass = psupData.lasToPass;
+		edgesPort.saveAll(onisepData.edgesInteretsMetiers, EdgesPort.TYPE_EDGE_INTERET_METIER)
+		edgesPort.saveAll(onisepData.edgesFilieresThematiques, EdgesPort.TYPE_EDGE_FILIERES_THEMATIQUES)
+		edgesPort.saveAll(onisepData.edgesThematiquesMetiers, EdgesPort.TYPE_EDGE_THEMATIQUES_METIERS)
+		edgesPort.saveAll(onisepData.edgesSecteursMetiers, EdgesPort.TYPE_EDGE_SECTEURS_METIERS)
+		edgesPort.saveAll(onisepData.edgesMetiersAssocies, EdgesPort.TYPE_EDGE_METIERS_ASSOCIES)
+		edgesPort.saveAll(psupKeyToMpsKey, EdgesPort.TYPE_EDGE_FILIERES_GROUPES)
+		edgesPort.saveAll(lasToGeneric, EdgesPort.TYPE_EDGE_LAS_TO_GENERIC)
+		edgesPort.saveAll(lasToPass, EdgesPort.TYPE_EDGE_LAS_TO_PASS)
+		edgesPort.saveAll(onisepData.edgesInteretsToInterets, EdgesPort.TYPE_EDGE_INTEREST_TO_INTEREST)
+	}
+
+
 	private fun updateFormationsDb() {
 		LOGGER.info("Chargement de " + dataSources.getSourceDataFilePath(
 			DataSources.BACK_PSUP_DATA_FILENAME))
-		val psupData = fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson(
+		val psupData = Serialisation.fromZippedJson(
 			dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
 			PsupData::class.java
 		)
@@ -227,21 +411,16 @@ class EtlApplicationRunner(
 		onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
 
 		LOGGER.info("Chargement des stats depuis " + DataSources.STATS_BACK_SRC_FILENAME)
-		val stats = fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson(
+		val stats = Serialisation.fromZippedJson(
 			dataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-			fr.gouv.monprojetsup.data.model.stats.PsupStatistiques::class.java
+			PsupStatistiques::class.java
 		)
 
-		stats.createGroupAdmisStatistique(psupData.correspondances)
-		stats.createGroupAdmisStatistique(
-			getGtaToLasMapping(
-				psupData,
-				stats
-			)
-		)
+		stats.createGroupAdmisStatistique(psupData.psupKeyToMpsKey)
+		stats.createGroupAdmisStatistique(getGtaToLasMapping(psupData))
 
 		LOGGER.info("Maj des données Onisep (noms des filières et urls)")
-		stats.updateLabels(onisepData, psupData, stats.lasCorrespondance.lasToGeneric)
+		stats.updateLabels(onisepData, psupData)
 
 
 		updateFormationsDb(psupData, stats, onisepData)
@@ -249,57 +428,62 @@ class EtlApplicationRunner(
 
 	private fun updateFormationsDb(
 		psupData: PsupData,
-		stats: PsupStatistiques,
+		statistiques: PsupStatistiques,
 		onisepData: OnisepData
 	) {
 		//le référentiel est formations front
-		val formations = fr.gouv.monprojetsup.data.ServerData.computeFilieresFront(
+		val formations = computeFilieresFront(
 			psupData,
-			stats.lasFlCodes
+			statistiques.lasFlCodes
 		)
 
 		LOGGER.info("Calcul des correspondance")
-		val groups = psupData.correspondances
-		val reverseGroups = revert(groups)
-		val lasCorrespondance = stats.lasCorrespondance
+		val psupKeyToMpsKey = psupData.psupKeyToMpsKey
+		val mpsKeyToPsupKeys = revert(psupKeyToMpsKey)
 
 		LOGGER.info("Génération des descriptifs")
 		val descriptifs =
             DescriptifsLoader.loadDescriptifs(
                 onisepData,
-                groups,
-                lasCorrespondance.lasToGeneric,
+                psupKeyToMpsKey,
+				psupData.getLasMpsKeys(),
                 dataSources
             )
 
-		val attendus = fr.gouv.monprojetsup.data.model.attendus.Attendus.getAttendus(
+		val specialites = SpecialitesLoader.load(
+			statistiques,
+			dataSources
+		)
+
+		val attendus = Attendus.getAttendus(
 			psupData,
-			stats,
-			SpecialitesLoader.load(stats, dataSources),
+			statistiques,
+			specialites,
 			false
 		)
 
 		LOGGER.info("Ajout des liens metiers")
-		val links = HashMap<String, fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.Link>()
-		stats.liensOnisep.forEach { (key: String, value: String?) ->
-			links[key] = fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs.toAvenirs(value, stats.labels.getOrDefault(key, ""))
+		val links = HashMap<String, DescriptifsFormations.Link>()
+		statistiques.liensOnisep.forEach { (key, value) ->
+			links[key] = DescriptifsFormations.toAvenirs(value, statistiques.labels.getOrDefault(key, ""))
 		}
 		val urls = UrlsUpdater.updateUrls(
 			onisepData,
 			links,
-			lasCorrespondance.lasToGeneric,
-			descriptifs
+			psupData.lasMpsKeys,
+			descriptifs,
+			psupKeyToMpsKey
 		)
 
 		val grilles = GrilleAnalyse.getGrilles(psupData)
 
-		val tagsSources = TagsSources.loadTagsSources(groups, dataSources).getKeyToTags()
+		val tagsSources = TagsSources.loadTagsSources(psupKeyToMpsKey, dataSources).getKeyToTags()
 
 		formationsdb.deleteAll()
 		formations.forEach { flCod ->
 			val entity = FormationDetailleeEntity()
 			entity.id = flCod
-			val label = stats.labels[flCod] ?: throw RuntimeException("Pas de label pour la formation $flCod")
+			val label = statistiques.labels[flCod] ?: throw RuntimeException("Pas de label pour la formation $flCod")
 			entity.label = label
 			entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(flCod)
 			entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(flCod)
@@ -312,7 +496,7 @@ class EtlApplicationRunner(
 				entity.descriptifAttendus = attendusFormation.getAttendusFront()
 			}
 
-			entity.formationsAssociees = ArrayList(reverseGroups.getOrDefault(flCod, setOf(flCod)))
+			entity.formationsAssociees = ArrayList(mpsKeyToPsupKeys.getOrDefault(flCod, setOf(flCod)))
 
 			val grille = grilles[flCod]
 			if (grille == null) {
@@ -355,7 +539,7 @@ class EtlApplicationRunner(
 	private fun updateBaccalaureatDb() {
 
 		baccalaureatBDD.deleteAll()
-		val bacs = fr.gouv.monprojetsup.data.model.bacs.BacsLoader.load(dataSources)
+		val bacs = BacsLoader.load(dataSources)
 		bacs.forEach { baccalaureat ->
 			val entity = BaccalaureatEntity()
 			entity.id = baccalaureat.key
@@ -386,7 +570,7 @@ class EtlApplicationRunner(
 		domainesDb.deleteAll()
 		domainesCategoriesDb.deleteAll()
 
-		val categories = loadthematiques()
+		val categories = loadThematiques()
 		var i = 0
 		categories.forEach { categorie ->
 			val entity = DomaineCategoryEntity()
@@ -405,7 +589,7 @@ class EtlApplicationRunner(
 		}
 	}
 
-	fun loadthematiques(): List<Thematiques.Category> {
+	fun loadThematiques(): List<Thematiques.Category> {
 		val groupes: MutableMap<String, Thematiques.Category> = HashMap()
 		val categories: MutableList<Thematiques.Category> = java.util.ArrayList()
 
@@ -442,5 +626,26 @@ class EtlApplicationRunner(
 		return categories
 	}
 
+	fun computeFilieresFront(
+		backendData: PsupData,
+		lasFlCodes: Collection<Int>
+	): List<String> {
+		val resultInt = HashSet(backendData.filActives)
+		val flGroups = backendData.psupKeyToMpsKey
+		val groupesWithAtLeastOneFormation = backendData.formationToVoeux.keys
+
+		resultInt.addAll(lasFlCodes)
+
+		val result = ArrayList(resultInt.stream()
+			.map { cle -> Constants.gFlCodToFrontId(cle) }
+			.toList()
+		)
+		result.removeAll(flGroups.keys)
+		result.addAll(flGroups.values)
+		result.retainAll(groupesWithAtLeastOneFormation)
+		result.sort()
+		return result
+
+	}
 
 }

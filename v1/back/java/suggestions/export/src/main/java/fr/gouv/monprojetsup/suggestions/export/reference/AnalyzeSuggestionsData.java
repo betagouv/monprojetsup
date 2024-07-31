@@ -58,14 +58,14 @@ public class AnalyzeSuggestionsData {
                 algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> data.getLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes.json",
                 algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(Helpers::isTheme))
-                        .map(e -> data.getLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
@@ -73,14 +73,14 @@ public class AnalyzeSuggestionsData {
                 algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> isFiliere(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || Helpers.isMetier(f)))
-                        .map(e -> data.getLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
         Serialisation.toJsonFile("metiers_sans_themes_ni_formation.json",
                 algo.edgesKeys.edges().entrySet().stream()
                         .filter(e -> Helpers.isMetier(e.getKey()))
                         .filter(e -> e.getValue().stream().noneMatch(f -> Helpers.isTheme(f) || isFiliere(f)))
-                        .map(e -> data.getLabel(e.getKey()))
+                        .map(e -> data.getDebugLabel(e.getKey()))
                         .toList(),
                 true);
 
@@ -94,7 +94,7 @@ public class AnalyzeSuggestionsData {
         Map<String, String> metiersSansFormations = algo.edgesKeys.edges().entrySet().stream()
                 .filter(e -> Helpers.isMetier(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isFiliere))
-                .map(e -> Pair.of(e.getKey(), data.getLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), data.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -126,7 +126,7 @@ public class AnalyzeSuggestionsData {
         Map<String, String> formationsSansMetiers = algo.edgesKeys.edges().entrySet().stream()
                 .filter(e -> isFiliere(e.getKey()))
                 .filter(e -> e.getValue().stream().noneMatch(Helpers::isMetier))
-                .map(e -> Pair.of(e.getKey(), data.getLabel(e.getKey())))
+                .map(e -> Pair.of(e.getKey(), data.getDebugLabel(e.getKey())))
                 .filter(e -> !e.getRight().contains("groupe") && !e.getRight().contains("null"))
                 .collect(Collectors.toMap(
                         Pair::getLeft,
@@ -166,7 +166,7 @@ public class AnalyzeSuggestionsData {
     }
     private void outputSemanticGraph() throws IOException {
         Edges edgesLabels = new Edges();
-        edgesLabels.createLabelledGraphFrom(algo.edgesKeys, data.getLabels());
+        edgesLabels.createLabelledGraphFrom(algo.edgesKeys, data.getDebugLabels());
         Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
     }
 
@@ -174,7 +174,7 @@ public class AnalyzeSuggestionsData {
         /* formations liés aux métiers de la santé */
         Serialisation.toJsonFile("relatedToHealth.json",
                 algo.getRelatedToHealth()
-                        .stream().map(key -> data.getLabel(key))
+                        .stream().map(key -> data.getDebugLabel(key))
                         .toList()
                 , true);
 

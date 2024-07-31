@@ -1,16 +1,16 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.Middle50;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques;
 import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -549,7 +549,7 @@ public class AffinityEvaluator {
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
-                        + data.getLabel(e.getKey()))
+                        + data.getDebugLabel(e.getKey()))
                 .collect(Collectors.joining(
                         "\n\t", "\n\t", "\n"
                 )) + ").";

@@ -1,7 +1,7 @@
-package fr.gouv.monprojetsup.data.distances;
+package fr.gouv.monprojetsup.suggestions.data.distances;
 
-import fr.gouv.monprojetsup.data.model.cities.CitiesBack;
-import fr.gouv.monprojetsup.data.model.cities.Coords;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.CitiesBack;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.Coords;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;

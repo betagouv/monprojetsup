@@ -16,7 +16,6 @@
 	<description>Extract, transform, load data of MonProjetSup</description>
     <modules>
 		<module>common</module>
-		<module>db</module>
 		<module>updatepsup</module>
         <module>scrapping</module>
 		<module>updatedb</module>

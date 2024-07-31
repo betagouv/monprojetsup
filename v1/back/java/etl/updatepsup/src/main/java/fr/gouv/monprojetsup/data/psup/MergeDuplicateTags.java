@@ -3,9 +3,9 @@ package fr.gouv.monprojetsup.data.psup;
 // TODO : move absolutes paths in config file.
 // TODO : change stemTags method to handle tags with multiple words.
 
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.tags.TagsSources;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
 import opennlp.tools.stemmer.PorterStemmer;
 
 import java.io.IOException;

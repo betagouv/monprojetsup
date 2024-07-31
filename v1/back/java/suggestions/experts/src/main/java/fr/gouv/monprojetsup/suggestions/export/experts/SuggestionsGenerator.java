@@ -50,7 +50,7 @@ public class SuggestionsGenerator {
 
 
         LOGGER.info("Retrieving details and explanations...");
-        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getLabels());
+        ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getDebugLabels());
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.model;
+package fr.gouv.monprojetsup.suggestions.data.model;
 
 import org.jetbrains.annotations.Nullable;
 
