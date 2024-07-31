@@ -29,7 +29,7 @@ public class ExportSuggestionsData {
             LabelsPort labelsPort) {
         this.data = data;
         this.algo = algo;
-        this.labels = labelsPort.retrieveLabels();
+        this.labels = labelsPort.retrieveDebugLabels();
     }
 
     public void export() throws Exception {
@@ -113,10 +113,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> themesMetiers = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = data.getLabel(s);
+                String labelTheme = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(data::getLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 themesMetiers.put(labelTheme, metiers);
             }
@@ -132,10 +132,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> metiersSecteurs = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.SEC_ACT_PREFIX_IN_GRAPH)) {
-                String secteur = data.getLabel(s);
+                String secteur = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.MET_PREFIX))
-                        .map(data::getLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 secteursMetiers.put(secteur, metiers);
                 metiers.forEach(met -> metiersSecteurs.computeIfAbsent(met, z -> new ArrayList<>()).add(secteur));
@@ -163,10 +163,10 @@ public class ExportSuggestionsData {
         Map<String, List<String>> themesFilieres = new HashMap<>();
         algo.edgesKeys.edges().forEach((s, strings) -> {
             if(s.startsWith(Constants.THEME_PREFIX)) {
-                String labelTheme = data.getLabel(s);
+                String labelTheme = data.getDebugLabel(s);
                 List<String> metiers = strings.stream()
                         .filter(m -> m.startsWith(Constants.FILIERE_PREFIX) || m.startsWith(Constants.TYPE_FORMATION_PREFIX))
-                        .map(data::getLabel)
+                        .map(data::getDebugLabel)
                         .toList();
                 themesFilieres.put(labelTheme, metiers);
             }

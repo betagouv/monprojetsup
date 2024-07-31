@@ -2,30 +2,31 @@ package fr.gouv.monprojetsup.data.audit;
 
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.attendus.Attendus;
-import fr.gouv.monprojetsup.data.model.attendus.AttendusDetailles;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.model.formations.ActionFormationOni;
-import fr.gouv.monprojetsup.data.model.formations.Filiere;
-import fr.gouv.monprojetsup.data.model.formations.FilieresToFormationsOnisep;
-import fr.gouv.monprojetsup.data.model.interets.Interets;
-import fr.gouv.monprojetsup.data.model.metiers.Metiers;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.model.stats.Statistique;
-import fr.gouv.monprojetsup.data.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.model.thematiques.Thematiques;
-import fr.gouv.monprojetsup.data.onisep.billy.PsupToOnisepLines;
-import fr.gouv.monprojetsup.data.onisep.formations.Formations;
-import fr.gouv.monprojetsup.data.psup.PsupData;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.parcoursup.carte.modele.modele.Etablissement;
-import fr.gouv.parcoursup.carte.modele.modele.Formation;
-import fr.gouv.parcoursup.carte.modele.modele.JsonCarte;
+import fr.gouv.monprojetsup.suggestions.domain.Constants;
+import fr.gouv.monprojetsup.suggestions.domain.Helpers;
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.carte.Etablissement;
+import fr.gouv.monprojetsup.suggestions.infrastructure.carte.FormationCarte;
+import fr.gouv.monprojetsup.suggestions.infrastructure.carte.JsonCarte;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.attendus.Attendus;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.attendus.AttendusDetailles;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.descriptifs.DescriptifsFormations;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.ActionFormationOni;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.Filiere;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.FilieresToFormationsOnisep;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.interets.Interets;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.metiers.Metiers;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.Statistique;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.tags.TagsSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.suggestions.infrastructure.onisep.billy.PsupToOnisepLines;
+import fr.gouv.monprojetsup.suggestions.infrastructure.onisep.formations.FormationOnisep;
+import fr.gouv.monprojetsup.suggestions.infrastructure.onisep.formations.FormationsOnisep;
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.PsupData;
+import fr.gouv.monprojetsup.suggestions.poc.ServerData;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.tools.csv.CsvTools;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +40,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
+import static fr.gouv.monprojetsup.suggestions.tools.Serialisation.fromZippedJson;
+
 
 /**
  * Classe principale pour l'analyse de la qualité des données du serveur.
@@ -111,7 +113,7 @@ public class PerformAudit implements CommandLineRunner {
         Serialisation.toJsonFile("thematiques.json", serverData.thematiques().thematiques(), true);
 
         /* *** items sans descriptis  ****/
-        Descriptifs desc = serverData.getDescriptifs();
+        val desc = serverData.getDescriptifs();
 
         outputMetiersSansDescriptifs(desc);
 
@@ -234,11 +236,11 @@ public class PerformAudit implements CommandLineRunner {
 
 
         /* *** stats fichier xml **/
-        Formations formations = Serialisation.fromJsonFile(
+        FormationsOnisep formationsOnisep = Serialisation.fromJsonFile(
                 dataSources.getSourceDataFilePath(DataSources.ONISEP_FORMATIONS_PATH),
-                Formations.class
+                FormationsOnisep.class
         );
-        Set<String> knownFromXML = formations.formations().stream().map(fr.gouv.monprojetsup.data.onisep.formations.Formation::identifiant).collect(Collectors.toSet());
+        Set<String> knownFromXML = formationsOnisep.formations().stream().map(FormationOnisep::identifiant).collect(Collectors.toSet());
         Set<String> knownFromIdeoHoline = lines.values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
@@ -468,11 +470,11 @@ public class PerformAudit implements CommandLineRunner {
                 idsIdeo2.remove(null);
                 if (idsIdeo2.isEmpty()) continue;
                 //on calcule les uai des établissements de ce gFlCod, côté psup
-                Map<String, List<fr.gouv.parcoursup.carte.modele.modele.Formation>> psupUAI = carte.formations.values().stream()
+                Map<String, List<FormationCarte>> psupUAI = carte.formations.values().stream()
                         .filter(f -> f.getFl() == gFlCod)
                         .collect(
                                 Collectors.groupingBy(
-                                        fr.gouv.parcoursup.carte.modele.modele.Formation::getGea
+                                        FormationCarte::getGea
                                 )
                         );
                 //on calcule les uai des établissements de ce gFlCod, côté onisep
@@ -484,9 +486,9 @@ public class PerformAudit implements CommandLineRunner {
                 psupUAI.keySet().removeAll(onisepUai.keySet());
                 if (psupUAI.isEmpty()) continue;
 
-                for (List<Formation> forms : psupUAI.values()) {
+                for (List<FormationCarte> forms : psupUAI.values()) {
 
-                    for (Formation f : forms) {
+                    for (FormationCarte f : forms) {
                         csv.append(line.G_FR_COD());
                         csv.append(line.G_FR_LIB());
                         csv.append(gFlCod);
@@ -560,8 +562,9 @@ public class PerformAudit implements CommandLineRunner {
     }
 
     private void exportLiensDomainesMetiers() throws IOException {
+        val liensDomainesMetiers = serverData.getLiensDomainesMetiers();
         Map<String, List<String>> liensDomainesNomsMetiers
-                = ServerData.liensDomainesMetiers.entrySet().stream()
+                = liensDomainesMetiers.entrySet().stream()
                 .flatMap(e -> e.getValue().stream().map(f -> Pair.of(e.getKey(), f)))
                 .collect(Collectors.groupingBy(p -> p.getLeft().domaine_onisep()))
                 .entrySet().stream()
@@ -572,7 +575,7 @@ public class PerformAudit implements CommandLineRunner {
         Serialisation.toJsonFile("liensDomainesNomsMetiers.json", liensDomainesNomsMetiers, true);
 
         Map<String, List<String>> liensSousDomainesNomsMetiers
-                = ServerData.liensDomainesMetiers.entrySet().stream()
+                = liensDomainesMetiers.entrySet().stream()
                 .flatMap(e -> e.getValue().stream().map(f -> Pair.of(e.getKey(), f)))
                 .collect(Collectors.groupingBy(p -> p.getLeft().sous_domaine_onisep()))
                 .entrySet().stream()
@@ -640,7 +643,7 @@ public class PerformAudit implements CommandLineRunner {
         );
     }
 
-    private void outputMetiersSansDescriptifs(Descriptifs desc) throws IOException {
+    private void outputMetiersSansDescriptifs(DescriptifsFormations desc) throws IOException {
         ArrayList<String> copy4 = new ArrayList<>();
         serverData.idMetiersOnisep().forEach(key -> {
             if (Helpers.isMetier(key) && !desc.keyToDescriptifs().containsKey(key)) {
@@ -662,7 +665,7 @@ public class PerformAudit implements CommandLineRunner {
         data.removeSmallPopulations();
 
         log.info("Chargement et nettoyage de " + dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME));
-        PsupData psupData = Serialisation.fromZippedJson(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
+        PsupData psupData = fromZippedJson(dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), PsupData.class);
         psupData.cleanup();
 
         /*
@@ -684,8 +687,8 @@ public class PerformAudit implements CommandLineRunner {
                 "url onisep",
                 "URL corrections",
                 "url psup",
-                Descriptifs.RESUME_FORMATION_V1,
-                Descriptifs.RESUME_FORMATION_MPS_HEADER,
+                DescriptifsFormations.RESUME_FORMATION_V1,
+                DescriptifsFormations.RESUME_FORMATION_MPS_HEADER,
                 "résumé spécialité",
                 "Liens supplémentaires",
                 "Retours à Onisep",
@@ -698,10 +701,10 @@ public class PerformAudit implements CommandLineRunner {
                     headers
             );
 
-            val lasCorr = serverData.getLASCorrespondance();
+            val lasMpsKeys = psupData.getLasMpsKeys();
             for (String flStr : ServerData.filieresFront) {
 
-                if (lasCorr.isLas(flStr)) {
+                if (lasMpsKeys.contains(flStr)) {
                     continue;
                 }
                 String label2 = serverData.getLabel(flStr, flStr);
@@ -736,7 +739,7 @@ public class PerformAudit implements CommandLineRunner {
 
                 val listeFilieres = ServerData.reverseFlGroups.getOrDefault(flStr, Set.of(flStr));
 
-                Descriptifs.Descriptif descriptif = descriptifs.keyToDescriptifs().get(flStr);
+                DescriptifsFormations.DescriptifFormation descriptif = descriptifs.keyToDescriptifs().get(flStr);
 
                 Map<String, String> mpsData = (descriptif == null) ? Map.of() : descriptif.getMpsData();
 
@@ -750,7 +753,7 @@ public class PerformAudit implements CommandLineRunner {
                                         )
                                 )
                                 .filter(s -> !s.getLeft().isEmpty())
-                                .map(s -> Descriptifs.toAvenirs(s.getLeft(), s.getRight()).uri())
+                                .map(s -> DescriptifsFormations.toAvenirs(s.getLeft(), s.getRight()).uri())
                                 .distinct()
                                 .collect(Collectors.joining("\n"))
                 );
@@ -765,8 +768,8 @@ public class PerformAudit implements CommandLineRunner {
                         .map(fl -> fl + "x").collect(Collectors.joining("%20")));
 
                 //"résumé formation V1",
-                if (mpsData.containsKey(Descriptifs.RESUME_FORMATION_V1)) {
-                    csv.append(mpsData.getOrDefault(Descriptifs.RESUME_FORMATION_V1, ""));
+                if (mpsData.containsKey(DescriptifsFormations.RESUME_FORMATION_V1)) {
+                    csv.append(mpsData.getOrDefault(DescriptifsFormations.RESUME_FORMATION_V1, ""));
                 } else if (descriptif != null) {
                     String summary = descriptif.getFrontRendering();
                     csv.append(summary);
@@ -775,7 +778,7 @@ public class PerformAudit implements CommandLineRunner {
                 }
 
                 //                    "résumé formation VLauriane",
-                csv.append(mpsData.getOrDefault(Descriptifs.RESUME_FORMATION_MPS_HEADER, ""));
+                csv.append(mpsData.getOrDefault(DescriptifsFormations.RESUME_FORMATION_MPS_HEADER, ""));
 
                 //                    "résumé spécialité"",
                 csv.append(mpsData.getOrDefault("résumé spécialité", ""));
@@ -808,13 +811,13 @@ public class PerformAudit implements CommandLineRunner {
             csv.appendHeaders(
                     headers
             );
-            for (Map.Entry<String, Descriptifs.Descriptif> entry : descriptifs.keyToDescriptifs().entrySet()) {
+            for (val entry : descriptifs.keyToDescriptifs().entrySet()) {
                 String s = entry.getKey();
                 if (processed.contains(s)) continue;
                 val desc = entry.getValue();
                 if (!desc.isViable()) continue;
                 val mpsData = desc.getMpsData();
-                if (mpsData == null || !mpsData.containsKey(Descriptifs.RESUME_FORMATION_MPS_HEADER) && !mpsData.containsKey("résumé spécialité"))
+                if (mpsData == null || !mpsData.containsKey(DescriptifsFormations.RESUME_FORMATION_MPS_HEADER) && !mpsData.containsKey("résumé spécialité"))
                     continue;
                 for (String h : headers) {
                     csv.append(mpsData.getOrDefault(h, ""));
@@ -832,8 +835,9 @@ public class PerformAudit implements CommandLineRunner {
                     "url onisep"
             ));
 
+            val lasMpsKeys = psupData.getLasMpsKeys();
             for (String flStr : ServerData.filieresFront) {
-                if (serverData.getLASCorrespondance().isLas(flStr)) {
+                if (lasMpsKeys.contains(flStr)) {
                     continue;
                 }
                 String label2 = serverData.getLabel(flStr, flStr);
@@ -841,7 +845,7 @@ public class PerformAudit implements CommandLineRunner {
                     continue;
                 }
 
-                Descriptifs.Descriptif descriptif = descriptifs.keyToDescriptifs().get(flStr);
+                val descriptif = descriptifs.keyToDescriptifs().get(flStr);
                 if (descriptif == null || descriptif.hasError() || descriptif.presentation() == null) continue;
 
                 int i = descriptif.presentation().indexOf("Exemples de métiers");

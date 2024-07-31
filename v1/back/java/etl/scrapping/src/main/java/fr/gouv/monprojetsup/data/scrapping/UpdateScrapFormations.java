@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.scrapping;
 
 import com.google.gson.GsonBuilder;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.ServerData;
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.descriptifs.DescriptifsFormations;
+import fr.gouv.monprojetsup.suggestions.poc.ServerData;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,11 +39,11 @@ public class UpdateScrapFormations implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Descriptifs descriptifs;
+        DescriptifsFormations descriptifs;
         try {
             descriptifs = Serialisation.fromJsonFile(
                     sources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH),
-                    Descriptifs.class
+                    DescriptifsFormations.class
             );
             Serialisation.toJsonFile(
                     sources.getSourceDataFilePath(DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH) + ".backup",
@@ -51,7 +51,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
                     true
             );
         } catch (Exception e) {
-            descriptifs = new Descriptifs();
+            descriptifs = new DescriptifsFormations();
         }
 
         Map<String, Integer> statsOk = descriptifs.keyToDescriptifs().values().stream()
@@ -79,7 +79,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
         LOGGER.info(new GsonBuilder().setPrettyPrinting().create().toJson(statsOk));
         LOGGER.info(new GsonBuilder().setPrettyPrinting().create().toJson(statsKo));
 
-        Map<String, Descriptifs.Descriptif> descKo = new HashMap<>(descriptifs.keyToDescriptifs());
+        Map<String, DescriptifsFormations.DescriptifFormation> descKo = new HashMap<>(descriptifs.keyToDescriptifs());
         descKo.keySet().retainAll(
                 descriptifs.keyToDescriptifs().entrySet().stream()
                         .filter(d -> d.getValue().type().equals("error"))
@@ -123,7 +123,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
             String flKey = entry.getKey();
 
             //si déjà connu et pas d'erreur et correcte alors pas la peine de réessayer
-            Descriptifs.Descriptif known = descriptifs.keyToDescriptifs().get(flKey);
+            DescriptifsFormations.DescriptifFormation known = descriptifs.keyToDescriptifs().get(flKey);
             if (known != null
                     && known.error() == null
                     && !known.type().equals("error")
@@ -139,15 +139,15 @@ public class UpdateScrapFormations implements CommandLineRunner {
 
             String url = entry.getValue();
             LOGGER.info("Processing " + url);
-            Descriptifs.Descriptif desc = getDescriptifFromUrl(url);
+            DescriptifsFormations.DescriptifFormation desc = getDescriptifFromUrl(url);
             boolean hasError = true;
             if (desc == null) {
-                desc = Descriptifs.getError("getDescriptifFromUrl returned null", url);
+                desc = DescriptifsFormations.getError("getDescriptifFromUrl returned null", url);
                 //LOGGER.info("Fail");
             } else if (desc.error() == null && desc.presentation() == null) {
-                desc = Descriptifs.getError("getDescriptifFromUrl returned null presentation", url);
+                desc = DescriptifsFormations.getError("getDescriptifFromUrl returned null presentation", url);
             } else if (desc.error() == null && desc.presentation().isEmpty()) {
-                desc = Descriptifs.getError("getDescriptifFromUrl returned empty presentation", url);
+                desc = DescriptifsFormations.getError("getDescriptifFromUrl returned empty presentation", url);
             } else {
                 hasError = desc.hasError();
             }
@@ -164,7 +164,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
         }
     }
 
-    private static @Nullable Descriptifs.Descriptif getDescriptifFromUrl(String url) {
+    private static @Nullable DescriptifsFormations.DescriptifFormation getDescriptifFromUrl(String url) {
         if(url.startsWith("www")) {
             url = "https://" + url;
         }
@@ -178,7 +178,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
 
             boolean isRedirected = doc.getElementById("jexplore-les-possibles") != null;
             if (isRedirected) {
-                return Descriptifs.getError("redirected to https://www.terminales2022-2023.fr/", url);
+                return DescriptifsFormations.getError("redirected to https://www.terminales2022-2023.fr/", url);
             }
 
             List<String> selectors = List.of(
@@ -193,7 +193,7 @@ public class UpdateScrapFormations implements CommandLineRunner {
                 Elements elts = doc.select(sel);
                 List<String> psTextxs = elts.stream().map(Element::html).toList();
                 if (!psTextxs.isEmpty()) {
-                    return Descriptifs.getDescriptif(psTextxs, url, sel);
+                    return DescriptifsFormations.getDescriptif(psTextxs, url, sel);
                 }
             }
             boolean  isRecherche = url.contains("recherche?");
@@ -223,11 +223,11 @@ public class UpdateScrapFormations implements CommandLineRunner {
                 if(unHtmlizedUrl.contains("¬_query_type=true")) {
                     return getDescriptifFromUrl(unHtmlizedUrl.replace("¬_query_type=true", ""));
                 }
-                return Descriptifs.getError("recherche, pas d'article spécifique", url);
+                return DescriptifsFormations.getError("recherche, pas d'article spécifique", url);
             }
             return null;
         } catch (Exception e) {
-            Descriptifs.Descriptif desc = Descriptifs.getError(e.getMessage(), url);
+            DescriptifsFormations.DescriptifFormation desc = DescriptifsFormations.getError(e.getMessage(), url);
             return desc;
         }
     }
@@ -245,13 +245,13 @@ public class UpdateScrapFormations implements CommandLineRunner {
     private static void testDomHasNotChanged() throws IOException {
                 /*  */
         //http://www.terminales2022-2023.fr/http/redirection/formation/slug/FOR.519
-        Descriptifs.Descriptif test3 = getDescriptifFromUrl("http://www.terminales2022-2023.fr/http/redirection/formation/slug/FOR.519");
+        DescriptifsFormations.DescriptifFormation test3 = getDescriptifFromUrl("http://www.terminales2022-2023.fr/http/redirection/formation/slug/FOR.519");
         assert test3.presentation() != null;
 
-        Descriptifs.Descriptif test1 = getDescriptifFromUrl("https://www.terminales2022-2023.fr/ressources/univers-formation/formations/Post-bac/bts-metiers-de-la-chimie");
+        DescriptifsFormations.DescriptifFormation test1 = getDescriptifFromUrl("https://www.terminales2022-2023.fr/ressources/univers-formation/formations/Post-bac/bts-metiers-de-la-chimie");
         assert test1.presentation() != null;
 
-        Descriptifs.Descriptif test2 = getDescriptifFromUrl("https://www.terminales2022-2023.fr/ressources/univers-formation/formations/Post-bac/licence-mention-informatique");
+        DescriptifsFormations.DescriptifFormation test2 = getDescriptifFromUrl("https://www.terminales2022-2023.fr/ressources/univers-formation/formations/Post-bac/licence-mention-informatique");
         assert test2.metiers() != null;
 
     }

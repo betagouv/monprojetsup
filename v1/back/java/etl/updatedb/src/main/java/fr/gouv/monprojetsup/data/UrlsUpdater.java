@@ -1,31 +1,33 @@
 package fr.gouv.monprojetsup.data;
 
-import fr.gouv.monprojetsup.data.model.descriptifs.Descriptifs;
-import fr.gouv.monprojetsup.data.onisep.OnisepData;
+import fr.gouv.monprojetsup.suggestions.domain.Constants;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.descriptifs.DescriptifsFormations;
+import fr.gouv.monprojetsup.suggestions.infrastructure.onisep.OnisepData;
 import lombok.val;
 
 import java.util.*;
 
 public class UrlsUpdater {
-    private static void addUrl(String key, String uri, String label, Map<String, List<Descriptifs.Link>> urls) {
+    private static void addUrl(String key, String uri, String label, Map<String, List<DescriptifsFormations.Link>> urls) {
         if (uri != null && !uri.isEmpty()) {
             if (uri.contains("www.terminales2022-2023.fr")) {
                 //deprecated uri
                 return;
             }
-            val url = Descriptifs.toAvenirs(uri, label);
+            val url = DescriptifsFormations.toAvenirs(uri, label);
             val liste = urls.computeIfAbsent(Constants.cleanup(key), z -> new ArrayList<>());
             if (!liste.contains(url)) liste.add(url);
         }
     }
 
-    public static Map<String, List<Descriptifs.Link>> updateUrls(
+    public static Map<String, List<DescriptifsFormations.Link>> updateUrls(
             OnisepData onisepData,
-            Map<String, Descriptifs.Link> links,
-            Map<String, String> lasCorrespondance,
-            Descriptifs descriptifs
+            Map<String, DescriptifsFormations.Link> links,
+            Set<String> lasMpsKeys,
+            DescriptifsFormations descriptifs,
+            Map<String,String> psupKeytoMpsKey
     ) {
-        val urls = new HashMap<String, List<Descriptifs.Link>>();
+        val urls = new HashMap<String, List<DescriptifsFormations.Link>>();
         onisepData.metiers().metiers().forEach((s, metier) -> addUrl(
                 s,
                 "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/" + s.replace('_', '.'),
@@ -53,10 +55,16 @@ public class UrlsUpdater {
             }
         });
         addUrl(Constants.gFlCodToFrontId(Constants.PASS_FL_COD), Constants.URL_ARTICLE_PAS_LAS, "Les études de santé", urls);
-        lasCorrespondance.forEach((keyLas, keyGen) -> {
-            addUrl(keyLas, Constants.URL_ARTICLE_PAS_LAS, "Les études de santé", urls);
-            urls.getOrDefault(keyGen, List.of()).forEach(s -> addUrl(keyLas, s.uri(), s.label(), urls));
+        urls.entrySet().forEach(e -> {
+            if(lasMpsKeys.contains(e.getKey())) {
+                val keyLas = e.getKey();
+                addUrl(keyLas, Constants.URL_ARTICLE_PAS_LAS, "Les études de santé", urls);
+            }
         });
+        psupKeytoMpsKey.forEach((psupKey, mpsKey) -> {
+            urls.getOrDefault(psupKey, List.of()).forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls));
+        });
+
         return urls;
     }
 }

@@ -43,7 +43,7 @@ public class SuggestionsEvaluator {
 
         ReferenceCases cases = ReferenceCases.loadFromFile(REF_CASES_WITH_SUGGESTIONS);
 
-        cases.toDetails("details", true, data.getLabels());
+        cases.toDetails("details", true, data.getDebugLabels());
 
 
         try (
@@ -52,7 +52,7 @@ public class SuggestionsEvaluator {
                         StandardCharsets.UTF_8
                 )
         ) {
-            fos.write(cases.resume(data.getLabels()));
+            fos.write(cases.resume(data.getDebugLabels()));
         }
 
         boolean stopOnFirstKO = true;
@@ -64,6 +64,7 @@ public class SuggestionsEvaluator {
         ) {
             int i = 1;
             long last = System.currentTimeMillis();
+            val labels = data.getDebugLabels();
             for (ReferenceCase refCase : cases.cases()) {
                 long now = System.currentTimeMillis();
                 LOGGER.info("Evaluating #" + i + " " + (now - last) + "ms");
@@ -86,7 +87,7 @@ public class SuggestionsEvaluator {
                         .stream().filter(s -> Helpers.isFiliere(s.fl()) )
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
-                String worst = worstExpl == null ? "null" : worstExpl.humanReadable(data.getLabels());
+                String worst = worstExpl == null ? "null" : worstExpl.humanReadable(labels);
                 String worstName = worstExpl == null ? "null" : data.getLabel(worstExpl.fl());
 
                 if(refCase.expectations() != null && !refCase.expectations().isEmpty()) {
@@ -113,7 +114,7 @@ public class SuggestionsEvaluator {
                                             StandardCharsets.UTF_8
                                     )
                             ) {
-                                fos2.write(ReferenceCases.toExplanationString(refCase.pf(), data.getLabels()));
+                                fos2.write(ReferenceCases.toExplanationString(refCase.pf(), labels));
                                 fos2.write("\n\n************ MISSED EXPECTATION ******************\n");
                                 fos2.write("\n\t" + expectation
                                         + "\n\n\t\twas overtaken by \n\n\t"
@@ -123,7 +124,7 @@ public class SuggestionsEvaluator {
                                 if (cod == null) {
                                     fos2.write("could not find '" + expectation + "'");
                                 } else {
-                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod, data.getLabels()));
+                                    fos2.write(ReferenceCases.evaluate(refCase.pf(), cod, labels));
                                 }
                                 fos2.write("\n***********************************************************************\n");
                                 fos2.write("\n************************** OVERTAKEN BY ***************************\n");

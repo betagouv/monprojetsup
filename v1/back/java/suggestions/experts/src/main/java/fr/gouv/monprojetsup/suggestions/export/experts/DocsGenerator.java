@@ -44,7 +44,7 @@ public class DocsGenerator {
 
         cases = toHumanReadable(cases);
 
-        cases.toDetails("détails", true, data.getLabels());
+        cases.toDetails("détails", true, data.getDebugLabels());
 
         try (
                 OutputStreamWriter fos = new OutputStreamWriter(
@@ -52,10 +52,10 @@ public class DocsGenerator {
                         StandardCharsets.UTF_8
                 )
         ) {
-            fos.write(cases.resume(data.getLabels()));
+            fos.write(cases.resume(data.getDebugLabels()));
         }
 
-        cases.resumeCsv("profiles_expectations_suggestions.csv", data.getLabels());
+        cases.resumeCsv("profiles_expectations_suggestions.csv", data.getDebugLabels());
 
     }
 

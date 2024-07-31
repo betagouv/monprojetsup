@@ -2,15 +2,14 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.data.model.Path;
-import fr.gouv.monprojetsup.data.model.stats.Middle50;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.Middle50;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 record ExplanationApprentissage (String option) {}
 
 record ExplanationTag(List<Path> pathes) {
-    static DecimalFormat df = new DecimalFormat("#.#####");
 
 }
 
@@ -45,28 +43,26 @@ record ExplanationTagShort(List<String> ns) {
 
     public String toExplanation(String sep, Map<String,String> labels) {
 
-        String ssb = ns().stream()
+        return this.ns().stream()
                 .filter(Helpers::isFiliere)
                 .sorted().map(
                         z -> labels.getOrDefault(z,z)
                 ).collect(Collectors.joining(sep, "\t", "\n")) +
-                ns().stream()
+                this.ns().stream()
                         .filter(Helpers::isMetier)
                         .sorted().map(
                                 z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
-                ns().stream()
+                this.ns().stream()
                         .filter(Helpers::isTheme)
                         .sorted().map(
                                 z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n")) +
-                ns().stream()
+                this.ns().stream()
                         .filter(Helpers::isInteret)
                         .sorted().map(
                                 z -> labels.getOrDefault(z,z)
                         ).collect(Collectors.joining(sep, "\n\t", "\n"));
-
-        return ssb;
     }
 }
 

@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.psup;
 
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.config.DataServerConfig;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.tags.TagsSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.PsupData;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,8 +39,6 @@ public class UpdateParcoursupDataFromPsupDB implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        DataServerConfig.load();
-
 
         getStatistiquesFromPsupDB();
 

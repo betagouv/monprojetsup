@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.scrapping;
 
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.model.disciplines.LiensMetiersThemesOnisep;
-import fr.gouv.monprojetsup.data.model.metiers.Metiers;
-import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.disciplines.LiensMetiersThemesOnisep;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.metiers.Metiers;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.metiers.MetiersScrapped;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

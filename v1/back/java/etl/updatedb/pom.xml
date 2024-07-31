@@ -17,6 +17,18 @@
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>fr.gouv.monprojetsup.data</groupId>
+            <artifactId>common</artifactId>
+            <version>1.4.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -126,25 +138,6 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>fr.gouv.monprojetsup</groupId>
-            <artifactId>common</artifactId>
-            <version>1.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-            <dependency>
-            <groupId>fr.gouv.monprojetsup</groupId>
-            <artifactId>db</artifactId>
-            <version>1.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>fr.gouv.monprojetsup</groupId>
-            <artifactId>etl</artifactId>
-            <version>1.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
 
 </project>

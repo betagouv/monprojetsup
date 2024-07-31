@@ -21,13 +21,16 @@ l'Innovation,
  */
 package fr.gouv.monprojetsup.data.psup;
 
-import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.model.formations.Filiere;
-import fr.gouv.monprojetsup.data.model.formations.Formation;
-import fr.gouv.monprojetsup.data.model.formations.Formations;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.domain.Constants;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.Filiere;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.Formation;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.formations.Formations;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.infrastructure.model.tags.TagsSources;
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.Correlations;
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.suggestions.infrastructure.psup.PsupData;
+import fr.gouv.monprojetsup.suggestions.tools.Serialisation;
 import fr.parcoursup.carte.algos.AlgoCarteConfig;
 import fr.parcoursup.carte.algos.AlgoCarteEntree;
 import fr.parcoursup.carte.algos.tools.Paire;
@@ -376,7 +379,7 @@ public class ConnecteurBackendSQL {
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    data.descriptifsFormations().descriptions().add(new DescriptifFormation(
+                    data.descriptifsFormations().descriptions().add(new DescriptifVoeu(
                             rs.getInt(1),
                             rs.getInt(2),
                             rs.getInt(3),
