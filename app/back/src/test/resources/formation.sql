@@ -53,6 +53,23 @@ VALUES ('fl0003',
         ]'::jsonb);
 
 INSERT INTO formation
+VALUES ('fl0005',
+        'L1 - Géographie',
+        'La licence de géographie est un cursus universitaire qui explore les interactions entre les environnements naturels et les sociétés humaines. Elle couvre des domaines variés comme la cartographie, la géopolitique, et l''aménagement du territoire. Les diplômés peuvent poursuivre des carrières dans l''urbanisme, l''environnement, la recherche, et l''enseignement.',
+        null,
+        '{histoire}',
+        '',
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        '[
+          {
+            "nom": "Voir la fiche Onisep",
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
+          }
+        ]'::jsonb);
+
+INSERT INTO formation
 VALUES ('fl0004',
         'L1 - Histoire',
         'La licence se décline en une quarantaine de mentions, allant du droit, à l''informatique, en passant par les arts. Organisée en parcours types, définis par chaque université, la licence permet d''acquérir une culture générale solide, des compétences disciplinaires, transversales et linguistiques.',
@@ -70,9 +87,9 @@ VALUES ('fl0004',
         ]'::jsonb);
 
 INSERT INTO formation
-VALUES ('fl0005',
-        'L1 - Géographie',
-        'La licence de géographie est un cursus universitaire qui explore les interactions entre les environnements naturels et les sociétés humaines. Elle couvre des domaines variés comme la cartographie, la géopolitique, et l''aménagement du territoire. Les diplômés peuvent poursuivre des carrières dans l''urbanisme, l''environnement, la recherche, et l''enseignement.',
+VALUES ('fl0006',
+        'L1 - Histoire de l''art',
+        'La licence se décline en une quarantaine de mentions, allant du droit, à l''informatique, en passant par les arts. Organisée en parcours types, définis par chaque université, la licence permet d''acquérir une culture générale solide, des compétences disciplinaires, transversales et linguistiques.',
         null,
         null,
         '',
@@ -82,6 +99,6 @@ VALUES ('fl0005',
         '[
           {
             "nom": "Voir la fiche Onisep",
-            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
+            "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire-de-l-art"
           }
         ]'::jsonb);
