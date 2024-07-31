@@ -1094,6 +1094,344 @@ class FormationControllerTest(
     }
 
     @Nested
+    inner class `Quand on appelle la route de recherche détaillée de formations` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
+            // Given
+            val rechercheL1 =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                )
+            `when`(rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1")).thenReturn(rechercheL1)
+            val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
+            val fichesFormations =
+                listOf(
+                    ficheFormation.copy(id = "fl1"),
+                    ficheFormation.copy(
+                        id = "fl7",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        tauxAffinite = 17,
+                        metiersTriesParAffinites = emptyList(),
+                        communesTrieesParAffinites = emptyList(),
+                        explications = null,
+                    ),
+                )
+            `when`(
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfil, toutesLesSuggestions, listOf("fl1", "fl7")),
+            ).thenReturn(fichesFormations)
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13.0
+                                    },
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17.0
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18.0
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "villes": [
+                                  "Paris  5e  Arrondissement",
+                                  "Paris 16e  Arrondissement"
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90
+                              },
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "formationsSimilaires": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "interetsEtDomainesChoisis": {
+                                  "interets": [
+                                    {
+                                      "id": "aider_autres",
+                                      "nom": "Aider les autres"
+                                    }
+                                  ],
+                                  "domaines": [
+                                    {
+                                      "id": "T_ITM_1356",
+                                      "nom": "soin aux animaux"
+                                    }
+                                  ]
+                                },
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "autoEvaluationMoyenne": {
+                                  "moyenne": 15.0,
+                                  "basIntervalleNotes": 14.0,
+                                  "hautIntervalleNotes": 16.0,
+                                  "baccalaureatUtilise": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "formation": {
+                                "id": "fl7",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "villes": [],
+                                "metiers": [],
+                                "tauxAffinite": 17
+                              },
+                              "explications": null
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
+        @Test
+        fun `pour un enseignant, doit retourner 401 avec le détail de la formation`() {
+            // Given
+            val recherche = "Lorem ipsum"
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=$recherche"),
+            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "UTILISATEUR_PAS_ELEVE",
+                          "status": 403,
+                          "detail": "L'utilisateur connecté n'est pas un élève",
+                          "instance": "/api/v1/formations/recherche/detaillee"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le mot recherché fait strictement moins de 2 caractère, doit retourner 400`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=L"),
+            ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_COURTE",
+                          "status": 400,
+                          "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
+                          "instance": "/api/v1/formations/recherche/detaillee"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si le mot recherché fait strictement plus de 50 caractère, doit retourner 400`() {
+            // When & Then
+            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=$rechercheDe51Caracteres"),
+            ).andDo(print()).andExpect(status().isBadRequest).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_LONGUE",
+                          "status": 400,
+                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "instance": "/api/v1/formations/recherche/detaillee"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=test"),
+            ).andDo(print()).andExpect(status().isForbidden)
+        }
+    }
+
+    @Nested
     inner class `Quand on appelle la route de récupération de formations` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
