@@ -11,14 +11,15 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
-class ModificationProfilDTO(
+data class ModificationProfilDTO(
     @Schema(
         description = "Etat d'avancée du projet de l'élève",
         example = "aucune_idee",
         required = false,
         allowableValues = ["aucune_idee", "quelques_pistes", "projet_precis"],
     )
-    val situation: String?,
+    @JsonProperty("situation")
+    val situation: String? = null,
     @Schema(
         description = "Classe actuelle",
         example = "terminale",
@@ -26,7 +27,7 @@ class ModificationProfilDTO(
         allowableValues = ["seconde", "premiere", "terminale"],
     )
     @JsonProperty("classe")
-    val classe: String?,
+    val classe: String? = null,
     @Schema(
         description = "Type de Bac choisi ou envisagé",
         example = "Générale",
@@ -34,17 +35,17 @@ class ModificationProfilDTO(
         allowableValues = ["NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"],
     )
     @JsonProperty("baccalaureat")
-    val baccalaureat: String?,
+    val baccalaureat: String? = null,
     @ArraySchema(
         arraySchema =
             Schema(
                 description = "Enseignements de spécialité de terminale choisis ou envisagés",
-                example = "[\"1056\",\"1054\"]",
+                example = "[\"707\",\"700\"]",
                 required = false,
             ),
     )
     @JsonProperty("specialites")
-    val specialites: List<String>?,
+    val specialites: List<String>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -54,27 +55,27 @@ class ModificationProfilDTO(
             ),
     )
     @JsonProperty("domaines")
-    val domaines: List<String>?,
+    val domaines: List<String>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
                 description = "Centres d'intérêt",
-                example = "[\"T_ROME_2092381917\", \"T_IDEO2_4812\"]",
+                example = "[\"transmettre_enfants\", \"travail_manuel_bricoler\", \"aider_soigner\", \"diriger_equipe\"]",
                 required = false,
             ),
     )
     @JsonProperty("centresInterets")
-    val centresInterets: List<String>?,
+    val centresInterets: List<String>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
                 description = "Les idées de métiers de l'élève",
-                example = "[\"MET_123\", \"MET_456\"]",
+                example = "[\"MET_384\", \"MET_469\"]",
                 required = false,
             ),
     )
     @JsonProperty("metiersFavoris")
-    val metiersFavoris: List<String>?,
+    val metiersFavoris: List<String>? = null,
     @Schema(
         description = "Durée envisagée des études",
         example = "indifferent",
@@ -82,7 +83,7 @@ class ModificationProfilDTO(
         allowableValues = ["indifferent", "courte", "longue", "aucune_idee"],
     )
     @JsonProperty("dureeEtudesPrevue")
-    val dureeEtudesPrevue: String?,
+    val dureeEtudesPrevue: String? = null,
     @Schema(
         description = "Intérêt pour les formations en apprentissage",
         example = "pas_interesse",
@@ -90,7 +91,7 @@ class ModificationProfilDTO(
         allowableValues = ["pas_interesse", "indifferent", "interesse", "tres_interesse"],
     )
     @JsonProperty("alternance")
-    val alternance: String?,
+    val alternance: String? = null,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -98,20 +99,20 @@ class ModificationProfilDTO(
                 required = false,
             ),
     ) @JsonProperty("communesFavorites")
-    val communesFavorites: List<CommuneDTO>?,
+    val communesFavorites: List<CommuneDTO>? = null,
     @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14", required = false)
     @JsonProperty("moyenneGenerale")
-    val moyenneGenerale: Float?,
+    val moyenneGenerale: Float? = null,
     @ArraySchema(
         arraySchema =
             Schema(
                 description = "Les idées de formations de l'élève",
-                example = "[\"fl1234\", \"fl5678\"]",
+                example = "[\"fl720007\", \"fl490030\"]",
                 required = false,
             ),
     )
     @JsonProperty("formationsFavorites")
-    val formationsFavorites: List<String>?,
+    val formationsFavorites: List<String>? = null,
 ) {
     constructor(profilEleve: ProfilEleve.Identifie) : this(
         situation = profilEleve.situation?.jsonValeur,
