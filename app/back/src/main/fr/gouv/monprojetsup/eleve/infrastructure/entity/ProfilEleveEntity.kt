@@ -69,7 +69,7 @@ class ProfilEleveEntity() {
     @Column(name = "moyenne_generale", nullable = true)
     var moyenneGenerale: Float? = null
 
-    constructor(profilEleve: ProfilEleve) : this() {
+    constructor(profilEleve: ProfilEleve.Identifie) : this() {
         id = UUID.fromString(profilEleve.id)
         situation = profilEleve.situation
         classe = profilEleve.classe
@@ -86,7 +86,7 @@ class ProfilEleveEntity() {
     }
 
     fun toProfilEleve() =
-        ProfilEleve(
+        ProfilEleve.Identifie(
             id.toString(),
             situation,
             classe,

@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.authentification.filter
 import fr.gouv.monprojetsup.authentification.domain.entity.Profil
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -37,12 +36,7 @@ class IdentificationFilter(
             val profil = getProfile(jwtToken)
             val idIndividu = getIdIndividu(jwtToken)
             if (profil == Profil.ELEVE && idIndividu != null) {
-                val eleve =
-                    try {
-                        eleveRepository.recupererUnEleve(idIndividu)
-                    } catch (e: MonProjetSupNotFoundException) {
-                        eleveRepository.creerUnEleve(idIndividu)
-                    }
+                val eleve = eleveRepository.recupererUnEleve(idIndividu)
                 val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_ELEVE))
                 SecurityContextHolder.getContext().authentication = authenticationEleve
             } else if (profil == Profil.ENSEIGNANT && idIndividu != null) {

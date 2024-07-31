@@ -12,10 +12,10 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-class APISuggestionProfilDTOTest {
+class APISuggestionModificationProfilDTOTest {
     companion object {
         private val profilEleveSeconde =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
@@ -57,7 +57,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveSecondeSTHR =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
@@ -89,7 +89,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveSecondeTMD =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
@@ -121,7 +121,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilElevePremiere =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
@@ -150,7 +150,7 @@ class APISuggestionProfilDTOTest {
             )
 
         private val profilEleveTerminal =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
@@ -182,7 +182,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveNull =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = "unknown",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.NON_RENSEIGNE,
@@ -225,7 +225,7 @@ class APISuggestionProfilDTOTest {
     @ParameterizedTest
     @MethodSource("testsProfileDTO")
     fun `doit créer le ProfilDTO attendu`(
-        entree: ProfilEleve,
+        entree: ProfilEleve.Identifie,
         dtoAttendu: APISuggestionProfilDTO,
     ) {
         // When

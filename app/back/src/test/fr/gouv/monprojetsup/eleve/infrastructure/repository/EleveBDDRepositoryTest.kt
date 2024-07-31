@@ -39,7 +39,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     val profil0f88 =
-        ProfilEleve(
+        ProfilEleve.Identifie(
             id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
@@ -69,12 +69,12 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:profil_eleve.sql")
-        fun `Quand l'élève n'existe pas, doit throw MonProjetSupNotFoundException`() {
+        fun `Quand l'élève n'existe pas, doit retourner un profil inconnu`() {
             // When & Then
-            assertThatThrownBy {
-                eleveBDDRepository.recupererUnEleve(id = "45fdce8e-0717-4848-9a0c-505dea093b8c")
-            }.isInstanceOf(MonProjetSupNotFoundException::class.java)
-                .hasMessage("L'élève n'a pas de compte")
+            val result = eleveBDDRepository.recupererUnEleve(id = "45fdce8e-0717-4848-9a0c-505dea093b8c")
+
+            // Then
+            assertThat(result).isEqualTo(ProfilEleve.Inconnu("45fdce8e-0717-4848-9a0c-505dea093b8c"))
         }
     }
 
@@ -88,20 +88,8 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             val attendu =
-                ProfilEleve(
+                ProfilEleve.Identifie(
                     id = "45fdce8e-0717-4848-9a0c-505dea093b8c",
-                    situation = null,
-                    classe = null,
-                    baccalaureat = null,
-                    specialites = null,
-                    domainesInterets = null,
-                    centresInterets = null,
-                    metiersFavoris = null,
-                    dureeEtudesPrevue = null,
-                    alternance = null,
-                    communesFavorites = null,
-                    formationsFavorites = null,
-                    moyenneGenerale = null,
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -125,21 +113,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
             // When
             val nouveauProfil =
-                ProfilEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-                    situation = null,
-                    classe = null,
-                    baccalaureat = null,
-                    specialites = null,
-                    domainesInterets = null,
-                    centresInterets = null,
-                    metiersFavoris = null,
-                    dureeEtudesPrevue = null,
-                    alternance = null,
-                    communesFavorites = null,
-                    formationsFavorites = null,
-                    moyenneGenerale = null,
-                )
+                ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
             eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = nouveauProfil)
 
             // Then

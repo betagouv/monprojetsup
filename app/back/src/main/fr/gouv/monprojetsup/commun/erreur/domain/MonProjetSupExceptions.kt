@@ -30,11 +30,12 @@ data class MonProjetSupNotFoundException(
     val origine: Throwable? = null,
 ) : MonProjetSup4xxExceptions(code, msg, origine)
 
-data class MonProjetSupForbiddenException(
+class EleveSansCompteException : MonProjetSupForbiddenException("ELEVE_SANS_COMPTE", "L'élève connecté n'a pas encore crée son compte")
+
+open class MonProjetSupForbiddenException(
     override val code: String,
     val msg: String,
-    val origine: Throwable? = null,
-) : MonProjetSup4xxExceptions(code, msg, origine)
+) : MonProjetSup4xxExceptions(code, msg, null)
 
 data class MonProjetSupInternalErrorException(
     override val code: String,

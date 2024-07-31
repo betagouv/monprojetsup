@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -34,23 +34,6 @@ class ProfilEleveControllerTest(
 ) : ControllerTest() {
     @MockBean
     lateinit var miseAJourEleveService: MiseAJourEleveService
-
-    val profilVide =
-        ProfilEleve(
-            id = "123f627c-36dd-4df5-897b-159443a6d49c",
-            situation = null,
-            classe = null,
-            baccalaureat = null,
-            specialites = null,
-            domainesInterets = null,
-            centresInterets = null,
-            metiersFavoris = null,
-            dureeEtudesPrevue = null,
-            alternance = null,
-            communesFavorites = null,
-            formationsFavorites = null,
-            moyenneGenerale = null,
-        )
 
     @Nested
     inner class `Quand on appelle la route POST profil` {
@@ -91,9 +74,8 @@ class ProfilEleveControllerTest(
             }
             """.trimIndent()
 
-        private val nouveauProfil =
-            ProfilEleve(
-                id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+        private val modificationProfilEleve =
+            ModificationProfilEleve(
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 baccalaureat = "Générale",
@@ -116,42 +98,41 @@ class ProfilEleveControllerTest(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
-            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(nouveauProfil, unProfil)
+            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(modificationProfilEleve, unProfil)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si élève existe et que le service réussi pour un profil vide, doit retourner 204`() {
+        fun `si élève existe et que le service réussi pour une modification vide, doit retourner 204`() {
+            // Given
+            val modificationProfilEleveVide = ModificationProfilEleve()
+
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content("{}")
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
-                miseAJourDuProfil = profilVide.copy(id = "adcf627c-36dd-4df5-897b-159443a6d49c"),
+                miseAJourDuProfil = modificationProfilEleveVide,
                 profilActuel = unProfil,
             )
         }
 
         @ConnecteAvecUnEleve(idEleve = "efgf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si élève n'existe pas et que le service réussi, doit créer l'élève retourner 204`() {
+        fun `si élève n'existe pas et que le service réussi, doit retourner 204`() {
             // Given
-            val exception = MonProjetSupNotFoundException(code = "ELEVE_SANS_COMPTE", msg = "L'élève n'a pas de compte")
-            given(eleveRepository.recupererUnEleve(id = "efgf627c-36dd-4df5-897b-159443a6d49c")).willThrow(exception)
-            given(
-                eleveRepository.creerUnEleve(id = "efgf627c-36dd-4df5-897b-159443a6d49c"),
-            ).willReturn(profilVide.copy(id = "efgf627c-36dd-4df5-897b-159443a6d49c"))
+            val profilInconnu = ProfilEleve.Inconnu(id = "efgf627c-36dd-4df5-897b-159443a6d49c")
+            given(eleveRepository.recupererUnEleve(id = "efgf627c-36dd-4df5-897b-159443a6d49c")).willReturn(profilInconnu)
 
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
-            then(eleveRepository).should().creerUnEleve(id = "efgf627c-36dd-4df5-897b-159443a6d49c")
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
-                miseAJourDuProfil = nouveauProfil.copy(id = "efgf627c-36dd-4df5-897b-159443a6d49c"),
-                profilActuel = profilVide.copy("efgf627c-36dd-4df5-897b-159443a6d49c"),
+                miseAJourDuProfil = modificationProfilEleve,
+                profilActuel = profilInconnu,
             )
         }
 
@@ -161,7 +142,7 @@ class ProfilEleveControllerTest(
             // Given
             val exception = MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations n'existent pas")
             given(
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = unProfil),
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = unProfil),
             ).willThrow(exception)
 
             // When & Then
@@ -441,37 +422,28 @@ class ProfilEleveControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "123f627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si l'élève n'existe pas, doit retourner le créer et le renvoyer`() {
+        fun `si l'élève n'existe pas, doit renvoyer 403`() {
             // Given
-            val exception = MonProjetSupNotFoundException(code = "ELEVE_SANS_COMPTE", msg = "L'élève n'a pas de compte")
-            given(eleveRepository.recupererUnEleve(id = "123f627c-36dd-4df5-897b-159443a6d49c")).willThrow(exception)
-            given(eleveRepository.creerUnEleve(id = "123f627c-36dd-4df5-897b-159443a6d49c")).willReturn(profilVide)
+            val profilInconnu = ProfilEleve.Inconnu(id = "123f627c-36dd-4df5-897b-159443a6d49c")
+            given(eleveRepository.recupererUnEleve(id = "123f627c-36dd-4df5-897b-159443a6d49c")).willReturn(profilInconnu)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
-                .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
                         """
                         {
-                          "situation": null,
-                          "classe": null,
-                          "baccalaureat": null,
-                          "specialites": null,
-                          "domaines": null,
-                          "centresInterets": null,
-                          "metiersFavoris": null,
-                          "dureeEtudesPrevue": null,
-                          "alternance": null,
-                          "communesFavorites": null,
-                          "moyenneGenerale": null,
-                          "formationsFavorites":  null
+                          "type": "about:blank",
+                          "title": "ELEVE_SANS_COMPTE",
+                          "status": 403,
+                          "detail": "L'élève connecté n'a pas encore crée son compte",
+                          "instance": "/api/v1/profil"
                         }
                         """.trimIndent(),
                     ),
                 )
-            then(eleveRepository).should().creerUnEleve(id = "123f627c-36dd-4df5-897b-159443a6d49c")
         }
 
         @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")

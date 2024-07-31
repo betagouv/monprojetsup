@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
@@ -56,7 +57,7 @@ class MiseAJourEleveServiceTest {
     }
 
     private val profilEleve =
-        ProfilEleve(
+        ProfilEleve.Identifie(
             id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
@@ -72,22 +73,8 @@ class MiseAJourEleveServiceTest {
             moyenneGenerale = 10.5f,
         )
 
-    private val profilVide =
-        ProfilEleve(
-            id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
-            situation = null,
-            classe = null,
-            baccalaureat = null,
-            specialites = null,
-            domainesInterets = null,
-            centresInterets = null,
-            metiersFavoris = null,
-            dureeEtudesPrevue = null,
-            alternance = null,
-            communesFavorites = null,
-            formationsFavorites = null,
-            moyenneGenerale = null,
-        )
+    private val profilVide = ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+    private val modificationProfilEleveVide = ModificationProfilEleve()
 
     @Nested
     inner class ErreursBaccalaureatEtSpecialites {
@@ -95,8 +82,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat null et spécialités ni nulles ni vides mais n'existent pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                ProfilEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+                ModificationProfilEleve(
                     situation = null,
                     classe = null,
                     baccalaureat = null,
@@ -126,7 +112,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si baccalaureat null et spécialités ni nulles ni vides mais baccalaureat en base null, doit throw BadRequestException`() {
             // Given
-            val nouveauProfil = profilVide.copy(specialites = listOf("5", "7"))
+            val nouveauProfil = modificationProfilEleveVide.copy(specialites = listOf("5", "7"))
 
             // When & Then
             assertThatThrownBy {
@@ -139,7 +125,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null et spécialités vides mais bac n'existe pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = emptyList(),
                 )
@@ -155,7 +141,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null et spécialités null et en base null mais bac n'existe pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
@@ -171,7 +157,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null et spécialités null et en base vide mais bac n'existe pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
@@ -190,7 +176,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null, spécialités null, en base non null-vide mais bac n'existe pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
@@ -214,7 +200,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null, spécialités null, en base non null-vide mais une spécialite absente, throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Pro",
                     specialites = null,
                 )
@@ -238,7 +224,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null, spécialités non null-vide mais bac n'existe pas, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = listOf("5", "2003"),
                 )
@@ -262,7 +248,7 @@ class MiseAJourEleveServiceTest {
         fun `si baccalaureat non null, spécialités non null-vide mais une spécialite absente, doit throw BadRequestException`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Pro",
                     specialites = listOf("5", "2006"),
                 )
@@ -289,7 +275,7 @@ class MiseAJourEleveServiceTest {
         fun `si une des formations favorites n'existe pas, doit throw BadRequestException`() {
             // Given
             val formationFavorites = listOf("flInconnue", "fl0001")
-            val nouveauProfil = profilVide.copy(formationsFavorites = formationFavorites)
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationFavorites)
             given(formationRepository.verifierFormationsExistent(formationFavorites)).willReturn(false)
 
             // When & Then
@@ -305,7 +291,7 @@ class MiseAJourEleveServiceTest {
         fun `si un des métiers favoris n'existe pas, doit throw BadRequestException`() {
             // Given
             val metiersFavoris = listOf("MET_INCONNU", "MET001")
-            val nouveauProfil = profilVide.copy(metiersFavoris = metiersFavoris)
+            val nouveauProfil = modificationProfilEleveVide.copy(metiersFavoris = metiersFavoris)
             given(metierRepository.verifierMetiersExistent(metiersFavoris)).willReturn(false)
 
             // When & Then
@@ -321,7 +307,7 @@ class MiseAJourEleveServiceTest {
         fun `si un des domaines n'existe pas, doit throw BadRequestException`() {
             // Given
             val domaines = listOf("inconnu", "animaux")
-            val nouveauProfil = profilVide.copy(domainesInterets = domaines)
+            val nouveauProfil = modificationProfilEleveVide.copy(domainesInterets = domaines)
             given(domaineRepository.verifierDomainesExistent(domaines)).willReturn(false)
 
             // When & Then
@@ -337,7 +323,7 @@ class MiseAJourEleveServiceTest {
         fun `si un des centre d'interêt n'existe pas, doit throw BadRequestException`() {
             // Given
             val interets = listOf("inconnu", "linguistique", "voyage")
-            val nouveauProfil = profilVide.copy(centresInterets = interets)
+            val nouveauProfil = modificationProfilEleveVide.copy(centresInterets = interets)
             given(interetRepository.verifierCentresInteretsExistent(interets)).willReturn(false)
 
             // When & Then
@@ -355,7 +341,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si la moyenne envoyée est strictement inferieure à 0, doit throw BadRequestException`() {
             // Given
-            val nouveauProfil = profilVide.copy(moyenneGenerale = -0.5f)
+            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = -0.5f)
 
             // When & Then
             assertThatThrownBy {
@@ -370,7 +356,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si la moyenne envoyée est strictement supérieure à 20, doit throw BadRequestException`() {
             // Given
-            val nouveauProfil = profilVide.copy(moyenneGenerale = 20.5f)
+            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = 20.5f)
 
             // When & Then
             assertThatThrownBy {
@@ -388,7 +374,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `quand toutes les valeurs sont à null, ne doit rien faire`() {
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = profilVide, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleveVide, profilActuel = profilEleve)
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
@@ -404,8 +390,7 @@ class MiseAJourEleveServiceTest {
         fun `quand les listes sont à vides, doit les mettre à jour sans appeler les repo`() {
             // Given
             val nouveauProfil =
-                ProfilEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+                ModificationProfilEleve(
                     situation = null,
                     classe = null,
                     baccalaureat = null,
@@ -445,9 +430,8 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `quand toutes les valeurs sont okay, doit tout mettre à jour`() {
             // Given
-            val nouveauProfil =
-                ProfilEleve(
-                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+            val modificationProfilEleve =
+                ModificationProfilEleve(
                     situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                     classe = ChoixNiveau.PREMIERE,
                     baccalaureat = "Pro",
@@ -469,9 +453,25 @@ class MiseAJourEleveServiceTest {
                 .willReturn(listOf("5", "7", "1008", "2003"))
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = profilEleve)
 
             // Then
+            val nouveauProfil =
+                ProfilEleve.Identifie(
+                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+                    situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
+                    classe = ChoixNiveau.PREMIERE,
+                    baccalaureat = "Pro",
+                    specialites = listOf("5", "1008"),
+                    domainesInterets = listOf("agroequipement"),
+                    centresInterets = listOf("linguistique", "etude"),
+                    metiersFavoris = listOf("MET004"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(Communes.PARIS),
+                    formationsFavorites = listOf("fl0011"),
+                    moyenneGenerale = 14.5f,
+                )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
         }
@@ -480,7 +480,7 @@ class MiseAJourEleveServiceTest {
         fun `quand le baccalaureat existe, doit le mettre à jour`() {
             // Given
             val nouveauProfil =
-                profilVide.copy(
+                modificationProfilEleveVide.copy(
                     baccalaureat = "Pro",
                     specialites = emptyList(),
                 )

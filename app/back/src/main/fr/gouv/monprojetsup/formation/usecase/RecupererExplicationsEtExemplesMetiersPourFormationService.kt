@@ -30,7 +30,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
     val metierRepository: MetierRepository,
 ) {
     fun recupererExplicationsEtExemplesDeMetiers(
-        profilEleve: ProfilEleve,
+        profilEleve: ProfilEleve.Identifie,
         idsFormations: List<String>,
     ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
         val explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?> =
@@ -104,7 +104,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
     }
 
     fun recupererExplicationsEtExemplesDeMetiers(
-        profilEleve: ProfilEleve,
+        profilEleve: ProfilEleve.Identifie,
         idFormation: String,
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
         val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!

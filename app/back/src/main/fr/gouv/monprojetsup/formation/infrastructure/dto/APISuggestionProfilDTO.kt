@@ -25,7 +25,7 @@ data class APISuggestionProfilDTO(
     @field:JsonProperty(value = "choices")
     val choix: List<SuggestionDTO>?,
 ) {
-    constructor(profilEleve: ProfilEleve, specialites: List<String>?) : this(
+    constructor(profilEleve: ProfilEleve.Identifie, specialites: List<String>?) : this(
         classe = profilEleve.classe?.apiSuggestionValeur,
         baccalaureat =
             when (profilEleve.baccalaureat) {

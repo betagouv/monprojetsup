@@ -78,7 +78,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand les 5 premieres formations, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             val idsFormationsTriesParAffinite =
@@ -104,7 +104,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand 10 formations sont demandés, alors doit appeler le service avec formations classées par ordre d'affinité du profil`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             val idsFormationsTriesParAffinite =
@@ -135,7 +135,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand plus de formations demandés qu'il y en a, doit appeler le service avec toutes les formations classées par affinité`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             val idsFormationsTriesParAffinite =
@@ -178,7 +178,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand les index des formations demandés sont en dehors de la liste, renvoyer liste vide`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             // When
@@ -196,7 +196,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand l'API suggestion nous retourne des listes vides, alors on doit les retourner une liste vide`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             val affinitesFormationEtMetierVides =
                 SuggestionsPourUnProfil(
                     metiersTriesParAffinites = emptyList(),
@@ -218,7 +218,7 @@ class SuggestionsFormationsServiceTest {
 
         @Test
         fun `quand l'index est négatif, alors doit throw une erreur`() {
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             // When & Then
@@ -230,7 +230,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `quand les indexs sont inversés, alors on doit throw une exception`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(affinitesFormationEtMetier)
 
             // When & Then
@@ -245,7 +245,7 @@ class SuggestionsFormationsServiceTest {
         @Test
         fun `doit appeler le client et renvoyer sa réponse`() {
             // Given
-            val profilEleve = mock(ProfilEleve::class.java)
+            val profilEleve = mock(ProfilEleve.Identifie::class.java)
             val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(suggestionsPourUnProfil)
 

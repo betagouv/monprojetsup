@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
-import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,15 +18,18 @@ class ProfilEleveController(
 ) : AuthentifieController() {
     @PostMapping
     fun postProfilEleve(
-        @RequestBody profilDTO: ProfilDTO,
+        @RequestBody modificationProfilDTO: ModificationProfilDTO,
     ): ResponseEntity<Unit> {
         val eleve = recupererEleve()
-        miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = profilDTO.toProfil(eleve.id), profilActuel = eleve)
+        miseAJourEleveService.mettreAJourUnProfilEleve(
+            miseAJourDuProfil = modificationProfilDTO.toModificationProfilEleve(),
+            profilActuel = eleve,
+        )
         return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 
     @GetMapping
-    fun getProfilEleve(): ProfilDTO {
-        return ProfilDTO(recupererEleve())
+    fun getProfilEleve(): ModificationProfilDTO {
+        return ModificationProfilDTO(recupererEleveIdentifie())
     }
 }

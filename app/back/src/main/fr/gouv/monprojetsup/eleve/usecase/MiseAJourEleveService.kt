@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
+import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
@@ -23,32 +24,37 @@ class MiseAJourEleveService(
 ) {
     @Throws(MonProjetSupBadRequestException::class)
     fun mettreAJourUnProfilEleve(
-        miseAJourDuProfil: ProfilEleve,
+        miseAJourDuProfil: ModificationProfilEleve,
         profilActuel: ProfilEleve,
     ) {
-        verifierBaccalaureatEtSesSpecialites(miseAJourDuProfil, profilActuel)
+        val profilInitial =
+            when (profilActuel) {
+                is ProfilEleve.Inconnu -> eleveRepository.creerUnEleve(profilActuel.id)
+                is ProfilEleve.Identifie -> profilActuel
+            }
+        verifierBaccalaureatEtSesSpecialites(miseAJourDuProfil, profilInitial)
         verifierDomaines(miseAJourDuProfil.domainesInterets)
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
         verifierFormations(miseAJourDuProfil.formationsFavorites)
         verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
         val profilEleveAMettreAJour =
-            ProfilEleve(
+            ProfilEleve.Identifie(
                 id = profilActuel.id,
-                situation = miseAJourDuProfil.situation ?: profilActuel.situation,
-                classe = miseAJourDuProfil.classe ?: profilActuel.classe,
-                baccalaureat = miseAJourDuProfil.baccalaureat ?: profilActuel.baccalaureat,
-                specialites = miseAJourDuProfil.specialites ?: profilActuel.specialites,
-                domainesInterets = miseAJourDuProfil.domainesInterets ?: profilActuel.domainesInterets,
-                centresInterets = miseAJourDuProfil.centresInterets ?: profilActuel.centresInterets,
-                metiersFavoris = miseAJourDuProfil.metiersFavoris ?: profilActuel.metiersFavoris,
-                dureeEtudesPrevue = miseAJourDuProfil.dureeEtudesPrevue ?: profilActuel.dureeEtudesPrevue,
-                alternance = miseAJourDuProfil.alternance ?: profilActuel.alternance,
-                communesFavorites = miseAJourDuProfil.communesFavorites ?: profilActuel.communesFavorites,
-                formationsFavorites = miseAJourDuProfil.formationsFavorites ?: profilActuel.formationsFavorites,
-                moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilActuel.moyenneGenerale,
+                situation = miseAJourDuProfil.situation ?: profilInitial.situation,
+                classe = miseAJourDuProfil.classe ?: profilInitial.classe,
+                baccalaureat = miseAJourDuProfil.baccalaureat ?: profilInitial.baccalaureat,
+                specialites = miseAJourDuProfil.specialites ?: profilInitial.specialites,
+                domainesInterets = miseAJourDuProfil.domainesInterets ?: profilInitial.domainesInterets,
+                centresInterets = miseAJourDuProfil.centresInterets ?: profilInitial.centresInterets,
+                metiersFavoris = miseAJourDuProfil.metiersFavoris ?: profilInitial.metiersFavoris,
+                dureeEtudesPrevue = miseAJourDuProfil.dureeEtudesPrevue ?: profilInitial.dureeEtudesPrevue,
+                alternance = miseAJourDuProfil.alternance ?: profilInitial.alternance,
+                communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
+                formationsFavorites = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites,
+                moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
             )
-        if (profilEleveAMettreAJour != profilActuel) {
+        if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
         }
     }
@@ -94,8 +100,8 @@ class MiseAJourEleveService(
 
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierBaccalaureatEtSesSpecialites(
-        miseAJourDuProfil: ProfilEleve,
-        ancienProfil: ProfilEleve,
+        miseAJourDuProfil: ModificationProfilEleve,
+        ancienProfil: ProfilEleve.Identifie,
     ) {
         if (miseAJourDuProfil.baccalaureat == null) {
             if (!miseAJourDuProfil.specialites.isNullOrEmpty()) {

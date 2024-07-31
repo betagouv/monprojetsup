@@ -17,7 +17,7 @@ class RecupererFormationsService(
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
     fun recupererFichesFormationPourProfil(
-        profilEleve: ProfilEleve,
+        profilEleve: ProfilEleve.Identifie,
         suggestionsPourUnProfil: SuggestionsPourUnProfil,
         idsFormations: List<String>,
     ): List<FicheFormation.FicheFormationPourProfil> {
