@@ -34,7 +34,7 @@ class SuggestionApiHttpClient(
     private val logger: Logger,
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesSuggestions(profilEleve: ProfilEleve): SuggestionsPourUnProfil {
+    override fun recupererLesSuggestions(profilEleve: ProfilEleve.Identifie): SuggestionsPourUnProfil {
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/suggestions",
@@ -46,7 +46,7 @@ class SuggestionApiHttpClient(
 
     @Throws(MonProjetSupInternalErrorException::class, MonProjetIllegalStateErrorException::class)
     override fun recupererLesExplications(
-        profilEleve: ProfilEleve,
+        profilEleve: ProfilEleve.Identifie,
         idsFormations: List<String>,
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
         val reponseDTO =
@@ -106,7 +106,7 @@ class SuggestionApiHttpClient(
         return reponseDTO
     }
 
-    private fun creerAPISuggestionProfilDTO(profilEleve: ProfilEleve): APISuggestionProfilDTO {
+    private fun creerAPISuggestionProfilDTO(profilEleve: ProfilEleve.Identifie): APISuggestionProfilDTO {
         val specialites =
             profilEleve.specialites?.let {
                 specialitesRepository.recupererLesSpecialites(it).map { specialite -> specialite.label }

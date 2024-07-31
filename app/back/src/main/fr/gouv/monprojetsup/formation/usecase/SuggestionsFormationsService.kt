@@ -16,7 +16,7 @@ class SuggestionsFormationsService(
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     fun suggererFormations(
-        profilEleve: ProfilEleve,
+        profilEleve: ProfilEleve.Identifie,
         deLIndex: Int,
         aLIndex: Int,
     ): List<FicheFormation.FicheFormationPourProfil> {
@@ -34,7 +34,7 @@ class SuggestionsFormationsService(
     }
 
     @Throws(MonProjetSupInternalErrorException::class)
-    fun recupererToutesLesSuggestionsPourUnProfil(profilEleve: ProfilEleve): SuggestionsPourUnProfil {
+    fun recupererToutesLesSuggestionsPourUnProfil(profilEleve: ProfilEleve.Identifie): SuggestionsPourUnProfil {
         return suggestionHttpClient.recupererLesSuggestions(profilEleve)
     }
 

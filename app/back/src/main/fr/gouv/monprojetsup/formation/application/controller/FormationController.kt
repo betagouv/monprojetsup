@@ -2,7 +2,8 @@ package fr.gouv.monprojetsup.formation.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Identifie
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Inconnu
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO
@@ -48,7 +49,7 @@ class FormationController(
     fun getSuggestionsFormations(): FormationsAvecExplicationsDTO {
         val formationsPourProfil: List<FicheFormation.FicheFormationPourProfil> =
             suggestionsFormationsService.suggererFormations(
-                profilEleve = recupererEleve(),
+                profilEleve = recupererEleveIdentifie(),
                 deLIndex = 0,
                 aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
             )
@@ -63,8 +64,8 @@ class FormationController(
     ): FormationAvecExplicationsDTO {
         val profil =
             when (val utilisateur = recupererUtilisateur()) {
-                is ProfilEleve -> utilisateur
-                is ProfilEnseignant, ProfilConnecte -> null
+                is Identifie -> utilisateur
+                is Inconnu, ProfilEnseignant, ProfilConnecte -> null
             }
         val ficheFormation = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
         return FormationAvecExplicationsDTO(ficheFormation)
@@ -811,7 +812,7 @@ class FormationController(
     fun getFormations(
         @RequestParam ids: List<String>,
     ): FormationsAvecExplicationsDTO {
-        val profilEleve = recupererEleve()
+        val profilEleve = recupererEleveIdentifie()
         val toutesLesSuggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
         val formations = recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, toutesLesSuggestions, ids)
         return FormationsAvecExplicationsDTO(formations = formations.map { FormationAvecExplicationsDTO(it) })

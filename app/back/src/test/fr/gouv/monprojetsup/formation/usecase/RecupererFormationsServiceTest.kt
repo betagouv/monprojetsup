@@ -55,7 +55,7 @@ class RecupererFormationsServiceTest {
     @Test
     fun `doit renvoyers les fiches formations pour un profil`() {
         // Given
-        val profilEleve = mock(ProfilEleve::class.java)
+        val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
         given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
@@ -217,7 +217,7 @@ class RecupererFormationsServiceTest {
     @Test
     fun `si la formation n'est pas renvoyé par les autres services, doit mettre des valeurs par défaut`() {
         // Given
-        val profilEleve = mock(ProfilEleve::class.java)
+        val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
         given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))

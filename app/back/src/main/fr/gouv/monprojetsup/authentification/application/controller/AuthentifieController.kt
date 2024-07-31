@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilUtilisateur
 import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.GRANTED_AUTHORITY_ELEVE
 import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.GRANTED_AUTHORITY_ENSEIGNANT
+import fr.gouv.monprojetsup.commun.erreur.domain.EleveSansCompteException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -12,6 +13,20 @@ import org.springframework.security.core.context.SecurityContextHolder
 abstract class AuthentifieController {
     @Throws(MonProjetSupForbiddenException::class)
     protected fun recupererEleve(): ProfilEleve {
+        val authentification = SecurityContextHolder.getContext().authentication
+        try {
+            return authentification.principal as ProfilEleve.Identifie
+        } catch (e: ClassCastException) {
+            try {
+                return authentification.principal as ProfilEleve.Inconnu
+            } catch (e: ClassCastException) {
+                throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève")
+            }
+        }
+    }
+
+    @Throws(MonProjetSupForbiddenException::class)
+    protected fun recupererEleveIdentifie(): ProfilEleve.Identifie {
         val authentification = SecurityContextHolder.getContext().authentication
         return deserialiseEleve(authentification)
     }
@@ -28,11 +43,16 @@ abstract class AuthentifieController {
     }
 
     @Throws(MonProjetSupForbiddenException::class)
-    private fun deserialiseEleve(authentification: Authentication): ProfilEleve {
+    private fun deserialiseEleve(authentification: Authentication): ProfilEleve.Identifie {
         try {
-            return authentification.principal as ProfilEleve
+            return authentification.principal as ProfilEleve.Identifie
         } catch (e: ClassCastException) {
-            throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève")
+            try {
+                authentification.principal as ProfilEleve.Inconnu
+                throw EleveSansCompteException()
+            } catch (e: ClassCastException) {
+                throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève")
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -10,7 +11,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
-class ProfilDTO(
+class ModificationProfilDTO(
     @Schema(
         description = "Etat d'avancée du projet de l'élève",
         example = "aucune_idee",
@@ -112,7 +113,7 @@ class ProfilDTO(
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<String>?,
 ) {
-    constructor(profilEleve: ProfilEleve) : this(
+    constructor(profilEleve: ProfilEleve.Identifie) : this(
         situation = profilEleve.situation?.jsonValeur,
         classe = profilEleve.classe?.jsonValeur,
         baccalaureat = profilEleve.baccalaureat,
@@ -127,9 +128,8 @@ class ProfilDTO(
         domaines = profilEleve.domainesInterets,
     )
 
-    fun toProfil(idEleve: String) =
-        ProfilEleve(
-            id = idEleve,
+    fun toModificationProfilEleve() =
+        ModificationProfilEleve(
             situation = situation?.let { SituationAvanceeProjetSup.deserialiseApplication(it) },
             classe = classe?.let { ChoixNiveau.deserialiseApplication(it) },
             baccalaureat = baccalaureat,

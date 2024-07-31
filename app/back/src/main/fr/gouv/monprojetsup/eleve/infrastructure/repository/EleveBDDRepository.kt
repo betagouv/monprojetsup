@@ -9,6 +9,7 @@ import org.slf4j.Logger
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class EleveBDDRepository(
@@ -16,22 +17,18 @@ class EleveBDDRepository(
     private val eleveJPARepository: EleveJPARepository,
     private val logger: Logger,
 ) : EleveRepository {
-    @Throws(MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
     override fun recupererUnEleve(id: String): ProfilEleve {
-        val eleveEntity =
-            eleveJPARepository.findById(UUID.fromString(id)).orElseThrow {
-                MonProjetSupNotFoundException(code = "ELEVE_SANS_COMPTE", msg = "L'élève n'a pas de compte")
-            }
-        return eleveEntity.toProfilEleve()
+        val eleve = eleveJPARepository.findById(UUID.fromString(id)).getOrNull()?.toProfilEleve() ?: ProfilEleve.Inconnu(id)
+        return eleve
     }
 
     @Transactional(readOnly = false)
-    override fun creerUnEleve(id: String): ProfilEleve {
+    override fun creerUnEleve(id: String): ProfilEleve.Identifie {
         val uuid = UUID.fromString(id)
         if (eleveJPARepository.existsById(uuid)) {
             logger.warn("L'élève $id a voulu être crée alors qu'il existe déjà en base")
-            return recupererUnEleve(id)
+            return eleveJPARepository.findById(UUID.fromString(id)).get().toProfilEleve()
         } else {
             val entity = ProfilEleveEntity()
             entity.id = UUID.fromString(id)
@@ -42,7 +39,7 @@ class EleveBDDRepository(
 
     @Throws(MonProjetSupNotFoundException::class)
     @Transactional(readOnly = false)
-    override fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve) {
+    override fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.Identifie) {
         try {
             entityManager.merge(ProfilEleveEntity(profilEleve))
         } catch (exception: Exception) {

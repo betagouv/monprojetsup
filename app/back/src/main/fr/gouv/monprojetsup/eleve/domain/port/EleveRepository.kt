@@ -5,11 +5,10 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import kotlin.jvm.Throws
 
 interface EleveRepository {
-    @Throws(MonProjetSupNotFoundException::class)
     fun recupererUnEleve(id: String): ProfilEleve
 
-    fun creerUnEleve(id: String): ProfilEleve
+    fun creerUnEleve(id: String): ProfilEleve.Identifie
 
     @Throws(MonProjetSupNotFoundException::class)
-    fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve)
+    fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.Identifie)
 }

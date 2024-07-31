@@ -61,7 +61,7 @@ class SuggestionApiHttpClientTest {
     private lateinit var suggestionApiHttpClient: SuggestionApiHttpClient
 
     private val unProfil =
-        ProfilEleve(
+        ProfilEleve.Identifie(
             id = "adcf627c-36dd-4df5-897b-159443a6d49c",
             situation = SituationAvanceeProjetSup.PROJET_PRECIS,
             classe = ChoixNiveau.TERMINALE,
@@ -1097,7 +1097,7 @@ class SuggestionApiHttpClientTest {
             then(
                 logger,
             ).should().error(
-                "Les formations [fl1] n'ont pas d'explications renvoyées pour le profil élève suivant ProfilEleve(" +
+                "Les formations [fl1] n'ont pas d'explications renvoyées pour le profil élève suivant Identifie(" +
                     "id=adcf627c-36dd-4df5-897b-159443a6d49c, situation=PROJET_PRECIS, classe=TERMINALE, baccalaureat=Générale, " +
                     "specialites=[1001, 1049], domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
                     "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersFavoris=[MET_123, MET_456], " +
