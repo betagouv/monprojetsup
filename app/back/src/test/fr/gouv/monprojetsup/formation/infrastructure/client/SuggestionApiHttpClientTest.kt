@@ -13,12 +13,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
-import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -48,7 +48,7 @@ class SuggestionApiHttpClientTest {
     lateinit var httpClient: OkHttpClient
 
     @Mock
-    lateinit var specialitesRepository: SpecialitesRepository
+    lateinit var apiSuggestionProfilDTOComponent: APISuggestionProfilDTOComponent
 
     @Mock
     lateinit var logger: Logger
@@ -77,6 +77,53 @@ class SuggestionApiHttpClientTest {
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
         )
 
+    private val dto =
+        APISuggestionProfilDTO(
+            classe = "term",
+            baccalaureat = "Générale",
+            duree = "indiff",
+            alternance = "D",
+            preferencesGeographiques = listOf("Paris"),
+            specialites =
+                listOf(
+                    "Sciences de la vie et de la Terre",
+                    "Mathématiques",
+                ),
+            interets =
+                listOf(
+                    "T_ROME_2092381917",
+                    "T_IDEO2_4812",
+                    "T_ITM_1054",
+                    "T_ITM_1534",
+                    "T_ITM_1248",
+                    "T_ITM_1351",
+                ),
+            moyenneGenerale = "14.0",
+            choix =
+                listOf(
+                    SuggestionDTO(
+                        fl = "MET_123",
+                        status = 1,
+                        date = null,
+                    ),
+                    SuggestionDTO(
+                        fl = "MET_456",
+                        status = 1,
+                        date = null,
+                    ),
+                    SuggestionDTO(
+                        fl = "fl1234",
+                        status = 1,
+                        date = null,
+                    ),
+                    SuggestionDTO(
+                        fl = "fl5678",
+                        status = 1,
+                        date = null,
+                    ),
+                ),
+        )
+
     @BeforeEach
     fun before() {
         MockitoAnnotations.openMocks(this)
@@ -85,9 +132,10 @@ class SuggestionApiHttpClientTest {
                 baseUrl = "http://localhost:8080",
                 objectMapper = objectMapper,
                 httpClient = httpClient,
-                specialitesRepository = specialitesRepository,
+                apiSuggestionProfilDTOComponent = apiSuggestionProfilDTOComponent,
                 logger = logger,
             )
+        given(apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(unProfil)).willReturn(dto)
     }
 
     @Nested
@@ -313,19 +361,6 @@ class SuggestionApiHttpClientTest {
                     .request(Request.Builder().url(url).build())
                     .body(reponseBody).build()
             given(callMock.execute()).willReturn(reponse)
-            given(specialitesRepository.recupererLesSpecialites(listOf("1001", "1049")))
-                .willReturn(
-                    listOf(
-                        Specialite(
-                            id = "1001",
-                            label = "Sciences de la vie et de la Terre",
-                        ),
-                        Specialite(
-                            id = "1049",
-                            label = "Mathématiques",
-                        ),
-                    ),
-                )
 
             // When
             suggestionApiHttpClient.recupererLesSuggestions(unProfil)
@@ -694,7 +729,7 @@ class SuggestionApiHttpClientTest {
         }
 
         @Test
-        fun `doit retourner les explications pour les formations données avec a null les données manquantes`() {
+        fun `doit retourner les explications pour les formations données avec à null les données manquantes`() {
             // Given
             val url = "http://localhost:8080/explanations"
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -919,19 +954,6 @@ class SuggestionApiHttpClientTest {
                     .request(Request.Builder().url(url).build())
                     .body(reponseBody).build()
             given(callMock.execute()).willReturn(reponse)
-            given(specialitesRepository.recupererLesSpecialites(listOf("1001", "1049")))
-                .willReturn(
-                    listOf(
-                        Specialite(
-                            id = "1001",
-                            label = "Sciences de la vie et de la Terre",
-                        ),
-                        Specialite(
-                            id = "1049",
-                            label = "Mathématiques",
-                        ),
-                    ),
-                )
 
             // When
             suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl2014"))
