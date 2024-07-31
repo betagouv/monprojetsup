@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.referentiel.infrastructure.repository
 
+import fr.gouv.monprojetsup.referentiel.domain.entity.Interet
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
@@ -15,6 +16,11 @@ class InteretBDDRepository(
     @Transactional(readOnly = true)
     override fun recupererLesSousCategoriesDInterets(idsInterets: List<String>): Map<String, InteretSousCategorie> {
         return interetJPARepository.findAllByIdIn(idsInterets).associate { it.id to it.sousCategorie.toInteretSousCategorie() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun recupererLesInteretsDeSousCategories(idsSousCategoriesInterets: List<String>): List<Interet> {
+        return interetJPARepository.findAllByIdSousCategorieIn(idsSousCategoriesInterets).map { it.toInteret() }
     }
 
     @Transactional(readOnly = true)

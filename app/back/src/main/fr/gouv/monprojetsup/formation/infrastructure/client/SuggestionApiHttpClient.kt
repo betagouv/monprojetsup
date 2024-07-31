@@ -7,14 +7,12 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorExcept
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffinitesProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilRequeteDTO
-import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -30,7 +28,7 @@ class SuggestionApiHttpClient(
     private val baseUrl: String,
     private val objectMapper: ObjectMapper,
     private val httpClient: OkHttpClient,
-    private val specialitesRepository: SpecialitesRepository,
+    private val apiSuggestionProfilDTOComponent: APISuggestionProfilDTOComponent,
     private val logger: Logger,
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
@@ -38,7 +36,7 @@ class SuggestionApiHttpClient(
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = creerAPISuggestionProfilDTO(profilEleve)),
+                requeteDTO = AffiniteProfilRequeteDTO(profil = apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(profilEleve)),
                 classDeserialise = AffinitesProfilReponseDTO::class,
             )
         return reponseDTO.toAffinitesPourProfil()
@@ -54,14 +52,13 @@ class SuggestionApiHttpClient(
                 url = "$baseUrl/explanations",
                 requeteDTO =
                     ExplicationFormationPourUnProfilRequeteDTO(
-                        profil = creerAPISuggestionProfilDTO(profilEleve),
+                        profil = apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(profilEleve),
                         formations = idsFormations,
                     ),
                 classDeserialise = ExplicationFormationPourUnProfilReponseDTO::class,
             ).resultats
         val explications =
-            idsFormations.associateWith {
-                    idFormation ->
+            idsFormations.associateWith { idFormation ->
                 reponseDTO.firstOrNull { it.cle == idFormation }?.toExplicationsSuggestion()
             }
         val formationsSansExplications = explications.filter { it.value == null }
@@ -104,14 +101,5 @@ class SuggestionApiHttpClient(
                 )
             }
         return reponseDTO
-    }
-
-    private fun creerAPISuggestionProfilDTO(profilEleve: ProfilEleve.Identifie): APISuggestionProfilDTO {
-        val specialites =
-            profilEleve.specialites?.let {
-                specialitesRepository.recupererLesSpecialites(it).map { specialite -> specialite.label }
-            }
-        val apiSuggestionProfilDTO = APISuggestionProfilDTO(profilEleve, specialites)
-        return apiSuggestionProfilDTO
     }
 }

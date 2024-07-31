@@ -83,7 +83,7 @@ class MiseAJourEleveService(
             if (!interetRepository.verifierCentresInteretsExistent(ids = it)) {
                 throw MonProjetSupBadRequestException(
                     "CENTRES_INTERETS_NON_RECONNUS",
-                    "Un ou plusieurs des centres d'interêt n'existent pas",
+                    "Un ou plusieurs des centres d'intérêt n'existent pas",
                 )
             }
         }

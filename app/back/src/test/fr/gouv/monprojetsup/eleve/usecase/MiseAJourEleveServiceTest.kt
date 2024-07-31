@@ -320,7 +320,7 @@ class MiseAJourEleveServiceTest {
         }
 
         @Test
-        fun `si un des centre d'interêt n'existe pas, doit throw BadRequestException`() {
+        fun `si un des centre d'intérêt n'existe pas, doit throw BadRequestException`() {
             // Given
             val interets = listOf("inconnu", "linguistique", "voyage")
             val nouveauProfil = modificationProfilEleveVide.copy(centresInterets = interets)
@@ -332,7 +332,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des centres d'interêt n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des centres d'intérêt n'existent pas")
         }
     }
 

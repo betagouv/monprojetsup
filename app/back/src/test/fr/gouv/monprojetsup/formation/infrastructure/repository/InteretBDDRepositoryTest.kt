@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.referentiel.domain.entity.Interet
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
@@ -35,7 +36,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesSousCategoriesDInterets {
         @Test
         @Sql("classpath:interet.sql")
-        fun `Doit retourner les interêts reconnus et ignorer ceux inconnus`() {
+        fun `Doit retourner les sous catégories des intérêts reconnus et ignorer ceux inconnus`() {
             // Given
             val ids =
                 listOf(
@@ -82,10 +83,55 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
+    inner class RecupererLesInteretsDeSousCategories {
+        @Test
+        @Sql("classpath:interet.sql")
+        fun `Doit retourner les intérêts des sous catégories reconnues et ignorer celles inconnues`() {
+            // Given
+            val ids =
+                listOf(
+                    "decouvrir_monde",
+                    "linguistique",
+                    "voyage",
+                    "multiculturel",
+                    "T_ROME_1825212206",
+                    "T_ROME_934089965",
+                    "T_ROME_326548351",
+                )
+
+            // When
+            val result = interetBDDRepository.recupererLesInteretsDeSousCategories(ids)
+
+            // Then
+            val attendu =
+                listOf(
+                    Interet(id = "T_ROME_326548351", nom = "je veux conduire"),
+                    Interet(id = "T_ROME_934089965", nom = "je veux voyager"),
+                    Interet(id = "T_ROME_1825212206", nom = "je veux écrire ou lire"),
+                )
+            assertThat(result).isEqualTo(attendu)
+        }
+
+        @Test
+        @Sql("classpath:interet.sql")
+        fun `Si la liste est vide, doit retourner une liste vide`() {
+            // Given
+            val ids = emptyList<String>()
+
+            // When
+            val result = interetBDDRepository.recupererLesInteretsDeSousCategories(ids)
+
+            // Then
+            val attendu = emptyList<Interet>()
+            assertThat(result).isEqualTo(attendu)
+        }
+    }
+
+    @Nested
     inner class RecupererToutesLesCategoriesEtLeursSousCategoriesDInterets {
         @Test
         @Sql("classpath:interet.sql")
-        fun `Doit retourner tous les catégories et sous categories d'interêts`() {
+        fun `Doit retourner tous les catégories et sous categories d'intérêts`() {
             // When
             val result = interetBDDRepository.recupererToutesLesCategoriesEtLeursSousCategoriesDInterets()
 
@@ -107,7 +153,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     inner class VerifierCentresInteretsExistent {
         @Test
         @Sql("classpath:interet.sql")
-        fun `si toutes les centres d'interêt existent, renvoyer true`() {
+        fun `si toutes les centres d'intérêt existent, renvoyer true`() {
             // Given
             val ids = listOf("linguistique", "voyage")
 
@@ -120,7 +166,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:interet.sql")
-        fun `si un des centres d'interêt n'existe pas, renvoyer false`() {
+        fun `si un des centres d'intérêt n'existe pas, renvoyer false`() {
             // Given
             val ids =
                 listOf(
