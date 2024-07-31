@@ -1,6 +1,3 @@
-export type Commune = {
-  codeInsee: string;
-  nom: string;
-  latitude: number;
-  longitude: number;
-};
+import { type components } from "@/types/api-mps";
+
+export type Commune = NonNullable<components["schemas"]["CommuneDTO"]>;

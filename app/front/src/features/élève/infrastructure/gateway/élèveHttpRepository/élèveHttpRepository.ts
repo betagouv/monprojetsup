@@ -1,4 +1,5 @@
 import {
+  type BodyMettreÀJourProfilÉlèveHTTP,
   type MettreÀJourProfilÉlèveRéponseHTTP,
   type RécupérerProfilÉlèveRéponseHTTP,
 } from "./élèveHttpRepository.interface";
@@ -20,11 +21,30 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   }
 
   public async mettreÀJourProfil(élève: Élève): Promise<Élève | undefined> {
-    const réponse = await this._mpsApiHttpClient.post<MettreÀJourProfilÉlèveRéponseHTTP>(this._ENDPOINT, élève);
+    const réponse = await this._mpsApiHttpClient.post<MettreÀJourProfilÉlèveRéponseHTTP>(
+      this._ENDPOINT,
+      this._mapperVersLApiMps(élève),
+    );
 
     if (!réponse) return undefined;
 
     return élève;
+  }
+
+  private _mapperVersLApiMps(élève: Élève): BodyMettreÀJourProfilÉlèveHTTP {
+    return {
+      situation: élève.situation ?? undefined,
+      classe: élève.classe ?? undefined,
+      baccalaureat: élève.bac ?? undefined,
+      specialites: élève.spécialités ?? undefined,
+      domaines: élève.domaines ?? undefined,
+      centresInterets: élève.centresIntêrets ?? undefined,
+      metiersFavoris: élève.métiersFavoris ?? undefined,
+      dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
+      alternance: élève.alternance ?? undefined,
+      communesFavorites: élève.communesFavorites ?? undefined,
+      formationsFavorites: élève.formationsFavorites ?? undefined,
+    };
   }
 
   private _mapperVersLeDomaine(élève: RécupérerProfilÉlèveRéponseHTTP): Élève {

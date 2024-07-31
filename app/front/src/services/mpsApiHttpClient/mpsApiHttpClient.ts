@@ -9,9 +9,11 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     private readonly _apiBaseUrl: string,
   ) {}
 
-  public get = async <O extends {}>(endpoint: keyof paths): Promise<O | undefined> => {
+  public get = async <O extends {}>(endpoint: keyof paths, paramètresDeRequête?: string): Promise<O | undefined> => {
     return await this._httpClient.récupérer<O>({
-      endpoint: `${this._apiBaseUrl}${endpoint}`,
+      endpoint: paramètresDeRequête
+        ? `${this._apiBaseUrl}${endpoint}/${paramètresDeRequête}`
+        : `${this._apiBaseUrl}${endpoint}`,
       méthode: "GET",
       headers: {
         authorization: `Bearer ${this._récupérerJWT()}`,

@@ -1,14 +1,13 @@
 import { type RécupérerFormationRéponseHTTP } from "./formationHttpRepository.interface";
-import { env } from "@/configuration/environnement";
 import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
 import { type Formation, type FormationAperçu } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
-import { type HttpClient } from "@/services/httpClient/httpClient";
+import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class formationHttpRepository implements FormationRepository {
-  private ENDPOINT_BASE = `${env.VITE_API_URL}/api/v1/formations/`;
+  private _ENDPOINT = "/api/v1/formations" as const;
 
-  public constructor(private _httpClient: HttpClient) {}
+  public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
   public async rechercher(_recherche: string): Promise<FormationAperçu[] | undefined> {
     return undefined;
@@ -19,13 +18,7 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   public async récupérer(formationId: string): Promise<Formation | undefined> {
-    const réponse = await this._httpClient.récupérer<RécupérerFormationRéponseHTTP>({
-      endpoint: `${this.ENDPOINT_BASE}${formationId}`,
-      méthode: "POST",
-      body: {
-        profil: null,
-      },
-    });
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationRéponseHTTP>(this._ENDPOINT, formationId);
 
     if (!réponse) return undefined;
 

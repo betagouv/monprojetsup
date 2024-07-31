@@ -91,7 +91,7 @@ export class Dépendances {
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);
     this._formationRepository = new formationInMemoryRepository();
-    this._formationHttpRepository = new formationHttpRepository(this._httpClient);
+    this._formationHttpRepository = new formationHttpRepository(this._mpsApiHttpClient);
     this._métierRepository = new métierInMemoryRepository();
     this._bacRepository = new bacInMemoryRepository();
     this._domaineProfessionnelRepository = new domaineProfessionnelInMemoryRepository();
