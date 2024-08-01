@@ -2,7 +2,7 @@
 FROM nginx:stable-alpine3.19
 
 # Copy frontend application files to the container
-COPY ./statics/* /var/www/mps-site-public/
+COPY ./statics /var/www/mps-site-public/
 
 # Nginx configuration
 ENV NGINX_HOSTNAME "_"

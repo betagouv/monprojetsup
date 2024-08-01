@@ -7,7 +7,7 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 - **etl** - Permet de transformer les fichiers référentiels et ajouter les données en BDD (pour le moment dans V1)
 - **suggestions** - API permettant de générer des suggestions de formations (pour le moment dans V1)
 - **keycloak** - Gestionnaire d'authentification (n'est pas déployé, utilisé uniquement pour le dev local)
-- **wordpress** - Export statique des fichiers du WP permettant d'alimenter les pages publiques (non utilisé en local, uniquement pour le déploiement)
+- **site-public** - Export statique des fichiers du WP permettant d'alimenter les pages publiques (non utilisé en local, uniquement pour le déploiement)
 - **app** - Cœur de l'application Mon Projet Sup
   - front - Frontend Typescript/React/ViteJS
   - back - Backend API Kotlin/Spring Boot
