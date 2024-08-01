@@ -35,6 +35,7 @@ class RechercherFormationsServiceTest {
             listOf(
                 FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                 FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl1000", nom = "BPJEPS"),
             )
         given(rechercheFormationRepository.rechercherUneFormation("peu")).willReturn(formationsPourPeu)
@@ -49,6 +50,7 @@ class RechercherFormationsServiceTest {
         val formationsPourLongue =
             listOf(
                 FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
+                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl10", nom = "DUT Informatique"),
                 FormationCourte(id = "fl18", nom = "L1 - Littérature"),
             )
@@ -67,11 +69,11 @@ class RechercherFormationsServiceTest {
         // Then
         val attendu =
             listOf(
+                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                 FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
                 FormationCourte(id = "fl1000", nom = "BPJEPS"),
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
                 FormationCourte(id = "fl10", nom = "DUT Informatique"),
                 FormationCourte(id = "fl18", nom = "L1 - Littérature"),
@@ -91,9 +93,9 @@ class RechercherFormationsServiceTest {
         // Then
         val attendu =
             listOf(
+                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                 FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
             )
         assertThat(resultat).isEqualTo(attendu)
     }
