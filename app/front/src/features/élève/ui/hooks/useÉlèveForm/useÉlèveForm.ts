@@ -27,8 +27,8 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
       const élève = { ...valeursParDéfaut, ...changementsProfilÉlève };
       return await dépendances.mettreÀJourProfilÉlèveUseCase.run(élève);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: élèveQueryOptions.queryKey });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: élèveQueryOptions.queryKey });
     },
   });
 

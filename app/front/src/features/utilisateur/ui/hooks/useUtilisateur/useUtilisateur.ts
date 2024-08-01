@@ -20,21 +20,21 @@ export default function useUtilisateur() {
   };
 
   const récupérerInformationsUtilisateur = () => {
-    if (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "élève") {
-      return {
-        type: "élève" as const,
-        prénom: "nina",
-        nom: "dupont",
-        email: "nina@example.com",
-      };
-    }
-
     if (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "enseignant") {
       return {
         type: "enseignant" as const,
         prénom: "hugo",
         nom: "durant",
         email: "hugo@example.com",
+      };
+    }
+
+    if (env.VITE_TEST_MODE || (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "élève")) {
+      return {
+        type: "élève" as const,
+        prénom: "nina",
+        nom: "dupont",
+        email: "nina@example.com",
       };
     }
 

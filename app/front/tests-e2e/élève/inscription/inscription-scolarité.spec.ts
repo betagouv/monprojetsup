@@ -88,6 +88,23 @@ class TestHelper {
 test.describe("Inscription élève - Ma scolarité", () => {
   test("Le champ classe actuelle est obligatoire", async ({ page }) => {
     // GIVEN
+    await page.route("*/**/api/v1/profil", async (route) => {
+      const json = {
+        situation: "quelques_pistes",
+        classe: null,
+        baccalaureat: null,
+        specialites: null,
+        domaines: null,
+        centresInterets: null,
+        metiersFavoris: null,
+        dureeEtudesPrevue: null,
+        alternance: null,
+        communesFavorites: null,
+        moyenneGenerale: null,
+        formationsFavorites: null,
+      };
+      await route.fulfill({ json });
+    });
     const testhelper = new TestHelper(page);
     await testhelper.naviguerVersLaPage();
 
