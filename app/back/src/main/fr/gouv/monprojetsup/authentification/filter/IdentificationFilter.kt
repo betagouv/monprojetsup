@@ -60,7 +60,7 @@ class IdentificationFilter(
         }
     }
 
-    private fun getIdIndividu(token: Jwt): String? = token.getClaim("sid")
+    private fun getIdIndividu(token: Jwt): String? = token.getClaim("sub")
 
     private fun getProfile(token: Jwt) = Profil.deserialise(token.getClaim("profile"))
 }
