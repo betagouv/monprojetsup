@@ -15,7 +15,7 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ## Schéma simplifié des apps et des types d'échanges en local
 ![Schéma apps en local](schema-local.png)
 
-
+lol
 ## Comment lancer le projet
 ### Prérequis 
 - Démarrer Docker sur sa machine
