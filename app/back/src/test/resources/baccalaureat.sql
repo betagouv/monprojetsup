@@ -4,6 +4,6 @@ VALUES ('Général',
         'Générale');
 
 INSERT INTO baccalaureat
-VALUES ('Professionnelle',
+VALUES ('Professionnel',
         'Série Pro',
         'P');

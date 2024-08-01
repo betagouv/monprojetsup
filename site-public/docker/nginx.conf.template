@@ -1,0 +1,10 @@
+server {
+    listen ${NGINX_PORT};
+    server_name ${NGINX_HOSTNAME};
+
+    location / {
+        root ${NGINX_ROOT};
+        index index.html index.htm;
+        try_files $uri $uri/ =404;
+    }
+}

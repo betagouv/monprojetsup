@@ -1,44 +1,44 @@
-import { type Ville } from "@/features/ville/domain/ville.interface";
+import { type Commune } from "@/features/commune/domain/commune.interface";
+import { type components } from "@/types/api-mps";
+
+export type SituationÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["situation"]>;
+export type ClasseÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["classe"]>;
+export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["dureeEtudesPrevue"]>;
+export type AlternanceÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["alternance"]>;
+type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
 export type Élève = {
-  id: string;
-  nom: string;
-  prénom: string;
-  nomUtilisateur: string;
-  email?: string;
-  situation?: SituationÉlève;
-  classe?: ClasseÉlève;
-  bac?: string;
-  spécialités?: string[];
-  domaines?: string[];
-  centresIntêrets?: string[];
-  situationMétiers?: SituationMétiersÉlève;
-  métiers?: string[];
-  duréeÉtudesPrévue?: DuréeÉtudesPrévueÉlève;
-  alternance?: AlternanceÉlève;
-  situationVilles?: SituationVillesÉlève;
-  villes?: Ville[];
-  situationFormations?: SituationFormationsÉlève;
-  formations?: string[];
+  situation: SituationÉlève | null;
+  classe: ClasseÉlève | null;
+  bac: BacÉlève | null;
+  spécialités: string[] | null;
+  domaines: string[] | null;
+  centresIntêrets: string[] | null;
+  métiersFavoris: string[] | null;
+  duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+  alternance: AlternanceÉlève | null;
+  communesFavorites: Commune[] | null;
+  formationsFavorites: string[] | null;
 };
 
-export const situationÉlève = ["aucune_idee", "quelques_pistes", "projet_precis"] as const;
-export type SituationÉlève = (typeof situationÉlève)[number];
+export const situationÉlève = [
+  "aucune_idee",
+  "quelques_pistes",
+  "projet_precis",
+] as const satisfies readonly SituationÉlève[];
 
-export const situationMétiersÉlève = ["aucune_idee", "quelques_pistes"] as const;
-export type SituationMétiersÉlève = (typeof situationMétiersÉlève)[number];
+export const classeÉlève = ["seconde", "premiere", "terminale"] as const satisfies readonly ClasseÉlève[];
 
-export const classeÉlève = ["seconde", "seconde_sthr", "seconde_tmd", "premiere", "terminale"] as const;
-export type ClasseÉlève = (typeof classeÉlève)[number];
+export const duréeÉtudesPrévueÉlève = [
+  "indifferent",
+  "courte",
+  "longue",
+  "aucune_idee",
+] as const satisfies readonly DuréeÉtudesPrévueÉlève[];
 
-export const duréeÉtudesPrévueÉlève = ["options_ouvertes", "courte", "longue", "aucune_idee"] as const;
-export type DuréeÉtudesPrévueÉlève = (typeof duréeÉtudesPrévueÉlève)[number];
-
-export const alternanceÉlève = ["pas_interesse", "indifferent", "interesse", "tres_interesse"] as const;
-export type AlternanceÉlève = (typeof alternanceÉlève)[number];
-
-export const situationVillesÉlève = ["aucune_idee", "quelques_pistes"] as const;
-export type SituationVillesÉlève = (typeof situationVillesÉlève)[number];
-
-export const situationFormationsÉlève = ["aucune_idee", "quelques_pistes"] as const;
-export type SituationFormationsÉlève = (typeof situationFormationsÉlève)[number];
+export const alternanceÉlève = [
+  "pas_interesse",
+  "indifferent",
+  "interesse",
+  "tres_interesse",
+] as const satisfies readonly AlternanceÉlève[];

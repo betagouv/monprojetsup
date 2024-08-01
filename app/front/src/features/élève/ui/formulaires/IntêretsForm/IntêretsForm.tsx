@@ -44,7 +44,7 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
             setValue("centresIntêrets", filtreIdsSélectionnés)
           }
           catégories={filtresGroupésParCatégories}
-          filtreIdsSélectionnésParDéfaut={getValues("centresIntêrets")}
+          filtreIdsSélectionnésParDéfaut={getValues("centresIntêrets") ?? []}
           niveauDeTitre={niveauDeTitreCatégories}
         />
         <div

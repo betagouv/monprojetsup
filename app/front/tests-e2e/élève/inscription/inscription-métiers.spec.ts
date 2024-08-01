@@ -27,25 +27,12 @@ class TestHelper extends InscriptionTestHelper {
 }
 
 test.describe("Inscription élève - Métiers", () => {
-  test("Le champ 'Avancement' est obligatoire", async ({ page }) => {
+  test("Aucun champ n'est obligatoire pour passer à l'étape suivante", async ({ page }) => {
     // GIVEN
     const testhelper = new TestHelper(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
-    await testhelper.soumettreLeFormulaire();
-
-    // THEN
-    await expect(testhelper.messageErreurChampObligatoire()).toBeVisible();
-  });
-
-  test("Si tous les champs obligatoires sont renseignés, passage à l'étape suivante", async ({ page }) => {
-    // GIVEN
-    const testhelper = new TestHelper(page);
-    await testhelper.naviguerVersLaPage();
-
-    // WHEN
-    await testhelper.renseignerChampSituationMétiers(i18n.ÉLÈVE.MÉTIERS.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL);
     await testhelper.soumettreLeFormulaire();
 
     // THEN

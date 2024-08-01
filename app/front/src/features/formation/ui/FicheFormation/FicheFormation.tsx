@@ -1,3 +1,4 @@
+import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondanceFicheFormation/ExplicationsCorrespondanceFicheFormation";
 import { type FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
 import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
@@ -42,7 +43,7 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
       (formation.descriptifs.attendus && formation.descriptifs.attendus !== "") ||
       formation.critèresAnalyse.length > 0 ||
       formation.admis.répartition.parBac.length > 0 ||
-      formation.admis.moyenneGénérale.centilles.length > 0
+      formation.admis.moyenneGénérale.centiles.length > 0
     ) {
       onglets.push({
         titre: i18n.PAGE_FORMATION.ONGLET_CRITÈRES,
@@ -84,7 +85,7 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
         <Titre niveauDeTitre="h1">{formation.nom}</Titre>
       </div>
       <div className="grid grid-flow-row gap-4 text-[--text-mention-grey]">
-        {formation.admis.total && (
+        {Boolean(formation.admis.total) && (
           <div className="grid grid-flow-col items-start justify-start gap-2">
             <span
               aria-hidden="true"
@@ -95,7 +96,7 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
             </p>
           </div>
         )}
-        {formation.villes.length > 0 && (
+        {formation.communes.length > 0 && (
           <div className="grid grid-flow-col items-start justify-start gap-2">
             <span
               aria-hidden="true"
@@ -103,11 +104,12 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
             />
             <div>
               <p className="mb-2 text-sm">
-                {i18n.PAGE_FORMATION.VILLES_PROPOSANT_LA_FORMATION} : <strong>{formation.villes.join(" • ")}</strong>
+                {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_LA_FORMATION} :{" "}
+                <strong>{formation.communes.join(" • ")}</strong>
               </p>
               <LienExterne
                 ariaLabel={i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
-                href="https://parcoursup.fr/"
+                href={`https://dossier.parcoursup.fr/Candidat/carte?search=${formation.id}%20${formation.formationsAssociées.join("x%20")}`}
                 taille="petit"
                 variante="simple"
               >
@@ -127,7 +129,12 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
           onglets={générerLesOnglets()}
         />
       </div>
-      <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
+      <div className="mb-12">
+        <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
+      </div>
+      <div className="mb-12">
+        {formation.explications && <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />}
+      </div>
     </div>
   );
 };

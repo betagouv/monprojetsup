@@ -1,5 +1,6 @@
 const pages = {
-  ACCUEIL: "Accueil",
+  TABLEAU_DE_BORD: "Tableau de bord",
+  PROFIL: "Mon profil",
   PLAN_DU_SITE: "Plan du site",
   ACCESSIBILITÉ: "Accessibilité: non conforme",
   MENTIONS_LÉGALES: "Mentions légales",
@@ -8,7 +9,7 @@ const pages = {
 } as const;
 
 const app = {
-  NOM: "Mon Projet Sup",
+  NOM: "MonProjetSup",
   DESCRIPTION: "Le guide qui facilite l’orientation des lycéens",
 } as const;
 
@@ -18,6 +19,9 @@ export const localeFR = {
   },
   ENTÊTE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
+    SE_CONNECTER: "Se connecter",
+    MON_ESPACE: "Mon espace",
+    PLATEFORME_AVENIRS: "Plateforme Avenir(s)",
   },
   PIED_DE_PAGE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
@@ -30,7 +34,9 @@ export const localeFR = {
     },
   },
   NAVIGATION: {
-    ACCUEIL: pages.ACCUEIL,
+    TABLEAU_DE_BORD: pages.TABLEAU_DE_BORD,
+    FORMATIONS: "Explorer les formations",
+    SÉLECTION: "Consulter ma sélection",
   },
   PAGE_RECHERCHE: {
     TITRE: "Rechercher une formation ou un métier",
@@ -43,7 +49,7 @@ export const localeFR = {
     ONGLET_CRITÈRES: "Critères d'admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l'année dernière",
-    VILLES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
+    COMMUNES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
     RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
@@ -56,6 +62,23 @@ export const localeFR = {
       QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
+    EXPLICATIONS_CORRESPONDANCE_PROFIL: {
+      TITRE: "Pourquoi cette formation devrait te plaire",
+      COMMUNES: "Plusieurs établissements proposant cette formation se trouvent à proximité des villes",
+      BAC: "Idéal si tu as un",
+      SPÉCIALITÉS:
+        "Les lycéennes et lycéens admis dans cette formation l'année dernière, avaient choisi ce(s) spécialité(s)",
+      DURÉE_FORMATION: "La durée de la formation est",
+      ALTERNANCE: "Formation réalisable",
+      ALTERNANCE_SUITE: "en alternance",
+      FORMATIONS_SIMILAIRES:
+        "Les candidates et candidats sur Parcoursup s'intéressant à cette formation s'intéressent également à",
+      INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
+      ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
+      ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
+      MOYENNE: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière, de série",
+      MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l'intervalle",
+    },
   },
   ÉLÈVE: {
     PROJET: {
@@ -93,13 +116,7 @@ export const localeFR = {
         LABEL: "Classe actuelle",
         OPTIONS: {
           SECONDE: {
-            LABEL: "Seconde Générale et Technologique",
-          },
-          SECONDE_STHR: {
-            LABEL: "Seconde STHR",
-          },
-          SECONDE_TMD: {
-            LABEL: "Seconde TMD",
+            LABEL: "Seconde",
           },
           PREMIÈRE: {
             LABEL: "Première",
@@ -167,7 +184,7 @@ export const localeFR = {
         LABEL: "Durée des études",
         DESCRIPTION: "Temps d’études que tu envisages après le bac",
         OPTIONS: {
-          OPTIONS_OUVERTES: {
+          INDIFFÉRENT: {
             LABEL: "Je garde mes options ouvertes",
           },
           COURTE: {
@@ -199,19 +216,8 @@ export const localeFR = {
           },
         },
       },
-      SITUATION_VILLES: {
-        LÉGENDE: "Où souhaites-tu étudier ?",
-        OPTIONS: {
-          AUCUNE_IDÉE: {
-            LABEL: "Aucune idée",
-          },
-          QUELQUES_PISTES: {
-            LABEL: "J’ai quelques villes en tête",
-          },
-        },
-      },
-      VILLES_ENVISAGÉES: {
-        LABEL: "Villes",
+      COMMUNES_ENVISAGÉES: {
+        LABEL: "As-tu des villes particulières où tu souhaites étudier ?",
         DESCRIPTION: "Commence à taper puis sélectionne des villes",
         SÉLECTIONNÉES: "Ville(s) sélectionnée(s)",
       },
@@ -252,11 +258,7 @@ export const localeFR = {
         CONTENU: "Ton professeur principal est à ta disposition pour échanger sur ta future orientation.",
       },
     },
-    PROFIL: {
-      TITRE: "Mon Profil",
-    },
     TABLEAU_DE_BORD: {
-      TITRE_PAGE: "Tableau de bord",
       TITRE: "Bienvenue dans ton espace MPS",
       MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
       CARTES: {
@@ -285,8 +287,13 @@ export const localeFR = {
       },
     },
   },
-  PAGE_ACCUEIL: {
-    TITLE: pages.ACCUEIL,
+  PAGE_TABLEAU_DE_BORD: {
+    TITRE_PAGE: pages.TABLEAU_DE_BORD,
+  },
+  PAGE_PROFIL: {
+    TITRE_PAGE: pages.PROFIL,
+    TITRE: pages.PROFIL,
+    SE_DÉCONNECTER: "Se déconnecter",
   },
   COMMUN: {
     FERMER: "Fermer",

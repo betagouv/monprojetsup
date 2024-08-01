@@ -2,7 +2,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const pages = [
-  "/",
+  "/?simulerCompte=élève",
+  "/profil/?simulerCompte=élève",
   "/eleve/inscription/projet",
   "/eleve/inscription/scolarite",
   "/eleve/inscription/domaines",
@@ -11,8 +12,6 @@ const pages = [
   "/eleve/inscription/etude",
   "/eleve/inscription/formations",
   "/eleve/inscription/confirmation",
-  "/eleve/tableau-de-bord",
-  "/eleve/profil",
 ];
 
 for (const testedPage of pages) {

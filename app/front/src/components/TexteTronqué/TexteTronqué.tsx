@@ -34,7 +34,7 @@ const TexteTronqué = ({ texte, nombreDeLigneÀAfficher }: TexteTronquéProps) =
         className={`${classEnFonctionDeAfficherEnEntier()} mb-2`}
         ref={ref}
       >
-        {texte}
+        {texte.replaceAll(/(<([^>]+)>)/gu, "")}
       </p>
       {afficherBoutonLireLaSuite && (
         <button

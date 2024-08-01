@@ -1,3 +1,5 @@
+import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
+
 export type Formation = {
   id: string;
   nom: string;
@@ -15,8 +17,8 @@ export type Formation = {
     moyenneGénérale: {
       idBac: string | null;
       nomBac: string | null;
-      centilles: Array<{
-        centille: number;
+      centiles: Array<{
+        centile: number;
         note: number;
       }>;
     };
@@ -27,7 +29,7 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  villes: string[];
+  communes: string[];
   métiersAccessibles: Array<{
     id: string;
     nom: string;
@@ -37,7 +39,45 @@ export type Formation = {
       url: string;
     }>;
   }>;
-  affinité?: number;
+  affinité: number | null;
+  explications: {
+    communes: Array<{
+      nom: string;
+      distanceKm: number;
+    }>;
+    formationsSimilaires: Array<{
+      id: string;
+      nom: string;
+    }>;
+    duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
+    alternance: AlternanceÉlève | null;
+    intêretsEtDomainesChoisis: {
+      intêrets: Array<{
+        id: string;
+        nom: string;
+      }>;
+      domaines: Array<{
+        id: string;
+        nom: string;
+      }>;
+    };
+    spécialitésChoisies: Array<{
+      nom: string;
+      pourcentageAdmisAnnéePrécédente: number;
+    }>;
+    typeBaccalaureat: {
+      id: string;
+      nom: string;
+      pourcentageAdmisAnnéePrécédente: number;
+    } | null;
+    autoEvaluationMoyenne: {
+      moyenne: number;
+      intervalBas: number;
+      intervalHaut: number;
+      idBacUtilisé: string;
+      nomBacUtilisé: string;
+    } | null;
+  } | null;
 };
 
 export type FormationAperçu = {

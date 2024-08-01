@@ -1,5 +1,5 @@
 # Use an official Maven image as the base image
-FROM maven:3.8.5-openjdk-17-slim AS build
+FROM maven:3-eclipse-temurin-17-alpine AS build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -12,10 +12,11 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Rename jar file 
-RUN cp target/*.?ar /usr/src/mps-backend.jar
+RUN mkdir -p /usr/src
+RUN cp target/*.jar /usr/src/mps-backend.jar
 
 # Use an official OpenJDK image as the base image
-FROM openjdk:23-ea-17-jdk-slim
+FROM eclipse-temurin:17-jre-noble
 
 # Set the working directory in the container
 WORKDIR /app

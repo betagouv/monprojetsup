@@ -1,5 +1,14 @@
 # Use an official node image as the base image
-FROM node:20-alpine3.20 AS build
+FROM node:22-alpine AS build
+
+# Arguments declaration
+ARG VITE_APP_URL
+ARG VITE_API_URL
+ARG VITE_PUBLIC_WEBSITE_URL
+ARG VITE_KEYCLOAK_ROYAUME_URL
+ARG VITE_KEYCLOAK_CLIENT_ID
+ARG VITE_KEYCLOAK_CLIENT_SECRET
+ARG VITE_TEST_MODE
 
 # Set the working directory in the container
 WORKDIR /app
@@ -14,7 +23,7 @@ RUN npm ci
 RUN npm run build
 
 # Use an official nginx image
-FROM nginx:stable-alpine3.19
+FROM nginx:stable-alpine
 
 # Copy node build result files to the container
 COPY --from=build /app/dist /var/www/mps-front

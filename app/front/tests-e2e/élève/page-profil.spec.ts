@@ -5,7 +5,7 @@ class TestHelper {
   public constructor(private _page: Page) {}
 
   public naviguerVersLaPage = async () => {
-    await this._page.goto("/eleve/profil");
+    await this._page.goto("/profil?simulerCompte=élève");
   };
 
   public soumettreLeFormulaire = async () => {
@@ -37,7 +37,7 @@ class TestHelper {
   };
 
   public listeOnglets = () => {
-    return this._page.getByRole("tablist", { name: i18n.ÉLÈVE.PROFIL.TITRE });
+    return this._page.getByRole("tablist", { name: i18n.PAGE_PROFIL.TITRE });
   };
 
   private _boutonSoumissionFormulaire = () => {

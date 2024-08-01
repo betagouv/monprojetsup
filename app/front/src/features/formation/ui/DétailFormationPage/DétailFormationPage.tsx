@@ -1,7 +1,7 @@
 import Head from "@/components/_layout/Head/Head";
 import { queryClient } from "@/configuration/lib/tanstack-query";
 import FicheFormation from "@/features/formation/ui/FicheFormation/FicheFormation";
-import { détailFormationQueryOptions } from "@/features/formation/ui/options";
+import { détailFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 

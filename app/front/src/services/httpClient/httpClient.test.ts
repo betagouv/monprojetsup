@@ -12,24 +12,24 @@ describe("HttpClient", () => {
     httpClient = new HttpClient(logger);
   });
 
-  describe("fetch", () => {
+  describe("récupérer", () => {
     test("doit renvoyer les données si tout s'est bien déroulé", async () => {
       // GIVEN
       const options: HttpClientOptions = {
         endpoint: ENDPOINT,
-        method: "GET",
+        méthode: "GET",
       };
       const responseData = { id: 1, name: "John Doe" };
       const response = new Response(JSON.stringify(responseData), { status: 200 });
       vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
 
       // WHEN
-      const result = await httpClient.fetch(options);
+      const result = await httpClient.récupérer(options);
 
       // THEN
       expect(result).toEqual(responseData);
       expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.method,
+        method: options.méthode,
         body: undefined,
         headers: {
           "content-type": "application/json",
@@ -42,18 +42,18 @@ describe("HttpClient", () => {
       // GIVEN
       const options: HttpClientOptions = {
         endpoint: ENDPOINT,
-        method: "GET",
+        méthode: "GET",
       };
       const response = new Response(null, { status: 404 });
       vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
 
       // WHEN
-      const result = await httpClient.fetch(options);
+      const result = await httpClient.récupérer(options);
 
       // THEN
       expect(result).toBeUndefined();
       expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.method,
+        method: options.méthode,
         body: undefined,
         headers: {
           "content-type": "application/json",
@@ -61,7 +61,7 @@ describe("HttpClient", () => {
       });
       expect(logger.error).toHaveBeenCalledWith({
         endpoint: options.endpoint,
-        method: options.method,
+        méthode: options.méthode,
         body: undefined,
         status: response.status,
       });
@@ -71,18 +71,18 @@ describe("HttpClient", () => {
       // GIVEN
       const options: HttpClientOptions = {
         endpoint: ENDPOINT,
-        method: "GET",
+        méthode: "GET",
       };
       const error = new Error("Network error");
       vitest.spyOn(global, "fetch").mockRejectedValueOnce(error);
 
       // WHEN
-      const result = await httpClient.fetch(options);
+      const result = await httpClient.récupérer(options);
 
       // THEN
       expect(result).toBeUndefined();
       expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.method,
+        method: options.méthode,
         body: undefined,
         headers: {
           "content-type": "application/json",
@@ -90,7 +90,7 @@ describe("HttpClient", () => {
       });
       expect(logger.error).toHaveBeenCalledWith({
         endpoint: options.endpoint,
-        method: options.method,
+        méthode: options.méthode,
         body: undefined,
         error,
       });

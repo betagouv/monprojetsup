@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   keycloakdb:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${KEYCLOAK_DB_NAME}
@@ -15,10 +15,11 @@ services:
       timeout: 5s
       retries: 5
     volumes:
+      - ./keycloak/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./keycloak/db:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    image: quay.io/keycloak/keycloak:24.0
     depends_on:
       keycloakdb:
         condition: service_healthy
@@ -29,13 +30,23 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_HEALTH_ENABLED: true
     restart: always
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/health/live'
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     ports:
-      - ${KEYCLOAK_PORT}:8080
+      - ${KEYCLOAK_PORT_EXPOSED}:${KEYCLOAK_PORT}
     entrypoint: /opt/keycloak/bin/kc.sh start-dev
 
   appdb:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
@@ -51,70 +62,3 @@ services:
       - ${APP_DB_PORT_EXPOSED}:${APP_DB_PORT}
     volumes:
       - ./app/db:/var/lib/postgresql/data
-
-  appfront:
-    image: node:lts
-    restart: on-failure
-    working_dir: /root/app
-    ports:
-      - ${APP_FRONT_PORT}:${APP_FRONT_PORT}
-    volumes:
-      - ./app/front:/root/app
-    command: sh -c "npm install && npx playwright install --with-deps && npm run dev"
-
-  appback:
-    image: maven:latest
-    restart: on-failure
-    working_dir: /root/app
-    ports:
-      - ${APP_BACK_PORT}:${APP_BACK_PORT}
-    volumes:
-      - ./app/back:/root/app  
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://appdb:${APP_DB_PORT}/${APP_DB_NAME}
-      - SPRING_DATASOURCE_USERNAME=${APP_DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${APP_DB_PASSWORD}
-    command: sh -c " mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.MonProjetSupApplication"
-
-  appsuggestion:
-    image: maven:latest
-    restart: on-failure
-    working_dir: /root/app
-    volumes:
-      - ./app/backsuggestion:/root/app
-    command: sh -c " mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.MonProjetSupApplication"
-
-  metabasedb:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_DB: ${METABASE_DB_NAME}
-      POSTGRES_USER: ${METABASE_DB_USER}
-      POSTGRES_PASSWORD: ${METABASE_DB_PASSWORD}
-      PGPORT: ${METABASE_DB_PORT}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./metabase/db:/var/lib/postgresql/data
-
-  metabase:
-    image: metabase/metabase:latest
-    restart: always
-    depends_on:
-      metabasedb:
-        condition: service_healthy
-    ports:
-      - ${METABASE_PORT}:${METABASE_PORT}
-    environment:
-      MB_JETTY_PORT: ${METABASE_PORT}
-      MB_DB_TYPE: postgres
-      MB_DB_HOST: metabasedb
-      MB_DB_DBNAME: ${METABASE_DB_NAME}
-      MB_DB_PORT: ${METABASE_DB_PORT}
-      MB_DB_USER: ${METABASE_DB_USER}
-      MB_DB_PASS: ${METABASE_DB_PASSWORD}
-volumes:
-  backend-db-data:

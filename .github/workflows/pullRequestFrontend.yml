@@ -1,0 +1,12 @@
+name: Pull Request Frontend
+
+on:
+  pull_request:
+    paths:
+      - 'app/front/**'
+      - '.github/**'
+
+jobs:
+  checkFrontend: 
+    name: Frontend
+    uses: ./.github/workflows/frontend.yml

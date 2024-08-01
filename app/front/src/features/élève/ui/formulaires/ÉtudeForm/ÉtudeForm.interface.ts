@@ -1,8 +1,4 @@
-import {
-  type AlternanceÉlève,
-  type DuréeÉtudesPrévueÉlève,
-  type SituationVillesÉlève,
-} from "@/features/élève/domain/élève.interface";
+import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
 
 export type ÉtudeFormProps = {
   formId: string;
@@ -16,11 +12,6 @@ export type DuréeÉtudesPrévueOptions = Array<{
 
 export type AlternanceOptions = Array<{
   valeur: AlternanceÉlève;
-  label: string;
-}>;
-
-export type SituationVillesOptions = Array<{
-  valeur: SituationVillesÉlève;
   label: string;
 }>;
 

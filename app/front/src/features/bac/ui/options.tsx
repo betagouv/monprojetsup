@@ -11,11 +11,11 @@ export const bacsQueryOptions = queryOptions({
   },
 });
 
-export const rechercheSpécialitésQueryOptions = (bacId?: string, recherche?: string) =>
+export const rechercheSpécialitésQueryOptions = (bacId: string | null, recherche?: string) =>
   queryOptions({
     queryKey: ["spécialités", "recherche", bacId, recherche],
     queryFn: async () => {
-      if (bacId === undefined) return [];
+      if (!bacId) return [];
 
       const spécialités = await dépendances.rechercherSpécialitésPourUnBacUseCase.run(bacId, recherche);
 
@@ -24,11 +24,11 @@ export const rechercheSpécialitésQueryOptions = (bacId?: string, recherche?: s
     enabled: false,
   });
 
-export const récupérerSpécialitésQueryOptions = (spécialitéIds?: Array<Spécialité["id"]>) =>
+export const récupérerSpécialitésQueryOptions = (spécialitéIds: Array<Spécialité["id"]> | null) =>
   queryOptions({
     queryKey: ["spécialités", spécialitéIds],
     queryFn: async () => {
-      if (spécialitéIds === undefined) return [];
+      if (!spécialitéIds) return [];
 
       const spécialités = await dépendances.récupérerSpécialitésUseCase.run(spécialitéIds);
 

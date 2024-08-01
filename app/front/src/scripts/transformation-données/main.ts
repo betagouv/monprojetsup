@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import { JSONHandler } from "./jsonHandler/jsonHandler";
-import { type Données } from "./main.interface";
+import { type Données, type RéponseApiAdresse } from "./main.interface";
 import { SQLHandler } from "./sqlHandler/sqlHandler";
 import path from "node:path";
 
@@ -23,6 +24,38 @@ import path from "node:path";
  ***********************************************************************
  */
 
+const trouverCommuneÀPartirDesCoordonnées = async (latitude: string, longitude: string) => {
+  const paramètresDeRequête = new URLSearchParams();
+  paramètresDeRequête.set("lat", latitude);
+  paramètresDeRequête.set("lon", longitude);
+  paramètresDeRequête.set("limit", "1");
+
+  // Pas trop aggressif avec l'api d'adresse
+  await new Promise((resolve) => {
+    setTimeout(resolve, 50);
+  });
+
+  try {
+    const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?${paramètresDeRequête.toString()}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    if (!response?.ok) {
+      console.log("Erreur dans l'appel à l'api adresse pour la recherche ", { latitude }, { longitude });
+      return undefined;
+    }
+
+    return (await response.json()) as RéponseApiAdresse;
+  } catch (error) {
+    console.log("Erreur dans l'appel à l'api adresse pour la recherche ", { latitude }, { longitude }, error);
+    return undefined;
+  }
+};
+
+// eslint-disable-next-line consistent-return
 const main = async () => {
   const MOYENNE_GENERALE_CODE = "-1";
   let données = {} as Données;
@@ -177,7 +210,7 @@ const main = async () => {
       descriptif_diplome   text,
       formations_associees varchar(20)[],
       criteres_analyse     integer[]    not null,
-      liens                jsonb[]      not null
+      liens                jsonb      not null
   */
   const formations = Object.entries(données.labels)
     .filter(([id]) => id.startsWith("fl") || id.startsWith("fr"))
@@ -221,7 +254,7 @@ const main = async () => {
 
       const liens = Object.entries(données.urls)
         .find(([id]) => id === formationId)?.[1]
-        ?.map((lien) => ({ label: lien.label.trim(), url: lien.uri.trim() }));
+        ?.map((lien) => ({ nom: lien.label.trim(), url: lien.uri.trim() }));
 
       return [
         formationId.trim(),
@@ -231,7 +264,7 @@ const main = async () => {
         motsClefs.length > 0 ? [...new Set(motsClefs)] : null,
         eds?.recoEDS?.trim() ?? null,
         descriptif?.summaryFormation?.trim() ?? null,
-        formationsAssociées.length > 0 ? formationsAssociées : null,
+        formationsAssociées.length > 0 ? formationsAssociées.filter((fId) => fId !== formationId.trim()) : null,
         critèresAnalyse,
         liens && liens.length > 0 ? JSON.stringify(liens) : JSON.stringify([]),
       ];
@@ -261,7 +294,7 @@ const main = async () => {
       id                 varchar(20)  not null primary key,
       label              varchar(300) not null,
       descriptif_general text,
-      liens              jsonb[]      not null
+      liens              jsonb      not null
   */
   const métiers = Object.entries(données.labels)
     .filter(([id]) => id.startsWith("MET_"))
@@ -270,7 +303,7 @@ const main = async () => {
 
       const liens = Object.entries(données.urls)
         .find(([id]) => id === métierId)?.[1]
-        ?.map((lien) => ({ label: lien.label.trim(), url: lien.uri.trim() }));
+        ?.map((lien) => ({ nom: lien.label.trim(), url: lien.uri.trim() }));
 
       return [
         métierId.trim(),
@@ -283,34 +316,6 @@ const main = async () => {
   requêteSQL.push(insertMétiers);
   sqlHandler.créerFichier("metier", insertMétiers);
 
-  /*  JOIN_METIER_FORMATION
-      metier_id    varchar(20) not null references metier,
-      formation_id varchar(20) not null references formation,
-  */
-  const métierFormation = Object.entries(données.liensMetiersFormations)
-    .flatMap(([métierId, formationIds]) => {
-      if (!données.labels[métierId]) return undefined;
-
-      return formationIds
-        .map((formationId) => {
-          if (formations.some((formation) => formation[0] === formationId))
-            return [métierId.trim(), formationId.trim()];
-
-          return undefined;
-        })
-        .filter((mf): mf is string[] => mf !== undefined);
-    })
-    .filter((mf): mf is string[] => mf !== undefined);
-
-  const insertMétierFormation = sqlHandler.générerInsert(
-    "join_metier_formation",
-    ["metier_id", "formation_id"],
-    métierFormation,
-    false,
-  );
-  requêteSQL.push(insertMétierFormation);
-  sqlHandler.créerFichier("join_metier_formation", insertMétierFormation);
-
   /*  TRIPLET_AFFECTATION
       id                        varchar(20)        not null primary key,
       nom                       text               not null,
@@ -319,33 +324,58 @@ const main = async () => {
       coordonnees_geographiques double precision[] not null,
       id_formation              varchar(20)        not null references formation
   */
-  const tripletAffectation = Object.entries(données.psupData.formations.formations)
-    .map(([tripleAffectationId, ta]) => {
-      const formationId = `fl${ta.gFlCod}`;
-      let formationIdAssociée = formationId;
+  const triplets = [];
+  const historiqueRequêtesApi: Record<string, { ville: string; codeInseeVille: string }> = {};
+  const tripletsInconnus: Record<string, { ta: string; latitude: string; longitude: string }> = {};
 
-      if (!formations.some((formation) => formation[0] === formationId)) {
-        const formationParenteId = formations.find((formation) => formation[7]?.includes(formationId))?.[0];
+  for (const [tripleAffectationId, ta] of Object.entries(données.psupData.formations.formations)) {
+    const formationId = `fl${ta.gFlCod}`;
+    let formationIdAssociée = formationId;
 
-        if (!formationParenteId) return undefined;
-        formationIdAssociée = formationParenteId;
+    if (!formations.some((formation) => formation[0] === formationId)) {
+      const formationParenteId = formations.find((formation) => formation[7]?.includes(formationId))?.[0];
+
+      if (!formationParenteId) return undefined;
+      formationIdAssociée = formationParenteId;
+    }
+
+    const identifiantCoordonnées = `${ta.lat.toString()}${ta.lng.toString()}`;
+
+    if (!historiqueRequêtesApi[identifiantCoordonnées]) {
+      const détailsGéo = await trouverCommuneÀPartirDesCoordonnées(ta.lat.toString(), ta.lng.toString());
+
+      if (détailsGéo?.features[0]?.properties?.city && détailsGéo?.features[0]?.properties?.citycode) {
+        historiqueRequêtesApi[identifiantCoordonnées] = {
+          ville: détailsGéo?.features[0]?.properties?.city,
+          codeInseeVille: détailsGéo?.features[0]?.properties?.citycode,
+        };
+      } else if (!tripletsInconnus[identifiantCoordonnées]) {
+        tripletsInconnus[identifiantCoordonnées] = {
+          ta: `ta${tripleAffectationId}`,
+          latitude: ta.lat.toString(),
+          longitude: ta.lng.toString(),
+        };
       }
+    }
 
-      return [
-        `ta${tripleAffectationId}`,
-        ta.libelle,
-        ta.commune,
-        ta.codeCommune,
-        [ta.lat, ta.lng],
-        formationIdAssociée,
-      ];
-    })
-    .filter((ta): ta is string[] => ta !== undefined);
+    triplets.push([
+      `ta${tripleAffectationId}`,
+      ta.libelle,
+      historiqueRequêtesApi?.[identifiantCoordonnées]?.ville ?? "",
+      historiqueRequêtesApi?.[identifiantCoordonnées]?.codeInseeVille ?? "",
+      [ta.lat, ta.lng],
+      formationIdAssociée,
+    ]);
+  }
+
+  triplets.filter((ta): ta is string[] => ta !== undefined);
+
+  console.log("Triplets sans villes", JSON.stringify(tripletsInconnus), Object.entries(tripletsInconnus).length);
 
   const insertTripLetAffectation = sqlHandler.générerInsert(
     "triplet_affectation",
     ["id", "nom", "commune", "code_commune", "coordonnees_geographiques", "id_formation"],
-    tripletAffectation,
+    triplets,
   );
   requêteSQL.push(insertTripLetAffectation);
   sqlHandler.créerFichier("triplet_affectation", insertTripLetAffectation);
@@ -385,74 +415,23 @@ const main = async () => {
   requêteSQL.push(insertMoyenneGénéraleAdmis);
   sqlHandler.créerFichier("moyenne_generale_admis", insertMoyenneGénéraleAdmis);
 
-  /*  REPARTITION_ADMIS
-      annee        varchar(4)   not null,
-      id_formation varchar(200) not null references formation,
-      id_bac       varchar      not null references baccalaureat,
-      nombre_admis integer      not null,
+  /*  JOIN_BACCALAUREAT_SPECIALITE
+      baccalaureat_id        varchar    not null references baccalaureat,
+      specialite_id          varchar    not null references specialite,
   */
-  const répartitionAdmis = Object.entries(données.nombreAdmisParBac)
-    .flatMap(([formationId, bacs]) => {
-      return Object.entries(bacs).map(([bacId, nbAdmis]) => {
-        if (
-          !baccalaureat.some((bac) => bac[0] === bacId) ||
-          !formations.some((formation) => formation[0] === formationId)
-        )
-          return undefined;
-        return ["2023", formationId.trim(), bacId.trim(), nbAdmis];
-      });
-    })
-    .filter((répartition): répartition is string[] => répartition !== undefined);
+  const baccalaureatSpécialité = Object.entries(données.specialites.specialitesParBac).flatMap(
+    ([bacId, spécialitéIds]) =>
+      spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId.trim(), spécialitéId.toString().trim()]),
+  );
 
-  const insertRépartitionAdmis = sqlHandler.générerInsert(
-    "repartition_admis",
-    ["annee", "id_formation", "id_bac", "nombre_admis"],
-    répartitionAdmis,
+  const insertBaccalaureatSpécialité = sqlHandler.générerInsert(
+    "join_baccalaureat_specialite",
+    ["baccalaureat_id", "specialite_id"],
+    baccalaureatSpécialité,
     false,
   );
-  requêteSQL.push(insertRépartitionAdmis);
-  sqlHandler.créerFichier("repartition_admis", insertRépartitionAdmis);
-
-  // Créer les matières
-  // const matières = Object.entries(données.matieres).map(([id, label]) => [id, label]);
-  // const insertMatières = sqlHandler.générerInsert("matieres", ["id", "label"], matières);
-  // requêteSQL.push(insertMatières);
-
-  // Créer les secteurs
-  // const secteurs = Object.entries(données.labels)
-  //   .filter(([id]) => id.startsWith("SEC_"))
-  //   .map(([id]) => [id, données.labels[id]]);
-  // const insertSecteurs = sqlHandler.générerInsert("secteurs", ["id", "label"], secteurs);
-  // requêteSQL.push(insertSecteurs);
-
-  // Créer bacs_specialites
-  // const bacsSpécialités = Object.entries(données.specialites.specialitesParBac).flatMap(([bacId, spécialitéIds]) =>
-  //   spécialitéIds.map((spécialitéId) => [bacId === "" ? "NC" : bacId, spécialitéId.toString()]),
-  // );
-  // const insertBacsSpécialités = sqlHandler.générerInsert(
-  //   "bacs_specialites",
-  //   ["bac_id", "specialite_id"],
-  //   bacsSpécialités,
-  //   false,
-  // );
-  // requêteSQL.push(insertBacsSpécialités);
-
-  // Créer metiers_secteurs
-  // const métiersSecteurs = Object.entries(données.liensSecteursMetiers).flatMap(([secteurId, métierIds]) =>
-  //   métierIds
-  //     .map((métierId) => {
-  //       if (!données.labels[métierId]) return undefined;
-  //       return [secteurId, métierId];
-  //     })
-  //     .filter((métierSecteur): métierSecteur is string[] => métierSecteur !== undefined),
-  // );
-  // const insertMétiersSecteurs = sqlHandler.générerInsert(
-  //   "metiers_secteurs",
-  //   ["secteur_id", "metier_id"],
-  //   métiersSecteurs,
-  //   false,
-  // );
-  // requêteSQL.push(insertMétiersSecteurs);
+  requêteSQL.push(insertBaccalaureatSpécialité);
+  sqlHandler.créerFichier("join_baccalaureat_specialite", insertBaccalaureatSpécialité);
 
   // Générer fichier final
   sqlHandler.créerFichier("insert", requêteSQL.join("\n"));

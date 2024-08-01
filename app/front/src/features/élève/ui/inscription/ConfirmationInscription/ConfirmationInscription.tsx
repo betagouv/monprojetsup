@@ -27,7 +27,7 @@ const ConfirmationInscription = () => {
         <p className="fr-text--lead mb-10">{i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.CONTENU}</p>
         <LienInterne
           ariaLabel={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.BOUTON_ACTION}
-          href="/eleve/tableau-de-bord"
+          href="/"
           variante="neutre"
         >
           <BoutonSquelette

@@ -70,14 +70,6 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
       label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.SECONDE.LABEL,
     },
     {
-      valeur: "seconde_sthr",
-      label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.SECONDE_STHR.LABEL,
-    },
-    {
-      valeur: "seconde_tmd",
-      label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.SECONDE_TMD.LABEL,
-    },
-    {
       valeur: "premiere",
       label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL,
     },

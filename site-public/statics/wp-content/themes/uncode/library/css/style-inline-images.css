@@ -1,0 +1,55 @@
+/*
+----------------------------------------------------------
+#Inline images
+----------------------------------------------------------
+*/
+.un-inline-link {
+  display: inline-block;
+}
+.un-inline-image {
+  display: inline-block;
+  position: relative;
+  vertical-align: bottom;
+}
+.un-inline-image:before {
+  content: '\00a0';
+  display: block;
+  overflow: hidden;
+  width: 0;
+}
+.un-inline-image img {
+  bottom: 0;
+  left: 0;
+  max-width: none !important;
+  position: absolute;
+  visibility: hidden;
+}
+.un-inline-image .fluid-object {
+  top: 0;
+  width: 100%;
+  position: absolute;
+}
+.un-inline-image.inline-img-loaded img {
+  visibility: visible;
+  width: 100%;
+}
+.un-inline-image > span {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.inline-rotate {
+  display: inline-block;
+}
+.inline-rotate.inline-rotate-standby {
+  display: inline;
+  opacity: 0;
+}
+.un-inline-space-over + .un-inline-space-over {
+  margin-left: -0.25em;
+}
+.un-inline-space-gutter + .un-inline-space-gutter {
+  margin-left: 0.25em;
+}

@@ -1,69 +1,54 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import {
-  type AlternanceOptions,
-  type DuréeÉtudesPrévueOptions,
-  type SituationVillesOptions,
-  type useÉtudeFormArgs,
-} from "./ÉtudeForm.interface";
+import { type AlternanceOptions, type DuréeÉtudesPrévueOptions, type useÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
+import { type Commune } from "@/features/commune/domain/commune.interface";
+import { rechercheCommunesQueryOptions } from "@/features/commune/ui/communeQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
-import { type Ville } from "@/features/ville/domain/ville.interface";
-import { rechercheVillesQueryOptions } from "@/features/ville/ui/options";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: useÉtudeFormArgs) {
-  const [rechercheVille, setRechercheVille] = useState<string>();
+  const [rechercheCommune, setRechercheCommune] = useState<string>();
 
-  const villeVersOptionVille = useCallback((ville: Ville) => {
+  const communeVersOptionCommune = useCallback((commune: Commune) => {
     return {
-      valeur: JSON.stringify(ville),
-      label: ville.nom,
+      valeur: JSON.stringify(commune),
+      label: commune.nom,
     };
   }, []);
 
-  const { register, erreurs, mettreÀJourÉlève, getValues, setValue, watch } = useÉlèveForm({
+  const { register, erreurs, mettreÀJourÉlève, getValues, setValue } = useÉlèveForm({
     schémaValidation: étudeValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const valeurSituationVilles = watch("situationVilles");
-
-  const villesSélectionnéesParDéfaut = useMemo(
-    () => getValues("villes"),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getValues, valeurSituationVilles],
-  );
+  const communesSélectionnéesParDéfaut = useMemo(() => getValues("communesFavorites"), [getValues]);
 
   const {
-    data: villes,
-    refetch: rechercherVilles,
-    isFetching: rechercheVillesEnCours,
-  } = useQuery(rechercheVillesQueryOptions(rechercheVille));
+    data: communes,
+    refetch: rechercherCommunes,
+    isFetching: rechercheCommunesEnCours,
+  } = useQuery(rechercheCommunesQueryOptions(rechercheCommune));
 
   useEffect(() => {
-    rechercherVilles();
-  }, [rechercheVille, rechercherVilles]);
+    rechercherCommunes();
+  }, [rechercheCommune, rechercherCommunes]);
 
-  useEffect(() => {
-    if (valeurSituationVilles === "aucune_idee") {
-      setValue("villes", []);
-    }
-  }, [setValue, valeurSituationVilles]);
+  useEffect(() => setValue("communesFavorites", []), [setValue]);
 
-  const auChangementDesVillesSélectionnées = (villesSélectionnées: SélecteurMultipleOption[]) => {
+  const auChangementDesCommunesSélectionnées = (communesSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
-      "villes",
-      villesSélectionnées.map((ville) => JSON.parse(ville.valeur)),
+      "communesFavorites",
+      communesSélectionnées.map((commune) => JSON.parse(commune.valeur)),
     );
   };
 
   const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions = [
     {
-      valeur: "options_ouvertes",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.OPTIONS_OUVERTES.LABEL,
+      valeur: "indifferent",
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.INDIFFÉRENT.LABEL,
     },
     {
       valeur: "courte",
@@ -98,29 +83,16 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     },
   ];
 
-  const situationVillesOptions: SituationVillesOptions = [
-    {
-      valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.AUCUNE_IDÉE.LABEL,
-    },
-    {
-      valeur: "quelques_pistes",
-      label: i18n.ÉLÈVE.ÉTUDE.SITUATION_VILLES.OPTIONS.QUELQUES_PISTES.LABEL,
-    },
-  ];
-
   return {
     mettreÀJourÉlève,
     erreurs,
     register,
     duréeÉtudesPrévueOptions,
     alternanceOptions,
-    situationVillesOptions,
-    valeurSituationVilles,
-    villesSuggérées: villes?.map(villeVersOptionVille) ?? [],
-    villesSélectionnéesParDéfaut: villesSélectionnéesParDéfaut?.map(villeVersOptionVille) ?? [],
-    rechercheVillesEnCours,
-    auChangementDesVillesSélectionnées,
-    àLaRechercheDUneVille: setRechercheVille,
+    communesSuggérées: communes?.map(communeVersOptionCommune) ?? [],
+    communesSélectionnéesParDéfaut: communesSélectionnéesParDéfaut?.map(communeVersOptionCommune) ?? [],
+    rechercheCommunesEnCours,
+    auChangementDesCommunesSélectionnées,
+    àLaRechercheDUneCommune: setRechercheCommune,
   };
 }

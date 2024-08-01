@@ -10,9 +10,12 @@ export const scolaritéValidationSchema = (bacs: Bac[]) => {
     classe: z.enum(classeÉlève, {
       errorMap: () => ({ message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE }),
     }),
-    bac: z.string().refine((valeur) => !valeur || bacIdsAutorisés.includes(valeur), {
-      message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE,
-    }),
-    spécialités: z.string().array().optional(),
+    bac: z
+      .string()
+      .nullable()
+      .refine((valeur) => !valeur || bacIdsAutorisés.includes(valeur), {
+        message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE,
+      }),
+    spécialités: z.string().array(),
   });
 };
