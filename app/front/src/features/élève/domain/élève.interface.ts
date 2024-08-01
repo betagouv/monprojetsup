@@ -1,11 +1,11 @@
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import { type components } from "@/types/api-mps";
 
-export type SituationÉlève = NonNullable<components["schemas"]["ProfilDTO"]["situation"]>;
-export type ClasseÉlève = NonNullable<components["schemas"]["ProfilDTO"]["classe"]>;
-export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ProfilDTO"]["dureeEtudesPrevue"]>;
-export type AlternanceÉlève = NonNullable<components["schemas"]["ProfilDTO"]["alternance"]>;
-type BacÉlève = NonNullable<components["schemas"]["ProfilDTO"]["baccalaureat"]>;
+export type SituationÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["situation"]>;
+export type ClasseÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["classe"]>;
+export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["dureeEtudesPrevue"]>;
+export type AlternanceÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["alternance"]>;
+type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
 export type Élève = {
   situation: SituationÉlève | null;

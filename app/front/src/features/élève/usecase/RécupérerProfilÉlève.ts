@@ -5,6 +5,26 @@ export class RécupérerÉlèveUseCase {
   public constructor(private readonly _élèveRepository: ÉlèveRepository) {}
 
   public async run(): Promise<Élève | undefined> {
-    return await this._élèveRepository.récupérerProfil();
+    const élève = await this._élèveRepository.récupérerProfil();
+
+    if (!élève) {
+      await this._élèveRepository.mettreÀJourProfil({
+        situation: null,
+        classe: null,
+        bac: null,
+        spécialités: null,
+        domaines: null,
+        centresIntêrets: null,
+        métiersFavoris: null,
+        duréeÉtudesPrévue: null,
+        alternance: null,
+        communesFavorites: null,
+        formationsFavorites: null,
+      });
+
+      return await this._élèveRepository.récupérerProfil();
+    }
+
+    return élève;
   }
 }
