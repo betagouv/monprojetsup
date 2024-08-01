@@ -41,7 +41,7 @@ class FormationController(
             suggestionsFormationsService.suggererFormations(
                 profilEleve = recupererEleveIdentifie(),
                 deLIndex = 0,
-                aLIndex = NOMBRE_FORMATIONS_SUGGEREES,
+                aLIndex = NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
             )
         return FormationsAvecExplicationsDTO(
             formations = formationsPourProfil.map { FormationAvecExplicationsDTO(it) },
@@ -106,12 +106,16 @@ class FormationController(
                 msg = "La taille de la requête est trop courte. Elle doit faire au moins $TAILLE_MINIMUM_RECHERCHE caractères",
             )
         }
-        val formationRecherchees = rechercherFormation.rechercheLesFormationsCorrespondantes(recherche)
+        val formationRecherchees =
+            rechercherFormation.rechercheLesFormationsCorrespondantes(
+                recherche,
+                NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
+            )
         return formationRecherchees
     }
 
     companion object {
-        private const val NOMBRE_FORMATIONS_SUGGEREES = 30
+        private const val NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES = 30
         const val TAILLE_MINIMUM_RECHERCHE = 2
         private const val TAILLE_MAXIMAL_RECHERCHE = 50
     }

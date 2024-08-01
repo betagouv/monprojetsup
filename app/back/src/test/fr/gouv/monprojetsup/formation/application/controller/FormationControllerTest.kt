@@ -944,7 +944,9 @@ class FormationControllerTest(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
-            `when`(rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1")).thenReturn(rechercheL1)
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+            ).thenReturn(rechercheL1)
 
             // When & Then
             mvc.perform(
@@ -987,7 +989,10 @@ class FormationControllerTest(
                     FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
             `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = rechercheDe50Caracteres),
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = rechercheDe50Caracteres,
+                    nombreMaximaleDeFormation = 30,
+                ),
             ).thenReturn(rechercheLongue)
 
             // When & Then
@@ -1104,7 +1109,9 @@ class FormationControllerTest(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
-            `when`(rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1")).thenReturn(rechercheL1)
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+            ).thenReturn(rechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
