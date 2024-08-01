@@ -58,7 +58,11 @@ class RechercherFormationsServiceTest {
     @Test
     fun `doit retourner la liste des formations sans doublons`() {
         // When
-        val resultat = rechercherFormationsService.rechercheLesFormationsCorrespondantes(rechercheLongue)
+        val resultat =
+            rechercherFormationsService.rechercheLesFormationsCorrespondantes(
+                recherche = rechercheLongue,
+                nombreMaximaleDeFormation = 10,
+            )
 
         // Then
         val attendu =
@@ -76,20 +80,39 @@ class RechercherFormationsServiceTest {
     }
 
     @Test
-    fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
+    fun `doit retourner la liste des formations en prenant en compte le maximum`() {
         // When
-        rechercherFormationsService.rechercheLesFormationsCorrespondantes(rechercheLongue)
+        val resultat =
+            rechercherFormationsService.rechercheLesFormationsCorrespondantes(
+                recherche = rechercheLongue,
+                nombreMaximaleDeFormation = 3,
+            )
 
         // Then
-        then(rechercheFormationRepository).should(never()).rechercherUneFormation("1")
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+            )
+        assertThat(resultat).isEqualTo(attendu)
+    }
+
+    @Test
+    fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
+        // When
+        rechercherFormationsService.rechercheLesFormationsCorrespondantes(recherche = rechercheLongue, nombreMaximaleDeFormation = 3)
+
+        // Then
+        then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "1")
     }
 
     @Test
     fun `ne doit pas appeler le repository plusieurs fois pour le même mot`() {
         // When
-        rechercherFormationsService.rechercheLesFormationsCorrespondantes(rechercheLongue)
+        rechercherFormationsService.rechercheLesFormationsCorrespondantes(recherche = rechercheLongue, nombreMaximaleDeFormation = 3)
 
         // Then
-        then(rechercheFormationRepository).should(atMostOnce()).rechercherUneFormation("peu")
+        then(rechercheFormationRepository).should(atMostOnce()).rechercherUneFormation(motRecherche = "peu")
     }
 }
