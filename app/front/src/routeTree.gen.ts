@@ -14,8 +14,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
-import { Route as FormationsFormationIdIndexImport } from './routes/formations/$formationId/index'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
+import { Route as AuthFormationsFormationIdIndexImport } from './routes/_auth/formations/$formationId/index'
 import { Route as AuthEleveInscriptionInscriptionScolariteIndexImport } from './routes/_auth/eleve/_inscription/inscription/scolarite/index'
 import { Route as AuthEleveInscriptionInscriptionProjetIndexImport } from './routes/_auth/eleve/_inscription/inscription/projet/index'
 import { Route as AuthEleveInscriptionInscriptionMetiersIndexImport } from './routes/_auth/eleve/_inscription/inscription/metiers/index'
@@ -56,19 +56,20 @@ const AuthProfilIndexLazyRoute = AuthProfilIndexLazyImport.update({
   import('./routes/_auth/profil/index.lazy').then((d) => d.Route),
 )
 
-const FormationsFormationIdIndexRoute = FormationsFormationIdIndexImport.update(
-  {
-    path: '/formations/$formationId/',
-    getParentRoute: () => rootRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/formations/$formationId/index.lazy').then((d) => d.Route),
-)
-
 const AuthEleveInscriptionRoute = AuthEleveInscriptionImport.update({
   id: '/_inscription',
   getParentRoute: () => AuthEleveRoute,
 } as any)
+
+const AuthFormationsFormationIdIndexRoute =
+  AuthFormationsFormationIdIndexImport.update({
+    path: '/formations/$formationId/',
+    getParentRoute: () => AuthRoute,
+  } as any).lazy(() =>
+    import('./routes/_auth/formations/$formationId/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute =
   AuthEleveInscriptionInscriptionConfirmationIndexLazyImport.update({
@@ -182,18 +183,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthEleveInscriptionImport
       parentRoute: typeof AuthEleveRoute
     }
-    '/formations/$formationId/': {
-      id: '/formations/$formationId/'
-      path: '/formations/$formationId'
-      fullPath: '/formations/$formationId'
-      preLoaderRoute: typeof FormationsFormationIdIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_auth/profil/': {
       id: '/_auth/profil/'
       path: '/profil'
       fullPath: '/profil'
       preLoaderRoute: typeof AuthProfilIndexLazyImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/formations/$formationId/': {
+      id: '/_auth/formations/$formationId/'
+      path: '/formations/$formationId'
+      fullPath: '/formations/$formationId'
+      preLoaderRoute: typeof AuthFormationsFormationIdIndexImport
       parentRoute: typeof AuthImport
     }
     '/_auth/eleve/_inscription/inscription/domaines/': {
@@ -273,8 +274,8 @@ export const routeTree = rootRoute.addChildren({
       }),
     }),
     AuthProfilIndexLazyRoute,
+    AuthFormationsFormationIdIndexRoute,
   }),
-  FormationsFormationIdIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -285,8 +286,7 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_auth",
-        "/formations/$formationId/"
+        "/_auth"
       ]
     },
     "/_auth": {
@@ -294,7 +294,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_auth/",
         "/_auth/eleve",
-        "/_auth/profil/"
+        "/_auth/profil/",
+        "/_auth/formations/$formationId/"
       ]
     },
     "/_auth/": {
@@ -322,11 +323,12 @@ export const routeTree = rootRoute.addChildren({
         "/_auth/eleve/_inscription/inscription/confirmation/"
       ]
     },
-    "/formations/$formationId/": {
-      "filePath": "formations/$formationId/index.tsx"
-    },
     "/_auth/profil/": {
       "filePath": "_auth/profil/index.lazy.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/formations/$formationId/": {
+      "filePath": "_auth/formations/$formationId/index.tsx",
       "parent": "/_auth"
     },
     "/_auth/eleve/_inscription/inscription/domaines/": {

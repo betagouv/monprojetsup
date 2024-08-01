@@ -22,6 +22,7 @@ export class HttpClient implements IHttpClient {
         return undefined;
       }
 
+      if (response.status === 204) return {} as O;
       return (await response.json()) as O;
     } catch (error) {
       this._logger.error({ endpoint, méthode, body, error });

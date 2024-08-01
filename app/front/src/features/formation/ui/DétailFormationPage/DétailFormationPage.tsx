@@ -6,7 +6,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 
 const DétailFormationPage = () => {
-  const route = getRouteApi("/formations/$formationId/");
+  const route = getRouteApi("/_auth/formations/$formationId/");
   const { formationId } = route.useParams();
 
   useSuspenseQuery(détailFormationQueryOptions(formationId));
