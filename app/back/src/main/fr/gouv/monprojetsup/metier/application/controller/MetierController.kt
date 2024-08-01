@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.metier.application.controller
 
-import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetiersCourtsDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetiersDTO
+import fr.gouv.monprojetsup.metier.usecase.RecupererMetiersService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("api/v1/metiers")
 @RestController
-class MetierController {
+class MetierController(
+    val recupererMetiersService: RecupererMetiersService,
+) {
     @GetMapping("/recherche/succincte")
     fun getRechercheMetierSuccincte(
         @RequestParam recherche: String,
@@ -545,63 +547,7 @@ class MetierController {
     fun getMetiers(
         @RequestParam ids: List<String>,
     ): MetiersDTO {
-        val metiers =
-            listOf(
-                MetierDTO(
-                    id = "MET_319",
-                    nom = "<span>Assistant / assistante de direction</span>",
-                    descriptif =
-                        "Pour seconder la direction d'une entreprise, l'assistante ou l'assistant de direction exerce des " +
-                            "missions variées, de la prise de rendez-vous à l'organisation de déplacements ou de réunions en passant " +
-                            "par le filtrage des appels ou la réception des clients. Un poste à responsabilités.<br/><br/><h3>Après " +
-                            "le bac</h3><p>2 ans pour préparer le BTS support à l'action managériale.</p>",
-                    liens =
-                        listOf(
-                            LienDTO(
-                                nom = "<span>Assistant / assistante de direction</span>",
-                                url = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.319",
-                            ),
-                        ),
-                ),
-                MetierDTO(
-                    id = "MET_312",
-                    nom = "moniteur/trice de ski",
-                    descriptif =
-                        "<p>Amoureux de la montagne et sportif émérite, le moniteur de ski évolue dans un cadre de rêve et " +
-                            "transmet sa passion aux vacanciers débutants comme experts. Mais il doit composer avec la concurrence et " +
-                            "le caractère saisonnier de son activité.</p>",
-                    liens =
-                        listOf(
-                            LienDTO(
-                                nom = "Éducation en activités sportives",
-                                url = "https://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=G1204",
-                            ),
-                            LienDTO(
-                                nom = "\"moniteur / monitrice de ski",
-                                url = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.312",
-                            ),
-                        ),
-                ),
-                MetierDTO(
-                    id = "MET_311",
-                    nom = "éducateur spécialisé / éducatrice spécialisée",
-                    descriptif =
-                        "<p>L'éducateur spécialisé aide des personnes en situation de handicap ou en difficulté à devenir " +
-                            "autonomes. Avec une double mission : contribuer à leur épanouissement personnel et à leur insertion " +
-                            "en société.</p>",
-                    liens =
-                        listOf(
-                            LienDTO(
-                                nom = "Intervention socioéducative",
-                                url = "https://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1207",
-                            ),
-                            LienDTO(
-                                nom = "éducateur spécialisé / éducatrice spécialisée",
-                                url = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.311",
-                            ),
-                        ),
-                ),
-            )
-        return MetiersDTO(metiers)
+        val metiers = recupererMetiersService.recupererMetiers(ids)
+        return MetiersDTO(metiers.map { MetierDTO(it) })
     }
 }
