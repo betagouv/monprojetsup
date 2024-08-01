@@ -23,6 +23,8 @@ class RechercherFormationsService(
         motsRecherches.forEach { mot ->
             formations.addAll(rechercheFormationRepository.rechercherUneFormation(mot))
         }
+        val selecteur = formations.groupingBy { it.id }.eachCount()
+        formations.sortByDescending { selecteur[it.id] }
         val formationDisctinctes = formations.distinct()
         return formationDisctinctes.subList(0, min(nombreMaximaleDeFormation, formationDisctinctes.size))
     }
