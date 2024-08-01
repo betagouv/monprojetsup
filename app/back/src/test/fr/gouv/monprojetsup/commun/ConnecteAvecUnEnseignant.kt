@@ -26,7 +26,7 @@ internal class ConnecteAvecUnEnseignantSecurityContextFactory : WithSecurityCont
                 .header("alg", "RS256")
                 .header("typ", "JWT")
                 .claim("iat", Instant.now())
-                .claim("sid", idEnseignant)
+                .claim("sub", idEnseignant)
                 .claim("profile", "APP-EDU")
                 .claim("name", "Léa Dupond")
                 .claim("preferred_username", "enseignant")

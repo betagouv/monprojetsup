@@ -26,7 +26,7 @@ internal class ConnecteAvecUnEleveSecurityContextFactory : WithSecurityContextFa
                 .header("alg", "RS256")
                 .header("typ", "JWT")
                 .claim("iat", Instant.now())
-                .claim("sid", idEleve)
+                .claim("sub", idEleve)
                 .claim("profile", "APP-SEC")
                 .claim("name", "Léo Dupont")
                 .claim("preferred_username", "eleve")
