@@ -5,6 +5,6 @@ server {
     location / {
         root ${NGINX_ROOT};
         index index.html;
-        try_files $uri /index.html$is_args$args =404;
+        try_files $uri $uri/ /index.html =404;
     }
 }
