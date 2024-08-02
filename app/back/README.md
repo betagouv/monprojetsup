@@ -30,8 +30,14 @@ spring.security.oauth2.client.registration.keycloak.client-id=mps-cli
 spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:5003/realms/avenirs
 spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:5003/realms/avenirs
 springdoc.swagger-ui.oauth.client-id=mps-cli
+springdoc.swagger-ui.oauth.client-secret=
 ```
 - Pour la variable `springdoc.swagger-ui.oauth.client-secret` vous pouvez récupérer le secret à cette URL http://localhost:5003/admin/master/console/#/avenirs/clients/99b97c1a-5f00-4304-9a17-9f8c9fa3974d/credentials (si vous ne savez pas lancer/vous connecter au keycloak -> README.md à la racine de ce repo)
+
+### Lancer le serveur
+- Assurez-vous de disposer de java en version 17
+- Lancez le serveur avec `mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.MonProjetSupApplication`
+
 
 ## Comment ajouter une variables d'env
 ### Dont la valeur dépend de l'environnement

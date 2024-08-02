@@ -9,6 +9,7 @@ Elle utilise les technologies Typescript/React/ViteJS.
 
 ### Lancer le serveur
 - Assurez-vous de disposer de la dernière version de NodeJS 22
+- Installez les dépendances avec `npm install`
 - Lancez le serveur avec `npm run dev`
 
 
@@ -19,7 +20,7 @@ Elle utilise les technologies Typescript/React/ViteJS.
 
 
 ## Comment ajouter une variables d'env
-- En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env`, `.env.ci`
+- En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env.local`, `.env.ci`
 - Pour le déploiement vous devez demander à l'équipe en charge du gitlab Avenir(s) de vous rajouter la variable à leur script de CD pour tous les environnements (cf README.md à la racine de ce repo)
 
 ## Remarque sur les variables d'environnement existantes
@@ -28,5 +29,3 @@ Vous trouverez cela surement étrange (je l'éspère) de définir un secret côt
 
 ### `VITE_TEST_MODE`
 Elle est à true dans le fichier `env.ci` et lors de l'execution des tests End-to-End. Dans les faits cela permet de contourner tous les systèmes d'authentification et de pouvoir tester le frontend de manière totalement indépendante. Pas d'inquiétude à avoir en terme de sécurité vous ne pourrez pas faire d'appel à l'API backend. 
-
-Lorsque vous êtes en mode TEST vous pouvez appeler les routes de l'application en ajoutant en paramètre `http://localhost:5001/.../?simulerCompte=élève` ou `http://localhost:5001/.../?simulerCompte=enseignant` afin de simuler la connexion avec un de ces profils (utile dans le cas de page avec la même URL mais pas le même contenu à afficher)
