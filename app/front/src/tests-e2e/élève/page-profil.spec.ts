@@ -8,7 +8,7 @@ class Test extends TestHelper {
   }
 
   public naviguerVersLaPage = async () => {
-    this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
+    await this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
     await this._page.goto("/profil");
   };
 
