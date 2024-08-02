@@ -22,7 +22,7 @@ class Test extends TestHelper {
   }
 
   public naviguerVersLaPage = async (path: keyof (typeof router)["routesByPath"]) => {
-    this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
+    await this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
     await this._page.goto(path, { waitUntil: "networkidle" });
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
