@@ -6,7 +6,7 @@ import { RécupérerBacsUseCase } from "@/features/bac/usecase/RécupérerBacs";
 import { RécupérerSpécialitésUseCase } from "@/features/bac/usecase/RécupérerSpécialités";
 import { type CentreIntêretRepository } from "@/features/centreIntêret/infrastructure/centreIntêretRepository.interface";
 import { centreIntêretInMemoryRepository } from "@/features/centreIntêret/infrastructure/gateway/centreIntêretInMemoryRepository/centreIntêretInMemoryRepository";
-import { RécupérerCentresIntêretsGroupésParCatégorieUseCase } from "@/features/centreIntêret/usecase/RécupérerCentresIntêretsGroupésParCatégorie";
+import { RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase } from "@/features/centreIntêret/usecase/RécupérerCatégoriesEtSousCatégoriesCentreIntêret";
 import { communeHTTPRepository } from "@/features/commune/infrastructure/communeHTTPRepository/communeHTTPRepository";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
@@ -81,7 +81,7 @@ export class Dépendances {
 
   public readonly récupérerDomainesProfessionnelsGroupésParCatégorieUseCase: RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase;
 
-  public readonly récupérerCentresIntêretsGroupésParCatégorieUseCase: RécupérerCentresIntêretsGroupésParCatégorieUseCase;
+  public readonly récupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase: RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase;
 
   private constructor() {
     this._logger = new Logger();
@@ -111,9 +111,8 @@ export class Dépendances {
     this.rechercherSpécialitésPourUnBacUseCase = new RechercherSpécialitésPourUnBacUseCase(this._bacRepository);
     this.récupérerDomainesProfessionnelsGroupésParCatégorieUseCase =
       new RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase(this._domaineProfessionnelRepository);
-    this.récupérerCentresIntêretsGroupésParCatégorieUseCase = new RécupérerCentresIntêretsGroupésParCatégorieUseCase(
-      this._centreIntêretRepository,
-    );
+    this.récupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase =
+      new RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase(this._centreIntêretRepository);
   }
 
   public static getInstance(): Dépendances {

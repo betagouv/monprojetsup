@@ -1,10 +1,12 @@
-export type CentreIntêret = {
+export type SousCatégorieCentreIntêret = {
   id: string;
   nom: string;
+  emoji: string;
 };
 
-export type CatégorieCentresIntêrets = {
+export type CatégorieCentreIntêret = {
+  id: string;
   nom: string;
   emoji: string;
-  centresIntêrets: CentreIntêret[];
+  sousCatégoriesCentreIntêret: SousCatégorieCentreIntêret[];
 };

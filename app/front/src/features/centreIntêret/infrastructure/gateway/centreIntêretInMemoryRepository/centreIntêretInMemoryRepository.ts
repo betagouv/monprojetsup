@@ -1,122 +1,257 @@
-import { type CatégorieCentresIntêrets } from "@/features/centreIntêret/domain/centreIntêret.interface";
+import { type CatégorieCentreIntêret } from "@/features/centreIntêret/domain/centreIntêret.interface";
 import { type CentreIntêretRepository } from "@/features/centreIntêret/infrastructure/centreIntêretRepository.interface";
 
 export class centreIntêretInMemoryRepository implements CentreIntêretRepository {
-  private CATÉGORIES_CENTRES_INTÊRETS: CatégorieCentresIntêrets[] = [
+  private CATÉGORIES_CENTRE_INTÊRET: CatégorieCentreIntêret[] = [
     {
-      emoji: "🧑‍💻",
+      id: "transmettre",
       nom: "Transmettre et m'occuper des plus jeunes",
-      centresIntêrets: [
-        { nom: "Travailler avec des enfants", id: "T_IDEO2_4815" },
-        { nom: "Enseigner", id: "T_ROME_1046112128" },
+      emoji: "🧑‍💻",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "transmettre_enfants",
+          nom: "Travailler avec des enfants",
+          emoji: "🙋",
+        },
+        {
+          id: "transmettre_enseigner",
+          nom: "Enseigner",
+          emoji: "👶",
+        },
       ],
     },
     {
-      emoji: "🌱",
+      id: "proteger",
       nom: "Protéger la nature et les animaux",
-      centresIntêrets: [
-        { nom: "Travailler au contact de la nature", id: "T_IDEO2_4824" },
-        { nom: "Défendre l'écologie", id: "T_ROME_84652368" },
-        { nom: "Travailler avec les animaux", id: "T_IDEO2_4828" },
+      emoji: "🌱",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "proteger_nature",
+          nom: "Travailler au contact de la nature",
+          emoji: "🌳",
+        },
+        {
+          id: "proteger_ecologie",
+          nom: "Défendre l'écologie",
+          emoji: "♻",
+        },
+        {
+          id: "proteger_animaux",
+          nom: "Travailler avec les animaux",
+          emoji: "😺",
+        },
       ],
     },
     {
-      emoji: "🗣",
+      id: "communiquer",
       nom: "Communiquer et informer",
-      centresIntêrets: [
-        { nom: "Informer, communiquer", id: "T_IDEO2_4821" },
-        { nom: "J'ai le sens du contact", id: "T_IDEO2_4817" },
-        { nom: "Communiquer, convaincre", id: "T_ROME_1814691478" },
+      emoji: "🗣",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "communiquer_informer",
+          nom: "Communiquer et informer",
+          emoji: "🗣",
+        },
       ],
     },
     {
-      emoji: "🔨",
+      id: "travail_manuel",
       nom: "Travailler de mes mains",
-      centresIntêrets: [
-        { nom: "Bricoler", id: "T_IDEO2_4806" },
-        { nom: "Créer quelque chose de mes mains", id: "T_ROME_1573349427" },
-        { nom: "Cuisiner", id: "T_ROME_1665443017" },
+      emoji: "🔨",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "travail_manuel_bricoler",
+          nom: "Bricoler",
+          emoji: "🙌",
+        },
+        {
+          id: "travail_manuel_creer",
+          nom: "Créer quelque chose de mes mains",
+          emoji: "🪛",
+        },
+        {
+          id: "travail_manuel_cuisiner",
+          nom: "Cuisiner",
+          emoji: "🧑‍🍳",
+        },
       ],
     },
     {
-      emoji: "🌎",
+      id: "decouvrir",
       nom: "Découvrir le monde",
-      centresIntêrets: [
-        { nom: "Voyager", id: "T_IDEO2_4810" },
-        { nom: "Apprendre de nouvelles langues", id: "T_IDEO2_4818" },
-        { nom: "Travailler dans un milieu multiculturel", id: "T_ROME_762517279" },
+      emoji: "🌎",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "decouvrir_voyager",
+          nom: "Voyager",
+          emoji: "🚅",
+        },
+        {
+          id: "decouvrir_apprendre_langues",
+          nom: "Apprendre de nouvelles langues",
+          emoji: "🇬🇧",
+        },
+        {
+          id: "decouvrir_multiculturel",
+          nom: "Travailler dans un milieu multiculturel",
+          emoji: "🛤",
+        },
       ],
     },
     {
-      emoji: "🧡",
+      id: "aider",
       nom: "Prendre soin des autres",
-      centresIntêrets: [
-        { nom: "Soigner", id: "T_IDEO2_4807" },
-        { nom: "Aider les autres", id: "T_ROME_731379930" },
-        { nom: "Aller vers les gens", id: "T_ROME_860291826" },
+      emoji: "🧡",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "aider_soigner",
+          nom: "Soigner",
+          emoji: "🏥",
+        },
+        {
+          id: "aider_autres",
+          nom: "Aider les autres",
+          emoji: "🫂",
+        },
+        {
+          id: "aider_aller_vers",
+          nom: "Aller vers les gens",
+          emoji: "😄",
+        },
       ],
     },
     {
-      emoji: "🤸",
+      id: "activite_physique",
       nom: "Avoir une activité physique",
-      centresIntêrets: [
-        { nom: "Pratiquer une activité sportive", id: "T_IDEO2_4809" },
-        { nom: "Des sensations fortes", id: "T_IDEO2_4826" },
-        { nom: "Conduire", id: "T_ROME_326548351" },
+      emoji: "🤸",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "activite_physique_sportive",
+          nom: "Pratiquer une activité sportive",
+          emoji: "⛹",
+        },
+        {
+          id: "activite_physique_sensations",
+          nom: "Des sensations fortes",
+          emoji: "🔥",
+        },
+        {
+          id: "activite_physique_conduire",
+          nom: "Conduire",
+          emoji: "🏎",
+        },
       ],
     },
     {
-      emoji: "🧐",
+      id: "rechercher",
       nom: "Découvrir, enquêter et rechercher",
-      centresIntêrets: [
-        { nom: "Faire des expériences", id: "T_ROME_2027610093" },
-        { nom: "Prêter attention au détail", id: "T_ROME_58088585" },
+      emoji: "🧐",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "rechercher_experiences",
+          nom: "Faire des expériences",
+          emoji: "🧪",
+        },
+        {
+          id: "rechercher_detail",
+          nom: "Prêter attention au détail",
+          emoji: "🔎",
+        },
       ],
     },
     {
-      emoji: "🧑‍⚖",
+      id: "loi",
       nom: "Faire respecter la loi",
-      centresIntêrets: [{ nom: "Faire respecter la loi", id: "T_IDEO2_4808" }],
+      emoji: "🧑‍⚖",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "loi_faire_respecter",
+          nom: "Faire respecter la loi",
+          emoji: "🧑‍⚖",
+        },
+      ],
     },
     {
-      emoji: "🎥",
+      id: "art",
       nom: "Travailler dans le monde de l'art",
-      centresIntêrets: [
-        { nom: "Être artiste", id: "T_IDEO2_4829" },
-        { nom: "Découvrir l'envers du décor", id: "T_ROME_1391567938" },
-        { nom: "Écrire ou lire", id: "T_ROME_1825212206" },
+      emoji: "🎥",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "art_artiste",
+          nom: "Être artiste",
+          emoji: "🎨",
+        },
+        {
+          id: "art_envers",
+          nom: "Découvrir l'envers du décor",
+          emoji: "🎭",
+        },
+        {
+          id: "art_ecrire_lire",
+          nom: "Écrire ou lire",
+          emoji: "✍",
+        },
       ],
     },
     {
-      emoji: "🚀",
+      id: "diriger",
       nom: "Mener une équipe",
-      centresIntêrets: [
-        { nom: "Diriger une équipe", id: "T_IDEO2_4814" },
-        { nom: "Organiser les choses", id: "T_IDEO2_4820" },
+      emoji: "🚀",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "diriger_equipe",
+          nom: "Diriger une équipe",
+          emoji: "👍",
+        },
+        {
+          id: "dirigier_organiser",
+          nom: "Organiser les choses",
+          emoji: "📑",
+        },
       ],
     },
-
     {
-      emoji: "💻",
+      id: "technologies",
       nom: "Développer les nouvelles technologies",
-      centresIntêrets: [{ nom: "Je suis branché high tech", id: "T_IDEO2_4825" }],
+      emoji: "💻",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "technologies_high_tech",
+          nom: "Je suis branché high tech",
+          emoji: "💻",
+        },
+      ],
     },
     {
-      emoji: "🤝",
+      id: "commerce",
       nom: "Vendre, développer un commerce",
-      centresIntêrets: [{ nom: "J'ai la bosse du commerce", id: "T_IDEO2_4811" }],
+      emoji: "🤝",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "commerce_bosse",
+          nom: "J'ai la bosse du commerce",
+          emoji: "🤝",
+        },
+      ],
     },
     {
-      emoji: "💯",
+      id: "chiffres",
       nom: "Jongler avec les chiffres",
-      centresIntêrets: [{ nom: "Jongler avec les chiffres", id: "T_IDEO2_4816" }],
+      emoji: "💯",
+      sousCatégoriesCentreIntêret: [
+        {
+          id: "chiffres_jongler",
+          nom: "Jongler avec les chiffres",
+          emoji: "💯",
+        },
+      ],
     },
   ];
 
-  public async récupérerTousGroupésParCatégorie(): Promise<CatégorieCentresIntêrets[] | undefined> {
+  public async récupérer(): Promise<CatégorieCentreIntêret[] | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(this.CATÉGORIES_CENTRES_INTÊRETS.sort((a, b) => a.nom.localeCompare(b.nom, "fr")));
+        resolve(this.CATÉGORIES_CENTRE_INTÊRET.sort((a, b) => a.nom.localeCompare(b.nom, "fr")));
       }, 500);
     });
   }

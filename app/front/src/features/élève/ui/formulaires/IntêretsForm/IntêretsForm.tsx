@@ -2,23 +2,23 @@ import { type IntêretsFormProps } from "./IntêretsForm.interface";
 import { centresIntêretsValidationSchema } from "./IntêretsForm.validation";
 import FiltresGroupésParCatégorie from "@/components/FiltresGroupésParCatégorie/FiltresGroupésParCatégorie";
 import { i18n } from "@/configuration/i18n/i18n";
-import { catégoriesCentresIntêretsQueryOptions } from "@/features/centreIntêret/ui/options";
+import { centresIntêretsQueryOptions } from "@/features/centreIntêret/ui/centreIntêretQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
 
 const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntêretsFormProps) => {
-  const { data: catégoriesCentresIntêrets } = useSuspenseQuery(catégoriesCentresIntêretsQueryOptions);
+  const { data: catégoriesCentreIntêret } = useSuspenseQuery(centresIntêretsQueryOptions);
 
   const { setValue, mettreÀJourÉlève, getValues, erreurs } = useÉlèveForm({
     schémaValidation: centresIntêretsValidationSchema,
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const filtresGroupésParCatégories = catégoriesCentresIntêrets.map((catégorie) => ({
+  const filtresGroupésParCatégories = catégoriesCentreIntêret.map((catégorie) => ({
     nom: catégorie.nom,
     emoji: catégorie.emoji,
-    filtres: catégorie.centresIntêrets,
+    filtres: catégorie.sousCatégoriesCentreIntêret,
   }));
 
   const légendeId = useId();
