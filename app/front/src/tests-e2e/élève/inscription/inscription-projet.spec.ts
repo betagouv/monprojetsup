@@ -1,4 +1,4 @@
-import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { InscriptionTestHelper } from "./t";
 import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
