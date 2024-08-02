@@ -53,6 +53,7 @@ class MiseAJourEleveService(
                 communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
                 formationsFavorites = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites,
                 moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
+                corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
             )
         if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)

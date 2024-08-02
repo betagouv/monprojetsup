@@ -71,6 +71,7 @@ class MiseAJourEleveServiceTest {
             communesFavorites = listOf(Communes.PARIS, Communes.MARSEILLE),
             formationsFavorites = listOf("fl0010", "fl0012"),
             moyenneGenerale = 10.5f,
+            corbeilleFormations = listOf("fl1234", "fl5678"),
         )
 
     private val profilVide = ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
@@ -471,6 +472,7 @@ class MiseAJourEleveServiceTest {
                     communesFavorites = listOf(Communes.PARIS),
                     formationsFavorites = listOf("fl0011"),
                     moyenneGenerale = 14.5f,
+                    corbeilleFormations = listOf("fl1234", "fl5678"),
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)

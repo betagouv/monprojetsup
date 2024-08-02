@@ -70,6 +70,10 @@ class ProfilEleveControllerTest(
               "formationsFavorites": [
                 "fl1234",
                 "fl5678"
+              ],
+              "corbeilleFormations": [
+                "fl0001",
+                "fl0002"
               ]
             }
             """.trimIndent()
@@ -88,6 +92,7 @@ class ProfilEleveControllerTest(
                 metiersFavoris = listOf("MET_456"),
                 formationsFavorites = listOf("fl1234", "fl5678"),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0001", "fl0002"),
             )
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
