@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import kotlin.jvm.Throws
 
 @RestController
 @RequestMapping("api/v1/formations")
@@ -66,8 +65,9 @@ class FormationController(
         @RequestParam recherche: String,
     ): FormationsCourtesDTO {
         val formationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche)
+        val formationsFiltrees = filtreesFormationPourEleve(formationRecherchees)
         return FormationsCourtesDTO(
-            formationRecherchees.map { FormationCourteDTO(it) },
+            formationsFiltrees.map { FormationCourteDTO(it) },
         )
     }
 
@@ -76,7 +76,7 @@ class FormationController(
         @RequestParam recherche: String,
     ): FormationsAvecExplicationsDTO {
         val formationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche)
-        return recupererUneListeDeFormationsDetaillees(formationRecherchees.map { it.id })
+        return recupererUneListeDeFormationsDetaillees(filtreesFormationPourEleve(formationRecherchees).map { it.id })
     }
 
     @GetMapping
@@ -84,6 +84,15 @@ class FormationController(
         @RequestParam ids: List<String>,
     ): FormationsAvecExplicationsDTO {
         return recupererUneListeDeFormationsDetaillees(ids)
+    }
+
+    private fun filtreesFormationPourEleve(formationRecherchees: List<FormationCourte>): List<FormationCourte> {
+        val formationsFiltrees =
+            when (val utilisateur = recupererUtilisateur()) {
+                is Identifie -> formationRecherchees.filterNot { formation -> utilisateur.corbeilleFormations.any { it == formation.id } }
+                else -> formationRecherchees
+            }
+        return formationsFiltrees
     }
 
     private fun recupererUneListeDeFormationsDetaillees(ids: List<String>): FormationsAvecExplicationsDTO {
