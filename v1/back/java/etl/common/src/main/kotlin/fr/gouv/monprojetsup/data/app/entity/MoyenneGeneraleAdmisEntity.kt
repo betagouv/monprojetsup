@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.app.entity
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import java.io.Serializable

@@ -15,4 +15,8 @@ public interface LabelsPort {
 
     @NotNull Optional<String> retrieveDebugLabel(@NotNull String key);
 
+    void saveAll(
+            @NotNull Map<String, @NotNull String> labels,
+            @NotNull Map<String, @NotNull String> debugLabelserror
+    );
 }

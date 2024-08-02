@@ -118,15 +118,15 @@ public class PsupStatistiques implements Serializable {
     private final StatistiquesAdmisParGroupe statsAdmis = new StatistiquesAdmisParGroupe();
 
     //par groupe puis par bac
-    private final Map<String,@NotNull Map<String, @NotNull Integer>> admisParGroupes = new TreeMap<>();
+    private final @NotNull Map<String,@NotNull Map<@NotNull String, @NotNull Integer>> admisParGroupes = new TreeMap<>();
 
     //par groupe puis par bac
-    private final Map<String, @NotNull Map<String,@NotNull Integer>> candidatsParGroupes = new TreeMap<>();
+    private final @NotNull Map<String, @NotNull Map<@NotNull String,@NotNull Integer>> candidatsParGroupes = new TreeMap<>();
 
-    public final Map<Integer, @NotNull String> matieres = new TreeMap<>();
+    public final @NotNull Map<@NotNull Integer, @NotNull String> matieres = new TreeMap<>();
 
     public final AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats = new AdmisMatiereBacAnneeStats();
-    private @NotNull Map<Integer, @NotNull Filiere> filieres = new HashMap<>();//from carte, including data on LAS
+    private @NotNull Map<@NotNull Integer, @NotNull Filiere> filieres = new HashMap<>();//from carte, including data on LAS
 
     public void injecterNomsFilieresManquantsEtTauxAcces(AlgoCarteEntree carte, Set<Integer> filActives) {
         this.filieres = carte.filieres;
@@ -177,11 +177,34 @@ public class PsupStatistiques implements Serializable {
     }
 
 
-    public @Nullable Map<Integer, Integer> getStatsSpec(String g) {
+    public @Nullable Map<Integer, Integer> getNbAdmisParSpec(String g) {
         TauxSpecialites s = statsSpecialites.parGroupe().get(g);
         if(s == null) return null;
         return s.parSpecialite();
     }
+
+    @Nullable
+    public Map<String, Integer> getPctAdmisParBac(@NotNull String mpsKey) {
+        return toPct(getNbAdmisParBac(mpsKey));
+    }
+
+    @Nullable
+    public Map<Integer, Integer> getPctAdmisParSpec(@NotNull String mpsKey) {
+        return toPct(getNbAdmisParSpec(mpsKey));
+    }
+
+
+    private static <T> @NotNull Map<T, @NotNull Integer> toPct(Map<T, @NotNull Integer> nbAdmis) {
+        if(nbAdmis == null || nbAdmis.isEmpty()) return Map.of();
+        int total = nbAdmis.values().stream().mapToInt(Integer::intValue).sum();
+        if (total <= MIN_POPULATION_SIZE_FOR_STATS) return Map.of();
+        return nbAdmis.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Entry::getKey,
+                        e -> (int) Math.round(100.0 * e.getValue() / total)
+                ));
+    }
+
     public @Nullable Map<Integer, Integer> getStatsSpecCandidats(String g) {
         TauxSpecialites s = statsSpecialitesCandidats.parGroupe().get(g);
         if(s == null) return null;
@@ -195,7 +218,7 @@ public class PsupStatistiques implements Serializable {
         int total = parBac.getOrDefault(TOUS_BACS_CODE, 0);
         if (total < 5) return null;
 
-        Map<Integer, Integer> sts = getStatsSpec(grp);
+        Map<Integer, Integer> sts = getNbAdmisParSpec(grp);
         if(sts == null || sts.isEmpty()) return null;
         int nbWithSpec = sts.getOrDefault(specialite, 0);
         return Math.max(0.0, Math.min(1.0, 1.0 * nbWithSpec / total));
@@ -502,7 +525,7 @@ public class PsupStatistiques implements Serializable {
                 e -> new StatsContainers.SimpleStatGroup(
                         g,
                         getNbAdmis(g,e.getKey()),
-                        (!onlyMoyGen && (e.getKey().equals(TOUS_BACS_CODE) || e.getKey().equals(bac))) ? getStatsSpec(g) : Collections.emptyMap(),
+                        (!onlyMoyGen && (e.getKey().equals(TOUS_BACS_CODE) || e.getKey().equals(bac))) ? getNbAdmisParSpec(g) : Collections.emptyMap(),
                         e.getKey().equals(TOUS_BACS_CODE) || e.getKey().equals(bac) ? getStatsScol(g, e.getKey(), onlyMoyGen) : Collections.emptyMap()
                         )
         ));

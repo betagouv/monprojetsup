@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.app.entity
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType
-import com.vladmihalcea.hibernate.type.json.JsonType
 import fr.gouv.monprojetsup.data.app.domain.Formation
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 
@@ -49,7 +49,7 @@ class FormationDetailleeEntity {
     var descriptifAttendus: String? = null
 
     @Type(ListArrayType::class)
-    @Column(name = "mots_clefs", nullable = true)
+    @Column(name = "mots_clefs", nullable = true, columnDefinition = "varchar[]")
     var motsClefs: List<String>? = null
 
     @Type(ListArrayType::class)

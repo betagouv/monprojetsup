@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.entity
+package fr.gouv.monprojetsup.data.suggestions.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "metiers")
-class MetierEntity {
+class SuggestionsMetierEntity {
     @Id
     @Column
     val id: String = ""

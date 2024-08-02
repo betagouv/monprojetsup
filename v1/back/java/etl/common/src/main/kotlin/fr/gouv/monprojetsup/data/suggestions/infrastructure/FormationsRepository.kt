@@ -1,6 +1,6 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.repository
+package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.infrastructure.entity.FormationEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsFormationEntity
 import fr.gouv.monprojetsup.suggestions.domain.model.Formation
 import fr.gouv.monprojetsup.suggestions.domain.port.FormationsPort
 import org.springframework.cache.annotation.Cacheable
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
-interface FormationsJPARepository : JpaRepository<FormationEntity, String> {
-    override fun findAll(): MutableList<FormationEntity>
+interface FormationsJPARepository : JpaRepository<SuggestionsFormationEntity, String> {
+    override fun findAll(): MutableList<SuggestionsFormationEntity>
 
-    override fun findById(key: String): Optional<FormationEntity>
+    override fun findById(key: String): Optional<SuggestionsFormationEntity>
 
 }
 
@@ -37,7 +37,7 @@ class FormationRepository(
 
     @Transactional(readOnly = false)
     override fun saveAll(formations: Collection<Formation>) {
-        repo.saveAll(formations.map { FormationEntity(it) })
+        repo.saveAll(formations.map { SuggestionsFormationEntity(it) })
     }
 
 }

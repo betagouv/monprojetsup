@@ -1,6 +1,6 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.repository
+package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.infrastructure.entity.EdgeEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.suggestions.domain.model.Edge
 import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort
 import fr.gouv.monprojetsup.suggestions.infrastructure.model.Edges
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 
-interface EdgeJPARepository : JpaRepository<EdgeEntity, String> {
-    fun findByTyp(typ: Int): List<EdgeEntity>
+interface EdgeJPARepository : JpaRepository<SuggestionsEdgeEntity, String> {
+    fun findByTyp(typ: Int): List<SuggestionsEdgeEntity>
 
-    fun findBySrc(src: String): List<EdgeEntity>
+    fun findBySrc(src: String): List<SuggestionsEdgeEntity>
 
 }
 
@@ -37,18 +37,18 @@ class EdgesRepository(
     }
 
     override fun saveAll(edges: Edges, type: Int) {
-        val newEdges = HashSet<EdgeEntity>()
+        val newEdges = HashSet<SuggestionsEdgeEntity>()
         edges.edges().forEach {
             edge -> edge.value.forEach {
-                target -> newEdges.add(EdgeEntity(edge.key, target, type))
+                target -> newEdges.add(SuggestionsEdgeEntity(edge.key, target, type))
             }
         }
         edgeJPARepository.saveAll(newEdges)
     }
 
     override fun saveAll(edges: Map<String, String>, type: Int) {
-        val newEdges = HashSet<EdgeEntity>()
-        edges.forEach { edge -> newEdges.add(EdgeEntity(edge.key, edge.value, type)) }
+        val newEdges = HashSet<SuggestionsEdgeEntity>()
+        edges.forEach { edge -> newEdges.add(SuggestionsEdgeEntity(edge.key, edge.value, type)) }
         edgeJPARepository.saveAll(newEdges)
     }
 

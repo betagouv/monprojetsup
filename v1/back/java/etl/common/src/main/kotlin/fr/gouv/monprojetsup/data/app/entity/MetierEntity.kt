@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.app.entity
 
-import com.vladmihalcea.hibernate.type.json.JsonType
 import fr.gouv.monprojetsup.data.app.domain.Metier
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

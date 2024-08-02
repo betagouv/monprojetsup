@@ -23,10 +23,11 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.*;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
+import static fr.gouv.monprojetsup.suggestions.poc.ServerData.p75Capacity;
+import static fr.gouv.monprojetsup.suggestions.poc.ServerData.p90NbFormations;
 import static java.util.Map.entry;
 
 public class AffinityEvaluator {
-
 
     public static final int MAX_DISTANCE = 3;
     private static final double MULTIPLIER_FOR_UNFITTED_NOTES = 0.1;
@@ -34,19 +35,13 @@ public class AffinityEvaluator {
     private static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
 
     private static final double MAX_SCORE_PATH_LENGTH_2 = 1.0;
-
     private static final double MAX_SCORE_PATH_LENGTH_3 = 0.25;
-
     public static final int ADMISSIBILITY_LOWEST_GRADE = 8;
     private static final double ZERO_ADMISSIBILITY = 0.001;
-
-    private static final double ADMISSIBILITY_10 = 0.1;//at the first decile
-
+    private static final double ADMISSIBILITY_10 = 0.1;//at the first décile
     private static final double ADMISSIBILITY_25 = 0.3;//at the 25 and 75 quartile
-
     private static final double ADMISSIBILITY_50 = 0.9;//at the 25 and 75 quartile
     private static final double ADMISSIBILITY_75 = 1.0;//at the 25 and 75 quartile
-
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
     public static final boolean USE_BIN = false;
 
@@ -484,7 +479,7 @@ public class AffinityEvaluator {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
         Map<String, Integer> sim = data.getFormationsSimilaires(fl, bacIndex);
-        if (sim == null) return Config.NO_MATCH_SCORE;
+        if (sim.isEmpty()) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
         for (String approved : ok) {
@@ -597,7 +592,6 @@ public class AffinityEvaluator {
                             if(includeExplanations) {
                                 explanations = new ArrayList<>();
                                 if (cfg.isVerboseMode()) {
-                                    //explanations.add(Explanation.getTagExplanation(pathes));
                                     double score = scores.getOrDefault(s, 0.0);
                                     explanations.add(Explanation.getDebugExplanation("Score : " + score + BR));
                                 }
@@ -681,8 +675,7 @@ public class AffinityEvaluator {
 
 
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
-        final Set<String> candidates = new HashSet<>();
-        candidates.addAll(data.getAllCandidatesMetiers(key));
+        final Set<String> candidates = new HashSet<>(data.getAllCandidatesMetiers(key));
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 

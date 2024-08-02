@@ -1,9 +1,14 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.suggestions.domain.model.*;
-import fr.gouv.monprojetsup.suggestions.domain.port.*;
-import fr.gouv.monprojetsup.suggestions.infrastructure.model.Edges;
+import fr.gouv.monprojetsup.suggestions.domain.model.Edge;
+import fr.gouv.monprojetsup.suggestions.domain.model.Formation;
+import fr.gouv.monprojetsup.suggestions.domain.model.Matiere;
+import fr.gouv.monprojetsup.suggestions.domain.model.StatsFormation;
+import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.FormationsPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.MatieresPort;
 import fr.gouv.monprojetsup.suggestions.infrastructure.model.cities.Coords;
 import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.infrastructure.model.stats.StatsContainers;
@@ -67,7 +72,9 @@ public class SuggestionsData {
     }
 
     public List<String> getAllRelatedInterests(@NotNull Collection<String> keys) {
-        return keys.stream().flatMap(key -> edgesPort.getOutgoingEdges(key, EdgesPort::TYPE_EDGE_INTEREST_TO_INTEREST).stream()).toList();
+        return keys.stream().flatMap(
+                key -> edgesPort.getOutgoingEdges(key, EdgesPort.TYPE_EDGE_INTEREST_TO_INTEREST).stream()
+        ).toList();
     }
 
     public @NotNull Map<String, Integer> getFormationsSimilaires(String formationId, int typeBac) {
@@ -92,7 +99,7 @@ public class SuggestionsData {
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {
         return formationsPort.retrieveFormation(formationId)
-                .map(f -> f.stats().nbAdmis().getOrDefault(bac, null))
+                .map(f -> f.stats().nbAdmisParBac().getOrDefault(bac, null))
                 .orElse(null);
     }
 
@@ -116,7 +123,7 @@ public class SuggestionsData {
 
     public @Nullable Double getStatsSpecialite(String formationId, Integer iMtCod) {
         return formationsPort.retrieveFormation(formationId)
-                .map(f -> f.stats().specialites().getOrDefault(iMtCod, null))
+                .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, null))
                 .orElse(null);
     }
 
@@ -179,7 +186,7 @@ public class SuggestionsData {
     private static @Nullable StatsContainers.SimpleStatGroup getSimpleStatGroup(String formationId, StatsFormation stats, String bac) {
         if(stats.admissions().containsKey(bac)) {
 
-            val nbAdmis = stats.nbAdmis().get(bac);
+            val nbAdmis = stats.nbAdmisParBac().get(bac);
             if(nbAdmis == null) return null;
 
             val frequencesCumulees = stats.admissions().get(bac).frequencesCumulees();
@@ -187,8 +194,8 @@ public class SuggestionsData {
 
             val stat = getStatistique(frequencesCumulees, true);
 
-            Map<Integer, Integer> statsSpecs = stats.specialites().entrySet().stream()
-                    .map(e -> Pair.of(e.getKey(), (int)(100 * e.getValue())))
+            Map<Integer, Integer> statsSpecs = stats.nbAdmisParSpecialite().entrySet().stream()
+                    .map(e -> Pair.of(e.getKey(), 100 * e.getValue()))
                     .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
 
             return new StatsContainers.SimpleStatGroup(

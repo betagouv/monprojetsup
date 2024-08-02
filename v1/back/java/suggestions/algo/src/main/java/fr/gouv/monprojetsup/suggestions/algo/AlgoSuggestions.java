@@ -1,11 +1,12 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
+import fr.gouv.monprojetsup.suggestions.domain.model.Formation;
 import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort;
+import fr.gouv.monprojetsup.suggestions.domain.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
@@ -20,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -31,15 +31,24 @@ import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
 @Component
 public class AlgoSuggestions {
 
     public static final Logger LOGGER = Logger.getLogger(AlgoSuggestions.class.getName());
+
     @Autowired
-    public AlgoSuggestions(SuggestionsData data, EdgesPort edgesPort) {
+    public AlgoSuggestions(SuggestionsData data, EdgesPort edgesPort, FormationsPort formationsPort) {
         this.data = data;
         this.edgesPort = edgesPort;
+        p50NbFormations = p50(
+                formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
+        );
+        p75Capacity = p75(
+                formationsPort.retrieveFormations().values().stream().map(Formation::capacite).toList()
+        );
         /*		val p90NbFormations = p50(
 			nbFormations.entries.stream().filter { e: Map.Entry<String?, Int?> ->
 				ServerData.filieresFront.contains(
@@ -94,12 +103,9 @@ public class AlgoSuggestions {
     private static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.75;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     private static final double MAX_AFFINITY_PERCENT = 0.90;
-    private static final int MIN_CAPACITY_FOR_PENALTY = 1000;
-    private static final int MIN_NB_FORMATIONS_FOR_PENALTY = 50;
-
     //utilisé par suggestions
-    public Map<String, Integer> codesSpecialites = new HashMap<>();
-    public final int p90NbFormations;
+    public static final Map<String, Integer> codesSpecialites = new HashMap<>();
+    public final int p50NbFormations;
     public final int p75Capacity;
 
     protected Set<String> lasFilieres;
@@ -123,6 +129,7 @@ public class AlgoSuggestions {
     }
 
 
+    @SuppressWarnings("unused")
     public record Affinite(
             double affinite,
             EnumMap<SuggestionDiversityQuota, Double> scores
@@ -350,7 +357,7 @@ public class AlgoSuggestions {
      * Preccmpute some data used to to details details
      */
     @PostConstruct
-    void initialize() throws IOException {
+    void initialize() {
 
         createGraph();
 
@@ -375,7 +382,7 @@ public class AlgoSuggestions {
         relatedToHealth.addAll(lasFilieres);
     }
 
-    public void createGraph() throws IOException {
+    public void createGraph() {
         LOGGER.info("Creating global graph");
         edgesKeys.clear();
 

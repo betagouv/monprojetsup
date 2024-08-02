@@ -1,10 +1,11 @@
-package fr.gouv.monprojetsup.etl
+package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.UrlsUpdater
 import fr.gouv.monprojetsup.data.app.entity.*
-import fr.gouv.monprojetsup.data.app.infrastructure.app.*
+import fr.gouv.monprojetsup.data.app.infrastructure.*
 import fr.gouv.monprojetsup.suggestions.domain.Constants
 import fr.gouv.monprojetsup.suggestions.domain.model.Candidat
+import fr.gouv.monprojetsup.suggestions.domain.model.Matiere
 import fr.gouv.monprojetsup.suggestions.domain.model.StatsFormation
 import fr.gouv.monprojetsup.suggestions.domain.model.Voeu
 import fr.gouv.monprojetsup.suggestions.domain.port.*
@@ -31,26 +32,29 @@ import fr.gouv.monprojetsup.suggestions.tools.Serialisation
 import fr.gouv.monprojetsup.suggestions.tools.csv.CsvTools
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.stereotype.Component
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import java.util.*
 import java.util.logging.Logger
 
-@SpringBootApplication
+
+fun main(args: Array<String>) {
+	runApplication<UpdateDbRunner>(*args)
+}
+
 @ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
-@EntityScan("fr.gouv.monprojetsup.formation.infrastructure.entity")
-class UpdateDbRunner
-
-	fun main(args: Array<String>) {
-		runApplication<UpdateDbRunner>(*args)
-	}
-
-@Component
-@ConditionalOnProperty(name = ["etl.runner.enabled"], havingValue = "true", matchIfMissing = true)
-class EtlApplicationRunner(
+@SpringBootApplication
+@EntityScan(basePackages = [
+	"fr.gouv.monprojetsup.data.app.entity",
+	"fr.gouv.monprojetsup.data.suggestions.entity"]
+)
+@EnableJpaRepositories(basePackages = [
+	"fr.gouv.monprojetsup.data.app.infrastructure",
+	"fr.gouv.monprojetsup.data.suggestions.infrastructure"]
+)
+class UpdateDbRunner(
 	private val baccalaureatBDD: BaccalaureatDb,
 	private val criteresDb: CriteresDb,
 	private val domainesDb : DomainesDb,
@@ -66,9 +70,9 @@ class EtlApplicationRunner(
 ) : CommandLineRunner {
 
 
-	private val LOGGER: Logger = Logger.getLogger(UpdateDbRunner::class.java.simpleName)
+
+	private val logger: Logger = Logger.getLogger(UpdateDbRunner::class.java.simpleName)
 	override fun run(vararg args: String?) {
-		println("Hello, World! ApplicationEtl has started.")
 
 		updateBaccalaureatDb()
 
@@ -199,10 +203,10 @@ class EtlApplicationRunner(
 					tagsSources.add("IFSI", formation)
 				}
 				metiersVersFormations[formation]?.forEach { metier ->
-					val label = statistiques.labels[metier]
-					if(label != null) {
+					val labelMetier = statistiques.labels[metier]
+					if(labelMetier != null) {
 						tagsSources.add(
-							label,
+							labelMetier,
 							formation
 						)
 					}
@@ -216,10 +220,21 @@ class EtlApplicationRunner(
 		candidatsPort.saveAll(candidats)
 
 		//2. edges
-		updateEdgesDb(onisepData, backPsupData);
+		updateEdgesDb(onisepData, backPsupData)
 
 		//3. labels
+		labelsPort.saveAll(statistiques.labels, debugLabels)
+
 		//4. matieres
+		matieresPort.saveAll(statistiques.matieres.entries.map {
+			Matiere(
+				it.key,
+				it.value,
+				specialites.isSpecialite(it.key),
+				specialites.getBacs(it.key)
+				) }
+		)
+
 		//5. voeux
 		val voeux = backPsupData.voeux
 		voeuxPort.saveAll(voeux)
@@ -237,12 +252,6 @@ class EtlApplicationRunner(
 			formationsVersMetiers
 		)
 
-		//Serialisation.toJsonFile("tagsSources.json", ServerData.tagsSources, true)
-
-
-		//Candidats
-
-			TODO("Not yet implemented")
 		/*
 
 		//if neeeded???
@@ -262,42 +271,8 @@ class EtlApplicationRunner(
 		*/
 
 
-		/* interests <--> interests */
 
-		//@PostConstruct
-		//fun load() {
-			//load filieresFront
 
-			/*
-                  this.statistiques = new PsupStatistiques();
-        ServerData.statistiques.labels = Serialisation.fromJsonFile(
-                "labelsDebug.json",
-                Map.class
-        );*/
-
-			//load labels
-
-			//load relatedInterests
-			/* onisepData.interets().expansion().getOrDefault(key, Collections.emptyList())*/
-
-			//load filieres similaires backpsupdata
-			//inherit groups but not too much....
-
-			//init formations
-			//includes both fl and fr and gta codes
-			//        /*        List<Formation> fors = Collections.emptyList();
-			//        ///attention aux groupes
-			//        if (flKey.startsWith(FILIERE_PREFIX)) {
-			//            fors = SuggestionsData.getFormationsFromFil(flKey);
-			//        } else if (flKey.startsWith((Constants.FORMATION_PREFIX))) {
-			//            int gTaCod = Integer.parseInt(flKey.substring(2));
-			//            Formation f = SuggestionsData.getFormation(gTaCod);
-			//            if (f != null) {
-			//                fors = List.of(f);
-			//            }
-			//        }
-			//        */
-			//        //should include groups
 
 
 			//        throw new NotImplementedException("Not implemented yet");
@@ -307,30 +282,8 @@ class EtlApplicationRunner(
         CitiesBack cities = ServerData.cities;
         Distances.init(cities);
 
-		//init dures from psup data
-
-		//liensSecteursMetiers
-
-        //lasFilieres
-
-        //nbAdmisParSpecialite
-        ServerData.nbAdmisParSpecialite.nbAdmisParSpecialite()
-
-        //bacs with spcialites
-        ServerData.nbAdmisParSpecialite.specialitesParBac().keySet()
-
-
-
-        //descriptifs
-                / * UpdateFrontData.DataContainer.loadDescriptifs(
-                onisepData,
-                backPsupData.getCorrespondances(),
-                statistiques.getLASCorrespondance().lasToGeneric()
-        );
-
          */
 
-			//throw new NotImplementedException("Not implemented yet");
 
 	}
 
@@ -352,20 +305,24 @@ class EtlApplicationRunner(
 		filieresFront.forEach { mpsKey ->
 			val voeuxFormation = voeux.filter { it.formation == mpsKey }
 			val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, setOf(mpsKey))
+			if(psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $mpsKey")
 			val metiers = formationsVersMetiers[mpsKey] ?: HashSet()
 			val stats = StatsFormation(
 				statistiques.getStatsMoyGenParBac(mpsKey),
 				statistiques.getNbAdmisParBac(mpsKey),
-				statistiques.getStatsSpec(mpsKey),
+				statistiques.getPctAdmisParBac(mpsKey),
+				statistiques.getNbAdmisParSpec(mpsKey),
+				statistiques.getPctAdmisParSpec(mpsKey),
 				backPsupData.getStatsFilSim(psupKeys)
 			)
+			val duree = psupKeys.minOfOrNull { fps -> backPsupData.getDuree(fps, psupKeyToMpsKey) }
 			val formation = fr.gouv.monprojetsup.suggestions.domain.model.Formation(
 				mpsKey,
 				statistiques.labels.getOrDefault(mpsKey,mpsKey),
 				debugLabels.getOrDefault(mpsKey,mpsKey),
 				capacities.getOrDefault(mpsKey,0),
 				apprentissage.contains(mpsKey),
-				psupKeys.map { fps -> backPsupData.getDuree(fps, psupKeyToMpsKey) }.minOrNull() ?: 5,
+				duree!!,//psupKeys is non empty
 				lasToGeneric[mpsKey],
 				voeuxFormation,
 				ArrayList(metiers),
@@ -379,8 +336,8 @@ class EtlApplicationRunner(
 
 	private fun updateEdgesDb(onisepData: OnisepData, psupData : PsupData) {
 		val psupKeyToMpsKey = psupData.psupKeyToMpsKey
-		val lasToGeneric = psupData.lasToGeneric;
-		val lasToPass = psupData.lasToPass;
+		val lasToGeneric = psupData.lasToGeneric
+		val lasToPass = psupData.lasToPass
 		edgesPort.saveAll(onisepData.edgesInteretsMetiers, EdgesPort.TYPE_EDGE_INTERET_METIER)
 		edgesPort.saveAll(onisepData.edgesFilieresThematiques, EdgesPort.TYPE_EDGE_FILIERES_THEMATIQUES)
 		edgesPort.saveAll(onisepData.edgesThematiquesMetiers, EdgesPort.TYPE_EDGE_THEMATIQUES_METIERS)
@@ -394,7 +351,7 @@ class EtlApplicationRunner(
 
 
 	private fun updateFormationsDb() {
-		LOGGER.info("Chargement de " + dataSources.getSourceDataFilePath(
+		logger.info("Chargement de " + dataSources.getSourceDataFilePath(
 			DataSources.BACK_PSUP_DATA_FILENAME))
 		val psupData = Serialisation.fromZippedJson(
 			dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
@@ -402,24 +359,24 @@ class EtlApplicationRunner(
 		)
 		psupData.cleanup()
 
-		LOGGER.info("Chargement des données Onisep")
+		logger.info("Chargement des données Onisep")
 		val onisepData = OnisepData.fromFiles(dataSources)
 
-		LOGGER.info("Chargement des données ROME")
+		logger.info("Chargement des données ROME")
 		val romeData = RomeData.load(dataSources)
-		LOGGER.info("Insertion des données ROME dans les données Onisep")
+		logger.info("Insertion des données ROME dans les données Onisep")
 		onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
 
-		LOGGER.info("Chargement des stats depuis " + DataSources.STATS_BACK_SRC_FILENAME)
+		logger.info("Chargement des stats depuis " + STATS_BACK_SRC_FILENAME)
 		val stats = Serialisation.fromZippedJson(
-			dataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
+			dataSources.getSourceDataFilePath(STATS_BACK_SRC_FILENAME),
 			PsupStatistiques::class.java
 		)
 
 		stats.createGroupAdmisStatistique(psupData.psupKeyToMpsKey)
 		stats.createGroupAdmisStatistique(getGtaToLasMapping(psupData))
 
-		LOGGER.info("Maj des données Onisep (noms des filières et urls)")
+		logger.info("Maj des données Onisep (noms des filières et urls)")
 		stats.updateLabels(onisepData, psupData)
 
 
@@ -437,11 +394,11 @@ class EtlApplicationRunner(
 			statistiques.lasFlCodes
 		)
 
-		LOGGER.info("Calcul des correspondance")
+		logger.info("Calcul des correspondance")
 		val psupKeyToMpsKey = psupData.psupKeyToMpsKey
 		val mpsKeyToPsupKeys = revert(psupKeyToMpsKey)
 
-		LOGGER.info("Génération des descriptifs")
+		logger.info("Génération des descriptifs")
 		val descriptifs =
             DescriptifsLoader.loadDescriptifs(
                 onisepData,
@@ -462,7 +419,7 @@ class EtlApplicationRunner(
 			false
 		)
 
-		LOGGER.info("Ajout des liens metiers")
+		logger.info("Ajout des liens metiers")
 		val links = HashMap<String, DescriptifsFormations.Link>()
 		statistiques.liensOnisep.forEach { (key, value) ->
 			links[key] = DescriptifsFormations.toAvenirs(value, statistiques.labels.getOrDefault(key, ""))
@@ -591,7 +548,7 @@ class EtlApplicationRunner(
 
 	fun loadThematiques(): List<Thematiques.Category> {
 		val groupes: MutableMap<String, Thematiques.Category> = HashMap()
-		val categories: MutableList<Thematiques.Category> = java.util.ArrayList()
+		val categories: MutableList<Thematiques.Category> = ArrayList()
 
 		var groupe = ""
 		var emojig: String? = ""
@@ -617,7 +574,7 @@ class EtlApplicationRunner(
 			if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
 			var cat = groupes[groupe]
 			if (cat == null) {
-				cat = Thematiques.Category(groupe, emojig, java.util.ArrayList())
+				cat = Thematiques.Category(groupe, emojig, ArrayList())
 				groupes[groupe] = cat
 				categories.add(cat)
 			}
