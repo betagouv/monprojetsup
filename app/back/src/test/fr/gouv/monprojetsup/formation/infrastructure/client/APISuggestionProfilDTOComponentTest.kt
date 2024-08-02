@@ -118,6 +118,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites = listOf("fl1234", "fl5678"),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0002"),
             )
         private val unProfilDTO =
             APISuggestionProfilDTO(
@@ -143,26 +144,11 @@ class APISuggestionProfilDTOComponentTest {
                 moyenneGenerale = "14.0",
                 choix =
                     listOf(
-                        SuggestionDTO(
-                            fl = "MET_123",
-                            status = 1,
-                            date = null,
-                        ),
-                        SuggestionDTO(
-                            fl = "MET_456",
-                            status = 1,
-                            date = null,
-                        ),
-                        SuggestionDTO(
-                            fl = "fl1234",
-                            status = 1,
-                            date = null,
-                        ),
-                        SuggestionDTO(
-                            fl = "fl5678",
-                            status = 1,
-                            date = null,
-                        ),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
+                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0002"),
                     ),
             )
 
@@ -181,6 +167,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites = listOf("fl1234", "fl5678"),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0001"),
             )
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
@@ -206,10 +193,11 @@ class APISuggestionProfilDTOComponentTest {
                 moyenneGenerale = "10.5",
                 choix =
                     listOf(
-                        SuggestionDTO("MET_123", 1, null),
-                        SuggestionDTO("MET_456", 1, null),
-                        SuggestionDTO("fl1234", 1, null),
-                        SuggestionDTO("fl5678", 1, null),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
+                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0001"),
                     ),
             )
         private val profilEleveSecondeSTHR =
@@ -227,6 +215,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = listOf("MET_001", "MET_004"),
                 formationsFavorites = emptyList(),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                corbeilleFormations = emptyList(),
             )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
@@ -244,8 +233,8 @@ class APISuggestionProfilDTOComponentTest {
                 moyenneGenerale = "19.5",
                 choix =
                     listOf(
-                        SuggestionDTO("MET_001", 1, null),
-                        SuggestionDTO("MET_004", 1, null),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_001"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "MET_004"),
                     ),
             )
         private val profilEleveSecondeTMD =
@@ -263,6 +252,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = emptyList(),
                 formationsFavorites = listOf("fl0001", "fl0005"),
                 domainesInterets = emptyList(),
+                corbeilleFormations = emptyList(),
             )
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
@@ -276,8 +266,8 @@ class APISuggestionProfilDTOComponentTest {
                 moyenneGenerale = null,
                 choix =
                     listOf(
-                        SuggestionDTO("fl0001", 1, null),
-                        SuggestionDTO("fl0005", 1, null),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0001"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl0005"),
                     ),
             )
         private val profilElevePremiere =
@@ -295,6 +285,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = emptyList(),
                 formationsFavorites = emptyList(),
                 domainesInterets = emptyList(),
+                corbeilleFormations = emptyList(),
             )
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
@@ -324,6 +315,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = null,
                 formationsFavorites = listOf("fl1234", "fl5678"),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0012"),
             )
         private val profilDTOTerminal =
             APISuggestionProfilDTO(
@@ -341,8 +333,9 @@ class APISuggestionProfilDTOComponentTest {
                 moyenneGenerale = "10.5",
                 choix =
                     listOf(
-                        SuggestionDTO("fl1234", 1, null),
-                        SuggestionDTO("fl5678", 1, null),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
+                        SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
+                        SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0012"),
                     ),
             )
         private val profilEleveNull =
@@ -360,6 +353,7 @@ class APISuggestionProfilDTOComponentTest {
                 metiersFavoris = null,
                 formationsFavorites = null,
                 domainesInterets = null,
+                corbeilleFormations = emptyList(),
             )
         private val profilDTONull =
             APISuggestionProfilDTO(

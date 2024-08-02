@@ -3,6 +3,8 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.CorbeilleSuggestionDTO
+import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.FavorisSuggestionDTO
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionProfilDTO(
@@ -40,19 +42,28 @@ data class APISuggestionProfilDTO(
         moyenneGenerale = profilEleve.moyenneGenerale?.toString(),
         choix =
             (
-                profilEleve.metiersFavoris?.map { SuggestionDTO(it) }
+                profilEleve.metiersFavoris?.map { FavorisSuggestionDTO(it) }
                     ?: emptyList()
-            ) + (profilEleve.formationsFavorites?.map { SuggestionDTO(it) } ?: emptyList()),
+            ) + (profilEleve.formationsFavorites?.map { FavorisSuggestionDTO(it) } ?: emptyList()) +
+                profilEleve.corbeilleFormations.map { CorbeilleSuggestionDTO(it) },
     )
 }
 
-data class SuggestionDTO(
-    val fl: String,
-    val status: Int,
+sealed class SuggestionDTO(
+    @field:JsonProperty(value = "fl")
+    open val id: String,
+    @field:JsonProperty(value = "status")
+    val statut: Int, // "statut. \"1\": dans les favoris. \"2\": dans la corbeille."
+    @field:JsonProperty(value = "date")
     val date: String? = null,
 ) {
-    constructor(nom: String) : this(
-        fl = nom,
-        status = 1, // "statut. \"1\": dans les favoris. \"2\": dans la corbeille."
-    )
+    data class FavorisSuggestionDTO(
+        @field:JsonProperty(value = "fl")
+        override val id: String,
+    ) : SuggestionDTO(id = id, statut = 1)
+
+    data class CorbeilleSuggestionDTO(
+        @field:JsonProperty(value = "fl")
+        override val id: String,
+    ) : SuggestionDTO(id = id, statut = 2)
 }

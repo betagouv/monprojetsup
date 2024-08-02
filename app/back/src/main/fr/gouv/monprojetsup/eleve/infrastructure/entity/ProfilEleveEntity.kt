@@ -69,6 +69,10 @@ class ProfilEleveEntity() {
     @Column(name = "moyenne_generale", nullable = true)
     var moyenneGenerale: Float? = null
 
+    @Type(ListArrayType::class)
+    @Column(name = "corbeille_formations", nullable = false)
+    var corbeilleFormations: List<String> = emptyList()
+
     constructor(profilEleve: ProfilEleve.Identifie) : this() {
         id = UUID.fromString(profilEleve.id)
         situation = profilEleve.situation
@@ -83,6 +87,7 @@ class ProfilEleveEntity() {
         communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
         formationsFavorites = profilEleve.formationsFavorites
         moyenneGenerale = profilEleve.moyenneGenerale
+        corbeilleFormations = profilEleve.corbeilleFormations
     }
 
     fun toProfilEleve() =
@@ -100,5 +105,6 @@ class ProfilEleveEntity() {
             communesFavorites?.map { it.toCommune() },
             formationsFavorites,
             moyenneGenerale,
+            corbeilleFormations,
         )
 }

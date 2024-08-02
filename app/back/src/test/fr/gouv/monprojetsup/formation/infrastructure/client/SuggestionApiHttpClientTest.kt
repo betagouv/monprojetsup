@@ -75,6 +75,7 @@ class SuggestionApiHttpClientTest {
             metiersFavoris = listOf("MET_123", "MET_456"),
             formationsFavorites = listOf("fl1234", "fl5678"),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+            corbeilleFormations = listOf("fl0001"),
         )
 
     private val dto =
@@ -101,26 +102,11 @@ class SuggestionApiHttpClientTest {
             moyenneGenerale = "14.0",
             choix =
                 listOf(
-                    SuggestionDTO(
-                        fl = "MET_123",
-                        status = 1,
-                        date = null,
-                    ),
-                    SuggestionDTO(
-                        fl = "MET_456",
-                        status = 1,
-                        date = null,
-                    ),
-                    SuggestionDTO(
-                        fl = "fl1234",
-                        status = 1,
-                        date = null,
-                    ),
-                    SuggestionDTO(
-                        fl = "fl5678",
-                        status = 1,
-                        date = null,
-                    ),
+                    SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
+                    SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
+                    SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
+                    SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
+                    SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0001"),
                 ),
         )
 
@@ -415,6 +401,11 @@ class SuggestionApiHttpClientTest {
                           {
                             "fl": "fl5678",
                             "status": 1,
+                            "date": null
+                          },
+                          {
+                            "fl": "fl0001",
+                            "status": 2,
                             "date": null
                           }
                         ]
@@ -1009,6 +1000,11 @@ class SuggestionApiHttpClientTest {
                             "fl": "fl5678",
                             "status": 1,
                             "date": null
+                          },
+                          {
+                            "fl": "fl0001",
+                            "status": 2,
+                            "date": null
                           }
                         ]
                       },
@@ -1123,9 +1119,9 @@ class SuggestionApiHttpClientTest {
                     "id=adcf627c-36dd-4df5-897b-159443a6d49c, situation=PROJET_PRECIS, classe=TERMINALE, baccalaureat=Générale, " +
                     "specialites=[1001, 1049], domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
                     "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersFavoris=[MET_123, MET_456], " +
-                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, communesFavorites=[" +
-                    "Commune(codeInsee=75015, nom=Paris, latitude=48.851227, longitude=2.2885659)], " +
-                    "formationsFavorites=[fl1234, fl5678], moyenneGenerale=14.0)",
+                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, " +
+                    "communesFavorites=[Commune(codeInsee=75015, nom=Paris, latitude=48.851227, longitude=2.2885659)], " +
+                    "formationsFavorites=[fl1234, fl5678], moyenneGenerale=14.0, corbeilleFormations=[fl0001])",
             )
         }
 

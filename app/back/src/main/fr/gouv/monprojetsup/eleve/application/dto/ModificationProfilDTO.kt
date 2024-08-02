@@ -113,6 +113,8 @@ data class ModificationProfilDTO(
     )
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<String>? = null,
+    @JsonProperty("corbeilleFormations")
+    val corbeilleFormations: List<String>? = null,
 ) {
     constructor(profilEleve: ProfilEleve.Identifie) : this(
         situation = profilEleve.situation?.jsonValeur,
@@ -127,6 +129,7 @@ data class ModificationProfilDTO(
         centresInterets = profilEleve.centresInterets,
         metiersFavoris = profilEleve.metiersFavoris,
         domaines = profilEleve.domainesInterets,
+        corbeilleFormations = profilEleve.corbeilleFormations,
     )
 
     fun toModificationProfilEleve() =
@@ -143,6 +146,7 @@ data class ModificationProfilDTO(
             centresInterets = centresInterets,
             metiersFavoris = metiersFavoris,
             domainesInterets = domaines,
+            corbeilleFormations = corbeilleFormations,
         )
 
     class CommuneDTO(

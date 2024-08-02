@@ -41,5 +41,6 @@ abstract class ControllerTest {
             metiersFavoris = listOf("MET_123", "MET_456"),
             formationsFavorites = listOf("fl1234", "fl5678"),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+            corbeilleFormations = listOf("fl0010", "fl0012"),
         )
 }

@@ -53,6 +53,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             communesFavorites = listOf(Communes.PARIS, Communes.MARSEILLE),
             formationsFavorites = listOf("fl0010", "fl0012"),
             moyenneGenerale = 10.5f,
+            corbeilleFormations = listOf("fl0001", "fl0002"),
         )
 
     @Nested
