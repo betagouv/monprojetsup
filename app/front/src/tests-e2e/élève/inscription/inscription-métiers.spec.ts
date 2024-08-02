@@ -1,8 +1,8 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
-import { InscriptionTestHelper } from "./InscriptionTestHelper";
+import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper extends InscriptionTestHelper {
+class Test extends InscriptionTestHelper {
   public MÉTIER_RECHERCHÉ = "gestionnaire";
 
   public PREMIER_MÉTIER = "gestionnaire du sport";
@@ -10,7 +10,14 @@ class TestHelper extends InscriptionTestHelper {
   public SECOND_MÉTIER = "gestionnaire de contrats d'assurance";
 
   public constructor(protected _page: Page) {
-    super(_page, "/eleve/inscription/metiers", "/eleve/inscription/etude");
+    super(_page, "/eleve/inscription/metiers", "/eleve/inscription/etude", {
+      situation: "quelques_pistes",
+      classe: "premiere",
+      bac: "Générale",
+      spécialités: [],
+      domaines: ["T_ITM_1534"],
+      centresIntêrets: ["travail_manuel_bricoler"],
+    });
   }
 
   public champSituationMétiers = (optionLabel: string) => {
@@ -29,7 +36,7 @@ class TestHelper extends InscriptionTestHelper {
 test.describe("Inscription élève - Métiers", () => {
   test("Aucun champ n'est obligatoire pour passer à l'étape suivante", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -42,7 +49,7 @@ test.describe("Inscription élève - Métiers", () => {
   test.describe("Si j'indique que j'ai quelques idées de métiers", () => {
     test("Je peux obtenir des suggestions de métiers en fonction de ma recherche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -55,7 +62,7 @@ test.describe("Inscription élève - Métiers", () => {
 
     test("Je peux sélectionner des métiers", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -71,7 +78,7 @@ test.describe("Inscription élève - Métiers", () => {
 
     test("Je peux supprimer des métiers sélectionnés", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -88,7 +95,7 @@ test.describe("Inscription élève - Métiers", () => {
 
     test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -103,7 +110,7 @@ test.describe("Inscription élève - Métiers", () => {
   test.describe("Si j'avais sélectionné des métiers", () => {
     test("En changeant le champ 'Avancement' ils sont réinitialisés", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -126,7 +133,7 @@ test.describe("Inscription élève - Métiers", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
       const situationMétiers = i18n.ÉLÈVE.MÉTIERS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
 

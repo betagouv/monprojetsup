@@ -1,8 +1,8 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
-import { InscriptionTestHelper } from "./InscriptionTestHelper";
+import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper extends InscriptionTestHelper {
+class Test extends InscriptionTestHelper {
   public COMMUNE_RECHERCHÉE = "Brest";
 
   public PREMIÈRE_COMMUNE = "Brest";
@@ -10,7 +10,15 @@ class TestHelper extends InscriptionTestHelper {
   public SECONDE_COMMUNE = "Brestot";
 
   public constructor(protected _page: Page) {
-    super(_page, "/eleve/inscription/etude", "/eleve/inscription/formations");
+    super(_page, "/eleve/inscription/etude", "/eleve/inscription/formations", {
+      situation: "quelques_pistes",
+      classe: "premiere",
+      bac: "Générale",
+      spécialités: [],
+      domaines: ["T_ITM_1534"],
+      centresIntêrets: ["travail_manuel_bricoler"],
+      métiersFavoris: [],
+    });
   }
 
   public champDuréeÉtudesPrévue = () => {
@@ -37,7 +45,7 @@ class TestHelper extends InscriptionTestHelper {
 test.describe("Inscription élève - Mes études", () => {
   test("Aucun champ n'est obligatoire pour passer à l'étape suivante", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -49,7 +57,7 @@ test.describe("Inscription élève - Mes études", () => {
 
   test("Je peux obtenir des suggestions de communes en fonction de ma recherche", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -61,7 +69,7 @@ test.describe("Inscription élève - Mes études", () => {
 
   test("Je peux sélectionner des communes", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -76,7 +84,7 @@ test.describe("Inscription élève - Mes études", () => {
 
   test("Je peux supprimer des communes sélectionnées", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -92,7 +100,7 @@ test.describe("Inscription élève - Mes études", () => {
 
   test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -105,7 +113,7 @@ test.describe("Inscription élève - Mes études", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN

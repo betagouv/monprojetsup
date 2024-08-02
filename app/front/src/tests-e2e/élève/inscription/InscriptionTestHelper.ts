@@ -1,12 +1,17 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
+import { i18n } from "@/configuration/i18n/i18n";
+import { type Élève } from "@/features/élève/domain/élève.interface";
+import { TestHelper } from "@/tests-e2e/testHelper";
 import { type Page } from "@playwright/test";
 
-export class InscriptionTestHelper {
+export class InscriptionTestHelper extends TestHelper {
   public constructor(
     protected _page: Page,
-    private readonly urlPageCourante: string,
+    public readonly urlPageCourante: string,
     public readonly urlPageSuivante: string,
-  ) {}
+    private readonly _profilÉlèveParDéfaut?: Partial<Élève>,
+  ) {
+    super(_page);
+  }
 
   protected _boutonSoumissionFormulaire = () => {
     return this._page.getByRole("button", { name: i18n.COMMUN.CONTINUER });
@@ -17,6 +22,10 @@ export class InscriptionTestHelper {
   };
 
   public naviguerVersLaPage = async () => {
+    if (this._profilÉlèveParDéfaut) {
+      await this.initialiserProfilÉlèveParDéfaut(this._profilÉlèveParDéfaut);
+    }
+
     await this._page.goto(this.urlPageCourante);
   };
 

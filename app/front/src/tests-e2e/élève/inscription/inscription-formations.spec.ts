@@ -1,8 +1,8 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
-import { InscriptionTestHelper } from "./InscriptionTestHelper";
+import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper extends InscriptionTestHelper {
+class Test extends InscriptionTestHelper {
   public FORMATION_RECHERCHÉE = "tourisme";
 
   public PREMIÈRE_FORMATION = "L1 - Tourisme";
@@ -10,7 +10,18 @@ class TestHelper extends InscriptionTestHelper {
   public SECONDE_FORMATION = "BTS - Tourisme";
 
   public constructor(protected _page: Page) {
-    super(_page, "/eleve/inscription/formations", "/eleve/inscription/confirmation");
+    super(_page, "/eleve/inscription/formations", "/eleve/inscription/confirmation", {
+      situation: "quelques_pistes",
+      classe: "premiere",
+      bac: "Générale",
+      spécialités: [],
+      domaines: ["T_ITM_1534"],
+      centresIntêrets: ["travail_manuel_bricoler"],
+      métiersFavoris: [],
+      alternance: "indifferent",
+      communesFavorites: [],
+      duréeÉtudesPrévue: "courte",
+    });
   }
 
   public champSituationFormations = (optionLabel: string) => {
@@ -29,7 +40,7 @@ class TestHelper extends InscriptionTestHelper {
 test.describe("Inscription élève - Formations", () => {
   test("Aucun champ n'est obligatoire pour passer à l'étape suivante", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -42,7 +53,7 @@ test.describe("Inscription élève - Formations", () => {
   test.describe("Si j'indique que j'ai quelques idées de formations", () => {
     test("Je peux obtenir des suggestions de formations en fonction de ma recherche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -57,7 +68,7 @@ test.describe("Inscription élève - Formations", () => {
 
     test("Je peux sélectionner des formations", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -75,7 +86,7 @@ test.describe("Inscription élève - Formations", () => {
 
     test("Je peux supprimer des formations sélectionnées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -94,7 +105,7 @@ test.describe("Inscription élève - Formations", () => {
 
     test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -111,7 +122,7 @@ test.describe("Inscription élève - Formations", () => {
   test.describe("Si j'avais sélectionné des formations", () => {
     test("En changeant le champ 'Avancement' elles sont réinitialisées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -138,7 +149,7 @@ test.describe("Inscription élève - Formations", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("En faisait précédent avec mon navigateur je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
       const situationFormations = i18n.ÉLÈVE.FORMATIONS.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL;
 

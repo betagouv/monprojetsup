@@ -1,9 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests-e2e",
-  outputDir: "./tests-e2e/results",
-  reporter: [["html", { outputFolder: "./tests-e2e/reports" }]],
+  testDir: "./src/tests-e2e",
+  outputDir: "./src/tests-e2e/results",
+  reporter: [["html", { outputFolder: "./src/tests-e2e/reports" }]],
   fullyParallel: true,
   forbidOnly: true,
   use: {
