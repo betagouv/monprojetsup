@@ -21,7 +21,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Test
-    @Sql("classpath:formation.sql")
+    @Sql("classpath:recherche_formation.sql")
     fun `Si fleur, renvoyer les formations d'horticulture`() {
         // Given
         val recherche = "fleur"
@@ -39,7 +39,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Test
-    @Sql("classpath:formation.sql")
+    @Sql("classpath:recherche_formation.sql")
     fun `Si L1, renvoyer les formations de license`() {
         // Given
         val recherche = "L1"
@@ -58,7 +58,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Test
-    @Sql("classpath:formation.sql")
+    @Sql("classpath:recherche_formation.sql")
     fun `Si histoire, renvoyer les formations avec celles d'histoire dans le label en premier puis celle en mot clé`() {
         // Given
         val recherche = "histoire"
@@ -77,8 +77,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Test
-    @Sql("classpath:formation.sql")
-    fun `Si ist, doit renvoyer les formations correspondant avec histoire et fleuriste`() {
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si ist, doit renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
         // Given
         val recherche = "ist"
 
@@ -92,7 +92,29 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
                 FormationCourte(id = "fl0004", nom = "L1 - Histoire"),
                 FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
+                FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
+            )
+        assertThat(result).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si BUT, doit ordonner les formations en mettant les exactes matchs en premiers`() {
+        // Given
+        val recherche = "BUT"
+
+        // When
+        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0008", nom = "BUT Numerique"),
+                FormationCourte(id = "fl0010", nom = "BUT Numérique"),
+                FormationCourte(id = "fl0011", nom = "BÙT"),
+                FormationCourte(id = "fl0009", nom = "but"),
+                FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
             )
         assertThat(result).isEqualTo(attendu)
     }
