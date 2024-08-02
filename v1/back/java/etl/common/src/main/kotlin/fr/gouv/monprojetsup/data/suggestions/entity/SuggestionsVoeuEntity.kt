@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.entity
+package fr.gouv.monprojetsup.data.suggestions.entity
 
 import fr.gouv.monprojetsup.suggestions.domain.model.Voeu
 import fr.gouv.monprojetsup.suggestions.infrastructure.psup.DescriptifVoeu
@@ -11,8 +11,8 @@ import org.hibernate.type.SqlTypes
 
 
 @Entity
-@Table(name = "voeux")
-class VoeuEntity {
+@Table(name = "sugg_voeux")
+class SuggestionsVoeuEntity {
 
     constructor()
     constructor(voeu: Voeu) {

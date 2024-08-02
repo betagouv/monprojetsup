@@ -22,11 +22,12 @@
             <groupId>fr.gouv.monprojetsup.data</groupId>
             <artifactId>common</artifactId>
             <version>1.4.1</version>
-            <scope>compile</scope>
         </dependency>
+        <!-- spring boot 3.2 uses hibernate 6.3.0 requires hypersistence 3.8.2 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.8.2</version>
         </dependency>
     </dependencies>
 

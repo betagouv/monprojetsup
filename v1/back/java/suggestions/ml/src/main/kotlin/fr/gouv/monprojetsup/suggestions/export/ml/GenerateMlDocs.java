@@ -58,7 +58,7 @@ public class GenerateMlDocs {
 
 
         val descriptifsIndexedByGta = voeuxPort.retrieveDescriptifs();
-        
+
         List<MlData> datas = new ArrayList<>();
 
         val descriptifs1 = voeuxPort.retrieveDescriptifs();
@@ -80,7 +80,7 @@ public class GenerateMlDocs {
                         texts.add(new MlData.Data("descriptifs_psup_debouches", descriptif2.debouches()));
                     }
                 });
-                datas.add(new MlData(key, labels.getOrDefault(key,key), texts));
+                datas.add(new MlData(key, labels.getOrDefault(key, key), texts));
             }
 
         });
@@ -109,7 +109,7 @@ public class GenerateMlDocs {
                 if (scrapped != null) {
                     texts.add(new MlData.Data(DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH, scrapped));
                 }
-                datas.add(new MlData(key, labels.getOrDefault(key,key), texts));
+                datas.add(new MlData(key, labels.getOrDefault(key, key), texts));
             }
 
         });
@@ -119,18 +119,20 @@ public class GenerateMlDocs {
         Map<String, List<String>> tags = new HashMap<>();
         algo.edgesKeys.keys().forEach(key -> {
             if (Helpers.isTheme(key) || Helpers.isInteret(key)) {
-                tags.computeIfAbsent(labels.getOrDefault(key,key), k -> new ArrayList<>()).add(key);
+                tags.computeIfAbsent(labels.getOrDefault(key, key), k -> new ArrayList<>()).add(key);
             }
         });
         Serialisation.toJsonFile("ml_tags.json", tags, true);
 
 
         val gtaToFil = data.getFormationToFilieres();
-        List<Set<String>> voeuxParCandidat = candidatsPort.getVoeuxParCandidat();
-        voeuxParCandidat().stream().map(
-                        voeux -> voeux.stream().map(
-                                v -> gtaToFil.get(Constants.FORMATION_PREFIX + v)
-                        ).filter(Objects::nonNull).collect(Collectors.toSet())
+        val voeuxParCandidat = candidatsPort.findAll().stream()
+                .map(
+                        c -> c.voeux().stream().map(
+                                        v -> gtaToFil.get(Constants.FORMATION_PREFIX + v)
+                                )
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toSet())
                 ).toList();
         Serialisation.toJsonFile("ml_voeux.json", voeuxParCandidat, true);
 

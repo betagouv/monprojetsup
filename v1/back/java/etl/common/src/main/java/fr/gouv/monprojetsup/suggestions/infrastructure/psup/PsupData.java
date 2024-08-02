@@ -271,8 +271,8 @@ public record PsupData(
         duree.add(Constants.gFlCodToFrontId(gFlCod), gFrCod, gFlLib, gFrLib, gFrSig);
     }
 
-    public int getDuree(@NotNull String mpsKey, @NotNull Map<String, String> psupKeyToMpsKey) {
-        if(psupKeyToMpsKey.containsKey(mpsKey)) mpsKey = psupKeyToMpsKey.get(mpsKey);
+    public int getDuree(@NotNull String key, @NotNull Map<String, String> psupKeyToMpsKey) {
+        val mpsKey = psupKeyToMpsKey.getOrDefault(key, key);
         val result = duree.durees().get(mpsKey);
         if(result == null) throw new RuntimeException("Durée inconnue pour " + mpsKey);
         return result;
@@ -643,13 +643,20 @@ public record PsupData(
             Map<Integer, DescriptifVoeu> indexedDescriptifs,
             Map<String, String> psupIndextoMpsIndex
     ) {
-        var mpsKey = gFlCodToFrontId(f.isLAS() ? (LAS_CONSTANT + f.gFlCod) : f.gFlCod);
+        var psupKey = gFlCodToFrontId(f.isLAS() ? (LAS_CONSTANT + f.gFlCod) : f.gFlCod);
+        val mpsKey = psupIndextoMpsIndex.get(psupKey);
+        if(mpsKey == null) {
+            throw new RuntimeException("No mps key for psup key " + psupKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
+        }
+        if(f.libelle == null) {
+            throw new RuntimeException("No libelle for psup key " + psupKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
+        }
         return new Voeu(
                     Constants.gTaCodToFrontId(f.gTaCod),
-                    psupIndextoMpsIndex.getOrDefault(mpsKey,mpsKey),
+                    mpsKey,
                     f.lat,
                     f.lng,
-                    Objects.requireNonNullElse(f.libelle,"Voeu " + Constants.gTaCodToFrontId(f.gTaCod)),
+                    f.libelle,
                     f.capacite,
                     indexedDescriptifs.get(f.gTaCod)
         );

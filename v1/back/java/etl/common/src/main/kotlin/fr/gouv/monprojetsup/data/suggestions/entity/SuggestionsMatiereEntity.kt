@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.entity
+package fr.gouv.monprojetsup.data.suggestions.entity
 
 import fr.gouv.monprojetsup.suggestions.domain.model.Matiere
 import jakarta.persistence.Column
@@ -9,8 +9,16 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "matieres")
-class MatiereEntity {
+@Table(name = "sugg_matieres")
+class SuggestionsMatiereEntity {
+
+    constructor(matiere: Matiere) {
+        this.id = matiere.id
+        this.label = matiere.label
+        this.estSpecialite = matiere.estSpecialite
+        this.bacs = matiere.bacs
+    }
+
     fun toMatiere() : Matiere {
         return Matiere(
             id,
@@ -22,16 +30,16 @@ class MatiereEntity {
 
     @Id
     @Column
-    val id: Int = 0
+    val id: Int
 
     @Column
-    val label: String = ""
+    val label: String
 
     @Column
-    val estSpecialite: Boolean = false
+    val estSpecialite: Boolean
 
     @Column
     @JdbcTypeCode(SqlTypes.JSON)
-    val bacs: List<String> = emptyList()
+    val bacs: List<String>
 
 }

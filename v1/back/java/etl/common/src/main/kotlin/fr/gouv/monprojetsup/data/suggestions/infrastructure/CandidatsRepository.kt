@@ -1,6 +1,6 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.repository
+package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.infrastructure.entity.CandidatEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
 import fr.gouv.monprojetsup.suggestions.domain.model.Candidat
 import fr.gouv.monprojetsup.suggestions.domain.port.CandidatsPort
 import org.springframework.data.jpa.repository.JpaRepository
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 
-interface CandidatsJPARepository : JpaRepository<CandidatEntity, String> {
+interface CandidatsJPARepository : JpaRepository<SuggestionsCandidatEntity, String> {
 
 }
 
@@ -26,12 +26,12 @@ class CandidatsRepository(
 
     @Transactional(readOnly = false)
     override fun save(candidat: Candidat) {
-        repo.save(CandidatEntity(candidat));
+        repo.save(SuggestionsCandidatEntity(candidat));
     }
 
     @Transactional(readOnly = false)
     override fun saveAll(candidat: MutableCollection<Candidat>) {
-        repo.saveAll(candidat.map { CandidatEntity(it) })
+        repo.saveAll(candidat.map { SuggestionsCandidatEntity(it) })
     }
 
 }

@@ -9,4 +9,6 @@ public interface MatieresPort {
 
     @NotNull List<@NotNull Matiere> retrieveSpecialites();
 
+    void saveAll(@NotNull List<@NotNull Matiere> matieres);
+
 }

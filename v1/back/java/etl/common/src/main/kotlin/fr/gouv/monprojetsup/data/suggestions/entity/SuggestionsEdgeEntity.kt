@@ -1,14 +1,16 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.entity
+package fr.gouv.monprojetsup.data.suggestions.entity
 
 import fr.gouv.monprojetsup.suggestions.domain.model.Edge
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 
 @Entity
-@Table(name = "liens")
-class EdgeEntity(key: String,target: String, type: Int) {
+@Table(name = "sugg_edges")
+class SuggestionsEdgeEntity(key: String, target: String, type: Int) {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0
 
     @Column(nullable = false)
     val src: String = key

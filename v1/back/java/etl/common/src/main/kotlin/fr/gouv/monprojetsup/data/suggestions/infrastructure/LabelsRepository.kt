@@ -1,6 +1,6 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.repository
+package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.infrastructure.entity.LabelEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
-interface LabelsJPARepository : JpaRepository<LabelEntity, String> {
-    override fun findAll(): MutableList<LabelEntity>
+interface LabelsJPARepository : JpaRepository<SuggestionsLabelEntity, String> {
+    override fun findAll(): MutableList<SuggestionsLabelEntity>
 
-    override fun findById(key: String): Optional<LabelEntity>
+    override fun findById(key: String): Optional<SuggestionsLabelEntity>
 
 }
 
@@ -43,6 +43,15 @@ class LabelsRepository(
     @Cacheable(value = ["myCache"], key = "#id")
     override fun retrieveDebugLabel(id: String): Optional<String> {
         return repo.findById(id).map { (it.labelDebug ?: it.label) }
+    }
+
+    override fun saveAll(
+        labels: Map<String, String>,
+        debugLabels: Map<String, String>
+    ) {
+        repo.saveAll(
+            labels.entries.map { SuggestionsLabelEntity(it.key, it.value, debugLabels[it.key]) }
+        )
     }
 
 }

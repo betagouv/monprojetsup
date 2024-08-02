@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.export.reference;
 
-import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
-import fr.gouv.monprojetsup.data.model.Edges;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;

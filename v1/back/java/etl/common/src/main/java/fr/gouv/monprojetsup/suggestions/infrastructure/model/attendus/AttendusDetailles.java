@@ -45,7 +45,7 @@ public record AttendusDetailles(
                         backPsupData.getRecoPremGeneriques(gFlCod),
                         backPsupData.getRecoTermGeneriques(gFlCod)
                 ));
-                Map<Integer, Integer> statsEds = statistiques.getStatsSpec(key);
+                Map<Integer, Integer> statsEds = statistiques.getNbAdmisParSpec(key);
                 if(statsEds != null) {
                     statsEds.forEach((iMtCod, pct) -> {
                         String name = specialites.specialites().get(iMtCod);

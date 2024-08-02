@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.app.infrastructure.app
+package fr.gouv.monprojetsup.data.app.infrastructure
 
 import fr.gouv.monprojetsup.data.app.entity.*
 import org.springframework.data.jpa.repository.JpaRepository

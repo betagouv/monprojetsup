@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure.entity
+package fr.gouv.monprojetsup.data.suggestions.entity
 
 import fr.gouv.monprojetsup.suggestions.domain.model.Formation
 import fr.gouv.monprojetsup.suggestions.domain.model.StatsFormation
@@ -11,10 +11,9 @@ import org.jetbrains.annotations.NotNull
 import java.io.Serializable
 
 @Entity
-@Table(name = "formations")
-class FormationEntity {
+@Table(name = "suggestions_formations")
+class SuggestionsFormationEntity {
 
-    constructor()
     constructor(f : Formation) {
         this.id = f.id;
         this.label = f.label;
@@ -23,12 +22,14 @@ class FormationEntity {
         this.apprentissage = f.apprentissage;
         this.duree = f.duree;
         this.las = f.las;
-        this.voeux = f.voeux.map { VoeuEntity(it) };
+        this.voeux = f.voeux.map { SuggestionsVoeuEntity(it) };
         this.metiers = f.metiers;
         this.stats = StatsEntity(
             f.stats.admissions,
             f.stats.nbAdmisParBac,
+            f.stats.pctAdmisParBac,
             f.stats.nbAdmisParSpecialite,
+            f.stats.pctAdmisParSpecialite,
             f.stats.formationsSimilaires
         );
         this.filieresPsup = f.filieresPsup;
@@ -51,37 +52,37 @@ class FormationEntity {
 
     @Id
     @Column
-    var id: String = ""
+    val id: String
 
     @Column
-    var label: String = ""
-
-    @Column
-    var labelDebug: String? = ""
-
-    @Column
-    var capacite: Int = 0
-
-    @Column
-    var apprentissage: Boolean = false
-
-    @Column
-    var duree: Int = 0
+    val label: String
 
     @Column(nullable = true)
-    var las: String? = null
+    val labelDebug: String?
+
+    @Column
+    val capacite: Int
+
+    @Column
+    val apprentissage: Boolean
+
+    @Column
+    val duree: Int
+
+    @Column(nullable = true)
+    val las: String?
 
     @ElementCollection
-    @CollectionTable(name = "voeux", joinColumns = [JoinColumn(name = "voeux_id")])
-    var voeux: List<VoeuEntity> = listOf()
+    @CollectionTable(name = "sugg_voeux", joinColumns = [JoinColumn(name = "id")])
+    val voeux: List<SuggestionsVoeuEntity>
 
     @Column
     @JdbcTypeCode(SqlTypes.JSON)
-    var metiers: List<String> = listOf()
+    val metiers: List<String>
 
     @Column
     @JdbcTypeCode(SqlTypes.JSON)
-    var filieresPsup : List<@NotNull String> = listOf()
+    val filieresPsup : List<@NotNull String>
 
     data class StatsEntity (
 
@@ -90,9 +91,11 @@ class FormationEntity {
         val admissions : Map<String, Statistique> = mapOf(),
 
         val nbAdmisParBac : Map<String, Int> = mapOf(),
+        val pctAdmisParBac : Map<String, Int> = mapOf(),
 
         //spécialité → pourcentage
         val nbAdmisParSpecialite: Map<Int, Int> = mapOf(),
+        val pctAdmisParSpecialite: Map<Int, Int> = mapOf(),
 
         //type de bac générique → formation → score
         val formationsSimilaires : Map<Int, Map<String,Int>> = mapOf(),
@@ -102,7 +105,9 @@ class FormationEntity {
             return StatsFormation(
                 admissions,
                 nbAdmisParBac,
+                pctAdmisParBac,
                 nbAdmisParSpecialite,
+                pctAdmisParSpecialite,
                 formationsSimilaires
             )
         }
