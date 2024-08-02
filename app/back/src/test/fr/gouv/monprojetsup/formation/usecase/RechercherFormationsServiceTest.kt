@@ -20,7 +20,7 @@ class RechercherFormationsServiceTest {
     @InjectMocks
     private lateinit var rechercherFormationsService: RechercherFormationsService
 
-    private val rechercheLongue = "12  ma*réchèrche 1%peu Toùt!peTit peu&lôngue ==="
+    private val rechercheLongue = "[^12  ma*réchèrche 1%peu Toùt!peTit peu&lôngue === ×÷\\ h^&e l l`.,|o w]{+o r l d'"
 
     @BeforeEach
     fun setup() {
@@ -30,7 +30,7 @@ class RechercherFormationsServiceTest {
                 FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                 FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
             )
-        given(rechercheFormationRepository.rechercherUneFormation("recherche")).willReturn(formationsPourRecherche)
+        given(rechercheFormationRepository.rechercherUneFormation("réchèrche")).willReturn(formationsPourRecherche)
         val formationsPourPeu =
             listOf(
                 FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -40,13 +40,13 @@ class RechercherFormationsServiceTest {
             )
         given(rechercheFormationRepository.rechercherUneFormation("peu")).willReturn(formationsPourPeu)
         val formationsPourTout = emptyList<FormationCourte>()
-        given(rechercheFormationRepository.rechercherUneFormation("tout")).willReturn(formationsPourTout)
+        given(rechercheFormationRepository.rechercherUneFormation("Toùt")).willReturn(formationsPourTout)
         val formationsPourPetit =
             listOf(
                 FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                 FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
             )
-        given(rechercheFormationRepository.rechercherUneFormation("petit")).willReturn(formationsPourPetit)
+        given(rechercheFormationRepository.rechercherUneFormation("peTit")).willReturn(formationsPourPetit)
         val formationsPourLongue =
             listOf(
                 FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
@@ -54,7 +54,7 @@ class RechercherFormationsServiceTest {
                 FormationCourte(id = "fl10", nom = "DUT Informatique"),
                 FormationCourte(id = "fl18", nom = "L1 - Littérature"),
             )
-        given(rechercheFormationRepository.rechercherUneFormation("longue")).willReturn(formationsPourLongue)
+        given(rechercheFormationRepository.rechercherUneFormation("lôngue")).willReturn(formationsPourLongue)
     }
 
     @Test
