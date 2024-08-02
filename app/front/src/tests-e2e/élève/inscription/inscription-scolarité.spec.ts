@@ -1,28 +1,17 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
+import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper {
+class Test extends InscriptionTestHelper {
   public SÉRIE_GÉNÉRALE = "Série Générale";
 
   public ARTS_PLASTIQUES = "Arts Plastiques";
 
   public HISTOIRE_DES_ARTS = "Histoire des arts";
 
-  public constructor(private _page: Page) {}
-
-  public readonly urlPageSuivante = "/eleve/inscription/domaines";
-
-  public naviguerVersLaPage = async () => {
-    await this._page.goto("/eleve/inscription/scolarite");
-  };
-
-  public soumettreLeFormulaire = async () => {
-    await this._boutonSoumissionFormulaire().click();
-  };
-
-  public revenirÀLÉtapePrécédente = async () => {
-    await this._boutonRetour().click();
-  };
+  public constructor(protected _page: Page) {
+    super(_page, "/eleve/inscription/scolarite", "/eleve/inscription/domaines", { situation: "quelques_pistes" });
+  }
 
   public renseignerCorrectementLeFormulaire = async ({ classeActuelle }: { classeActuelle: string }) => {
     await this.renseignerChampClasseActuelle(classeActuelle);
@@ -67,45 +56,12 @@ class TestHelper {
   public champSpécialités = () => {
     return this._page.getByRole("searchbox", { name: i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL });
   };
-
-  public messageErreurChampObligatoire = () => {
-    return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE);
-  };
-
-  public messageErreurAucunRésultat = () => {
-    return this._page.getByText(i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT);
-  };
-
-  private _boutonSoumissionFormulaire = () => {
-    return this._page.getByRole("button", { name: i18n.COMMUN.CONTINUER });
-  };
-
-  private _boutonRetour = () => {
-    return this._page.getByRole("link", { name: i18n.COMMUN.RETOUR });
-  };
 }
 
 test.describe("Inscription élève - Ma scolarité", () => {
   test("Le champ classe actuelle est obligatoire", async ({ page }) => {
     // GIVEN
-    await page.route("*/**/api/v1/profil", async (route) => {
-      const json = {
-        situation: "quelques_pistes",
-        classe: null,
-        baccalaureat: null,
-        specialites: null,
-        domaines: null,
-        centresInterets: null,
-        metiersFavoris: null,
-        dureeEtudesPrevue: null,
-        alternance: null,
-        communesFavorites: null,
-        moyenneGenerale: null,
-        formationsFavorites: null,
-      };
-      await route.fulfill({ json });
-    });
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -117,7 +73,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
   test("Si tous les champs obligatoires sont renseignés, passage à l'étape suivante", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -133,7 +89,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
   test.describe("Si je sélectionne un bac qui a des enseignements de spécialités", () => {
     test("Afficher le champ enseignements de spécialités", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -145,7 +101,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
     test("Je peux obtenir des suggestions de spécialités en fonction de ma recherche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -158,7 +114,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
     test("Je peux sélectionner des spécialités", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -174,7 +130,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
     test("Je peux supprimer des spécialités sélectionnées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -191,7 +147,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
     test("Si je cherche quelque chose qui n'existe pas j'ai un message d'erreur qui s'affiche", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -206,7 +162,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
   test.describe("Si j'avais sélectionné des spécialités", () => {
     test("En changeant de bac elles sont réinitialisées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN
@@ -227,7 +183,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
       const classeActuelleÀSélectionner = i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL;
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN

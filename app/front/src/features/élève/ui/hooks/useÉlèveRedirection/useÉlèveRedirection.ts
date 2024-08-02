@@ -16,7 +16,7 @@ export default function useÉlèveRedirection() {
   const étapesInscription = étapesÉtapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
-    if (utilisateur.type === undefined) return;
+    if (utilisateur.type === undefined || (utilisateur.type === "élève" && !élève)) return;
 
     if (utilisateur.type !== "élève") {
       setEstInitialisé(true);

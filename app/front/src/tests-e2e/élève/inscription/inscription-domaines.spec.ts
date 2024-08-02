@@ -1,7 +1,8 @@
-import { i18n } from "../../../src/configuration/i18n/i18n";
+import { InscriptionTestHelper } from "./inscriptionTestHelper";
+import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper {
+class Test extends InscriptionTestHelper {
   public DOMAINE_ART = "Art";
 
   public DOMAINE_SCIENCE_LANGAGE = "Science du langage";
@@ -10,21 +11,14 @@ class TestHelper {
 
   public BOUTON_APPUYÉ = "aria-pressed";
 
-  public constructor(private _page: Page) {}
-
-  public readonly urlPageSuivante = "/eleve/inscription/interets";
-
-  public naviguerVersLaPage = async () => {
-    await this._page.goto("/eleve/inscription/domaines");
-  };
-
-  public soumettreLeFormulaire = async () => {
-    await this._boutonSoumissionFormulaire().click();
-  };
-
-  public revenirÀLÉtapePrécédente = async () => {
-    await this._boutonRetour().click();
-  };
+  public constructor(protected _page: Page) {
+    super(_page, "/eleve/inscription/domaines", "/eleve/inscription/interets", {
+      situation: "quelques_pistes",
+      classe: "premiere",
+      bac: "Générale",
+      spécialités: [],
+    });
+  }
 
   public cliquerSurUneCatégorie = async (catégorieLabel: string) => {
     await this.boutonCatégorie(catégorieLabel).click();
@@ -45,20 +39,12 @@ class TestHelper {
   public messageErreurAuMoinsUnDomaine = () => {
     return this._page.locator("#domaines-message").getByText(i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN);
   };
-
-  private _boutonSoumissionFormulaire = () => {
-    return this._page.getByRole("button", { name: i18n.COMMUN.CONTINUER });
-  };
-
-  private _boutonRetour = () => {
-    return this._page.getByRole("link", { name: i18n.COMMUN.RETOUR });
-  };
 }
 
 test.describe("Inscription élève - Mes domaines", () => {
   test("L'élève doit choisir au moins un domaine", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -70,7 +56,7 @@ test.describe("Inscription élève - Mes domaines", () => {
 
   test("Je peux sélectionner des domaines", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -83,7 +69,7 @@ test.describe("Inscription élève - Mes domaines", () => {
 
   test("Je peux supprimer des domaines sélectionnés", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -97,7 +83,7 @@ test.describe("Inscription élève - Mes domaines", () => {
 
   test("Si au moins un domaine est renseigné, passage à l'étape suivante", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -112,7 +98,7 @@ test.describe("Inscription élève - Mes domaines", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const testhelper = new TestHelper(page);
+      const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 
       // WHEN

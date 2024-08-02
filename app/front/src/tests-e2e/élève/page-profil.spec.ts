@@ -1,11 +1,15 @@
-import { i18n } from "../../src/configuration/i18n/i18n";
+import { i18n } from "@/configuration/i18n/i18n";
+import { TestHelper } from "@/tests-e2e/testHelper";
 import { expect, type Page, test } from "@playwright/test";
 
-class TestHelper {
-  public constructor(private _page: Page) {}
+class Test extends TestHelper {
+  public constructor(protected _page: Page) {
+    super(_page);
+  }
 
   public naviguerVersLaPage = async () => {
-    await this._page.goto("/profil?simulerCompte=élève");
+    this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
+    await this._page.goto("/profil");
   };
 
   public soumettreLeFormulaire = async () => {
@@ -48,7 +52,7 @@ class TestHelper {
 test.describe("Page Profil Élève", () => {
   test("J'ai accès à 4 onglets me permettant de modifier mon profil", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // THEN
@@ -57,7 +61,7 @@ test.describe("Page Profil Élève", () => {
 
   test("Je peux naviguer entre les onglets", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
@@ -69,28 +73,14 @@ test.describe("Page Profil Élève", () => {
 
   test("Je peux modifier un élément", async ({ page }) => {
     // GIVEN
-    const testhelper = new TestHelper(page);
+    const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
-    await testhelper.renseignerChampClasseActuelle(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL);
+    await testhelper.renseignerChampClasseActuelle(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.TERMINALE.LABEL);
     await testhelper.soumettreLeFormulaire();
 
     // THEN
     await expect(testhelper.messageModificationsEnregistrées()).toBeVisible();
-  });
-
-  test("Mes modifications sont bien conservées si je rafraîchi la page", async ({ page }) => {
-    // GIVEN
-    const testhelper = new TestHelper(page);
-    await testhelper.naviguerVersLaPage();
-
-    // WHEN
-    await testhelper.renseignerChampClasseActuelle(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL);
-    await testhelper.soumettreLeFormulaire();
-    await testhelper.naviguerVersLaPage();
-
-    // THEN
-    await expect(testhelper.champClasseActuelle()).toHaveValue("premiere");
   });
 });

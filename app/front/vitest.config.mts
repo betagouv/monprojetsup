@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
+    include: ["**/*.test.?(c|m)[jt]s?(x)"],
   },
 });
