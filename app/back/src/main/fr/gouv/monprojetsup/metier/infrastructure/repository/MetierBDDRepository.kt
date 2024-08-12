@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class MetierBDDRepository(
-    val metierJPARepository: MetierJPARepository,
-    val logger: Logger,
+    private val metierJPARepository: MetierJPARepository,
+    private val logger: Logger,
 ) : MetierRepository {
     @Transactional(readOnly = true)
     override fun recupererLesMetiersDetailles(ids: List<String>): List<Metier> {
@@ -19,7 +19,7 @@ class MetierBDDRepository(
             if (metier == null) {
                 logger.error("Le métier $idMetier n'est pas présent en base")
             }
-            metier?.toMetierDetaille()
+            metier?.toMetier()
         }
     }
 

@@ -6,6 +6,8 @@ import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
+import fr.gouv.monprojetsup.metier.usecase.RechercherMetiersService
 import fr.gouv.monprojetsup.metier.usecase.RecupererMetiersService
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -27,8 +29,11 @@ class MetierControllerTest(
     @MockBean
     lateinit var recupererMetiersService: RecupererMetiersService
 
+    @MockBean
+    lateinit var rechercherMetiersService: RechercherMetiersService
+
     @Nested
-    inner class `Quand on appelle la route de suggestions de formations` {
+    inner class `Quand on appelle la route de récupération de métiers` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si connecté en élève, doit retourner 200 avec la liste des métiers`() {
@@ -251,18 +256,205 @@ class MetierControllerTest(
         @Test
         fun `si connecté sans profil, doit retourner 403`() {
             // When & Then
-            mvc.perform(
-                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
-            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isForbidden)
+            mvc.perform(get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358")).andExpect(status().isForbidden)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si appel sans ids, doit retourner 400`() {
             // When & Then
+            mvc.perform(get("/api/v1/metiers")).andExpect(status().isBadRequest)
+        }
+    }
+
+    @Nested
+    inner class `Quand on appelle la route de recherche de métiers` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si connecté en élève, doit retourner 200 avec la liste des métiers`() {
+            // Given
+            val metiers =
+                listOf(
+                    MetierCourt(id = "MET_454", nom = "garde à cheval"),
+                    MetierCourt(id = "MET_471", nom = "entraîneur / entraîneuse de chevaux"),
+                    MetierCourt(id = "MET_682", nom = "maréchal-ferrant / maréchale-ferrante"),
+                    MetierCourt(id = "MET_155", nom = "lad-jockey, lad-driver"),
+                    MetierCourt(id = "MET_345", nom = "moniteur/trice d'activités équestres"),
+                    MetierCourt(id = "MET_19", nom = "palefrenier / palefrenière"),
+                    MetierCourt(id = "MET_98", nom = "sellier/ère"),
+                )
+            `when`(
+                rechercherMetiersService.rechercherMetiers(
+                    recherche = "cheval",
+                    nombreMaximaleDeMetier = 30,
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(metiers)
+
+            // When & Then
             mvc.perform(
-                get("/api/v1/metiers"),
+                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "metiers": [
+                            {
+                              "id": "MET_454",
+                              "nom": "garde à cheval"
+                            },
+                            {
+                              "id": "MET_471",
+                              "nom": "entraîneur / entraîneuse de chevaux"
+                            },
+                            {
+                              "id": "MET_682",
+                              "nom": "maréchal-ferrant / maréchale-ferrante"
+                            },
+                            {
+                              "id": "MET_155",
+                              "nom": "lad-jockey, lad-driver"
+                            },
+                            {
+                              "id": "MET_345",
+                              "nom": "moniteur/trice d'activités équestres"
+                            },
+                            {
+                              "id": "MET_19",
+                              "nom": "palefrenier / palefrenière"
+                            },
+                            {
+                              "id": "MET_98",
+                              "nom": "sellier/ère"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si connecté en enseignant, doit retourner 200 avec la liste des métiers`() {
+            // Given
+            val metiers =
+                listOf(
+                    MetierCourt(id = "MET_454", nom = "garde à cheval"),
+                    MetierCourt(id = "MET_471", nom = "entraîneur / entraîneuse de chevaux"),
+                    MetierCourt(id = "MET_682", nom = "maréchal-ferrant / maréchale-ferrante"),
+                    MetierCourt(id = "MET_155", nom = "lad-jockey, lad-driver"),
+                    MetierCourt(id = "MET_345", nom = "moniteur/trice d'activités équestres"),
+                    MetierCourt(id = "MET_19", nom = "palefrenier / palefrenière"),
+                    MetierCourt(id = "MET_98", nom = "sellier/ère"),
+                )
+            `when`(
+                rechercherMetiersService.rechercherMetiers(
+                    recherche = "cheval",
+                    nombreMaximaleDeMetier = 30,
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(metiers)
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "metiers": [
+                            {
+                              "id": "MET_454",
+                              "nom": "garde à cheval"
+                            },
+                            {
+                              "id": "MET_471",
+                              "nom": "entraîneur / entraîneuse de chevaux"
+                            },
+                            {
+                              "id": "MET_682",
+                              "nom": "maréchal-ferrant / maréchale-ferrante"
+                            },
+                            {
+                              "id": "MET_155",
+                              "nom": "lad-jockey, lad-driver"
+                            },
+                            {
+                              "id": "MET_345",
+                              "nom": "moniteur/trice d'activités équestres"
+                            },
+                            {
+                              "id": "MET_19",
+                              "nom": "palefrenier / palefrenière"
+                            },
+                            {
+                              "id": "MET_98",
+                              "nom": "sellier/ère"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si connecté sans profil, doit retourner 403`() {
+            // When & Then
+            mvc.perform(get("/api/v1/metiers/recherche/succincte?recherche=cheval")).andExpect(status().isForbidden)
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si la recherche est trop courte, doit retourner 400`() {
+            // When & Then
+            mvc.perform(
+                get("/api/v1/metiers/recherche/succincte?recherche=t"),
             ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_COURTE",
+                          "status": 400,
+                          "detail": "La taille de la requête est trop courte. Elle doit faire au moins 2 caractères",
+                          "instance": "/api/v1/metiers/recherche/succincte"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si la recherche est trop longue, doit retourner 400`() {
+            // Given
+            val rechercheDe51Caracteres = "Lorem ipsum dolor sit amet, consectetur sodales sed"
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/metiers/recherche/succincte?recherche=$rechercheDe51Caracteres"),
+            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "REQUETE_TROP_LONGUE",
+                          "status": 400,
+                          "detail": "La taille de la requête dépasse la taille maximale de 50 caractères",
+                          "instance": "/api/v1/metiers/recherche/succincte"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
         }
     }
 }
