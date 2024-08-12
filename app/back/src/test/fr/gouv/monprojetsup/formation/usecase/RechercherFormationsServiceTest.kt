@@ -5,12 +5,12 @@ import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.BDDMockito.atMostOnce
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.never
+import org.mockito.Mockito.times
 import org.mockito.MockitoAnnotations
 
 class RechercherFormationsServiceTest {
@@ -63,7 +63,8 @@ class RechercherFormationsServiceTest {
         val resultat =
             rechercherFormationsService.rechercheLesFormationsCorrespondantes(
                 recherche = rechercheLongue,
-                nombreMaximaleDeFormation = 10,
+                nombreMaximaleDeFormations = 10,
+                tailleMinimumRecherche = 2,
             )
 
         // Then
@@ -87,7 +88,8 @@ class RechercherFormationsServiceTest {
         val resultat =
             rechercherFormationsService.rechercheLesFormationsCorrespondantes(
                 recherche = rechercheLongue,
-                nombreMaximaleDeFormation = 3,
+                nombreMaximaleDeFormations = 3,
+                tailleMinimumRecherche = 2,
             )
 
         // Then
@@ -103,7 +105,11 @@ class RechercherFormationsServiceTest {
     @Test
     fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
         // When
-        rechercherFormationsService.rechercheLesFormationsCorrespondantes(recherche = rechercheLongue, nombreMaximaleDeFormation = 3)
+        rechercherFormationsService.rechercheLesFormationsCorrespondantes(
+            recherche = rechercheLongue,
+            nombreMaximaleDeFormations = 3,
+            tailleMinimumRecherche = 2,
+        )
 
         // Then
         then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "1")
@@ -112,9 +118,13 @@ class RechercherFormationsServiceTest {
     @Test
     fun `ne doit pas appeler le repository plusieurs fois pour le même mot`() {
         // When
-        rechercherFormationsService.rechercheLesFormationsCorrespondantes(recherche = rechercheLongue, nombreMaximaleDeFormation = 3)
+        rechercherFormationsService.rechercheLesFormationsCorrespondantes(
+            recherche = rechercheLongue,
+            nombreMaximaleDeFormations = 3,
+            tailleMinimumRecherche = 2,
+        )
 
         // Then
-        then(rechercheFormationRepository).should(atMostOnce()).rechercherUneFormation(motRecherche = "peu")
+        then(rechercheFormationRepository).should(times(1)).rechercherUneFormation(motRecherche = "peu")
     }
 }

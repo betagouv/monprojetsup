@@ -26,7 +26,7 @@ class MetierEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
-    fun toMetierDetaille() =
+    fun toMetier() =
         Metier(
             id = id,
             nom = label,

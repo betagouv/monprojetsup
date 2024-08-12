@@ -947,7 +947,11 @@ class FormationControllerTest(
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
             `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    nombreMaximaleDeFormations = 30,
+                    tailleMinimumRecherche = 2,
+                ),
             ).thenReturn(rechercheL1)
 
             // When & Then
@@ -985,7 +989,11 @@ class FormationControllerTest(
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
             `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    nombreMaximaleDeFormations = 30,
+                    tailleMinimumRecherche = 2,
+                ),
             ).thenReturn(rechercheL1)
 
             // When & Then
@@ -1031,7 +1039,8 @@ class FormationControllerTest(
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
                     recherche = rechercheDe50Caracteres,
-                    nombreMaximaleDeFormation = 30,
+                    nombreMaximaleDeFormations = 30,
+                    tailleMinimumRecherche = 2,
                 ),
             ).thenReturn(rechercheLongue)
 
@@ -1150,7 +1159,11 @@ class FormationControllerTest(
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
             `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    nombreMaximaleDeFormations = 30,
+                    tailleMinimumRecherche = 2,
+                ),
             ).thenReturn(rechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
@@ -1409,7 +1422,11 @@ class FormationControllerTest(
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
             `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(recherche = "L1", nombreMaximaleDeFormation = 30),
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    nombreMaximaleDeFormations = 30,
+                    tailleMinimumRecherche = 2,
+                ),
             ).thenReturn(rechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)

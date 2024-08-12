@@ -117,15 +117,16 @@ class FormationController(
         }
         val formationRecherchees =
             rechercherFormation.rechercheLesFormationsCorrespondantes(
-                recherche,
-                NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
+                recherche = recherche,
+                nombreMaximaleDeFormations = NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
+                tailleMinimumRecherche = TAILLE_MINIMUM_RECHERCHE,
             )
         return formationRecherchees
     }
 
     companion object {
         private const val NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES = 30
-        const val TAILLE_MINIMUM_RECHERCHE = 2
+        private const val TAILLE_MINIMUM_RECHERCHE = 2
         private const val TAILLE_MAXIMAL_RECHERCHE = 50
     }
 }
