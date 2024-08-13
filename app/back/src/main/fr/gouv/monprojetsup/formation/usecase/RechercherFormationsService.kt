@@ -11,12 +11,10 @@ class RechercherFormationsService(
 ) : RechercherService<FormationCourte>() {
     fun rechercheLesFormationsCorrespondantes(
         recherche: String,
-        nombreMaximaleDeFormations: Int,
         tailleMinimumRecherche: Int,
     ): List<FormationCourte> {
         return rechercher(
             recherche = recherche,
-            nombreMaximaleDeResultats = nombreMaximaleDeFormations,
             tailleMinimumRecherche = tailleMinimumRecherche,
         )
     }

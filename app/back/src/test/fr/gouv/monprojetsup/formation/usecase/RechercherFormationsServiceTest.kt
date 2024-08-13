@@ -63,7 +63,6 @@ class RechercherFormationsServiceTest {
         val resultat =
             rechercherFormationsService.rechercheLesFormationsCorrespondantes(
                 recherche = rechercheLongue,
-                nombreMaximaleDeFormations = 10,
                 tailleMinimumRecherche = 2,
             )
 
@@ -83,31 +82,10 @@ class RechercherFormationsServiceTest {
     }
 
     @Test
-    fun `doit retourner la liste des formations en prenant en compte le maximum`() {
-        // When
-        val resultat =
-            rechercherFormationsService.rechercheLesFormationsCorrespondantes(
-                recherche = rechercheLongue,
-                nombreMaximaleDeFormations = 3,
-                tailleMinimumRecherche = 2,
-            )
-
-        // Then
-        val attendu =
-            listOf(
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-            )
-        assertThat(resultat).isEqualTo(attendu)
-    }
-
-    @Test
     fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
         // When
         rechercherFormationsService.rechercheLesFormationsCorrespondantes(
             recherche = rechercheLongue,
-            nombreMaximaleDeFormations = 3,
             tailleMinimumRecherche = 2,
         )
 
@@ -120,7 +98,6 @@ class RechercherFormationsServiceTest {
         // When
         rechercherFormationsService.rechercheLesFormationsCorrespondantes(
             recherche = rechercheLongue,
-            nombreMaximaleDeFormations = 3,
             tailleMinimumRecherche = 2,
         )
 

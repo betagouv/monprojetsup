@@ -11,12 +11,10 @@ class RechercherMetiersService(
 ) : RechercherService<MetierCourt>() {
     fun rechercherMetiers(
         recherche: String,
-        nombreMaximaleDeMetier: Int,
         tailleMinimumRecherche: Int,
     ): List<MetierCourt> {
         return rechercher(
             recherche = recherche,
-            nombreMaximaleDeResultats = nombreMaximaleDeMetier,
             tailleMinimumRecherche = tailleMinimumRecherche,
         )
     }
