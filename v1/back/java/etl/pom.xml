@@ -8,18 +8,18 @@
 		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>fr.gouv.monprojetsup.data</groupId>
+	<groupId>fr.gouv.monprojetsup</groupId>
 	<artifactId>etl</artifactId>
+	<name>etl</name>
 	<version>1.4.1</version>
     <packaging>pom</packaging>
-    <name>etl</name>
 	<description>Extract, transform, load data of MonProjetSup</description>
     <modules>
-		<module>common</module>
-		<module>updatepsup</module>
-        <module>scrapping</module>
-		<module>updatedb</module>
-		<module>audit</module>
+		<module>etl-common</module>
+		<module>etl-psup</module>
+        <module>etl-scrapping</module>
+		<module>etl-updatedb</module>
+		<module>etl-audit</module>
     </modules>
     <properties>
 		<maven.compiler.source>19</maven.compiler.source>
