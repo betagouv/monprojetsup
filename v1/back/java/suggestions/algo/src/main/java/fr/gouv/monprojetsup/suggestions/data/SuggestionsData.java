@@ -34,7 +34,6 @@ public class SuggestionsData {
     private final EdgesPort edgesPort;
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
-
     private final MatieresPort matieresPort;
 
     @Autowired
