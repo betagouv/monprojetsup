@@ -286,7 +286,6 @@ class MetierControllerTest(
             `when`(
                 rechercherMetiersService.rechercherMetiers(
                     recherche = "cheval",
-                    nombreMaximaleDeMetier = 30,
                     tailleMinimumRecherche = 2,
                 ),
             ).thenReturn(metiers)
@@ -352,7 +351,6 @@ class MetierControllerTest(
             `when`(
                 rechercherMetiersService.rechercherMetiers(
                     recherche = "cheval",
-                    nombreMaximaleDeMetier = 30,
                     tailleMinimumRecherche = 2,
                 ),
             ).thenReturn(metiers)

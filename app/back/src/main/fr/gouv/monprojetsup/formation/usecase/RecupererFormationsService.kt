@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class RecupererFormationsService(
-    val formationRepository: FormationRepository,
-    val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
-    val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
-    val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
-    val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
-    val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
-    val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
+    private val formationRepository: FormationRepository,
+    private val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
+    private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
+    private val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
+    private val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
+    private val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
+    private val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
     fun recupererFichesFormationPourProfil(
         profilEleve: ProfilEleve.Identifie,

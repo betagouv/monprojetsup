@@ -36,7 +36,6 @@ class MetierController(
         val metiers =
             rechercherMetiersService.rechercherMetiers(
                 recherche = recherche,
-                nombreMaximaleDeMetier = NOMBRE_METIERS_MAXIMAL_RETOURNES,
                 tailleMinimumRecherche = TAILLE_MINIMUM_RECHERCHE,
             )
         return MetiersCourtsDTO(

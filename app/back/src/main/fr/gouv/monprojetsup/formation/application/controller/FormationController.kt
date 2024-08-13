@@ -6,17 +6,20 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Identifie
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Inconnu
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PREMIERE_PAGE
+import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.PARAMETRE_NUMERO_PAGE
+import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationCourteDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesDTO
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -32,19 +35,33 @@ class FormationController(
     val recupererFormationService: RecupererFormationService,
     val recupererFormationsService: RecupererFormationsService,
     val rechercherFormation: RechercherFormationsService,
+    val hateoasBuilder: HateoasBuilder,
 ) : AuthentifieController() {
     @GetMapping("/suggestions")
     @Operation(summary = "Récupérer les suggestions de formations pour un profil d'élève")
-    fun getSuggestionsFormations(): FormationsAvecExplicationsDTO {
-        val formationsPourProfil: List<FicheFormation.FicheFormationPourProfil> =
-            suggestionsFormationsService.suggererFormations(
-                profilEleve = recupererEleveIdentifie(),
-                deLIndex = 0,
-                aLIndex = NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
+    fun getSuggestionsFormations(
+        @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
+    ): FormationsAvecExplicationsDTO {
+        if (numeroDePage < NUMERO_PREMIERE_PAGE) {
+            throw MonProjetSupBadRequestException("PAGINATION_COMMENCE_A_1", "La pagination commence à 1")
+        }
+        val profilEleve = recupererEleveIdentifie()
+        val suggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
+        val hateoas =
+            hateoasBuilder.creerHateoas(
+                liste = suggestions.formations.sortedByDescending { it.tauxAffinite },
+                numeroDePageActuelle = numeroDePage,
+                tailleLot = TAILLE_LOT_SUGGESTIONS_FORMATIONS,
             )
-        return FormationsAvecExplicationsDTO(
-            formations = formationsPourProfil.map { FormationAvecExplicationsDTO(it) },
-        )
+        val formationsSuggerees =
+            recupererFormationsService.recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = suggestions,
+                idsFormations = hateoas.listeCoupee.map { it.idFormation },
+            )
+        val dto = FormationsAvecExplicationsDTO(formations = formationsSuggerees.map { FormationAvecExplicationsDTO(it) })
+        dto.ajouterHateoas(hateoas)
+        return dto
     }
 
     @GetMapping("/{idformation}")
@@ -62,28 +79,43 @@ class FormationController(
 
     @GetMapping("/recherche/succincte")
     fun getRechercheFormationSuccincte(
-        @RequestParam recherche: String,
+        @Parameter(description = "Formation recherchée") @RequestParam recherche: String,
+        @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsCourtesDTO {
         val formationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche)
         val formationsFiltrees = filtreesFormationPourEleve(formationRecherchees)
-        return FormationsCourtesDTO(
-            formationsFiltrees.map { FormationCourteDTO(it) },
-        )
+        val hateoas =
+            hateoasBuilder.creerHateoas(
+                liste = formationsFiltrees,
+                numeroDePageActuelle = numeroDePage,
+                tailleLot = TAILLE_LOT_RECHERCHE_SUCCINCTE,
+            )
+        val dto = FormationsCourtesDTO(formations = hateoas.listeCoupee.map { FormationCourteDTO(it) })
+        dto.ajouterHateoas(hateoas)
+        return dto
     }
 
     @GetMapping("/recherche/detaillee")
     fun getRechercheFormationDetaillee(
-        @RequestParam recherche: String,
+        @Parameter(description = "Formation recherchée") @RequestParam recherche: String,
+        @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsAvecExplicationsDTO {
-        val formationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche)
-        return recupererUneListeDeFormationsDetaillees(filtreesFormationPourEleve(formationRecherchees).map { it.id })
+        val idsFormationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche).map { it.id }
+        val dto =
+            recupererUneListeDeFormationsDetaillees(
+                ids = idsFormationRecherchees,
+                numeroDePage = numeroDePage,
+                tailleLot = TAILLE_LOT_FORMATIONS,
+            )
+        return dto
     }
 
     @GetMapping
     fun getFormations(
         @RequestParam ids: List<String>,
+        @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsAvecExplicationsDTO {
-        return recupererUneListeDeFormationsDetaillees(ids)
+        return recupererUneListeDeFormationsDetaillees(ids = ids, numeroDePage = numeroDePage, tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE)
     }
 
     private fun filtreesFormationPourEleve(formationRecherchees: List<FormationCourte>): List<FormationCourte> {
@@ -95,11 +127,28 @@ class FormationController(
         return formationsFiltrees
     }
 
-    private fun recupererUneListeDeFormationsDetaillees(ids: List<String>): FormationsAvecExplicationsDTO {
+    private fun recupererUneListeDeFormationsDetaillees(
+        ids: List<String>,
+        numeroDePage: Int,
+        tailleLot: Int,
+    ): FormationsAvecExplicationsDTO {
         val profilEleve = recupererEleveIdentifie()
+        val hateoas =
+            hateoasBuilder.creerHateoas(
+                liste = ids,
+                numeroDePageActuelle = numeroDePage,
+                tailleLot = tailleLot,
+            )
         val toutesLesSuggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
-        val formations = recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, toutesLesSuggestions, ids)
-        return FormationsAvecExplicationsDTO(formations = formations.map { FormationAvecExplicationsDTO(it) })
+        val formations =
+            recupererFormationsService.recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = toutesLesSuggestions,
+                idsFormations = hateoas.listeCoupee,
+            )
+        val dto = FormationsAvecExplicationsDTO(formations = formations.map { FormationAvecExplicationsDTO(it) })
+        dto.ajouterHateoas(hateoas)
+        return dto
     }
 
     @Throws(MonProjetSupBadRequestException::class)
@@ -118,14 +167,16 @@ class FormationController(
         val formationRecherchees =
             rechercherFormation.rechercheLesFormationsCorrespondantes(
                 recherche = recherche,
-                nombreMaximaleDeFormations = NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES,
                 tailleMinimumRecherche = TAILLE_MINIMUM_RECHERCHE,
             )
         return formationRecherchees
     }
 
     companion object {
-        private const val NOMBRE_FORMATIONS_MAXIMAL_RETOURNEES = 30
+        private const val TAILLE_LOT_RECHERCHE_DETAILLEE = 30
+        private const val TAILLE_LOT_RECHERCHE_SUCCINCTE = 30
+        private const val TAILLE_LOT_SUGGESTIONS_FORMATIONS = 30
+        private const val TAILLE_LOT_FORMATIONS = 30
         private const val TAILLE_MINIMUM_RECHERCHE = 2
         private const val TAILLE_MAXIMAL_RECHERCHE = 50
     }
