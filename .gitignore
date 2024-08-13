@@ -7,3 +7,8 @@ metabase/db
 .idea/*
 *.iml
 /v1/data
+
+**secrets**
+**.csv
+**~
+**#

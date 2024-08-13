@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.tools.nlp;
 
+import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.ServerData;
 import org.json.simple.JSONArray;
@@ -29,7 +30,7 @@ record Match(String word, Integer weight){}
 public class Correspondances {
     public final Map<String, List<Match>> links;
     //Rather a map from string (user input) to list of strings + interests (correspondances)
-    public Correspondances() throws IOException {
+    public Correspondances() throws IOException, CsvValidationException {
         this.links = getLinks(
                 getNonFilteredWords(),
                 getRelations(),
@@ -94,7 +95,7 @@ public class Correspondances {
     /*
     * Get the ONISEP keywords from tagsSources.json
     */
-    private Set<String> getKeywords() throws IOException {
+    private Set<String> getKeywords() throws IOException, CsvValidationException {
         ServerData.load();
         TagsSources tagsSources = TagsSources.load(ServerData.backPsupData.getCorrespondances());
         Set<String> tags = tagsSources.getTags();

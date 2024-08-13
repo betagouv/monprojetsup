@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.model.thematiques;
 
+import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.update.onisep.ThematiquesOnisep;
 import lombok.val;
