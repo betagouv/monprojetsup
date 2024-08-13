@@ -53,6 +53,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0004", nom = "L1 - Histoire"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
                 FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
+                FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
             )
         assertThat(result).isEqualTo(attendu)
     }
@@ -110,11 +111,29 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         // Then
         val attendu =
             listOf(
+                FormationCourte(id = "fl0009", nom = "but"),
+                FormationCourte(id = "fl0011", nom = "BÙT"),
                 FormationCourte(id = "fl0008", nom = "BUT Numerique"),
                 FormationCourte(id = "fl0010", nom = "BUT Numérique"),
-                FormationCourte(id = "fl0011", nom = "BÙT"),
-                FormationCourte(id = "fl0009", nom = "but"),
                 FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
+            )
+        assertThat(result).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si LAS, doit retourner en premier ceux entre parenthèses`() {
+        // Given
+        val recherche = "las"
+
+        // When
+        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
+                FormationCourte(id = "fl0012", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
             )
         assertThat(result).isEqualTo(attendu)
     }
