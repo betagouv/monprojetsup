@@ -1,6 +1,10 @@
 package fr.gouv.monprojetsup.data.tools.csv;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -30,10 +34,12 @@ public class CsvTools implements Closeable {
 
     public static List<Map<String,String>> readCSV(String path, char separator) {
         List<Map<String,String>> data = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            CSVReader csvReader = new CSVReader(br, separator);
-
+        val parser = new CSVParserBuilder().withSeparator(separator).build();
+        try (BufferedReader br = new BufferedReader(new FileReader(path));
+             CSVReader csvReader = new CSVReaderBuilder(br).withCSVParser(parser).build()
+        ) {
             String[] values = csvReader.readNext();
+
             if(values == null) {
                 throw new RuntimeException("Cannot read csv / empty csv '" + path );
             }
@@ -52,9 +58,12 @@ public class CsvTools implements Closeable {
                     throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + values);
                 }
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
         }
+
         return data;
     }
 

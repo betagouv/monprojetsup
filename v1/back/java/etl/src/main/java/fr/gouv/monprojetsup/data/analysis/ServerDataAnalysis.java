@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.analysis;
 
 
 import com.google.gson.reflect.TypeToken;
+import com.opencsv.exceptions.CsvValidationException;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.DataSources;
 import fr.gouv.monprojetsup.data.ServerData;
@@ -335,12 +336,12 @@ public class ServerDataAnalysis {
 
     }
 
-    private static void exportDataHeleneBaffin() throws IOException {
+    private static void exportDataHeleneBaffin() throws IOException, CsvValidationException {
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_avec_heritage.csv");
         exportCsvMetierToFiliereCorr("ajouts_metiers_filieres_sans_heritage.csv");
     }
 
-    private static void exportCsvMetierToFiliereCorr(String s) throws IOException {
+    private static void exportCsvMetierToFiliereCorr(String s) throws IOException, CsvValidationException {
         val  data = CsvTools.readCSV(s, ',');
         List<List<String>> lines = new ArrayList<>();
         for (Map<String, String> line : data) {
