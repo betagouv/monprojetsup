@@ -129,3 +129,39 @@ VALUES ('fl0011',
         null,
         ARRAY [100, 0, 0, 0, 0],
         null);
+
+INSERT INTO formation
+VALUES ('fl0012',
+        'Classe préparatoire aux études supérieures - Cinéma audiovisuel',
+        null,
+        '{}',
+        null,
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null);
+
+INSERT INTO formation
+VALUES ('fl0013',
+        'L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)',
+        null,
+        '{}',
+        null,
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null);
+
+INSERT INTO formation
+VALUES ('fl0014',
+        'BUT - Génie biologique parcours sciences de l''environnement et écotechnologies',
+        null,
+        '{BUT-GB-SEE,Génie biologique parcours sciences de l''environnement et écotechnologies,bachelor,biologiques,but,butgbsee,environnement,génie,iut,parcours,pollution,productions,sciences,see,technologie,universitaires,écotechnologies}',
+        null,
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null);

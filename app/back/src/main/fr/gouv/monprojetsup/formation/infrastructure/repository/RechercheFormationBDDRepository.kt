@@ -39,33 +39,14 @@ class RechercheFormationBDDRepository(
                          descriptif_conseils,
                          descriptif_diplome,
                          mots_clefs
-                ORDER BY CASE
-                             WHEN label LIKE :mot_recherche_strict THEN 1
-                             WHEN label LIKE :mot_recherche_en_debut_de_phrase THEN 2
-                             WHEN label LIKE :mot_recherche_en_fin_de_phrase THEN 3
-                             WHEN label LIKE :mot_recherche_inclus_dans_une_phrase THEN 4
-
-                             WHEN unaccent(label) LIKE unaccent(:mot_recherche_strict) THEN 5
-                             WHEN unaccent(label) LIKE unaccent(:mot_recherche_en_debut_de_phrase) THEN 6
-                             WHEN unaccent(label) LIKE unaccent(:mot_recherche_en_fin_de_phrase) THEN 7
-                             WHEN unaccent(label) LIKE unaccent(:mot_recherche_inclus_dans_une_phrase) THEN 8
-                             
-                             WHEN lower(label) LIKE lower(:mot_recherche_strict) THEN 9
-                             WHEN lower(label) LIKE lower(:mot_recherche_en_debut_de_phrase) THEN 10
-                             WHEN lower(label) LIKE lower(:mot_recherche_en_fin_de_phrase) THEN 11
-                             WHEN lower(label) LIKE lower(:mot_recherche_inclus_dans_une_phrase) THEN 12
-                             
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict)) THEN 13
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_debut_de_phrase)) THEN 14
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_fin_de_phrase)) THEN 15
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_une_phrase)) THEN 16
-                                                          
-                             WHEN label LIKE :mot_recherche_inclus_dans_un_mot THEN 17
-                             WHEN unaccent(label) LIKE unaccent(:mot_recherche_inclus_dans_un_mot) THEN 18
-                             WHEN lower(label) LIKE lower(:mot_recherche_inclus_dans_un_mot) THEN 19
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot)) THEN 20
-                             
-                             ELSE 21
+                ORDER BY CASE                             
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict)) THEN 1
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict_entre_parentheses)) THEN 2
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_debut_de_phrase)) THEN 3
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_fin_de_phrase)) THEN 4
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_une_phrase)) THEN 5
+                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot)) THEN 6                             
+                             ELSE 7
                              END,
                          id;
                 """.trimIndent(),
@@ -75,6 +56,7 @@ class RechercheFormationBDDRepository(
                 .setParameter("mot_recherche_en_debut_de_phrase", "$motRecherche %")
                 .setParameter("mot_recherche_en_fin_de_phrase", "% $motRecherche")
                 .setParameter("mot_recherche_inclus_dans_une_phrase", "% $motRecherche %")
+                .setParameter("mot_recherche_strict_entre_parentheses", "%($motRecherche)%")
                 .setParameter("mot_recherche_inclus_dans_un_mot", "%$motRecherche%")
                 .resultList
         return resulat.map { (it as FormationCourteEntity).toFormationCourte() }
