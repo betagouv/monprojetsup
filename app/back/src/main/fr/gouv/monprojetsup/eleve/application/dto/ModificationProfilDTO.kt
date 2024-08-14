@@ -113,6 +113,14 @@ data class ModificationProfilDTO(
     )
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<String>? = null,
+    @ArraySchema(
+        arraySchema =
+            Schema(
+                description = "Les formations mises à la corbeille par l'élève",
+                example = "[\"fl1\", \"fl810505\"]",
+                required = false,
+            ),
+    )
     @JsonProperty("corbeilleFormations")
     val corbeilleFormations: List<String>? = null,
 ) {

@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.eleve.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
@@ -36,7 +37,7 @@ class MiseAJourEleveService(
         verifierDomaines(miseAJourDuProfil.domainesInterets)
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
-        verifierFormations(miseAJourDuProfil.formationsFavorites)
+        verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
         verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
         val profilEleveAMettreAJour =
             ProfilEleve.Identifie(
@@ -61,10 +62,37 @@ class MiseAJourEleveService(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun verifierFormations(formationsFavorites: List<String>?) {
-        formationsFavorites?.takeUnless { it.isEmpty() }?.let {
-            if (!formationRepository.verifierFormationsExistent(ids = it)) {
-                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations n'existent pas")
+    private fun verifierFormations(
+        formationsFavorites: List<String>?,
+        corbeilleFormations: List<String>?,
+        profilInitial: ProfilEleve.Identifie,
+    ) {
+        if (!formationsFavorites.isNullOrEmpty() && !corbeilleFormations.isNullOrEmpty()) {
+            if (formationsFavorites.aUneValeurCommune(corbeilleFormations)) {
+                throw MonProjetSupBadRequestException(
+                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                    msg = "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
+                )
+            } else if (!formationRepository.verifierFormationsExistent(ids = formationsFavorites + corbeilleFormations)) {
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
+            }
+        } else if (!formationsFavorites.isNullOrEmpty()) {
+            if (formationsFavorites.aUneValeurCommune(profilInitial.corbeilleFormations)) {
+                throw MonProjetSupBadRequestException(
+                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                    msg = "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
+                )
+            } else if (!formationRepository.verifierFormationsExistent(ids = formationsFavorites)) {
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
+            }
+        } else if (!corbeilleFormations.isNullOrEmpty()) {
+            if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites)) {
+                throw MonProjetSupBadRequestException(
+                    code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
+                    msg = "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
+                )
+            } else if (!formationRepository.verifierFormationsExistent(ids = corbeilleFormations)) {
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
             }
         }
     }
