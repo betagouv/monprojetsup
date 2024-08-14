@@ -273,22 +273,6 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurNonPresents {
         @Test
-        fun `si une des formations favorites n'existe pas, doit throw BadRequestException`() {
-            // Given
-            val formationFavorites = listOf("flInconnue", "fl0001")
-            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationFavorites)
-            given(formationRepository.verifierFormationsExistent(formationFavorites)).willReturn(false)
-
-            // When & Then
-            assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Une ou plusieurs des formations n'existent pas")
-        }
-
-        @Test
         fun `si un des métiers favoris n'existe pas, doit throw BadRequestException`() {
             // Given
             val metiersFavoris = listOf("MET_INCONNU", "MET001")
@@ -334,6 +318,124 @@ class MiseAJourEleveServiceTest {
                     profilActuel = profilVide,
                 )
             }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des centres d'intérêt n'existent pas")
+        }
+    }
+
+    @Nested
+    inner class ErreurFormations {
+        @Test
+        fun `si une des formations favorites ou de la corbeille n'existe pas, doit throw BadRequestException`() {
+            // Given
+            val formationFavorites = listOf("flInconnue", "fl0001")
+            val corbeilleFormations = listOf("fl5678")
+            val nouveauProfil =
+                modificationProfilEleveVide.copy(
+                    formationsFavorites = formationFavorites,
+                    corbeilleFormations = corbeilleFormations,
+                )
+            given(formationRepository.verifierFormationsExistent(ids = formationFavorites + corbeilleFormations)).willReturn(false)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+        }
+
+        @Test
+        fun `si une des formations favorites n'existe pas, doit throw BadRequestException`() {
+            // Given
+            val formationFavorites = listOf("flInconnue", "fl0001")
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationFavorites)
+            given(formationRepository.verifierFormationsExistent(ids = formationFavorites)).willReturn(false)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+        }
+
+        @Test
+        fun `si une des formations à la corbeille n'existe pas, doit throw BadRequestException`() {
+            // Given
+            val corbeilleFormations = listOf("flInconnue", "fl1234", "fl5678")
+            val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
+            given(formationRepository.verifierFormationsExistent(corbeilleFormations)).willReturn(false)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+        }
+
+        @Test
+        fun `si une des formations favorites est commune avec une de la corbeille, doit throw BadRequestException`() {
+            // Given
+            val formationFavorites = listOf("flInconnue", "fl0001")
+            val corbeilleFormations = listOf("fl5678", "fl0001")
+            val nouveauProfil =
+                modificationProfilEleveVide.copy(
+                    formationsFavorites = formationFavorites,
+                    corbeilleFormations = corbeilleFormations,
+                )
+            given(formationRepository.verifierFormationsExistent(ids = formationFavorites + corbeilleFormations)).willReturn(false)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris")
+        }
+
+        @Test
+        fun `si une des formations favorites se trouve déjà dans la corbeille, doit throw BadRequestException`() {
+            // Given
+            val formationFavorites = listOf("fl1234", "fl0001")
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationFavorites)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille")
+            then(formationRepository).shouldHaveNoInteractions()
+        }
+
+        @Test
+        fun `si une des formations à la corbeille se trouve déjà dans les favoris, doit throw BadRequestException`() {
+            // Given
+            val corbeilleFormations = listOf("fl0010", "fl1234", "fl5678")
+            val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
+
+            // When & Then
+            assertThatThrownBy {
+                miseAJourEleveService.mettreAJourUnProfilEleve(
+                    miseAJourDuProfil = nouveauProfil,
+                    profilActuel = profilEleve,
+                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris")
+            then(formationRepository).shouldHaveNoInteractions()
         }
     }
 
