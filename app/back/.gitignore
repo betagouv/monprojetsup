@@ -35,9 +35,4 @@ build/
 ### JDD ###
 /src/main/resources/db/jdd/**
 
-
-**secrets**
-
-### DOCKER ENV ####
-.env
-
+secrets.properties
