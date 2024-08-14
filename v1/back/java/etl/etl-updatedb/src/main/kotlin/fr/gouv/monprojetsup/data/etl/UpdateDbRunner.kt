@@ -77,6 +77,8 @@ class UpdateDbRunner(
 	private val logger: Logger = Logger.getLogger(UpdateDbRunner::class.java.simpleName)
 	override fun run(vararg args: String?) {
 
+			updateFormationsDb()
+
 			updateSuggestionsDbs()
 
 			updateBaccalaureatDb()
@@ -85,7 +87,6 @@ class UpdateDbRunner(
 
 			updateDomainesDb()
 
-			updateFormationsDb()
 
 	}
 
@@ -448,6 +449,7 @@ class UpdateDbRunner(
 			statistiques.lasFlCodes
 		)
 		formationsdb.deleteAll()
+		val entities = ArrayList<FormationDetailleeEntity>()
 		formationsMps.forEach { flCod ->
 			val entity = FormationDetailleeEntity()
 			entity.id = flCod
@@ -486,9 +488,9 @@ class UpdateDbRunner(
 			}
 			entity.metiers = listOf()
 
-			formationsdb.save(entity)
+			entities.add(entity)
 		}
-
+		formationsdb.saveAll(entities)
 	}
 
 
