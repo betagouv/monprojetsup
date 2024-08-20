@@ -62,7 +62,7 @@ class ProfilEleveControllerTest(
                 {
                   "codeInsee": "75015",
                   "nom": "Paris",
-                  "latitude": 48.8512252,
+                  "latitude": 48.851227,
                   "longitude": 2.2885659
                 }
               ],
@@ -85,7 +85,7 @@ class ProfilEleveControllerTest(
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.INTERESSE,
-                communesFavorites = listOf(Communes.PARIS),
+                communesFavorites = listOf(Communes.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
                 moyenneGenerale = 14f,

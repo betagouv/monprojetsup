@@ -9,9 +9,15 @@ import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
+import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.entity.Communes.LYON
+import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -36,7 +42,7 @@ class RecupererFormationServiceTest {
     lateinit var formationRepository: FormationRepository
 
     @Mock
-    lateinit var recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService
+    lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -95,8 +101,17 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            given(recupererCommunesDUneFormationService.recupererNomCommunes(idFormation = "fl0001")).willReturn(
-                listOf("Paris", "Marseille", "Caen"),
+            val tripletFormationFL0001 =
+                listOf(
+                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                )
+            given(recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(idFormation = "fl0001")).willReturn(
+                tripletFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
             given(
@@ -129,7 +144,8 @@ class RecupererFormationServiceTest {
                             Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                         ),
                     metiers = emptyList(),
-                    communes = listOf("Paris", "Marseille", "Caen"),
+                    communes = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
+                    tripletsAffectation = tripletFormationFL0001,
                     criteresAnalyseCandidature =
                         listOf(
                             CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
@@ -149,8 +165,17 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            given(recupererCommunesDUneFormationService.recupererNomCommunes("fl0001")).willReturn(
-                listOf("Paris", "Marseille", "Caen"),
+            val tripletFormationFL0001 =
+                listOf(
+                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                )
+            given(recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(idFormation = "fl0001")).willReturn(
+                tripletFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
             given(
@@ -208,18 +233,31 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            given(recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites("fl0001", listOf(Communes.CAEN))).willReturn(
-                listOf("Caen", "Paris", "Marseille"),
-            )
+            val tripletFormationFL0001 =
+                listOf(
+                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                )
+            given(
+                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                    idFormation = "fl0001",
+                    profilEleve = profil,
+                ),
+            ).willReturn(tripletFormationFL0001)
             given(
                 calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
-                    listOf(
-                        FormationAvecSonAffinite(idFormation = "fl00012", tauxAffinite = 0.9f),
-                        FormationAvecSonAffinite(idFormation = "fl0001", tauxAffinite = 0.7f),
-                        FormationAvecSonAffinite(idFormation = "fl00014", tauxAffinite = 0.6648471f),
-                        FormationAvecSonAffinite(idFormation = "fl0002", tauxAffinite = 0.1250544f),
-                    ),
-                    "fl0001",
+                    formationAvecLeurAffinite =
+                        listOf(
+                            FormationAvecSonAffinite(idFormation = "fl00012", tauxAffinite = 0.9f),
+                            FormationAvecSonAffinite(idFormation = "fl0001", tauxAffinite = 0.7f),
+                            FormationAvecSonAffinite(idFormation = "fl00014", tauxAffinite = 0.6648471f),
+                            FormationAvecSonAffinite(idFormation = "fl0002", tauxAffinite = 0.1250544f),
+                        ),
+                    idFormation = "fl0001",
                 ),
             ).willReturn(70)
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve = profil)).willReturn(suggestionsPourUnProfil)
@@ -329,7 +367,8 @@ class RecupererFormationServiceTest {
                                 liens = emptyList(),
                             ),
                         ),
-                    communesTrieesParAffinites = listOf("Caen", "Paris", "Marseille"),
+                    communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
+                    tripletsAffectation = tripletFormationFL0001,
                     tauxAffinite = 70,
                     explications = explicationsEtExemplesMetiers.first,
                     criteresAnalyseCandidature =

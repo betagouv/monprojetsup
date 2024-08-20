@@ -6,8 +6,8 @@ import java.io.Serializable
 data class CommuneEntity(
     val codeInsee: String,
     val nom: String,
-    val latitude: Float,
-    val longitude: Float,
+    val latitude: Double,
+    val longitude: Double,
 ) : Serializable {
     constructor(commune: Commune) : this(
         codeInsee = commune.codeInsee,
