@@ -9,8 +9,14 @@ import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
+import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.entity.Communes.LYON
+import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
+import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
@@ -27,7 +33,7 @@ class RecupererFormationsServiceTest {
     lateinit var formationRepository: FormationRepository
 
     @Mock
-    lateinit var recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService
+    lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -58,7 +64,6 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -137,17 +142,28 @@ class RecupererFormationsServiceTest {
                 listOf("fl0001", "fl0003"),
             ),
         ).willReturn(explications)
-        val communesParFormations =
-            mapOf(
-                "fl0001" to listOf("Paris", "Lyon", "Sartrouville"),
-                "fl0003" to listOf("Strasbourg", "Houilles"),
+        val tripletFormationFL0001 =
+            listOf(
+                TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
             )
+        val tripletFormationFL0003 =
+            listOf(
+                TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+            )
+        val tripletsAffectationsDesFormations = mapOf("fl0001" to tripletFormationFL0001, "fl0003" to tripletFormationFL0003)
         given(
-            recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
-                idsDesPremieresFormationsTriesParAffinites = listOf("fl0001", "fl0003"),
-                communesFavorites = listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG),
+            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                idsFormations = listOf("fl0001", "fl0003"),
+                profilEleve = profilEleve,
             ),
-        ).willReturn(communesParFormations)
+        ).willReturn(tripletsAffectationsDesFormations)
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                 formationAvecLeurAffinite = formationsAvecAffinites,
@@ -191,7 +207,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier123, metier534),
-                communesTrieesParAffinites = listOf("Paris", "Lyon", "Sartrouville"),
+                communesTrieesParAffinites = listOf("Paris", "Saint-Malo", "Marseille"),
+                tripletsAffectation = tripletFormationFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -208,7 +225,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                 tauxAffinite = 87,
                 metiersTriesParAffinites = listOf(metier234, metier534),
-                communesTrieesParAffinites = listOf("Strasbourg", "Houilles"),
+                communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
+                tripletsAffectation = tripletFormationFL0003,
                 explications = explicationsFL0003,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
@@ -220,7 +238,6 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
-        given(profilEleve.communesFavorites).willReturn(listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -289,16 +306,19 @@ class RecupererFormationsServiceTest {
                 listOf("fl0001", "fl0003"),
             ),
         ).willReturn(explications)
-        val communesParFormations =
-            mapOf(
-                "fl0001" to listOf("Paris", "Lyon", "Sartrouville"),
+        val tripletFormationFL0001 =
+            listOf(
+                TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
             )
+        val tripletsAffectationsDesFormations = mapOf("fl0001" to tripletFormationFL0001)
         given(
-            recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
-                idsDesPremieresFormationsTriesParAffinites = listOf("fl0001", "fl0003"),
-                communesFavorites = listOf(Communes.PARIS, Communes.LYON, Communes.STRASBOURG),
+            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                idsFormations = listOf("fl0001", "fl0003"),
+                profilEleve = profilEleve,
             ),
-        ).willReturn(communesParFormations)
+        ).willReturn(tripletsAffectationsDesFormations)
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                 formationAvecLeurAffinite = formationsAvecAffinites,
@@ -342,7 +362,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier534),
-                communesTrieesParAffinites = listOf("Paris", "Lyon", "Sartrouville"),
+                communesTrieesParAffinites = listOf("Paris", "Saint-Malo", "Marseille"),
+                tripletsAffectation = tripletFormationFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -360,6 +381,7 @@ class RecupererFormationsServiceTest {
                 tauxAffinite = 0,
                 metiersTriesParAffinites = emptyList(),
                 communesTrieesParAffinites = emptyList(),
+                tripletsAffectation = emptyList(),
                 explications = null,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))

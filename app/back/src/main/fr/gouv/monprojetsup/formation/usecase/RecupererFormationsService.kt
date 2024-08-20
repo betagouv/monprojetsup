@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class RecupererFormationsService(
     private val formationRepository: FormationRepository,
-    private val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
+    private val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
     private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     private val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     private val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
@@ -35,10 +35,10 @@ class RecupererFormationsService(
                 profilEleve,
                 idsDesFormationsRetournees,
             )
-        val communes =
-            recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
+        val tripletsAffectations =
+            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
                 idsDesFormationsRetournees,
-                profilEleve.communesFavorites,
+                profilEleve,
             )
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
@@ -61,7 +61,8 @@ class RecupererFormationsService(
                         metiers = exemplesDeMetiersDeLaFormation,
                         idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
-                communesTrieesParAffinites = communes[formation.id] ?: emptyList(),
+                communesTrieesParAffinites = tripletsAffectations[formation.id]?.map { it.commune.nom }?.distinct() ?: emptyList(),
+                tripletsAffectation = tripletsAffectations[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
-    val recupererCommunesDUneFormationService: RecupererCommunesDUneFormationService,
+    val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
@@ -39,6 +39,11 @@ class RecupererFormationService(
                     profilEleve,
                     formation.id,
                 )
+            val tripletsAffectation =
+                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                    idFormation = formation.id,
+                    profilEleve = profilEleve,
+                )
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -58,16 +63,14 @@ class RecupererFormationService(
                         metiers = exemplesDeMetiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
-                communesTrieesParAffinites =
-                    recupererCommunesDUneFormationService.recupererNomCommunesTriesParAffinites(
-                        idFormation = formation.id,
-                        communesFavorites = profilEleve.communesFavorites,
-                    ),
+                communesTrieesParAffinites = tripletsAffectation.map { it.commune.nom }.distinct(),
+                tripletsAffectation = tripletsAffectation,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,
             )
         } else {
+            val tripletsAffectation = recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(formation.id)
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -77,7 +80,8 @@ class RecupererFormationService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                communes = recupererCommunesDUneFormationService.recupererNomCommunes(formation.id),
+                communes = tripletsAffectation.map { it.commune.nom }.distinct(),
+                tripletsAffectation = tripletsAffectation,
                 metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,

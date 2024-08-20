@@ -15,6 +15,7 @@ sealed class FicheFormation(
     open val liens: List<Lien>,
     open val metiers: List<Metier>,
     open val communes: List<String>,
+    open val tripletsAffectation: List<TripletAffectation>,
     open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
     open val statistiquesDesAdmis: StatistiquesDesAdmis?,
 ) {
@@ -29,6 +30,7 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val metiers: List<Metier>,
         override val communes: List<String>,
+        override val tripletsAffectation: List<TripletAffectation>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis,
     ) : FicheFormation(
@@ -42,6 +44,7 @@ sealed class FicheFormation(
             liens = liens,
             metiers = metiers,
             communes = communes,
+            tripletsAffectation = tripletsAffectation,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
         )
@@ -57,6 +60,7 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
+        override val tripletsAffectation: List<TripletAffectation>,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
         val communesTrieesParAffinites: List<String>,
@@ -72,6 +76,7 @@ sealed class FicheFormation(
             liens = liens,
             metiers = metiersTriesParAffinites,
             communes = communesTrieesParAffinites,
+            tripletsAffectation = tripletsAffectation,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
         ) {

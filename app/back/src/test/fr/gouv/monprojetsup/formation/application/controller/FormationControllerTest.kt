@@ -26,6 +26,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
+import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.entity.Communes.LYON
+import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
@@ -145,10 +151,15 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            communesTrieesParAffinites =
+            communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
+            tripletsAffectation =
                 listOf(
-                    "Paris  5e  Arrondissement",
-                    "Paris 16e  Arrondissement",
+                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 ),
             metiersTriesParAffinites =
                 listOf(
@@ -348,6 +359,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         communesTrieesParAffinites = emptyList(),
+                        tripletsAffectation = emptyList(),
                         explications = null,
                     ),
                 ),
@@ -452,8 +464,48 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "villes": [
-                                  "Paris  5e  Arrondissement",
-                                  "Paris 16e  Arrondissement"
+                                  "Lyon",
+                                  "Paris",
+                                  "Strasbourg",
+                                  "Marseille"
+                                ],
+                                "tripletAffectationAssocies": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75005"
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75015"
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "nomCommune": "Strasbourg",
+                                    "codeCommune": "80688"
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "nomCommune": "Marseille",
+                                    "codeCommune": "13200"
+                                  }
                                 ],
                                 "metiers": [
                                   {
@@ -562,6 +614,7 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "villes": [],
+                                "tripletAffectationAssocies": [],
                                 "metiers": [],
                                 "tauxAffinite": 17
                               },
@@ -707,8 +760,48 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "villes": [
-                                  "Paris  5e  Arrondissement",
-                                  "Paris 16e  Arrondissement"
+                                  "Lyon",
+                                  "Paris",
+                                  "Strasbourg",
+                                  "Marseille"
+                                ],
+                                "tripletAffectationAssocies": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75005"
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75015"
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "nomCommune": "Strasbourg",
+                                    "codeCommune": "80688"
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "nomCommune": "Marseille",
+                                    "codeCommune": "13200"
+                                  }
                                 ],
                                 "metiers": [
                                   {
@@ -1052,8 +1145,48 @@ class FormationControllerTest(
                               }
                             ],
                             "villes": [
-                              "Paris  5e  Arrondissement",
-                              "Paris 16e  Arrondissement"
+                              "Lyon",
+                              "Paris",
+                              "Strasbourg",
+                              "Marseille"
+                            ],
+                            "tripletAffectationAssocies": [
+                              {
+                                "id": "ta10",
+                                "nom": "Nom du ta10",
+                                "nomCommune": "Lyon",
+                                "codeCommune": "69380"
+                              },
+                              {
+                                "id": "ta3",
+                                "nom": "Nom du ta3",
+                                "nomCommune": "Paris",
+                                "codeCommune": "75005"
+                              },
+                              {
+                                "id": "ta11",
+                                "nom": "Nom du ta11",
+                                "nomCommune": "Lyon",
+                                "codeCommune": "69380"
+                              },
+                              {
+                                "id": "ta32",
+                                "nom": "Nom du ta32",
+                                "nomCommune": "Paris",
+                                "codeCommune": "75015"
+                              },
+                              {
+                                "id": "ta17",
+                                "nom": "Nom du ta17",
+                                "nomCommune": "Strasbourg",
+                                "codeCommune": "80688"
+                              },
+                              {
+                                "id": "ta7",
+                                "nom": "Nom du ta7",
+                                "nomCommune": "Marseille",
+                                "codeCommune": "13200"
+                              }
                             ],
                             "metiers": [
                               {
@@ -1208,10 +1341,15 @@ class FormationControllerTest(
                                         "cycle-pluridisciplinaire-d-etudes-superieures",
                             ),
                         ),
-                    communes =
+                    communes = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
+                    tripletsAffectation =
                         listOf(
-                            "Paris  5e  Arrondissement",
-                            "Paris 16e  Arrondissement",
+                            TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                            TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                            TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                            TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                            TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                            TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                         ),
                     criteresAnalyseCandidature =
                         listOf(
@@ -1288,8 +1426,48 @@ class FormationControllerTest(
                               }
                             ],
                             "villes": [
-                              "Paris  5e  Arrondissement",
-                              "Paris 16e  Arrondissement"
+                              "Lyon",
+                              "Paris",
+                              "Strasbourg",
+                              "Marseille"
+                            ],
+                            "tripletAffectationAssocies": [
+                              {
+                                "id": "ta10",
+                                "nom": "Nom du ta10",
+                                "nomCommune": "Lyon",
+                                "codeCommune": "69380"
+                              },
+                              {
+                                "id": "ta3",
+                                "nom": "Nom du ta3",
+                                "nomCommune": "Paris",
+                                "codeCommune": "75005"
+                              },
+                              {
+                                "id": "ta11",
+                                "nom": "Nom du ta11",
+                                "nomCommune": "Lyon",
+                                "codeCommune": "69380"
+                              },
+                              {
+                                "id": "ta32",
+                                "nom": "Nom du ta32",
+                                "nomCommune": "Paris",
+                                "codeCommune": "75015"
+                              },
+                              {
+                                "id": "ta17",
+                                "nom": "Nom du ta17",
+                                "nomCommune": "Strasbourg",
+                                "codeCommune": "80688"
+                              },
+                              {
+                                "id": "ta7",
+                                "nom": "Nom du ta7",
+                                "nomCommune": "Marseille",
+                                "codeCommune": "13200"
+                              }
                             ],
                             "metiers": [
                               {
@@ -1809,8 +1987,48 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "villes": [
-                                  "Paris  5e  Arrondissement",
-                                  "Paris 16e  Arrondissement"
+                                  "Lyon",
+                                  "Paris",
+                                  "Strasbourg",
+                                  "Marseille"
+                                ],
+                                "tripletAffectationAssocies": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75005"
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75015"
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "nomCommune": "Strasbourg",
+                                    "codeCommune": "80688"
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "nomCommune": "Marseille",
+                                    "codeCommune": "13200"
+                                  }
                                 ],
                                 "metiers": [
                                   {
@@ -1919,6 +2137,44 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "villes": [],
+                                "tripletAffectationAssocies": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75005"
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75015"
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "nomCommune": "Strasbourg",
+                                    "codeCommune": "80688"
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "nomCommune": "Marseille",
+                                    "codeCommune": "13200"
+                                  }
+                                ],
                                 "metiers": [],
                                 "tauxAffinite": 17
                               },
@@ -2050,6 +2306,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         communesTrieesParAffinites = emptyList(),
+                        tripletsAffectation = emptyList(),
                         explications = null,
                     ),
                 )
@@ -2167,8 +2424,48 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "villes": [
-                                  "Paris  5e  Arrondissement",
-                                  "Paris 16e  Arrondissement"
+                                  "Lyon",
+                                  "Paris",
+                                  "Strasbourg",
+                                  "Marseille"
+                                ],
+                                "tripletAffectationAssocies": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75005"
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "nomCommune": "Lyon",
+                                    "codeCommune": "69380"
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "nomCommune": "Paris",
+                                    "codeCommune": "75015"
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "nomCommune": "Strasbourg",
+                                    "codeCommune": "80688"
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "nomCommune": "Marseille",
+                                    "codeCommune": "13200"
+                                  }
                                 ],
                                 "metiers": [
                                   {
@@ -2277,6 +2574,7 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "villes": [],
+                                "tripletAffectationAssocies": [],
                                 "metiers": [],
                                 "tauxAffinite": 17
                               },

@@ -166,10 +166,10 @@ data class ModificationProfilDTO(
         val nom: String,
         @Schema(description = "Latitude de la ville", example = "48.8512252", required = true)
         @JsonProperty("latitude")
-        val latitude: Float,
+        val latitude: Double,
         @Schema(description = "Longitude de la ville", example = "2.2885659", required = true)
         @JsonProperty("longitude")
-        val longitude: Float,
+        val longitude: Double,
     ) {
         constructor(commune: Commune) : this(
             codeInsee = commune.codeInsee,

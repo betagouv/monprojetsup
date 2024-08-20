@@ -50,7 +50,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             metiersFavoris = listOf("MET001"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(Communes.PARIS, Communes.MARSEILLE),
+            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
             formationsFavorites = listOf("fl0010", "fl0012"),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),

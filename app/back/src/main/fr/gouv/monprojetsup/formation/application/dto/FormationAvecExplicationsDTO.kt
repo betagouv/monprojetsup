@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
+import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
@@ -45,6 +46,7 @@ data class FormationAvecExplicationsDTO(
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
         val villes: List<String>,
+        val tripletAffectationAssocies: List<TripletAffectationDTO>,
         val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
     ) {
@@ -67,6 +69,7 @@ data class FormationAvecExplicationsDTO(
             descriptifConseils = ficheFormation.descriptifConseils,
             liens = ficheFormation.liens.map { LienDTO(it) },
             villes = ficheFormation.communes,
+            tripletAffectationAssocies = ficheFormation.tripletsAffectation.map { TripletAffectationDTO(it) },
             metiers =
                 ficheFormation.metiers.map { metier ->
                     MetierDTO(metier)
@@ -242,6 +245,20 @@ data class FormationAvecExplicationsDTO(
         constructor(typeBaccalaureat: ExplicationTypeBaccalaureat) : this(
             baccalaureat = BaccalaureatDTO(typeBaccalaureat.baccalaureat),
             pourcentage = typeBaccalaureat.pourcentage,
+        )
+    }
+
+    data class TripletAffectationDTO(
+        val id: String,
+        val nom: String,
+        val nomCommune: String,
+        val codeCommune: String,
+    ) {
+        constructor(tripletAffectation: TripletAffectation) : this(
+            tripletAffectation.id,
+            tripletAffectation.nom,
+            tripletAffectation.commune.nom,
+            tripletAffectation.commune.codeInsee,
         )
     }
 }
