@@ -34,5 +34,21 @@ VALUES ('0f88ddd1-62ef-436e-ad3f-cf56d5d14c15'::uuid,
           }
         ]'::jsonb,
         10.5,
-        '{fl0010, fl0012}',
-        '{fl0001, fl0002}');
+        '{fl0001, fl0002}',
+        '[
+          {
+            "idFormation": "fl0010",
+            "priseDeNote": null,
+            "niveauAmbition": 1,
+            "tripletsAffectationsChoisis": []
+          },
+          {
+            "idFormation": "fl0012",
+            "priseDeNote": "Mon voeu préféré",
+            "niveauAmbition": 3,
+            "tripletsAffectationsChoisis": [
+              "ta15974",
+              "ta17831"
+            ]
+          }
+        ]'::jsonb);

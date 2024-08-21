@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
@@ -209,7 +210,21 @@ class RecupererFormationServiceTest {
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
-                formationsFavorites = listOf("fl1234", "fl5678"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001"),
             )

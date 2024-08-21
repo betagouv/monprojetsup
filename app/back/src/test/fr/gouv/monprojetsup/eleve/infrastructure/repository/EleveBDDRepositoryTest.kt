@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.eleve.infrastructure.repository
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -51,7 +52,21 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
             communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
-            formationsFavorites = listOf("fl0010", "fl0012"),
+            formationsFavorites =
+                listOf(
+                    VoeuFormation(
+                        idFormation = "fl0010",
+                        niveauAmbition = 1,
+                        tripletsAffectationsChoisis = emptyList(),
+                        priseDeNote = null,
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl0012",
+                        niveauAmbition = 3,
+                        tripletsAffectationsChoisis = listOf("ta15974", "ta17831"),
+                        priseDeNote = "Mon voeu préféré",
+                    ),
+                ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),
         )

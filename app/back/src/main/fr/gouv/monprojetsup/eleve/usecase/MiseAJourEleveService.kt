@@ -1,11 +1,13 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
-import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
+import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service
 class MiseAJourEleveService(
     private val baccalaureatRepository: BaccalaureatRepository,
     private val baccalaureatSpecialiteRepository: BaccalaureatSpecialiteRepository,
+    private val tripletAffectationBDDRepository: TripletAffectationRepository,
     private val domaineRepository: DomaineRepository,
     private val interetRepository: InteretRepository,
     private val metierRepository: MetierRepository,
@@ -38,6 +41,7 @@ class MiseAJourEleveService(
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
         verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
+        verifierVoeuxFormations(miseAJourDuProfil.formationsFavorites)
         verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
         val profilEleveAMettreAJour =
             ProfilEleve.Identifie(
@@ -63,11 +67,22 @@ class MiseAJourEleveService(
 
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierFormations(
-        formationsFavorites: List<String>?,
+        voeuxDeFormations: List<VoeuFormation>?,
         corbeilleFormations: List<String>?,
         profilInitial: ProfilEleve.Identifie,
     ) {
-        if (!formationsFavorites.isNullOrEmpty() && !corbeilleFormations.isNullOrEmpty()) {
+        val formationsFavorites = voeuxDeFormations?.map { it.idFormation }
+        if (formationsFavorites?.distinct()?.size != formationsFavorites?.size) {
+            throw MonProjetSupBadRequestException(
+                code = "FORMATIONS_FAVORITES_EN_DOUBLE",
+                msg = "Une des formations favorites est présentes plusieurs fois",
+            )
+        } else if (corbeilleFormations?.distinct()?.size != corbeilleFormations?.size) {
+            throw MonProjetSupBadRequestException(
+                code = "FORMATIONS_CORBEILLE_EN_DOUBLE",
+                msg = "Une des formations à la corbeille est présentes plusieurs fois",
+            )
+        } else if (!formationsFavorites.isNullOrEmpty() && !corbeilleFormations.isNullOrEmpty()) {
             if (formationsFavorites.aUneValeurCommune(corbeilleFormations)) {
                 throw MonProjetSupBadRequestException(
                     code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
@@ -86,7 +101,7 @@ class MiseAJourEleveService(
                 throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
             }
         } else if (!corbeilleFormations.isNullOrEmpty()) {
-            if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites)) {
+            if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites?.map { it.idFormation })) {
                 throw MonProjetSupBadRequestException(
                     code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
                     msg = "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
@@ -98,9 +113,33 @@ class MiseAJourEleveService(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
+    private fun verifierVoeuxFormations(voeuxDeFormations: List<VoeuFormation>?) {
+        voeuxDeFormations?.mapNotNull {
+            if (it.tripletsAffectationsChoisis.isNotEmpty()) it.idFormation else null
+        }?.takeUnless { it.isEmpty() }?.let { idsFormations ->
+            val voeux = tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(idsFormations)
+            voeuxDeFormations.forEach { voeu ->
+                if (voeu.tripletsAffectationsChoisis.isNotEmpty()) {
+                    val tripletAffectationDuVoeu = voeux[voeu.idFormation]?.map { it.id }
+                    if (tripletAffectationDuVoeu?.containsAll(voeu.tripletsAffectationsChoisis) != true) {
+                        throw MonProjetSupBadRequestException(
+                            code = "TRIPLET_AFFECTATION_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
+                            msg =
+                                "Pour la formation ${voeu.idFormation} présente dans les formations favorites comporte un ou plusieurs " +
+                                    "triplet d'affectation ne correspondant pas à une de ses possibilités : $tripletAffectationDuVoeu",
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Throws(MonProjetSupBadRequestException::class)
     private fun verifierMetiers(metiersFavoris: List<String>?) {
         metiersFavoris?.takeUnless { it.isEmpty() }?.let {
-            if (!metierRepository.verifierMetiersExistent(ids = it)) {
+            if (it.distinct().size != it.size) {
+                throw MonProjetSupBadRequestException("METIERS_FAVORITES_EN_DOUBLE", "Un ou plusieurs des métiers est en double")
+            } else if (!metierRepository.verifierMetiersExistent(ids = it)) {
                 throw MonProjetSupBadRequestException("METIERS_NON_RECONNUS", "Un ou plusieurs des métiers n'existent pas")
             }
         }

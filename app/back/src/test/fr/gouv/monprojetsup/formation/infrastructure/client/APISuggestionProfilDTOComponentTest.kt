@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
@@ -116,7 +117,21 @@ class APISuggestionProfilDTOComponentTest {
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
-                formationsFavorites = listOf("fl1234", "fl5678"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0002"),
             )
@@ -165,7 +180,21 @@ class APISuggestionProfilDTOComponentTest {
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 10.5f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
-                formationsFavorites = listOf("fl1234", "fl5678"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001"),
             )
@@ -250,7 +279,21 @@ class APISuggestionProfilDTOComponentTest {
                 centresInterets = listOf("rechercher_experiences", "chiffres_jongler"),
                 moyenneGenerale = null,
                 metiersFavoris = emptyList(),
-                formationsFavorites = listOf("fl0001", "fl0005"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl0001",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl0005",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta4", "ta5"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
             )
@@ -313,7 +356,21 @@ class APISuggestionProfilDTOComponentTest {
                 centresInterets = null,
                 moyenneGenerale = 10.5f,
                 metiersFavoris = null,
-                formationsFavorites = listOf("fl1234", "fl5678"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0012"),
             )

@@ -62,9 +62,9 @@ class ProfilEleveEntity() {
     @Column(name = "communes_favorites", nullable = true)
     var communesFavorites: List<CommuneEntity>? = null
 
-    @Type(ListArrayType::class)
+    @Type(JsonType::class)
     @Column(name = "formations_favorites", nullable = true)
-    var formationsFavorites: List<String>? = null
+    var formationsFavorites: List<VoeuEntity>? = null
 
     @Column(name = "moyenne_generale", nullable = true)
     var moyenneGenerale: Float? = null
@@ -85,7 +85,7 @@ class ProfilEleveEntity() {
         centresInterets = profilEleve.centresInterets
         metiersFavoris = profilEleve.metiersFavoris
         communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
-        formationsFavorites = profilEleve.formationsFavorites
+        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuEntity(it) }
         moyenneGenerale = profilEleve.moyenneGenerale
         corbeilleFormations = profilEleve.corbeilleFormations
     }
@@ -103,7 +103,7 @@ class ProfilEleveEntity() {
             dureeEtudesPrevue,
             alternance,
             communesFavorites?.map { it.toCommune() },
-            formationsFavorites,
+            formationsFavorites?.map { it.toVoeuFormation() },
             moyenneGenerale,
             corbeilleFormations,
         )

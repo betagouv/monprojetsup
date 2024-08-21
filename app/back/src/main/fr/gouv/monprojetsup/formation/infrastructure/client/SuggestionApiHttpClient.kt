@@ -64,8 +64,8 @@ class SuggestionApiHttpClient(
         val formationsSansExplications = explications.filter { it.value == null }
         if (formationsSansExplications.isNotEmpty()) {
             logger.error(
-                "Les formations ${formationsSansExplications.map { it.key }} n'ont pas d'explications renvoyées " +
-                    "pour le profil élève suivant $profilEleve",
+                "Les formations ${formationsSansExplications.map { it.key }} n'ont pas d'explications renvoyées par l'API suggestion " +
+                    "pour le profil élève avec l'id ${profilEleve.id}",
             )
         }
         return explications

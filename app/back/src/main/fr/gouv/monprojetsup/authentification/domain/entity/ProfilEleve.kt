@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.authentification.domain.entity
 
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -19,7 +20,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         val dureeEtudesPrevue: ChoixDureeEtudesPrevue?,
         val alternance: ChoixAlternance?,
         val communesFavorites: List<Commune>?,
-        val formationsFavorites: List<String>?,
+        val formationsFavorites: List<VoeuFormation>?,
         val moyenneGenerale: Float?,
         val corbeilleFormations: List<String>,
     ) : ProfilEleve(id) {
