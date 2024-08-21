@@ -1,12 +1,13 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
-import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -37,47 +38,6 @@ class ProfilEleveControllerTest(
 
     @Nested
     inner class `Quand on appelle la route POST profil` {
-        private val requeteNouveauProfil =
-            """
-            {
-              "situation": "projet_precis",
-              "classe": "terminale",
-              "baccalaureat": "Générale",
-              "specialites": [
-                "1054"
-              ],
-              "domaines": [
-                "T_ITM_1054",
-                "T_ITM_1351"
-              ],
-              "centresInterets": [
-                "T_IDEO2_4812"
-              ],
-              "metiersFavoris": [
-                "MET_456"
-              ],
-              "dureeEtudesPrevue": "longue",
-              "alternance": "interesse",
-              "communesFavorites": [
-                {
-                  "codeInsee": "75015",
-                  "nom": "Paris",
-                  "latitude": 48.851227,
-                  "longitude": 2.2885659
-                }
-              ],
-              "moyenneGenerale": 14,
-              "formationsFavorites": [
-                "fl1234",
-                "fl5678"
-              ],
-              "corbeilleFormations": [
-                "fl0001",
-                "fl0002"
-              ]
-            }
-            """.trimIndent()
-
         private val modificationProfilEleve =
             ModificationProfilEleve(
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
@@ -90,7 +50,21 @@ class ProfilEleveControllerTest(
                 centresInterets = listOf("T_IDEO2_4812"),
                 moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_456"),
-                formationsFavorites = listOf("fl1234", "fl5678"),
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            tripletsAffectationsChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001", "fl0002"),
             )
@@ -100,7 +74,7 @@ class ProfilEleveControllerTest(
         fun `si élève existe et que le service réussi, doit retourner 204`() {
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(modificationProfilEleve, unProfil)
@@ -132,7 +106,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
@@ -152,7 +126,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isBadRequest)
         }
@@ -161,42 +135,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève existe mais que la situation n'est pas dans l'enum, doit retourner 400`() {
             // Given
-            val requeteNouveauProfil =
-                """
-                {
-                  "situation": "mon_projet",
-                  "classe": "terminale",
-                  "baccalaureat": "Générale",
-                  "specialites": [
-                    "1054"
-                  ],
-                  "domaines": [
-                    "T_ITM_1054",
-                    "T_ITM_1351"
-                  ],
-                  "centresInterets": [
-                    "T_IDEO2_4812"
-                  ],
-                  "metiersFavoris": [
-                    "MET_456"
-                  ],
-                  "dureeEtudesPrevue": "longue",
-                  "alternance": "interesse",
-                  "communesFavorites": [
-                    {
-                      "codeInsee": "75015",
-                      "nom": "Paris",
-                      "latitude": 48.8512252,
-                      "longitude": 2.2885659
-                    }
-                  ],
-                  "moyenneGenerale": 14,
-                  "formationsFavorites": [
-                    "fl1234",
-                    "fl5678"
-                  ]
-                }
-                """.trimIndent()
+            val requeteNouveauProfil = creerRequeteNouveauProfilJson(situation = "mon_projet")
 
             // When & Then
             mvc.perform(
@@ -209,42 +148,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève existe mais que la classe n'est pas dans l'enum, doit retourner 400`() {
             // Given
-            val requeteNouveauProfil =
-                """
-                {
-                  "situation": "projet_precis",
-                  "classe": "classe_inconnue",
-                  "baccalaureat": "Générale",
-                  "specialites": [
-                    "1054"
-                  ],
-                  "domaines": [
-                    "T_ITM_1054",
-                    "T_ITM_1351"
-                  ],
-                  "centresInterets": [
-                    "T_IDEO2_4812"
-                  ],
-                  "metiersFavoris": [
-                    "MET_456"
-                  ],
-                  "dureeEtudesPrevue": "longue",
-                  "alternance": "interesse",
-                  "communesFavorites": [
-                    {
-                      "codeInsee": "75015",
-                      "nom": "Paris",
-                      "latitude": 48.8512252,
-                      "longitude": 2.2885659
-                    }
-                  ],
-                  "moyenneGenerale": 14,
-                  "formationsFavorites": [
-                    "fl1234",
-                    "fl5678"
-                  ]
-                }
-                """.trimIndent()
+            val requeteNouveauProfil = creerRequeteNouveauProfilJson(classe = "classe_inconnue")
 
             // When & Then
             mvc.perform(
@@ -257,42 +161,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève existe mais que la durées des études n'est pas dans l'enum, doit retourner 400`() {
             // Given
-            val requeteNouveauProfil =
-                """
-                {
-                  "situation": "projet_precis",
-                  "classe": "terminale",
-                  "baccalaureat": "Générale",
-                  "specialites": [
-                    "1054"
-                  ],
-                  "domaines": [
-                    "T_ITM_1054",
-                    "T_ITM_1351"
-                  ],
-                  "centresInterets": [
-                    "T_IDEO2_4812"
-                  ],
-                  "metiersFavoris": [
-                    "MET_456"
-                  ],
-                  "dureeEtudesPrevue": "inconnue_au_bataillon",
-                  "alternance": "interesse",
-                  "communesFavorites": [
-                    {
-                      "codeInsee": "75015",
-                      "nom": "Paris",
-                      "latitude": 48.8512252,
-                      "longitude": 2.2885659
-                    }
-                  ],
-                  "moyenneGenerale": 14,
-                  "formationsFavorites": [
-                    "fl1234",
-                    "fl5678"
-                  ]
-                }
-                """.trimIndent()
+            val requeteNouveauProfil = creerRequeteNouveauProfilJson(dureeEtudesPrevue = "inconnue_au_bataillon")
 
             // When & Then
             mvc.perform(
@@ -305,42 +174,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève existe mais que le choix de l'alternance n'est pas dans l'enum, doit retourner 400`() {
             // Given
-            val requeteNouveauProfil =
-                """
-                {
-                  "situation": "projet_precis",
-                  "classe": "terminale",
-                  "baccalaureat": "Générale",
-                  "specialites": [
-                    "1054"
-                  ],
-                  "domaines": [
-                    "T_ITM_1054",
-                    "T_ITM_1351"
-                  ],
-                  "centresInterets": [
-                    "T_IDEO2_4812"
-                  ],
-                  "metiersFavoris": [
-                    "MET_456"
-                  ],
-                  "dureeEtudesPrevue": "longue",
-                  "alternance": "inconnue_au_bataillon",
-                  "communesFavorites": [
-                    {
-                      "codeInsee": "75015",
-                      "nom": "Paris",
-                      "latitude": 48.8512252,
-                      "longitude": 2.2885659
-                    }
-                  ],
-                  "moyenneGenerale": 14,
-                  "formationsFavorites": [
-                    "fl1234",
-                    "fl5678"
-                  ]
-                }
-                """.trimIndent()
+            val requeteNouveauProfil = creerRequeteNouveauProfilJson(alternance = "inconnue_au_bataillon")
 
             // When & Then
             mvc.perform(
@@ -354,7 +188,7 @@ class ProfilEleveControllerTest(
         fun `si enseignant, doit retourner 403`() {
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isForbidden)
         }
@@ -364,10 +198,68 @@ class ProfilEleveControllerTest(
         fun `si token, doit retourner 403`() {
             // When & Then
             mvc.perform(
-                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(requeteNouveauProfil)
+                post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isForbidden)
         }
+
+        private fun creerRequeteNouveauProfilJson(
+            situation: String = "projet_precis",
+            classe: String = "terminale",
+            dureeEtudesPrevue: String = "longue",
+            alternance: String = "interesse",
+        ) = """
+            {
+              "situation": "$situation",
+              "classe": "$classe",
+              "baccalaureat": "Générale",
+              "specialites": [
+                "1054"
+              ],
+              "domaines": [
+                "T_ITM_1054",
+                "T_ITM_1351"
+              ],
+              "centresInterets": [
+                "T_IDEO2_4812"
+              ],
+              "metiersFavoris": [
+                "MET_456"
+              ],
+              "dureeEtudesPrevue": "$dureeEtudesPrevue",
+              "alternance": "$alternance",
+              "communesFavorites": [
+                {
+                  "codeInsee": "75015",
+                  "nom": "Paris",
+                  "latitude": 48.851227,
+                  "longitude": 2.2885659
+                }
+              ],
+              "moyenneGenerale": 14,
+              "formationsFavorites": [
+                {
+                  "idFormation": "fl1234",
+                  "niveauAmbition": 1,
+                  "tripletsAffectationsChoisis": [],
+                  "priseDeNote": null
+                },
+                {
+                  "idFormation": "fl5678",
+                  "niveauAmbition": 3,
+                  "tripletsAffectationsChoisis": [
+                    "ta1",
+                    "ta2"
+                  ],
+                  "priseDeNote": "Mon voeu préféré"
+                }
+              ],
+              "corbeilleFormations": [
+                "fl0001",
+                "fl0002"
+              ]
+            }
+            """.trimIndent()
     }
 
     @Nested
@@ -416,8 +308,25 @@ class ProfilEleveControllerTest(
                           ],
                           "moyenneGenerale": 14.0,
                           "formationsFavorites": [
-                            "fl1234",
-                            "fl5678"
+                            {
+                              "idFormation": "fl1234",
+                              "niveauAmbition": 1,
+                              "tripletsAffectationsChoisis": [],
+                              "priseDeNote": null
+                            },
+                            {
+                              "idFormation": "fl5678",
+                              "niveauAmbition": 3,
+                              "tripletsAffectationsChoisis": [
+                                "ta1",
+                                "ta2"
+                              ],
+                              "priseDeNote": "Mon voeu préféré"
+                            }
+                          ],
+                          "corbeilleFormations": [
+                            "fl0010",
+                            "fl0012"
                           ]
                         }
                         """.trimIndent(),

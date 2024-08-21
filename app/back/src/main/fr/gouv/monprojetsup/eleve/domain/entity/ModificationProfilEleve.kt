@@ -1,6 +1,5 @@
-package fr.gouv.monprojetsup.authentification.domain.entity
+package fr.gouv.monprojetsup.eleve.domain.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -17,7 +16,7 @@ data class ModificationProfilEleve(
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     val alternance: ChoixAlternance? = null,
     val communesFavorites: List<Commune>? = null,
-    val formationsFavorites: List<String>? = null,
+    val formationsFavorites: List<VoeuFormation>? = null,
     val moyenneGenerale: Float? = null,
     val corbeilleFormations: List<String>? = null,
 )

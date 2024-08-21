@@ -1,9 +1,10 @@
 package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import fr.gouv.monprojetsup.authentification.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -103,16 +104,9 @@ data class ModificationProfilDTO(
     @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14", required = false)
     @JsonProperty("moyenneGenerale")
     val moyenneGenerale: Float? = null,
-    @ArraySchema(
-        arraySchema =
-            Schema(
-                description = "Les idées de formations de l'élève",
-                example = "[\"fl720007\", \"fl490030\"]",
-                required = false,
-            ),
-    )
+    @ArraySchema(arraySchema = Schema(description = "Les idées de formations de l'élève", required = false))
     @JsonProperty("formationsFavorites")
-    val formationsFavorites: List<String>? = null,
+    val formationsFavorites: List<VoeuFormationDTO>? = null,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -130,7 +124,7 @@ data class ModificationProfilDTO(
         baccalaureat = profilEleve.baccalaureat,
         dureeEtudesPrevue = profilEleve.dureeEtudesPrevue?.jsonValeur,
         alternance = profilEleve.alternance?.jsonValeur,
-        formationsFavorites = profilEleve.formationsFavorites,
+        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuFormationDTO(it) },
         communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
         specialites = profilEleve.specialites,
         moyenneGenerale = profilEleve.moyenneGenerale,
@@ -147,7 +141,7 @@ data class ModificationProfilDTO(
             baccalaureat = baccalaureat,
             dureeEtudesPrevue = dureeEtudesPrevue?.let { ChoixDureeEtudesPrevue.deserialiseApplication(it) },
             alternance = alternance?.let { ChoixAlternance.deserialiseApplication(it) },
-            formationsFavorites = formationsFavorites,
+            formationsFavorites = formationsFavorites?.map { it.toVoeuFormation() },
             communesFavorites = communesFavorites?.map { it.toCommune() },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
@@ -157,7 +151,7 @@ data class ModificationProfilDTO(
             corbeilleFormations = corbeilleFormations,
         )
 
-    class CommuneDTO(
+    data class CommuneDTO(
         @Schema(description = "Code Insee de la ville", example = "75015", required = true)
         @JsonProperty("codeInsee")
         val codeInsee: String,
@@ -184,6 +178,47 @@ data class ModificationProfilDTO(
                 nom = nom,
                 latitude = latitude,
                 longitude = longitude,
+            )
+    }
+
+    data class VoeuFormationDTO(
+        @Schema(description = "Id de la formation", example = "fl490030", required = true)
+        @JsonProperty("idFormation")
+        val idFormation: String,
+        @Schema(
+            description = "Niveau de l'ambition du voeux avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux",
+            example = "2",
+            required = true,
+        )
+        @JsonProperty("niveauAmbition")
+        val niveauAmbition: Int,
+        @ArraySchema(
+            arraySchema =
+                Schema(
+                    description = "Les triplets d'affectation souhaités",
+                    example = "[\"ta15974\", \"ta17831\"]",
+                    required = true,
+                ),
+        )
+        @JsonProperty("tripletsAffectationsChoisis")
+        val tripletsAffectationsChoisis: List<String>,
+        @Schema(description = "Prise de note additionnel sur le voeu", example = "Ma note personnalisée", required = false)
+        @JsonProperty("priseDeNote")
+        val priseDeNote: String?,
+    ) {
+        constructor(voeuDeFormation: VoeuFormation) : this(
+            idFormation = voeuDeFormation.idFormation,
+            niveauAmbition = voeuDeFormation.niveauAmbition,
+            tripletsAffectationsChoisis = voeuDeFormation.tripletsAffectationsChoisis,
+            priseDeNote = voeuDeFormation.priseDeNote,
+        )
+
+        fun toVoeuFormation() =
+            VoeuFormation(
+                idFormation = idFormation,
+                niveauAmbition = niveauAmbition,
+                tripletsAffectationsChoisis = tripletsAffectationsChoisis,
+                priseDeNote = priseDeNote,
             )
     }
 }

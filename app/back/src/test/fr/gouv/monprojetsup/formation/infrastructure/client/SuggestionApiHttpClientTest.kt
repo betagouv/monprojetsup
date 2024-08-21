@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
+import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
@@ -73,7 +74,21 @@ class SuggestionApiHttpClientTest {
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
             metiersFavoris = listOf("MET_123", "MET_456"),
-            formationsFavorites = listOf("fl1234", "fl5678"),
+            formationsFavorites =
+                listOf(
+                    VoeuFormation(
+                        idFormation = "fl1234",
+                        niveauAmbition = 1,
+                        tripletsAffectationsChoisis = emptyList(),
+                        priseDeNote = null,
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl5678",
+                        niveauAmbition = 3,
+                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        priseDeNote = "Mon voeu préféré",
+                    ),
+                ),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             corbeilleFormations = listOf("fl0001"),
         )
@@ -1115,13 +1130,8 @@ class SuggestionApiHttpClientTest {
             then(
                 logger,
             ).should().error(
-                "Les formations [fl1] n'ont pas d'explications renvoyées pour le profil élève suivant Identifie(" +
-                    "id=adcf627c-36dd-4df5-897b-159443a6d49c, situation=PROJET_PRECIS, classe=TERMINALE, baccalaureat=Générale, " +
-                    "specialites=[1001, 1049], domainesInterets=[T_ITM_1054, T_ITM_1534, T_ITM_1248, T_ITM_1351], " +
-                    "centresInterets=[T_ROME_2092381917, T_IDEO2_4812], metiersFavoris=[MET_123, MET_456], " +
-                    "dureeEtudesPrevue=INDIFFERENT, alternance=PAS_INTERESSE, " +
-                    "communesFavorites=[Commune(codeInsee=75015, nom=Paris, latitude=48.851227, longitude=2.2885659)], " +
-                    "formationsFavorites=[fl1234, fl5678], moyenneGenerale=14.0, corbeilleFormations=[fl0001])",
+                "Les formations [fl1] n'ont pas d'explications renvoyées par l'API suggestion pour le profil " +
+                    "élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c",
             )
         }
 

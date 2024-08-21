@@ -44,7 +44,7 @@ data class APISuggestionProfilDTO(
             (
                 profilEleve.metiersFavoris?.map { FavorisSuggestionDTO(it) }
                     ?: emptyList()
-            ) + (profilEleve.formationsFavorites?.map { FavorisSuggestionDTO(it) } ?: emptyList()) +
+            ) + (profilEleve.formationsFavorites?.map { FavorisSuggestionDTO(it.idFormation) } ?: emptyList()) +
                 profilEleve.corbeilleFormations.map { CorbeilleSuggestionDTO(it) },
     )
 }
