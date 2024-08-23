@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.suggestions.entity
 
-import fr.gouv.monprojetsup.suggestions.domain.model.Candidat
+import fr.gouv.monprojetsup.data.domain.model.Candidat
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
@@ -18,7 +18,7 @@ class SuggestionsCandidatEntity {
     @GeneratedValue
     val id: Long = 0
 
-    fun toCandidat() : Candidat{
+    fun toCandidat() : Candidat {
         return Candidat(ArrayList(voeux))
     }
 

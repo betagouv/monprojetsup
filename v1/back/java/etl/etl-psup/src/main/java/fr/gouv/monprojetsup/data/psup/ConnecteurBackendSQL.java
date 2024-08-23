@@ -123,6 +123,8 @@ public class ConnecteurBackendSQL {
 
     private void recupererStatsAdmisParFiliereEtSpecialites(PsupStatistiques stats, Map<Integer, String> bacs, Set<Integer> filActives) throws SQLException {
 
+        //TODO récupérer année et la setter dans stats
+
         ConnecteurBackendSQL.LOGGER.info("Récupération du nombre de lycéens admis à n-1 dans chaque filière");
         String sqlAdmisParFilieres =
                 "select g_cn_cod,g_fl_cod from " + ConnecteurBackendSQL.LYCEENS_ADMIS_FILIERE;
@@ -199,9 +201,9 @@ public class ConnecteurBackendSQL {
         String sqlCandidatsParFilieresMatieres =
                 """
          select count(*) cnt, i_mt_cod, g_fl_cod
-        from\040""" + LYCEENS_CANDIDATS_FILIERE + """
+        from""" + LYCEENS_CANDIDATS_FILIERE + """
                          , matieres
-                        where\040"""
+                        where"""
                         +  LYCEENS_CANDIDATS_FILIERE +
                         """
                         .g_cn_cod=matieres.g_cn_cod

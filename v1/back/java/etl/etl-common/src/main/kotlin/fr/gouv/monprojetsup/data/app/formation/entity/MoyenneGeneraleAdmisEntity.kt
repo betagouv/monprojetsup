@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.data.app.formation.entity
 
-import fr.gouv.monprojetsup.data.app.referentiel.entity.BaccalaureatEntity
-import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.io.Serializable
 
 @Entity
@@ -12,23 +11,30 @@ class MoyenneGeneraleAdmisEntity {
     @EmbeddedId
     lateinit var id: MoyenneGeneraleAdmisId
 
-    @Type(ListArrayType::class)
+    //taille 40 à ne pas changer
+    @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "frequences_cumulees")
     lateinit var frequencesCumulees: List<Int>
 
-    @Column(name = "annee", insertable = false, updatable = false)
+    @Column(name = "annee")
     lateinit var annee: String
 
-    @Column(name = "id_formation", insertable = false, updatable = false)
+    @Column(name = "id_formation")
     lateinit var idFormation: String
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_bac", insertable = false, updatable = false)
-    lateinit var baccalaureat: BaccalaureatEntity
+    @Column(name = "id_bac")
+    lateinit var idBaccalaureat: String
 }
 
 @Embeddable
 class MoyenneGeneraleAdmisId : Serializable {
+    constructor()
+    constructor(annee: String, idFormation: String, idBaccalaureat: String) {
+        this.annee = annee
+        this.idFormation = idFormation
+        this.idBaccalaureat = idBaccalaureat
+    }
+
     @Column(name = "annee")
     lateinit var annee: String
 

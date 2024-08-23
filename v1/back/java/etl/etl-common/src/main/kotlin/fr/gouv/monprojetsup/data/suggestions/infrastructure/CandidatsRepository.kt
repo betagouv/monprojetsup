@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
-import fr.gouv.monprojetsup.suggestions.domain.model.Candidat
-import fr.gouv.monprojetsup.suggestions.domain.port.CandidatsPort
+import fr.gouv.monprojetsup.data.domain.model.Candidat
+import fr.gouv.monprojetsup.data.domain.port.CandidatsPort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
