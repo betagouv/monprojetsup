@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import fr.gouv.monprojetsup.suggestions.domain.port.LabelsPort
+import fr.gouv.monprojetsup.data.domain.port.LabelsPort
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

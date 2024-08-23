@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
-import fr.gouv.monprojetsup.suggestions.domain.model.LatLng
-import fr.gouv.monprojetsup.suggestions.domain.model.Ville
-import fr.gouv.monprojetsup.suggestions.domain.port.VillesPort
+import fr.gouv.monprojetsup.data.domain.model.LatLng
+import fr.gouv.monprojetsup.data.domain.model.Ville
+import fr.gouv.monprojetsup.data.domain.port.VillesPort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

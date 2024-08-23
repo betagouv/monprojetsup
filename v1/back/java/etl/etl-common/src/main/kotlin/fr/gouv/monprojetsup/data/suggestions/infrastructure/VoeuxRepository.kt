@@ -1,14 +1,14 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVoeuEntity
-import fr.gouv.monprojetsup.suggestions.domain.model.Voeu
-import fr.gouv.monprojetsup.suggestions.domain.port.VoeuxPort
-import fr.gouv.monprojetsup.suggestions.infrastructure.psup.DescriptifVoeu
+import fr.gouv.monprojetsup.data.app.formation.entity.VoeuEntity
+import fr.gouv.monprojetsup.data.domain.model.Voeu
+import fr.gouv.monprojetsup.data.domain.port.VoeuxPort
+import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 
-interface VoeuxJPARepository : JpaRepository<SuggestionsVoeuEntity, String> {
+interface VoeuxJPARepository : JpaRepository<VoeuEntity, String> {
 
 }
 
@@ -22,8 +22,8 @@ open class VoeuxRepository(
         return repo.findAll().associate { it.id to it.descriptif}
     }
 
-    override fun saveAll(voeux: MutableList<Voeu>) {
-        repo.saveAll(voeux.map { SuggestionsVoeuEntity(it) })
+    override fun saveAll(voeux: List<Voeu>) {
+        repo.saveAll(voeux.map { VoeuEntity(it, "", "") })
     }
 
 }

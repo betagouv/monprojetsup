@@ -19,22 +19,21 @@ fun main(args: Array<String>) {
 @ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
 @SpringBootApplication
 @EntityScan(basePackages = [
-	"fr.gouv.monprojetsup.data.app.entity",
-	"fr.gouv.monprojetsup.data.suggestions.entity"]
+	"fr.gouv.monprojetsup.data"]
 )
 @EnableJpaRepositories(basePackages = [
 	"fr.gouv.monprojetsup.data.app.infrastructure",
 	"fr.gouv.monprojetsup.data.suggestions.infrastructure"]
 )
 class UpdateDbRunner(
-	private val updateFormationDbs: UpdateFormationDbs,
+	private val updateFormationRepositories: UpdateFormationDbs,
 	private val updateReferentielDbs: UpdateReferentielDbs,
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs
 ) : CommandLineRunner {
 
 	override fun run(vararg args: String?) {
-		updateFormationDbs.updateFormationDbs()
+		updateFormationRepositories.updateFormationDbs()
 		updateMetierDbs.updateMetierDbs()
 		updateReferentielDbs.updateReferentielDbs()
 		updateSuggestionsDbs.updateSuggestionDbs()

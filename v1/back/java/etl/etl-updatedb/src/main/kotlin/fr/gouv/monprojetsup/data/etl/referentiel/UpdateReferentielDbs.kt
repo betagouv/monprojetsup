@@ -1,65 +1,100 @@
 package fr.gouv.monprojetsup.data.etl.referentiel
 
-import fr.gouv.monprojetsup.data.app.infrastructure.BaccalaureatDb
-import fr.gouv.monprojetsup.data.app.infrastructure.DomainesCategoryDb
-import fr.gouv.monprojetsup.data.app.infrastructure.DomainesDb
-import fr.gouv.monprojetsup.data.app.referentiel.entity.BaccalaureatEntity
-import fr.gouv.monprojetsup.data.app.referentiel.entity.CategorieDomaineEntity
-import fr.gouv.monprojetsup.data.app.referentiel.entity.DomaineEntity
-import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources
-import fr.gouv.monprojetsup.suggestions.infrastructure.model.bacs.BacsLoader
-import fr.gouv.monprojetsup.suggestions.infrastructure.model.thematiques.Thematiques
-import fr.gouv.monprojetsup.suggestions.tools.csv.CsvTools
+import fr.gouv.monprojetsup.data.MpsDataPort
+import fr.gouv.monprojetsup.data.app.infrastructure.*
+import fr.gouv.monprojetsup.data.app.referentiel.entity.*
 import org.springframework.stereotype.Component
 
 @Component
 class UpdateReferentielDbs(
-    private val baccalaureatBDD: BaccalaureatDb,
+    private val baccalaureatBd: BaccalaureatDb,
+    private val specialitesDb: SpecialitesDb,
+    private val bacSpecDb: BaccalaureatSpecialiteDb,
     private val domainesDb: DomainesDb,
     private val domainesCategoriesDb: DomainesCategoryDb,
-    private val dataSources: DataSources
+    private val interetsDb: InteretsDb,
+    private val interetsCategorieDb: InteretsCategoryDb,
+    private val interetsSousCategorieDb: InteretsSousCategorieDb,
+    private val mpsDataPort: MpsDataPort
 ) {
     fun updateReferentielDbs() {
         updateBaccalaureatDb()
-        updateBaccalaureatSpecialiteDb()
-        updateCategorieDomaineDb()
-        updateDomainesDb()
-        updateInteretCategorieDb()
-        updateInteretDb()
-        updateInteretSousCategorieDb()
         updateSpecialiteDb()
+        updateBaccalaureatSpecialiteDb()
+        updateDomainesDbs()
+        updateInteretDbs()
+    }
+
+    private fun updateBaccalaureatDb() {
+        baccalaureatBd.deleteAll()
+        val bacs = mpsDataPort.getBacs()
+        bacs.forEach { baccalaureat ->
+            val entity = BaccalaureatEntity()
+            entity.id = baccalaureat.key
+            entity.nom = baccalaureat.label
+            entity.idExterne = baccalaureat.key
+            baccalaureatBd.save(entity)
+        }
     }
 
     private fun updateSpecialiteDb() {
-        TODO("Not yet implemented")
-    }
-
-    private fun updateInteretSousCategorieDb() {
-        TODO("Not yet implemented")
-    }
-
-    private fun updateInteretDb() {
-        TODO("Not yet implemented")
-    }
-
-    private fun updateInteretCategorieDb() {
-        TODO("Not yet implemented")
-    }
-
-    private fun updateCategorieDomaineDb() {
-        TODO("Not yet implemented")
+        val specialites = mpsDataPort.getSpecialites()
+        specialitesDb.deleteAll()
+        specialites.specialites.forEach { specialite ->
+            val entity = SpecialiteEntity()
+            entity.id = specialite.key.toString()
+            entity.label = specialite.value
+            specialitesDb.save(entity)
+        }
     }
 
     private fun updateBaccalaureatSpecialiteDb() {
-        TODO("Not yet implemented")
+        val specialites = mpsDataPort.getSpecialites()
+        bacSpecDb.deleteAll()
+        specialites.specialitesParBac.forEach {
+            it.value.forEach { bacSpec ->
+                val entity = BaccalaureatSpecialiteEntity()
+                entity.idBaccalaureat = it.key
+                entity.idSpecialite = bacSpec.toString()
+                bacSpecDb.save(entity)
+            }
+        }
     }
 
-    private fun updateDomainesDb() {
+    private fun updateInteretDbs() {
+        val interets = mpsDataPort.getInterets()
+        interetsDb.deleteAll()
+        interets.groupeInterets.forEach { groupeInteret ->
+            val entity = InteretCategorieEntity()
+            val ids = groupeInteret.items.flatMap { item -> item.keys }.joinToString( "_")
+            entity.id = ids
+            entity.idCategorie = ids
+            entity.nom = groupeInteret.label
+            entity.emoji = groupeInteret.emoji
+            interetsCategorieDb.save(entity)
+            groupeInteret.items.forEach { item ->
+                val sousCategorie = InteretSousCategorieEntity()
+                sousCategorie.id = item.keys.joinToString("_")
+                sousCategorie.nom = item.label
+                sousCategorie.emoji = item.emoji
+                sousCategorie.idCategorie = ids
+                interetsSousCategorieDb.save(sousCategorie)
+                item.keys.forEach { key ->
+                    val interet = InteretEntity()
+                    interet.id = key
+                    interet.nom = key
+                    interetsDb.save(interet)
+                }
+            }
+        }
+    }
+
+    private fun updateDomainesDbs() {
 
         domainesDb.deleteAll()
         domainesCategoriesDb.deleteAll()
 
-        val categories = loadThematiques()
+        val categories = mpsDataPort.getThematiques()
         var i = 0
         categories.forEach { categorie ->
             val entity = CategorieDomaineEntity()
@@ -78,56 +113,8 @@ class UpdateReferentielDbs(
         }
     }
 
-    fun loadThematiques(): List<Thematiques.Category> {
-        val groupes: MutableMap<String, Thematiques.Category> = HashMap()
-        val categories: MutableList<Thematiques.Category> = ArrayList()
 
-        var groupe = ""
-        var emojig: String? = ""
-        for (stringStringMap in CsvTools.readCSV(
-            dataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH),
-            '\t'
-        )) {
-            val id = stringStringMap["id"].orEmpty()
-            if(id.isEmpty()) continue
-            val regroupement = stringStringMap["regroupement"].orEmpty().trim { it <= ' ' }
-            if (regroupement.isNotEmpty()) {
-                groupe = regroupement
-                val emojiGroupe = stringStringMap["Emoji"].orEmpty()
-                if (emojiGroupe.isNotEmpty()) {
-                    emojig = emojiGroupe
-                } else {
-                    throw java.lang.RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
-                }
-            }
-            val emoji = stringStringMap.getOrDefault("Emojis", "").trim { it <= ' ' }
-            val label = stringStringMap.getOrDefault("label", "").trim { it <= ' ' }
-            if (groupe.isEmpty()) throw java.lang.RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
-            if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
-            var cat = groupes[groupe]
-            if (cat == null) {
-                cat = Thematiques.Category(groupe, emojig, ArrayList())
-                groupes[groupe] = cat
-                categories.add(cat)
-            }
-            cat.items.add(Thematiques.Item(id, label, emoji))
-        }
-        return categories
-    }
 
-    private fun updateBaccalaureatDb() {
-
-        baccalaureatBDD.deleteAll()
-        val bacs = BacsLoader.load(dataSources)
-        bacs.forEach { baccalaureat ->
-            val entity = BaccalaureatEntity()
-            entity.id = baccalaureat.key
-            entity.nom = baccalaureat.label
-            entity.idExterne = baccalaureat.key
-            baccalaureatBDD.save(entity)
-        }
-
-    }
 
 
 }

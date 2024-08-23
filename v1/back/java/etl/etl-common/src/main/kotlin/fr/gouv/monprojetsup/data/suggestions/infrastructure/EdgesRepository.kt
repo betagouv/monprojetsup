@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
+import fr.gouv.monprojetsup.data.domain.model.Edge
+import fr.gouv.monprojetsup.data.domain.port.EdgesPort
+import fr.gouv.monprojetsup.data.infrastructure.model.Edges
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
-import fr.gouv.monprojetsup.suggestions.domain.model.Edge
-import fr.gouv.monprojetsup.suggestions.domain.port.EdgesPort
-import fr.gouv.monprojetsup.suggestions.infrastructure.model.Edges
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -50,6 +50,10 @@ open class EdgesRepository(
         val newEdges = HashSet<SuggestionsEdgeEntity>()
         edges.forEach { edge -> newEdges.add(SuggestionsEdgeEntity(edge.key, edge.value, type)) }
         edgeJPARepository.saveAll(newEdges)
+    }
+
+    override fun saveAll(edges: List<Triple<String, String, Int>>) {
+        edgeJPARepository.saveAll(edges.map { SuggestionsEdgeEntity(it.first, it.second, it.third) })
     }
 
 }
