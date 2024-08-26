@@ -91,4 +91,12 @@ class MpsDataPortTest(
         assert(nbSansAttendus < formationsIds.size / 2)
     }
 
+    @Test
+    fun `moins de 200 voeux n'ont pas de coordonnées gps`() {
+        val voeux = mpsDataPort.getVoeux()
+        assert(voeux.isNotEmpty())
+        val nbSansCoordonnees = voeux.count { it.lat == null || it.lng == null }
+        assert(nbSansCoordonnees < 200)
+    }
+
 }
