@@ -58,10 +58,7 @@ public class DescriptifsLoader {
 
         injectDomainesPro(onisepData.domainesWeb(), descriptifs);
 
-        boolean includeMpsData = true;
-        if (includeMpsData) {
-            addMpsdescriptifs(descriptifs, sources);
-        }
+        addMpsdescriptifs(descriptifs, sources);
 
         descriptifs.injectGroups(psupKeyToMpsKey);
         descriptifs.injectLas(lasToGeneric);//in this order after groups
@@ -130,8 +127,8 @@ public class DescriptifsLoader {
         }
         val line0 = lines.get(0);
         keyFlFr = line0.keySet().stream().filter(k -> k.contains("code")).findAny().orElse(null);
-        keyDescFormation = line0.keySet().stream().filter(k -> k.contains("formation VLauriane")).findAny().orElse(null);
-        keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("spécialité")).findAny().orElse(null);
+        keyDescFormation = line0.keySet().stream().filter(k -> k.contains("resume type formation")).findAny().orElse(null);
+        keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("resume filiere")).findAny().orElse(null);
 
         val keyUrlCorrection = line0.keySet().stream().filter(k -> k.contains("URL corrections")).findAny().orElse(null);
 
