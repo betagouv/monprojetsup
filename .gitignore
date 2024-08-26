@@ -11,3 +11,4 @@ metabase/db
 *.csv
 **~
 **#
+**secret**
