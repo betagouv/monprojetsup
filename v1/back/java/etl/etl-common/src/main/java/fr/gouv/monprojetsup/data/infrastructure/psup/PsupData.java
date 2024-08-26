@@ -681,7 +681,9 @@ public record PsupData(
                     f.lng,
                     f.libelle,
                     f.capacite,
-                    indexedDescriptifs.get(f.gTaCod)
+                    indexedDescriptifs.get(f.gTaCod),
+                    f.commune,
+                    f.codeCommune
         );
     }
 

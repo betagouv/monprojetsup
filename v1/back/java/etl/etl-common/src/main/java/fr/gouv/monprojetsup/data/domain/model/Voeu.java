@@ -11,7 +11,8 @@ public record Voeu(
         @Nullable Double lng,
         @NotNull String libelle,
         int capacite,
-        @Nullable DescriptifVoeu descriptif
-
+        @Nullable DescriptifVoeu descriptif,
+        @NotNull String commune,
+        @NotNull String codeCommune
         ) {
 }

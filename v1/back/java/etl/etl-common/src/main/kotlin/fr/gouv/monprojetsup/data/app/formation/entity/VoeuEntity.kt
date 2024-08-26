@@ -14,11 +14,11 @@ import org.hibernate.type.SqlTypes
 @Table(name = "triplet_affectation")
 class VoeuEntity {
     constructor()
-    constructor(voeu: Voeu, commune: String, codeCommune: String) {
+    constructor(voeu: Voeu) {
         this.id = voeu.id
         this.nom = voeu.libelle
-        this.commune = commune
-        this.codeCommune = codeCommune
+        this.commune = voeu.commune
+        this.codeCommune = voeu.codeCommune
         this.coordonneesGeographiques = "${voeu.lat},${voeu.lng}"
         this.lat = voeu.lat
         this.lng = voeu.lng
@@ -68,7 +68,9 @@ class VoeuEntity {
             lng,
             nom,
             capacite,
-            descriptif
+            descriptif,
+            commune,
+            codeCommune
         )
     }
 

@@ -97,7 +97,7 @@ class UpdateFormationDbs(
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
             entity.apprentissage = apprentissage.contains(id)
             entity.las = lasToGeneric[id]
-            entity.voeux = voeuxFormation.map { VoeuEntity(it, "", "") }.toList()
+            entity.voeux = voeuxFormation.map { VoeuEntity(it) }.toList()
             entity.voeuxIds = voeuxFormation.map { it.id }
             entity.metiers = metiers.toList()
 
