@@ -87,8 +87,8 @@ public record TagsSources(
         return result.entrySet().stream()
                 .collect(
                         Collectors.toMap(
-                                e -> e.getKey(),
-                                e -> new ArrayList(e.getValue())
+                                Map.Entry::getKey,
+                                e -> new ArrayList<>(e.getValue())
                         )
                 );
     }

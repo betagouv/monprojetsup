@@ -45,11 +45,22 @@ class MpsDataPortTest(
 
 
     @Test
-    fun `Au moins un lien par formation est généré`() {
+    fun `Au moins un lien par formation`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
         val liens = mpsDataPort.getLiens()
         assert(formationsIds.all { liens.containsKey(it) && liens[it]!!.isNotEmpty() })
 
     }
+
+
+    @Test
+    fun `Au moins un mot clé par formation`() {
+        val formationsIds = mpsDataPort.getFormationsMpsIds()
+        assert(formationsIds.isNotEmpty())
+        val motsCles = mpsDataPort.getMotsCles()
+        assert(formationsIds.all { motsCles.containsKey(it) && motsCles[it]!!.isNotEmpty() })
+
+    }
+
 }
