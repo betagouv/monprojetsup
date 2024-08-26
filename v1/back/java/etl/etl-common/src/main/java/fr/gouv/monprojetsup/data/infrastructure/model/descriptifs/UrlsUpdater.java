@@ -59,9 +59,7 @@ public class UrlsUpdater {
             }
         });
 
-        psupKeytoMpsKey.forEach((psupKey, mpsKey) -> {
-            urls.getOrDefault(psupKey, List.of()).forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls));
-        });
+        psupKeytoMpsKey.forEach((psupKey, mpsKey) -> urls.getOrDefault(psupKey, List.of()).forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls)));
 
         /* traitement spécifique études de santé */
         addUrl(Constants.gFlCodToFrontId(Constants.PASS_FL_COD), Constants.URL_ARTICLE_PAS_LAS, Constants.LABEL_ARTICLE_PAS_LAS, urls);
@@ -82,4 +80,6 @@ public class UrlsUpdater {
 
         return urls;
     }
+
+    private UrlsUpdater() {}
 }

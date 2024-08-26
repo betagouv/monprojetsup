@@ -269,15 +269,18 @@ public record PsupData(
         duree.add(Constants.gFlCodToFrontId(gFlCod), gFrCod, gFlLib, gFrLib, gFrSig);
     }
 
-    public @Nullable Integer getDuree(@NotNull String key, @NotNull Map<String, String> psupKeyToMpsKey, @NotNull Set<String> las) {
-        val mpsKey = psupKeyToMpsKey.getOrDefault(key, key);
-        if(las.contains(mpsKey)) return 5;
-        val result = duree.durees().get(mpsKey);
-        if(result == null) {
-            return null;
-            //throw new RuntimeException("Durée inconnue pour " + mpsKey);
-        }
-        return result;
+    public @Nullable Integer getDuree(
+            @NotNull String mpsKey,
+            @NotNull Map<String, Set<String>> mpsKeyToPsupKeys,
+            @NotNull Set<String> las) {
+        val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, Set.of(mpsKey));
+        if(las.contains(mpsKey)) return Constants.DUREE_LAS;
+        val result = psupKeys.stream()
+                .map(k -> duree.durees().get(k)).filter(Objects::nonNull)
+                .mapToInt(Integer::intValue)
+                .min()
+                .orElse(0);
+        return result > 0 ? result : null;
     }
 
 

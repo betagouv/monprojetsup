@@ -382,19 +382,10 @@ class MpsDataFiles(
     override fun getDurees(): Map<String, Int?> {
         val ids = getFormationsMpsIds()
         val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val psupKeyToMpsKey = psupData.psupKeyToMpsKey
         val lasKeys = psupData.lasToGeneric.keys
         val result = HashMap<String,Int?>()
         ids.forEach { id ->
-            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf())
-            if(psupKeys.isNotEmpty()) {
-                val duree =
-                    psupKeys
-                        .map { fps -> psupData.getDuree(fps, psupKeyToMpsKey, lasKeys) }
-                        .filterNotNull()
-                        .minOrNull()
-                result[id] = duree
-            }
+            result[id] = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
         }
         return result
     }

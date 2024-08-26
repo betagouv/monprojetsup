@@ -63,4 +63,13 @@ class MpsDataPortTest(
 
     }
 
+    @Test
+    fun `au plus 10 formations n'ont pas de durée`() {
+        val formationsIds = mpsDataPort.getFormationsMpsIds()
+        assert(formationsIds.isNotEmpty())
+        val durees = mpsDataPort.getDurees()
+        assert(formationsIds.filter { durees[it] == null }.count() < 10)
+
+    }
+
 }
