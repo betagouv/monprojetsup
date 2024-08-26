@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.audit;
 
 
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.data.infrastructure.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.suggestions.domain.Constants;
 import fr.gouv.monprojetsup.suggestions.domain.Helpers;
 import fr.gouv.monprojetsup.suggestions.infrastructure.DataSources;
@@ -762,10 +763,7 @@ public class PerformAudit implements CommandLineRunner {
                 csv.append(mpsData.getOrDefault("URL corrections", ""));
 
                 // "url psup",
-                csv.append("https://dossier.parcoursup.fr/Candidat/carte?search=" + listeFilieres
-                        .stream()
-                        .distinct()
-                        .map(fl -> fl + "x").collect(Collectors.joining("%20")));
+                csv.append(DescriptifsFormationsMetiers.toParcoursupCarteUrl(listeFilieres));
 
                 //"résumé formation V1",
                 if (mpsData.containsKey(DescriptifsFormations.RESUME_FORMATION_V1)) {

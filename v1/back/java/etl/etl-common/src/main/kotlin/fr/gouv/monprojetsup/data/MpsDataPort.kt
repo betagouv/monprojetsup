@@ -29,7 +29,7 @@ interface MpsDataPort {
     fun getFormationsVersMetiers(): Map<String, Set<String>>
     fun getStatsFormation(): Map<String, StatsFormation>
     fun getMpsIdToPsupFlIds(): Map<String, Collection<String>>
-    fun getDurees(): Map<String, Int>
+    fun getDurees(): Map<String, Int?>
     fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>>
     fun getPsupIdToMpsId(): Map<String, String>
     fun getVoeuxParCandidat(): List<Set<Int>>

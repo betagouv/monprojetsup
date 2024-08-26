@@ -11,19 +11,20 @@ class MoyenneGeneraleAdmisEntity {
     @EmbeddedId
     lateinit var id: MoyenneGeneraleAdmisId
 
+    @Column(name = "annee", insertable = false, updatable = false)
+    lateinit var annee: String
+
+    @Column(name = "id_formation", insertable = false, updatable = false)
+    lateinit var idFormation: String
+
+    @Column(name = "id_bac", insertable = false, updatable = false)
+    lateinit var idBaccalaureat: String
+
     //taille 40 à ne pas changer
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "frequences_cumulees")
     lateinit var frequencesCumulees: List<Int>
 
-    @Column(name = "annee")
-    lateinit var annee: String
-
-    @Column(name = "id_formation")
-    lateinit var idFormation: String
-
-    @Column(name = "id_bac")
-    lateinit var idBaccalaureat: String
 }
 
 @Embeddable

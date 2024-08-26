@@ -10,10 +10,12 @@ import fr.gouv.monprojetsup.data.infrastructure.model.cities.CitiesExternal
 import fr.gouv.monprojetsup.data.infrastructure.model.cities.Coords
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import org.apache.commons.lang3.tuple.Pair
+import org.springframework.stereotype.Component
 import java.io.IOException
 import java.util.*
 import java.util.logging.Logger
 
+@Component
 class UpdateSuggestionsDbs(
     private val dataSources: DataSources,
     private val candidatsPort: CandidatsPort,

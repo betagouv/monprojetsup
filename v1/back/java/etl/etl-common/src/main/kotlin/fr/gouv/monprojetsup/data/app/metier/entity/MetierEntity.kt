@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.app.metier.entity
 
 import fr.gouv.monprojetsup.data.app.commun.entity.LienEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -12,13 +13,13 @@ import org.hibernate.annotations.Type
 @Table(name = "metier")
 class MetierEntity {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     lateinit var id: String
 
-    @Column(name = "label", nullable = false)
+    @Column(name = "label", length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     lateinit var label: String
 
-    @Column(name = "descriptif_general", nullable = true)
+    @Column(name = "descriptif_general", nullable = true, columnDefinition = "text")
     var descriptifGeneral: String? = null
 
     @Type(JsonType::class)

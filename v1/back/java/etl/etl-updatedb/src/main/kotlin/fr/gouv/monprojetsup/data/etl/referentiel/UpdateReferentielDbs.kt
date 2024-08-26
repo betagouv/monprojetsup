@@ -54,8 +54,7 @@ class UpdateReferentielDbs(
         specialites.specialitesParBac.forEach {
             it.value.forEach { bacSpec ->
                 val entity = BaccalaureatSpecialiteEntity()
-                entity.idBaccalaureat = it.key
-                entity.idSpecialite = bacSpec.toString()
+                entity.id = BaccalaureatSpecialiteId(it.key, bacSpec.toString())
                 bacSpecDb.save(entity)
             }
         }
@@ -83,6 +82,7 @@ class UpdateReferentielDbs(
                     val interet = InteretEntity()
                     interet.id = key
                     interet.nom = key
+                    interet.idSousCategorie = sousCategorie.id
                     interetsDb.save(interet)
                 }
             }

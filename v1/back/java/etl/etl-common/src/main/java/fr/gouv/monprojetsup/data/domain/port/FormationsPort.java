@@ -14,6 +14,8 @@ public interface FormationsPort {
 
     @NotNull Optional<@NotNull Formation> retrieveFormation(@NotNull String id);
 
+    @NotNull List<@NotNull FormationEntity> findAll();
+
     void deleteAll();
 
     void saveAll(@NotNull List<FormationEntity> entities);

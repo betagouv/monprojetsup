@@ -1,8 +1,9 @@
 package fr.gouv.monprojetsup.data.infrastructure.model.descriptifs;
 
 
-import fr.gouv.monprojetsup.data.infrastructure.model.metiers.MetiersScrapped;
+import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.infrastructure.model.metiers.MetiersScrapped;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,11 +19,6 @@ public record DescriptifsFormationsMetiers(
     Map<String, DescriptifFormation> keyToDescriptifs
 ) {
 
-    private static final String EXPLORER_AVENIRS_URL = "https://explorer-avenirs.onisep.fr";
-    private static final String ONISEP_URL1 = "http://www.onisep.fr";
-    private static final String ONISEP_URL2 = "https://www.onisep.fr";
-    public static final String RESUME_FORMATION_MPS_HEADER = "résumé formation VLauriane";
-    public static final String RESUME_FORMATION_V1 = "résumé formation V1";
     public DescriptifsFormationsMetiers() {
         this(new HashMap<>());
     }
@@ -32,13 +28,21 @@ public record DescriptifsFormationsMetiers(
         uri =  uri
                 .replace(
                 "www.terminales2022-2023.fr","www.onisep.fr")
-                .replace(ONISEP_URL1,EXPLORER_AVENIRS_URL)
-                .replace(ONISEP_URL2,EXPLORER_AVENIRS_URL)
+                .replace(Constants.ONISEP_URL1, Constants.EXPLORER_AVENIRS_URL)
+                .replace(Constants.ONISEP_URL2, Constants.EXPLORER_AVENIRS_URL)
                 ;
         return new Link(label, uri);
     }
 
+    public static String toParcoursupCarteUrl(@NotNull Collection<String> psupIds) {
+        return Constants.CARTE_PARCOURSUP_PREFIX_URI
+                + psupIds.stream().distinct()
+                .map(fl -> fl + "x").collect(Collectors.joining("%20"));
+    }
 
+
+    /*
+    */
 
     public void injectGroups(Map<String, String> groups) {
         Map<String, List<String>> groupsToItems = groups.keySet().stream().collect(Collectors.groupingBy(groups::get));

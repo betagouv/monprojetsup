@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS specialite
+(
+    id    VARCHAR(20) PRIMARY KEY,
+    label VARCHAR(300) NOT NULL
+);

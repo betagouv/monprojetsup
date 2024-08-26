@@ -531,8 +531,10 @@ public record PsupData(
 
     public Map<String, GrilleAnalyse> getGrillesAnalyseCandidatures() {
 
-        if (diversPsup.containsKey(A_REC_GRP) && diversPsup.containsKey(C_JUR_ADM)) {
-            val arec = diversPsup.get(A_REC_GRP);
+        val aRecGrpKey = A_REC_GRP.toLowerCase();
+        val cJurAdmKey = C_JUR_ADM.toLowerCase();
+        if (diversPsup.containsKey(aRecGrpKey) && diversPsup.containsKey(cJurAdmKey)) {
+            val arec = diversPsup.get(aRecGrpKey);
             Map<Integer, Set<Integer>> juryToFils = new HashMap<>();
             arec.forEach(m -> {
                 if (m.containsKey(C_JA_COD) && m.containsKey(G_TA_COD)) {
@@ -551,7 +553,7 @@ public record PsupData(
 
             val corr = getPsupKeyToMpsKey();
 
-            val jurys = diversPsup.get(C_JUR_ADM);
+            val jurys = diversPsup.get(cJurAdmKey);
             Map<String, Map<String, List<Integer>>> filToPctsListe = new HashMap<>();
             jurys.forEach(m -> {
                 if (m.containsKey(C_JA_COD)) {

@@ -4,7 +4,9 @@ import fr.gouv.monprojetsup.data.MpsDataPort
 import fr.gouv.monprojetsup.data.app.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.app.infrastructure.MetiersDb
 import fr.gouv.monprojetsup.data.app.metier.entity.MetierEntity
+import org.springframework.stereotype.Component
 
+@Component
 class UpdateMetierDbs(
     private val metiersDb: MetiersDb,
     private val mpsDataPort : MpsDataPort
