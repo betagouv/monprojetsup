@@ -467,7 +467,7 @@ public class ConnecteurBackendSQL {
                     String gEaCodAff = result.getString("G_EA_COD_AFF");
                     String gAaLib = result.getString("G_AA_LIB");
                     int gAaCod = result.getInt("G_AA_COD");
-                    int capacciteFormation = result.getInt("capa");
+                    int capaciteFormation = result.getInt("capa");
                     Double lat = result.getDouble("lat");
                     Double lng = result.getDouble("lng");
                     if (result.wasNull()) {
@@ -494,7 +494,7 @@ public class ConnecteurBackendSQL {
                                 gAaLib,
                                 gEaCodAff,
                                 gAaCod,
-                                capacciteFormation,
+                                capaciteFormation,
                                 finalLat,
                                 finalLng,
                                 "",//todo merge with psup
