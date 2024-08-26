@@ -124,13 +124,38 @@ class MpsDataFiles(
         return specialites!!
     }
 
-    override fun getAttendus(): Map<String, Attendus> {
-        return Attendus.getAttendus(
-            psupData,
-            statistiques,
-            getSpecialites(),
-            false
+    override fun getAttendus(): Map<String, String> {
+        val attendusPsup =  Attendus.getAttendusSimplifies(
+            psupData
         )
+        val mpsIds = getFormationsMpsIds()
+        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+        val result = HashMap<String, String>()
+        mpsIds.forEach { id ->
+            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
+            val attendusId = psupKeys.asSequence().map { attendusPsup[it] }.filterNotNull().map { att -> att.attendusFront }.distinct().joinToString("\n\n")
+            if(attendusId.isNotBlank() && !attendusId.contains("null")) {
+                result[id] = attendusId
+            }
+        }
+        return result
+    }
+
+    override fun getConseils(): Map<String, String> {
+        val attendusPsup =  Attendus.getAttendusSimplifies(
+            psupData
+        )
+        val mpsIds = getFormationsMpsIds()
+        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+        val result = HashMap<String, String>()
+        mpsIds.forEach { id ->
+            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
+            val attendusId = psupKeys.map { attendusPsup[it] }.filterNotNull().map { att -> att.conseilsFront }.distinct().joinToString("\n\n")
+            if(attendusId.isNotBlank() && !attendusId.contains("null")) {
+                result[id] = attendusId
+            }
+        }
+        return result
     }
 
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {

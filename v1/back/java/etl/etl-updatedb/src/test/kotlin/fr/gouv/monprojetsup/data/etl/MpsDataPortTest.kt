@@ -68,8 +68,27 @@ class MpsDataPortTest(
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
         val durees = mpsDataPort.getDurees()
-        assert(formationsIds.filter { durees[it] == null }.count() < 10)
+        val nbSansDuree = formationsIds.count { durees[it] == null }
+        assert(nbSansDuree < 10)
 
+    }
+
+    @Test
+    fun `au plus la moitié des formations n'a pas d'attendus`() {
+        val formationsIds = mpsDataPort.getFormationsMpsIds()
+        assert(formationsIds.isNotEmpty())
+        val attendus = mpsDataPort.getAttendus()
+        val nbSansAttendus = formationsIds.count { attendus[it] == null }
+        assert(nbSansAttendus < formationsIds.size / 2)
+    }
+
+    @Test
+    fun `au plus la moitié des formations n'a pas de conseils`() {
+        val formationsIds = mpsDataPort.getFormationsMpsIds()
+        assert(formationsIds.isNotEmpty())
+        val conseils = mpsDataPort.getConseils()
+        val nbSansAttendus = formationsIds.count { conseils[it] == null }
+        assert(nbSansAttendus < formationsIds.size / 2)
     }
 
 }

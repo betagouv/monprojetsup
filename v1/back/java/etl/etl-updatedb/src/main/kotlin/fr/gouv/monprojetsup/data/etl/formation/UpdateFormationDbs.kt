@@ -48,6 +48,7 @@ class UpdateFormationDbs(
         val labels = mpsDataPort.getLabels()
         val descriptifs = mpsDataPort.getDescriptifs()
         val attendus = mpsDataPort.getAttendus()
+        val conseils = mpsDataPort.getConseils()
         val liens = mpsDataPort.getLiens()
         val grilles = mpsDataPort.getGrilles()
         val tagsSources = mpsDataPort.getMotsCles()
@@ -70,14 +71,8 @@ class UpdateFormationDbs(
             entity.label = label
             entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(id)
             entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(id)
-            val attendusFormation = attendus[id]
-            if (attendusFormation == null) {
-                entity.descriptifConseils = null
-                entity.descriptifAttendus = null
-            } else {
-                entity.descriptifConseils = attendusFormation.getConseilsFront()
-                entity.descriptifAttendus = attendusFormation.getAttendusFront()
-            }
+            entity.descriptifAttendus = attendus[id]
+            entity.descriptifConseils = conseils[id]
 
             entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList()
 

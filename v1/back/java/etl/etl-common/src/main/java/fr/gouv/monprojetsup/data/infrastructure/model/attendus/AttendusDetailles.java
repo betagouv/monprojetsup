@@ -120,8 +120,9 @@ public record AttendusDetailles(
             );
         }
 
-        private @Nullable String compress(@Nullable String attendus) {
+        public static @Nullable String compress(@Nullable String attendus) {
             if(attendus == null) return null;
+            if(attendus.contains("ne comprend pas")) return null;
             int i = attendus.toLowerCase().lastIndexOf("cadrage national");
             if(i > 0) {
                 attendus = attendus.substring(i + 16);
@@ -130,7 +131,7 @@ public record AttendusDetailles(
                     attendus = attendus.substring(i + 10);
                 }
             }
-            return attendus;
+            return attendus.replaceAll("null", " ");
         }
         public Attendus simplifyForFront() {
             boolean takeRecoPrem = (recoPremGeneriques != null
@@ -139,7 +140,6 @@ public record AttendusDetailles(
             );
 
             boolean takeRecoGen = !takeRecoPrem && recoTermGeneriques != null;
-
 
             boolean takeRecoTerm = !takeRecoGen &&
                     recoTermGeneriques != null
