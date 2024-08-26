@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.data.app.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.domain.model.Matiere
 import fr.gouv.monprojetsup.data.domain.model.StatsFormation
 import fr.gouv.monprojetsup.data.domain.model.Voeu
-import fr.gouv.monprojetsup.data.infrastructure.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.infrastructure.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.infrastructure.model.bacs.Bac
 import fr.gouv.monprojetsup.data.infrastructure.model.descriptifs.DescriptifsFormationsMetiers
@@ -16,7 +15,7 @@ interface MpsDataPort {
     fun getLabels(): Map<String, String>
     fun getDescriptifs(): DescriptifsFormationsMetiers
     fun getSpecialites(): Specialites
-    fun getAttendus(): Map<String, Attendus>
+    fun getAttendus(): Map<String, String>
     fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>>
     fun getGrilles(): Map<String, GrilleAnalyse>
     fun getMotsCles(): Map<String, List<String>>
@@ -39,4 +38,5 @@ interface MpsDataPort {
     fun getBacs(): List<Bac>
     fun getThematiques(): List<CategorieThematiques>
     fun getInterets(): Interets
+    fun getConseils(): Map<String, String>
 }
