@@ -30,6 +30,7 @@ public class Constants {
     public static final String RESUME_FORMATION_V1 = "résumé formation V1";
     public static final String CARTE_PARCOURSUP_PREFIX_URI = "https://dossier.parcoursup.fr/Candidat/carte?search=";
     public static final String PASS_MOT_CLE = "PASS";
+    public static final int DUREE_LAS = 5;
 
     /* TODO: move elsewhere */
     public static String gFlCodToFrontId(int cle) {
