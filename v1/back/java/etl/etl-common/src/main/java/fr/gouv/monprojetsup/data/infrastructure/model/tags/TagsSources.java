@@ -1,13 +1,9 @@
 package fr.gouv.monprojetsup.data.infrastructure.model.tags;
 
-import fr.gouv.monprojetsup.data.infrastructure.DataSources;
-import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,16 +89,4 @@ public record TagsSources(
                 );
     }
 
-    @NotNull
-    public static TagsSources loadTagsSources(@NotNull Map<String,String> groups, @NotNull DataSources sources) throws IOException {
-            //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-            val tags = Serialisation.fromJsonFile(
-                    sources.getSourceDataFilePath(DataSources.TAGS_SOURCE_MERGED_FILENAME),
-                    TagsSources.class);
-
-            tags.sources.computeIfAbsent("pass", z -> new HashSet<>()).add(Constants.gFlCodToFrontId(Constants.PASS_FL_COD));
-
-            tags.extendToGroups(groups);
-            return tags;
-    }
 }

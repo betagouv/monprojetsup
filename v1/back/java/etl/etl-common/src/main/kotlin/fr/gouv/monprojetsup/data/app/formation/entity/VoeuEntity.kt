@@ -20,6 +20,8 @@ class VoeuEntity {
         this.commune = commune
         this.codeCommune = codeCommune
         this.coordonneesGeographiques = "${voeu.lat},${voeu.lng}"
+        this.lat = voeu.lat
+        this.lng = voeu.lng
         this.idFormation = voeu.formation
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
