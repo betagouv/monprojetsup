@@ -1,10 +1,13 @@
 package fr.gouv.monprojetsup.data.infrastructure.model.stats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.Serializable;
 import java.util.stream.IntStream;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record Middle50(
         /* Le rang de la catégorie contenant l'échantillon de rang ceil(0.25*nombre échantillons).
         * Par exemple si on fait 41 catégories, et que rangEch25 vaut 15,
@@ -35,6 +38,7 @@ public record Middle50(
         );
     }
 
+    @JsonIgnore
     public Triple<Double, Double, Double> getTriple() {
         return Triple.of(
                 rangEch25() / 2.0,

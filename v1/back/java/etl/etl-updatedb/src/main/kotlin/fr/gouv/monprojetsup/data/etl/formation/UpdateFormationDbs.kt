@@ -5,10 +5,10 @@ import fr.gouv.monprojetsup.data.app.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.app.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.app.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.app.formation.entity.MoyenneGeneraleAdmisEntity
+import fr.gouv.monprojetsup.data.app.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.app.infrastructure.CriteresDb
 import fr.gouv.monprojetsup.data.app.infrastructure.FormationDb
 import fr.gouv.monprojetsup.data.app.infrastructure.MoyennesGeneralesAdmisDb
-import fr.gouv.monprojetsup.data.domain.port.VoeuxPort
 import fr.gouv.monprojetsup.data.infrastructure.model.attendus.GrilleAnalyse
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
@@ -16,19 +16,17 @@ import java.util.logging.Logger
 @Component
 class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
-    private val formationsdb : FormationDb,
+    private val formationsdb: FormationDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
-    private val mpsDataPort : MpsDataPort,
-    private val voeuxPort: VoeuxPort
-    ) {
+    private val mpsDataPort: MpsDataPort
+) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun updateFormationDbs() {
-        updateFormationsDb()
+        updateFormationsAndVoeuxDb()
         updateCriteresDb()
         updateMoyennesGeneralesAdmisDb()
-        updateVoeuxDb()
     }
 
     private fun updateMoyennesGeneralesAdmisDb() {
@@ -44,13 +42,8 @@ class UpdateFormationDbs(
         moyennesGeneralesAdmisDb.saveAll(entities)
     }
 
-    private fun updateVoeuxDb() {
-        val voeux = mpsDataPort.getVoeux()
-        voeuxPort.saveAll(voeux)
-    }
 
-
-    private fun updateFormationsDb() {
+    private fun updateFormationsAndVoeuxDb() {
 
         val labels = mpsDataPort.getLabels()
         val descriptifs = mpsDataPort.getDescriptifs()
@@ -86,7 +79,7 @@ class UpdateFormationDbs(
                 entity.descriptifAttendus = attendusFormation.getAttendusFront()
             }
 
-            entity.formationsAssociees = ArrayList(mpsKeyToPsupKeys.getOrDefault(id, setOf(id)))
+            entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList()
 
             val grille = grilles[id]
             if (grille == null) {
@@ -114,7 +107,8 @@ class UpdateFormationDbs(
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
             entity.apprentissage = apprentissage.contains(id)
             entity.las = lasToGeneric[id]
-            entity.voeuxIds = voeuxFormation.map { it.id }.toList()
+            entity.voeux = voeuxFormation.map { VoeuEntity(it, "", "") }.toList()
+            entity.voeuxIds = voeuxFormation.map { it.id }
             entity.metiers = metiers.toList()
 
             val statsFormation = stats[id]
@@ -124,7 +118,6 @@ class UpdateFormationDbs(
                 logger.info("formation $id n'a pas de stats")
                 entity.stats = FormationEntity.StatsEntity()
             }
-            entity.psupFlIds = mpsKeyToPsupKeys.getOrDefault(id, setOf()).toList()
 
             val duree = durees[id]
             if(duree !=  null) {

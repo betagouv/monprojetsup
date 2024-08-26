@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.app.formation.entity
 
 import fr.gouv.monprojetsup.data.domain.model.Voeu
 import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -24,11 +25,12 @@ class VoeuEntity {
         this.capacite = voeu.capacite
     }
 
+    constructor(p0: Any)
+
     @Id
     lateinit var id: String
 
-    @Column(name = "nom", nullable = false)
-    //@Column(length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
+    @Column(name = "nom", nullable = false, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     lateinit var nom: String
 
     @Column(name = "commune", nullable = false)

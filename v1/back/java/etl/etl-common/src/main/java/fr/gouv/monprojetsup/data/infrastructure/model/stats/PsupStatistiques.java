@@ -88,11 +88,11 @@ public class PsupStatistiques implements Serializable {
     public static final int SIM_FIL_MAX_WEIGHT = 100000;
 
     //liens onisep, par filière
-    public final Map<String, String> liensOnisep = new TreeMap<>();
+    public final @NotNull Map<String, @NotNull String> liensOnisep = new TreeMap<>();
 
     //nom des filieres, par code, tels qu'affichés sur la carte
     //auxquels on rajoute les noms spécifiques LAS
-    public final Map<String, String> nomsFilieres = new TreeMap<>();
+    public final @NotNull Map<String, @NotNull String> nomsFilieres = new TreeMap<>();
 
     public static final String TOUS_GROUPES_CODE = "";
     public static final int MOYENNE_BAC_CODE = -2;

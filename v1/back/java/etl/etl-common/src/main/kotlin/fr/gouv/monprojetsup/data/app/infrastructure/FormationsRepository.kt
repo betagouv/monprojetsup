@@ -10,18 +10,22 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
-
-
+interface FormationJpaRepository : JpaRepository<FormationEntity, String>
 
 @Repository
 open class FormationDb(
-    private val db : JpaRepository<FormationEntity, String>
+    private val db : FormationJpaRepository
 )
     : FormationsPort
 {
     @Transactional(readOnly = true)
     override fun retrieveFormations(): Map<String, Formation> {
         return db.findAll().associate { it.id to it.toFormation() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun findAll(): List<FormationEntity> {
+        return db.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +38,7 @@ open class FormationDb(
         db.deleteAll()
     }
 
-    override fun saveAll(entities: MutableList<FormationEntity>) {
+    override fun saveAll(entities: List<FormationEntity>) {
         db.saveAll(entities)
     }
 

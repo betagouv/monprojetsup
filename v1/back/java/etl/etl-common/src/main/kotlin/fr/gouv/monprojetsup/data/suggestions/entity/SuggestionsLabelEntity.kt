@@ -13,6 +13,7 @@ class SuggestionsLabelEntity {
 
     companion object {
         const val MAX_LABEL_LENGTH: Int = 1023
+        const val MAX_DESCRIPTIF_LENGTH: Int = 4096
     }
 
     constructor(key: String, label: String, labelDebug: String?) {

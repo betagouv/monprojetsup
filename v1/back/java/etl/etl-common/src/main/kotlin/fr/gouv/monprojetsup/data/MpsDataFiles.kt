@@ -134,17 +134,14 @@ class MpsDataFiles(
     }
 
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
-        val labels = getLabels()
-        val links = HashMap<String, DescriptifsFormationsMetiers.Link>()
-        statistiques.liensOnisep.forEach { (key, value) ->
-            links[key] = DescriptifsFormationsMetiers.toAvenirs(value, labels.getOrDefault(key, ""))
-        }
         val urls = UrlsUpdater.updateUrls(
             onisepData,
-            links,
-            psupData.lasMpsKeys,
-            descriptifs,
-            psupData.psupKeyToMpsKey
+            statistiques.liensOnisep,
+            psupData.lasToGeneric,
+            getDescriptifs(),
+            psupData.psupKeyToMpsKey,
+            getFormationsMpsIds(),
+            getLabels()
         )
         return urls
     }
@@ -342,13 +339,13 @@ class MpsDataFiles(
     }
 
 
-    override fun getDurees(): Map<String, Int> {
+    override fun getDurees(): Map<String, Int?> {
         val ids = getFormationsMpsIds()
         val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
         val psupKeyToMpsKey = psupData.psupKeyToMpsKey
         val lasKeys = psupData.lasToGeneric.keys
-        val result = HashMap<String,Int>()
-        ids.forEach() { id ->
+        val result = HashMap<String,Int?>()
+        ids.forEach { id ->
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf())
             if(psupKeys.isNotEmpty()) {
                 val duree =
@@ -356,7 +353,7 @@ class MpsDataFiles(
                         .map { fps -> psupData.getDuree(fps, psupKeyToMpsKey, lasKeys) }
                         .filterNotNull()
                         .minOrNull()
-                result.put(id, duree!!)
+                result[id] = duree
             }
         }
         return result

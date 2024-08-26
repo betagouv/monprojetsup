@@ -18,6 +18,12 @@
             <version>1.4.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>fr.gouv.monprojetsup</groupId>
+            <artifactId>etl-common</artifactId>
+            <version>1.4.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

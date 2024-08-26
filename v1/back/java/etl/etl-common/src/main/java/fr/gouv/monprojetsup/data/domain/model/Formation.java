@@ -35,5 +35,6 @@ public record Formation(
     public int nbVoeux() {
         return voeux.size();
     }
+
 }
 
