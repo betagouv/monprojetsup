@@ -1,1 +1,1 @@
-ALTER TABLE metier ALTER COLUMN descriptif_general TYPE text;
+../../../../../../../../../app/back/src/main/resources/db/migration/V1_11_etl.sql

@@ -1,11 +1,1 @@
-ALTER TABLE formation
-    DROP COLUMN liens;
-
-ALTER TABLE formation
-    ADD COLUMN liens jsonb;
-
-ALTER TABLE metier
-    DROP COLUMN liens;
-
-ALTER TABLE metier
-    ADD COLUMN liens jsonb;
+../../../../../../../../../app/back/src/main/resources/db/migration/V1_5__changement_liens_en_jsonb.sql
