@@ -150,8 +150,48 @@ class MpsDataFiles(
         return GrilleAnalyse.getGrilles(psupData)
     }
 
-    override fun getTagsSources(): Map<String, List<String>> {
-        return TagsSources.loadTagsSources(psupData.psupKeyToMpsKey, dataSources).getKeyToTags()
+    override fun getMotsCles(): Map<String, List<String>> {
+
+        //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
+        val motsCles = Serialisation.fromJsonFile(
+            dataSources.getSourceDataFilePath(DataSources.TAGS_SOURCE_MERGED_FILENAME),
+            TagsSources::class.java
+        )
+
+        motsCles.sources.computeIfAbsent(
+            Constants.PASS_MOT_CLE
+        ) { HashSet() }.add(Constants.gFlCodToFrontId(Constants.PASS_FL_COD))
+
+        motsCles.extendToGroups(psupData.psupKeyToMpsKey)
+
+        val formationsVersMetiers = getFormationsVersMetiers()
+        val mpsIds = getFormationsMpsIds()
+        val labels = getLabels()
+
+        //le référentiel est formations front
+        mpsIds.forEach { formation ->
+            val label = labels.getOrDefault(formation, formation)
+            motsCles.add(label, formation)
+            if (label.contains("L1")) {
+                motsCles.add("licence", formation)
+            }
+            if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
+                motsCles.add("IFSI", formation)
+            }
+            formationsVersMetiers[formation]?.forEach { metier ->
+                val labelMetier = labels[metier]
+                if(labelMetier != null) {
+                    motsCles.add(
+                        labelMetier,
+                        formation
+                    )
+                }
+            }
+        }
+        motsCles.extendToGroups(psupData.psupKeyToMpsKey)
+        motsCles.normalize()
+
+        return motsCles.getKeyToTags()
     }
 
     override fun getFormationsMpsIds(): List<String> {
@@ -441,49 +481,6 @@ class MpsDataFiles(
 
     }
 
-    private fun processTagSources(
-        psupData: PsupData,
-        onisepData: OnisepData,
-        statistiques: PsupStatistiques
-    ) {
-        val formationsMps = getFormationsMpsIds()
-
-        val labels = Labels.getLabels(
-            statistiques.nomsFilieres,
-            psupData,
-            onisepData
-        )
-
-        val tagsSources = TagsSources.loadTagsSources(
-            psupData.getPsupKeyToMpsKey(),
-            dataSources
-        )
-
-        val formationsVersMetiers = getFormationsVersMetiers()
-
-        //le référentiel est formations front
-        formationsMps.forEach { formation ->
-            val label: String = labels.getOrDefault(formation, formation)
-            tagsSources.add(label, formation)
-            if (label.contains("L1")) {
-                tagsSources.add("licence", formation)
-            }
-            if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
-                tagsSources.add("IFSI", formation)
-            }
-            formationsVersMetiers[formation]?.forEach { metier ->
-                val labelMetier = labels[metier]
-                if(labelMetier != null) {
-                    tagsSources.add(
-                        labelMetier,
-                        formation
-                    )
-                }
-            }
-        }
-        tagsSources.normalize()
-
-    }
 
 
 }

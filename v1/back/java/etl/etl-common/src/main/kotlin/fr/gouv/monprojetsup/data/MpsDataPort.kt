@@ -19,7 +19,7 @@ interface MpsDataPort {
     fun getAttendus(): Map<String, Attendus>
     fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>>
     fun getGrilles(): Map<String, GrilleAnalyse>
-    fun getTagsSources(): Map<String, List<String>>
+    fun getMotsCles(): Map<String, List<String>>
     fun getFormationsMpsIds(): List<String>
     fun getApprentissage(): Collection<String>
     fun getLasToGenericIdMapping(): Map<String, String>

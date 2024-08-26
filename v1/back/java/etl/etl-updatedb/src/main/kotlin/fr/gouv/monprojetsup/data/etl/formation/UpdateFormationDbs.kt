@@ -50,7 +50,7 @@ class UpdateFormationDbs(
         val attendus = mpsDataPort.getAttendus()
         val liens = mpsDataPort.getLiens()
         val grilles = mpsDataPort.getGrilles()
-        val tagsSources = mpsDataPort.getTagsSources()
+        val tagsSources = mpsDataPort.getMotsCles()
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val apprentissage = mpsDataPort.getApprentissage()
         val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
@@ -93,12 +93,7 @@ class UpdateFormationDbs(
                 LienEntity(link.label, link.uri)
             }.toCollection(ArrayList())
 
-            val motsClefs = tagsSources[id]
-            if (motsClefs == null) {
-                entity.motsClefs = listOf()
-            } else {
-                entity.motsClefs = motsClefs
-            }
+            entity.motsClefs = tagsSources.getOrDefault(id, listOf(label))
 
             val voeuxFormation = voeux.filter { it.formation == id }
             val metiers = formationsVersMetiers[id] ?: java.util.HashSet()
