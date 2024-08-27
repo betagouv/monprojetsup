@@ -567,12 +567,9 @@ public class ConnecteurBackendSQL {
      * @return
      */
     private TagsSources recupererDonneesCarte(PsupStatistiques data, Set<Integer> filActives) throws SQLException, AccesDonneesException {
-        //on recupere tous les mots clés en s'appuyant sur le code de la carte la carte
+        //on recupere tous les mots clés en s'appuyant sur le code de la carte
         ConnecteurJsonCarteSQL conn = new ConnecteurJsonCarteSQL(this.conn);
         AlgoCarteConfig config = new AlgoCarteConfig();//on part de la config par défaut
-        config.noSplitMode = true;
-        config.noOnisep = true;
-        config.specificTreatmentforLAS = true;
         AlgoCarteEntree donneesCarte = conn.recupererDonneesJSONCarte(config);
         data.injecterNomsFilieresManquantsEtTauxAcces(
                 donneesCarte,
