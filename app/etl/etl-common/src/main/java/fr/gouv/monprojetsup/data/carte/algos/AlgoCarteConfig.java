@@ -45,43 +45,16 @@ public class AlgoCarteConfig implements Serializable {
 
     public final Map<String, String> fieldToSourceType;
 
-    public final Map<String, Integer> sourceTypeWeights;
+    /* special mode where words and chains imported from database are not split. Used for orientation. */
+    public final boolean noSplitMode = true;
 
-    /* field containing the name of the etablissement,
-    matched only if the full sentence matches,
-    for example "Université de Paris".
-     */
-    public final List<String> etablissementNameFields;
-
-    /* Weight bonus given when etablissement matches.
-    The score when matched is 2 to the power of the bonus.
-    A bonus of 8 means that when an etablissement macthes,
-    the formation of this etablissement will appear first in the list.
-     */
-    public final int etablissementFullnameMatchWeight;
-
-    public final List<String> etablissementFullnameSplits;
+    /* special mode where onisep words are not imported from database. Used for orientation. */
+    public final boolean noOnisep = true;
+    public final boolean specificTreatmentforLAS = true;
 
     public final List<String> ignoredWords;
 
-    /* special mode where words and chains imported from database are not split. Used for orientation. */
-    public boolean noSplitMode = false;
-
-    /* special mode where onisep words are not imported from database. Used for orientation. */
-    public boolean noOnisep = false;
-    public final boolean exportAlgoCarteEntree;
-    public boolean specificTreatmentforLAS = false;
-
     public AlgoCarteConfig() {
-
-        exportAlgoCarteEntree = false;
-
-        etablissementNameFields = Stream.of(
-                "fc_g_lib_eta_cal_ref",
-                "g_ea_lib_aff",
-                "fc_g_lib_eta_cal_ref2",
-                "g_ea_lib_mdr"
-        ).collect(Collectors.toList());
 
         fieldToSourceType = Stream.of(new Object[][]{
                 {"g_ta_mot_cle", FORMATION},
@@ -118,44 +91,10 @@ public class AlgoCarteConfig implements Serializable {
                 {"g_tf_mot_cle_mdr", TYPE_FORMATION},
         }).collect(Collectors.toMap(data -> ((String) data[0]).toLowerCase(), data -> (String) data[1]));
 
-        sourceTypeWeights = Stream.of(new Object[][]{
-                {CITY, 7},
-                {FILIERE, 6},
-                {TYPE_FORMATION, 5},
-                {FORMATION, 4},
-                {ETABLISSEMENT, 3},
-                {LOCALISATION, 2},
-                {FIL_ONISEP, 1},
-                {DESCRIPTION_WEB, 0}
-        }).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
 
         ignoredWords = Stream.of(new String[]{
                 "", "le", "la", "en", "à", "pour", "les", "et", "de", "dans", "du", "aux", "ta", "ti"
         }).collect(Collectors.toList());
 
-        /* the words in these fields will be excluded from generation of keywords
-        attached to filieres, even if they appear in the "FREE" fields  */
-        /* to keep somewhere for record.
-        This was used when generating automatically tags for filiere
-        ignoredFieldsForFiliere = Stream.of(new String[]{
-                "fc_g_lib_eta_cal_ref",
-                "g_ea_lib_aff",
-                "fc_g_lib_eta_cal_ref2",
-                "g_ea_lib_mdr",
-                "g_ea_com",
-                "g_ea_vil_pri",
-                "g_dp_lib",
-                "g_aa_lib",
-                "f_get_info_region_mdr"
-        }).collect(Collectors.toList());
-        */
-        etablissementFullnameSplits = Stream.of(new String[]{
-                " - ",
-                " / ",
-                " \\ ",
-                ","
-        }).collect(Collectors.toList());
-
-        etablissementFullnameMatchWeight = 8;
     }
 }
