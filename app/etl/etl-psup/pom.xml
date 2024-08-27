@@ -18,11 +18,7 @@
             <version>1.4.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>fr.gouv.education</groupId>
-            <artifactId>parcoursup-simulations</artifactId>
-            <version>2023-11.0</version>
-        </dependency>
+
 
     </dependencies>
 
