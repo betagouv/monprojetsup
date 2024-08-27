@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_1__ajout_table_specialite.sql

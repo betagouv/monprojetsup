@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_8__create_join_baccalaureat_specialite.sql

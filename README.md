@@ -3,14 +3,13 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 
 
 ## Applications contenu dans le repo
-- **v1** - L'application historique (ce dossier est amené à disparaitre)
-- **etl** - Permet de transformer les fichiers référentiels et ajouter les données en BDD (pour le moment dans V1)
-- **suggestions** - API permettant de générer des suggestions de formations (pour le moment dans V1)
 - **keycloak** - Gestionnaire d'authentification (n'est pas déployé, utilisé uniquement pour le dev local)
 - **site-public** - Export statique des fichiers du WP permettant d'alimenter les pages publiques (non utilisé en local, uniquement pour le déploiement)
 - **app** - Cœur de l'application Mon Projet Sup
   - front - Frontend Typescript/React/ViteJS
   - back - Backend API Kotlin/Spring Boot
+  - etl - alimente les données de référence de la BDD  (Kotlin + Java / Spring Boot)
+  - suggestions - API des suggestions de formations (Kotlin + Java / Spring Boot)
 
 ## Schéma simplifié des apps et des types d'échanges en local
 ![Schéma apps en local](schema-local.png)
@@ -20,9 +19,10 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ### Prérequis 
 - Démarrer Docker sur sa machine
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
+- Alimenter les données de référence de la BDD en suivant les instructions de [app/etl/README.md](app/etl/README.md)
 - Lancer le backend en suivant les instructions de [app/back/README.md](app/back/README.md)
 - Lancer le frontend en suivant les instructions de [app/front/README.md](app/front/README.md)
-- Lancer l'api Suggestion en suivant les instructions de [v1/back/README.md](v1/back/README.md)
+- Lancer l'api Suggestion en suivant les instructions de [app/suggestions/README.md](app/suggestions/README.md)
 
 ## Les différentes URLs
 - Frontend: http://localhost:5001
