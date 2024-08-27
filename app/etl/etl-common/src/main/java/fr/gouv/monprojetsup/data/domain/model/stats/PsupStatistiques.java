@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
-import fr.parcoursup.carte.algos.AlgoCarteEntree;
-import fr.parcoursup.carte.algos.Filiere;
+import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
+import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import static fr.gouv.monprojetsup.data.domain.Constants.*;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MIN_POPULATION_SIZE_FOR_STATS;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYENNE_BAC_CODE;
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatistiquesAdmisParMatiere.getStatAgregee;
-import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 
 
 record StatistiquesAdmisParMatiere(

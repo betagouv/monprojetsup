@@ -81,7 +81,7 @@ public class OrientationConfig implements Serializable {
     }
 
     public static OrientationConfig fromFile() throws IOException, JAXBException {
-        return (new fr.parcoursup.carte.config.ExecutableConfig<OrientationConfig>())
+        return (new ExecutableConfig<OrientationConfig>())
                 .fromFile(DEFAULT_FILENAME, ENV_VARIABLE, OrientationConfig.class, new OrientationConfig());
     }
 

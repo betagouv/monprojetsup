@@ -19,7 +19,6 @@
  */
 package fr.gouv.monprojetsup.data.psup;
 
-import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -78,7 +77,7 @@ public class ConnecteurSQL implements AutoCloseable {
 
     public ConnecteurSQL(Connection connection) throws AccesDonneesException {
         if (connection == null) {
-            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_SQL_CONNEXION_NULL);
+            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL);
         }
         cleanupOnClose = false;
         this.conn = connection;
@@ -87,6 +86,7 @@ public class ConnecteurSQL implements AutoCloseable {
     public ConnecteurSQL(String url, String user, String password) throws AccesDonneesException {
         cleanupOnClose = true;
         try {
+            /*
         	if(url.startsWith("jdbc:oracle:thin:@")) {
         		OracleDataSource ods = new OracleDataSource();
     			ods.setURL(url);
@@ -95,9 +95,10 @@ public class ConnecteurSQL implements AutoCloseable {
     			conn=ods.getConnection();
         	}else {
             conn = DriverManager.getConnection(url, user, password);
-        	}
+        	}*/
+            conn = DriverManager.getConnection(url, user, password);
         } catch (SQLException ex) {
-            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_SQL_CREATION, ex);
+            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CREATION, ex);
         }
     }
 

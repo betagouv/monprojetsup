@@ -1,15 +1,15 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
+import fr.gouv.monprojetsup.data.etl.BDDRepositoryTest
 import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.infrastructure.FormationDb
-import fr.gouv.monprojetsup.data.etl.BDDRepositoryTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 
-class UpdateFormationDbsTest : BDDRepositoryTest() {
+class UpdateFormationDbsTestCarteAlgoTags : BDDRepositoryTest() {
 
     @Autowired
     lateinit var formationsdb : FormationDb

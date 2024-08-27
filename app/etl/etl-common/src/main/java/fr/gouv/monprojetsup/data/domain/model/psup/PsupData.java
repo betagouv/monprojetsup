@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
-import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 
 
 record FormationsSimilaires(

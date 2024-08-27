@@ -1,4 +1,6 @@
-package fr.gouv.monprojetsup.data.domain.model.carte;
+package fr.gouv.monprojetsup.data.carte.algos.tags;
+
+import fr.gouv.monprojetsup.data.domain.model.carte.DetailTag;
 
 import java.io.Serializable;
 import java.util.*;

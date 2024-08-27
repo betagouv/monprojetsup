@@ -30,7 +30,7 @@ public class JsonCarte {
 	/* Map g_ta_cod / Formation */
 	public final Map<Integer, FormationCarte> formations = new TreeMap<>();
 	/* Map g_fl_cod / Filiere */
-	public final Map<Integer, Filiere> filieres = new TreeMap<>();
+	public final Map<Integer, FiliereCarteTags> filieres = new TreeMap<>();
 
 	public Lexique lexique;
 

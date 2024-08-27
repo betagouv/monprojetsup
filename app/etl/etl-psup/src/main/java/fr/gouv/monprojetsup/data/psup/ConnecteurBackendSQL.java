@@ -21,38 +21,34 @@ l'Innovation,
  */
 package fr.gouv.monprojetsup.data.psup;
 
+import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
+import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.carte.DonneesCommunes;
 import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.domain.model.psup.Correlations;
 import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.parcoursup.carte.algos.AlgoCarteConfig;
-import fr.parcoursup.carte.algos.AlgoCarteEntree;
-import fr.parcoursup.carte.algos.tools.Paire;
-import fr.parcoursup.carte.donnees.ConnecteurDonneesAnnuellesCarteSQL;
-import fr.parcoursup.carte.donnees.ConnecteurJsonCarteSQL;
-import fr.parcoursup.carte.exceptions.AccesDonneesException;
-import fr.parcoursup.carte.modele.DonneesCommunes;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import static fr.parcoursup.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.parcoursup.carte.algos.filsim.AlgoFilieresSimilaires.calculerCorrelations;
-import static fr.parcoursup.carte.donnees.SQLStringsConstants.WHERE;
+import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.carte.algos.filsim.AlgoFilieresSimilaires.calculerCorrelations;
+import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.WHERE;
 
 public class ConnecteurBackendSQL {
 
@@ -70,7 +66,7 @@ public class ConnecteurBackendSQL {
     }
 
 
-    public Pair<PsupStatistiques, TagsSources> recupererStatistiquesEtMotsCles() throws fr.parcoursup.carte.exceptions.AccesDonneesException, SQLException {
+    public Pair<PsupStatistiques, TagsSources> recupererStatistiquesEtMotsCles() throws SQLException, AccesDonneesException {
 
         PsupStatistiques data = new PsupStatistiques();
 
@@ -335,7 +331,7 @@ public class ConnecteurBackendSQL {
 
     }
 
-    private void recupererEntreeCarte(PsupData data) throws fr.parcoursup.carte.exceptions.AccesDonneesException {
+    private void recupererEntreeCarte(PsupData data) throws AccesDonneesException {
         ConnecteurDonneesAnnuellesCarteSQL conn
                 = new ConnecteurDonneesAnnuellesCarteSQL(this.conn);
 
@@ -347,7 +343,14 @@ public class ConnecteurBackendSQL {
                     "**** Calcul des corrélations entre voeux, type bac " + typeBac + " ********\n" +
                     "**********************************************************\n" +
                     "************************************************************");
-            Map<Paire<Integer, Integer>, Double> corrs = calculerCorrelations(entree, typeBac);
+            Map<Pair<Integer, Integer>, Double> corrs =
+                    calculerCorrelations(entree, typeBac)
+                            .entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(
+                                    e -> Pair.of(e.getKey().getLeft(), e.getKey().getRight()),
+                                    Map.Entry::getValue
+                            ));
 
             LOGGER.info("Injection dans les données");
             data.correlations().parBac().put(typeBac, new Correlations(corrs));
@@ -355,7 +358,7 @@ public class ConnecteurBackendSQL {
 
     }
 
-    private void recupererDiversPsup(PsupData data) throws SQLException, IOException, AccesDonneesException {
+    private void recupererDiversPsup(PsupData data) throws SQLException {
         Map<String, List<Map<String, String>>> o = Serialisation.exportSelectToObject(this.conn,
                 Map.of("c_jur_adm", "select * from c_jur_adm",
                         "c_jur_adm_comments", "select * from user_col_comments where table_name like '%C_JUR_ADM%' and comments is not null",
@@ -595,9 +598,8 @@ public class ConnecteurBackendSQL {
      * @param data
      * @param filActives
      * @return
-     * @throws fr.parcoursup.carte.exceptions.AccesDonneesException
      */
-    private TagsSources recupererDonneesCarte(PsupStatistiques data, Set<Integer> filActives) throws fr.parcoursup.carte.exceptions.AccesDonneesException, SQLException {
+    private TagsSources recupererDonneesCarte(PsupStatistiques data, Set<Integer> filActives) throws SQLException, AccesDonneesException {
         //on recupere tous les mots clés en s'appuyant sur le code de la carte la carte
         ConnecteurJsonCarteSQL conn = new ConnecteurJsonCarteSQL(this.conn);
         AlgoCarteConfig config = new AlgoCarteConfig();//on part de la config par défaut
