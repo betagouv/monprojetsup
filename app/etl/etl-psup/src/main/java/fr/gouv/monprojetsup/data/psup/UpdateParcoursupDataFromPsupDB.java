@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.data.psup;
 
-import fr.gouv.monprojetsup.data.infrastructure.DataSources;
-import fr.gouv.monprojetsup.data.infrastructure.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.infrastructure.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.infrastructure.psup.PsupData;
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -30,10 +29,10 @@ public class UpdateParcoursupDataFromPsupDB implements CommandLineRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateParcoursupDataFromPsupDB.class);
 
-    private final DataSources sources;
+    private final PsupDataSources sources;
 
     @Autowired
-    public UpdateParcoursupDataFromPsupDB(DataSources sources) {
+    public UpdateParcoursupDataFromPsupDB(PsupDataSources sources) {
         this.sources = sources;
     }
 
@@ -59,7 +58,7 @@ public class UpdateParcoursupDataFromPsupDB implements CommandLineRunner {
             LOGGER.info("Récupération des données");
             PsupData data = conn.recupererData();
             LOGGER.info("Export du backend data au format json  ");
-            Serialisation.toZippedJson(sources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME), data, true);
+            Serialisation.toZippedJson(sources.getSourceDataFilePath(PsupDataSources.BACK_PSUP_DATA_FILENAME), data, true);
         }
 
     }
@@ -73,7 +72,7 @@ public class UpdateParcoursupDataFromPsupDB implements CommandLineRunner {
         OrientationConfig config = OrientationConfig.fromFile();
         //config.save();
 
-        String path = sources.getSourceDataFilePath(DataSources.TAGS_SOURCE_RAW_FILENAME);
+        String path = sources.getSourceDataFilePath(PsupDataSources.TAGS_SOURCE_RAW_FILENAME);
         if (!Files.exists(Path.of(path))) {
             throw new RuntimeException("No file " + path);
         }
@@ -91,19 +90,19 @@ public class UpdateParcoursupDataFromPsupDB implements CommandLineRunner {
 
 
             LOGGER.info("Export du full data set");
-            Serialisation.toZippedJson(sources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME), stats, true);
+            Serialisation.toZippedJson(sources.getSourceDataFilePath(PsupDataSources.STATS_BACK_SRC_FILENAME), stats, true);
 
             LOGGER.info("Export du middle data set");
             stats.minimize();
-            Serialisation.toZippedJson(sources.getSourceDataFilePath(DataSources.FRONT_MID_SRC_PATH), data.getLeft(), true);
+            Serialisation.toZippedJson(sources.getSourceDataFilePath(PsupDataSources.FRONT_MID_SRC_PATH), data.getLeft(), true);
 
             LOGGER.info("Export des tags au format json  ");
             //for debug
-            Serialisation.toJsonFile(sources.getSourceDataFilePath(DataSources.TAGS_SOURCE_RAW_FILENAME), tagsSources, true);
+            Serialisation.toJsonFile(sources.getSourceDataFilePath(PsupDataSources.TAGS_SOURCE_RAW_FILENAME), tagsSources, true);
             // Stem and merge tags.
             TagsSources stemmedTagsSources = stemMergeTags(tagsSources);
             // Save stemmed tags in json file.
-            Serialisation.toJsonFile(sources.getSourceDataFilePath(DataSources.TAGS_SOURCE_MERGED_FILENAME), stemmedTagsSources, true);
+            Serialisation.toJsonFile(sources.getSourceDataFilePath(PsupDataSources.TAGS_SOURCE_MERGED_FILENAME), stemmedTagsSources, true);
 
         }
 

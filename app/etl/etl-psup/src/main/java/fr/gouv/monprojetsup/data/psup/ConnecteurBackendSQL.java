@@ -22,14 +22,14 @@ l'Innovation,
 package fr.gouv.monprojetsup.data.psup;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.infrastructure.model.formations.Filiere;
-import fr.gouv.monprojetsup.data.infrastructure.model.formations.Formation;
-import fr.gouv.monprojetsup.data.infrastructure.model.formations.Formations;
-import fr.gouv.monprojetsup.data.infrastructure.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.infrastructure.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.infrastructure.psup.Correlations;
-import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu;
-import fr.gouv.monprojetsup.data.infrastructure.psup.PsupData;
+import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
+import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
+import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.domain.model.psup.Correlations;
+import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.parcoursup.carte.algos.AlgoCarteConfig;
 import fr.parcoursup.carte.algos.AlgoCarteEntree;

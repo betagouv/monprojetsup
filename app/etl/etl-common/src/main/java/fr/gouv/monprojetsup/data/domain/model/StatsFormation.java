@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model;
 
-import fr.gouv.monprojetsup.data.infrastructure.model.stats.Statistique;
+import fr.gouv.monprojetsup.data.domain.model.stats.Statistique;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

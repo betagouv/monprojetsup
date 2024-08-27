@@ -1,15 +1,15 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
-import fr.gouv.monprojetsup.data.MpsDataPort
-import fr.gouv.monprojetsup.data.app.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.app.formation.entity.CritereAnalyseCandidatureEntity
-import fr.gouv.monprojetsup.data.app.formation.entity.FormationEntity
-import fr.gouv.monprojetsup.data.app.formation.entity.MoyenneGeneraleAdmisEntity
-import fr.gouv.monprojetsup.data.app.formation.entity.VoeuEntity
-import fr.gouv.monprojetsup.data.app.infrastructure.CriteresDb
-import fr.gouv.monprojetsup.data.app.infrastructure.FormationDb
-import fr.gouv.monprojetsup.data.app.infrastructure.MoyennesGeneralesAdmisDb
-import fr.gouv.monprojetsup.data.infrastructure.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.data.commun.entity.LienEntity
+import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
+import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
+import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
+import fr.gouv.monprojetsup.data.formation.infrastructure.CriteresDb
+import fr.gouv.monprojetsup.data.formation.infrastructure.FormationDb
+import fr.gouv.monprojetsup.data.formation.infrastructure.MoyennesGeneralesAdmisDb
+import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 

@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.etl.metier
 
-import fr.gouv.monprojetsup.data.MpsDataPort
-import fr.gouv.monprojetsup.data.app.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.app.infrastructure.MetiersDb
-import fr.gouv.monprojetsup.data.app.metier.entity.MetierEntity
+import fr.gouv.monprojetsup.data.commun.entity.LienEntity
+import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
+import fr.gouv.monprojetsup.data.metier.infrastructure.MetiersDb
 import org.springframework.stereotype.Component
 
 @Component

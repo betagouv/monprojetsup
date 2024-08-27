@@ -49,7 +49,7 @@ class Runner(
 
 @Component
 @Profile("test")
-class TestRunner() : CommandLineRunner {
+class TestRunner : CommandLineRunner {
 	override fun run(vararg args: String?) {
 	}
 }

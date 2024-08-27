@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

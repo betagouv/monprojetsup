@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.suggestions.export.reference;
 
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.data.Helpers.isFiliere;
 
 @Slf4j
 @Component

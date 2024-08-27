@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.app.formation.entity.VoeuEntity
+import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.domain.port.VoeuxPort
-import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu
+import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional

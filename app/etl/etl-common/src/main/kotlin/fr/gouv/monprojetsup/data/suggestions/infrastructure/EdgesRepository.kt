@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.data.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.domain.model.Edge
 import fr.gouv.monprojetsup.data.domain.port.EdgesPort
-import fr.gouv.monprojetsup.data.infrastructure.model.Edges
+import fr.gouv.monprojetsup.data.domain.model.graph.Edges
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

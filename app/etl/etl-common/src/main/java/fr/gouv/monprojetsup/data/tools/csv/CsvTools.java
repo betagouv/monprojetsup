@@ -68,6 +68,21 @@ public class CsvTools implements Closeable {
         return data;
     }
 
+    public static void toCsv(Map<String, Set<String>> corr, String filename) throws IOException {
+        try(CsvTools csvTools = new CsvTools(filename, ',')) {
+            csvTools.appendHeaders(List.of("key1","key2"));
+            for (Map.Entry<String, Set<String>> entry : corr.entrySet()) {
+                String key1 = entry.getKey();
+                Set<String> keys2 = entry.getValue();
+                for (String key2 : keys2) {
+                    csvTools.append(key1);
+                    csvTools.append(key2);
+                    csvTools.newLine();
+                }
+            }
+        }
+    }
+
     public void append(@Nullable String val) throws IOException {
         if(!this.skipNextSeparator) writer.append(separator);
         writer.append("\"" + (Objects.isNull(val) ? "" : val.replace("\"","'")) + "\"");

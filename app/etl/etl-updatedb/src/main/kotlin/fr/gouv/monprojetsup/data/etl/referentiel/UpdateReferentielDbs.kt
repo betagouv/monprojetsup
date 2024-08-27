@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.referentiel
 
-import fr.gouv.monprojetsup.data.MpsDataPort
-import fr.gouv.monprojetsup.data.app.infrastructure.*
-import fr.gouv.monprojetsup.data.app.referentiel.entity.*
+import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.referentiel.entity.*
+import fr.gouv.monprojetsup.data.referentiel.infrastructure.*
 import org.springframework.stereotype.Component
 
 @Component

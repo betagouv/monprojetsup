@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.port;
 
-import fr.gouv.monprojetsup.data.app.formation.entity.FormationEntity;
+import fr.gouv.monprojetsup.data.formation.entity.FormationEntity;
 import fr.gouv.monprojetsup.data.domain.model.Formation;
 import org.jetbrains.annotations.NotNull;
 
