@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
-import fr.gouv.monprojetsup.data.app.infrastructure.*
 import fr.gouv.monprojetsup.data.etl.BDDRepositoryTest
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
+import fr.gouv.monprojetsup.data.referentiel.infrastructure.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

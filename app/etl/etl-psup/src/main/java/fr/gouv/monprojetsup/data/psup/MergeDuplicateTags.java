@@ -3,12 +3,9 @@ package fr.gouv.monprojetsup.data.psup;
 // TODO : move absolutes paths in config file.
 // TODO : change stemTags method to handle tags with multiple words.
 
-import fr.gouv.monprojetsup.data.infrastructure.DataSources;
-import fr.gouv.monprojetsup.data.infrastructure.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import opennlp.tools.stemmer.PorterStemmer;
 
-import java.io.IOException;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,11 +44,6 @@ public class MergeDuplicateTags {
                 : Normalizer
                 .normalize(input, Normalizer.Form.NFKD)
                 .replaceAll("\\p{M}","");
-    }
-
-    // 1. Load tagsSources.json
-    private static TagsSources loadTagsSources(DataSources sources) throws IOException {
-        return Serialisation.fromJsonFile(sources.getSourceDataFilePath(DataSources.TAGS_SOURCE_RAW_FILENAME), TagsSources.class);
     }
 
     // 2. Stem (then merge) tags.

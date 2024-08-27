@@ -10,6 +10,10 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 
+fun main(args: Array<String>) {
+    runApplication<ApplicationSuggestions>(*args)
+}
+
 @Configuration
 @PropertySource("classpath:application.properties")
 @PropertySource("classpath:secret.properties")
@@ -19,7 +23,7 @@ class Config {
 
 @SpringBootApplication
 @EnableCaching
-@ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
+@ComponentScan(basePackages = ["fr.gouv.monprojetsup.suggestions"])
 @EntityScan(basePackages = [
     "fr.gouv.monprojetsup.data"]
 )
@@ -27,7 +31,8 @@ class Config {
     "fr.gouv.monprojetsup.data.app.infrastructure",
     "fr.gouv.monprojetsup.data.suggestions.infrastructure"]
 )
-class ApplicationSuggestions
+class ApplicationSuggestions{
+}
 
 /**
  * Version of the API used to implement the service,
@@ -40,10 +45,3 @@ const val API_VERSION = "1.2"
  */
 const val BASE_PATH = "/api/$API_VERSION"
 
-/**
- * Main function
- */
-fun main(args: Array<String>) {
-    WritePidToFile.write("sugg")
-    runApplication<ApplicationSuggestions>(*args)
-}

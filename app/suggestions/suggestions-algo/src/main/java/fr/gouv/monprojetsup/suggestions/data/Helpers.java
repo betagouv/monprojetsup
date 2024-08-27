@@ -1,5 +1,6 @@
-package fr.gouv.monprojetsup.data;
+package fr.gouv.monprojetsup.suggestions.data;
 
+import fr.gouv.monprojetsup.data.Constants;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,7 @@ public class Helpers {
     ************************* HELPERS to determine type from key ***********************
      */
     public static boolean isFiliere(@NotNull String key) {
-        return key.startsWith(Constants.FILIERE_PREFIX)
+        return key.startsWith(fr.gouv.monprojetsup.data.Constants.FILIERE_PREFIX)
                 || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
     }
 

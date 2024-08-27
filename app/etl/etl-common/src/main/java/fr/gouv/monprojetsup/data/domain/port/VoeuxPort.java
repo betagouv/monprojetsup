@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.port;
 
-import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 
 import java.util.Map;
 

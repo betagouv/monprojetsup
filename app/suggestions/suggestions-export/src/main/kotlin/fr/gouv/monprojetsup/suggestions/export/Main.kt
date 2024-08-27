@@ -3,17 +3,23 @@ package fr.gouv.monprojetsup.suggestions.export
 import fr.gouv.monprojetsup.suggestions.export.experts.DocsGenerator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsEvaluator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator
+import fr.gouv.monprojetsup.suggestions.export.ml.GenerateMlDocs
 import fr.gouv.monprojetsup.suggestions.export.reference.AnalyzeSuggestionsData
 import fr.gouv.monprojetsup.suggestions.export.reference.ExportSuggestionsData
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
+
+
+fun main(args: Array<String>) {
+    runApplication<Main>(*args)
+}
 
 @SpringBootApplication
 class Main
 
 @Profile("export")
-
 class ExportRunner(
     val exportSuggestionsData: ExportSuggestionsData,
     val analyzeSuggestionsData: AnalyzeSuggestionsData
@@ -55,7 +61,7 @@ class GenerateExpertsDocsRunner(val gen : DocsGenerator) : CommandLineRunner
 
 @Profile("ml")
 class GenerateMlDocsRunner (
-    val generateMlDocs: fr.gouv.monprojetsup.suggestions.ml.GenerateMlDocs
+    val generateMlDocs: GenerateMlDocs
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {

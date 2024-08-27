@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
-import fr.gouv.monprojetsup.data.Helpers;
-import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.data.infrastructure.model.stats.Middle50;
+import fr.gouv.monprojetsup.suggestions.data.Helpers;
+import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

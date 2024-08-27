@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model;
 
-import fr.gouv.monprojetsup.data.infrastructure.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

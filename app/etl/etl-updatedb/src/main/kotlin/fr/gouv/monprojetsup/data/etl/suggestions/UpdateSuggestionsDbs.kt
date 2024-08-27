@@ -1,13 +1,12 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
-import fr.gouv.monprojetsup.data.MpsDataPort
-import fr.gouv.monprojetsup.data.app.infrastructure.*
 import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.domain.model.*
+import fr.gouv.monprojetsup.data.domain.model.cities.CitiesExternal
+import fr.gouv.monprojetsup.data.domain.model.cities.Coords
 import fr.gouv.monprojetsup.data.domain.port.*
-import fr.gouv.monprojetsup.data.infrastructure.DataSources
-import fr.gouv.monprojetsup.data.infrastructure.model.cities.CitiesExternal
-import fr.gouv.monprojetsup.data.infrastructure.model.cities.Coords
+import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.sources.DataSources
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component

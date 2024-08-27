@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.domain.port;
 
 import fr.gouv.monprojetsup.data.domain.model.Edge;
-import fr.gouv.monprojetsup.data.infrastructure.model.Edges;
+import fr.gouv.monprojetsup.data.domain.model.graph.Edges;
 import kotlin.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
