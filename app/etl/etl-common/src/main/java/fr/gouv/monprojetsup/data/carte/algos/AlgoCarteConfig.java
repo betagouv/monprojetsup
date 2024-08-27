@@ -43,10 +43,6 @@ public class AlgoCarteConfig implements Serializable {
     /* DESCRIPTION_WEB is a special category from which the keywords of filieres are extracted */
     public static final String DESCRIPTION_WEB = "DESCRIPTION_WEB";
 
-    public static final String DICO_FILENAME = "dico-short.zip";
-
-    public static final String DICO_FILENAME_ENV_VARIABLE = "DICO_FILENAME";
-
     public final Map<String, String> fieldToSourceType;
 
     public final Map<String, Integer> sourceTypeWeights;

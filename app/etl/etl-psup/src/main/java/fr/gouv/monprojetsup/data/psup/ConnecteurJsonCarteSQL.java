@@ -5,8 +5,7 @@ import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.carte.algos.tags.FormationCarteAlgoTags;
-import fr.gouv.monprojetsup.data.domain.model.carte.DonneesCommunes;
-import fr.gouv.monprojetsup.data.domain.model.carte.Item;
+import lombok.val;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -22,18 +21,18 @@ import java.sql.Statement;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static fr.gouv.monprojetsup.data.psup.ExecutableConfig.filenameFromEnv;
 import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.TYPE_FORMATION;
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.carte.algos.tags.Scores.cleanAndSplit;
-import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.FROM;
-import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.SELECT;
 import static fr.gouv.monprojetsup.data.psup.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 import static fr.gouv.monprojetsup.data.psup.ConnecteurDonneesAnnuellesCarteSQL.TABLE_STATS_TAUX_ACCES;
+import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.FROM;
+import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.SELECT;
 
 
 public class ConnecteurJsonCarteSQL {
@@ -60,21 +59,14 @@ public class ConnecteurJsonCarteSQL {
         AlgoCarteEntree entree = new AlgoCarteEntree();
 
         try {
-            String dicoFilename = filenameFromEnv(AlgoCarteConfig.DICO_FILENAME_ENV_VARIABLE, AlgoCarteConfig.DICO_FILENAME);
-            chargementDico(entree, dicoFilename);
             recuperationDesFilieres(entree, config.specificTreatmentforLAS);
             recupererTauxAccesPrecalcules(entree);
             recuperationDomainesOnisep(entree);
             recuperationFormationsTagguees(entree, config);
-        } catch (SQLException | VerificationException | IOException ex) {
+        } catch (SQLException | VerificationException ex) {
             throw new AccesDonneesException(AccesDonneesExceptionMessage.MESSAGE, ex,  String.format(ex.getMessage()), ex);
         }
         return entree;
-    }
-
-    private void chargementDico(AlgoCarteEntree entree, String dicoFilename) throws IOException {
-        entree.motsDico.clear();
-        entree.motsDico.addAll(getDico(dicoFilename));
     }
 
     public static Set<String> getDico(String dicoFilename) throws IOException {
@@ -141,6 +133,44 @@ public class ConnecteurJsonCarteSQL {
     }
 
     public void recuperationFormationsTagguees(AlgoCarteEntree entree, AlgoCarteConfig config) throws AccesDonneesException {
+
+        /* L'ensemble des correspondances g_ta_cod/g_tf_cod
+         * (Cas particulier car une formation peut correspondre à plusieurs type
+         * 	on charge donc en memoire l'ensemble des correspondance pour limiter les accés bases )*/
+        Map<Integer, Set<Integer>> correspondancesTypesFormation = new HashMap<>();
+        LOGGER.info("Chargement des correspondances des types de formations");
+        try (Statement stmt = connection.createStatement()) {
+            stmt.setFetchSize(1_000_000);
+            String sql = "select * from sp_g_tri_aff_typ_for";
+            LOGGER.info(sql);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    val gTaCod = rs.getInt("g_ta_cod");
+                    val gTfCod = rs.getInt("g_tf_cod");
+                    correspondancesTypesFormation
+                            .computeIfAbsent(gTaCod, k -> new HashSet<>())
+                            .add(gTfCod);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_DONNEES_APPEL_ORACLE_ERREUR_SQL_RECUPERATION, ex);
+        }
+
+        //Les mots clés par type de formation
+        Map<Integer, String> motsClestypeFormation = new HashMap<>();
+        LOGGER.info("Chargement des type de formations");
+        try (Statement stmt = connection.createStatement()) {
+            stmt.setFetchSize(1_000_000);
+            String sql = "select * from v_typ_for";
+            LOGGER.info(sql);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    motsClestypeFormation.put(rs.getInt("g_tf_cod"), rs.getString("g_tf_mot_cle_mdr"));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_DONNEES_APPEL_ORACLE_ERREUR_SQL_RECUPERATION, ex);
+        }
 
         try (Statement stmt = connection.createStatement()) {
             LOGGER.info("Récupération des mots-clés");
@@ -259,14 +289,18 @@ public class ConnecteurJsonCarteSQL {
                     }
 
                     /* ajout des mots clés types formations, plusieurs hits possibles */
-                    Collection<Item> tfs = DonneesCommunes.getInstance().getTypesFormation(gTaCod).values();
+                    Set<String> tags =
+                            correspondancesTypesFormation
+                                    .getOrDefault(gTaCod, Set.of())
+                                    .stream().map(tfCod -> motsClestypeFormation.get(tfCod))
+                                    .filter(Objects::nonNull)
+                                    .collect(Collectors.toSet())
+                            ;
                     StringBuilder mtfs = new StringBuilder();
-                    for (Item it : tfs) {
-                        if (it.getRec() != null) {
-                            mtfs.append(it.getRec()).append(" ");
-                        }
+                    for (String tag : tags) {
+                            mtfs.append(tag).append(" ");
                     }
-                    if (mtfs.length() > 0) {
+                    if (!mtfs.isEmpty()) {
                         f.donnees.put(G_TF_MOT_CLE_MDR, mtfs.toString());
                         if (fil != null) {
                             fil.addMotCles(cleanAndSplit(mtfs.toString(), ignoredWords, config.noSplitMode));

@@ -21,29 +21,17 @@ l'Innovation,
  */
 package fr.gouv.monprojetsup.data.psup;
 
-import com.google.gson.GsonBuilder;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
-import fr.gouv.monprojetsup.data.carte.algos.explicabilite.AlgoCarteDetails;
-import fr.gouv.monprojetsup.data.carte.algos.explicabilite.reco.AlgoFiliereSimilairesDetailsCalculFormationScore;
-import fr.gouv.monprojetsup.data.carte.algos.explicabilite.reco.AlgoFilieresSimilairesDetailsCalcul;
-import fr.gouv.monprojetsup.data.carte.algos.explicabilite.reco.AlgoFilieresSimilairesDetailsCalculFiliere;
-import fr.gouv.monprojetsup.data.carte.algos.filsim.AlgoFilieresSimilairesSortie;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.*;
-import static fr.gouv.monprojetsup.data.psup.ExportDonneesCarte.zipper;
 
 public class ConnecteurDonneesAnnuellesCarteSQL {
 
-    private static final String TAUX_ACCES_DETAILS_FILENAME = "taux_acces_details.json";
     private static final String RECO_DETAILS_FILENAME = "filsim_details.json";
     private final Connection connection;
 
@@ -78,9 +66,7 @@ public class ConnecteurDonneesAnnuellesCarteSQL {
 
 
     public static final String TABLE_FILIERES_SIMILAIRE = "G_FIL_SIM";
-    static final String TABLE_MOTS_CLES = "G_FIL_KEYS";
     public static final String TABLE_STATS_TAUX_ACCES = "G_REC_TAU_ACC";
-    private static final int MIN_NB_CANDIDATS_POUR_TAUX_ACCES = 5;
 
     /** deprecated
     public void exporterStatistiquesBacheliers() throws SQLException {
@@ -180,60 +166,6 @@ public class ConnecteurDonneesAnnuellesCarteSQL {
 
     }
 
-    public void exporterTauxAcces() throws SQLException, IOException, AccesDonneesException {
-
-        LOGGER.info("Export des taux d'accès de l'an dernier");
-
-        AlgoCarteDetails details = new AlgoCarteDetails();
-        ConnecteurDetailsJsonCarteSQL conn = new ConnecteurDetailsJsonCarteSQL(connection);
-        conn.recupererDetailsTauxAcces(details, MIN_NB_CANDIDATS_POUR_TAUX_ACCES);
-
-        LOGGER.info("Export des résultats sous forme de fichier Json " + TAUX_ACCES_DETAILS_FILENAME);
-        try(FileWriter fw = new FileWriter(TAUX_ACCES_DETAILS_FILENAME)) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(details, fw);
-        }
-        zipper(TAUX_ACCES_DETAILS_FILENAME);
-
-        LOGGER.info("Export en BDD");
-        LOGGER.info("Effacement de la table " + TABLE_STATS_TAUX_ACCES);
-        try (Statement ps = connection.createStatement()) {
-            ps.execute(TRUNCATE_TABLE + TABLE_STATS_TAUX_ACCES);
-        }
-
-
-        LOGGER.info("Insertion dans la table " + TABLE_STATS_TAUX_ACCES);
-        Map<Integer, Map<Integer,Integer>> tauxAcces = details.parBac.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().getTauxAcces()
-                ));
-        for(int tbac = 0; tbac <= 3; tbac++) {
-            tauxAcces.computeIfAbsent(tbac, z -> new HashMap<>());
-        }
-
-
-        String sql = INSERT_INTO + TABLE_STATS_TAUX_ACCES
-                + " (g_ta_cod,g_rt_tau_acc, g_rt_tau_acc_gen, g_rt_tau_acc_tec, g_rt_tau_acc_pro) VALUES (?,?,?,?,?) ";
-
-        LOGGER.info(sql);
-        Set<Integer> allGtas = new HashSet<>();
-        for(int tBac = 0; tBac <= 3; tBac ++) {
-            allGtas.addAll(tauxAcces.computeIfAbsent(tBac, z -> new HashMap<>()).keySet());
-        }
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            for (int gTaCod : allGtas) {
-                ps.setInt(1, gTaCod);
-                ps.setInt(2, tauxAcces.get(0).getOrDefault(gTaCod, -1));
-                ps.setInt(3, tauxAcces.get(1).getOrDefault(gTaCod, -1));
-                ps.setInt(4, tauxAcces.get(2).getOrDefault(gTaCod, -1));
-                ps.setInt(5, tauxAcces.get(3).getOrDefault(gTaCod, -1));
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-
-    }
-
     public static String getSQLDernierAppeleEnPP() {
         return
                 "SELECT adm.g_ta_cod g_ta_cod," +
@@ -287,99 +219,6 @@ public class ConnecteurDonneesAnnuellesCarteSQL {
 
     }
 
-    public void exporterFilieresSimilaires(AlgoFilieresSimilairesSortie sortie) throws SQLException, IOException {
-
-        LOGGER.info("Export des résultats sous forme de fichier Json " + RECO_DETAILS_FILENAME);
-        try (FileWriter fw = new FileWriter(RECO_DETAILS_FILENAME)) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(sortie.recommandations, fw);
-        }
-        zipper(RECO_DETAILS_FILENAME);
-
-
-        /*
-            g_fil_sim  :  table des filères similaires
-             */
-        LOGGER.info("Vidage de la table " + TABLE_FILIERES_SIMILAIRE + " avant export");
-        try (Statement ps = connection.createStatement()) {
-            ps.execute(TRUNCATE_TABLE + TABLE_FILIERES_SIMILAIRE);
-        }
-
-        for (int typeBac = 0; typeBac <= 3; typeBac++) {
-            AlgoFilieresSimilairesDetailsCalcul recos = sortie.recommandations.getOrDefault(typeBac, new AlgoFilieresSimilairesDetailsCalcul());
-
-            LOGGER.log(Level.INFO, "Type Bac " + typeBac + ",export de {0} recommandations dans la table " + TABLE_FILIERES_SIMILAIRE,
-                    recos.resultats.size());
-            try (PreparedStatement ps = connection.prepareStatement(
-                    INSERT_INTO + TABLE_FILIERES_SIMILAIRE
-                            + " (G_FL_COD_ORI,G_FL_COD_SIM,G_FS_SCO,G_FS_PRO_SEM, G_FS_COR, I_TC_COD)"
-                            + " VALUES (?,?,?,?,?,?)")) {
-
-                int maxPRoSem = Integer.MIN_VALUE;
-                int maxScore = Integer.MIN_VALUE;
-                int maxCorr = Integer.MIN_VALUE;
-                for (AlgoFilieresSimilairesDetailsCalculFiliere entry : recos.resultats.values()) {
-                    Set<Integer> cc = entry.recoOnisepCorrelation.stream().map(r -> r.filIdx).collect(Collectors.toSet());
-                    if (cc.size() == entry.recoOnisepCorrelation.size()) {
-                        entry.recoOnisepCorrelation.sort(Comparator.comparingInt(o -> -o.score));
-                        for (AlgoFiliereSimilairesDetailsCalculFormationScore r : entry.recoOnisepCorrelation) {
-                            int proSem = entry.getProximiteSemantique(r.filIdx);
-                            int score = r.score;
-                            int corr = entry.getCorrelation(r.filIdx);
-                            maxPRoSem = Math.max(maxPRoSem, proSem);
-                            maxScore = Math.max(maxScore, score);
-                            maxCorr = Math.max(maxCorr, corr);
-                            ps.setInt(1, entry.codeFiliere);
-                            ps.setInt(2, r.filIdx);
-                            ps.setInt(3, score);
-                            ps.setInt(4, proSem);
-                            ps.setInt(5, corr);
-                            ps.setInt(6, typeBac);
-                            ps.addBatch();
-                        }
-                    } else {
-                        throw new RuntimeException("Consistency problem");
-                    }
-                }
-                LOGGER.info("MaxProSem " + maxPRoSem);
-                LOGGER.info("maxScore " + maxScore);
-                LOGGER.info("maxcorr " + maxCorr);
-                ps.executeBatch();
-            }
-        }
-
-
-    }
-
-    public void viderTableMotsCles() throws SQLException {
-        /*
-            g_fil_keys: table liant une filière à une liste de mots clés rentrée sous la forme d'une chaine de caractères séparés par des espaces.
-             */
-        LOGGER.info("Vidage de la table " + TABLE_MOTS_CLES );
-        try (Statement ps = connection.createStatement()) {
-            ps.execute(TRUNCATE_TABLE + TABLE_MOTS_CLES);
-        }
-    }
-
-
-    /* export des données */
-    public void exporterDonneesAnnuellesCarte(AlgoFilieresSimilairesSortie sortie) throws AccesDonneesException, IOException {
-        exporterDonneesAnnuellesCarte(sortie, false);
-    }
-
-    public void exporterDonneesAnnuellesCarte(AlgoFilieresSimilairesSortie sortie, boolean skipTauxAcces) throws IOException, AccesDonneesException {
-        try {
-
-            if(!skipTauxAcces) exporterTauxAcces();
-
-            exporterFilieresSimilaires(sortie);
-
-                viderTableMotsCles();//deprecated now extracted dynamically from JSON
-
-        } catch (SQLException ex) {
-            throw new AccesDonneesException(AccesDonneesExceptionMessage.MESSAGE, ex,  "Echec de l'exportation des donnees de la carte", ex);
-        }
-
-    }
 
     public void recuperationTypesBacs(AlgoCarteEntree entree) throws SQLException {
 

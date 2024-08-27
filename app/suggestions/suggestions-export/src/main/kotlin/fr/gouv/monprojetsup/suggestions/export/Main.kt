@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.export
 import fr.gouv.monprojetsup.suggestions.export.experts.DocsGenerator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsEvaluator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator
-import fr.gouv.monprojetsup.suggestions.export.ml.GenerateMlDocs
 import fr.gouv.monprojetsup.suggestions.export.reference.AnalyzeSuggestionsData
 import fr.gouv.monprojetsup.suggestions.export.reference.ExportSuggestionsData
 import org.springframework.boot.CommandLineRunner
@@ -54,22 +53,6 @@ class GenerateExpertsDocsRunner(val gen : DocsGenerator) : CommandLineRunner
 {
     override fun run(vararg args: String?) {
         gen.generate()
-    }
-
-}
-
-
-@Profile("ml")
-class GenerateMlDocsRunner (
-    val generateMlDocs: GenerateMlDocs
-) : CommandLineRunner {
-
-    override fun run(vararg args: String?) {
-
-        generateMlDocs.outputMlData()
-
-        generateMlDocs.outputDoDiff()
-
     }
 
 }

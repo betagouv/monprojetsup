@@ -20,8 +20,6 @@ l'Innovation,
  */
 package fr.gouv.monprojetsup.data.carte.algos;
 
-import fr.gouv.monprojetsup.data.carte.algos.filsim.CandidatsCommuns;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -58,9 +56,6 @@ public class Filiere implements Serializable {
     public final Set<String> motsClesParcoursup = new HashSet<>();
 
     public final Set<String> motsClesOnisepv2 = new HashSet<>();
-
-    /* infos sur les candidats communs */
-    public final CandidatsCommuns candidatsCommuns = new CandidatsCommuns();
 
     public Filiere(String libelle,
                    String sigle,
