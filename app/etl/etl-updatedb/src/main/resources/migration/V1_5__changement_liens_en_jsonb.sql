@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_5__changement_liens_en_jsonb.sql

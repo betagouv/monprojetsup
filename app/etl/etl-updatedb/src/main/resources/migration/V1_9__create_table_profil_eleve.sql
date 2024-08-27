@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_9__create_table_profil_eleve.sql

@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_7__drop_join_metier_formation.sql

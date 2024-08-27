@@ -1,1 +1,0 @@
-../../../../../../../../../app/back/src/main/resources/db/migration/V1_2__modification_table_formation.sql
