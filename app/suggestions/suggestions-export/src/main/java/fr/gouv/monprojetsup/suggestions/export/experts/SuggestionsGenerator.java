@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.DataSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import lombok.val;
@@ -34,6 +33,18 @@ public class SuggestionsGenerator {
 
     private static final boolean ONLY_FORMATIONS = true;
 
+    public static final String PROFILS_EXPERTS_MPS_PATH = "mps/profilsExperts.json";
+
+    /***************************************************************************
+     ******************* PATHES TO DATA FILES ***********************************
+     ****************************************************************************/
+
+    public static String getSourceDataFilePath(String filename) {
+        String dir = fr.gouv.monprojetsup.data.config.DataServerConfig.getDataRootDirectory();
+        String pathWithSpace = dir + "data/" + filename;
+        val path = java.nio.file.Path.of(pathWithSpace);
+        return path.toString();
+    }
     public void generate() throws Exception {
 
 
@@ -42,7 +53,7 @@ public class SuggestionsGenerator {
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
-                DataSources.getSourceDataFilePath(DataSources.PROFILS_EXPERTS_MPS_PATH),
+                getSourceDataFilePath(PROFILS_EXPERTS_MPS_PATH),
                 new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
 
         );

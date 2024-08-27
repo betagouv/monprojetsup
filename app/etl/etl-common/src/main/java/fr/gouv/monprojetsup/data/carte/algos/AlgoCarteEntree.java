@@ -36,9 +36,6 @@ public class AlgoCarteEntree implements Serializable {
     /* les formations, indexées par gTaCod */
     public final Map<Integer, FormationCarteAlgoTags> formations = new HashMap<>();
 
-    /* le dictionnaire des mots admis depuis les descriptifs web */
-    public final List<String> motsDico = new ArrayList<>();
-
     /* les taux d'accès entre 0 et 100 indexés par 1) type de bac 2) gTaCod */
     public final transient Map<Integer, Map<Integer,Integer>> tauxAcces = new HashMap<>();
 

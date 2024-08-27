@@ -154,9 +154,6 @@ public record PsupData(
         /* indexed by name, mapped to a list of object represented as a String -> String */
         @NotNull Map<String, @NotNull List<Map<String, @NotNull String>>> diversPsup,
 
-        /* correlations between wishes, by bac type and by filieres */
-        @NotNull CorrelationsParBac correlations,
-
         @NotNull Set<Integer> las,
 
         @NotNull List<@NotNull Set<@NotNull Integer>> voeuxParCandidat,
@@ -175,7 +172,6 @@ public record PsupData(
                 new DureesEtudes(),
                 new Formations(),
                 new HashMap<>(),
-                new CorrelationsParBac(),
                 new HashSet<>(),
                 new ArrayList<>(),
                 new DescriptifsFormations()

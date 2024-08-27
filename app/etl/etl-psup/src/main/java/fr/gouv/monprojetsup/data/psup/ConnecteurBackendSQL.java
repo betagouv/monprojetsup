@@ -24,11 +24,9 @@ package fr.gouv.monprojetsup.data.psup;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.carte.DonneesCommunes;
 import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
-import fr.gouv.monprojetsup.data.domain.model.psup.Correlations;
 import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
@@ -44,10 +42,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.carte.algos.filsim.AlgoFilieresSimilaires.calculerCorrelations;
 import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.WHERE;
 
 public class ConnecteurBackendSQL {
@@ -242,8 +238,6 @@ public class ConnecteurBackendSQL {
 
         recupererDiversPsup(data);
 
-        recupererEntreeCarte(data);
-
         recupererVoeuxParCandidat(data);
 
         return data;
@@ -327,33 +321,6 @@ public class ConnecteurBackendSQL {
                     data.las().add(gTaCod);
                 }
             }
-        }
-
-    }
-
-    private void recupererEntreeCarte(PsupData data) throws AccesDonneesException {
-        ConnecteurDonneesAnnuellesCarteSQL conn
-                = new ConnecteurDonneesAnnuellesCarteSQL(this.conn);
-
-        AlgoCarteEntree entree =  conn.recupererDonneesAnnuellesCarte();
-
-        for(int typeBac = 0; typeBac <=3; typeBac++) {
-            LOGGER.info("***********************************************************\n" +
-                    "**********************************************************\n" +
-                    "**** Calcul des corrélations entre voeux, type bac " + typeBac + " ********\n" +
-                    "**********************************************************\n" +
-                    "************************************************************");
-            Map<Pair<Integer, Integer>, Double> corrs =
-                    calculerCorrelations(entree, typeBac)
-                            .entrySet()
-                            .stream()
-                            .collect(Collectors.toMap(
-                                    e -> Pair.of(e.getKey().getLeft(), e.getKey().getRight()),
-                                    Map.Entry::getValue
-                            ));
-
-            LOGGER.info("Injection dans les données");
-            data.correlations().parBac().put(typeBac, new Correlations(corrs));
         }
 
     }
@@ -606,7 +573,6 @@ public class ConnecteurBackendSQL {
         config.noSplitMode = true;
         config.noOnisep = true;
         config.specificTreatmentforLAS = true;
-        DonneesCommunes.getInstance().chargerCorrespondancesFiliere(this.conn);
         AlgoCarteEntree donneesCarte = conn.recupererDonneesJSONCarte(config);
         data.injecterNomsFilieresManquantsEtTauxAcces(
                 donneesCarte,
