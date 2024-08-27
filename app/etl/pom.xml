@@ -17,7 +17,6 @@
     <modules>
 		<module>etl-common</module>
 		<module>etl-psup</module>
-        <module>etl-scrapping</module>
 		<module>etl-updatedb</module>
     </modules>
     <properties>
