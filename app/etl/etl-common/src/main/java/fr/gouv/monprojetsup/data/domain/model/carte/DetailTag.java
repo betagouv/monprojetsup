@@ -5,7 +5,7 @@ public class DetailTag {
 
     public final int poids;
 
-    DetailTag(int source, int poids) {
+    public DetailTag(int source, int poids) {
         this.source = source;
         this.poids = poids;
     }
