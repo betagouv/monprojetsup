@@ -5,8 +5,8 @@ import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
-import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -134,8 +134,8 @@ record DureesEtudes(
 
 record CorrelationPaireFiliere(int fl1, int fl2, double corr) {
 
-    public CorrelationPaireFiliere(Paire<Integer, Integer> integerIntegerPaire, Double aDouble) {
-        this(integerIntegerPaire.cg1, integerIntegerPaire.cg2, aDouble);
+    public CorrelationPaireFiliere(Pair<Integer, Integer> integerIntegerPaire, Double aDouble) {
+        this(integerIntegerPaire.getLeft(), integerIntegerPaire.getRight(), aDouble);
     }
 }
 

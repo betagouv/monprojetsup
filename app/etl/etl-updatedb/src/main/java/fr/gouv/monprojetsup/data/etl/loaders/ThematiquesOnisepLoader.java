@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.domain.model.onisep.ThematiquesOnisep;
 import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.data.etl.csv.CsvTools;
 
 import java.io.IOException;
 import java.util.List;

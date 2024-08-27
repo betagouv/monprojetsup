@@ -9,7 +9,7 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.data.etl.csv.CsvTools;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 

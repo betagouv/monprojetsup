@@ -23,13 +23,22 @@ class Config {
 
 @SpringBootApplication
 @EnableCaching
-@ComponentScan(basePackages = ["fr.gouv.monprojetsup.suggestions"])
+@ComponentScan(basePackages = [
+    "fr.gouv.monprojetsup.suggestions",
+    "fr.gouv.monprojetsup.data.formation.infrastructure",
+    "fr.gouv.monprojetsup.data.metier.infrastructure",
+    "fr.gouv.monprojetsup.data.referentiel.infrastructure",
+    "fr.gouv.monprojetsup.data.suggestions.infrastructure"
+])
 @EntityScan(basePackages = [
     "fr.gouv.monprojetsup.data"]
 )
 @EnableJpaRepositories(basePackages = [
-    "fr.gouv.monprojetsup.data.app.infrastructure",
-    "fr.gouv.monprojetsup.data.suggestions.infrastructure"]
+    "fr.gouv.monprojetsup.data.formation.infrastructure",
+    "fr.gouv.monprojetsup.data.metier.infrastructure",
+    "fr.gouv.monprojetsup.data.referentiel.infrastructure",
+    "fr.gouv.monprojetsup.data.suggestions.infrastructure"
+]
 )
 class ApplicationSuggestions{
 }
