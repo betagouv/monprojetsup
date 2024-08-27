@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
@@ -9,9 +11,6 @@ import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
-import fr.gouv.monprojetsup.data.infrastructure.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.infrastructure.model.stats.PsupStatistiques;
-import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.*;
+import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.Affinite;
+import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.MAX_LENGTH_FOR_SUGGESTIONS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
 
@@ -138,14 +139,14 @@ public class AffinityEvaluator {
         //en verbose mode, on récupère également les interests
         TreeMap<String, Double> nonZeroScores = cfg.isVerboseMode() ? new TreeMap<>() : null;
 
-        List<Paire<Double, Explanation>> unsortedExpl = new ArrayList<>();
+        List<Pair<Double, Explanation>> unsortedExpl = new ArrayList<>();
 
         //the computation
         Affinite totalScoreforFiliere = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores);
 
-        unsortedExpl.sort(Comparator.comparing(e -> -e.cg1));
+        unsortedExpl.sort(Comparator.comparing(e -> -e.getLeft()));
 
-        List<Explanation> sortedExpl = unsortedExpl.stream().map(e -> e.cg2).toList();
+        List<Explanation> sortedExpl = unsortedExpl.stream().map(Pair::getRight).toList();
         if (cfg.isVerboseMode() && nonZeroScores != null) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl);
             expl2.add(Explanation.getDebugExplanation("Score Total: " + totalScoreforFiliere + BR));
@@ -197,7 +198,7 @@ public class AffinityEvaluator {
      */
     private Affinite getScoreAndExplanation(
             String fl,
-            List<Paire<Double, Explanation>> expl,
+            List<Pair<Double, Explanation>> expl,
             Map<String, Double> matches
             ) {
 
@@ -228,7 +229,7 @@ public class AffinityEvaluator {
                 .anyMatch(e -> cfg.personalCriteria().contains(e.getKey()) && e.getValue() > Config.NO_MATCH_SCORE);
         if (!process) return Affinite.getNoMatch();
 
-        if(Helpers.isFiliere(fl)) {
+        if(isFiliere(fl)) {
             scores.putAll(Map.ofEntries(
                     entry(Config.BONUS_GEO, getBonusCities(fl, expl, cfg.weights().getOrDefault(Config.BONUS_GEO, 0.0))),
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl, cfg.weights().getOrDefault(Config.BONUS_DURATION, 0.0))),
@@ -292,7 +293,7 @@ public class AffinityEvaluator {
     }
 
 
-    private double getBonusTypeBac(String grp, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusTypeBac(String grp, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
         Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
         Integer nbAdmisBac = data.getNbAdmis(grp, pf.bac());
@@ -306,14 +307,14 @@ public class AffinityEvaluator {
             bonus = (percentage - Config.SEUIL_TYPE_BAC_NO_MATCH) / (Config.SEUIL_TYPE_BAC_FULL_MATCH - Config.SEUIL_TYPE_BAC_NO_MATCH);
         if (expl != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
             expl.add(
-                    new Paire<>(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), pf.bac()))
+                    Pair.of(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), pf.bac()))
             );
         }
         return bonus;
     }
 
 
-    private double getBonusMoyGen2(String fl, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusMoyGen2(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
         val stats = data.getStatsBac(fl, pf.bac());
         String moyBacEstimee = pf.moygen();
@@ -328,7 +329,7 @@ public class AffinityEvaluator {
      * @return the bonus
      */
     private double getBonusNotes(
-            @Nullable List<Paire<Double, Explanation>> expl,
+            @Nullable List<Pair<Double, Explanation>> expl,
             double weight,
             @Nullable Pair<String, Middle50> stats,
             @Nullable String moy) {
@@ -342,21 +343,21 @@ public class AffinityEvaluator {
         //on va chercher les stats pour ce type de bac et cette filiere
         if (stats == null || stats.getRight() == null) {
             if (expl != null && cfg.isVerboseMode())
-                expl.add(new Paire<>(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats pour cette filiere")));
+                expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats pour cette filiere")));
             return 1.0 - MULTIPLIER_FOR_UNFITTED_NOTES;
         }
         String bacUtilise = stats.getLeft();
         Middle50 middle50 = stats.getRight();
         if (middle50 == null) {
             if (expl != null && cfg.isVerboseMode())
-                expl.add(new Paire<>(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de middle50 pour cette filiere")));
+                expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de middle50 pour cette filiere")));
             return 1.0 - MULTIPLIER_FOR_UNFITTED_NOTES;
         }
         double bonus = computeBonusNotes(stats, autoEval);
         //affiché systématiquement
         if (expl != null) {
             expl.add(
-                    new Paire<>(weight == SPECIAL_WEIGHT_MULTIPLIER ? Double.MAX_VALUE : bonus * weight,
+                    Pair.of(weight == SPECIAL_WEIGHT_MULTIPLIER ? Double.MAX_VALUE : bonus * weight,
                             Explanation.getNotesExplanation(autoEval, middle50, bacUtilise)
                     )
             );
@@ -412,7 +413,7 @@ public class AffinityEvaluator {
         return Math.max(0.0, Math.min(1.0, result));
     }
 
-    private double getBonusCities(String fl, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusCities(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         //pour chaque filiere, on scanne toutes les details et on calcule la distance min ç chaque ville
         double bonus = Config.NO_MATCH_SCORE;
 
@@ -432,7 +433,7 @@ public class AffinityEvaluator {
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
                 if (expl != null && distanceKm < 50) {
-                    expl.add(new Paire<>(weight / distanceKm,
+                    expl.add(Pair.of(weight / distanceKm,
                                     Explanation.getGeoExplanation(result)
                             )
                     );
@@ -443,7 +444,7 @@ public class AffinityEvaluator {
     }
 
 
-    private double getBonusDuree(String fl, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusDuree(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
         int duree = data.getDuree(fl);
         final double result;
@@ -451,26 +452,26 @@ public class AffinityEvaluator {
             case "court" -> {
                 result = duree <= 3 ? (5 - duree) : Config.NO_MATCH_SCORE;
                 if (result > 2 && expl != null)
-                    expl.add(new Paire<>(result * weight, Explanation.getDurationExplanation(pf.duree())));
+                    expl.add(Pair.of(result * weight, Explanation.getDurationExplanation(pf.duree())));
             }
             case "long" -> {
                 result = duree >= 4 ? duree : Config.NO_MATCH_SCORE;
                 if (result > 3 && expl != null)
-                    expl.add(new Paire<>(result * weight, Explanation.getDurationExplanation(pf.duree())));
+                    expl.add(Pair.of(result * weight, Explanation.getDurationExplanation(pf.duree())));
             }
             default -> result = Config.NO_MATCH_SCORE;
         }
         return result;
     }
 
-    private double getBonusSimilaires(String fl, int bacIndex, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusSimilaires(String fl, int bacIndex, List<Pair<Double, Explanation>> expl, double weight) {
         return getBonusSimilaires(fl, bacIndex, expl, flApproved, candidatsSimilaires, weight);
     }
 
     private double getBonusSimilaires(
             String fl,
             int bacIndex,
-            List<Paire<Double, Explanation>> expl,
+            List<Pair<Double, Explanation>> expl,
             List<String> ok,
             Set<String> okCodes,
             double weight
@@ -488,7 +489,7 @@ public class AffinityEvaluator {
                 bonus += simi;
                 if (expl != null && !fl.equals(approved)) {
                     int percentage = Math.max(1, (int) simi * 100);
-                    expl.add(new Paire<>(simi * weight, Explanation.getSimilarityExplanation(approved, percentage)));
+                    expl.add(Pair.of(simi * weight, Explanation.getSimilarityExplanation(approved, percentage)));
                 }
             }
         }
@@ -501,7 +502,7 @@ public class AffinityEvaluator {
         return Math.min(maxValue, score);
     }
 
-    private double getBonusTags(String node, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusTags(String node, List<Pair<Double, Explanation>> expl, double weight) {
 
         List<Path> pathes =
                 pathesFromTagsIndexedByTarget.getOrDefault(node, Collections.emptyList())
@@ -530,9 +531,9 @@ public class AffinityEvaluator {
              */
             if(cfg.isVerboseMode()) {
                 String msg = getTagSubScoreExplanation(score, subscores);
-                expl.add(new Paire<>(score * weight, Explanation.getDebugExplanation(msg)));
+                expl.add(Pair.of(score * weight, Explanation.getDebugExplanation(msg)));
             }
-            expl.add(new Paire<>(score * weight, Explanation.getTagExplanationShort(pathes)));
+            expl.add(Pair.of(score * weight, Explanation.getTagExplanationShort(pathes)));
         }
         return score;
     }
@@ -608,7 +609,7 @@ public class AffinityEvaluator {
                 .toList();
     }
 
-    private double getBonusApprentissage(String grp, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusApprentissage(String grp, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.apprentissage() == null) return 0.0;
         boolean isApp = algo.existsInApprentissage(grp);
         double resultat = switch (pf.apprentissage()) {
@@ -618,12 +619,12 @@ public class AffinityEvaluator {
             default -> 0.0;
         };
         if (expl != null && resultat > 0.5 && isApp) {
-            expl.add(new Paire<>(resultat * weight, Explanation.getAppExplanation(pf.apprentissage())));
+            expl.add(Pair.of(resultat * weight, Explanation.getAppExplanation(pf.apprentissage())));
         }
         return resultat;
     }
 
-    private double getBonusSpecialites(String fl, List<Paire<Double, Explanation>> expl, double weight) {
+    private double getBonusSpecialites(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !algo.hasSpecialitesInTerminale(pf.bac()))
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
@@ -639,13 +640,13 @@ public class AffinityEvaluator {
         });
         if (stats.isEmpty()) {
             if (expl != null && cfg.isVerboseMode())
-                expl.add(new Paire<>(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats spécialités pour cette filiere")));
+                expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats spécialités pour cette filiere")));
             return Config.NO_MATCH_SCORE;
         }
         double score = stats.values().stream().mapToDouble(x -> x).sum();
         stats.values().removeIf(x -> x < 0.2);
         if (expl != null && !stats.isEmpty()) {
-            expl.add(new Paire<>(score * weight, Explanation.getSpecialitesExplanation(stats)));
+            expl.add(Pair.of(score * weight, Explanation.getSpecialitesExplanation(stats)));
         }
         return score;
     }

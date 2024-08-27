@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.data.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.parcoursup.carte.exceptions.AccesDonneesException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -137,7 +136,7 @@ public class Serialisation {
         out.close();
     }
 
-    public static Map<String,List<Map<String, String>>> exportSelectToObject(Connection conn, Map<String, String> sqls) throws AccesDonneesException, IOException, SQLException {
+    public static Map<String,List<Map<String, String>>> exportSelectToObject(Connection conn, Map<String, String> sqls) throws SQLException {
         Map<String,List<Map<String, String>>> m = new HashMap<>();
         for (Map.Entry<String, String> entry : sqls.entrySet()) {
             String prefix = entry.getKey();

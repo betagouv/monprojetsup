@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 import fr.gouv.monprojetsup.data.domain.model.LatLng;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
-import fr.parcoursup.carte.algos.tools.Paire;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +25,9 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
             String cityName,
             List<LatLng> cityCoords,
             List<Pair<String, LatLng>> coords,
-            ConcurrentBoundedMapQueue<Paire<String, String>,
+            ConcurrentBoundedMapQueue<Pair<String, String>,
                     List<ExplanationGeo>> distanceCaches) {
-        Paire<String, String> p = new Paire<>(flKey, cityName);
-
+        Pair<String,String> p = Pair.of(flKey, cityName);
         val l = distanceCaches.get(p);
         if( l != null) return l;
 
@@ -54,7 +52,7 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
         return e;
     }
 
-    public static @Nullable List<Pair<Integer,String>> getDistanceKm(List<@Nullable LatLng> cities, @NotNull List<Pair<String, @Nullable LatLng>> fors) {
+    public static @Nullable List<Pair<Integer,String>> getDistanceKm(List<LatLng> cities, @NotNull List<Pair<String, LatLng>> fors) {
         //noinspection DataFlowIssue
         return fors.stream()
                 .filter(f -> f != null && f.getRight() != null)
@@ -79,7 +77,7 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
             List<LatLng> cityCoords,
             int maxResultsPerNode,
             List<Pair<String,LatLng>> coords,
-            ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>> distanceCaches
+            ConcurrentBoundedMapQueue<Pair<String, String>, List<ExplanationGeo>> distanceCaches
     ) {
         return
                 flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, cityCoords, coords, distanceCaches)

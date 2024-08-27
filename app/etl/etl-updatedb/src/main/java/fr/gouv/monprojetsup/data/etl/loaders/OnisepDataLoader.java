@@ -17,7 +17,7 @@ import fr.gouv.monprojetsup.data.domain.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
+import fr.gouv.monprojetsup.data.etl.csv.CsvTools;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.FORMATION_PREFIX;
 import static fr.gouv.monprojetsup.data.domain.Constants.cleanup;
-import static fr.gouv.monprojetsup.data.tools.csv.CsvTools.toCsv;
+import static fr.gouv.monprojetsup.data.etl.csv.CsvTools.toCsv;
 
 public class OnisepDataLoader {
     private static final Logger LOGGER = Logger.getLogger(OnisepData.class.getSimpleName());

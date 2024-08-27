@@ -24,8 +24,11 @@ fun main(args: Array<String>) {
 	"fr.gouv.monprojetsup.data"]
 )
 @EnableJpaRepositories(basePackages = [
-	"fr.gouv.monprojetsup.data.app.infrastructure",
-	"fr.gouv.monprojetsup.data.suggestions.infrastructure"]
+	"fr.gouv.monprojetsup.data.formation.infrastructure",
+	"fr.gouv.monprojetsup.data.metier.infrastructure",
+	"fr.gouv.monprojetsup.data.referentiel.infrastructure",
+	"fr.gouv.monprojetsup.data.suggestions.infrastructure"
+]
 )
 class UpdateDbRunner  {
 

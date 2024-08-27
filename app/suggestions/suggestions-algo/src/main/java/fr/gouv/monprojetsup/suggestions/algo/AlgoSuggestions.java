@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.Formation;
 import fr.gouv.monprojetsup.data.domain.port.EdgesPort;
 import fr.gouv.monprojetsup.data.domain.port.FormationsPort;
+import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.data.tools.Stats.p50;
-import static fr.gouv.monprojetsup.data.tools.Stats.p75;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
+import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
 @Component
 public class AlgoSuggestions {

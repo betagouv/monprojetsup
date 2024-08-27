@@ -1,8 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
+import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -161,8 +162,8 @@ public class SuggestionsEvaluator {
 
     private static String getOKPrefix(ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
-                .map(e -> e.fl())
-                .filter(fl -> Helpers.isFiliere(fl))
+                .map(SuggestionDTO::fl)
+                .filter(Helpers::isFiliere)
                 .collect(Collectors.toMap(fl -> fl, fl -> 1));
         int rank = getRank(flCodSugg, favoris);
         if(rank > 0) return "fav      \t";

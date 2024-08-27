@@ -33,12 +33,6 @@
 
 
 	<dependencies>
-
-		<dependency>
-			<groupId>fr.gouv.education</groupId>
-			<artifactId>parcoursup-carte</artifactId>
-			<version>2023-3-orientation</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

@@ -29,7 +29,7 @@ import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
 import fr.gouv.monprojetsup.data.etl.loaders.RomeDataLoader
 import fr.gouv.monprojetsup.data.tools.Serialisation
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools
+import fr.gouv.monprojetsup.data.etl.csv.CsvTools
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Component
 import java.util.*

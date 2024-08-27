@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.psup;
 
-import fr.parcoursup.carte.algos.tools.Paire;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public record Correlations(List<CorrelationPaireFiliere> correlations) {
         this (new ArrayList<>());
     }
 
-    public Correlations(Map<Paire<Integer, Integer>, Double> corrs) {
+    public Correlations(Map<Pair<Integer, Integer>, Double> corrs) {
         this (new ArrayList<>());
         corrs.forEach((integerIntegerPaire, aDouble) -> correlations.add(new CorrelationPaireFiliere(integerIntegerPaire, aDouble)));
 

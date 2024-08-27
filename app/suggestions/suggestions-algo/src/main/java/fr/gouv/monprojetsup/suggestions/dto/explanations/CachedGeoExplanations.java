@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
-import fr.parcoursup.carte.algos.tools.Paire;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class CachedGeoExplanations {
     /**
      * caches return values of getDistanceKm
      */
-    public static final ConcurrentBoundedMapQueue<Paire<String, String>, List<ExplanationGeo>>
+    public static final ConcurrentBoundedMapQueue<Pair<String, String>, List<ExplanationGeo>>
             distanceCaches = new ConcurrentBoundedMapQueue<>(DISTANCE_CACHE_SIZE);
 
 }
