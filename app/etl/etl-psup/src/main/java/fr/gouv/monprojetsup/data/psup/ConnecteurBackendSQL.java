@@ -65,34 +65,6 @@ public class ConnecteurBackendSQL {
     }
 
 
-    public PsupStatistiques recupererStatistiques() throws SQLException, AccesDonneesException {
-
-        PsupStatistiques data = new PsupStatistiques();
-
-        Set<Integer> filActives = recupererFilieresActives(conn);
-
-        Map<Integer, String> bacs = new HashMap<>();
-        LOGGER.info("Récupération des bacs de chaque candidat");
-        try (Statement stmt = conn.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod,i_cl_cod from bacs_candidats";
-            LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gCnCod = result.getInt(1);
-                    String bac = result.getString(2);
-                    bacs.put(gCnCod, bac);
-                }
-            }
-        }
-
-        recupererProfilsScolaires(data, bacs);
-
-        recupererStatsAdmisParFiliereEtSpecialites(data, bacs, filActives);
-
-        return data;
-    }
-
     private void recupererNomsfilieres(PsupData data, Set<Integer> filActives) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             LOGGER.info("Récupération des noms des filieres sur la carte");
@@ -243,6 +215,27 @@ public class ConnecteurBackendSQL {
         recupererDiversPsup(data);
 
         recupererVoeuxParCandidat(data);
+
+        Map<Integer, String> bacs = new HashMap<>();
+        LOGGER.info("Récupération des bacs de chaque candidat");
+        try (Statement stmt = conn.createStatement()) {
+            stmt.setFetchSize(1_000_000);
+            String sql = "select g_cn_cod,i_cl_cod from bacs_candidats";
+            LOGGER.info(sql);
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                while (result.next()) {
+                    int gCnCod = result.getInt(1);
+                    String bac = result.getString(2);
+                    bacs.put(gCnCod, bac);
+                }
+            }
+        }
+
+        recupererProfilsScolaires(data.stats(), bacs);
+
+        recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
+
+        data.cleanup();
 
         return data;
     }

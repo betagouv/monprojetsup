@@ -12,8 +12,7 @@ public class DataSources {
     @Value("${dataRootDirectory}")
     private String dataRootDirectory = "./";
 
-    public static final String STATS_BACK_SRC_FILENAME = "parcoursup/statistiques.zip";
-    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/backPsupData.json.zip";
+    public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
     public static final String BACS_FILENAME = "parcoursup/bacs.json";
     public static final String ONISEP_FICHES_METIERS = "onisep_fiches_metiers/Onisep_Ideo_Fiches_metiers_12092023.json";

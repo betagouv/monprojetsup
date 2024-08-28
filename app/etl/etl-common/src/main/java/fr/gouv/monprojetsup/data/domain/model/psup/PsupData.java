@@ -88,11 +88,11 @@ public record PsupData(
         liensOnisep.put(FILIERE_PREFIX + gFlCod, lien);
     }
 
-    public static Map<String, String> getGtaToLasMapping(PsupData backPsupData) {
-        Map<String, List<Formation>> grpToFormations = backPsupData.getFormationToVoeux();
+    public  Map<String, String> getGtaToLasMapping() {
+        Map<String, List<Formation>> grpToFormations = getFormationToVoeux();
         Map<String, String> result = new HashMap<>();
 
-        Set<String> lasCodes = backPsupData.getLasMpsKeys();
+        Set<String> lasCodes = getLasMpsKeys();
         lasCodes.forEach(las -> {
             List<Formation> formations = grpToFormations.getOrDefault(las, List.of());
             formations.forEach(formation -> result.put(gTaCodToFrontId(formation.gTaCod), las));
@@ -196,11 +196,14 @@ public record PsupData(
 
     public void cleanup() {
         filsim().normalize();
+        filActives.addAll(getLasFlCodes());
         filActives.retainAll(formations().filieres.keySet());
         //do not restrict to fil actives because we want to keep apprentissage
         formations().cleanup();
-
-
+        stats.removeSmallPopulations();
+        stats.rebuildMiddle50();
+        stats.createGroupAdmisStatistique(getPsupKeyToMpsKey());
+        stats.createGroupAdmisStatistique(getGtaToLasMapping());
     }
 
     public void injecterNomsFilieresManquants(AlgoCarteEntree carte, Set<Integer> filActives) {

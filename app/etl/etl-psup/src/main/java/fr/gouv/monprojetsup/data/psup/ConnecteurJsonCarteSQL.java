@@ -50,7 +50,7 @@ public class ConnecteurJsonCarteSQL {
         AlgoCarteEntree entree = new AlgoCarteEntree();
 
         try {
-            recuperationDesFilieres(entree, config.specificTreatmentforLAS);
+            recuperationDesFilieres(entree);
             recupererTauxAccesPrecalcules(entree);
             recuperationDomainesOnisep(entree);
             recuperationFormationsTagguees(entree, config);
@@ -268,7 +268,7 @@ public class ConnecteurJsonCarteSQL {
         }
     }
 
-    public void recuperationDesFilieres(AlgoCarteEntree entree, boolean specificTreatmentForLas) throws SQLException {
+    public void recuperationDesFilieres(AlgoCarteEntree entree) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
 
             /* récupère la liste des candidats depuis la base de données */
@@ -298,31 +298,28 @@ public class ConnecteurJsonCarteSQL {
             }
         }
 
-        if(specificTreatmentForLas) {
 
-            try (Statement stmt = connection.createStatement()) {
+        //traitement spécifique LAS
+        try (Statement stmt = connection.createStatement()) {
+            LOGGER.info("Récupération des filières las");
+            stmt.setFetchSize(1_000_000);
+            String sql = SELECT
+                    //id du groupe de classement
+                    + "distinct G_FL_LIB_aff, "
+                    + "G_FL_COD_aff "
+                    + " FROM SP_G_TRI_AFF where NVL(G_TA_FLG_FOR_LAS,0)=1";
 
-                /* récupère la liste des candidats depuis la base de données */
-                LOGGER.info("Récupération des filières las");
-                stmt.setFetchSize(1_000_000);
-                String sql = SELECT
-                        //id du groupe de classement
-                        + "distinct G_FL_LIB_aff, "
-                        + "G_FL_COD_aff "
-                        + " FROM SP_G_TRI_AFF where NVL(G_TA_FLG_FOR_LAS,0)=1";
+            LOGGER.info(sql);
 
-                LOGGER.info(sql);
-
-                try (ResultSet result = stmt.executeQuery(sql)) {
-                    while (result.next()) {
-                        String gFlLib = result.getString(1);
-                        int gFlCod = result.getInt(2);
-                        Filiere f = entree.filieres.get(gFlCod);
-                        if (f != null) {
-                            int newGFlCod = LAS_CONSTANT + gFlCod;
-                            Filiere filiere = new Filiere(gFlLib, f.sigle, newGFlCod, gFlCod, false, true);
-                            entree.filieres.put(newGFlCod, filiere);
-                        }
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                while (result.next()) {
+                    String gFlLib = result.getString(1);
+                    int gFlCod = result.getInt(2);
+                    Filiere f = entree.filieres.get(gFlCod);
+                    if (f != null) {
+                        int newGFlCod = LAS_CONSTANT + gFlCod;
+                        Filiere filiere = new Filiere(gFlLib, f.sigle, newGFlCod, gFlCod, false, true);
+                        entree.filieres.put(newGFlCod, filiere);
                     }
                 }
             }
