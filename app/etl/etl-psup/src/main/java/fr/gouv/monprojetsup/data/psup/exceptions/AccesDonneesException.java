@@ -18,14 +18,18 @@ l'Innovation,
     along with Algorithmes-de-parcoursup.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-package fr.gouv.monprojetsup.data.psup;
+package fr.gouv.monprojetsup.data.psup.exceptions;
 
-public class VerificationException extends Exception {
+public class AccesDonneesException extends Exception {
 
-    private static final long serialVersionUID = 6_494_999_485_590_357_622L;
+    private static final long serialVersionUID = 1L;
 
-    public VerificationException(VerificationExceptionMessage exceptionMessage, Object... arguments) {
+    public AccesDonneesException(AccesDonneesExceptionMessage exceptionMessage, Object... arguments) {
         super(String.format(exceptionMessage.getMessage(), arguments));
     }
-    
+
+    public AccesDonneesException(AccesDonneesExceptionMessage exceptionMessage, Throwable cause, Object... arguments) {
+        super(String.format(exceptionMessage.getMessage(), arguments), cause);
+    }
+
 }

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.psup;
+package fr.gouv.monprojetsup.data.psup.exceptions;
 
 public enum VerificationExceptionMessage {
 

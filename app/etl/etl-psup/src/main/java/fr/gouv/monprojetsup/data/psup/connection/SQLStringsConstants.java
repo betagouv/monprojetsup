@@ -18,7 +18,7 @@ l'Innovation,
     along with Algorithmes-de-parcoursup.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-package fr.gouv.monprojetsup.data.psup;
+package fr.gouv.monprojetsup.data.psup.connection;
 
 public class SQLStringsConstants {
     
