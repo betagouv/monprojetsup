@@ -69,7 +69,7 @@ class UpdateFormationDbsTestCarteAlgoTags : BDDRepositoryTest() {
         }
 
         @Test
-        fun `Plus de 95% des formations en base doivent réussir le test d'intégrité`() {
+        fun `Plus de 95 pour 100 des formations en base doivent réussir le test d'intégrité`() {
             updateFormationDbs.updateFormationDbs()
             val formations = formationsdb.findAll()
             val nbFormations = formations.size

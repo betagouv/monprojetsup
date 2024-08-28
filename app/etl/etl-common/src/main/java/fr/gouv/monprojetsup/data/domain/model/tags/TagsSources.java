@@ -59,7 +59,7 @@ public record TagsSources(
     }
 
     public void normalize() {
-        val copy = new HashMap<>(sources);
+        HashMap<String,Set<String>> copy = new HashMap<>(sources);
         sources.clear();
         copy.forEach((tag, sources) -> {
             val normalizedTag = normalize(tag);
