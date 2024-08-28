@@ -180,10 +180,7 @@ class MpsDataFiles(
     override fun getMotsCles(): Map<String, List<String>> {
 
         //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-        val motsCles = Serialisation.fromJsonFile(
-            dataSources.getSourceDataFilePath(DataSources.TAGS_SOURCE_MERGED_FILENAME),
-            TagsSources::class.java
-        )
+        val motsCles = statistiques.motsCles;
 
         motsCles.sources.computeIfAbsent(
             Constants.PASS_MOT_CLE
@@ -195,7 +192,7 @@ class MpsDataFiles(
         val mpsIds = getFormationsMpsIds()
         val labels = getLabels()
 
-        //le référentiel est formations front
+        //le référentiel des formations front
         mpsIds.forEach { formation ->
             val label = labels.getOrDefault(formation, formation)
             motsCles.add(label, formation)

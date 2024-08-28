@@ -17,8 +17,6 @@ public class PsupDataSources {
     }
 
     /* Parcoursup Data */
-    public static final String TAGS_SOURCE_RAW_FILENAME = "parcoursup/tagsSources.json";
-    public static final String TAGS_SOURCE_MERGED_FILENAME = "parcoursup/tagsSourcesMerged.json";
     public static final String STATS_BACK_SRC_FILENAME = "parcoursup/statistiques.zip";
     public static final String FRONT_MID_SRC_PATH = "parcoursup/data_mid.zip";
     public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/backPsupData.json.zip";

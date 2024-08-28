@@ -22,26 +22,17 @@ public record TagsSources(
     }
 
     public void add(String tag, String source) {
-        if (tag != null && tag.length() >= 3) {
+        if (tag != null && source != null) {
             sources.computeIfAbsent(tag, z -> new HashSet<>()).add(source);
         }
     }
 
-    public void clear() {
-        sources.clear();
-    }
-
-    // Added by Benoît : 
     public Set<String> getTags() {
         return sources.keySet();
     }
 
     public void remove(String tag) {
         sources.remove(tag);
-    }
-
-    public void putAll(TagsSources tags) {
-        this.sources.putAll(tags.sources);
     }
 
     public void extendToGroups(Map<String, String> correspondances) {
@@ -89,4 +80,8 @@ public record TagsSources(
                 );
     }
 
+    public void set(TagsSources motsCles) {
+        sources.clear();
+        sources.putAll(motsCles.sources);
+    }
 }
