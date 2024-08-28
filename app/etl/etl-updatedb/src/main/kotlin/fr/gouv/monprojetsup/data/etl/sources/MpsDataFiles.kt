@@ -58,7 +58,7 @@ class MpsDataFiles(
             dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
             PsupData::class.java
         )
-        psupData.cleanup()
+        statistiques = psupData.stats
 
         logger.info("Chargement des données Onisep")
         onisepData =
@@ -68,29 +68,6 @@ class MpsDataFiles(
         romeData = RomeDataLoader.load(dataSources)
         logger.info("Insertion des données ROME dans les données Onisep")
         onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
-
-        logger.info("Chargement des stats depuis " + DataSources.STATS_BACK_SRC_FILENAME)
-        statistiques = Serialisation.fromZippedJson(
-            dataSources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-            PsupStatistiques::class.java
-        )
-
-        statistiques.removeSmallPopulations()
-        statistiques.rebuildMiddle50()
-        statistiques.createGroupAdmisStatistique(psupData.psupKeyToMpsKey)
-        statistiques.createGroupAdmisStatistique(PsupData.getGtaToLasMapping(psupData))
-
-        psupData.filActives.addAll(psupData.lasFlCodes)
-
-        //useless for suggestions
-    /*specs
-    /*
-        logger.info("Chargement des données B) carte parcoursup")
-        val carte: JsonCarte = Serialisation.fromJsonFile(
-            dataSources.getSourceDataFilePath(CARTE_JSON_PATH),
-            JsonCarte::class.java
-        )*/processTagSources(psupData, onisepData, statistiques)
-        */
 
     }
 

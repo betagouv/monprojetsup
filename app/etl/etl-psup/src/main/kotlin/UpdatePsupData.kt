@@ -48,9 +48,8 @@ class Runner : CommandLineRunner {
 	private val logger = LoggerFactory.getLogger(UpdatePsupData::class.java)
 
 	companion object {
-		const val STATS_BACK_SRC_FILENAME = "parcoursup/statistiques.zip"
-		const val FRONT_MID_SRC_PATH = "parcoursup/data_mid.zip"
-		const val BACK_PSUP_DATA_FILENAME = "parcoursup/backPsupData.json.zip"
+		const val FRONT_PSUP_DATA_FILENAME = "parcoursup/psupDataFront.zip"
+		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
 	}
 
 	override fun run(vararg args: String?) {
@@ -58,32 +57,27 @@ class Runner : CommandLineRunner {
 		DriverManager.getConnection(psupUrl, psupUsername, psupPassword)
 		.use { co ->
 			val conn = ConnecteurBackendSQL(co)
-			logger.info("Récupération des données")
-			val stats = conn.recupererStatistiques()
-
-			logger.info("Export du full data set")
-			Serialisation.toZippedJson(
-				getSourceDataFilePath(STATS_BACK_SRC_FILENAME),
-				stats,
-				true
-			)
-
-			logger.info("Export du legacy front data set")
-			stats.minimize()
-			Serialisation.toZippedJson(
-				getSourceDataFilePath(FRONT_MID_SRC_PATH),
-				stats,
-				true
-			)
 
 			logger.info("Récupération des données backend autres que les stats")
 			val data = conn.recupererData()
+
 			logger.info("Export du backend data au format json  ")
 			Serialisation.toZippedJson(
 				getSourceDataFilePath(BACK_PSUP_DATA_FILENAME),
 				data,
 				true
 			)
+
+
+
+			logger.info("Export du legacy front data set")
+			data.stats().minimize()
+			Serialisation.toZippedJson(
+				getSourceDataFilePath(FRONT_PSUP_DATA_FILENAME),
+				data.stats(),
+				true
+			)
+
 		}
 
 
