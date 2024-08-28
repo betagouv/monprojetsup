@@ -1,38 +1,29 @@
 package fr.gouv.monprojetsup.data.psup;
 
-
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.carte.algos.tags.FormationCarteAlgoTags;
-import lombok.val;
+import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
+import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage;
+import fr.gouv.monprojetsup.data.psup.exceptions.VerificationException;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.Normalizer;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.TYPE_FORMATION;
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.carte.algos.tags.Scores.cleanAndSplit;
-import static fr.gouv.monprojetsup.data.psup.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
-import static fr.gouv.monprojetsup.data.psup.ConnecteurDonneesAnnuellesCarteSQL.TABLE_STATS_TAUX_ACCES;
-import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.FROM;
-import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.SELECT;
+import static fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL.TABLE_STATS_TAUX_ACCES;
+import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.FROM;
+import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.SELECT;
+import static fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 
 
 public class ConnecteurJsonCarteSQL {
@@ -67,39 +58,6 @@ public class ConnecteurJsonCarteSQL {
             throw new AccesDonneesException(AccesDonneesExceptionMessage.MESSAGE, ex,  String.format(ex.getMessage()), ex);
         }
         return entree;
-    }
-
-    public static Set<String> getDico(String dicoFilename) throws IOException {
-        Set<String> result = new HashSet<>();
-        try (ZipInputStream in
-                     = new ZipInputStream(
-                new BufferedInputStream(
-                        Files.newInputStream(Paths.get(dicoFilename))))) {
-            ZipEntry entry = in.getNextEntry();
-            if (entry == null) {
-                throw new RuntimeException(String.format(dicoFilename));
-            }
-            if (entry.isDirectory()) {
-                throw new RuntimeException("Dico contains a directory, expected to contain a single csv file");
-            }
-            if (!entry.getName().endsWith(".csv")) {
-                throw new RuntimeException("Dico contains a non csv file");
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            while (reader.ready()) {
-                String newLine = reader.readLine();
-                String[] words = newLine.split(",");
-                for (String word : words) {
-                    if (word.length() > 0) {
-                        String w = word.toLowerCase();
-                        result.add(w);
-                        String w2 = Normalizer.normalize(w, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}", "");
-                        result.add(w2);
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     public static final String G_TA_COD = "g_ta_cod";
@@ -145,8 +103,8 @@ public class ConnecteurJsonCarteSQL {
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    val gTaCod = rs.getInt("g_ta_cod");
-                    val gTfCod = rs.getInt("g_tf_cod");
+                    int gTaCod = rs.getInt("g_ta_cod");
+                    int gTfCod = rs.getInt("g_tf_cod");
                     correspondancesTypesFormation
                             .computeIfAbsent(gTaCod, k -> new HashSet<>())
                             .add(gTfCod);
@@ -233,8 +191,8 @@ public class ConnecteurJsonCarteSQL {
                     "AND  arec.g_ta_cod=aff.g_ta_cod\n" +
                     "AND  ta.g_ta_cod=aff.g_ta_cod\n" +
                     "AND ei.g_ea_cod=ti.g_ea_cod_ins\n" +
-                    "AND e.g_ea_cod=aff.g_ea_cod_aff" +
-                    "";
+                    "AND e.g_ea_cod=aff.g_ea_cod_aff"
+                    ;
             LOGGER.info(sql);
             Set<String> ignoredWords = new HashSet<>(config.ignoredWords);
 
@@ -263,9 +221,6 @@ public class ConnecteurJsonCarteSQL {
                             if (!fieldName.equalsIgnoreCase(G_TF_MOT_CLE_MDR)) {
                                 String chain = result.getString(fieldName);
                                 if (chain != null) {
-                                    if(chain.contains("decine")) {
-                                        int i = 0;
-                                    }
                                     f.donnees.put(fieldName, chain);
                                     if (fil != null
                                             && (
@@ -292,7 +247,7 @@ public class ConnecteurJsonCarteSQL {
                     Set<String> tags =
                             correspondancesTypesFormation
                                     .getOrDefault(gTaCod, Set.of())
-                                    .stream().map(tfCod -> motsClestypeFormation.get(tfCod))
+                                    .stream().map(motsClestypeFormation::get)
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toSet())
                             ;
@@ -311,10 +266,6 @@ public class ConnecteurJsonCarteSQL {
         } catch (SQLException ex) {
             throw new AccesDonneesException(AccesDonneesExceptionMessage.CONNECTEUR_DONNEES_APPEL_ORACLE_ERREUR_SQL_RECUPERATION, ex);
         }
-    }
-
-    public void recuperationDesFilieres(AlgoCarteEntree entree) throws SQLException {
-        recuperationDesFilieres(entree, false);
     }
 
     public void recuperationDesFilieres(AlgoCarteEntree entree, boolean specificTreatmentForLas) throws SQLException {

@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.psup;
+package fr.gouv.monprojetsup.data.psup.tags;
 
 // TODO : move absolutes paths in config file.
 // TODO : change stemTags method to handle tags with multiple words.

@@ -31,6 +31,9 @@ import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.psup.connection.ConnecteurSQL;
+import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
+import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,13 +45,14 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.psup.SQLStringsConstants.WHERE;
+import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.WHERE;
 
 public class ConnecteurBackendSQL {
 
     public static final String LYCEENS_ADMIS_FILIERE = " admis_filiere ";
     public static final String LYCEENS_CANDIDATS_FILIERE = " candidats_filieres ";
     public static final String LYCEENS_ADMIS_FORMATION = " admis_formations ";
+    public static final String TABLE_STATS_TAUX_ACCES = "G_REC_TAU_ACC";
     private static final Logger LOGGER = Logger.getLogger(ConnecteurBackendSQL.class.getSimpleName());
     private static final String FROM = " FROM ";
 
@@ -473,6 +477,7 @@ public class ConnecteurBackendSQL {
                                 "",//todo merge with psup
                                 ""//todo merge with psup
                                 );
+                        //communes et codes communes!!
                         formations.formations.put(gTaCod, f);
                     }
                     f.groupes.add(cGpCod);
