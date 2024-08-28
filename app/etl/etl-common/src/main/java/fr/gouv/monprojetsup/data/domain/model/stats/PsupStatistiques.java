@@ -1,11 +1,14 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatistiquesAdmisParMatiere.getStatAgregee;
@@ -77,6 +80,27 @@ public class PsupStatistiques implements Serializable {
                         e -> (int) Math.round(100.0 * e.getValue() / total)
                 ));
     }
+
+    @NotNull
+    public Map<String,  @NotNull Statistique> getStatsMoyGenParBac(String grp) {
+        return getStatScolParBac(grp, MOYENNE_GENERALE_CODE);
+    }
+
+
+    public Map<String, @NotNull Statistique> getStatScolParBac(String groupe, int matiere) {
+        @Nullable StatistiquesAdmisParBac toto = statsAdmis.parGroupe().get(groupe);
+        if(toto == null) return Map.of();
+        return toto.parBac().entrySet().stream()
+                .map(e -> Pair.of(e.getKey(), e.getValue().parMatiere().get(matiere)))
+                .filter(p -> p.getRight() != null)
+                .collect(
+                        Collectors.toMap(
+                                Pair::getLeft,
+                                Pair::getRight
+                        )
+                );
+    }
+
 
     public void ajouterMatiere(int iMtCod, String iMtLib) {
         matieres.put(iMtCod, iMtLib);
@@ -236,6 +260,23 @@ public class PsupStatistiques implements Serializable {
 
     public void setAnnee(int annee) {
         this.annee = annee;
+    }
+
+
+    //trading cpu for memory
+    private final transient ConcurrentHashMap<Triple<String,String, Boolean>, Map<Integer, StatFront>> statsCache = new ConcurrentHashMap<>();
+
+    private Map<Integer, StatFront> computeStatsScol(String groupe, String bac, boolean minimalForStudent) {
+        StatistiquesAdmisParBac sapb = statsAdmis.parGroupe().get(groupe);
+        if(sapb == null) return Collections.emptyMap();
+        StatistiquesAdmisParMatiere st = sapb.parBac().get(bac);
+        if(st == null) return Collections.emptyMap();
+        Map<Integer, Statistique> result = st.parMatiere();
+        result.entrySet().removeIf(e -> (minimalForStudent && e.getKey() != MOYENNE_GENERALE_CODE) || e.getValue().nb() < 5);
+        return result.entrySet().stream().collect(Collectors.toMap(
+                Entry::getKey,
+                e -> StatFront.getStatistique(e.getValue().frequencesCumulees(), minimalForStudent)
+        ));
     }
 
 }
