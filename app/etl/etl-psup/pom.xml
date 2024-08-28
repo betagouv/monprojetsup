@@ -6,7 +6,7 @@
     <parent>
         <groupId>fr.gouv.monprojetsup</groupId>
         <artifactId>etl</artifactId>
-        <version>1.4.1</version>
+        <version>1.4</version>
     </parent>
 
     <artifactId>etl-psup</artifactId>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>fr.gouv.monprojetsup</groupId>
             <artifactId>etl-common</artifactId>
-            <version>1.4.1</version>
+            <version>${etl.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -90,19 +90,13 @@
                         <sourceDir>${project.basedir}/test/main/kotlin</sourceDir>
                         <sourceDir>${project.basedir}/test/main/java</sourceDir>
                     </sourceDirs>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>${maven.compiler.target}</jvmTarget>
                 </configuration>
 
                 <dependencies>
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
@@ -135,8 +129,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
         </plugins>

@@ -3,15 +3,12 @@ package fr.gouv.monprojetsup.data.etl
 import fr.gouv.monprojetsup.data.psup.*
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import lombok.extern.slf4j.Slf4j
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import java.nio.file.Files
-import java.nio.file.Path
 
 
 fun main(args: Array<String>) {
@@ -34,7 +31,13 @@ class Runner(
 	private val logger = LoggerFactory.getLogger(UpdatePsupData::class.java)
 
 
-	override fun run(vararg args: String?) {}
+	override fun run(vararg args: String?) {
+
+		getStatistiquesFromPsupDB()
+
+		getBackDataFromPsupDB()
+
+	}
 
 	/**
 	 * generates BACK_PSUP_DATA_FILENAME
@@ -63,13 +66,6 @@ class Runner(
 	private fun getStatistiquesFromPsupDB() {
 
 		val config = OrientationConfig.fromFile()
-
-		//config.save();
-		val path: String = dataSources.getSourceDataFilePath(PsupDataSources.TAGS_SOURCE_RAW_FILENAME)
-		if (!Files.exists(Path.of(path))) {
-			throw RuntimeException("No file $path")
-		}
-
 
 		ConnecteurSQLHelper.getConnecteur(config.statsDB).use { co ->
 			val conn = ConnecteurBackendSQL(co)

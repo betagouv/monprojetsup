@@ -88,6 +88,7 @@ public class ConnecteurBackendSQL {
         TagsSources motsCles = recupererDonneesCarte(data, filActives);
         // Stem and merge tags.
         motsCles = MergeDuplicateTags.stemMergeTags(motsCles);
+        motsCles.normalize();
         data.setMotsCles(motsCles);
 
 
