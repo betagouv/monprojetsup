@@ -21,8 +21,6 @@ import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.TYPE_FORMATI
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.carte.algos.tags.Scores.cleanAndSplit;
 import static fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL.TABLE_STATS_TAUX_ACCES;
-import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.FROM;
-import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.SELECT;
 import static fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 
 
@@ -32,6 +30,8 @@ public class ConnecteurJsonCarteSQL {
     public static final int INDEX_TAU_ACC_GEN = 1;
     public static final int INDEX_TAU_ACC_TEC = 2;
     public static final int INDEX_TAU_ACC_PRO = 3;
+    public static final String SELECT = "SELECT ";
+    public static final String FROM = " FROM ";
     private final Connection connection;
 
     public ConnecteurJsonCarteSQL(Connection connection) throws AccesDonneesException {

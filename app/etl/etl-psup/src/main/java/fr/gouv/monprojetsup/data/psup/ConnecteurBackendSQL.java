@@ -31,7 +31,6 @@ import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.psup.connection.ConnecteurSQL;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
@@ -45,7 +44,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.psup.connection.SQLStringsConstants.WHERE;
 
 public class ConnecteurBackendSQL {
 
@@ -53,24 +51,25 @@ public class ConnecteurBackendSQL {
     public static final String LYCEENS_CANDIDATS_FILIERE = " candidats_filieres ";
     public static final String LYCEENS_ADMIS_FORMATION = " admis_formations ";
     public static final String TABLE_STATS_TAUX_ACCES = "G_REC_TAU_ACC";
+    public static final String FOR_TYPE_TABLE = " G_FOR " ;
+    public static final String FIL_TYPE_TABLE = " G_FIL " ;
+    public static final String WHERE = " WHERE ";
     private static final Logger LOGGER = Logger.getLogger(ConnecteurBackendSQL.class.getSimpleName());
     private static final String FROM = " FROM ";
 
     @NotNull
     private final Connection conn;
 
-    public ConnecteurBackendSQL(@NotNull ConnecteurSQL conn) {
-        this.conn = conn.connection();
+    public ConnecteurBackendSQL(@NotNull Connection conn) {
+        this.conn = conn;
     }
 
 
-    public PsupStatistiques recupererStatistiquesEtMotsCles() throws SQLException, AccesDonneesException {
+    public PsupStatistiques recupererStatistiques() throws SQLException, AccesDonneesException {
 
         PsupStatistiques data = new PsupStatistiques();
 
         Set<Integer> filActives = recupererFilieresActives(conn);
-
-        recupererNomsfilieres(data, filActives);
 
         Map<Integer, String> bacs = new HashMap<>();
         LOGGER.info("Récupération des bacs de chaque candidat");
@@ -87,15 +86,6 @@ public class ConnecteurBackendSQL {
             }
         }
 
-        recupererLiensOnisep(data, filActives);
-
-        TagsSources motsCles = recupererDonneesCarte(data, filActives);
-        // Stem and merge tags.
-        motsCles = MergeDuplicateTags.stemMergeTags(motsCles);
-        motsCles.normalize();
-        data.setMotsCles(motsCles);
-
-
         recupererProfilsScolaires(data, bacs);
 
         recupererStatsAdmisParFiliereEtSpecialites(data, bacs, filActives);
@@ -103,10 +93,10 @@ public class ConnecteurBackendSQL {
         return data;
     }
 
-    private void recupererNomsfilieres(PsupStatistiques data, Set<Integer> filActives) throws SQLException {
+    private void recupererNomsfilieres(PsupData data, Set<Integer> filActives) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             LOGGER.info("Récupération des noms des filieres sur la carte");
-            data.nomsFilieres.clear();
+            data.nomsFilieres().clear();
             stmt.setFetchSize(1_000_000);
             String sql = "select g_fl_cod, g_fl_lib_mdr, g_fl_sig from v_fil_car_mps";
             LOGGER.info(sql);
@@ -114,7 +104,7 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gFlCod = result.getInt(1);
                     if(!filActives.contains(gFlCod)) continue;
-                    data.nomsFilieres.put(Constants.gFlCodToFrontId(gFlCod), result.getString(2));
+                    data.nomsFilieres().put(Constants.gFlCodToFrontId(gFlCod), result.getString(2));
                 }
             }
         }
@@ -232,10 +222,17 @@ public class ConnecteurBackendSQL {
 
         recupererLas(data);
 
+        Set<Integer> filActives = recupererFilieresActives(conn);
+        recupererNomsfilieres(data, filActives);
+
         //do that first, important, next call are filtered out by this list
         data.filActives().addAll(
                 recupererFilieresActives(conn)
         );
+
+        recupererDonneesCarte(data, filActives);
+
+        recupererLiensOnisep(data, filActives);
 
         recupererFilieresSimilaires(data);
 
@@ -248,30 +245,6 @@ public class ConnecteurBackendSQL {
         recupererVoeuxParCandidat(data);
 
         return data;
-    }
-
-    public Map<Integer, Integer> recuperationTypesBacs() throws SQLException {
-
-        Map<Integer, Integer>  typesBacCandiats = new HashMap<>();
-        try (Statement stmt = this.conn.createStatement()) {
-
-            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
-            LOGGER.info("Récupération des types de bac par candidat");
-            stmt.setFetchSize(1_000_000);
-            String sql = "SELECT can.g_cn_cod, ic.i_tc_cod from g_can_arch can, i_cla_arch ic " +
-                    "where  can.I_CL_COD_BAC=ic.I_CL_COD and ic.i_tc_cod is not null";
-            LOGGER.info(sql);
-
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gCnCod = result.getInt(1);
-                    int typeBac = result.getInt(2);
-                    typesBacCandiats.put(gCnCod,typeBac);
-                }
-            }
-
-        }
-        return typesBacCandiats;
     }
 
     private void recupererVoeuxParCandidat(PsupData data) throws SQLException {
@@ -385,7 +358,7 @@ public class ConnecteurBackendSQL {
         LOGGER.info("Récupération des filieres et groupes par filiere");
 
         String sql = "SELECT G_FR_COD,G_FR_LIB   " + FROM
-                + ConnecteurSQL.FOR_TYPE_TABLE;
+                + FOR_TYPE_TABLE;
         try (
                 Statement stmt = conn.createStatement();
                 ResultSet result = stmt.executeQuery(sql)) {
@@ -398,8 +371,8 @@ public class ConnecteurBackendSQL {
 
 
         sql = "SELECT G_FL_COD,fr.G_FR_COD,G_FR_LIB,G_FL_LIB,G_FL_FLG_APP,G_FL_COD_FI FROM  "
-                + ConnecteurSQL.FIL_TYPE_TABLE + " fil,"
-                + ConnecteurSQL.FOR_TYPE_TABLE
+                + FIL_TYPE_TABLE + " fil,"
+                + FOR_TYPE_TABLE
                 + " fr "
                 + WHERE + " fil.g_fr_cod=fr.g_fr_cod "
                 + "ORDER BY fr.g_fr_cod,G_FL_COD";
@@ -574,16 +547,22 @@ public class ConnecteurBackendSQL {
      * @param filActives
      * @return
      */
-    private TagsSources recupererDonneesCarte(PsupStatistiques data, Set<Integer> filActives) throws SQLException, AccesDonneesException {
+    private void recupererDonneesCarte(PsupData data, Set<Integer> filActives) throws AccesDonneesException {
         //on recupere tous les mots clés en s'appuyant sur le code de la carte
         ConnecteurJsonCarteSQL conn = new ConnecteurJsonCarteSQL(this.conn);
         AlgoCarteConfig config = new AlgoCarteConfig();//on part de la config par défaut
         AlgoCarteEntree donneesCarte = conn.recupererDonneesJSONCarte(config);
-        data.injecterNomsFilieresManquantsEtTauxAcces(
+        data.injecterNomsFilieresManquants(
                 donneesCarte,
                 filActives
         );
-        return recupererSources(donneesCarte, filActives);
+
+        // Stem and merge tags.
+        TagsSources motsCles = recupererSources(donneesCarte, filActives);
+        motsCles = MergeDuplicateTags.stemMergeTags(motsCles);
+        motsCles.normalize();
+        data.setMotsCles(motsCles);
+
     }
 
     public static TagsSources recupererSources(AlgoCarteEntree carte, Set<Integer> filActives) {
@@ -626,10 +605,10 @@ public class ConnecteurBackendSQL {
     /**
      * Recupère les liens onisep pour chaque filière
      *
-     * @param data
-     * @param filActives
+     * @param data les données
+     * @param filActives les filières intéressantes
      */
-    private void recupererLiensOnisep(PsupStatistiques data, Set<Integer> filActives) throws SQLException {
+    private void recupererLiensOnisep(PsupData data, Set<Integer> filActives) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             ConnecteurBackendSQL.LOGGER.info("Récupération des liens Onisep ");
@@ -700,24 +679,6 @@ public class ConnecteurBackendSQL {
                 }
             }
         }
-
-        /*
-        LOGGER.info("Recupération du nombre de candidats admis par paire matiere annee");
-        Integer anneeSecondeMajoritaire = null;
-        try(Statement stmt = conn.createStatement()) {
-            String sql = """
-                    with max_nb as (select max(nb) nb from stats_sec)
-                    select g_cn_ann_sec from stats_sec,max_nb where stats.nb=max_nb.nb""";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                if (result.next()) {
-                    anneeSecondeMajoritaire = result.getInt(1);
-                }
-            }
-        }
-        if(anneeSecondeMajoritaire == null) {
-            throw new RuntimeException("Impossible de calculer l'année de seconde majoritaire");
-        }*/
 
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
@@ -831,47 +792,6 @@ public class ConnecteurBackendSQL {
         gtaToGcn.forEach((gta, gcns) -> incremente(bacs, gta, gcns, datasCandidatsMoyennes));
         data.setStatistiquesAdmisFromPercentileCounters(percCounters);
     }
-
-/*
-            private void ajouterStatistiqueFromNotesSur20(
-            int iMtCod,
-            Map<Integer, Double> notesCandidats,
-            Map<Integer, Set<Integer>> groups,
-            Map<Integer, String> bacs,
-            FrontendData data,
-            boolean filiere
-    ) {
-        groups.forEach((grp, gCnCods) -> {
-            //on fait la tous bacs pour commencer
-            {
-               Stream<Double> notes =
-                        gCnCods.stream()
-                                .map(notesCandidats::get)
-                                .filter(Objects::nonNull);
-                if(filiere) {
-                    data.ajouterStatistiqueFiliereFromNotesSur20(grp, iMtCod, notes, TOUS_BACS_CODE);
-                } else {
-                    data.ajouterStatistiqueFormationFromNotesSur20(grp, iMtCod, notes, TOUS_BACS_CODE);
-                }
-            }
-            //maintenant bac par bac
-            {
-                Map<String, List<Map.Entry<Integer, Double>>> parBacs =
-                        notesCandidats.entrySet().stream()
-                                        .collect(Collectors
-                                                .groupingBy(p -> bacs.get(p.getKey())));
-                parBacs.forEach((bac, entries) -> {
-                    Stream<Double> notes = entries.stream().map(p -> p.getValue());
-                    if(filiere) {
-                        data.ajouterStatistiqueFiliereFromNotesSur20(grp, iMtCod, notes, bac);
-                    } else {
-                        data.ajouterStatistiqueFormationFromNotesSur20(grp, iMtCod, notes, bac);
-                    }
-                });
-            }
-        });
-
-    }*/
 
 
 }

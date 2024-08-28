@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.psup.*
-import fr.gouv.monprojetsup.data.psup.connection.ConnecteurSQL
+import fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
@@ -12,6 +11,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.nio.file.Path
+import java.sql.DriverManager
 
 
 fun main(args: Array<String>) {
@@ -55,14 +55,11 @@ class Runner : CommandLineRunner {
 
 	override fun run(vararg args: String?) {
 
-		ConnecteurSQL(
-			psupUrl,
-			psupUsername,
-			psupPassword
-		).use { co ->
+		DriverManager.getConnection(psupUrl, psupUsername, psupPassword)
+		.use { co ->
 			val conn = ConnecteurBackendSQL(co)
 			logger.info("Récupération des données")
-			val stats = conn.recupererStatistiquesEtMotsCles()
+			val stats = conn.recupererStatistiques()
 
 			logger.info("Export du full data set")
 			Serialisation.toZippedJson(

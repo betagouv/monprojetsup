@@ -12,10 +12,10 @@ import static fr.gouv.monprojetsup.data.domain.Constants.*;
 
 public class Labels {
     public static Map<String,@NotNull String> getLabels(
-            Map<String, String> nomsFilieres,
             PsupData psupData,
             OnisepData oniData) {
 
+        val nomsFilieres = psupData.nomsFilieres();
         val psupKeysToMpsKeys = psupData.getPsupKeyToMpsKey();
 
         Map<String,String> result = new HashMap<>();

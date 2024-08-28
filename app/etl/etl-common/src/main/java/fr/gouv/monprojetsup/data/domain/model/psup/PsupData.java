@@ -1,12 +1,14 @@
 package fr.gouv.monprojetsup.data.domain.model.psup;
 
+import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
+import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,129 +17,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-
-
-record FormationsSimilaires(
-        //indexé par "fl1234""
-        Map<String, FormationsSimilairesParBac> parFiliereOrigine
-) {
-    public FormationsSimilaires() {
-        this(new HashMap<>());
-    }
-
-    public Map<String, Integer> get(String fl, int bacIndex) {
-        FormationsSimilairesParBac t = parFiliereOrigine().get(fl);
-        //TODO remove and use new format for sim
-        if (t == null) return Collections.emptyMap();
-        Map<String, Integer> sim = t.parBac().get(bacIndex);
-        if (sim == null) sim = t.parBac().get(0);
-        return sim;
-    }
-
-    public void add(String gFlCodOri, String gFlCodSim, int gFsSco, int iTcCod) {
-        parFiliereOrigine.computeIfAbsent(gFlCodOri, z -> new FormationsSimilairesParBac())
-                .parBac().computeIfAbsent(iTcCod, z -> new HashMap<>())
-                .put(gFlCodSim, gFsSco);
-    }
-
-    public void normalize() {
-        parFiliereOrigine.values().forEach(FormationsSimilairesParBac::normalize);
-        //some cleanup, may improve performances?
-        parFiliereOrigine.entrySet().removeIf(e -> e.getValue().parBac().isEmpty());
-    }
-
-    public @NotNull Map<Integer, @NotNull Map<String, @NotNull Integer>> getStats(Set<String> psupKeys) {
-        Map<Integer, @NotNull Map<String, @NotNull Integer>> result = new HashMap<>();
-        psupKeys.forEach(psupKey -> {
-            val stats = parFiliereOrigine.get(psupKey);
-            if (stats != null) {
-                stats.parBac().forEach(
-                        (bac, sim) -> sim.forEach(
-                                (key, value) -> result.computeIfAbsent(bac, z -> new HashMap<>()).merge(key, value, Integer::sum)));
-            }
-        });
-        return result;
-    }
-}
-
-record DureesEtudes(
-        //durees des etudes dans chaque filieres, indexées par "fl1234"
-        Map<String, Integer> durees
-) {
-    public DureesEtudes() {
-        this(new HashMap<>());
-    }
-
-    public void add(String fl, int gFrCod, String gFlLib, String gFrLib, String gFrSig) {
-        int duree;
-        if (gFlLib.contains("4") || gFrLib.contains("4")) {
-            duree = 4;
-        } else if (gFlLib.contains("3") || gFrLib.contains("3")) {
-            duree = 3;
-        } else if (gFlLib.contains("5") || gFrLib.contains("5")) {
-            duree = 5;
-        } else if (gFrCod <= 27) {
-            duree = 5;//les prepas / ecoles / CMI
-        } else if (gFrSig.contains("BTS")
-                || gFrSig.contains("BUT")
-                || gFrSig.contains("DCG")
-                || gFrSig.contains("DE")
-                || gFrSig.contains("3")
-                || gFrSig.contains("LP")
-                || gFrSig.contains("FVGL")
-        ) {
-            duree = 3;
-        } else if (gFrSig.contains("L1")
-                || gFrSig.contains("CUPGE")
-                || gFrSig.contains("CPES")
-                || gFrSig.contains("5")
-                || gFrLib.contains("Sciences politiques")
-                || gFrSig.contains("Véto")
-        ) {
-            duree = 5;
-        } else if (gFrSig.contains("FP")
-                || gFrSig.contains("DEUST")
-                || gFrSig.contains("DMA")
-                || gFrSig.contains("DNA")
-                || gFrSig.contains("BPJEPS")
-        ) {
-            duree = 2;
-        } else if (gFrSig.contains("FCIL") || gFrSig.contains("MC") || gFrSig.contains("CSA")) {
-            duree = 1;
-        } else if (gFrSig.contains("D-Etab")
-                || gFrSig.contains("DU")
-                || gFrSig.contains("MAN")
-                || gFrSig.contains("Ann. Prép")
-        ) {
-            //Delicat: passerelles vers le SUP donc au moins un an mais ensuite? On va dire 1+3 car pas professionnalisant
-            duree = 4;
-        } else if (gFrSig.contains("DNSP")) {
-            duree = 3;
-        } else if (gFrSig.equals("DSP")) {
-            duree = 1;
-        } else if (gFlLib.contains("Bac +1")) {
-            duree = 3;
-        } else if (gFrCod == 69) {//Brevet de maitrise compagnons du tour de France
-            duree = 2;
-        } else if (gFrCod == 49) {//Certificat ede spécialisation
-            duree = 1;
-        } else {
-            throw new RuntimeException("Unknown formation duree for g_fr_cod=" + gFrCod);
-        }
-        //DU FP DEUST
-        durees.put(fl, duree);
-    }
-}
-
-
-
-
-record CorrelationPaireFiliere(int fl1, int fl2, double corr) {
-
-    public CorrelationPaireFiliere(Pair<Integer, Integer> integerIntegerPaire, Double aDouble) {
-        this(integerIntegerPaire.getLeft(), integerIntegerPaire.getRight(), aDouble);
-    }
-}
 
 
 public record PsupData(
@@ -158,7 +37,20 @@ public record PsupData(
 
         @NotNull List<@NotNull Set<@NotNull Integer>> voeuxParCandidat,
 
-        @NotNull DescriptifsFormations descriptifsFormations
+        @NotNull DescriptifsFormations descriptifsFormations,
+
+        @NotNull Map<@NotNull Integer, @NotNull Filiere> filieres,//from carte, including data on LAS
+
+//nom des filieres, par code, tels qu'affichés sur la carte
+        //auxquels on rajoute les noms spécifiques LAS
+        @NotNull Map<String, @NotNull String> nomsFilieres,
+
+        @NotNull TagsSources motsCles,
+
+        //liens onisep, par filière
+        @NotNull Map<String, @NotNull String> liensOnisep
+
+
         ) {
     public static final String C_JA_COD = "C_JA_COD";
     public static final String G_TA_COD = "G_TA_COD";
@@ -174,17 +66,32 @@ public record PsupData(
                 new HashMap<>(),
                 new HashSet<>(),
                 new ArrayList<>(),
-                new DescriptifsFormations()
+                new DescriptifsFormations(),
+                new HashMap<>(),
+                new TreeMap<>(),
+                new TagsSources(),
+                new TreeMap<>()
         );
     }
 
+    public List<Filiere> getFilieres() {
+        return new ArrayList<>(filieres.values());
+    }
+    public Collection<Integer> getLasFlCodes() {
+        return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
+    }
+
+    public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
+        liensOnisep.put(FILIERE_PREFIX + gFlCod, lien);
+    }
+
     public static Map<String, String> getGtaToLasMapping(PsupData backPsupData) {
-        val grpToFormations = backPsupData.getFormationToVoeux();
+        Map<String, List<Formation>> grpToFormations = backPsupData.getFormationToVoeux();
         Map<String, String> result = new HashMap<>();
 
         Set<String> lasCodes = backPsupData.getLasMpsKeys();
         lasCodes.forEach(las -> {
-            val formations = grpToFormations.getOrDefault(las, List.of());
+            List<Formation> formations = grpToFormations.getOrDefault(las, List.of());
             formations.forEach(formation -> result.put(gTaCodToFrontId(formation.gTaCod), las));
         });
         return result;
@@ -294,6 +201,22 @@ public record PsupData(
 
     }
 
+    public void injecterNomsFilieresManquants(AlgoCarteEntree carte, Set<Integer> filActives) {
+        this.filieres.clear();
+        this.filieres.putAll(carte.filieres);
+        //liste de mots-clés filtrée (pas les villes et les chaines établissement et onisep en entier)
+        carte.filieres.values().forEach(filiere -> {
+            if (filActives.contains(filiere.cle)) {
+                //nomsFilieres est initialisé avec les noms de filières de v_car
+                // il n'y a pas tout
+                // typiquement il manque les LAS qui sont récupérés via la carte
+                String idfiliere = gFlCodToFrontId(filiere.cle);
+                if(!this.nomsFilieres.containsKey(idfiliere)) {
+                    this.nomsFilieres.put(idfiliere, filiere.libelle);
+                }
+            }
+        });
+    }
     /**
      * Maps a fl** to an fl** or a fr**
      *
@@ -432,6 +355,10 @@ public record PsupData(
         val mpsKeyToPsupKeys = new HashMap<String,Set<String>>();
         getPsupKeyToMpsKey().forEach((s, s2) -> mpsKeyToPsupKeys.computeIfAbsent(s2, z -> new HashSet<String>() ).add(s));
         return mpsKeyToPsupKeys;
+    }
+
+    public void setMotsCles(TagsSources motsCles) {
+        this.motsCles.set(motsCles);
     }
 
     @NotNull

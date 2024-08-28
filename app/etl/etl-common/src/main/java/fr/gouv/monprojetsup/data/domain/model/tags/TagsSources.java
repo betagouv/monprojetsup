@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.tags;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.Normalizer;
@@ -62,7 +61,7 @@ public record TagsSources(
         HashMap<String,Set<String>> copy = new HashMap<>(sources);
         sources.clear();
         copy.forEach((tag, sources) -> {
-            val normalizedTag = normalize(tag);
+            String normalizedTag = normalize(tag);
             this.sources.computeIfAbsent(normalizedTag, z -> new HashSet<>()).addAll(sources);
         });
     }
