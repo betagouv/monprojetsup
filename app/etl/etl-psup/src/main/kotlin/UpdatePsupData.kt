@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -18,26 +20,10 @@ fun main(args: Array<String>) {
 	runApplication<UpdatePsupData>(*args)
 }
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, HibernateJpaAutoConfiguration::class ] )
 class UpdatePsupData
 
-@Value("\${dataRootDirectory}")
-private val dataRootDirectory = "./"
 
-@Value("\${psup.url}")
-private val psupUrl : String? = null
-
-@Value("\${psup.username}")
-private val psupUsername : String? = null
-
-@Value("\${psup.password}")
-private val psupPassword : String? = null
-
-fun getSourceDataFilePath(filename: String): String {
-	val pathWithSpace = dataRootDirectory + "data/" + filename
-	val path = Path.of(pathWithSpace)
-	return path.toString()
-}
 
 @Component
 @Slf4j
@@ -47,10 +33,23 @@ class Runner : CommandLineRunner {
 
 	private val logger = LoggerFactory.getLogger(UpdatePsupData::class.java)
 
+	@Value("\${dataRootDirectory}")
+	lateinit var dataRootDirectory : String
+
+	@Value("\${psup.url}")
+	lateinit var psupUrl : String
+
+	@Value("\${psup.username}")
+	lateinit var psupUsername : String
+
+	@Value("\${psup.password}")
+	lateinit var psupPassword : String
+
 	companion object {
 		const val FRONT_PSUP_DATA_FILENAME = "parcoursup/psupDataFront.zip"
 		const val BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip"
 	}
+
 
 	override fun run(vararg args: String?) {
 
@@ -71,7 +70,7 @@ class Runner : CommandLineRunner {
 
 
 			logger.info("Export du legacy front data set")
-			data.stats().minimize()
+			data.minimizeForFront()
 			Serialisation.toZippedJson(
 				getSourceDataFilePath(FRONT_PSUP_DATA_FILENAME),
 				data.stats(),
@@ -84,6 +83,10 @@ class Runner : CommandLineRunner {
 	}
 
 
+	fun getSourceDataFilePath(filename: String): String {
+		val path = Path.of(dataRootDirectory, filename)
+		return path.toString()
+	}
 
 }
 

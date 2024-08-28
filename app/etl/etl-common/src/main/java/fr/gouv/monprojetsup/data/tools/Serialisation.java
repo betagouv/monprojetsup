@@ -12,11 +12,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -134,41 +129,6 @@ public class Serialisation {
         oos.writeObject(obj);
         oos.close();
         out.close();
-    }
-
-    public static Map<String,List<Map<String, String>>> exportSelectToObject(Connection conn, Map<String, String> sqls) throws SQLException {
-        Map<String,List<Map<String, String>>> m = new HashMap<>();
-        for (Map.Entry<String, String> entry : sqls.entrySet()) {
-            String prefix = entry.getKey();
-            String sql = entry.getValue();
-            List<Map<String, String>> result = new ArrayList<>();
-            try (Statement stmt = conn.createStatement()) {
-                /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
-                stmt.setFetchSize(1_000_000);
-                LOGGER.info(sql);
-
-                try (ResultSet resultSet = stmt.executeQuery(sql)) {
-
-                    ResultSetMetaData rsmd = resultSet.getMetaData();
-                    int nb = rsmd.getColumnCount();
-                    int cnt = 0;
-                    while (resultSet.next()) {
-                        Map<String, String> o = new HashMap<>();
-                        for (int i = 1; i <= nb; i++) {
-                            String st = resultSet.getString(i);
-                            String columnName = rsmd.getColumnName(i);
-                            o.put(columnName, st);
-                        }
-                        if (++cnt % 100000 == 0) {
-                            LOGGER.info("Got " + cnt + " entries");
-                        }
-                        result.add(o);
-                    }
-                }
-            }
-            m.put(prefix, result);
-        }
-        return m;
     }
 
     public static <T> T fromXML(String path, Class<T> type) throws IOException, JAXBException {

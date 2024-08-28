@@ -33,13 +33,10 @@ import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Date;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -47,15 +44,17 @@ import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 
 public class ConnecteurBackendSQL {
 
-    public static final String LYCEENS_ADMIS_FILIERE = " admis_filiere ";
-    public static final String LYCEENS_CANDIDATS_FILIERE = " candidats_filieres ";
-    public static final String LYCEENS_ADMIS_FORMATION = " admis_formations ";
-    public static final String TABLE_STATS_TAUX_ACCES = "G_REC_TAU_ACC";
-    public static final String FOR_TYPE_TABLE = " G_FOR " ;
-    public static final String FIL_TYPE_TABLE = " G_FIL " ;
+    public static final String LYCEENS_ADMIS_FILIERE = " mps_admis_filiere ";
+    public static final String LYCEENS_CANDIDATS_FILIERE = " mps_candidats_filieres ";
+    public static final String LYCEENS_ADMIS_FORMATION = " mps_admis_formations ";
+    public static final String FOR_TYPE_TABLE = " mps_G_FOR " ;
+    public static final String FIL_TYPE_TABLE = " mps_G_FIL " ;
     public static final String WHERE = " WHERE ";
     private static final Logger LOGGER = Logger.getLogger(ConnecteurBackendSQL.class.getSimpleName());
     private static final String FROM = " FROM ";
+    private static final String MPS_V_FIL_CAR = " mps_v_fil_car ";
+    private static final String MPS_MATIERES = "mps_matieres";
+    private static final String MPS_BACS_CANDIDATS = "mps_bacs_candidats";
 
     @NotNull
     private final Connection conn;
@@ -64,13 +63,48 @@ public class ConnecteurBackendSQL {
         this.conn = conn;
     }
 
+    public static Map<String,List<Map<String, String>>> exportSelectToObject(Connection conn, Map<String, String> sqls) throws SQLException {
+        Map<String,List<Map<String, String>>> m = new HashMap<>();
+        for (Map.Entry<String, String> entry : sqls.entrySet()) {
+            String prefix = entry.getKey();
+            String sql = entry.getValue();
+            List<Map<String, String>> result = new ArrayList<>();
+            try (Statement stmt = conn.createStatement()) {
+                /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
+                stmt.setFetchSize(1_000_000);
+                LOGGER.info(sql);
+
+                try (ResultSet resultSet = stmt.executeQuery(sql)) {
+
+                    ResultSetMetaData rsmd = resultSet.getMetaData();
+                    int nb = rsmd.getColumnCount();
+                    int cnt = 0;
+                    while (resultSet.next()) {
+                        Map<String, String> o = new HashMap<>();
+                        for (int i = 1; i <= nb; i++) {
+                            String st = resultSet.getString(i);
+                            String columnName = rsmd.getColumnName(i);
+                            o.put(columnName, st);
+                        }
+                        if (++cnt % 100000 == 0) {
+                            LOGGER.info("Got " + cnt + " entries");
+                        }
+                        result.add(o);
+                    }
+                }
+            }
+            m.put(prefix, result);
+        }
+        return m;
+    }
+
 
     private void recupererNomsfilieres(PsupData data, Set<Integer> filActives) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             LOGGER.info("Récupération des noms des filieres sur la carte");
             data.nomsFilieres().clear();
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod, g_fl_lib_mdr, g_fl_sig from v_fil_car_mps";
+            String sql = "select g_fl_cod, g_fl_lib_mdr, g_fl_sig from " + MPS_V_FIL_CAR;
             LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -136,10 +170,11 @@ public class ConnecteurBackendSQL {
 
         ConnecteurBackendSQL.LOGGER.info("Récupération du nombre de lycéens admis à n-1 de chaque spécialité/matière dans chaque filière");
         String sqlAdmisParFilieresMatieres =
-                """
-         select count(*) cnt, i_mt_cod, g_fl_cod
-        from\040""" + ConnecteurBackendSQL.LYCEENS_ADMIS_FILIERE + """
-                        admis_filiere , matieres
+                "select count(*) cnt, i_mt_cod, g_fl_cod from "
+                        + LYCEENS_ADMIS_FILIERE + " admis_filiere, "
+                        + MPS_MATIERES + " matieres "
+                        +
+                        """
                         where admis_filiere.g_cn_cod=matieres.g_cn_cod
                         group by i_mt_cod,g_fl_cod
                         order by g_fl_cod, cnt desc
@@ -162,12 +197,11 @@ public class ConnecteurBackendSQL {
         String sqlCandidatsParFilieresMatieres =
                 """
          select count(*) cnt, i_mt_cod, g_fl_cod
-        from""" + LYCEENS_CANDIDATS_FILIERE + """
-                         , matieres
-                        where"""
-                        +  LYCEENS_CANDIDATS_FILIERE +
+        from""" + LYCEENS_CANDIDATS_FILIERE + " candidats, "
+                        + MPS_MATIERES + " matieres " +
                         """
-                        .g_cn_cod=matieres.g_cn_cod
+                        where
+                        candidats.g_cn_cod=matieres.g_cn_cod
                         group by i_mt_cod,g_fl_cod
                         order by g_fl_cod, cnt desc
                         """;
@@ -192,35 +226,38 @@ public class ConnecteurBackendSQL {
     public PsupData recupererData() throws Exception {
         PsupData data = new PsupData();
 
+        recupererAnnee(data);
+
         recupererLas(data);
 
         Set<Integer> filActives = recupererFilieresActives(conn);
+        data.filActives().addAll(filActives);
+
         recupererNomsfilieres(data, filActives);
-
-        //do that first, important, next call are filtered out by this list
-        data.filActives().addAll(
-                recupererFilieresActives(conn)
-        );
-
-        recupererDonneesCarte(data, filActives);
-
+        recupererNomsFilieresManquantsEtMostCles(data, filActives);
         recupererLiensOnisep(data, filActives);
-
         recupererFilieresSimilaires(data);
-
         recupererDureesEtudes(data);
-
         recupererFormations(data);
-
         recupererDiversPsup(data);
-
         recupererVoeuxParCandidat(data);
 
-        Map<Integer, String> bacs = new HashMap<>();
+        Map<Integer, String> bacs = recupereBacsCandidats();
+
+        recupererProfilsScolaires(data.stats(), bacs);
+        recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
+
+        data.cleanup();
+
+        return data;
+    }
+
+    private Map<Integer, String> recupereBacsCandidats() throws SQLException {
         LOGGER.info("Récupération des bacs de chaque candidat");
+        Map<Integer, String> bacs = new HashMap<>();
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod,i_cl_cod from bacs_candidats";
+            String sql = "select g_cn_cod,i_cl_cod from " + MPS_BACS_CANDIDATS;
             LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -230,14 +267,27 @@ public class ConnecteurBackendSQL {
                 }
             }
         }
+        return bacs;
+    }
 
-        recupererProfilsScolaires(data.stats(), bacs);
+    private void recupererAnnee(PsupData data) throws SQLException {
+        //mps_annee
+        try (Statement stmt = this.conn.createStatement()) {
 
-        recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
+            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
+            LOGGER.info("Récupération de l'année");
+            String sql = "SELECT a_am_dat_max FROM mps_annee";
+            LOGGER.info(sql);
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                if (result.next()) {
+                    Date date = result.getDate(1);
+                    data.stats().setAnnee(date.toLocalDate().getYear());
+                } else {
+                    throw new RuntimeException("Echec de la récupération de l'année");
+                }
+            }
+        }
 
-        data.cleanup();
-
-        return data;
     }
 
     private void recupererVoeuxParCandidat(PsupData data) throws SQLException {
@@ -250,20 +300,7 @@ public class ConnecteurBackendSQL {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             LOGGER.info("Récupération des filieres par candidat");
             stmt.setFetchSize(1_000_000);
-            String sql = "SELECT  DISTINCT voeu.g_cn_cod, aff.g_ta_cod g_ta_cod"
-                    //id du groupe de classement
-                    + " FROM A_VOE voeu, "
-                    + "I_INS ins, "
-                    + "A_REC_GRP  arecgrp, "
-                    + "SP_G_TRI_AFF  aff"
-                    + WHERE
-                    + " voeu.g_ta_cod=aff.g_ta_cod"
-                    + " AND voeu.g_ta_cod = arecgrp.g_ta_cod"
-                    + " AND arecgrp.g_ti_cod = ins.g_ti_cod"
-                    + " AND voeu.g_cn_cod = ins.g_cn_cod"
-                    + " AND voeu.a_sv_cod > -90" //élimine les voeux non sélectionnés
-                    + " AND NVL(ins.i_is_val,0) = 1" //élimine les voeux non validés
-                    ;
+            String sql = "SELECT g_cn_cod, g_ta_cod FROM mps_voeux";
 
             LOGGER.info(sql);
 
@@ -286,7 +323,7 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = this.conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select distinct g_ta_cod from las";
+            String sql = "select distinct g_ta_cod from mps_las";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -299,16 +336,14 @@ public class ConnecteurBackendSQL {
     }
 
     private void recupererDiversPsup(PsupData data) throws SQLException {
-        Map<String, List<Map<String, String>>> o = Serialisation.exportSelectToObject(this.conn,
-                Map.of("c_jur_adm", "select * from c_jur_adm",
+        Map<String, List<Map<String, String>>> o = exportSelectToObject(this.conn,
+                Map.of("c_jur_adm", "select * from mps_c_jur_adm",
                         "c_jur_adm_comments", "select * from user_col_comments where table_name like '%C_JUR_ADM%' and comments is not null",
-                        "g_tau_ins_jeu", "select * from g_tau_ins_jeu",
-                        "g_tau_ins_jeu_comments", "select * from user_col_comments where table_name like '%G_TAU_INS_JEU%' and comments is not null",
                         "g_for_tau_reu", "select * from g_for_tau_reu",
                         "g_for_tau_reu_comments", "select * from user_col_comments where table_name like '%G_FOR_TAU_REU%' and comments is not null",
-                        "a_rec_grp", "select c_gp_cod,g_ti_cod,g_ta_cod,c_ja_cod,a_rg_pla,a_rg_nbr_sou from a_rec_grp",
-                        "g_fil_att_con", "select g_fl_cod,g_fl_lib,g_fl_des_att, g_fl_sig_mot_rec,g_fl_con_lyc_prem,g_fl_con_lyc_term, g_fl_typ_con_lyc from g_fil",
-                        "descriptions_formations", "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from descriptions_formations"
+                        "a_rec_grp", "select c_gp_cod,g_ti_cod,g_ta_cod,c_ja_cod,a_rg_pla,a_rg_nbr_sou from mps_a_rec_grp",
+                        "g_fil_att_con", "select g_fl_cod,g_fl_lib,g_fl_des_att, g_fl_sig_mot_rec,g_fl_con_lyc_prem,g_fl_con_lyc_term, g_fl_typ_con_lyc from mps_g_fil",
+                        "descriptions_formations", "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from mps_descriptions_formations"
                 )
         );
         data.diversPsup().putAll(o);
@@ -320,7 +355,8 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = this.conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from descriptions_formations";
+            String sql = "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens " +
+                    "from mps_descriptions_formations";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -365,8 +401,7 @@ public class ConnecteurBackendSQL {
 
         sql = "SELECT G_FL_COD,fr.G_FR_COD,G_FR_LIB,G_FL_LIB,G_FL_FLG_APP,G_FL_COD_FI FROM  "
                 + FIL_TYPE_TABLE + " fil,"
-                + FOR_TYPE_TABLE
-                + " fr "
+                + FOR_TYPE_TABLE + " fr "
                 + WHERE + " fil.g_fr_cod=fr.g_fr_cod "
                 + "ORDER BY fr.g_fr_cod,G_FL_COD";
         try (
@@ -394,7 +429,7 @@ public class ConnecteurBackendSQL {
                 "G_AA_COD, " +
                 "capa, " +
                 "lng, " +
-                "lat FROM formations "
+                "lat FROM mps_formations "
                 + " ORDER BY G_FL_COD_AFF,C_GP_COD";
         LOGGER.info(sql);
         int filieresManquantes = 0;
@@ -475,7 +510,7 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select distinct g_fl_cod_aff, g_ta_flg_for_las from filieres_actives";
+            String sql = "select distinct g_fl_cod_aff, g_ta_flg_for_las from mps_filieres_actives";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -493,7 +528,7 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod,g_fr_cod,g_fl_lib, g_fr_lib,g_fr_sig from filieres2";
+            String sql = "select g_fl_cod,g_fr_cod,g_fl_lib, g_fr_lib,g_fr_sig from mps_filieres2";
             LOGGER.info(sql);
 
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -515,7 +550,8 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod_ori,g_fl_cod_sim, g_fs_sco, i_tc_cod from filieres_sim order by g_fl_cod_ori,g_fs_sco";
+            String sql = "select g_fl_cod_ori,g_fl_cod_sim, g_fs_sco, i_tc_cod " +
+                    "from mps_filieres_sim order by g_fl_cod_ori,g_fs_sco";
             LOGGER.info(sql);
 
             try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -536,15 +572,15 @@ public class ConnecteurBackendSQL {
      * Injecte les motsc=c-éls nécessaires à la carte, en préservant les chaines entières.
      * Effet de bord: injecte les données dsur les formations dans data.
      *
-     * @param data
-     * @param filActives
-     * @return
+     * @param data les containueur de données à renseigner
+     * @param filActives les filières qui nous intéressent
      */
-    private void recupererDonneesCarte(PsupData data, Set<Integer> filActives) throws AccesDonneesException {
+    private void recupererNomsFilieresManquantsEtMostCles(PsupData data, Set<Integer> filActives) throws AccesDonneesException {
         //on recupere tous les mots clés en s'appuyant sur le code de la carte
         ConnecteurJsonCarteSQL conn = new ConnecteurJsonCarteSQL(this.conn);
         AlgoCarteConfig config = new AlgoCarteConfig();//on part de la config par défaut
         AlgoCarteEntree donneesCarte = conn.recupererDonneesJSONCarte(config);
+
         data.injecterNomsFilieresManquants(
                 donneesCarte,
                 filActives
@@ -606,7 +642,7 @@ public class ConnecteurBackendSQL {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             ConnecteurBackendSQL.LOGGER.info("Récupération des liens Onisep ");
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod, g_fl_lie_inf from liens_onisep";
+            String sql = "select g_fl_cod, g_fl_lie_inf from mps_liens_onisep";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -662,7 +698,7 @@ public class ConnecteurBackendSQL {
             /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
             ConnecteurBackendSQL.LOGGER.info("Récupération des matières");
             stmt.setFetchSize(1_000_000);
-            String sql = "select i_mt_cod,i_mt_lib from matieres2";
+            String sql = "select i_mt_cod,i_mt_lib from mps_matieres2";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -678,7 +714,7 @@ public class ConnecteurBackendSQL {
             String sql = "select i_cs_ann," +
                     "i_mt_cod, " +
                     "i_cl_cod, " +
-                        "nb from stats_mat_bac " +
+                        "nb from mps_stats_mat_bac " +
                     "order by i_mt_cod ";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
@@ -697,27 +733,11 @@ public class ConnecteurBackendSQL {
 
         Map<Integer, Map<Integer, Double>> datasCandidatsMoyennes = new HashMap<>();
 
-        ConnecteurBackendSQL.LOGGER.info("Récupération des moyennes au bac de chaque candidat");
-        try (Statement stmt = conn.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod,note from moyenne_bac";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gCnCod = result.getInt(1);
-                    double note = result.getDouble(2);
-                    datasCandidatsMoyennes
-                            .computeIfAbsent(gCnCod, z -> new HashMap<>())
-                            .put(PsupStatistiques.MOYENNE_BAC_CODE, note);
-                }
-            }
-        }
-
 
         ConnecteurBackendSQL.LOGGER.info("Récupération des  moyennes générales de chaque lycéen");
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql ="select g_cn_cod,moyenne from moy_gen_candidats";
+            String sql ="select g_cn_cod,moyenne from mps_moy_gen_candidats";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -734,7 +754,7 @@ public class ConnecteurBackendSQL {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod,i_mt_cod,moyenne from moy_sco_candidats";
+            String sql = "select g_cn_cod,i_mt_cod,moyenne from mps_moy_sco_candidats";
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -753,7 +773,7 @@ public class ConnecteurBackendSQL {
         Map<String, Set<Integer>> flToGcn = new HashMap<>();
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod, g_fl_cod from " + ConnecteurBackendSQL.LYCEENS_ADMIS_FILIERE;
+            String sql = "select g_cn_cod, g_fl_cod from " + LYCEENS_ADMIS_FILIERE;
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
@@ -768,7 +788,7 @@ public class ConnecteurBackendSQL {
         Map<String, Set<Integer>> gtaToGcn = new HashMap<>();
         try (Statement stmt = conn.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select g_cn_cod, g_ta_cod from " + ConnecteurBackendSQL.LYCEENS_ADMIS_FORMATION;
+            String sql = "select g_cn_cod, g_ta_cod from " + LYCEENS_ADMIS_FORMATION;
             ConnecteurBackendSQL.LOGGER.info(sql);
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
