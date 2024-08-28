@@ -9,27 +9,26 @@ import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers
-import fr.gouv.monprojetsup.data.domain.model.liens.UrlsUpdater
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
-import fr.gouv.monprojetsup.data.domain.port.EdgesPort
-import fr.gouv.monprojetsup.data.etl.suggestions.labels.Labels
-import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
-import fr.gouv.monprojetsup.data.domain.model.graph.Edges
-import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation
+import fr.gouv.monprojetsup.data.domain.model.graph.Edges
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets
-import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
-import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
-import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources
-import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
+import fr.gouv.monprojetsup.data.domain.model.liens.UrlsUpdater
 import fr.gouv.monprojetsup.data.domain.model.onisep.InteretsOnisep
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
-import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
-import fr.gouv.monprojetsup.data.etl.loaders.RomeDataLoader
-import fr.gouv.monprojetsup.data.tools.Serialisation
+import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
+import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
+import fr.gouv.monprojetsup.data.domain.port.EdgesPort
 import fr.gouv.monprojetsup.data.etl.csv.CsvTools
+import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
+import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
+import fr.gouv.monprojetsup.data.etl.loaders.RomeDataLoader
+import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
+import fr.gouv.monprojetsup.data.etl.suggestions.labels.Labels
+import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Component
 import java.util.*
@@ -81,7 +80,7 @@ class MpsDataFiles(
         statistiques.createGroupAdmisStatistique(psupData.psupKeyToMpsKey)
         statistiques.createGroupAdmisStatistique(PsupData.getGtaToLasMapping(psupData))
 
-        psupData.filActives.addAll(statistiques.lasFlCodes)
+        psupData.filActives.addAll(psupData.lasFlCodes)
 
         //useless for suggestions
     /*specs
@@ -97,7 +96,6 @@ class MpsDataFiles(
 
     override fun getLabels(): Map<String, String> {
         return Labels.getLabels(
-            statistiques.nomsFilieres,
             psupData,
             onisepData
         )
@@ -163,7 +161,7 @@ class MpsDataFiles(
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
         val urls = UrlsUpdater.updateUrls(
             onisepData,
-            statistiques.liensOnisep,
+            psupData.liensOnisep,
             psupData.lasToGeneric,
             getDescriptifs(),
             psupData.psupKeyToMpsKey,
@@ -180,7 +178,7 @@ class MpsDataFiles(
     override fun getMotsCles(): Map<String, List<String>> {
 
         //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-        val motsCles = statistiques.motsCles;
+        val motsCles = psupData.motsCles;
 
         motsCles.sources.computeIfAbsent(
             Constants.PASS_MOT_CLE
@@ -224,7 +222,7 @@ class MpsDataFiles(
             val flGroups = psupData.psupKeyToMpsKey
             val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
 
-            resultInt.addAll(statistiques.lasFlCodes)
+            resultInt.addAll(psupData.lasFlCodes)
 
             val result = ArrayList(resultInt.stream()
                 .map { cle -> Constants.gFlCodToFrontId(cle) }

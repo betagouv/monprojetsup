@@ -2,8 +2,6 @@ package fr.gouv.monprojetsup.data.domain.model.attendus;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.Helpers;
-import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites;
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
@@ -17,17 +15,6 @@ public record Attendus(
         String recoEDS,
         String recoEDSPrem,
         String recoEDSTerm) {
-
-    public static Map<String, Attendus> getAttendus(
-            PsupData psupData,
-            PsupStatistiques data,
-            Specialites specs,
-            boolean specifiques) {
-        AttendusDetailles eds = AttendusDetailles.getAttendusDetailles(
-                psupData, data, specs, specifiques, false
-        );
-        return eds.getSimplifiedFrontVersion();
-    }
 
     public static Map<String, Attendus> getAttendusSimplifies(PsupData backPsupData) {
         val result = new HashMap<String, Attendus>();
@@ -54,14 +41,28 @@ public record Attendus(
 
             if (attendus != null || takeRecoGen || takeRecoTerm) {
                 result.put(key, new Attendus(
-                        AttendusDetailles.AttenduDetaille.compress(attendus),
-                        takeRecoGen ? AttendusDetailles.AttenduDetaille.compress(recoTermGeneriques) : null,
-                        takeRecoPrem ? AttendusDetailles.AttenduDetaille.compress(recoPremGeneriques) : null,
-                        takeRecoTerm ? AttendusDetailles.AttenduDetaille.compress(recoTermGeneriques) : null
+                        compress(attendus),
+                        takeRecoGen ? compress(recoTermGeneriques) : null,
+                        takeRecoPrem ? compress(recoPremGeneriques) : null,
+                        takeRecoTerm ? compress(recoTermGeneriques) : null
                 ));
             }
         });
         return result;
+    }
+
+    public static @Nullable String compress(@Nullable String attendus) {
+        if(attendus == null) return null;
+        if(attendus.contains("ne comprend pas")) return null;
+        int i = attendus.toLowerCase().lastIndexOf("cadrage national");
+        if(i > 0) {
+            attendus = attendus.substring(i + 16);
+            i = attendus.indexOf("<br/><br/>");
+            if(i > 0) {
+                attendus = attendus.substring(i + 10);
+            }
+        }
+        return attendus.replaceAll("null", " ");
     }
 
     @Nullable
