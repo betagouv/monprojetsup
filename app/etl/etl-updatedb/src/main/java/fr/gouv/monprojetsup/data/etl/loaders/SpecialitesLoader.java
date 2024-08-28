@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.etl.sources.DataSources;
+import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.domain.model.stats.AdmisMatiereBacAnnee;
 import fr.gouv.monprojetsup.data.domain.model.stats.AdmisMatiereBacAnneeStats;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites;
+import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,19 +14,11 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.ANNEE_LYCEE_TERMINALE;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE;
 import static fr.gouv.monprojetsup.data.tools.Serialisation.fromJsonFile;
-import static fr.gouv.monprojetsup.data.tools.Serialisation.fromZippedJson;
 
 public class SpecialitesLoader {
     public static Specialites load(PsupStatistiques statistiques, DataSources sources) throws IOException {
 
         Specialites specs = fromJsonFile(sources.getSourceDataFilePath(DataSources.SPECIALITES_FILENAME), Specialites.class);
-
-        if(statistiques == null) {
-            statistiques = fromZippedJson(
-                    sources.getSourceDataFilePath(DataSources.STATS_BACK_SRC_FILENAME),
-                    PsupStatistiques.class
-            );
-        }
 
         AdmisMatiereBacAnneeStats stats = statistiques.admisMatiereBacAnneeStats;
 
