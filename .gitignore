@@ -12,3 +12,6 @@ metabase/db
 **~
 **#
 **secret**
+**tmp**
+**target**
+**.idea**
