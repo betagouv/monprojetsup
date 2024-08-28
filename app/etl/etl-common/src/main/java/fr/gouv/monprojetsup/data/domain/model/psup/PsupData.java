@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +49,9 @@ public record PsupData(
         @NotNull TagsSources motsCles,
 
         //liens onisep, par filière
-        @NotNull Map<String, @NotNull String> liensOnisep
+        @NotNull Map<String, @NotNull String> liensOnisep,
 
+        PsupStatistiques stats
 
         ) {
     public static final String C_JA_COD = "C_JA_COD";
@@ -70,7 +72,8 @@ public record PsupData(
                 new HashMap<>(),
                 new TreeMap<>(),
                 new TagsSources(),
-                new TreeMap<>()
+                new TreeMap<>(),
+                new PsupStatistiques()
         );
     }
 
@@ -157,9 +160,8 @@ public record PsupData(
 
     }
 
-
-    public Map<String, Integer> getFilieresSimilaires(String fil, int bacIndex) {
-        return filsim.get(fil, bacIndex);
+    public @NotNull Map<Integer, @NotNull Map<String, @NotNull Integer>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
+        return  filsim.getStats(psupKeys);
     }
 
     public void addFiliereSimilaire(int gFlCodOri, int gFlCodSim, int gFsSco, int iTcCod) {
@@ -610,9 +612,5 @@ public record PsupData(
         );
     }
 
-    @Nullable
-    public @NotNull Map<Integer, @NotNull Map<String, @NotNull Integer>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
-        return  filsim.getStats(psupKeys);
-    }
 
 }
