@@ -12,7 +12,6 @@ public class DataSources {
     @Value("${dataRootDirectory}")
     private String dataRootDirectory = "./";
 
-    public static final String TAGS_SOURCE_MERGED_FILENAME = "parcoursup/tagsSourcesMerged.json";
     public static final String STATS_BACK_SRC_FILENAME = "parcoursup/statistiques.zip";
     public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/backPsupData.json.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";

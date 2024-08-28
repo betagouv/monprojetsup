@@ -32,8 +32,6 @@ import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -62,7 +60,7 @@ public class ConnecteurBackendSQL {
     }
 
 
-    public Pair<PsupStatistiques, TagsSources> recupererStatistiquesEtMotsCles() throws SQLException, AccesDonneesException {
+    public PsupStatistiques recupererStatistiquesEtMotsCles() throws SQLException, AccesDonneesException {
 
         PsupStatistiques data = new PsupStatistiques();
 
@@ -87,13 +85,17 @@ public class ConnecteurBackendSQL {
 
         recupererLiensOnisep(data, filActives);
 
-        TagsSources sources = recupererDonneesCarte(data, filActives);
+        TagsSources motsCles = recupererDonneesCarte(data, filActives);
+        // Stem and merge tags.
+        motsCles = MergeDuplicateTags.stemMergeTags(motsCles);
+        data.setMotsCles(motsCles);
+
 
         recupererProfilsScolaires(data, bacs);
 
         recupererStatsAdmisParFiliereEtSpecialites(data, bacs, filActives);
 
-        return ImmutablePair.of(data,sources);
+        return data;
     }
 
     private void recupererNomsfilieres(PsupStatistiques data, Set<Integer> filActives) throws SQLException {

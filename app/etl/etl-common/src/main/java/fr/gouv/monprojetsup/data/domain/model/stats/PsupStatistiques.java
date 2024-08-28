@@ -2,11 +2,13 @@ package fr.gouv.monprojetsup.data.domain.model.stats;
 
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.carte.algos.Filiere;
+import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.text.html.HTML;
 import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
@@ -121,9 +123,12 @@ public class PsupStatistiques implements Serializable {
 
     public final @NotNull Map<@NotNull Integer, @NotNull String> matieres = new TreeMap<>();
 
+    public final @NotNull TagsSources motsCles = new TagsSources();
+
     public final AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats = new AdmisMatiereBacAnneeStats();
     private @NotNull Map<@NotNull Integer, @NotNull Filiere> filieres = new HashMap<>();//from carte, including data on LAS
     private int annee = 2024;
+
 
     public void injecterNomsFilieresManquantsEtTauxAcces(AlgoCarteEntree carte, Set<Integer> filActives) {
         this.filieres = carte.filieres;
@@ -458,6 +463,10 @@ public class PsupStatistiques implements Serializable {
 
     public void setAnnee(int annee) {
         this.annee = annee;
+    }
+
+    public void setMotsCles(TagsSources motsCles) {
+        this.motsCles.set(motsCles);
     }
 
     public record LASCorrespondance(
