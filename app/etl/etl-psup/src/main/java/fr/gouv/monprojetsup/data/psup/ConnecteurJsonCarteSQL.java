@@ -20,16 +20,11 @@ import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.FILIERE;
 import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.TYPE_FORMATION;
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.carte.algos.tags.Scores.cleanAndSplit;
-import static fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL.TABLE_STATS_TAUX_ACCES;
 import static fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 
 
 public class ConnecteurJsonCarteSQL {
 
-    public static final int INDEX_TAU_ACC = 0;
-    public static final int INDEX_TAU_ACC_GEN = 1;
-    public static final int INDEX_TAU_ACC_TEC = 2;
-    public static final int INDEX_TAU_ACC_PRO = 3;
     public static final String SELECT = "SELECT ";
     public static final String FROM = " FROM ";
     private final Connection connection;
@@ -51,7 +46,6 @@ public class ConnecteurJsonCarteSQL {
 
         try {
             recuperationDesFilieres(entree);
-            recupererTauxAccesPrecalcules(entree);
             recuperationDomainesOnisep(entree);
             recuperationFormationsTagguees(entree, config);
         } catch (SQLException | VerificationException ex) {
@@ -99,7 +93,7 @@ public class ConnecteurJsonCarteSQL {
         LOGGER.info("Chargement des correspondances des types de formations");
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select * from sp_g_tri_aff_typ_for";
+            String sql = "select g_ta_cod,g_tf_cod from mps_sp_g_tri_aff_typ_for";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -119,7 +113,7 @@ public class ConnecteurJsonCarteSQL {
         LOGGER.info("Chargement des type de formations");
         try (Statement stmt = connection.createStatement()) {
             stmt.setFetchSize(1_000_000);
-            String sql = "select * from v_typ_for";
+            String sql = "select g_tf_cod, g_tf_mot_cle_mdr from mps_v_typ_for";
             LOGGER.info(sql);
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
@@ -176,14 +170,14 @@ public class ConnecteurJsonCarteSQL {
                     "\n" +
                     "\n" +
                     "from\n" +
-                    "G_FOR fr,\n" +
-                    "G_FIL fl,\n" +
-                    "SP_G_TRI_AFF aff,\n" +
-                    "g_tri_ins ti,\n" +
-                    "g_tri_aff ta,\n" +
-                    "a_rec arec,\n" +
-                    "v_eta ei,\n" +
-                    "v_eta e\n" +
+                    "mps_G_FOR fr,\n" +
+                    "mps_G_FIL fl,\n" +
+                    "mps_aff aff,\n" +
+                    "mps_g_tri_ins ti,\n" +
+                    "mps_aff ta,\n" +
+                    "mps_a_rec arec,\n" +
+                    "mps_v_eta ei,\n" +
+                    "mps_v_eta e\n" +
                     "WHERE\n" +
                     "fr.g_fr_cod=aff.g_fr_cod_aff\n" +
                     "AND fl.g_fl_cod=aff.g_fl_cod_aff\n" +
@@ -199,7 +193,7 @@ public class ConnecteurJsonCarteSQL {
             try (ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
                     int gTaCod = result.getInt(G_TA_COD);
-                    int gFlCod = result.getInt("g_fl_Cod");
+                    int gFlCod = result.getInt("g_fl_cod");
                     boolean isLAS = result.getBoolean("g_ta_flg_for_las");
 
                     FormationCarteAlgoTags f = new FormationCarteAlgoTags(gTaCod, gFlCod, config.specificTreatmentforLAS && isLAS);
@@ -281,7 +275,7 @@ public class ConnecteurJsonCarteSQL {
                     + "fil.G_FL_COD, "
                     + "NVL(fil.G_FL_COD_FI,fil.G_FL_COD), "
                     + "fil.G_FL_FLG_APP "
-                    + " FROM G_FIL fil";
+                    + " FROM mps_G_FIL fil";
 
             LOGGER.info(sql);
 
@@ -307,7 +301,7 @@ public class ConnecteurJsonCarteSQL {
                     //id du groupe de classement
                     + "distinct G_FL_LIB_aff, "
                     + "G_FL_COD_aff "
-                    + " FROM SP_G_TRI_AFF where NVL(G_TA_FLG_FOR_LAS,0)=1";
+                    + " FROM mps_aff where NVL(G_TA_FLG_FOR_LAS,0)=1";
 
             LOGGER.info(sql);
 
@@ -321,52 +315,6 @@ public class ConnecteurJsonCarteSQL {
                         Filiere filiere = new Filiere(gFlLib, f.sigle, newGFlCod, gFlCod, false, true);
                         entree.filieres.put(newGFlCod, filiere);
                     }
-                }
-            }
-        }
-    }
-
-    public void recupererTauxAccesPrecalcules(AlgoCarteEntree entree) throws SQLException {
-        entree.tauxAcces.clear();
-
-        String sql =  SELECT + " g_ta_cod, g_rt_tau_acc, g_rt_tau_acc_GEN, g_rt_tau_acc_TEC, g_rt_tau_acc_PRO " + FROM + TABLE_STATS_TAUX_ACCES;
-
-        LOGGER.info(sql);
-
-        try (Statement stmt = connection.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    Map<Integer,Integer> taux = new HashMap<>();
-                    int gTaCod = result.getInt(1);
-                    taux.put(INDEX_TAU_ACC,result.getInt(2));
-                    taux.put(INDEX_TAU_ACC_GEN,result.getInt(3));
-                    taux.put(INDEX_TAU_ACC_TEC,result.getInt(4));
-                    taux.put(INDEX_TAU_ACC_PRO,result.getInt(5));
-                    entree.tauxAcces.put(gTaCod, taux);
-                }
-            }
-        }
-        
-        
-        //TMA-2603 - Correction affichage taux d'accès formation avec double localisation
-         sql =  SELECT + " loc.g_ta_cod, g_rt_tau_acc, g_rt_tau_acc_GEN, g_rt_tau_acc_TEC, g_rt_tau_acc_PRO " + FROM + "  g_tri_aff_dou_loc loc join G_REC_TAU_ACC rec on rec.g_ta_cod=loc.g_ta_cod_ref";
-
-        LOGGER.info(sql);
-
-        try (Statement stmt = connection.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    Map<Integer,Integer> taux = new HashMap<>();
-                    int gTaCod = result.getInt(1);
-                    taux.put(INDEX_TAU_ACC,result.getInt(2));
-                    taux.put(INDEX_TAU_ACC_GEN,result.getInt(3));
-                    taux.put(INDEX_TAU_ACC_TEC,result.getInt(4));
-                    taux.put(INDEX_TAU_ACC_PRO,result.getInt(5));
-                    entree.tauxAcces.put(gTaCod, taux);
                 }
             }
         }

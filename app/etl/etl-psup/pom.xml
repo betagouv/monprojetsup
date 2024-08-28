@@ -18,6 +18,11 @@
             <version>${etl.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc10</artifactId>
+            <version>19.18.0.0</version>
+        </dependency>
 
 
     </dependencies>

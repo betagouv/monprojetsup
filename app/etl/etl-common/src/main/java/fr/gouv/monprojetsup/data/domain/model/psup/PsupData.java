@@ -101,24 +101,6 @@ public record PsupData(
 
     }
 
-    public Set<String> getJuryCodesFromGTaCods(List<Integer> gTaCods) {
-        Set<String> gTaCodsSet = gTaCods.stream().map(Object::toString).collect(Collectors.toSet());
-        List<Map<String, String>> data = diversPsup().getOrDefault(A_REC_GRP, new ArrayList<>());
-        return data.stream()
-                .filter(m -> m.containsKey(G_TA_COD) && m.containsKey(C_JA_COD))
-                .filter(m -> gTaCodsSet.contains(m.get(G_TA_COD)))
-                .map(m -> m.get(C_JA_COD))
-                .collect(Collectors.toSet());
-    }
-
-    public Map<String, List<String>> getRecoScoPremiere(Set<String> juryCodes) {
-        return getRecoScoSpecifiques(juryCodes, "PREM");
-    }
-
-    public Map<String, List<String>> getRecoScoTerminale(Set<String> juryCodes) {
-        return getRecoScoSpecifiques(juryCodes, "TERM");
-    }
-
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
         return getRecoScoGeneriques(gFlCod, "PREM");
     }
@@ -139,25 +121,6 @@ public record PsupData(
                 .filter(m -> m.getOrDefault("G_FL_COD", "").equals(gFlCod.toString()))
                 .findAny();
         return entry.map(stringStringMap -> stringStringMap.get("G_FL_DES_ATT")).orElse(null);
-    }
-
-    private Map<String, List<String>> getRecoScoSpecifiques(Set<String> juryCodes, String key) {
-
-
-        List<Map<String, String>> data = diversPsup().getOrDefault(C_JUR_ADM, new ArrayList<>());
-        return data.stream()
-                .filter(m -> m.containsKey(C_JA_COD) && juryCodes.contains(m.get(C_JA_COD)) && m.containsKey("C_JA_CON_LYC_" + key))
-                .collect(Collectors.groupingBy(m -> m.get("C_JA_CON_LYC_" + key)))
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().stream().map(
-                                mm -> C_JA_COD + "=" + mm.getOrDefault(C_JA_COD, "?")
-                                        + " G_TI_COD=" + mm.getOrDefault("G_TI_COD", "?")
-                                        + " C_JA_LIB=" + mm.getOrDefault("C_JA_LIB", "?")
-                        ).toList()
-                ));
-
     }
 
     public @NotNull Map<Integer, @NotNull Map<String, @NotNull Integer>> getStatsFilSim(@NotNull Set<@NotNull String> psupKeys) {
@@ -616,4 +579,8 @@ public record PsupData(
     }
 
 
+    public void minimizeForFront() {
+        voeuxParCandidat.clear();
+        stats.minimize();
+    }
 }
