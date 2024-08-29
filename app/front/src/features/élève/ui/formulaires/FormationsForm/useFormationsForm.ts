@@ -4,10 +4,10 @@ import { type BoutonRadioRicheProps } from "@/components/_dsfr/BoutonRadioRiche/
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
-import { type FormationAperçu } from "@/features/formation/domain/formation.interface";
+import { type Formation } from "@/features/formation/domain/formation.interface";
 import {
-  rechercheFormationsQueryOptions,
-  récupérerAperçusFormationsQueryOptions,
+  rechercherFormationsQueryOptions,
+  récupérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -18,7 +18,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   const [rechercheFormation, setRechercheFormation] = useState<string>();
   const [valeurSituationFormations, setValeurSituationFormations] = useState<SituationFormationsÉlève>();
 
-  const aperçuFormationVersOptionFormation = useCallback((formation: FormationAperçu) => {
+  const formationVersOptionFormation = useCallback((formation: Formation) => {
     return {
       valeur: formation.id,
       label: formation.nom,
@@ -30,14 +30,13 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const formationsSélectionnéesParDéfaut = useMemo(
-    () => getValues(NOM_ATTRIBUT),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getValues, valeurSituationFormations],
+  const formationIdsSélectionnéesParDéfaut = useMemo(
+    () => getValues(NOM_ATTRIBUT)?.map((formation) => formation.id),
+    [getValues],
   );
 
   useEffect(() => {
-    if (formationsSélectionnéesParDéfaut && formationsSélectionnéesParDéfaut.length > 0) {
+    if (formationIdsSélectionnéesParDéfaut && formationIdsSélectionnéesParDéfaut.length > 0) {
       setValeurSituationFormations("quelques_pistes");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,14 +46,16 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     data: formations,
     refetch: rechercherFormations,
     isFetching: rechercheFormationsEnCours,
-  } = useQuery(rechercheFormationsQueryOptions(rechercheFormation));
+  } = useQuery(rechercherFormationsQueryOptions(rechercheFormation));
 
-  const { data: aperçusFormationsSélectionnéesParDéfaut } = useQuery(
-    récupérerAperçusFormationsQueryOptions(formationsSélectionnéesParDéfaut ?? []),
+  const { data: formationsSélectionnéesParDéfaut } = useQuery(
+    récupérerFormationsQueryOptions(formationIdsSélectionnéesParDéfaut ?? []),
   );
 
   useEffect(() => {
-    rechercherFormations();
+    if (rechercheFormation && rechercheFormation.length >= 2) {
+      rechercherFormations();
+    }
   }, [rechercheFormation, rechercherFormations]);
 
   useEffect(() => {
@@ -66,7 +67,12 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   const auChangementDesFormationsSélectionnées = (formationsSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
       NOM_ATTRIBUT,
-      formationsSélectionnées.map((formation) => formation.valeur),
+      formationsSélectionnées.map((formation) => ({
+        id: formation.valeur,
+        niveauAmbition: null,
+        tripletsAffectationsChoisis: [],
+        commentaire: null,
+      })),
     );
   };
 
@@ -95,8 +101,8 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     situationFormationsOptions,
     valeurSituationFormations,
     setValeurSituationFormations,
-    formationsSuggérées: formations?.map(aperçuFormationVersOptionFormation) ?? [],
-    formationsSélectionnéesParDéfaut: aperçusFormationsSélectionnéesParDéfaut?.map(aperçuFormationVersOptionFormation),
+    formationsSuggérées: formations?.map(formationVersOptionFormation) ?? [],
+    formationsSélectionnéesParDéfaut: formationsSélectionnéesParDéfaut?.map(formationVersOptionFormation),
     rechercheFormationsEnCours,
     auChangementDesFormationsSélectionnées,
     àLaRechercheDUneFormation: setRechercheFormation,

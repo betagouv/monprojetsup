@@ -43,7 +43,13 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
       alternance: élève.alternance ?? undefined,
       communesFavorites: élève.communesFavorites ?? undefined,
-      formationsFavorites: élève.formationsFavorites ?? undefined,
+      formationsFavorites:
+        élève.formationsFavorites?.map((formationFavorite) => ({
+          idFormation: formationFavorite.id,
+          niveauAmbition: formationFavorite.niveauAmbition ?? 0,
+          tripletsAffectationsChoisis: formationFavorite.tripletsAffectationsChoisis ?? [],
+          priseDeNote: formationFavorite.commentaire ?? undefined,
+        })) ?? undefined,
     };
   }
 
@@ -59,7 +65,15 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       duréeÉtudesPrévue: élève.dureeEtudesPrevue ?? null,
       alternance: élève.alternance ?? null,
       communesFavorites: élève.communesFavorites ?? null,
-      formationsFavorites: élève.formationsFavorites ?? null,
+      formationsFavorites:
+        élève.formationsFavorites?.map((formationFavorite) => ({
+          id: formationFavorite.idFormation,
+          niveauAmbition: [1, 2, 3].includes(formationFavorite.niveauAmbition)
+            ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
+            : null,
+          tripletsAffectationsChoisis: formationFavorite.tripletsAffectationsChoisis,
+          commentaire: formationFavorite.priseDeNote ?? null,
+        })) ?? null,
     };
   }
 }

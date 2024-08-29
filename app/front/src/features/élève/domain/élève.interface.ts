@@ -18,7 +18,14 @@ export type Élève = {
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
   communesFavorites: Commune[] | null;
-  formationsFavorites: string[] | null;
+  formationsFavorites: FormationFavorite[] | null;
+};
+
+type FormationFavorite = {
+  id: string;
+  niveauAmbition: 1 | 2 | 3 | null;
+  tripletsAffectationsChoisis: string[];
+  commentaire: string | null;
 };
 
 export const situationÉlève = [

@@ -63,7 +63,7 @@ test.describe("Inscription élève - Formations", () => {
       await testhelper.renseignerChampRechercheFormations(testhelper.FORMATION_RECHERCHÉE);
 
       // THEN
-      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(6);
+      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(4);
     });
 
     test("Je peux sélectionner des formations", async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe("Inscription élève - Formations", () => {
       await testhelper.boutonOptionSuggérée(testhelper.SECONDE_FORMATION).click();
 
       // THEN
-      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(4);
+      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(2);
       await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(2);
     });
 
@@ -99,7 +99,7 @@ test.describe("Inscription élève - Formations", () => {
       await testhelper.boutonOptionSélectionnée(testhelper.SECONDE_FORMATION).click();
 
       // THEN
-      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(5);
+      await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(3);
       await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(1);
     });
 

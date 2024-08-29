@@ -79,8 +79,3 @@ export type Formation = {
     } | null;
   } | null;
 };
-
-export type FormationAperçu = {
-  id: Formation["id"];
-  nom: Formation["nom"];
-};

@@ -9,10 +9,13 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     private readonly _apiBaseUrl: string,
   ) {}
 
-  public get = async <O extends {}>(endpoint: keyof paths, paramètresDeRequête?: string): Promise<O | undefined> => {
+  public get = async <O extends {}>(
+    endpoint: keyof paths,
+    paramètresDeRequête?: URLSearchParams,
+  ): Promise<O | undefined> => {
     return await this._httpClient.récupérer<O>({
       endpoint: paramètresDeRequête
-        ? `${this._apiBaseUrl}${endpoint}/${paramètresDeRequête}`
+        ? `${this._apiBaseUrl}${endpoint}?${paramètresDeRequête.toString()}`
         : `${this._apiBaseUrl}${endpoint}`,
       méthode: "GET",
       headers: {

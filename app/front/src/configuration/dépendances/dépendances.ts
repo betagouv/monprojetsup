@@ -22,8 +22,8 @@ import { type FormationRepository } from "@/features/formation/infrastructure/fo
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
 import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
-import { RécupérerAperçusFormationsUseCase } from "@/features/formation/usecase/RécupérerAperçusFormations";
-import { RécupérerDétailFormationUseCase } from "@/features/formation/usecase/RécupérerDétailFormation";
+import { RécupérerFormationUseCase } from "@/features/formation/usecase/RécupérerFormation";
+import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
@@ -45,8 +45,6 @@ export class Dépendances {
 
   private readonly _formationRepository: FormationRepository;
 
-  private readonly _formationHttpRepository: FormationRepository;
-
   private readonly _métierRepository: MétierRepository;
 
   private readonly _bacRepository: BacRepository;
@@ -65,9 +63,9 @@ export class Dépendances {
 
   public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
 
-  public readonly récupérerAperçusFormationsUseCase: RécupérerAperçusFormationsUseCase;
+  public readonly récupérerFormationUseCase: RécupérerFormationUseCase;
 
-  public readonly récupérerDétailFormationUseCase: RécupérerDétailFormationUseCase;
+  public readonly récupérerFormationsUseCase: RécupérerFormationsUseCase;
 
   public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
@@ -87,24 +85,33 @@ export class Dépendances {
     this._logger = new Logger();
     this._httpClient = new HttpClient(this._logger);
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, env.VITE_API_URL);
+
+    // Repositories
     this._élèveRepository = env.VITE_TEST_MODE
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);
-    this._formationRepository = new formationInMemoryRepository();
-    this._formationHttpRepository = new formationHttpRepository(this._mpsApiHttpClient);
+    this._formationRepository = env.VITE_TEST_MODE
+      ? new formationInMemoryRepository()
+      : new formationHttpRepository(this._mpsApiHttpClient);
     this._métierRepository = new métierInMemoryRepository();
     this._bacRepository = new bacInMemoryRepository();
     this._domaineProfessionnelRepository = new domaineProfessionnelInMemoryRepository();
     this._centreIntêretRepository = new centreIntêretInMemoryRepository();
     this._communeRepository = new communeHTTPRepository(this._httpClient);
 
+    // Élève
     this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
+
+    // Métiers
     this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
-    this.récupérerAperçusFormationsUseCase = new RécupérerAperçusFormationsUseCase(this._formationRepository);
+
+    // Formations
+    this.récupérerFormationUseCase = new RécupérerFormationUseCase(this._formationRepository);
+    this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
-    this.récupérerDétailFormationUseCase = new RécupérerDétailFormationUseCase(this._formationHttpRepository);
+
     this.rechercherCommunesUseCase = new RechercherCommunesUseCase(this._communeRepository);
     this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
     this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);

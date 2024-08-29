@@ -1,10 +1,10 @@
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 
-export class RechercherFormationsUseCase {
+export class RécupérerFormationsUseCase {
   public constructor(private readonly _formationRepository: FormationRepository) {}
 
-  public async run(recherche: string): Promise<Formation[] | undefined> {
-    return await this._formationRepository.rechercher(recherche);
+  public async run(formationIds: Array<Formation["id"]>): Promise<Formation[] | undefined> {
+    return await this._formationRepository.récupérerPlusieurs(formationIds);
   }
 }

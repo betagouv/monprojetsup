@@ -1,6 +1,6 @@
-import { type RécupérerFormationRéponseHTTP } from "./formationHttpRepository.interface";
+import { type RécupérerFormationsRéponseHTTP } from "./formationHttpRepository.interface";
 import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
-import { type Formation, type FormationAperçu } from "@/features/formation/domain/formation.interface";
+import { type Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
@@ -9,23 +9,44 @@ export class formationHttpRepository implements FormationRepository {
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
-  public async rechercher(_recherche: string): Promise<FormationAperçu[] | undefined> {
-    return undefined;
-  }
-
-  public async récupérerAperçus(_formationIds: string[]): Promise<FormationAperçu[] | undefined> {
-    return undefined;
-  }
-
   public async récupérer(formationId: string): Promise<Formation | undefined> {
-    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationRéponseHTTP>(this._ENDPOINT, formationId);
+    const formations = await this.récupérerPlusieurs([formationId]);
+
+    return formations?.[0];
+  }
+
+  public async récupérerPlusieurs(formationIds: string[]): Promise<Formation[] | undefined> {
+    const paramètresDeRequête = new URLSearchParams();
+
+    for (const formationId of formationIds) {
+      paramètresDeRequête.append("ids", formationId);
+    }
+
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+      this._ENDPOINT,
+      paramètresDeRequête,
+    );
 
     if (!réponse) return undefined;
 
-    return this._mapperVersLeDomaine(réponse);
+    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
   }
 
-  private _mapperVersLeDomaine(formationHttp: RécupérerFormationRéponseHTTP): Formation {
+  public async rechercher(recherche: string): Promise<Formation[] | undefined> {
+    const paramètresDeRequête = new URLSearchParams();
+    paramètresDeRequête.set("recherche", recherche);
+
+    const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/recherche/detaillee`,
+      paramètresDeRequête,
+    );
+
+    if (!réponse) return undefined;
+
+    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+  }
+
+  private _mapperVersLeDomaine(formationHttp: RécupérerFormationsRéponseHTTP["formations"][number]): Formation {
     return {
       id: formationHttp.formation.id,
       nom: formationHttp.formation.nom,

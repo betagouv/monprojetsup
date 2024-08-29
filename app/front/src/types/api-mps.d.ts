@@ -216,13 +216,13 @@ export interface components {
              */
             nom: string;
             /**
-             * Format: float
+             * Format: double
              * @description Latitude de la ville
              * @example 48.8512252
              */
             latitude: number;
             /**
-             * Format: float
+             * Format: double
              * @description Longitude de la ville
              * @example 2.2885659
              */
@@ -303,14 +303,42 @@ export interface components {
              * @example 14
              */
             moyenneGenerale?: number;
+            /** @description Les idées de formations de l'élève */
+            formationsFavorites?: components["schemas"]["VoeuFormationDTO"][];
             /**
-             * @description Les idées de formations de l'élève
+             * @description Les formations mises à la corbeille par l'élève
              * @example [
-             *       "fl720007",
-             *       "fl490030"
+             *       "fl1",
+             *       "fl810505"
              *     ]
              */
-            formationsFavorites?: string[];
+            corbeilleFormations?: string[];
+        };
+        VoeuFormationDTO: {
+            /**
+             * @description Id de la formation
+             * @example fl490030
+             */
+            idFormation: string;
+            /**
+             * Format: int32
+             * @description Niveau de l'ambition du voeux avec 1 = Plan B, 2 = Réaliste et 3 = Ambitieux
+             * @example 2
+             */
+            niveauAmbition: number;
+            /**
+             * @description Les triplets d'affectation souhaités
+             * @example [
+             *       "ta15974",
+             *       "ta17831"
+             *     ]
+             */
+            tripletsAffectationsChoisis: string[];
+            /**
+             * @description Prise de note additionnel sur le voeu
+             * @example Ma note personnalisée
+             */
+            priseDeNote?: string;
         };
         Unit: Record<string, never>;
         BaccalaureatAvecSesSpecialitesDTO: {
@@ -366,6 +394,10 @@ export interface components {
             nom: string;
             url: string;
         };
+        LienHateoasDTO: {
+            rel: string;
+            href: string;
+        };
         MetierDTO: {
             id: string;
             nom: string;
@@ -374,6 +406,7 @@ export interface components {
         };
         MetiersDTO: {
             metiers: components["schemas"]["MetierDTO"][];
+            liens: components["schemas"]["LienHateoasDTO"][];
         };
         MetierCourtDTO: {
             id: string;
@@ -381,6 +414,7 @@ export interface components {
         };
         MetiersCourtsDTO: {
             metiers: components["schemas"]["MetierCourtDTO"][];
+            liens: components["schemas"]["LienHateoasDTO"][];
         };
         AffiniteSpecialiteDTO: {
             nomSpecialite: string;
@@ -435,6 +469,7 @@ export interface components {
             repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
             liens: components["schemas"]["LienDTO"][];
             villes: string[];
+            tripletAffectationAssocies: components["schemas"]["TripletAffectationDTO"][];
             metiers: components["schemas"]["MetierDTO"][];
             /** Format: int32 */
             tauxAffinite?: number;
@@ -449,6 +484,7 @@ export interface components {
         };
         FormationsAvecExplicationsDTO: {
             formations: components["schemas"]["FormationAvecExplicationsDTO"][];
+            liens: components["schemas"]["LienHateoasDTO"][];
         };
         InteretDTO: {
             id: string;
@@ -472,6 +508,12 @@ export interface components {
             /** Format: int32 */
             nombreAdmis: number;
         };
+        TripletAffectationDTO: {
+            id: string;
+            nom: string;
+            nomCommune: string;
+            codeCommune: string;
+        };
         TypeBaccalaureatDTO: {
             baccalaureat: components["schemas"]["BaccalaureatDTO"];
             /** Format: int32 */
@@ -483,6 +525,7 @@ export interface components {
         };
         FormationsCourtesDTO: {
             formations: components["schemas"]["FormationCourteDTO"][];
+            liens: components["schemas"]["LienHateoasDTO"][];
         };
         Link: {
             href?: string;
@@ -565,6 +608,8 @@ export interface operations {
         parameters: {
             query: {
                 ids: string[];
+                /** @description Numéro de page */
+                numeroDePage?: number;
             };
             header?: never;
             path?: never;
@@ -587,6 +632,8 @@ export interface operations {
         parameters: {
             query: {
                 recherche: string;
+                /** @description Numéro de page */
+                numeroDePage?: number;
             };
             header?: never;
             path?: never;
@@ -609,6 +656,8 @@ export interface operations {
         parameters: {
             query: {
                 ids: string[];
+                /** @description Numéro de page */
+                numeroDePage?: number;
             };
             header?: never;
             path?: never;
@@ -651,7 +700,10 @@ export interface operations {
     };
     getSuggestionsFormations: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Numéro de page */
+                numeroDePage?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -672,7 +724,10 @@ export interface operations {
     getRechercheFormationSuccincte: {
         parameters: {
             query: {
+                /** @description Formation recherchée */
                 recherche: string;
+                /** @description Numéro de page */
+                numeroDePage?: number;
             };
             header?: never;
             path?: never;
@@ -694,7 +749,10 @@ export interface operations {
     getRechercheFormationDetaillee: {
         parameters: {
             query: {
+                /** @description Formation recherchée */
                 recherche: string;
+                /** @description Numéro de page */
+                numeroDePage?: number;
             };
             header?: never;
             path?: never;
@@ -730,18 +788,18 @@ export interface operations {
                 content: {
                     "application/vnd.spring-boot.actuator.v3+json": {
                         [key: string]: {
-                            [key: string]: components["schemas"]["Link"] | undefined;
-                        } | undefined;
+                            [key: string]: components["schemas"]["Link"];
+                        };
                     };
                     "application/vnd.spring-boot.actuator.v2+json": {
                         [key: string]: {
-                            [key: string]: components["schemas"]["Link"] | undefined;
-                        } | undefined;
+                            [key: string]: components["schemas"]["Link"];
+                        };
                     };
                     "application/json": {
                         [key: string]: {
-                            [key: string]: components["schemas"]["Link"] | undefined;
-                        } | undefined;
+                            [key: string]: components["schemas"]["Link"];
+                        };
                     };
                 };
             };
