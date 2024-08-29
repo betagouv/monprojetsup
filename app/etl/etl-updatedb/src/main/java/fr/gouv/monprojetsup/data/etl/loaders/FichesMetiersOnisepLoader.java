@@ -2,14 +2,13 @@ package fr.gouv.monprojetsup.data.etl.loaders;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.onisep.FichesMetierOnisep;
-import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static fr.gouv.monprojetsup.data.etl.sources.DataSources.ONISEP_FICHES_METIERS;
+import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.ONISEP_FICHES_METIERS;
 
 public class FichesMetiersOnisepLoader {
     public static FichesMetierOnisep loadFichesMetierOnisep(DataSources sources) throws IOException {

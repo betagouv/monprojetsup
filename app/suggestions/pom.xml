@@ -13,7 +13,7 @@
 
 	<groupId>fr.gouv.monprojetsup</groupId>
 	<artifactId>suggestions</artifactId>
-	<version>1.4.1</version>
+	<version>1.4</version>
     <packaging>pom</packaging>
 
 	<description>suggestions personnalisées dans MonProjetSup</description>
@@ -29,6 +29,7 @@
 		<java.version>19</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
+		<mps.suggestions.version>1.4.1</mps.suggestions.version>
 	</properties>
 
 
@@ -97,6 +98,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+
+		<!-- spring boot 3.2 uses hibernate 6.3.0 requires hypersistence 3.8.2 -->
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-63</artifactId>
+			<version>3.8.2</version>
 		</dependency>
 
 	</dependencies>

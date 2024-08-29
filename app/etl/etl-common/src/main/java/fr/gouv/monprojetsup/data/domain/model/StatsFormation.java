@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.domain.model;
 import fr.gouv.monprojetsup.data.domain.model.stats.Statistique;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 public record StatsFormation(
@@ -23,4 +24,9 @@ public record StatsFormation(
 
 ) {
 
+    public void restrictToBacs(@NotNull List<String> bacsKeys) {
+        admissions.keySet().retainAll(bacsKeys);
+        nbAdmisParBac.keySet().retainAll(bacsKeys);
+        pctAdmisParBac.keySet().retainAll(bacsKeys);
+    }
 }

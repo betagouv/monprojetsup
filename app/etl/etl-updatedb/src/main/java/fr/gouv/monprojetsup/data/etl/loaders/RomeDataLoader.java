@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
 import fr.gouv.monprojetsup.data.domain.model.rome.RomeData;
 import fr.gouv.monprojetsup.data.domain.model.rome.Themes;

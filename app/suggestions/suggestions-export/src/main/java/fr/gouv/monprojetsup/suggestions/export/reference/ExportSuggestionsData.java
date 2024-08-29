@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.suggestions.export.reference;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.domain.port.LabelsPort;
+import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
-import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
+import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class ExportSuggestionsData {
-
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
     private final Map<String, String> labels;

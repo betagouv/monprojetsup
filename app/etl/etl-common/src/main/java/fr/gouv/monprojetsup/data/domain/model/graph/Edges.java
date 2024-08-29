@@ -78,20 +78,7 @@ public final class Edges {
 
 
     public Set<Path> computePathesFrom(String node, int maxDistance) {
-
         return computePathesFromInternal(node, maxDistance);
-        /*
-        Pair<String,Integer> p = Pair.of(node, maxDistance);
-        Set<Path> cached = cachePathesComputation.get(p);
-        if(cached != null) return new HashSet<>(cached);
-
-        Set<Path> result = computePathesFromInternal(node, maxDistance);
-        cachePathesComputation.put(p, result);
-        cachePathesComputationStats.put(p, cachePathesComputationStats.getOrDefault(p, 0) + 1);
-        if(cachePathesComputation.size() >= CACHE_MAX_SIZE) {
-            slimCache();
-        }
-        return new HashSet<>(result);*/
     }
 
 
@@ -131,29 +118,6 @@ public final class Edges {
         }
         return resultat;
     }
-
-    /**
-    private Map<Pair<String, Integer>, Set<Path>> cachePathesComputation = new ConcurrentHashMap<>();
-    private Map<Pair<String, Integer>, Integer> cachePathesComputationStats = new ConcurrentHashMap<>();
-    private static final int CACHE_MAX_SIZE = 500;
-
-     * decreases to 75% of the max cache size
-     * by removing from the cache the least used entries
-    private void slimCache() {
-        try {
-            Serialisation.toJsonFile("cachePathesStats.json", cachePathesComputationStats, true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        List<Pair<String, Integer>> top =
-                cachePathesComputationStats.entrySet().stream()
-                        .sorted((e1, e2) -> e2.getValue() - e1.getValue())
-                        .limit(3 * CACHE_MAX_SIZE / 4)
-                        .map(e -> e.getKey())
-                        .toList();
-        cachePathesComputation.keySet().retainAll(top);
-    }
-    */
 
     /**
      * @param node

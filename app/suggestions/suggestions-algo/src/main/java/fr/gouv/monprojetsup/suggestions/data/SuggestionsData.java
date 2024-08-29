@@ -4,7 +4,8 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.domain.model.*;
 import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.domain.model.stats.StatsContainers;
-import fr.gouv.monprojetsup.data.domain.port.*;
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity;
+import fr.gouv.monprojetsup.suggestions.port.*;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,7 @@ public class SuggestionsData {
 
     public List<String> getAllRelatedInterests(@NotNull Collection<String> keys) {
         return keys.stream().flatMap(
-                key -> edgesPort.getOutgoingEdges(key, EdgesPort.TYPE_EDGE_INTEREST_TO_INTEREST).stream()
+                key -> edgesPort.getOutgoingEdges(key, SuggestionsEdgeEntity.TYPE_EDGE_INTEREST_TO_INTEREST).stream()
         ).toList();
     }
 

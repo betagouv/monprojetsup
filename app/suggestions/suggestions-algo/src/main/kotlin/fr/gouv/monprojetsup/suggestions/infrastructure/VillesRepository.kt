@@ -1,16 +1,15 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure
+package fr.gouv.monprojetsup.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.domain.model.LatLng
-import fr.gouv.monprojetsup.data.domain.model.Ville
-import fr.gouv.monprojetsup.data.domain.port.VillesPort
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
+import fr.gouv.monprojetsup.suggestions.port.VillesPort
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 
-interface VillesJPARepository : JpaRepository<SuggestionsVilleEntity, String> {
-
-}
+interface VillesJPARepository : JpaRepository<SuggestionsVilleEntity, String>
 
 @Repository
 open class VillesRepository(
@@ -18,13 +17,11 @@ open class VillesRepository(
 )
     : VillesPort
 {
+
+    @Transactional(readOnly = true)
+    @Cacheable(value = ["myCache"])
     override fun getCoords(id: String): List<LatLng> {
         return repo.findById(id).map { it.coords }.orElse(listOf())
     }
-
-    override fun saveAll(villes: MutableList<Ville>) {
-        repo.saveAll(villes.map { SuggestionsVilleEntity(it) })
-    }
-
 
 }

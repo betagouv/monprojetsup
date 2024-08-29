@@ -14,10 +14,8 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.billy.PsupToOnisepLines;
 import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FormationsAvecMetiers;
 import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FormationsOnisep;
 import fr.gouv.monprojetsup.data.domain.model.thematiques.Thematiques;
-import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.etl.csv.CsvTools;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.FORMATION_PREFIX;
 import static fr.gouv.monprojetsup.data.domain.Constants.cleanup;
-import static fr.gouv.monprojetsup.data.etl.csv.CsvTools.toCsv;
+import static fr.gouv.monprojetsup.data.etl.loaders.CsvTools.toCsv;
 
 public class OnisepDataLoader {
     private static final Logger LOGGER = Logger.getLogger(OnisepData.class.getSimpleName());
@@ -59,7 +57,7 @@ public class OnisepDataLoader {
 
         metiers.inject(metiersScrapped);
 
-        Thematiques thematiques = ThematiquesLoader.loadThematiques(sources);
+        Thematiques thematiques = ThematiquesLoader.loadThematiquesOnisep(sources);
 
         InteretsOnisep interetsOnisep = Serialisation.fromJsonFile(sources.getSourceDataFilePath(DataSources.INTERETS_PATH), InteretsOnisep.class);
         val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');

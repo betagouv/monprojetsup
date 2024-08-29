@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.domain.port;
+package fr.gouv.monprojetsup.suggestions.port;
 
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity;
 import fr.gouv.monprojetsup.data.domain.model.Formation;
@@ -16,7 +16,4 @@ public interface FormationsPort {
 
     @NotNull List<@NotNull FormationEntity> findAll();
 
-    void deleteAll();
-
-    void saveAll(@NotNull List<FormationEntity> entities);
 }

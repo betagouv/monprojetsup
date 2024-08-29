@@ -23,13 +23,7 @@ fun main(args: Array<String>) {
 @EntityScan(basePackages = [
 	"fr.gouv.monprojetsup.data"]
 )
-@EnableJpaRepositories(basePackages = [
-	"fr.gouv.monprojetsup.data.formation.infrastructure",
-	"fr.gouv.monprojetsup.data.metier.infrastructure",
-	"fr.gouv.monprojetsup.data.referentiel.infrastructure",
-	"fr.gouv.monprojetsup.data.suggestions.infrastructure"
-]
-)
+@EnableJpaRepositories
 class UpdateDbRunner  {
 
 }
@@ -42,10 +36,27 @@ class Runner(
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs
 ) : CommandLineRunner {
+
+	private val logger = java.util.logging.Logger.getLogger(Runner::class.java.simpleName)
+
 	override fun run(vararg args: String?) {
-		updateFormationRepositories.updateFormationDbs()
-		updateMetierDbs.updateMetierDbs()
+
+		//clearAll in this order to avoid foreign key constraint errors
+		updateFormationRepositories.clearAll()
+		updateMetierDbs.clearAll()
+		updateSuggestionsDbs.clearAll()
+		updateReferentielDbs.clearAll()
+
+		logger.info("Updating referentiel dbs")
 		updateReferentielDbs.updateReferentielDbs()
+
+		logger.info("Updating formations dbs")
+		updateFormationRepositories.updateFormationDbs()
+
+		logger.info("Updating metiers dbs")
+		updateMetierDbs.updateMetierDbs()
+
+		logger.info("Updating suggestions dbs")
 		updateSuggestionsDbs.updateSuggestionDbs()
 	}
 }

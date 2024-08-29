@@ -1,8 +1,8 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure
+package fr.gouv.monprojetsup.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.domain.model.Candidat
-import fr.gouv.monprojetsup.data.domain.port.CandidatsPort
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
+import fr.gouv.monprojetsup.suggestions.port.CandidatsPort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -20,16 +20,6 @@ open class CandidatsRepository(
     @Transactional(readOnly = true)
     override fun findAll(): List<Candidat> {
         return repo.findAll().map { it.toCandidat() }.toMutableList()
-    }
-
-    @Transactional(readOnly = false)
-    override fun save(candidat: Candidat) {
-        repo.save(SuggestionsCandidatEntity(candidat));
-    }
-
-    @Transactional(readOnly = false)
-    override fun saveAll(candidat: MutableCollection<Candidat>) {
-        repo.saveAll(candidat.map { SuggestionsCandidatEntity(it) })
     }
 
 }

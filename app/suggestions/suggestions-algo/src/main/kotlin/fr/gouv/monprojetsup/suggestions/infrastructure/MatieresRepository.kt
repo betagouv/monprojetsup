@@ -1,8 +1,8 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure
+package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
 import fr.gouv.monprojetsup.data.domain.model.Matiere
-import fr.gouv.monprojetsup.data.domain.port.MatieresPort
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
+import fr.gouv.monprojetsup.suggestions.port.MatieresPort
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -28,12 +28,6 @@ open class MatieresRepository(
     @Cacheable(value = ["myCache"])
     override fun retrieveSpecialites(): List<Matiere> {
         return repo.findAll().filter { m -> m.estSpecialite }.map { it.toMatiere() }
-    }
-
-    override fun saveAll(matieres: List<Matiere>) {
-        repo.saveAll(
-            matieres.map { SuggestionsMatiereEntity(it) }
-        )
     }
 
 }

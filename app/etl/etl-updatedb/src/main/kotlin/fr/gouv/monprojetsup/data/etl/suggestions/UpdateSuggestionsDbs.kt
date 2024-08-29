@@ -1,27 +1,42 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.model.*
-import fr.gouv.monprojetsup.data.domain.model.cities.CitiesExternal
-import fr.gouv.monprojetsup.data.domain.model.cities.Coords
-import fr.gouv.monprojetsup.data.domain.port.*
-import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
-import fr.gouv.monprojetsup.data.etl.sources.DataSources
-import fr.gouv.monprojetsup.data.tools.Serialisation
-import org.apache.commons.lang3.tuple.Pair
+import fr.gouv.monprojetsup.data.domain.model.Candidat
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.suggestions.entity.*
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
-import java.io.IOException
-import java.util.*
+import org.springframework.stereotype.Repository
 import java.util.logging.Logger
+
+
+@Repository
+interface SuggestionsCandidatsDb :
+    JpaRepository<SuggestionsCandidatEntity, String>
+
+@Repository
+interface SuggestionsVillesDb :
+    JpaRepository<SuggestionsVilleEntity, String>
+
+@Repository
+interface SuggestionsMatieresDb :
+    JpaRepository<SuggestionsMatiereEntity, String>
+
+@Repository
+interface SuggestionsLabelsDb :
+    JpaRepository<SuggestionsLabelEntity, String>
+
+@Repository
+interface SuggestionsEdgesDb :
+    JpaRepository<SuggestionsEdgeEntity, String>
 
 @Component
 class UpdateSuggestionsDbs(
-    private val dataSources: DataSources,
-    private val candidatsPort: CandidatsPort,
-    private val villesPort: VillesPort,
-    private val matieresPort: MatieresPort,
-    private val labelsPort: LabelsPort,
-    private val edgesPort: EdgesPort,
+    private val candidatsPort: SuggestionsCandidatsDb,
+    private val villesPort: SuggestionsVillesDb,
+    private val matieresPort: SuggestionsMatieresDb,
+    private val labelsPort: SuggestionsLabelsDb,
+    private val edgesPort: SuggestionsEdgesDb,
     private val mpsDataPort: MpsDataPort
 ) {
 
@@ -29,25 +44,26 @@ class UpdateSuggestionsDbs(
 
     internal fun updateSuggestionDbs() {
 
-        //1. candidats
+        logger.info("Updating candidats db")
         updateCandidatsDb()
 
-        //2. edges
+        logger.info("Updating edges db")
         updateEdgesDb()
 
-        //3. labels
+        logger.info("Updating labels db")
         updateLabelsDb()
 
-        //4. matieres
+        logger.info("Updating matieres db")
         updateMatieresDb()
 
-        //5. villes
+        logger.info("Updating villes db")
         updateVillesDb()
 
     }
 
     private fun updateMatieresDb() {
-        matieresPort.saveAll(mpsDataPort.getMatieres())
+        matieresPort.deleteAll()
+        matieresPort.saveAll(mpsDataPort.getMatieres().map { SuggestionsMatiereEntity(it) })
     }
 
     private fun updateLabelsDb() {
@@ -58,8 +74,8 @@ class UpdateSuggestionsDbs(
             if(value.size >= 2)
                 debugLabels[key] = labels[key] + Constants.GROUPE_INFIX + value.toString()
         }
-        labelsPort.saveAll(labels, debugLabels)
-
+        labelsPort.deleteAll()
+        labelsPort.saveAll(labels.entries.map { SuggestionsLabelEntity(it.key, it.value, debugLabels[it.key]) })
     }
 
     private fun updateCandidatsDb() {
@@ -68,166 +84,31 @@ class UpdateSuggestionsDbs(
                 voeuxCandidat
             )
         }
-        candidatsPort.saveAll(candidats)
+        candidatsPort.deleteAll()
+        candidatsPort.saveAll(candidats.map { SuggestionsCandidatEntity(it) })
     }
 
 
     private fun updateVillesDb() {
-        val cities = loadCitiesBack()
-        villesPort.saveAll(cities)
+        val cities = mpsDataPort.getCities()
+        villesPort.deleteAll()
+        villesPort.saveAll(cities.map { SuggestionsVilleEntity(it) })
     }
-
-    /*
-
-    private fun updateFormationsDb(
-        psupData: PsupData,
-        statistiques: PsupStatistiques,
-        onisepData: OnisepData
-    ) {
-        val psupKeyToMpsKey = psupData.psupKeyToMpsKey
-        val apprentissage = psupData.getApprentissage()
-        val lasToGeneric = psupData.lasToGeneric
-
-        val formationsMps = mpsDataPort.getFormationsMpsIds()
-
-        val voeux = psupData.getVoeux(formationsMps)
-
-        val labels = Labels.getLabels(
-            statistiques.nomsFilieres,
-            psupData,
-            onisepData
-        )
-
-        val mpsKeyToPsupKeys = psupData.getMpsKeyToPsupKeys()
-
-        val debugLabels = HashMap(labels)
-        mpsKeyToPsupKeys.forEach { (key, value) ->
-            if(value.size >= 2)
-                debugLabels[key] = labels[key] + Constants.GROUPE_INFIX + value.toString()
-        }
-
-        val capacities = HashMap<String,Int>()
-        val nbFormations = HashMap<String,Int>()
-        val grpToFormations = psupData.getFormationToVoeux()
-        grpToFormations.forEach { (key, value) ->
-            nbFormations[key] = value.size
-            capacities[key] = value.stream()
-                .mapToInt { f: Formation -> f.capacite }
-                .sum()
-        }
-
-        val formationsVersMetiers = getFormationsVersMetiers(onisepData, psupData)
-
-        val formations = ArrayList<fr.gouv.monprojetsup.data.domain.model.Formation>()
-        formationsMps.forEach { mpsKey ->
-            val voeuxFormation = voeux.filter { it.formation == mpsKey }
-            val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, setOf(mpsKey))
-            if(psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $mpsKey")
-            val metiers = formationsVersMetiers[mpsKey] ?: HashSet()
-            val stats = StatsFormation(
-                statistiques.getStatsMoyGenParBac(mpsKey),
-                statistiques.getNbAdmisParBac(mpsKey),
-                statistiques.getPctAdmisParBac(mpsKey) ?: mapOf(),
-                statistiques.getNbAdmisParSpec(mpsKey) ?: mapOf(),
-                statistiques.getPctAdmisParSpec(mpsKey) ?: mapOf(),
-                psupData.getStatsFilSim(psupKeys) ?: mapOf()
-            )
-            val duree =
-                psupKeys.mapNotNull { fps -> psupData.getDuree(fps, psupKeyToMpsKey, lasToGeneric.keys) }
-                    .minOrNull()
-
-            if(duree !=  null) {
-                val formation = Formation(
-                    mpsKey,
-                    labels.getOrDefault(mpsKey, mpsKey),
-                    debugLabels.getOrDefault(mpsKey, mpsKey),
-                    capacities.getOrDefault(mpsKey, 0),
-                    apprentissage.contains(mpsKey),
-                    duree,//psupKeys is non empty
-                    lasToGeneric[mpsKey],
-                    voeuxFormation,
-                    ArrayList(metiers),
-                    stats,
-                    ArrayList(psupKeys)
-                )
-                formations.add(formation)
-            } else {
-                logger.info("Skipped formation $mpsKey because of missing duration")
-            }
-        }
-        formationsPort.saveAll(formations)
-    }
-
-     */
 
     private fun updateEdgesDb() {
         val edges = mpsDataPort.getEdges()
-        edgesPort.saveAll(edges)
+        edgesPort.deleteAll()
+        edgesPort.saveAll(edges.map { SuggestionsEdgeEntity(it.first, it.second, it.third) })
     }
 
 
-
-    @Throws(IOException::class)
-    fun loadCitiesBack(): List<Ville> {
-        logger.info("Double indexation des villes")
-        val citiesOld = Serialisation.fromJsonFile(
-            dataSources.getSourceDataFilePath(DataSources.CITIES_FILE_PATH),
-            CitiesExternal::class.java
-        )
-
-        val mByDpt: MutableMap<String, Pair<String, MutableList<Coords>>> = HashMap()
-        citiesOld.cities()
-            .filter { c -> c.zip_code != null }
-            .forEach { c ->
-                var key = c.name()
-                key += c.zip_code().toInt() / 1000
-                val toto = mByDpt.computeIfAbsent(key) { _ ->
-                    Pair.of(
-                        c.name(),
-                        ArrayList()
-                    )
-                }
-                toto.right.add(
-                    Coords(
-                        c.zip_code(),
-                        c.insee_code(),
-                        c.gps_lat(),
-                        c.gps_lng()
-                    )
-                )
-            }
-        val cities: MutableList<Ville> = ArrayList()
-        mByDpt.values.forEach{ value: Pair<String, MutableList<Coords>> ->
-            val name = value.left
-            val coords = value.right
-            if (coords != null) {
-                val gpsCoords: List<LatLng> = coords
-                    .filter { it.gps_lat != null && it.gps_lng != null }
-                    .map {
-                        LatLng(
-                            it.gps_lat,
-                            it.gps_lng
-                        )
-                    }
-                if (gpsCoords.isNotEmpty()) {
-                    cities.add(Ville(name, gpsCoords))
-                    coords.forEach { c: Coords ->
-                        cities.add(
-                            Ville(c.zip_code(), gpsCoords)
-                        )
-                        cities.add(
-                            Ville(
-                                "i" + c.insee_code(),
-                                gpsCoords
-                            )
-                        )
-                    }
-                }
-            }
-        }
-        return cities
+    fun clearAll() {
+        candidatsPort.deleteAll()
+        villesPort.deleteAll()
+        matieresPort.deleteAll()
+        labelsPort.deleteAll()
+        edgesPort.deleteAll()
     }
-
 
 
 }

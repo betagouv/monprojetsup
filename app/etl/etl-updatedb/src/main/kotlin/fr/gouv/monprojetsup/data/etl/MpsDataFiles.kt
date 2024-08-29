@@ -1,13 +1,13 @@
-package fr.gouv.monprojetsup.data.etl.sources
+package fr.gouv.monprojetsup.data.etl
 
 import com.google.gson.reflect.TypeToken
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.model.Matiere
-import fr.gouv.monprojetsup.data.domain.model.StatsFormation
-import fr.gouv.monprojetsup.data.domain.model.Voeu
+import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac
+import fr.gouv.monprojetsup.data.domain.model.cities.CitiesExternal
+import fr.gouv.monprojetsup.data.domain.model.cities.Coords
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation
 import fr.gouv.monprojetsup.data.domain.model.graph.Edges
@@ -20,16 +20,21 @@ import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
-import fr.gouv.monprojetsup.data.domain.port.EdgesPort
-import fr.gouv.monprojetsup.data.etl.csv.CsvTools
-import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
-import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
-import fr.gouv.monprojetsup.data.etl.loaders.RomeDataLoader
-import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
+import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.etl.suggestions.labels.Labels
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_GROUPES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_THEMATIQUES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTEREST_TO_INTEREST
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_METIER
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_GENERIC
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_PASS
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_ASSOCIES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_SECTEURS_METIERS
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_THEMATIQUES_METIERS
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
+import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
@@ -133,6 +138,66 @@ class MpsDataFiles(
             }
         }
         return result
+    }
+
+    override fun getCities(): List<Ville> {
+        logger.info("Double indexation des villes")
+        val citiesOld = Serialisation.fromJsonFile(
+            dataSources.getSourceDataFilePath(DataSources.CITIES_FILE_PATH),
+            CitiesExternal::class.java
+        )
+
+        val mByDpt: MutableMap<String, Pair<String, MutableList<Coords>>> = HashMap()
+        citiesOld.cities()
+            .filter { c -> c.zip_code != null }
+            .forEach { c ->
+                var key = c.name()
+                key += c.zip_code().toInt() / 1000
+                val toto = mByDpt.computeIfAbsent(key) { _ ->
+                    Pair.of(
+                        c.name(),
+                        ArrayList()
+                    )
+                }
+                toto.right.add(
+                    Coords(
+                        c.zip_code(),
+                        c.insee_code(),
+                        c.gps_lat(),
+                        c.gps_lng()
+                    )
+                )
+            }
+        val cities: MutableList<Ville> = ArrayList()
+        mByDpt.values.forEach { value: Pair<String, MutableList<Coords>> ->
+            val name = value.left
+            val coords = value.right
+            if (coords != null) {
+                val gpsCoords: List<LatLng> = coords
+                    .filter { it.gps_lat != null && it.gps_lng != null }
+                    .map {
+                        LatLng(
+                            it.gps_lat,
+                            it.gps_lng
+                        )
+                    }
+                if (gpsCoords.isNotEmpty()) {
+                    cities.add(Ville(name, gpsCoords))
+                    coords.forEach { c: Coords ->
+                        cities.add(
+                            Ville(c.zip_code(), gpsCoords)
+                        )
+                        cities.add(
+                            Ville(
+                                "i" + c.insee_code(),
+                                gpsCoords
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        return cities
     }
 
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
@@ -337,15 +402,15 @@ class MpsDataFiles(
         val psupKeyToMpsKey = getPsupIdToMpsId()
         val lasToGeneric = getLasToGenericIdMapping()
         val lasToPass = getLasToPasIdMapping()
-        result.addAll(getEdges(onisepData.edgesInteretsMetiers, EdgesPort.TYPE_EDGE_INTERET_METIER))
-        result.addAll(getEdges(onisepData.edgesFilieresThematiques, EdgesPort.TYPE_EDGE_FILIERES_THEMATIQUES))
-        result.addAll(getEdges(onisepData.edgesThematiquesMetiers, EdgesPort.TYPE_EDGE_THEMATIQUES_METIERS))
-        result.addAll(getEdges(onisepData.edgesSecteursMetiers, EdgesPort.TYPE_EDGE_SECTEURS_METIERS))
-        result.addAll(getEdges(onisepData.edgesMetiersAssocies, EdgesPort.TYPE_EDGE_METIERS_ASSOCIES))
-        result.addAll(getEdges(psupKeyToMpsKey, EdgesPort.TYPE_EDGE_FILIERES_GROUPES))
-        result.addAll(getEdges(lasToGeneric, EdgesPort.TYPE_EDGE_LAS_TO_GENERIC))
-        result.addAll(getEdges(lasToPass, EdgesPort.TYPE_EDGE_LAS_TO_PASS))
-        result.addAll(getEdges(onisepData.edgesInteretsToInterets, EdgesPort.TYPE_EDGE_INTEREST_TO_INTEREST))
+        result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
+        result.addAll(getEdges(onisepData.edgesFilieresThematiques, TYPE_EDGE_FILIERES_THEMATIQUES))
+        result.addAll(getEdges(onisepData.edgesThematiquesMetiers, TYPE_EDGE_THEMATIQUES_METIERS))
+        result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
+        result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
+        result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_FILIERES_GROUPES))
+        result.addAll(getEdges(lasToGeneric, TYPE_EDGE_LAS_TO_GENERIC))
+        result.addAll(getEdges(lasToPass, TYPE_EDGE_LAS_TO_PASS))
+        result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTEREST_TO_INTEREST))
         return result
     }
 
@@ -393,6 +458,7 @@ class MpsDataFiles(
         val annee = statistiques.getAnnee()
         val stats = getStatsFormation()
         val result = HashMap<MoyenneGeneraleAdmisId, List<Int>>()
+        stats.values.forEach{ stat -> stat.restrictToBacs(getBacs().map { it.key }) }
         stats.forEach {
             val formationId = it.key
             val admissions = it.value.admissions
@@ -406,8 +472,10 @@ class MpsDataFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        val type = object : TypeToken<List<Bac?>?>() {}.type
-        return Serialisation.fromJsonFile<List<Bac>>(dataSources.getSourceDataFilePath(DataSources.BACS_FILENAME), type)
+        val type = object : TypeToken<Map<String,String>>() {}.type
+        val pairs = Serialisation.fromJsonFile<Map<String,String>>(dataSources.getSourceDataFilePath(DataSources.BACS_FILENAME), type)
+        val bacs = pairs.entries.map { Bac(it.key, it.value) }
+        return bacs
     }
 
     override fun getThematiques(): List<CategorieThematiques> {
@@ -416,10 +484,9 @@ class MpsDataFiles(
 
         var groupe = ""
         var emojig: String? = ""
-        for (stringStringMap in CsvTools.readCSV(
-            dataSources.getSourceDataFilePath(DataSources.THEMATIQUES_REGROUPEMENTS_PATH),
-            '\t'
-        )) {
+        val listStringStringMap = ThematiquesLoader.loadThematiquesMps(dataSources)
+        for (stringStringMap in listStringStringMap)
+        {
             val id = stringStringMap["id"].orEmpty()
             if(id.isEmpty()) continue
             val regroupement = stringStringMap["regroupement"].orEmpty().trim { it <= ' ' }
@@ -466,7 +533,7 @@ class MpsDataFiles(
             ),
             InteretsOnisep::class.java
         )
-        val groupes = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t')
+        val groupes = InteretsLoader.loadInterets(dataSources)
 
         return Interets(interetsOnisep, groupes)
 
