@@ -97,8 +97,11 @@ class UpdateReferentielDbs(
 
     private fun updateBaccalaureatSpecialiteDb() {
         val specialites = mpsDataPort.getSpecialites()
+        val bacsKeys = mpsDataPort.getBacs().map { b -> b.key}.toSet()
         specialitesBacDb.deleteAll()
-        specialites.specialitesParBac.forEach {
+        specialites.specialitesParBac
+            .filter { s -> bacsKeys.contains(s.key) }
+            .forEach {
             it.value.forEach { bacSpec ->
                 val entity = BaccalaureatSpecialiteEntity()
                 entity.id = BaccalaureatSpecialiteId(it.key, bacSpec.toString())
