@@ -1,4 +1,3 @@
-select count(*) from a_adm;
 
 define anneeSeconde = 2022;
 define MOYENNE_BAC_I_EB_COD = 20;
@@ -216,10 +215,11 @@ from sp_g_tri_aff
 drop table mps_formations;
 create table mps_formations as
 SELECT G_TA_LIB_VOE,G_FL_COD_AFF,G_EA_COD_AFF,C_GP_COD,formations.g_ta_cod G_TA_COD, rec.g_ti_cod G_Ti_COD, 
-G_AA_LIB,G_AA_COD, arec.A_RC_CAP capa, formations.g_ta_lng lng, formations.g_ta_lat lat, eta.b_cm_cod code_commune, eta.g_ea_com commune
-FROM  A_REC_GRP rec, A_REC arec,G_ETA eta, SP_G_TRI_AFF  formations  
-WHERE rec.g_ta_cod=formations.g_ta_cod AND rec.g_ta_cod=arec.g_ta_Cod AND eta.g_ea_cod=formations.g_ea_cod_aff ORDER BY G_FL_COD_AFF,C_GP_COD;
-
+G_AA_LIB,G_AA_COD, arec.A_RC_CAP capa, formations.g_ta_lng lng, formations.g_ta_lat lat, eta.b_cm_cod code_commune, NVL(b_cm_lib,eta.g_ea_com) commune
+FROM  A_REC_GRP rec, A_REC arec,G_ETA eta, SP_G_TRI_AFF  formations, B_COM com  
+WHERE rec.g_ta_cod=formations.g_ta_cod AND rec.g_ta_cod=arec.g_ta_Cod AND eta.g_ea_cod=formations.g_ea_cod_aff 
+and eta.b_cm_cod=com.b_cm_cod
+ORDER BY G_FL_COD_AFF,C_GP_COD;
 
 create or replace view mps_a_rec as 
 (select g_ta_cod,g_ti_cod from a_rec);
