@@ -1,8 +1,8 @@
-package fr.gouv.monprojetsup.data.etl.sources
+package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.domain.model.Matiere
 import fr.gouv.monprojetsup.data.domain.model.StatsFormation
+import fr.gouv.monprojetsup.data.domain.model.Ville
 import fr.gouv.monprojetsup.data.domain.model.Voeu
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac
@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsM
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
+import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 
 interface MpsDataPort {
     fun getLabels(): Map<String, String>
@@ -39,4 +40,5 @@ interface MpsDataPort {
     fun getThematiques(): List<CategorieThematiques>
     fun getInterets(): Interets
     fun getConseils(): Map<String, String>
+    fun getCities(): List<Ville>
 }

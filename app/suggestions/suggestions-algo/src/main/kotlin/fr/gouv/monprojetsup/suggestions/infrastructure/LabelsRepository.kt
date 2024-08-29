@@ -1,7 +1,7 @@
-package fr.gouv.monprojetsup.data.suggestions.infrastructure
+package fr.gouv.monprojetsup.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import fr.gouv.monprojetsup.data.domain.port.LabelsPort
+import fr.gouv.monprojetsup.suggestions.port.LabelsPort
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -34,24 +34,15 @@ open class LabelsRepository(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["myCache"], key = "#id")
+    @Cacheable(value = ["myCache"])
     override fun retrieveLabel(id: String): Optional<String> {
         return repo.findById(id).map { it.label }
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["myCache"], key = "#id")
+    @Cacheable(value = ["myCache"])
     override fun retrieveDebugLabel(id: String): Optional<String> {
         return repo.findById(id).map { (it.labelDebug ?: it.label) }
-    }
-
-    override fun saveAll(
-        labels: Map<String, String>,
-        debugLabels: Map<String, String>
-    ) {
-        repo.saveAll(
-            labels.entries.map { SuggestionsLabelEntity(it.key, it.value, debugLabels[it.key]) }
-        )
     }
 
 }

@@ -1,9 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.domain.model.Formation;
-import fr.gouv.monprojetsup.data.domain.port.EdgesPort;
-import fr.gouv.monprojetsup.data.domain.port.FormationsPort;
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.domain.model.Formation;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -11,6 +9,8 @@ import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
+import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
+import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
+import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
-import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 

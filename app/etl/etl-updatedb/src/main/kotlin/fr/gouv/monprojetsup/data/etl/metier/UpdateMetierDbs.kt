@@ -1,16 +1,22 @@
 package fr.gouv.monprojetsup.data.etl.metier
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
-import fr.gouv.monprojetsup.data.metier.infrastructure.MetiersDb
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
+
+@Repository
+interface MetiersDb :
+    JpaRepository<MetierEntity, String>
 
 @Component
 class UpdateMetierDbs(
     private val metiersDb: MetiersDb,
     private val mpsDataPort : MpsDataPort
 ) {
+
     fun updateMetierDbs() {
         val descriptifs = mpsDataPort.getDescriptifs()
         val labels = mpsDataPort.getLabels()
@@ -34,6 +40,10 @@ class UpdateMetierDbs(
         }
         metiersDb.deleteAll()
         metiersDb.saveAll(entities)
+    }
+
+    fun clearAll() {
+        metiersDb.deleteAll()
     }
 
 }

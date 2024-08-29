@@ -1,15 +1,53 @@
 package fr.gouv.monprojetsup.data.etl.referentiel
 
-import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.referentiel.entity.*
-import fr.gouv.monprojetsup.data.referentiel.infrastructure.*
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
+import java.util.logging.Logger
+
+@Repository
+interface BaccalaureatDb :
+    JpaRepository<BaccalaureatEntity, String>
+
+@Repository
+interface SpecialitesDb :
+    JpaRepository<SpecialiteEntity, String>
+
+@Repository
+interface BaccalaureatSpecialiteDb :
+    JpaRepository<BaccalaureatSpecialiteEntity, String>
+
+@Repository
+interface CategorieDomaineDb :
+    JpaRepository<CategorieDomaineEntity, String>
+
+@Repository
+interface DomainesDb :
+    JpaRepository<DomaineEntity, String>
+
+@Repository
+interface DomainesCategoryDb :
+    JpaRepository<CategorieDomaineEntity, String>
+
+@Repository
+interface InteretsDb :
+    JpaRepository<InteretEntity, String>
+
+@Repository
+interface InteretsCategoryDb :
+    JpaRepository<InteretCategorieEntity, String>
+
+@Repository
+interface InteretsSousCategorieDb :
+    JpaRepository<InteretSousCategorieEntity, String>
 
 @Component
 class UpdateReferentielDbs(
     private val baccalaureatBd: BaccalaureatDb,
     private val specialitesDb: SpecialitesDb,
-    private val bacSpecDb: BaccalaureatSpecialiteDb,
+    private val specialitesBacDb: BaccalaureatSpecialiteDb,
     private val domainesDb: DomainesDb,
     private val domainesCategoriesDb: DomainesCategoryDb,
     private val interetsDb: InteretsDb,
@@ -17,15 +55,24 @@ class UpdateReferentielDbs(
     private val interetsSousCategorieDb: InteretsSousCategorieDb,
     private val mpsDataPort: MpsDataPort
 ) {
+
+    private val logger: Logger = Logger.getLogger(UpdateReferentielDbs::class.java.simpleName)
+
     fun updateReferentielDbs() {
+        logger.info("Updating bacs db")
         updateBaccalaureatDb()
+        logger.info("Updating specialites db")
         updateSpecialiteDb()
+        logger.info("Updating bacs specialites db")
         updateBaccalaureatSpecialiteDb()
+        logger.info("Updating domaines db")
         updateDomainesDbs()
+        logger.info("Updating interets db")
         updateInteretDbs()
     }
 
     private fun updateBaccalaureatDb() {
+        //delete table already using bacs foreign keys
         baccalaureatBd.deleteAll()
         val bacs = mpsDataPort.getBacs()
         bacs.forEach { baccalaureat ->
@@ -50,12 +97,12 @@ class UpdateReferentielDbs(
 
     private fun updateBaccalaureatSpecialiteDb() {
         val specialites = mpsDataPort.getSpecialites()
-        bacSpecDb.deleteAll()
+        specialitesBacDb.deleteAll()
         specialites.specialitesParBac.forEach {
             it.value.forEach { bacSpec ->
                 val entity = BaccalaureatSpecialiteEntity()
                 entity.id = BaccalaureatSpecialiteId(it.key, bacSpec.toString())
-                bacSpecDb.save(entity)
+                specialitesBacDb.save(entity)
             }
         }
     }
@@ -113,8 +160,21 @@ class UpdateReferentielDbs(
         }
     }
 
+    fun clearAll() {
 
+        //in this order to avoid foreign key constraint errors
 
+        specialitesBacDb.deleteAll()
+        specialitesDb.deleteAll()
+        baccalaureatBd.deleteAll()
+
+        domainesDb.deleteAll()
+        domainesCategoriesDb.deleteAll()
+
+        interetsDb.deleteAll()
+        interetsSousCategorieDb.deleteAll()
+        interetsCategorieDb.deleteAll()
+    }
 
 
 }

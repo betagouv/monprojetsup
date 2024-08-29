@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites;
 import fr.gouv.monprojetsup.data.domain.model.stats.AdmisMatiereBacAnnee;
 import fr.gouv.monprojetsup.data.domain.model.stats.AdmisMatiereBacAnneeStats;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.etl.sources.DataSources;
 
 import java.io.IOException;
 import java.util.List;

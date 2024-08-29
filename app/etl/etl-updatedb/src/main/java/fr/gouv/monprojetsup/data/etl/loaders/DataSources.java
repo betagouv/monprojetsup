@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.etl.sources;
+package fr.gouv.monprojetsup.data.etl.loaders;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;

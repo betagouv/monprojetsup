@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.etl.csv;
+package fr.gouv.monprojetsup.data.etl.loaders;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class CsvTools implements Closeable {
 
@@ -24,13 +23,6 @@ public class CsvTools implements Closeable {
         this.skipNextSeparator = true;
         this.separator = separator;
         ownWriter = true;
-    }
-
-    public CsvTools(Writer writer, char separator) {
-        this.writer = writer;
-        this.skipNextSeparator = true;
-        this.separator = separator;
-        ownWriter = false;
     }
 
     public static @NotNull List<Map<@NotNull String,@NotNull String>> readCSV(String path, char separator) {
@@ -59,9 +51,7 @@ public class CsvTools implements Closeable {
                     throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + values);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (CsvValidationException e) {
+        } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
         }
 
@@ -89,23 +79,6 @@ public class CsvTools implements Closeable {
         skipNextSeparator = false;
     }
 
-    public void append(double val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-
-    public void append(int val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-    public void append(long val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-
     public void newLine() throws IOException {
         writer.append(System.lineSeparator());
         skipNextSeparator = true;
@@ -125,13 +98,5 @@ public class CsvTools implements Closeable {
         newLine();
     }
 
-    public void append(boolean b) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(b));
-        skipNextSeparator = false;
-    }
-
-    public void append(Stream<Map.Entry<String, Integer>> entryStream, String s) {
-    }
 
 }

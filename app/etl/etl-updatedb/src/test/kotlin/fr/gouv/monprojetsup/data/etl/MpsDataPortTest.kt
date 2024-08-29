@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -97,6 +96,13 @@ class MpsDataPortTest(
         assert(voeux.isNotEmpty())
         val nbSansCoordonnees = voeux.count { it.lat == null || it.lng == null }
         assert(nbSansCoordonnees < 200)
+    }
+
+    @Test
+    fun `tous les bacs de toutes les stats sont connus`() {
+        val keys = mpsDataPort.getBacs().map { b -> b.key}
+        val statsKeys = mpsDataPort.getStatsFormation().flatMap{ it.value.nbAdmisParBac.keys }
+        assert(keys.containsAll(statsKeys))
     }
 
 }

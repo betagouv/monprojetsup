@@ -1,17 +1,32 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.etl.sources.MpsDataPort
+import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
-import fr.gouv.monprojetsup.data.formation.infrastructure.CriteresDb
-import fr.gouv.monprojetsup.data.formation.infrastructure.FormationDb
-import fr.gouv.monprojetsup.data.formation.infrastructure.MoyennesGeneralesAdmisDb
-import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import java.util.logging.Logger
+
+@Repository
+interface CriteresDb :
+    JpaRepository<CritereAnalyseCandidatureEntity, String>
+
+@Repository
+interface MoyennesGeneralesAdmisDb :
+    JpaRepository<MoyenneGeneraleAdmisEntity, String>
+
+@Repository
+interface TripletsAffectationDb :
+    JpaRepository<VoeuEntity, String>
+
+@Repository
+interface FormationDb : JpaRepository<FormationEntity, String>
+
 
 @Component
 class UpdateFormationDbs(
@@ -24,8 +39,11 @@ class UpdateFormationDbs(
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun updateFormationDbs() {
+        logger.info("Updating formations and voeux dbs")
         updateFormationsAndVoeuxDb()
+        logger.info("Updating criteres dbs")
         updateCriteresDb()
+        logger.info("Updating moyennes generales admis dbs")
         updateMoyennesGeneralesAdmisDb()
     }
 
@@ -138,6 +156,12 @@ class UpdateFormationDbs(
         }
         criteresDb.deleteAll()
         criteresDb.saveAll(criteres)
+    }
+
+    fun clearAll() {
+        moyennesGeneralesAdmisDb.deleteAll()
+        formationsdb.deleteAll()
+        criteresDb.deleteAll()
     }
 
 

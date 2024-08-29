@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.domain.port;
+package fr.gouv.monprojetsup.suggestions.port;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,8 +15,4 @@ public interface LabelsPort {
 
     @NotNull Optional<String> retrieveDebugLabel(@NotNull String key);
 
-    void saveAll(
-            @NotNull Map<String, @NotNull String> labels,
-            @NotNull Map<String, @NotNull String> debugLabelserror
-    );
 }
