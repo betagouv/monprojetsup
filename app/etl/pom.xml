@@ -22,7 +22,7 @@
 		<etl.version>1.4.2</etl.version>
 		<java.version>19</java.version>
 		<maven.compiler.source>19</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.target>19</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
 		<kotlin.code.style>official</kotlin.code.style>
@@ -108,7 +108,6 @@
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
-			<version>3.0.0</version>
 		</dependency>
 		<!-- Database Connector -->
 		<dependency>

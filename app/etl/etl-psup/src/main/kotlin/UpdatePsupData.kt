@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -20,7 +18,8 @@ fun main(args: Array<String>) {
 	runApplication<UpdatePsupData>(*args)
 }
 
-@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, HibernateJpaAutoConfiguration::class ] )
+//@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, HibernateJpaAutoConfiguration::class ] )
+@SpringBootApplication
 class UpdatePsupData
 
 

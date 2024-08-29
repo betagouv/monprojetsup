@@ -1,1 +1,0 @@
-ALTER TABLE metier ALTER COLUMN descriptif_general TYPE text;
