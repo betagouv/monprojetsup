@@ -14,7 +14,6 @@ public class DataSources {
 
     public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
-    public static final String BACS_FILENAME = "parcoursup/bacs.json";
     public static final String ONISEP_FICHES_METIERS = "onisep_fiches_metiers/Onisep_Ideo_Fiches_metiers_12092023.json";
     public static final String ONISEP_PSUP_TO_IDEO_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26.json";
     public static final String ONISEP_IDEO_FICHES_FORMATIONS_WITH_METIER_PATH = "ideo_formations/Onisep_Ideo_Fiches_Formations_12092023.json";
