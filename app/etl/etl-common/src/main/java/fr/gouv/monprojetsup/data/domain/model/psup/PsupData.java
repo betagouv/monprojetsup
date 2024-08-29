@@ -5,14 +5,17 @@ import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
+import fr.gouv.monprojetsup.data.domain.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,7 +54,9 @@ public record PsupData(
         //liens onisep, par filière
         @NotNull Map<String, @NotNull String> liensOnisep,
 
-        PsupStatistiques stats
+        PsupStatistiques stats,
+
+        @NotNull List<@NotNull Bac> bacs
 
         ) {
     public static final String C_JA_COD = "C_JA_COD";
@@ -73,7 +78,8 @@ public record PsupData(
                 new TreeMap<>(),
                 new TagsSources(),
                 new TreeMap<>(),
-                new PsupStatistiques()
+                new PsupStatistiques(),
+                new ArrayList<>()
         );
     }
 
@@ -163,6 +169,18 @@ public record PsupData(
         filActives.retainAll(formations().filieres.keySet());
         //do not restrict to fil actives because we want to keep apprentissage
         formations().cleanup();
+
+
+        Set<String> bacsActifs = new HashSet<>(stats.getBacsWithAtLeastNdAdmis(MIN_NB_ADMIS_FOR_BAC_ACTIF));
+        bacsActifs.add(PsupStatistiques.TOUS_BACS_CODE);
+        this.bacs.removeIf(b -> !bacsActifs.contains(b.key()));
+        try {
+            Serialisation.toJsonFile("bacsActifs.json", this.bacs, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.stats.restrictToBacs(bacsActifs);
+
         stats.removeSmallPopulations();
         stats.rebuildMiddle50();
         stats.createGroupAdmisStatistique(getPsupKeyToMpsKey());
@@ -583,4 +601,10 @@ public record PsupData(
         voeuxParCandidat.clear();
         stats.minimize();
     }
+
+    public void setBacs(List<Bac> bacs) {
+        this.bacs.clear();
+        this.bacs.addAll(bacs);
+    }
+
 }

@@ -24,6 +24,7 @@ package fr.gouv.monprojetsup.data.psup;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
@@ -41,6 +42,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_GROUPES_CODE;
 
 public class ConnecteurBackendSQL {
 
@@ -134,8 +137,10 @@ public class ConnecteurBackendSQL {
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
                         String g = Constants.gFlCodToFrontId(gFlCod);
-                        stats.incrementeAdmisParFiliere(g, PsupStatistiques.TOUS_BACS_CODE);
-                        if (!bac.equals(PsupStatistiques.TOUS_BACS_CODE)) {
+                        stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, TOUS_BACS_CODE);
+                        stats.incrementeAdmisParFiliere(g, TOUS_BACS_CODE);
+                        if (!bac.equals(TOUS_BACS_CODE)) {
+                            stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, bac);
                             stats.incrementeAdmisParFiliere(g, bac);
                         }
                     }
@@ -159,8 +164,8 @@ public class ConnecteurBackendSQL {
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
                         String g = Constants.gFlCodToFrontId(gFlCod);
-                        stats.incrementeCandidatsParFiliere(g, PsupStatistiques.TOUS_BACS_CODE);
-                        if (!bac.equals(PsupStatistiques.TOUS_BACS_CODE)) {
+                        stats.incrementeCandidatsParFiliere(g, TOUS_BACS_CODE);
+                        if (!bac.equals(TOUS_BACS_CODE)) {
                             stats.incrementeCandidatsParFiliere(g, bac);
                         }
                     }
@@ -233,6 +238,7 @@ public class ConnecteurBackendSQL {
         Set<Integer> filActives = recupererFilieresActives(conn);
         data.filActives().addAll(filActives);
 
+
         recupererNomsfilieres(data, filActives);
         recupererNomsFilieresManquantsEtMostCles(data, filActives);
         recupererLiensOnisep(data, filActives);
@@ -241,10 +247,11 @@ public class ConnecteurBackendSQL {
         recupererFormations(data);
         recupererDiversPsup(data);
         recupererVoeuxParCandidat(data);
+        recupererTypesBacs(data);
 
         Map<Integer, String> bacs = recupereBacsCandidats();
 
-        recupererProfilsScolaires(data.stats(), bacs);
+        //recupererProfilsScolaires(data.stats(), bacs);
         recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
 
         data.cleanup();
@@ -374,12 +381,21 @@ public class ConnecteurBackendSQL {
         }
     }
 
-    private void recupererFormations(PsupData data) throws Exception {
-
-            data.formations().ajouterSiInconnu(recupererFilieresEtFormations());
+    private void recupererTypesBacs(PsupData data) throws SQLException {
+        try (Statement stmt = this.conn.createStatement()) {
+            stmt.setFetchSize(1_000_000);
+            String sql = "select i_cl_cod, i_cl_bac_lib from mps_bacs";
+            LOGGER.info(sql);
+            List<Bac> bacs = new ArrayList<>();
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    bacs.add(new Bac(rs.getString(1), rs.getString(2)));
+                }
+            data.setBacs(bacs);            }
+        }
     }
 
-    private Formations recupererFilieresEtFormations() throws SQLException {
+    private void recupererFormations(PsupData data) throws Exception {
 
 
         Formations formations = new Formations();
@@ -429,7 +445,9 @@ public class ConnecteurBackendSQL {
                 "G_AA_COD, " +
                 "capa, " +
                 "lng, " +
-                "lat FROM mps_formations "
+                "lat," +
+                "commune," +
+                "code_commune FROM mps_formations "
                 + " ORDER BY G_FL_COD_AFF,C_GP_COD";
         LOGGER.info(sql);
         int filieresManquantes = 0;
@@ -475,9 +493,9 @@ public class ConnecteurBackendSQL {
                                 capaciteFormation,
                                 finalLat,
                                 finalLng,
-                                "",//todo merge with psup
-                                ""//todo merge with psup
-                                );
+                                result.getString("commune"),
+                                result.getString("code_commune")
+                        );
                         //communes et codes communes!!
                         formations.formations.put(gTaCod, f);
                     }
@@ -500,7 +518,8 @@ public class ConnecteurBackendSQL {
             LOGGER.info("Filieres manquantes pour " + filieresManquantes + " groupes");
         }
 
-        return formations;
+        data.formations().ajouterSiInconnu(formations);
+
     }
 
 
@@ -683,7 +702,7 @@ public class ConnecteurBackendSQL {
                 String bac = bacs.getOrDefault(gcn, "?");
                 notes.forEach((matiere, note) -> {
                     incremente(bac, group, matiere,note);
-                    incremente(PsupStatistiques.TOUS_BACS_CODE, group, matiere,note);
+                    incremente(TOUS_BACS_CODE, group, matiere,note);
                 });
             }
         });
@@ -800,7 +819,7 @@ public class ConnecteurBackendSQL {
         }
 
         percCounters.clear();
-        incremente(bacs, PsupStatistiques.TOUS_GROUPES_CODE, datasCandidatsMoyennes.keySet(), datasCandidatsMoyennes);
+        incremente(bacs, TOUS_GROUPES_CODE, datasCandidatsMoyennes.keySet(), datasCandidatsMoyennes);
         flToGcn.forEach((fl, gcns) -> incremente(bacs, fl, gcns, datasCandidatsMoyennes));
         gtaToGcn.forEach((gta, gcns) -> incremente(bacs, gta, gcns, datasCandidatsMoyennes));
         data.setStatistiquesAdmisFromPercentileCounters(percCounters);

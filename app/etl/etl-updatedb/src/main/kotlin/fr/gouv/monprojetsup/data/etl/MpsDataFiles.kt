@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl
 
-import com.google.gson.reflect.TypeToken
 import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
@@ -472,10 +471,7 @@ class MpsDataFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        val type = object : TypeToken<Map<String,String>>() {}.type
-        val pairs = Serialisation.fromJsonFile<Map<String,String>>(dataSources.getSourceDataFilePath(DataSources.BACS_FILENAME), type)
-        val bacs = pairs.entries.map { Bac(it.key, it.value) }
-        return bacs
+        return psupData.bacs;
     }
 
     override fun getThematiques(): List<CategorieThematiques> {

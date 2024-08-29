@@ -1,10 +1,12 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
+import fr.gouv.monprojetsup.data.tools.Serialisation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
@@ -23,7 +25,6 @@ public class PsupStatistiques implements Serializable {
     public static final int MOYENNE_BAC_CODE = -2;
     public static final String TOUS_BACS_CODE = "";
 
-    public static final String BACS_GENERAL_CODE = "Générale";
     public static final int PRECISION_PERCENTILES = 40;
     public static final int MOYENNE_GENERALE_CODE = -1;
 
@@ -279,4 +280,24 @@ public class PsupStatistiques implements Serializable {
         ));
     }
 
+    public Set<String> getBacsWithAtLeastNdAdmis(int minNbAdmis) {
+        @NotNull Map<@NotNull String, @NotNull Integer> admisBacsTousGroupes = admisParGroupes.getOrDefault(TOUS_GROUPES_CODE, Map.of());
+        try {
+            Serialisation.toJsonFile("statsBacs.json", admisBacsTousGroupes, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return admisBacsTousGroupes
+                .entrySet()
+                .stream().filter(e -> e.getValue() >= minNbAdmis)
+                .map(Entry::getKey)
+                .collect(Collectors.toSet());
+    }
+
+    public void restrictToBacs(Set<String> bacsActifs) {
+        admisParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
+        candidatsParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
+        admisParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
+        admisMatiereBacAnneeStats.stats().removeIf(s -> !bacsActifs.contains(s.bac()));
+    }
 }

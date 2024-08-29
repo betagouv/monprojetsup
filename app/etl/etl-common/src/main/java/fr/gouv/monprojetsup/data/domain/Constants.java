@@ -26,6 +26,7 @@ public class Constants {
     public static final String CARTE_PARCOURSUP_PREFIX_URI = "https://dossier.parcoursup.fr/Candidat/carte?search=";
     public static final String PASS_MOT_CLE = "PASS";
     public static final int DUREE_LAS = 5;
+    public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
 
     /* TODO: move elsewhere */
     public static String gFlCodToFrontId(int cle) {
