@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.etl.suggestions.labels;
+package fr.gouv.monprojetsup.data.etl.labels;
 
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;

@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.domain.model.psup;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.Candidat;
 import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac;
@@ -19,8 +20,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.domain.Constants.*;
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.domain.Constants.*;
 
 
 public record PsupData(
@@ -39,7 +40,7 @@ public record PsupData(
 
         @NotNull Set<Integer> las,
 
-        @NotNull List<@NotNull Set<@NotNull Integer>> voeuxParCandidat,
+        @NotNull List<Candidat> voeuxParCandidat,
 
         @NotNull DescriptifsFormations descriptifsFormations,
 
@@ -273,6 +274,8 @@ public record PsupData(
                     || name.contains("Année préparatoire")//année préparatoire
                     || fr == 75000 // Diplôme d'Etablissement
                     || fr == 90 //sciences po
+                    || fr == 75001 // DSP
+                    || fr == 75 // DU
 
             ) {
                 String grp = Constants.TYPE_FORMATION_PREFIX + fr;

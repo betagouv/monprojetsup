@@ -60,6 +60,11 @@
             <artifactId>spring-boot-test-autoconfigure</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -112,6 +117,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
+                                <sourceDir>src/main/kotlin</sourceDir>
+                                <sourceDir>src/main/java</sourceDir>
                                 <source>src/test/java</source>
                                 <source>src/test/kotlin</source>
                             </sourceDirs>
@@ -122,15 +129,6 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
-                    <sourceDirs>
-                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                        <sourceDir>${project.basedir}/test/main/kotlin</sourceDir>
-                        <sourceDir>${project.basedir}/test/main/java</sourceDir>
-                    </sourceDirs>
                     <jvmTarget>${maven.compiler.target}</jvmTarget>
                 </configuration>
 

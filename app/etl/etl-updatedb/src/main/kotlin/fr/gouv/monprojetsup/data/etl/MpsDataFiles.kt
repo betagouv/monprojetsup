@@ -19,8 +19,8 @@ import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
+import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
-import fr.gouv.monprojetsup.data.etl.suggestions.labels.Labels
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_GROUPES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_THEMATIQUES
@@ -72,6 +72,8 @@ class MpsDataFiles(
         romeData = RomeDataLoader.load(dataSources)
         logger.info("Insertion des données ROME dans les données Onisep")
         onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
+
+        statistiques.restrictToBacs(getBacs().map { it.key }.toSet())
 
     }
 
@@ -366,16 +368,13 @@ class MpsDataFiles(
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
             if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
 
-            result.put(
-                id,
-                StatsFormation(
-                    statistiques.getStatsMoyGenParBac(id),
-                    statistiques.getNbAdmisParBac(id),
-                    statistiques.getPctAdmisParBac(id) ?: mapOf(),
-                    statistiques.getNbAdmisParSpec(id) ?: mapOf(),
-                    statistiques.getPctAdmisParSpec(id) ?: mapOf(),
-                    psupData.getStatsFilSim(psupKeys) ?: mapOf()
-                )
+            result[id] = StatsFormation(
+                statistiques.getStatsMoyGenParBac(id),
+                statistiques.getNbAdmisParBac(id),
+                statistiques.getPctAdmisParBac(id) ?: mapOf(),
+                statistiques.getNbAdmisParSpec(id) ?: mapOf(),
+                statistiques.getPctAdmisParSpec(id) ?: mapOf(),
+                psupData.getStatsFilSim(psupKeys)
             )
         }
         return result
@@ -388,7 +387,7 @@ class MpsDataFiles(
         return psupData.psupKeyToMpsKey
     }
 
-    override fun getVoeuxParCandidat(): List<Set<Int>> {
+    override fun getVoeuxParCandidat(): List<Candidat> {
         return psupData.voeuxParCandidat
     }
 

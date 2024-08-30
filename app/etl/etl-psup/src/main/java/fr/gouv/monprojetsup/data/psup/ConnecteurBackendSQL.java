@@ -24,6 +24,7 @@ package fr.gouv.monprojetsup.data.psup;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.Candidat;
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
@@ -246,12 +247,11 @@ public class ConnecteurBackendSQL {
         recupererDureesEtudes(data);
         recupererFormations(data);
         recupererDiversPsup(data);
-        recupererVoeuxParCandidat(data);
         recupererTypesBacs(data);
 
         Map<Integer, String> bacs = recupereBacsCandidats();
-
-        //recupererProfilsScolaires(data.stats(), bacs);
+        recupererVoeuxParCandidat(data, bacs);
+        recupererProfilsScolaires(data.stats(), bacs);
         recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
 
         data.cleanup();
@@ -297,7 +297,7 @@ public class ConnecteurBackendSQL {
 
     }
 
-    private void recupererVoeuxParCandidat(PsupData data) throws SQLException {
+    private void recupererVoeuxParCandidat(PsupData data, Map<Integer, String> bacs) throws SQLException {
 
 
         Map<Integer, Set<Integer>> voeuxParCandidat = new HashMap<>();
@@ -322,8 +322,12 @@ public class ConnecteurBackendSQL {
         }
 
         data.voeuxParCandidat().clear();
-        data.voeuxParCandidat().addAll(voeuxParCandidat.values());
-
+        data.voeuxParCandidat().addAll(
+                voeuxParCandidat.entrySet().stream()
+                        .filter(e -> bacs.containsKey(e.getKey()))
+                        .map(e -> new Candidat(bacs.get(e.getKey()), e.getValue()))
+                        .toList()
+        );
     }
 
     private void recupererLas(PsupData data) throws SQLException {

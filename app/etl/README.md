@@ -15,12 +15,12 @@ La nomenclature à respecter est VX_Y__nom_en_miniscule_decrivant_la_migration o
 
 Dans le cas de rebase, il faut penser à augmenter ce chiffre Y pour éviter les conflits avec de potentiels scripts déjà mergés par d'autres personnes.  
 
-## Comment lancer le projet
-### Variables d'env
-- Avant de pouvoir démarrer l'application il est nécessaire de créer le fichier `secrets.properties` situé au même niveau que `application.properties` dans le dossier `app/etl/etl-updatedb/src/main/resources`. Le fait de redéfinir certaines variables dans ce fichier écrasera les valeurs par défaut de ces variables.
+## Mettre à jour les données de référence dans la bdd de MonProjetSup
+
+### Configuration
+- Il est nécessaire de configurer la connexion à la BDD MPS en créant un fichier `secrets.properties` situé au même niveau que `application.properties` dans le dossier `app/etl/etl-updatedb/src/main/resources`. Le fait de redéfinir certaines variables dans ce fichier écrasera les valeurs par défaut de ces variables.
 - Voici les valeurs par défaut que vous pouvez créer
 ```
-server.port=5002
 spring.datasource.url=jdbc:postgresql://localhost:5431/postgres
 spring.datasource.username=postgres
 spring.datasource.password=postgres
@@ -33,8 +33,22 @@ dataRootDirectory=/data/mps/
 ```
 La dernière valeur doit pointer sur un dossier contenant les fichiers de référence.
 
-
-### Lancer le serveur
+### Efectuer la mise à joru de la bdd MPS
 - Assurez-vous de disposer de java en version >= 19
-- Depuis le dossier `app/etl/etl-updatedb` lancez le serveur avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateDbRunnerKt```
+- Lancez la tâche de mise à jour avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
 
+## Mettre à jour les données de référence Parcoursup
+
+### Fichiers de configuration
+- Il est nécessaire de configurer la connexion à la BDD PSUP en créant un fichier `secrets.properties` situé au même niveau que `application.properties` dans le dossier `app/etl/etl-updatedb/src/main/resources`. Le fait de redéfinir certaines variables dans ce fichier écrasera les valeurs par défaut de ces variables.
+- Voici un exemple de valeurst
+```
+dataRootDirectory=./data
+psup.url=jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=host.fr)(PORT=7777))(CONNECT_DATA=(SERVICE_NAME=name)))
+psup.username=login
+psup.password=password
+```
+### Effectuer la mise à jour des fichiers Psup
+Assurez-vous de disposer de java en version >= 19
+- La machine doit disposer d'une connexion directe à la BDD de parcoursup 
+- Lancez la tâche de mise à jour avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdatePsupDataKt```

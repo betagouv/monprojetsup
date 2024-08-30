@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.suggestions.export
 
-import fr.gouv.monprojetsup.suggestions.export.experts.DocsGenerator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsEvaluator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator
 import fr.gouv.monprojetsup.suggestions.export.reference.AnalyzeSuggestionsData
@@ -39,20 +38,15 @@ class Evaluate(val eval : SuggestionsEvaluator) : CommandLineRunner
 
 }
 
-@Profile("experts_generate")
+@Profile("experts_docs")
 class GenerateSuggestions(val gen : SuggestionsGenerator) : CommandLineRunner
 {
     override fun run(vararg args: String?) {
-        gen.generate()
-    }
-
-}
-
-@Profile("experts_docs")
-class GenerateExpertsDocsRunner(val gen : DocsGenerator) : CommandLineRunner
-{
-    override fun run(vararg args: String?) {
-        gen.generate()
+        var filename = SuggestionsGenerator.PROFILS_EXPERTS_MPS_PATH;
+        if(args.isNotEmpty() && args[0] != null) {
+            filename = args[0]!!
+        }
+        gen.generate(filename)
     }
 
 }

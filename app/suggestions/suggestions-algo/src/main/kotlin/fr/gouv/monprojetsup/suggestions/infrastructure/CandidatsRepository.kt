@@ -19,7 +19,7 @@ open class CandidatsRepository(
 
     @Transactional(readOnly = true)
     override fun findAll(): List<Candidat> {
-        return repo.findAll().map { it.toCandidat() }.toMutableList()
+        return repo.findAll().map { it.toCandidat() }
     }
 
 }

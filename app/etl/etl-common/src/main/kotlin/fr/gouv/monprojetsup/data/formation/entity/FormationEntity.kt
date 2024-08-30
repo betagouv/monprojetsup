@@ -79,6 +79,9 @@ class FormationEntity {
     @Column(nullable = true)
     var las: String? = null
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    var stats : StatsEntity = StatsEntity()
+
     fun integrityCheck(): Boolean {
         if(label.isEmpty()
             || descriptifGeneral.isNullOrEmpty()
@@ -131,8 +134,6 @@ class FormationEntity {
         }
     }
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    var stats : StatsEntity = StatsEntity()
 
     fun toFormation(): Formation {
         return Formation(

@@ -297,7 +297,8 @@ public class PsupStatistiques implements Serializable {
     public void restrictToBacs(Set<String> bacsActifs) {
         admisParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
         candidatsParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
-        admisParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
         admisMatiereBacAnneeStats.stats().removeIf(s -> !bacsActifs.contains(s.bac()));
+        statsAdmis.parGroupe().values().forEach(s -> s.parBac().keySet().retainAll(bacsActifs));
     }
+
 }

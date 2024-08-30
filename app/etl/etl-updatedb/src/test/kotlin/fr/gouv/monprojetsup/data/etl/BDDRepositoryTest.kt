@@ -11,11 +11,12 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @ActiveProfiles("test")
-class BDDRepositoryTest {
+open class BDDRepositoryTest {
     companion object {
         @JvmStatic
         private var postgres: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:15-alpine")
