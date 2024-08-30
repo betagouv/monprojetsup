@@ -36,9 +36,8 @@ La dernière valeur doit pointer sur un dossier contenant les fichiers de réfé
 ### Efectuer la mise à jour de la bdd MPS
 - Assurez-vous de disposer de java en version >= 19
 - Placez-vous dans le dossier `app/etl/`
-- Installez les librairies dans le repo localavec ```mvn clean compile install -DskipTests=true```
-- Placez-vous dans le dossier `app/etl/etl-updatedb`
-- Lancez la tâche de mise à jour avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
+- Installez les librairies dans le repo local avec ```mvn clean compile install -DskipTests=true```
+- Lancez la tâche de mise à jour avec ```mvn clean compile -fetl-updatedb/pom.xml exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
 
 ## Mettre à jour les données de référence Parcoursup
 
@@ -54,4 +53,5 @@ psup.password=password
 ### Effectuer la mise à jour des fichiers Psup
 Assurez-vous de disposer de java en version >= 19
 - La machine doit disposer d'une connexion directe à la BDD de parcoursup 
-- Lancez la tâche de mise à jour avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdatePsupDataKt```
+- Placez-vous dans le dossier `app/etl/`
+- Lancez la tâche de mise à jour avec ```mvn clean compile -fetl-psup/pom.xml exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdatePsupDataKt```
