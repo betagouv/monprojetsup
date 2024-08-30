@@ -33,8 +33,11 @@ dataRootDirectory=/data/mps/
 ```
 La dernière valeur doit pointer sur un dossier contenant les fichiers de référence.
 
-### Efectuer la mise à joru de la bdd MPS
+### Efectuer la mise à jour de la bdd MPS
 - Assurez-vous de disposer de java en version >= 19
+- Placez-vous dans le dossier `app/etl/`
+- Installez les librairies dans le repo localavec ```mvn clean compile install -DskipTests=true```
+- Placez-vous dans le dossier `app/etl/etl-updatedb`
 - Lancez la tâche de mise à jour avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
 
 ## Mettre à jour les données de référence Parcoursup
