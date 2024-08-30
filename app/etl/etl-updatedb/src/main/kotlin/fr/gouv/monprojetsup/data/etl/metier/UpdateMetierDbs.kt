@@ -19,7 +19,7 @@ class UpdateMetierDbs(
 
     fun updateMetierDbs() {
         val descriptifs = mpsDataPort.getDescriptifs()
-        val labels = mpsDataPort.getLabels()
+        val labels = mpsDataPort.getMetiersLabels()
         val metiersIds = mpsDataPort.getFormationsVersMetiers().flatMap { (_,b) -> b }.toSet()
         val liens = mpsDataPort.getLiens()
 

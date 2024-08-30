@@ -45,7 +45,13 @@ record DureesEtudes(
                 || gFrSig.contains("BPJEPS")
         ) {
             duree = 2;
-        } else if (gFrSig.contains("FCIL") || gFrSig.contains("MC") || gFrSig.contains("CSA")) {
+        } else if (
+                gFrSig.contains("FCIL")
+                        || gFrSig.contains("MC")
+                        || gFrSig.contains("CSA")
+                        || gFrSig.contains("SousOf")
+                        || gFrCod == 95000//Sousof bis
+        ) {
             duree = 1;
         } else if (gFrSig.contains("D-Etab")
                 || gFrSig.contains("DU")
