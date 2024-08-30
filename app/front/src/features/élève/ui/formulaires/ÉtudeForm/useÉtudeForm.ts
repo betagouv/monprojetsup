@@ -6,10 +6,13 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import { rechercheCommunesQueryOptions } from "@/features/commune/ui/communeQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: useÉtudeFormArgs) {
+  const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
+
   const [rechercheCommune, setRechercheCommune] = useState<string>();
 
   const communeVersOptionCommune = useCallback((commune: Commune) => {
@@ -45,43 +48,17 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     );
   };
 
-  const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions = [
-    {
-      valeur: "indifferent",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.INDIFFÉRENT.LABEL,
-    },
-    {
-      valeur: "courte",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.COURTE.LABEL,
-    },
-    {
-      valeur: "longue",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.LONGUE.LABEL,
-    },
-    {
-      valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.AUCUNE_IDÉE.LABEL,
-    },
-  ];
+  const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions =
+    référentielDonnées?.élève.duréesÉtudesPrévue.map((duréeÉtudesPrévue) => ({
+      valeur: duréeÉtudesPrévue,
+      label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS[duréeÉtudesPrévue].LABEL,
+    })) ?? [];
 
-  const alternanceOptions: AlternanceOptions = [
-    {
-      valeur: "pas_interesse",
-      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.PAS_INTÉRESSÉ.LABEL,
-    },
-    {
-      valeur: "indifferent",
-      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.INDIFFÉRENT.LABEL,
-    },
-    {
-      valeur: "interesse",
-      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.INTÉRESSÉ.LABEL,
-    },
-    {
-      valeur: "tres_interesse",
-      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.TRÈS_INTÉRESSÉ.LABEL,
-    },
-  ];
+  const alternanceOptions: AlternanceOptions =
+    référentielDonnées?.élève.alternances.map((alternance) => ({
+      valeur: alternance,
+      label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS[alternance].LABEL,
+    })) ?? [];
 
   return {
     mettreÀJourÉlève,

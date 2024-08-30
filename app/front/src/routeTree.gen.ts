@@ -16,19 +16,32 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
 import { Route as AuthFormationsFormationIdIndexImport } from './routes/_auth/formations/$formationId/index'
-import { Route as AuthEleveInscriptionInscriptionScolariteIndexImport } from './routes/_auth/eleve/_inscription/inscription/scolarite/index'
-import { Route as AuthEleveInscriptionInscriptionProjetIndexImport } from './routes/_auth/eleve/_inscription/inscription/projet/index'
-import { Route as AuthEleveInscriptionInscriptionMetiersIndexImport } from './routes/_auth/eleve/_inscription/inscription/metiers/index'
-import { Route as AuthEleveInscriptionInscriptionInteretsIndexImport } from './routes/_auth/eleve/_inscription/inscription/interets/index'
-import { Route as AuthEleveInscriptionInscriptionFormationsIndexImport } from './routes/_auth/eleve/_inscription/inscription/formations/index'
-import { Route as AuthEleveInscriptionInscriptionEtudeIndexImport } from './routes/_auth/eleve/_inscription/inscription/etude/index'
-import { Route as AuthEleveInscriptionInscriptionDomainesIndexImport } from './routes/_auth/eleve/_inscription/inscription/domaines/index'
 
 // Create Virtual Routes
 
 const AuthEleveImport = createFileRoute('/_auth/eleve')()
 const AuthIndexLazyImport = createFileRoute('/_auth/')()
 const AuthProfilIndexLazyImport = createFileRoute('/_auth/profil/')()
+const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/scolarite/',
+)()
+const AuthEleveInscriptionInscriptionProjetIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/projet/',
+)()
+const AuthEleveInscriptionInscriptionMetiersIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/metiers/',
+)()
+const AuthEleveInscriptionInscriptionInteretsIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/interets/',
+)()
+const AuthEleveInscriptionInscriptionFormationsIndexLazyImport =
+  createFileRoute('/_auth/eleve/_inscription/inscription/formations/')()
+const AuthEleveInscriptionInscriptionEtudeIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/etude/',
+)()
+const AuthEleveInscriptionInscriptionDomainesIndexLazyImport = createFileRoute(
+  '/_auth/eleve/_inscription/inscription/domaines/',
+)()
 const AuthEleveInscriptionInscriptionConfirmationIndexLazyImport =
   createFileRoute('/_auth/eleve/_inscription/inscription/confirmation/')()
 
@@ -71,18 +84,8 @@ const AuthFormationsFormationIdIndexRoute =
     ),
   )
 
-const AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute =
-  AuthEleveInscriptionInscriptionConfirmationIndexLazyImport.update({
-    path: '/inscription/confirmation/',
-    getParentRoute: () => AuthEleveInscriptionRoute,
-  } as any).lazy(() =>
-    import(
-      './routes/_auth/eleve/_inscription/inscription/confirmation/index.lazy'
-    ).then((d) => d.Route),
-  )
-
-const AuthEleveInscriptionInscriptionScolariteIndexRoute =
-  AuthEleveInscriptionInscriptionScolariteIndexImport.update({
+const AuthEleveInscriptionInscriptionScolariteIndexLazyRoute =
+  AuthEleveInscriptionInscriptionScolariteIndexLazyImport.update({
     path: '/inscription/scolarite/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -91,8 +94,8 @@ const AuthEleveInscriptionInscriptionScolariteIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionProjetIndexRoute =
-  AuthEleveInscriptionInscriptionProjetIndexImport.update({
+const AuthEleveInscriptionInscriptionProjetIndexLazyRoute =
+  AuthEleveInscriptionInscriptionProjetIndexLazyImport.update({
     path: '/inscription/projet/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -101,8 +104,8 @@ const AuthEleveInscriptionInscriptionProjetIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionMetiersIndexRoute =
-  AuthEleveInscriptionInscriptionMetiersIndexImport.update({
+const AuthEleveInscriptionInscriptionMetiersIndexLazyRoute =
+  AuthEleveInscriptionInscriptionMetiersIndexLazyImport.update({
     path: '/inscription/metiers/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -111,8 +114,8 @@ const AuthEleveInscriptionInscriptionMetiersIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionInteretsIndexRoute =
-  AuthEleveInscriptionInscriptionInteretsIndexImport.update({
+const AuthEleveInscriptionInscriptionInteretsIndexLazyRoute =
+  AuthEleveInscriptionInscriptionInteretsIndexLazyImport.update({
     path: '/inscription/interets/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -121,8 +124,8 @@ const AuthEleveInscriptionInscriptionInteretsIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionFormationsIndexRoute =
-  AuthEleveInscriptionInscriptionFormationsIndexImport.update({
+const AuthEleveInscriptionInscriptionFormationsIndexLazyRoute =
+  AuthEleveInscriptionInscriptionFormationsIndexLazyImport.update({
     path: '/inscription/formations/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -131,8 +134,8 @@ const AuthEleveInscriptionInscriptionFormationsIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionEtudeIndexRoute =
-  AuthEleveInscriptionInscriptionEtudeIndexImport.update({
+const AuthEleveInscriptionInscriptionEtudeIndexLazyRoute =
+  AuthEleveInscriptionInscriptionEtudeIndexLazyImport.update({
     path: '/inscription/etude/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
@@ -141,13 +144,23 @@ const AuthEleveInscriptionInscriptionEtudeIndexRoute =
     ).then((d) => d.Route),
   )
 
-const AuthEleveInscriptionInscriptionDomainesIndexRoute =
-  AuthEleveInscriptionInscriptionDomainesIndexImport.update({
+const AuthEleveInscriptionInscriptionDomainesIndexLazyRoute =
+  AuthEleveInscriptionInscriptionDomainesIndexLazyImport.update({
     path: '/inscription/domaines/',
     getParentRoute: () => AuthEleveInscriptionRoute,
   } as any).lazy(() =>
     import(
       './routes/_auth/eleve/_inscription/inscription/domaines/index.lazy'
+    ).then((d) => d.Route),
+  )
+
+const AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute =
+  AuthEleveInscriptionInscriptionConfirmationIndexLazyImport.update({
+    path: '/inscription/confirmation/',
+    getParentRoute: () => AuthEleveInscriptionRoute,
+  } as any).lazy(() =>
+    import(
+      './routes/_auth/eleve/_inscription/inscription/confirmation/index.lazy'
     ).then((d) => d.Route),
   )
 
@@ -197,60 +210,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFormationsFormationIdIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/eleve/_inscription/inscription/confirmation/': {
+      id: '/_auth/eleve/_inscription/inscription/confirmation/'
+      path: '/inscription/confirmation'
+      fullPath: '/eleve/inscription/confirmation'
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyImport
+      parentRoute: typeof AuthEleveInscriptionImport
+    }
     '/_auth/eleve/_inscription/inscription/domaines/': {
       id: '/_auth/eleve/_inscription/inscription/domaines/'
       path: '/inscription/domaines'
       fullPath: '/eleve/inscription/domaines'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionDomainesIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionDomainesIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/etude/': {
       id: '/_auth/eleve/_inscription/inscription/etude/'
       path: '/inscription/etude'
       fullPath: '/eleve/inscription/etude'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionEtudeIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionEtudeIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/formations/': {
       id: '/_auth/eleve/_inscription/inscription/formations/'
       path: '/inscription/formations'
       fullPath: '/eleve/inscription/formations'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionFormationsIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionFormationsIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/interets/': {
       id: '/_auth/eleve/_inscription/inscription/interets/'
       path: '/inscription/interets'
       fullPath: '/eleve/inscription/interets'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionInteretsIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionInteretsIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/metiers/': {
       id: '/_auth/eleve/_inscription/inscription/metiers/'
       path: '/inscription/metiers'
       fullPath: '/eleve/inscription/metiers'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionMetiersIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionMetiersIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/projet/': {
       id: '/_auth/eleve/_inscription/inscription/projet/'
       path: '/inscription/projet'
       fullPath: '/eleve/inscription/projet'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionProjetIndexImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionProjetIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
     '/_auth/eleve/_inscription/inscription/scolarite/': {
       id: '/_auth/eleve/_inscription/inscription/scolarite/'
       path: '/inscription/scolarite'
       fullPath: '/eleve/inscription/scolarite'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionScolariteIndexImport
-      parentRoute: typeof AuthEleveInscriptionImport
-    }
-    '/_auth/eleve/_inscription/inscription/confirmation/': {
-      id: '/_auth/eleve/_inscription/inscription/confirmation/'
-      path: '/inscription/confirmation'
-      fullPath: '/eleve/inscription/confirmation'
-      preLoaderRoute: typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyImport
+      preLoaderRoute: typeof AuthEleveInscriptionInscriptionScolariteIndexLazyImport
       parentRoute: typeof AuthEleveInscriptionImport
     }
   }
@@ -263,14 +276,14 @@ export const routeTree = rootRoute.addChildren({
     AuthIndexLazyRoute,
     AuthEleveRoute: AuthEleveRoute.addChildren({
       AuthEleveInscriptionRoute: AuthEleveInscriptionRoute.addChildren({
-        AuthEleveInscriptionInscriptionDomainesIndexRoute,
-        AuthEleveInscriptionInscriptionEtudeIndexRoute,
-        AuthEleveInscriptionInscriptionFormationsIndexRoute,
-        AuthEleveInscriptionInscriptionInteretsIndexRoute,
-        AuthEleveInscriptionInscriptionMetiersIndexRoute,
-        AuthEleveInscriptionInscriptionProjetIndexRoute,
-        AuthEleveInscriptionInscriptionScolariteIndexRoute,
         AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute,
+        AuthEleveInscriptionInscriptionDomainesIndexLazyRoute,
+        AuthEleveInscriptionInscriptionEtudeIndexLazyRoute,
+        AuthEleveInscriptionInscriptionFormationsIndexLazyRoute,
+        AuthEleveInscriptionInscriptionInteretsIndexLazyRoute,
+        AuthEleveInscriptionInscriptionMetiersIndexLazyRoute,
+        AuthEleveInscriptionInscriptionProjetIndexLazyRoute,
+        AuthEleveInscriptionInscriptionScolariteIndexLazyRoute,
       }),
     }),
     AuthProfilIndexLazyRoute,
@@ -313,14 +326,14 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth/eleve/_inscription.tsx",
       "parent": "/_auth/eleve",
       "children": [
+        "/_auth/eleve/_inscription/inscription/confirmation/",
         "/_auth/eleve/_inscription/inscription/domaines/",
         "/_auth/eleve/_inscription/inscription/etude/",
         "/_auth/eleve/_inscription/inscription/formations/",
         "/_auth/eleve/_inscription/inscription/interets/",
         "/_auth/eleve/_inscription/inscription/metiers/",
         "/_auth/eleve/_inscription/inscription/projet/",
-        "/_auth/eleve/_inscription/inscription/scolarite/",
-        "/_auth/eleve/_inscription/inscription/confirmation/"
+        "/_auth/eleve/_inscription/inscription/scolarite/"
       ]
     },
     "/_auth/profil/": {
@@ -331,36 +344,36 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth/formations/$formationId/index.tsx",
       "parent": "/_auth"
     },
+    "/_auth/eleve/_inscription/inscription/confirmation/": {
+      "filePath": "_auth/eleve/_inscription/inscription/confirmation/index.lazy.tsx",
+      "parent": "/_auth/eleve/_inscription"
+    },
     "/_auth/eleve/_inscription/inscription/domaines/": {
-      "filePath": "_auth/eleve/_inscription/inscription/domaines/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/domaines/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/etude/": {
-      "filePath": "_auth/eleve/_inscription/inscription/etude/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/etude/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/formations/": {
-      "filePath": "_auth/eleve/_inscription/inscription/formations/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/formations/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/interets/": {
-      "filePath": "_auth/eleve/_inscription/inscription/interets/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/interets/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/metiers/": {
-      "filePath": "_auth/eleve/_inscription/inscription/metiers/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/metiers/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/projet/": {
-      "filePath": "_auth/eleve/_inscription/inscription/projet/index.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/projet/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     },
     "/_auth/eleve/_inscription/inscription/scolarite/": {
-      "filePath": "_auth/eleve/_inscription/inscription/scolarite/index.tsx",
-      "parent": "/_auth/eleve/_inscription"
-    },
-    "/_auth/eleve/_inscription/inscription/confirmation/": {
-      "filePath": "_auth/eleve/_inscription/inscription/confirmation/index.lazy.tsx",
+      "filePath": "_auth/eleve/_inscription/inscription/scolarite/index.lazy.tsx",
       "parent": "/_auth/eleve/_inscription"
     }
   }

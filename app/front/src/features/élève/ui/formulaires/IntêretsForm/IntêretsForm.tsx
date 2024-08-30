@@ -1,27 +1,19 @@
 import { type IntêretsFormProps } from "./IntêretsForm.interface";
-import { centresIntêretsValidationSchema } from "./IntêretsForm.validation";
+import useIntêretsForm from "./useIntêretsForm";
 import FiltresGroupésParCatégorie from "@/components/FiltresGroupésParCatégorie/FiltresGroupésParCatégorie";
 import { i18n } from "@/configuration/i18n/i18n";
-import { centresIntêretsQueryOptions } from "@/features/centreIntêret/ui/centreIntêretQueries";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { useId } from "react";
 
 const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntêretsFormProps) => {
-  const { data: catégoriesCentreIntêret } = useSuspenseQuery(centresIntêretsQueryOptions);
-
-  const { setValue, mettreÀJourÉlève, getValues, erreurs } = useÉlèveForm({
-    schémaValidation: centresIntêretsValidationSchema,
+  const {
+    mettreÀJourÉlève,
+    erreurs,
+    filtresGroupésParCatégories,
+    filtreIdsSélectionnésParDéfaut,
+    auChangementFiltresSélectionnés,
+    légendeId,
+  } = useIntêretsForm({
     àLaSoumissionDuFormulaireAvecSuccès,
   });
-
-  const filtresGroupésParCatégories = catégoriesCentreIntêret.map((catégorie) => ({
-    nom: catégorie.nom,
-    emoji: catégorie.emoji,
-    filtres: catégorie.sousCatégoriesCentreIntêret,
-  }));
-
-  const légendeId = useId();
 
   return (
     <form
@@ -40,11 +32,9 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
           {i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE}
         </legend>
         <FiltresGroupésParCatégorie
-          auChangementFiltresSélectionnés={(filtreIdsSélectionnés) =>
-            setValue("centresIntêrets", filtreIdsSélectionnés)
-          }
+          auChangementFiltresSélectionnés={auChangementFiltresSélectionnés}
           catégories={filtresGroupésParCatégories}
-          filtreIdsSélectionnésParDéfaut={getValues("centresIntêrets") ?? []}
+          filtreIdsSélectionnésParDéfaut={filtreIdsSélectionnésParDéfaut}
           niveauDeTitre={niveauDeTitreCatégories}
         />
         <div

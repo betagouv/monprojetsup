@@ -5,6 +5,7 @@ export type FiltresGroupésParCatégorieProps = {
     filtres: Array<{
       id: string;
       nom: string;
+      emoji: string;
     }>;
   }>;
   niveauDeTitre: "h2" | "h3";

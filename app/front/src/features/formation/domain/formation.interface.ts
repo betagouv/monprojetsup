@@ -1,4 +1,7 @@
-import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
+import {
+  type AlternanceÉlève,
+  type DuréeÉtudesPrévueÉlève,
+} from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
 export type Formation = {
   id: string;

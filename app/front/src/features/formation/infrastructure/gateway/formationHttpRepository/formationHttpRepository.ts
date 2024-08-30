@@ -1,5 +1,4 @@
 import { type RécupérerFormationsRéponseHTTP } from "./formationHttpRepository.interface";
-import { type AlternanceÉlève, type DuréeÉtudesPrévueÉlève } from "@/features/élève/domain/élève.interface";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
@@ -109,8 +108,8 @@ export class formationHttpRepository implements FormationRepository {
                 id: formation.id,
                 nom: formation.nom,
               })) ?? [],
-            duréeÉtudesPrévue: (formationHttp.explications.dureeEtudesPrevue as DuréeÉtudesPrévueÉlève) ?? null,
-            alternance: (formationHttp.explications.alternance as AlternanceÉlève) ?? null,
+            duréeÉtudesPrévue: formationHttp.explications.dureeEtudesPrevue ?? null,
+            alternance: formationHttp.explications.alternance ?? null,
             intêretsEtDomainesChoisis: {
               intêrets:
                 formationHttp.explications.interetsEtDomainesChoisis?.interets.map((intêret) => ({

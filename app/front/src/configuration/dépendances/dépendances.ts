@@ -1,18 +1,7 @@
 import { env } from "@/configuration/environnement";
-import { type BacRepository } from "@/features/bac/infrastructure/bacRepository.interface";
-import { bacInMemoryRepository } from "@/features/bac/infrastructure/gateway/bacInMemoryRepository/bacInMemoryRepository";
-import { RechercherSpécialitésPourUnBacUseCase } from "@/features/bac/usecase/RechercherSpécialitésPourUnBac";
-import { RécupérerBacsUseCase } from "@/features/bac/usecase/RécupérerBacs";
-import { RécupérerSpécialitésUseCase } from "@/features/bac/usecase/RécupérerSpécialités";
-import { type CentreIntêretRepository } from "@/features/centreIntêret/infrastructure/centreIntêretRepository.interface";
-import { centreIntêretInMemoryRepository } from "@/features/centreIntêret/infrastructure/gateway/centreIntêretInMemoryRepository/centreIntêretInMemoryRepository";
-import { RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase } from "@/features/centreIntêret/usecase/RécupérerCatégoriesEtSousCatégoriesCentreIntêret";
 import { communeHTTPRepository } from "@/features/commune/infrastructure/communeHTTPRepository/communeHTTPRepository";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
-import { type DomaineProfessionnelRepository } from "@/features/domaineProfessionnel/infrastructure/domaineProfessionnelRepository.interface";
-import { domaineProfessionnelInMemoryRepository } from "@/features/domaineProfessionnel/infrastructure/gateway/domaineProfessionnelInMemoryRepository/domaineProfessionnelInMemoryRepository";
-import { RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase } from "@/features/domaineProfessionnel/usecase/RécupérerDomainesProfessionnelsGroupésParCatégorie";
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
@@ -28,6 +17,10 @@ import { métierInMemoryRepository } from "@/features/métier/infrastructure/gat
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
 import { RécupérerAperçusMétiersUseCase } from "@/features/métier/usecase/RécupérerAperçusMétiers";
+import { référentielDonnéesHttpRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesHttpRepository/référentielDonnéesHttpRepository";
+import { référentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
+import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
+import { RécupérerRéférentielDonnéesUseCase } from "@/features/référentielDonnées/usecase/RécupérerRéférentielDonnées";
 import { HttpClient } from "@/services/httpClient/httpClient";
 import { Logger } from "@/services/logger/logger";
 import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
@@ -41,27 +34,21 @@ export class Dépendances {
 
   private readonly _mpsApiHttpClient: MpsApiHttpClient;
 
+  private readonly _référentielDonnéesRepository: RéférentielDonnéesRepository;
+
   private readonly _élèveRepository: ÉlèveRepository;
 
   private readonly _formationRepository: FormationRepository;
 
   private readonly _métierRepository: MétierRepository;
 
-  private readonly _bacRepository: BacRepository;
-
-  private readonly _domaineProfessionnelRepository: DomaineProfessionnelRepository;
-
-  private readonly _centreIntêretRepository: CentreIntêretRepository;
-
   private readonly _communeRepository: CommuneRepository;
+
+  public readonly récupérerRéférentielDonnéesUseCase: RécupérerRéférentielDonnéesUseCase;
 
   public readonly mettreÀJourProfilÉlèveUseCase: MettreÀJourÉlèveUseCase;
 
   public readonly récupérerProfilÉlèveUseCase: RécupérerÉlèveUseCase;
-
-  public readonly récupérerAperçusMétiersUseCase: RécupérerAperçusMétiersUseCase;
-
-  public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
 
   public readonly récupérerFormationUseCase: RécupérerFormationUseCase;
 
@@ -69,17 +56,11 @@ export class Dépendances {
 
   public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
+  public readonly récupérerAperçusMétiersUseCase: RécupérerAperçusMétiersUseCase;
+
+  public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
+
   public readonly rechercherCommunesUseCase: RechercherCommunesUseCase;
-
-  public readonly récupérerBacsUseCase: RécupérerBacsUseCase;
-
-  public readonly récupérerSpécialitésUseCase: RécupérerSpécialitésUseCase;
-
-  public readonly rechercherSpécialitésPourUnBacUseCase: RechercherSpécialitésPourUnBacUseCase;
-
-  public readonly récupérerDomainesProfessionnelsGroupésParCatégorieUseCase: RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase;
-
-  public readonly récupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase: RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase;
 
   private constructor() {
     this._logger = new Logger();
@@ -87,6 +68,9 @@ export class Dépendances {
     this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, env.VITE_API_URL);
 
     // Repositories
+    this._référentielDonnéesRepository = env.VITE_TEST_MODE
+      ? new référentielDonnéesInMemoryRepository()
+      : new référentielDonnéesHttpRepository(this._mpsApiHttpClient);
     this._élèveRepository = env.VITE_TEST_MODE
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);
@@ -94,32 +78,28 @@ export class Dépendances {
       ? new formationInMemoryRepository()
       : new formationHttpRepository(this._mpsApiHttpClient);
     this._métierRepository = new métierInMemoryRepository();
-    this._bacRepository = new bacInMemoryRepository();
-    this._domaineProfessionnelRepository = new domaineProfessionnelInMemoryRepository();
-    this._centreIntêretRepository = new centreIntêretInMemoryRepository();
     this._communeRepository = new communeHTTPRepository(this._httpClient);
+
+    // Référentiel de données
+    this.récupérerRéférentielDonnéesUseCase = new RécupérerRéférentielDonnéesUseCase(
+      this._référentielDonnéesRepository,
+    );
 
     // Élève
     this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
-
-    // Métiers
-    this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
-    this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
 
     // Formations
     this.récupérerFormationUseCase = new RécupérerFormationUseCase(this._formationRepository);
     this.récupérerFormationsUseCase = new RécupérerFormationsUseCase(this._formationRepository);
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
 
+    // Métiers
+    this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
+    this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
+
+    // Communes
     this.rechercherCommunesUseCase = new RechercherCommunesUseCase(this._communeRepository);
-    this.récupérerBacsUseCase = new RécupérerBacsUseCase(this._bacRepository);
-    this.récupérerSpécialitésUseCase = new RécupérerSpécialitésUseCase(this._bacRepository);
-    this.rechercherSpécialitésPourUnBacUseCase = new RechercherSpécialitésPourUnBacUseCase(this._bacRepository);
-    this.récupérerDomainesProfessionnelsGroupésParCatégorieUseCase =
-      new RécupérerDomainesProfessionnelsGroupésParCatégorieUseCase(this._domaineProfessionnelRepository);
-    this.récupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase =
-      new RécupérerCatégoriesEtSousCatégoriesCentreIntêretUseCase(this._centreIntêretRepository);
   }
 
   public static getInstance(): Dépendances {

@@ -89,17 +89,17 @@ export const localeFR = {
       SITUATION: {
         LÉGENDE: "Ma situation",
         OPTIONS: {
-          AUCUNE_IDÉE: {
+          aucune_idee: {
             LABEL: "Je n'ai pas encore d’idée",
             DESCRIPTION: "Ça tombe bien, MPS te présente des idées d'études selon ton profil.",
             EMOJI: "🥚",
           },
-          QUELQUES_PISTES: {
+          quelques_pistes: {
             LABEL: "J’ai déjà quelques pistes d’orientation",
             DESCRIPTION: "Super, MPS va t’aider à affiner ton projet post-bac.",
             EMOJI: "🐣",
           },
-          PROJET_PRÉCIS: {
+          projet_precis: {
             LABEL: "J'ai déjà un projet précis",
             DESCRIPTION: "Formidable, explorons les différentes possibilités ensemble.",
             EMOJI: "🐥",
@@ -115,13 +115,13 @@ export const localeFR = {
       CLASSE: {
         LABEL: "Classe actuelle",
         OPTIONS: {
-          SECONDE: {
+          seconde: {
             LABEL: "Seconde",
           },
-          PREMIÈRE: {
+          premiere: {
             LABEL: "Première",
           },
-          TERMINALE: {
+          terminale: {
             LABEL: "Terminale",
           },
         },
@@ -184,16 +184,16 @@ export const localeFR = {
         LABEL: "Durée des études",
         DESCRIPTION: "Temps d’études que tu envisages après le bac",
         OPTIONS: {
-          INDIFFÉRENT: {
+          indifferent: {
             LABEL: "Je garde mes options ouvertes",
           },
-          COURTE: {
+          courte: {
             LABEL: "Courte - 3 ans ou moins",
           },
-          LONGUE: {
+          longue: {
             LABEL: "Longue - 5 ans ou plus",
           },
-          AUCUNE_IDÉE: {
+          aucune_idee: {
             LABEL: "Aucune idée pour le moment",
           },
         },
@@ -202,16 +202,16 @@ export const localeFR = {
         LABEL: "Ton intérêt pour un cursus en alternance",
         DESCRIPTION: "Formations alternant scolarité et pratique en entreprise",
         OPTIONS: {
-          PAS_INTÉRESSÉ: {
+          pas_interesse: {
             LABEL: "Pas du tout intéressé(e)",
           },
-          INDIFFÉRENT: {
+          indifferent: {
             LABEL: "Indifférent(e)",
           },
-          INTÉRESSÉ: {
+          interesse: {
             LABEL: "Intéressé(e)",
           },
-          TRÈS_INTÉRESSÉ: {
+          tres_interesse: {
             LABEL: "Très intéressé(e)",
           },
         },

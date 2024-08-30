@@ -234,13 +234,13 @@ export interface components {
              * @example aucune_idee
              * @enum {string}
              */
-            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis";
+            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis" | "aucune_idee" | "quelques_pistes" | "projet_precis";
             /**
              * @description Classe actuelle
              * @example terminale
              * @enum {string}
              */
-            classe?: "seconde" | "premiere" | "terminale";
+            classe?: "seconde" | "premiere" | "terminale" | "seconde" | "premiere" | "terminale";
             /**
              * @description Type de Bac choisi ou envisagé
              * @example Générale
@@ -288,13 +288,13 @@ export interface components {
              * @example indifferent
              * @enum {string}
              */
-            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee" | "indifferent" | "courte" | "longue" | "aucune_idee";
             /**
              * @description Intérêt pour les formations en apprentissage
              * @example pas_interesse
              * @enum {string}
              */
-            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             /** @description Villes préférées pour étudier */
             communesFavorites?: components["schemas"]["CommuneDTO"][];
             /**
@@ -378,10 +378,10 @@ export interface components {
             emoji: string;
         };
         ReferentielDTO: {
-            situations: string[];
-            choixNiveau: string[];
-            choixAlternance: string[];
-            choixDureeEtudesPrevue: string[];
+            situations: ("aucune_idee" | "quelques_pistes" | "projet_precis")[];
+            choixNiveau: ("seconde" | "premiere" | "terminale")[];
+            choixAlternance: ("pas_interesse" | "indifferent" | "interesse" | "tres_interesse")[];
+            choixDureeEtudesPrevue: ("indifferent" | "courte" | "longue" | "aucune_idee")[];
             baccalaureatsAvecLeurSpecialites: components["schemas"]["BaccalaureatAvecSesSpecialitesDTO"][];
             categoriesDInteretsAvecLeursSousCategories: components["schemas"]["CategorieInteretAevcSousCategoriesDTO"][];
             categoriesDomaineAvecLeursDomaines: components["schemas"]["CategorieDomaineAvecDomainesDTO"][];
@@ -449,8 +449,10 @@ export interface components {
         ExplicationsDTO: {
             geographique: components["schemas"]["ExplicationGeographiqueDTO"][];
             formationsSimilaires: components["schemas"]["FormationSimilaireDTO"][];
-            dureeEtudesPrevue?: string;
-            alternance?: string;
+            /** @enum {string} */
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
+            /** @enum {string} */
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
             interetsEtDomainesChoisis?: components["schemas"]["InteretsEtDomainesDTO"];
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];

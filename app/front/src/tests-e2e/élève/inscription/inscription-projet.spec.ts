@@ -44,7 +44,7 @@ test.describe("Inscription élève - Mon projet", () => {
 
     // WHEN
     await testhelper.renseignerCorrectementLeFormulaire({
-      situation: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL,
+      situation: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.aucune_idee.LABEL,
     });
     await testhelper.soumettreLeFormulaire();
 
@@ -55,7 +55,7 @@ test.describe("Inscription élève - Mon projet", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const situationÀSélectionner = i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL;
+      const situationÀSélectionner = i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.aucune_idee.LABEL;
       const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 

@@ -15,7 +15,6 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     bacADesSpécialités,
     spécialitésSuggérées,
     spécialitésSélectionnéesParDéfaut,
-    rechercheSpécialitéEnCours,
     auChangementDesSpécialitésSélectionnées,
     àLaRechercheDUneSpécialité,
   } = useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès });
@@ -46,11 +45,11 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesSpécialitésSélectionnées}
             description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
-            key={valeurBac}
+            key={`${valeurBac}${spécialitésSélectionnéesParDéfaut.length}`}
             label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
             optionsSuggérées={spécialitésSuggérées}
             optionsSélectionnéesParDéfaut={spécialitésSélectionnéesParDéfaut}
-            rechercheSuggestionsEnCours={rechercheSpécialitéEnCours}
+            rechercheSuggestionsEnCours={false}
             texteOptionsSélectionnées={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.SÉLECTIONNÉS}
             àLaRechercheDUneOption={àLaRechercheDUneSpécialité}
           />

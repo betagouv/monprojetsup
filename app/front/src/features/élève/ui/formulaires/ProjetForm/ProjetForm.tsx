@@ -1,35 +1,12 @@
-import { type ProjetFormProps, type SituationOptions } from "./ProjetForm.interface";
-import { projetValidationSchema } from "./ProjetForm.validation";
+import { type ProjetFormProps } from "./ProjetForm.interface";
+import useProjetForm from "./useProjetForm";
 import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 
 const ProjetForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFormProps) => {
-  const { register, erreurs, mettreÀJourÉlève } = useÉlèveForm({
-    schémaValidation: projetValidationSchema,
+  const { mettreÀJourÉlève, erreurs, register, situationOptions } = useProjetForm({
     àLaSoumissionDuFormulaireAvecSuccès,
   });
-
-  const situationOptions: SituationOptions = [
-    {
-      valeur: "aucune_idee",
-      label: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.AUCUNE_IDÉE.LABEL,
-      description: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.AUCUNE_IDÉE.DESCRIPTION,
-      pictogramme: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.AUCUNE_IDÉE.EMOJI,
-    },
-    {
-      valeur: "quelques_pistes",
-      label: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.QUELQUES_PISTES.LABEL,
-      description: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.QUELQUES_PISTES.DESCRIPTION,
-      pictogramme: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.QUELQUES_PISTES.EMOJI,
-    },
-    {
-      valeur: "projet_precis",
-      label: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.PROJET_PRÉCIS.LABEL,
-      description: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.PROJET_PRÉCIS.DESCRIPTION,
-      pictogramme: i18n.ÉLÈVE.PROJET.SITUATION.OPTIONS.PROJET_PRÉCIS.EMOJI,
-    },
-  ];
 
   return (
     <form

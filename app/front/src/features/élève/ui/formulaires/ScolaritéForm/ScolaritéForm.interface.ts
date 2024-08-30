@@ -1,4 +1,4 @@
-import { type ClasseÉlève } from "@/features/élève/domain/élève.interface";
+import { type Bac, type ClasseÉlève } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
 export type ScolaritéFormProps = {
   formId: string;
@@ -7,6 +7,11 @@ export type ScolaritéFormProps = {
 
 export type ClasseOptions = Array<{
   valeur: ClasseÉlève;
+  label: string;
+}>;
+
+export type BacOptions = Array<{
+  valeur: Bac["id"];
   label: string;
 }>;
 

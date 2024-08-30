@@ -77,7 +77,7 @@ test.describe("Page Profil Élève", () => {
     await testhelper.naviguerVersLaPage();
 
     // WHEN
-    await testhelper.renseignerChampClasseActuelle(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.TERMINALE.LABEL);
+    await testhelper.renseignerChampClasseActuelle(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.terminale.LABEL);
     await testhelper.soumettreLeFormulaire();
 
     // THEN

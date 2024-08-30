@@ -117,8 +117,8 @@ test.describe("Inscription élève - Mes études", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampDuréeÉtudesPrévue(i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.COURTE.LABEL);
-      await testhelper.renseignerChampAlternance(i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.INTÉRESSÉ.LABEL);
+      await testhelper.renseignerChampDuréeÉtudesPrévue(i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS.courte.LABEL);
+      await testhelper.renseignerChampAlternance(i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS.interesse.LABEL);
       await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
       await testhelper.boutonOptionSuggérée(testhelper.PREMIÈRE_COMMUNE).click();
       await testhelper.boutonOptionSuggérée(testhelper.SECONDE_COMMUNE).click();

@@ -78,7 +78,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
 
     // WHEN
     await testhelper.renseignerCorrectementLeFormulaire({
-      classeActuelle: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL,
+      classeActuelle: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.premiere.LABEL,
     });
     await testhelper.soumettreLeFormulaire();
 
@@ -182,7 +182,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
   test.describe("En étant à l'étape suivante", () => {
     test("Au clic sur le bouton retour je retrouve bien les informations renseignées", async ({ page }) => {
       // GIVEN
-      const classeActuelleÀSélectionner = i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.PREMIÈRE.LABEL;
+      const classeActuelleÀSélectionner = i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS.premiere.LABEL;
       const testhelper = new Test(page);
       await testhelper.naviguerVersLaPage();
 

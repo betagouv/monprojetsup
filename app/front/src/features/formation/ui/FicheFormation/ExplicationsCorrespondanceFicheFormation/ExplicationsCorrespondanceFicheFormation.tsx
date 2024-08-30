@@ -1,7 +1,6 @@
 import { type ExplicationsCorrespondanceFicheFormationProps } from "./ExplicationsCorrespondanceFicheFormation.interface";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import { duréeÉtudesPrévueVersTraduction } from "@/features/élève/domain/élève";
 import ExplicationCorrespondanceÉlementFicheFormation from "@/features/formation/ui/FicheFormation/ExplicationCorrespondanceÉlementFicheFormation/ExplicationCorrespondanceÉlementFicheFormation";
 import ExplicationCorrespondanceListeÉlementsFicheFormation from "@/features/formation/ui/FicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation";
 
@@ -30,7 +29,9 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {explications.duréeÉtudesPrévue && (
           <ExplicationCorrespondanceÉlementFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.DURÉE_FORMATION}
-            texteMisEnAvant={duréeÉtudesPrévueVersTraduction(explications.duréeÉtudesPrévue).toLocaleLowerCase()}
+            texteMisEnAvant={i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS[
+              explications.duréeÉtudesPrévue
+            ].LABEL.toLocaleLowerCase()}
           />
         )}
         {explications.alternance && explications.alternance !== "pas_interesse" && (

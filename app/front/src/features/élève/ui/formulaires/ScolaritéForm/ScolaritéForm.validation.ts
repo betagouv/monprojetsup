@@ -1,6 +1,6 @@
 import { i18n } from "@/configuration/i18n/i18n";
-import { type Bac } from "@/features/bac/domain/bac.interface";
 import { classeÉlève } from "@/features/élève/domain/élève.interface";
+import { type Bac } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { z } from "zod";
 
 export const scolaritéValidationSchema = (bacs: Bac[]) => {
