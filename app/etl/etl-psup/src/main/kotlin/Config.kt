@@ -7,6 +7,6 @@ import org.springframework.context.annotation.PropertySources
 @Configuration
 @PropertySources(
 PropertySource("classpath:application.properties"),
-PropertySource("classpath:secret.properties")
+PropertySource("classpath:secrets.properties")
 )
 open class Config
