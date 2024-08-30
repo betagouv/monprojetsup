@@ -182,7 +182,8 @@ public record PsupData(
         }
         this.stats.restrictToBacs(bacsActifs);
 
-        stats.removeSmallPopulations();
+        //stats.removeSmallPopulations();//not the moment to do that
+        stats.cleanup();
         stats.rebuildMiddle50();
         stats.createGroupAdmisStatistique(getPsupKeyToMpsKey());
         stats.createGroupAdmisStatistique(getGtaToLasMapping());

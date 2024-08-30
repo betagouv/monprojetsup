@@ -299,6 +299,13 @@ public class PsupStatistiques implements Serializable {
         candidatsParGroupes.values().forEach(v -> v.keySet().retainAll(bacsActifs));
         admisMatiereBacAnneeStats.stats().removeIf(s -> !bacsActifs.contains(s.bac()));
         statsAdmis.parGroupe().values().forEach(s -> s.parBac().keySet().retainAll(bacsActifs));
+        cleanup();
     }
 
+    public void cleanup() {
+        admisParGroupes.values().removeIf(Map::isEmpty);
+        candidatsParGroupes.values().removeIf(Map::isEmpty);
+        admisMatiereBacAnneeStats.stats().removeIf(s -> s.nb() == 0);
+        statsAdmis.parGroupe().values().removeIf(s -> s.parBac().isEmpty());
+    }
 }
