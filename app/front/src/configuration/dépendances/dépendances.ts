@@ -13,10 +13,11 @@ import { formationInMemoryRepository } from "@/features/formation/infrastructure
 import { RechercherFormationsUseCase } from "@/features/formation/usecase/RechercherFormations";
 import { RécupérerFormationUseCase } from "@/features/formation/usecase/RécupérerFormation";
 import { RécupérerFormationsUseCase } from "@/features/formation/usecase/RécupérerFormations";
+import { métierHttpRepository } from "@/features/métier/infrastructure/gateway/métierHttpRepository/métierHttpRepository";
 import { métierInMemoryRepository } from "@/features/métier/infrastructure/gateway/métierInMemoryRepository/métierInMemoryRepository";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
-import { RécupérerAperçusMétiersUseCase } from "@/features/métier/usecase/RécupérerAperçusMétiers";
+import { RécupérerMétiersUseCase } from "@/features/métier/usecase/RécupérerMétiers";
 import { référentielDonnéesHttpRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesHttpRepository/référentielDonnéesHttpRepository";
 import { référentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
@@ -56,7 +57,7 @@ export class Dépendances {
 
   public readonly rechercherFormationsUseCase: RechercherFormationsUseCase;
 
-  public readonly récupérerAperçusMétiersUseCase: RécupérerAperçusMétiersUseCase;
+  public readonly récupérerMétiersUseCase: RécupérerMétiersUseCase;
 
   public readonly rechercherMétiersUseCase: RechercherMétiersUseCase;
 
@@ -77,7 +78,9 @@ export class Dépendances {
     this._formationRepository = env.VITE_TEST_MODE
       ? new formationInMemoryRepository()
       : new formationHttpRepository(this._mpsApiHttpClient);
-    this._métierRepository = new métierInMemoryRepository();
+    this._métierRepository = env.VITE_TEST_MODE
+      ? new métierInMemoryRepository()
+      : new métierHttpRepository(this._mpsApiHttpClient);
     this._communeRepository = new communeHTTPRepository(this._httpClient);
 
     // Référentiel de données
@@ -95,7 +98,7 @@ export class Dépendances {
     this.rechercherFormationsUseCase = new RechercherFormationsUseCase(this._formationRepository);
 
     // Métiers
-    this.récupérerAperçusMétiersUseCase = new RécupérerAperçusMétiersUseCase(this._métierRepository);
+    this.récupérerMétiersUseCase = new RécupérerMétiersUseCase(this._métierRepository);
     this.rechercherMétiersUseCase = new RechercherMétiersUseCase(this._métierRepository);
 
     // Communes

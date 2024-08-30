@@ -1,6 +1,6 @@
-import { type MétierAperçu } from "@/features/métier/domain/métier.interface";
+import { type Métier } from "@/features/métier/domain/métier.interface";
 
 export type MétierRepository = {
-  rechercher: (recherche: string) => Promise<MétierAperçu[] | undefined>;
-  récupérerAperçus: (métierIds: Array<MétierAperçu["id"]>) => Promise<MétierAperçu[] | undefined>;
+  récupérerPlusieurs: (métierIds: Array<Métier["id"]>) => Promise<Métier[] | undefined>;
+  rechercher: (recherche: string) => Promise<Métier[] | undefined>;
 };

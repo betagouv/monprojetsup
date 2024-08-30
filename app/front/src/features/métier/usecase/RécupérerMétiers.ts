@@ -1,10 +1,10 @@
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 
-export class RechercherMétiersUseCase {
+export class RécupérerMétiersUseCase {
   public constructor(private readonly _métierRepository: MétierRepository) {}
 
-  public async run(recherche: string): Promise<Métier[] | undefined> {
-    return await this._métierRepository.rechercher(recherche);
+  public async run(métierIds: Array<Métier["id"]>): Promise<Métier[] | undefined> {
+    return await this._métierRepository.récupérerPlusieurs(métierIds);
   }
 }

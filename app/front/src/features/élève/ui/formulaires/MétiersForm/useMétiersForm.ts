@@ -4,17 +4,18 @@ import { type BoutonRadioRicheProps } from "@/components/_dsfr/BoutonRadioRiche/
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
-import { type MétierAperçu } from "@/features/métier/domain/métier.interface";
-import { rechercheMétiersQueryOptions, récupérerAperçusMétiersQueryOptions } from "@/features/métier/ui/options";
+import { type Métier } from "@/features/métier/domain/métier.interface";
+import { rechercherMétiersQueryOptions, récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès }: useMétiersFormArgs) {
   const NOM_ATTRIBUT = "métiersFavoris";
+
   const [rechercheMétier, setRechercheMétier] = useState<string>();
   const [valeurSituationMétiers, setValeurSituationMétiers] = useState<SituationMétiersÉlève>();
 
-  const aperçuMétierVersOptionMétier = useCallback((métier: MétierAperçu) => {
+  const métierVersOptionMétier = useCallback((métier: Métier) => {
     return {
       valeur: métier.id,
       label: métier.nom,
@@ -26,11 +27,10 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const métiersSélectionnésParDéfaut = useMemo(() => getValues(NOM_ATTRIBUT), [getValues, valeurSituationMétiers]);
+  const métierIdsSélectionnésParDéfaut = useMemo(() => getValues(NOM_ATTRIBUT), [getValues]);
 
   useEffect(() => {
-    if (métiersSélectionnésParDéfaut && métiersSélectionnésParDéfaut.length > 0) {
+    if (métierIdsSélectionnésParDéfaut && métierIdsSélectionnésParDéfaut.length > 0) {
       setValeurSituationMétiers("quelques_pistes");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,14 +40,16 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     data: métiers,
     refetch: rechercherMétiers,
     isFetching: rechercheMétiersEnCours,
-  } = useQuery(rechercheMétiersQueryOptions(rechercheMétier));
+  } = useQuery(rechercherMétiersQueryOptions(rechercheMétier));
 
-  const { data: aperçusMétiersSélectionnésParDéfaut } = useQuery(
-    récupérerAperçusMétiersQueryOptions(métiersSélectionnésParDéfaut ?? []),
+  const { data: métiersSélectionnésParDéfaut } = useQuery(
+    récupérerMétiersQueryOptions(métierIdsSélectionnésParDéfaut ?? []),
   );
 
   useEffect(() => {
-    rechercherMétiers();
+    if (rechercheMétier && rechercheMétier.length >= 2) {
+      rechercherMétiers();
+    }
   }, [rechercheMétier, rechercherMétiers]);
 
   useEffect(() => {
@@ -88,8 +90,8 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     situationMétiersOptions,
     valeurSituationMétiers,
     setValeurSituationMétiers,
-    métiersSuggérés: métiers?.map(aperçuMétierVersOptionMétier) ?? [],
-    métiersSélectionnésParDéfaut: aperçusMétiersSélectionnésParDéfaut?.map(aperçuMétierVersOptionMétier),
+    métiersSuggérés: métiers?.map(métierVersOptionMétier) ?? [],
+    métiersSélectionnésParDéfaut: métiersSélectionnésParDéfaut?.map(métierVersOptionMétier),
     rechercheMétiersEnCours,
     auChangementDesMétiersSélectionnés,
     àLaRechercheDUnMétier: setRechercheMétier,

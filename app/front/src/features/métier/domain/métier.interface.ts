@@ -2,14 +2,8 @@ export type Métier = {
   id: string;
   nom: string;
   descriptif: string | null;
-  urls: string[];
-  formations: Array<{
-    id: string;
-    nom: string;
+  liens: Array<{
+    intitulé: string;
+    url: string;
   }>;
-};
-
-export type MétierAperçu = {
-  id: Métier["id"];
-  nom: Métier["nom"];
 };
