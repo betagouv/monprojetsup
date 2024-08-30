@@ -6,7 +6,7 @@ Elle utilise les technologies Kotlin/Java/Spring Boot.
 ## Démarrer le serveur de suggestions
 
 ### Installation de la dépendance etl-common
-- La compilation du serveur de suggestion dépend du module ```ètl-common``` (qui fournit la définition des entities de la bdd)
+- La compilation du serveur de suggestion dépend du module ```etl-common``` (qui fournit la définition des entities de la bdd)
 - Depuis le dossier `app/etl/etl-common` lancez la commande ```mvn clean compile install -DskipTests=true``` pour installer le module dans votre repository local
 
 ### Paramétrage de l'accès à la BDD et du port du service
@@ -20,7 +20,7 @@ spring.datasource.password=postgres
 ```
 La dernière valeur doit pointer sur un dossier contenant les fichiers de référence.
 
-LA Bdd doit avoir été initialisée avec l'etl.
+La Bdd doit avoir été initialisée avec l'etl.
 
 ### Lancer le serveur
 - Assurez-vous de disposer de java en version 17
