@@ -1,4 +1,4 @@
---ALTER TABLE critere_analyse_candidature RENAME TO ref_critere_analyse_candidature;
+--ALTER TABLE ref_critere_analyse_candidature RENAME TO ref_critere_analyse_candidature;
 --ALTER TABLE formation RENAME TO ref_formation;
 --ALTER TABLE moyenne_generale_admis RENAME TO ref_moyenne_generale_admis;
 --ALTER TABLE triplet_affectation RENAME TO ref_triplet_affectation;
@@ -81,7 +81,7 @@ CREATE TABLE ref_formation (
     descriptif_conseils text,
     descriptif_diplome text,
     formations_associees character varying(20)[],
-    criteres_analyse integer[] NOT NULL,
+    ref_criteres_analyse integer[] NOT NULL,
     liens jsonb,
     apprentissage boolean NOT NULL,
     capacite integer,
@@ -268,19 +268,19 @@ CREATE TABLE sugg_villes (
 );
 
 --
--- Name: ref_critere_analyse_candidature critere_analyse_candidature_index_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ref_critere_analyse_candidature ref_critere_analyse_candidature_index_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY ref_critere_analyse_candidature
-    ADD CONSTRAINT critere_analyse_candidature_index_key UNIQUE (index);
+    ADD CONSTRAINT ref_critere_analyse_candidature_index_key UNIQUE (index);
 
 
 --
--- Name: ref_critere_analyse_candidature critere_analyse_candidature_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ref_critere_analyse_candidature ref_critere_analyse_candidature_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY ref_critere_analyse_candidature
-    ADD CONSTRAINT critere_analyse_candidature_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_critere_analyse_candidature_pkey PRIMARY KEY (id);
 
 
 --
@@ -288,7 +288,7 @@ ALTER TABLE ONLY ref_critere_analyse_candidature
 --
 
 ALTER TABLE ONLY ref_domaine
-    ADD CONSTRAINT domaine_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_domaine_pkey PRIMARY KEY (id);
 
 
 --
@@ -296,7 +296,7 @@ ALTER TABLE ONLY ref_domaine
 --
 
 ALTER TABLE ONLY ref_formation
-    ADD CONSTRAINT formation_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_formation_pkey PRIMARY KEY (id);
 
 
 --
@@ -304,7 +304,7 @@ ALTER TABLE ONLY ref_formation
 --
 
 ALTER TABLE ONLY ref_domaine_categorie
-    ADD CONSTRAINT groupement_domaine_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_groupement_domaine_pkey PRIMARY KEY (id);
 
 
 --
@@ -312,7 +312,7 @@ ALTER TABLE ONLY ref_domaine_categorie
 --
 
 ALTER TABLE ONLY ref_interet_categorie
-    ADD CONSTRAINT groupement_interet_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_groupement_interet_pkey PRIMARY KEY (id);
 
 
 --
@@ -320,7 +320,7 @@ ALTER TABLE ONLY ref_interet_categorie
 --
 
 ALTER TABLE ONLY ref_interet_sous_categorie
-    ADD CONSTRAINT interet_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_interet_pkey PRIMARY KEY (id);
 
 
 --
@@ -328,7 +328,7 @@ ALTER TABLE ONLY ref_interet_sous_categorie
 --
 
 ALTER TABLE ONLY ref_interet
-    ADD CONSTRAINT interet_pkey1 PRIMARY KEY (id);
+    ADD CONSTRAINT ref_interet_pkey1 PRIMARY KEY (id);
 
 
 --
@@ -336,7 +336,7 @@ ALTER TABLE ONLY ref_interet
 --
 
 ALTER TABLE ONLY ref_join_baccalaureat_specialite
-    ADD CONSTRAINT join_baccalaureat_specialite_pkey PRIMARY KEY (id_baccalaureat, id_specialite);
+    ADD CONSTRAINT ref_join_baccalaureat_specialite_pkey PRIMARY KEY (id_baccalaureat, id_specialite);
 
 
 --
@@ -344,7 +344,7 @@ ALTER TABLE ONLY ref_join_baccalaureat_specialite
 --
 
 ALTER TABLE ONLY ref_metier
-    ADD CONSTRAINT metier_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_metier_pkey PRIMARY KEY (id);
 
 
 --
@@ -352,7 +352,7 @@ ALTER TABLE ONLY ref_metier
 --
 
 ALTER TABLE ONLY ref_moyenne_generale_admis
-    ADD CONSTRAINT moyenne_generale_admis_pkey PRIMARY KEY (annee, id_formation, id_bac);
+    ADD CONSTRAINT ref_moyenne_generale_admis_pkey PRIMARY KEY (annee, id_formation, id_bac);
 
 
 --
@@ -360,7 +360,7 @@ ALTER TABLE ONLY ref_moyenne_generale_admis
 --
 
 ALTER TABLE ONLY ref_specialite
-    ADD CONSTRAINT specialite_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_specialite_pkey PRIMARY KEY (id);
 
 
 --
@@ -368,7 +368,7 @@ ALTER TABLE ONLY ref_specialite
 --
 
 ALTER TABLE ONLY sugg_candidats
-    ADD CONSTRAINT sugg_candidats_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_sugg_candidats_pkey PRIMARY KEY (id);
 
 
 --
@@ -376,7 +376,7 @@ ALTER TABLE ONLY sugg_candidats
 --
 
 ALTER TABLE ONLY sugg_edges
-    ADD CONSTRAINT sugg_edges_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_sugg_edges_pkey PRIMARY KEY (id);
 
 
 --
@@ -384,7 +384,7 @@ ALTER TABLE ONLY sugg_edges
 --
 
 ALTER TABLE ONLY sugg_labels
-    ADD CONSTRAINT sugg_labels_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_sugg_labels_pkey PRIMARY KEY (id);
 
 
 --
@@ -392,7 +392,7 @@ ALTER TABLE ONLY sugg_labels
 --
 
 ALTER TABLE ONLY sugg_matieres
-    ADD CONSTRAINT sugg_matieres_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_sugg_matieres_pkey PRIMARY KEY (id);
 
 
 --
@@ -400,7 +400,7 @@ ALTER TABLE ONLY sugg_matieres
 --
 
 ALTER TABLE ONLY sugg_villes
-    ADD CONSTRAINT sugg_villes_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_sugg_villes_pkey PRIMARY KEY (id);
 
 
 --
@@ -408,7 +408,7 @@ ALTER TABLE ONLY sugg_villes
 --
 
 ALTER TABLE ONLY ref_triplet_affectation
-    ADD CONSTRAINT triplet_affectation_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_triplet_affectation_pkey PRIMARY KEY (id);
 
 
 --
@@ -416,14 +416,14 @@ ALTER TABLE ONLY ref_triplet_affectation
 --
 
 ALTER TABLE ONLY ref_baccalaureat
-    ADD CONSTRAINT type_baccalaureat_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ref_type_baccalaureat_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: triplet_affectation_id_formation_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX triplet_affectation_id_formation_idx ON ref_triplet_affectation USING btree (id_formation);
+CREATE INDEX ref_triplet_affectation_id_formation_idx ON ref_triplet_affectation USING btree (id_formation);
 
 
 --
@@ -431,7 +431,7 @@ CREATE INDEX triplet_affectation_id_formation_idx ON ref_triplet_affectation USI
 --
 
 ALTER TABLE ONLY ref_domaine
-    ADD CONSTRAINT domaine_id_groupement_fkey FOREIGN KEY (id_categorie) REFERENCES ref_domaine_categorie(id);
+    ADD CONSTRAINT ref_domaine_id_groupement_fkey FOREIGN KEY (id_categorie) REFERENCES ref_domaine_categorie(id);
 
 
 --
@@ -439,7 +439,7 @@ ALTER TABLE ONLY ref_domaine
 --
 
 ALTER TABLE ONLY ref_interet_sous_categorie
-    ADD CONSTRAINT interet_id_groupement_fkey FOREIGN KEY (id_categorie) REFERENCES ref_interet_categorie(id);
+    ADD CONSTRAINT ref_interet_id_groupement_fkey FOREIGN KEY (id_categorie) REFERENCES ref_interet_categorie(id);
 
 
 --
@@ -447,7 +447,7 @@ ALTER TABLE ONLY ref_interet_sous_categorie
 --
 
 ALTER TABLE ONLY ref_interet
-    ADD CONSTRAINT interet_id_sous_categorie_fkey FOREIGN KEY (id_sous_categorie) REFERENCES ref_interet_sous_categorie(id);
+    ADD CONSTRAINT ref_interet_id_sous_categorie_fkey FOREIGN KEY (id_sous_categorie) REFERENCES ref_interet_sous_categorie(id);
 
 
 --
@@ -455,7 +455,7 @@ ALTER TABLE ONLY ref_interet
 --
 
 ALTER TABLE ONLY ref_join_baccalaureat_specialite
-    ADD CONSTRAINT join_baccalaureat_specialite_id_baccalaureat_fkey FOREIGN KEY (id_baccalaureat) REFERENCES ref_baccalaureat(id);
+    ADD CONSTRAINT ref_join_baccalaureat_specialite_id_baccalaureat_fkey FOREIGN KEY (id_baccalaureat) REFERENCES ref_baccalaureat(id);
 
 
 --
@@ -463,7 +463,7 @@ ALTER TABLE ONLY ref_join_baccalaureat_specialite
 --
 
 ALTER TABLE ONLY ref_join_baccalaureat_specialite
-    ADD CONSTRAINT join_baccalaureat_specialite_id_specialite_fkey FOREIGN KEY (id_specialite) REFERENCES ref_specialite(id);
+    ADD CONSTRAINT ref_join_baccalaureat_specialite_id_specialite_fkey FOREIGN KEY (id_specialite) REFERENCES ref_specialite(id);
 
 
 --
@@ -471,7 +471,7 @@ ALTER TABLE ONLY ref_join_baccalaureat_specialite
 --
 
 ALTER TABLE ONLY ref_moyenne_generale_admis
-    ADD CONSTRAINT moyenne_generale_admis_id_bac_fkey FOREIGN KEY (id_bac) REFERENCES ref_baccalaureat(id);
+    ADD CONSTRAINT ref_moyenne_generale_admis_id_bac_fkey FOREIGN KEY (id_bac) REFERENCES ref_baccalaureat(id);
 
 
 --
@@ -479,7 +479,7 @@ ALTER TABLE ONLY ref_moyenne_generale_admis
 --
 
 ALTER TABLE ONLY ref_moyenne_generale_admis
-    ADD CONSTRAINT moyenne_generale_admis_id_formation_fkey FOREIGN KEY (id_formation) REFERENCES ref_formation(id);
+    ADD CONSTRAINT ref_moyenne_generale_admis_id_formation_fkey FOREIGN KEY (id_formation) REFERENCES ref_formation(id);
 
 
 --
@@ -487,7 +487,7 @@ ALTER TABLE ONLY ref_moyenne_generale_admis
 --
 
 ALTER TABLE ONLY ref_triplet_affectation
-    ADD CONSTRAINT triplet_affectation_id_formation_fkey FOREIGN KEY (id_formation) REFERENCES ref_formation(id);
+    ADD CONSTRAINT ref_triplet_affectation_id_formation_fkey FOREIGN KEY (id_formation) REFERENCES ref_formation(id);
 
 
 --
