@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 }
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class, HibernateJpaAutoConfiguration::class ] )
-class UpdatePsupData
+open class UpdatePsupData
 
 
 

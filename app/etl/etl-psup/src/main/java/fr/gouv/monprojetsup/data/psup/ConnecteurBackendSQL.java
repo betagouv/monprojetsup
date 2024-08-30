@@ -324,8 +324,7 @@ public class ConnecteurBackendSQL {
         data.voeuxParCandidat().clear();
         data.voeuxParCandidat().addAll(
                 voeuxParCandidat.entrySet().stream()
-                        .filter(e -> bacs.containsKey(e.getKey()))
-                        .map(e -> new Candidat(bacs.get(e.getKey()), e.getValue()))
+                        .map(e -> new Candidat(bacs.getOrDefault(e.getKey(),TOUS_BACS_CODE), e.getValue()))
                         .toList()
         );
     }
