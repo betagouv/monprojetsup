@@ -221,8 +221,7 @@ public record PsupData(
         formations.filieres.values().stream()
                 .filter(f -> f.apprentissage
                         && f.gFlCodeFi != f.gFlCod
-                        && filActives.contains(f.gFlCodeFi)
-                        && filActives.contains(f.gFlCod)
+                        && (filActives.contains(f.gFlCodeFi) || filActives.contains(f.gFlCod))
                 )
                 .forEach(f -> flToFl.put(f.gFlCod, f.gFlCodeFi));
 

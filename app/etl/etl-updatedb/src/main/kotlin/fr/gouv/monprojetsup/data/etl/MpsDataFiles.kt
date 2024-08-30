@@ -261,21 +261,25 @@ class MpsDataFiles(
 
     override fun getFormationsMpsIds(): List<String> {
         if(formationsMpsIds == null) {
-            val resultInt = HashSet(psupData.filActives)
-            val flGroups = psupData.psupKeyToMpsKey
-            val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
-
+            val resultInt = HashSet(psupData.filActives)//environ 750 (incluant apprentissage)
             resultInt.addAll(psupData.lasFlCodes)
 
-            val result = ArrayList(resultInt.stream()
+            val result = HashSet(resultInt.stream()
                 .map { cle -> Constants.gFlCodToFrontId(cle) }
                 .toList()
             )
+
+            //on supprime du résultat les formations regroupées et on ajoute les groupes
+            val flGroups = psupData.psupKeyToMpsKey//environ 589 obtenus en groupant et en ajoutant les las
             result.removeAll(flGroups.keys)
             result.addAll(flGroups.values)
+
+            //on veut au moins un voeu psup par formations indexées dans mps
+            val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
             result.retainAll(groupesWithAtLeastOneFormation)
-            result.sort()
-            formationsMpsIds =  result
+
+            val sorted = result.toList().sorted()
+            formationsMpsIds =  sorted
         }
         return formationsMpsIds!!
     }
