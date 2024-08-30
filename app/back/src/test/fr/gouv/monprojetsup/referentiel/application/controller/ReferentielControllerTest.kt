@@ -46,22 +46,19 @@ class ReferentielControllerTest(
           "choixNiveau": [
             "seconde",
             "premiere",
-            "terminale",
-            "NC"
+            "terminale"
           ],
           "choixAlternance": [
             "pas_interesse",
             "indifferent",
             "interesse",
-            "tres_interesse",
-            "NC"
+            "tres_interesse"
           ],
           "choixDureeEtudesPrevue": [
             "indifferent",
             "courte",
             "longue",
-            "aucune_idee",
-            "NC"
+            "aucune_idee"
           ],
           "baccalaureatsAvecLeurSpecialites": [
             {
@@ -222,7 +219,6 @@ class ReferentielControllerTest(
                         ChoixNiveau.SECONDE,
                         ChoixNiveau.PREMIERE,
                         ChoixNiveau.TERMINALE,
-                        ChoixNiveau.NON_RENSEIGNE,
                     ),
                 choixAlternance =
                     listOf(
@@ -230,7 +226,6 @@ class ReferentielControllerTest(
                         ChoixAlternance.INDIFFERENT,
                         ChoixAlternance.INTERESSE,
                         ChoixAlternance.TRES_INTERESSE,
-                        ChoixAlternance.NON_RENSEIGNE,
                     ),
                 choixDureeEtudesPrevue =
                     listOf(
@@ -238,7 +233,6 @@ class ReferentielControllerTest(
                         ChoixDureeEtudesPrevue.COURTE,
                         ChoixDureeEtudesPrevue.LONGUE,
                         ChoixDureeEtudesPrevue.AUCUNE_IDEE,
-                        ChoixDureeEtudesPrevue.NON_RENSEIGNE,
                     ),
                 categoriesDInteretsAvecLeursSousCategories = toutesLesCategoriesEtSousCategoriesDInteret,
                 categoriesDomaineAvecLeursDomaines = categorieDomaineAvecLeursDomaines,

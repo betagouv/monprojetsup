@@ -115,7 +115,6 @@ class ReferentielServiceTest {
                         ChoixNiveau.SECONDE,
                         ChoixNiveau.PREMIERE,
                         ChoixNiveau.TERMINALE,
-                        ChoixNiveau.NON_RENSEIGNE,
                     ),
                 choixAlternance =
                     listOf(
@@ -123,7 +122,6 @@ class ReferentielServiceTest {
                         ChoixAlternance.INDIFFERENT,
                         ChoixAlternance.INTERESSE,
                         ChoixAlternance.TRES_INTERESSE,
-                        ChoixAlternance.NON_RENSEIGNE,
                     ),
                 choixDureeEtudesPrevue =
                     listOf(
@@ -131,7 +129,6 @@ class ReferentielServiceTest {
                         ChoixDureeEtudesPrevue.COURTE,
                         ChoixDureeEtudesPrevue.LONGUE,
                         ChoixDureeEtudesPrevue.AUCUNE_IDEE,
-                        ChoixDureeEtudesPrevue.NON_RENSEIGNE,
                     ),
                 categoriesDInteretsAvecLeursSousCategories = toutesLesCategoriesEtSousCategoriesDInteret,
                 categoriesDomaineAvecLeursDomaines = categorieDomaineAvecLeursDomaines,

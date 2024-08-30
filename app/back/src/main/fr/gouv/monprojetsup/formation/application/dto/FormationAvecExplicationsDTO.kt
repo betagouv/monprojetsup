@@ -18,6 +18,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 
 data class FormationAvecExplicationsDTO(
@@ -151,8 +153,8 @@ data class FormationAvecExplicationsDTO(
     data class ExplicationsDTO(
         val geographique: List<ExplicationGeographiqueDTO>,
         val formationsSimilaires: List<FormationSimilaireDTO>,
-        val dureeEtudesPrevue: String?,
-        val alternance: String?,
+        val dureeEtudesPrevue: ChoixDureeEtudesPrevue?,
+        val alternance: ChoixAlternance?,
         val interetsEtDomainesChoisis: InteretsEtDomainesDTO?,
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
@@ -161,8 +163,8 @@ data class FormationAvecExplicationsDTO(
         constructor(explications: ExplicationsSuggestionDetaillees) : this(
             geographique = explications.geographique.map { ExplicationGeographiqueDTO(it) },
             formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
-            dureeEtudesPrevue = explications.dureeEtudesPrevue?.jsonValeur,
-            alternance = explications.alternance?.jsonValeur,
+            dureeEtudesPrevue = explications.dureeEtudesPrevue,
+            alternance = explications.alternance,
             interetsEtDomainesChoisis =
                 InteretsEtDomainesDTO(
                     interets = explications.interets.map { InteretDTO(it) },

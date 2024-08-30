@@ -61,8 +61,8 @@ class IdentificationFilterTest(
                     {
                       "principal": {
                         "id": "adcf627c-36dd-4df5-897b-159443a6d49c",
-                        "situation": "AUCUNE_IDEE",
-                        "classe": "TERMINALE",
+                        "situation": "aucune_idee",
+                        "classe": "terminale",
                         "baccalaureat": "Générale",
                         "specialites": [
                           "1056",
@@ -82,8 +82,8 @@ class IdentificationFilterTest(
                           "MET_123",
                           "MET_456"
                         ],
-                        "dureeEtudesPrevue": "INDIFFERENT",
-                        "alternance": "PAS_INTERESSE",
+                        "dureeEtudesPrevue": "indifferent",
+                        "alternance": "pas_interesse",
                         "communesFavorites": [
                           {
                             "codeInsee": "75015",

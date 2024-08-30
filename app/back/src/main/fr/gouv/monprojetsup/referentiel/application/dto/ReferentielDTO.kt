@@ -1,40 +1,44 @@
 package fr.gouv.monprojetsup.referentiel.application.dto
 
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
+import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.Referentiel
+import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 
 data class ReferentielDTO(
-    val situations: List<String>,
-    val choixNiveau: List<String>,
-    val choixAlternance: List<String>,
-    val choixDureeEtudesPrevue: List<String>,
+    val situations: List<SituationAvanceeProjetSup>,
+    val choixNiveau: List<ChoixNiveau>,
+    val choixAlternance: List<ChoixAlternance>,
+    val choixDureeEtudesPrevue: List<ChoixDureeEtudesPrevue>,
     val baccalaureatsAvecLeurSpecialites: List<BaccalaureatAvecSesSpecialitesDTO>,
     val categoriesDInteretsAvecLeursSousCategories: List<CategorieInteretAevcSousCategoriesDTO>,
     val categoriesDomaineAvecLeursDomaines: List<CategorieDomaineAvecDomainesDTO>,
 ) {
     constructor(referentiel: Referentiel) : this(
-        situations = referentiel.situations.map { it.jsonValeur },
-        choixNiveau = referentiel.choixNiveau.map { it.jsonValeur },
-        choixAlternance = referentiel.choixAlternance.map { it.jsonValeur },
-        choixDureeEtudesPrevue = referentiel.choixDureeEtudesPrevue.map { it.jsonValeur },
+        situations = referentiel.situations,
+        choixNiveau = referentiel.choixNiveau,
+        choixAlternance = referentiel.choixAlternance,
+        choixDureeEtudesPrevue = referentiel.choixDureeEtudesPrevue,
         baccalaureatsAvecLeurSpecialites =
             referentiel.baccalaureatsAvecLeursSpecialites.map {
                 BaccalaureatAvecSesSpecialitesDTO(
                     baccalaureat = BaccalaureatDTO(it.key),
-                    specialites = it.value.map { SpecialitesDTO(it) },
+                    specialites = it.value.map { specialite -> SpecialitesDTO(specialite) },
                 )
             },
         categoriesDInteretsAvecLeursSousCategories =
             referentiel.categoriesDInteretsAvecLeursSousCategories.map {
                 CategorieInteretAevcSousCategoriesDTO(
                     categorieInteret = InteretCategorieDTO(it.key),
-                    sousCategoriesInterets = it.value.map { InteretSousCategorieDTO(it) },
+                    sousCategoriesInterets = it.value.map { interet -> InteretSousCategorieDTO(interet) },
                 )
             },
         categoriesDomaineAvecLeursDomaines =
             referentiel.categoriesDomaineAvecLeursDomaines.map {
                 CategorieDomaineAvecDomainesDTO(
                     categorieDomaine = CategorieDomaineDTO(it.key),
-                    domaines = it.value.map { DomaineDTO(it) },
+                    domaines = it.value.map { domaine -> DomaineDTO(domaine) },
                 )
             },
     )
