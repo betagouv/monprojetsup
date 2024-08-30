@@ -18,17 +18,15 @@ class BaccalaureatSpecialiteEntity {
 }
 
 @Embeddable
-class BaccalaureatSpecialiteId : Serializable {
-
-    constructor()
-    constructor(idBaccalaureat: String, idSpecialite: String) {
-        this.idBaccalaureat = idBaccalaureat
-        this.idSpecialite = idSpecialite
-    }
-
+data class BaccalaureatSpecialiteId(
     @Column(name = "id_baccalaureat")
-    lateinit var idBaccalaureat: String
+    var idBaccalaureat: String = "",
 
     @Column(name = "id_specialite")
-    lateinit var idSpecialite: String
+    var idSpecialite: String = ""
+
+) : Serializable {
+
+    constructor() : this("","")
+
 }

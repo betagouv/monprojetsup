@@ -28,20 +28,16 @@ class MoyenneGeneraleAdmisEntity {
 }
 
 @Embeddable
-class MoyenneGeneraleAdmisId : Serializable {
-    constructor()
-    constructor(annee: String, idFormation: String, idBaccalaureat: String) {
-        this.annee = annee
-        this.idFormation = idFormation
-        this.idBaccalaureat = idBaccalaureat
-    }
-
+data class MoyenneGeneraleAdmisId(
     @Column(name = "annee")
-    lateinit var annee: String
+    var annee : String = "",
 
     @Column(name = "id_formation")
-    lateinit var idFormation: String
+    var idFormation : String = "",
 
     @Column(name = "id_bac")
-    lateinit var idBaccalaureat: String
+    var idBaccalaureat : String = ""
+) : Serializable {
+    constructor() : this("","","")
+
 }
