@@ -16,7 +16,8 @@ class MpsDataPortTest(
     @Test
     fun `Doit réussir à accéder aux différents ports de données`() {
         mpsDataPort.getMatieres()
-        mpsDataPort.getLabels()
+        mpsDataPort.getFormationsLabels()
+        mpsDataPort.getMetiersLabels()
         mpsDataPort.getMpsIdToPsupFlIds()
         mpsDataPort.getMoyennesGeneralesAdmis()
         mpsDataPort.getFormationsMpsIds()

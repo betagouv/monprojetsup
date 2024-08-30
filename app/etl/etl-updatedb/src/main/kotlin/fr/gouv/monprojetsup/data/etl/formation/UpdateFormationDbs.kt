@@ -63,7 +63,7 @@ class UpdateFormationDbs(
 
     private fun updateFormationsAndVoeuxDb() {
 
-        val labels = mpsDataPort.getLabels()
+        val labels = mpsDataPort.getFormationsLabels()
         val descriptifs = mpsDataPort.getDescriptifs()
         val attendus = mpsDataPort.getAttendus()
         val conseils = mpsDataPort.getConseils()

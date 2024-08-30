@@ -41,7 +41,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -56,10 +55,10 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>src/main/kotlin</source>
                                 <source>src/main/java</source>
-                                <source>target/generated-sources/annotations</source>
+                                <source>src/main/kotlin</source>
                             </sourceDirs>
+                            <classpath/>
                         </configuration>
                     </execution>
                     <execution>
@@ -68,36 +67,20 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <!--
+                                <source>src/test/kotlin</source>
+                                <source>src/test/java</source>
+                                -->
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>

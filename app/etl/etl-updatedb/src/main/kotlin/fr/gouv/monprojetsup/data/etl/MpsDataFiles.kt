@@ -82,7 +82,18 @@ class MpsDataFiles(
             psupData,
             onisepData
         )
+    }
 
+    override fun getFormationsLabels(): Map<String, String> {
+        return Labels.getFormationsLabels(
+            psupData
+        )
+    }
+
+    override fun getMetiersLabels(): Map<String, String> {
+        return Labels.getMetiersLabels(
+            onisepData
+        )
     }
 
     override fun getDescriptifs(): DescriptifsFormationsMetiers {

@@ -11,22 +11,15 @@ import java.util.Map;
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
 
 public class Labels {
-    public static Map<String,@NotNull String> getLabels(
-            PsupData psupData,
-            OnisepData oniData) {
 
+    @NotNull
+    public static Map<String, String> getFormationsLabels(@NotNull PsupData psupData) {
+
+        val result = new HashMap<String, String>();
+        /* les noms affichés sur la carte */
         val nomsFilieres = psupData.nomsFilieres();
         val psupKeysToMpsKeys = psupData.getPsupKeyToMpsKey();
-
-        Map<String,String> result = new HashMap<>();
-        oniData.metiers().metiers().forEach((key, metier) -> result.put(cleanup(key), getLibelleFront(cleanup(key), metier.lib())));
-        oniData.interets().interets().forEach((key, interet) -> result.put(cleanup(key), getLibelleFront(cleanup(key), interet)));
-        oniData.thematiques().thematiques().forEach((key, thematiques) -> result.put(cleanup(key), getLibelleFront(cleanup(key), thematiques)));
-
-
-        /* les noms affichés sur la carte */
         nomsFilieres.forEach((key, libelle) -> result.put(key, getLibelleFront(key, libelle)));
-
 
         /* used for LAS */
         psupData.formations().filieres.forEach((gFlCod, filiere) -> {
@@ -40,7 +33,6 @@ public class Labels {
                 result.put(key, getLibelleFront(key, libelle));
             }
         });
-
 
         //on prend seulement les types macros intéressants
         psupKeysToMpsKeys.values().forEach(key -> {
@@ -65,19 +57,37 @@ public class Labels {
                 result.put(lasKey, result.get(genericKey) + " -  Accès Santé (LAS)");
             }
         });
+        return result;
+    }
+
+    @NotNull
+    public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData) {
+        val result = new HashMap<String, String>();
+        oniData.metiers().metiers().forEach((key, metier) -> result.put(cleanup(key), getLibelleFront(cleanup(key), metier.lib())));
+        oniData.interets().interets().forEach((key, interet) -> result.put(cleanup(key), getLibelleFront(cleanup(key), interet)));
+        oniData.thematiques().thematiques().forEach((key, thematiques) -> result.put(cleanup(key), getLibelleFront(cleanup(key), thematiques)));
 
         /* on intègre les associations récupérées dans les métiers associés */
         oniData.fichesMetiers().metiers().metier().stream()
                 .filter(metier -> metier.metiers_associes() != null)
                 .filter(metier -> metier.metiers_associes().metier_associe() != null)
                 .forEach(
-                metier -> metier.metiers_associes().metier_associe().forEach(metierAssocie ->
-                    result.put(
-                            cleanup(metierAssocie.id()),
-                            metierAssocie.libelle()
-                    )
-                )
-        );
+                        metier -> metier.metiers_associes().metier_associe().forEach(metierAssocie ->
+                                result.put(
+                                        cleanup(metierAssocie.id()),
+                                        metierAssocie.libelle()
+                                )
+                        )
+                );
+        return result;
+    }
+
+    public static Map<String,@NotNull String> getLabels(
+            PsupData psupData,
+            OnisepData oniData) {
+        val result = new HashMap<String,@NotNull String>();
+        result.putAll(getFormationsLabels(psupData));
+        result.putAll(getMetiersLabels(oniData));
         return result;
     }
 
@@ -96,4 +106,5 @@ public class Labels {
     private Labels() {
 
     }
+
 }

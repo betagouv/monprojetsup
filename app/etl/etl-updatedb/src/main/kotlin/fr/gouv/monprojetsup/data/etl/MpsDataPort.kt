@@ -38,4 +38,6 @@ interface MpsDataPort {
     fun getInterets(): Interets
     fun getConseils(): Map<String, String>
     fun getCities(): List<Ville>
+    fun getFormationsLabels(): Map<String, String>
+    fun getMetiersLabels(): Map<String, String>
 }
