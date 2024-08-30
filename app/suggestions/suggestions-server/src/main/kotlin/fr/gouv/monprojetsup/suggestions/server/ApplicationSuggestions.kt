@@ -6,7 +6,6 @@ import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.PropertySource
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 
@@ -15,8 +14,6 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@PropertySource("classpath:secret.properties")
 class Config {
 
 }
