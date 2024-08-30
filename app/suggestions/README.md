@@ -18,12 +18,12 @@ spring.datasource.url=jdbc:postgresql://localhost:5431/postgres
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
-La dernière valeur doit pointer sur un dossier contenant les fichiers de référence.
 
 La Bdd doit avoir été initialisée avec l'etl.
 
 ### Lancer le serveur
-- Assurez-vous de disposer de java en version 17
-- Depuis le dossier `app/suggestions/` tapez ```mvn clean compile install```
-- Depuis le dossier `app/suggestions/suggestions-server` lancez le serveur avec ```mvn clean compile exec:java -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.server.ApplicationSuggestionsKt```
+- Assurez-vous de disposer de java en version 19
+- Placez vous dans le dossier `app/suggestions/` 
+- Tapez ```mvn clean compile install```
+- Lancer le serveur avec ```mvn clean compile -f./suggestions-server exec:java -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.server.ApplicationSuggestionsKt```
 
