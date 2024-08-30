@@ -10,7 +10,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy
 import java.io.Serializable
 
 @Entity
-@Table(name = "join_baccalaureat_specialite")
+@Table(name = "ref_join_baccalaureat_specialite")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class BaccalaureatSpecialiteEntity {
     @EmbeddedId

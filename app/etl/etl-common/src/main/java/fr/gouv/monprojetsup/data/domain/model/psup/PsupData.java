@@ -158,6 +158,18 @@ public record PsupData(
         return result > 0 ? result : null;
     }
 
+    @Nullable
+    public Integer getDuree(@NotNull Filiere filiere) {
+        return DureesEtudes.getDuree(
+                Constants.gFlCodToFrontId(filiere.cle),
+                filiere.cle,
+                filiere.libelle,
+                filiere.libelle,
+                filiere.sigle
+                );
+    }
+
+
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean estFiliereActive(int fl) {

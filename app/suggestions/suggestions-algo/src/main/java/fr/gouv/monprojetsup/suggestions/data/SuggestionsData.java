@@ -138,8 +138,8 @@ public class SuggestionsData {
         return f.map(Formation::capacite).orElse(0);
     }
 
-    public Map<Integer, String> getSpecialites() {
-        return matieresPort.retrieveSpecialites().stream().collect(Collectors.toMap(Matiere::id, Matiere::label));
+    public @NotNull List<@NotNull Matiere> getSpecialites() {
+        return matieresPort.retrieveSpecialites();
     }
 
     public Set<String> getFormationIdsWithApprentissage() {

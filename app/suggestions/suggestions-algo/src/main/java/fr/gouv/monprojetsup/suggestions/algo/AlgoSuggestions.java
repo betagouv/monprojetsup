@@ -326,9 +326,10 @@ public class AlgoSuggestions {
         createGraph();
 
         data.getSpecialites().forEach(
-                (iMtCod, s) -> {
-                    codesSpecialites.put(s, iMtCod);
-                    codesSpecialites.put(Integer.toString(iMtCod), iMtCod);
+                spe -> {
+                    codesSpecialites.put(spe.idMps(), spe.idPsup());//prod ref
+                    codesSpecialites.put(spe.label(), spe.idPsup());//retrocompat pour experts métiers
+                    codesSpecialites.put(Integer.toString(spe.idPsup()), spe.idPsup());//retrocompat pour experts métiers
                 }
         );
 

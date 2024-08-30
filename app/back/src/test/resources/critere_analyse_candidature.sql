@@ -1,4 +1,4 @@
-INSERT INTO critere_analyse_candidature(id, index, nom)
+INSERT INTO ref_critere_analyse_candidature(id, index, nom)
 VALUES
     (
         'COM_ACA',

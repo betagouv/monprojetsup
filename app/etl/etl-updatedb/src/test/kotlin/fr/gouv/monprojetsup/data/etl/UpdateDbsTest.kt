@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
+import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
@@ -82,7 +83,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         }
 
-    }
 
     @Nested
     inner class UpdateReferentielsTest {
@@ -90,12 +90,23 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Autowired
         lateinit var updateReferentielDbs: UpdateReferentielDbs
 
+        @Autowired
+        lateinit var specialitesBacDb: BaccalaureatSpecialiteDb
+
         @Test
         fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
             assertDoesNotThrow { updateReferentielDbs.clearAll() }
             assertDoesNotThrow { updateReferentielDbs.updateReferentielDbs() }
             assertDoesNotThrow { updateReferentielDbs.clearAll() }
         }
+
+        @Test
+        fun `La table join_baccalaureat_specialite doit être non vide`() {
+            updateReferentielDbs.updateReferentielDbs()
+            val items = specialitesBacDb.findAll()
+            assert(items.isNotEmpty())
+        }
+    }
 
     }
 

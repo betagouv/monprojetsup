@@ -428,18 +428,21 @@ class MpsDataFiles(
     }
 
     override fun getMatieres(): List<Matiere> {
-        if(specialites == null) {
-            specialites = getSpecialites()
-        }
-        val specs = specialites!!
-        return statistiques.matieres.entries.map {
+        val specs = getSpecialites()
+        val result = ArrayList(
+            statistiques.matieres.entries
+                .filter { !specs.isSpecialite(it.key) }
+                .map {
             Matiere(
+                Matiere.idPsupToIdMps(it.key),
                 it.key,
                 it.value,
-                specs.isSpecialite(it.key),
-                specs.getBacs(it.key)
-            )
-        }
+                false,
+                listOf()
+            )}
+        )
+        result.addAll(specs.toMatieres())
+        return result
     }
 
     private fun getEdges(edges: Map<String, String>, type: Int): List<Triple<String, String, Int>> {
@@ -462,7 +465,19 @@ class MpsDataFiles(
         val lasKeys = psupData.lasToGeneric.keys
         val result = HashMap<String,Int?>()
         ids.forEach { id ->
-            result[id] = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
+            var duree = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
+            if(duree == null && id.startsWith(Constants.FILIERE_PREFIX)) {
+                try {
+                    val codeFilierePsup = Integer.parseInt(id.substring(Constants.FILIERE_PREFIX.length))
+                    val filiere = psupData.filieres()[codeFilierePsup]
+                    if(filiere != null) {
+                        duree = psupData.getDuree(filiere)
+                    }
+                } catch (e: NumberFormatException) {
+                    //ignore
+                }
+            }
+            result[id] = duree
         }
         return result
     }

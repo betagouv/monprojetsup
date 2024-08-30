@@ -2,13 +2,14 @@ package fr.gouv.monprojetsup.data.domain.model.stats;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 public record StatistiquesAdmisParGroupe(
         //indexé par groupes
         Map<String, StatistiquesAdmisParBac> parGroupe
-) {
+) implements Serializable {
     public StatistiquesAdmisParGroupe() { this(new HashMap<>()); }
 
     public void clear() {

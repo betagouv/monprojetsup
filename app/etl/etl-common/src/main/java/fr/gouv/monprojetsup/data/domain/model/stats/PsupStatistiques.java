@@ -44,8 +44,7 @@ public class PsupStatistiques implements Serializable {
 
     public final @NotNull Map<@NotNull Integer, @NotNull String> matieres = new TreeMap<>();
 
-
-    public final AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats = new AdmisMatiereBacAnneeStats();
+    private final AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats = new AdmisMatiereBacAnneeStats();
 
     private int annee = 2024;
 
@@ -307,5 +306,34 @@ public class PsupStatistiques implements Serializable {
         candidatsParGroupes.values().removeIf(Map::isEmpty);
         admisMatiereBacAnneeStats.stats().removeIf(s -> s.nb() == 0);
         statsAdmis.parGroupe().values().removeIf(s -> s.parBac().isEmpty());
+    }
+
+    public List<AdmisMatiereBacAnnee> getAdmisMatiereBacAnneeStats() {
+        if(!admisMatiereBacAnneeStats.stats().isEmpty()) {
+            return admisMatiereBacAnneeStats.stats();
+        } else {//fallback en attendant de réparer la source de données
+            return statsAdmis.parGroupe().values().stream()
+                    .flatMap(grp -> grp.parBac().entrySet().stream()
+                            .flatMap(bac -> bac.getValue().parMatiere().entrySet().stream()
+                                    .map(mat -> new AdmisMatiereBacAnnee(
+                                            ANNEE_LYCEE_TERMINALE,
+                                            mat.getKey(),
+                                            bac.getKey(),
+                                            mat.getValue().nb()
+                                    ))
+                            )
+                    )
+                    .collect(Collectors.groupingBy(s -> Pair.of(s.iMtCod(), s.bac())))
+                    .entrySet().stream()
+                    .map(
+                            e -> new AdmisMatiereBacAnnee(
+                                    ANNEE_LYCEE_TERMINALE,
+                                    e.getKey().getLeft(),
+                                    e.getKey().getRight(),
+                                    e.getValue().stream().mapToInt(AdmisMatiereBacAnnee::nb).sum()
+                            )
+                    )
+                    .toList();
+        }
     }
 }

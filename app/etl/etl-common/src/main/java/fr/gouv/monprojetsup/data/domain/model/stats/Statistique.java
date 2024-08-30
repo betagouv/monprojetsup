@@ -7,7 +7,7 @@ import java.util.List;
 
 public record Statistique(
         //les frequences cumulees
-        @NotNull int[] frequencesCumulees,
+        int @NotNull [] frequencesCumulees,
         //le middle 50
         @NotNull Middle50 middle50
 ) implements Serializable {
@@ -67,7 +67,7 @@ public record Statistique(
     }
 
     public int nb() {
-        return frequencesCumulees == null ? 0 : frequencesCumulees[PsupStatistiques.PRECISION_PERCENTILES - 1];
+        return frequencesCumulees[PsupStatistiques.PRECISION_PERCENTILES - 1];
     }
 
     @Override
@@ -75,6 +75,26 @@ public record Statistique(
         return middle50.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Statistique that)) return false;
+        if (!middle50.equals(that.middle50)) return false;
+        if (frequencesCumulees.length != that.frequencesCumulees.length) return false;
+        for (int i = 0; i < frequencesCumulees.length; i++) {
+            if (frequencesCumulees[i] != that.frequencesCumulees[i]) return false;
+        }
+        return true;
+    }
 
+    @Override
+    public int hashCode() {
+        int result = 1;
+        for (int element : frequencesCumulees) {
+            result = 31 * result + element;
+        }
+        result = 31 * result + middle50.hashCode();
+        return result;
+    }
 }
 

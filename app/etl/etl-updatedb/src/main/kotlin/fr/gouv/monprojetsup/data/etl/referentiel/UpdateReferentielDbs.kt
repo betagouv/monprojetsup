@@ -85,12 +85,12 @@ class UpdateReferentielDbs(
     }
 
     private fun updateSpecialiteDb() {
-        val specialites = mpsDataPort.getSpecialites()
+        val specialites = mpsDataPort.getSpecialites().toMatieres()
         specialitesDb.deleteAll()
-        specialites.specialites.forEach { specialite ->
+        specialites.forEach { matiere ->
             val entity = SpecialiteEntity()
-            entity.id = specialite.key.toString()
-            entity.label = specialite.value
+            entity.id = matiere.idMps
+            entity.label = matiere.label
             specialitesDb.save(entity)
         }
     }
@@ -104,7 +104,10 @@ class UpdateReferentielDbs(
             .forEach {
             it.value.forEach { bacSpec ->
                 val entity = BaccalaureatSpecialiteEntity()
-                entity.id = BaccalaureatSpecialiteId(it.key, bacSpec.toString())
+                entity.id = BaccalaureatSpecialiteId(
+                    it.key,
+                    bacSpec
+                )
                 specialitesBacDb.save(entity)
             }
         }

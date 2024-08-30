@@ -11,7 +11,7 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "triplet_affectation")
+@Table(name = "ref_triplet_affectation")
 class VoeuEntity {
     constructor()
     constructor(voeu: Voeu) {
@@ -19,7 +19,6 @@ class VoeuEntity {
         this.nom = voeu.libelle
         this.commune = voeu.commune
         this.codeCommune = voeu.codeCommune
-        this.coordonneesGeographiques = "${voeu.lat},${voeu.lng}"
         this.lat = voeu.lat
         this.lng = voeu.lng
         this.idFormation = voeu.formation
@@ -41,13 +40,10 @@ class VoeuEntity {
     @Column(name = "code_commune", nullable = false)
     lateinit var codeCommune: String
 
-    @Column(name = "coordonnees_geographiques", nullable = false)
-    lateinit var coordonneesGeographiques: String
-
-    @Column(name = "lat", nullable = true)
+    @Column(name = "latitude", nullable = true)
     var lat : Double? = null
 
-    @Column(name = "lng", nullable = true)
+    @Column(name = "longitude", nullable = true)
     var lng : Double? = null
 
     @Column(name = "id_formation", nullable = false)

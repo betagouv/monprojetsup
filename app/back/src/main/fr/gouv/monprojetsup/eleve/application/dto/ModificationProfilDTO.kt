@@ -35,7 +35,7 @@ data class ModificationProfilDTO(
         required = false,
         allowableValues = ["NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"],
     )
-    @JsonProperty("baccalaureat")
+    @JsonProperty("ref_baccalaureat")
     val baccalaureat: String? = null,
     @ArraySchema(
         arraySchema =
