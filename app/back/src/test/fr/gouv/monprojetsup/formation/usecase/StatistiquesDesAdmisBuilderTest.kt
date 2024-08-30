@@ -213,14 +213,15 @@ class StatistiquesDesAdmisBuilderTest {
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
-    @Test
-    fun `si en premiere ou terminal, doit retourner la moyenne générale`() {
+    @ParameterizedTest
+    @EnumSource(value = ChoixNiveau::class, names = ["PREMIERE", "TERMINALE"])
+    fun `si en premiere ou terminal, doit retourner la moyenne générale`(classe: ChoixNiveau) {
         // When
         val resultat =
             statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Générale",
                 frequencesCumulees = frequencesCumulees,
-                classe = ChoixNiveau.PREMIERE,
+                classe = classe,
             )
 
         // Then
@@ -242,15 +243,14 @@ class StatistiquesDesAdmisBuilderTest {
         assertThat(resultat).usingRecursiveComparison().isEqualTo(attendu)
     }
 
-    @ParameterizedTest
-    @EnumSource(value = ChoixNiveau::class, names = ["SECONDE", "NON_RENSEIGNE"])
-    fun `si en seconde ou n'a pas renseigné sa classe, doit retourner null`(classe: ChoixNiveau) {
+    @Test
+    fun `si en seconde, doit retourner null`() {
         // When
         val resultat =
             statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(
                 idBaccalaureat = "Générale",
                 frequencesCumulees = frequencesCumulees,
-                classe = classe,
+                classe = ChoixNiveau.SECONDE,
             )
 
         // Then

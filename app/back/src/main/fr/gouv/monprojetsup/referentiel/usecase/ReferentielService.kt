@@ -21,36 +21,11 @@ class ReferentielService(
         val categorieDInteretsAvecLeursSousCategories = interetRepository.recupererToutesLesCategoriesEtLeursSousCategoriesDInterets()
         val categorieDomaineAvecLeursDomaines = domaineRepository.recupererTousLesDomainesEtLeursCategories()
         return Referentiel(
-            situations =
-                listOf(
-                    SituationAvanceeProjetSup.AUCUNE_IDEE,
-                    SituationAvanceeProjetSup.QUELQUES_PISTES,
-                    SituationAvanceeProjetSup.PROJET_PRECIS,
-                ),
+            situations = SituationAvanceeProjetSup.entries,
             baccalaureatsAvecLeursSpecialites = baccalaureatsAvecLeursSpecialites,
-            choixNiveau =
-                listOf(
-                    ChoixNiveau.SECONDE,
-                    ChoixNiveau.PREMIERE,
-                    ChoixNiveau.TERMINALE,
-                    ChoixNiveau.NON_RENSEIGNE,
-                ),
-            choixAlternance =
-                listOf(
-                    ChoixAlternance.PAS_INTERESSE,
-                    ChoixAlternance.INDIFFERENT,
-                    ChoixAlternance.INTERESSE,
-                    ChoixAlternance.TRES_INTERESSE,
-                    ChoixAlternance.NON_RENSEIGNE,
-                ),
-            choixDureeEtudesPrevue =
-                listOf(
-                    ChoixDureeEtudesPrevue.INDIFFERENT,
-                    ChoixDureeEtudesPrevue.COURTE,
-                    ChoixDureeEtudesPrevue.LONGUE,
-                    ChoixDureeEtudesPrevue.AUCUNE_IDEE,
-                    ChoixDureeEtudesPrevue.NON_RENSEIGNE,
-                ),
+            choixNiveau = ChoixNiveau.entries,
+            choixAlternance = ChoixAlternance.entries,
+            choixDureeEtudesPrevue = ChoixDureeEtudesPrevue.entries,
             categoriesDInteretsAvecLeursSousCategories = categorieDInteretsAvecLeursSousCategories,
             categoriesDomaineAvecLeursDomaines = categorieDomaineAvecLeursDomaines,
         )

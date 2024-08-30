@@ -399,10 +399,10 @@ class APISuggestionProfilDTOComponentTest {
             ProfilEleve.Identifie(
                 id = "unknown",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
-                classe = ChoixNiveau.NON_RENSEIGNE,
+                classe = null,
                 baccalaureat = null,
-                dureeEtudesPrevue = ChoixDureeEtudesPrevue.NON_RENSEIGNE,
-                alternance = ChoixAlternance.NON_RENSEIGNE,
+                dureeEtudesPrevue = null,
+                alternance = null,
                 communesFavorites = null,
                 specialites = null,
                 centresInterets = null,
@@ -414,10 +414,10 @@ class APISuggestionProfilDTOComponentTest {
             )
         private val profilDTONull =
             APISuggestionProfilDTO(
-                classe = "",
+                classe = null,
                 baccalaureat = null,
-                duree = "",
-                alternance = "",
+                duree = null,
+                alternance = null,
                 preferencesGeographiques = null,
                 specialites = null,
                 interets = emptyList(),

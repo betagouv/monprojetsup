@@ -44,7 +44,7 @@ class StatistiquesDesAdmisBuilder {
         classe: ChoixNiveau?,
     ): MoyenneGeneraleDesAdmis? {
         return when (classe) {
-            ChoixNiveau.SECONDE, ChoixNiveau.NON_RENSEIGNE, null -> null
+            ChoixNiveau.SECONDE, null -> null
             ChoixNiveau.PREMIERE, ChoixNiveau.TERMINALE -> recupererStatistiquesAdmisDUneFormation(idBaccalaureat, frequencesCumulees)
         }
     }

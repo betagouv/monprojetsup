@@ -20,7 +20,7 @@ data class ModificationProfilDTO(
         allowableValues = ["aucune_idee", "quelques_pistes", "projet_precis"],
     )
     @JsonProperty("situation")
-    val situation: String? = null,
+    val situation: SituationAvanceeProjetSup? = null,
     @Schema(
         description = "Classe actuelle",
         example = "terminale",
@@ -28,7 +28,7 @@ data class ModificationProfilDTO(
         allowableValues = ["seconde", "premiere", "terminale"],
     )
     @JsonProperty("classe")
-    val classe: String? = null,
+    val classe: ChoixNiveau? = null,
     @Schema(
         description = "Type de Bac choisi ou envisagé",
         example = "Générale",
@@ -84,7 +84,7 @@ data class ModificationProfilDTO(
         allowableValues = ["indifferent", "courte", "longue", "aucune_idee"],
     )
     @JsonProperty("dureeEtudesPrevue")
-    val dureeEtudesPrevue: String? = null,
+    val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
     @Schema(
         description = "Intérêt pour les formations en apprentissage",
         example = "pas_interesse",
@@ -92,7 +92,7 @@ data class ModificationProfilDTO(
         allowableValues = ["pas_interesse", "indifferent", "interesse", "tres_interesse"],
     )
     @JsonProperty("alternance")
-    val alternance: String? = null,
+    val alternance: ChoixAlternance? = null,
     @ArraySchema(
         arraySchema =
             Schema(
@@ -119,11 +119,11 @@ data class ModificationProfilDTO(
     val corbeilleFormations: List<String>? = null,
 ) {
     constructor(profilEleve: ProfilEleve.Identifie) : this(
-        situation = profilEleve.situation?.jsonValeur,
-        classe = profilEleve.classe?.jsonValeur,
+        situation = profilEleve.situation,
+        classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,
-        dureeEtudesPrevue = profilEleve.dureeEtudesPrevue?.jsonValeur,
-        alternance = profilEleve.alternance?.jsonValeur,
+        dureeEtudesPrevue = profilEleve.dureeEtudesPrevue,
+        alternance = profilEleve.alternance,
         formationsFavorites = profilEleve.formationsFavorites?.map { VoeuFormationDTO(it) },
         communesFavorites = profilEleve.communesFavorites?.map { CommuneDTO(it) },
         specialites = profilEleve.specialites,
@@ -136,11 +136,11 @@ data class ModificationProfilDTO(
 
     fun toModificationProfilEleve() =
         ModificationProfilEleve(
-            situation = situation?.let { SituationAvanceeProjetSup.deserialiseApplication(it) },
-            classe = classe?.let { ChoixNiveau.deserialiseApplication(it) },
+            situation = situation,
+            classe = classe,
             baccalaureat = baccalaureat,
-            dureeEtudesPrevue = dureeEtudesPrevue?.let { ChoixDureeEtudesPrevue.deserialiseApplication(it) },
-            alternance = alternance?.let { ChoixAlternance.deserialiseApplication(it) },
+            dureeEtudesPrevue = dureeEtudesPrevue,
+            alternance = alternance,
             formationsFavorites = formationsFavorites?.map { it.toVoeuFormation() },
             communesFavorites = communesFavorites?.map { it.toCommune() },
             specialites = specialites,
