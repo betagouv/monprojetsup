@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 
 
 fun main(args: Array<String>) {
-	runApplication<UpdateDbRunner>(*args)
+	runApplication<UpdateMpsDbRunner>(*args)
 }
 
 @ComponentScan(basePackages = ["fr.gouv.monprojetsup"])
@@ -24,13 +24,11 @@ fun main(args: Array<String>) {
 	"fr.gouv.monprojetsup.data"]
 )
 @EnableJpaRepositories
-class UpdateDbRunner  {
-
-}
+open class UpdateMpsDbRunner
 
 @Component
 @Profile("!test")
-class Runner(
+open class Runner(
 	private val updateFormationRepositories: UpdateFormationDbs,
 	private val updateReferentielDbs: UpdateReferentielDbs,
 	private val updateMetierDbs: UpdateMetierDbs,

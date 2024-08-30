@@ -29,7 +29,7 @@ public class DocsGenerator {
         this.labels = labelsPort.retrieveLabels();
     }
 
-    public void generate() throws Exception {
+    public void generate(String filename) throws Exception {
 
 
         //load Map<String, ProfileDTO> profiles = new HashMap<>(); from profilsExperts.json
@@ -38,7 +38,7 @@ public class DocsGenerator {
             cases = ReferenceCases.loadFromFile(SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS);
         } catch (Exception e) {
             SuggestionsGenerator.LOGGER.info("Generating ref profiles");
-            suggestionsGenerator.generate();
+            suggestionsGenerator.generate(filename);
             cases = ReferenceCases.loadFromFile(SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS);
         }
 

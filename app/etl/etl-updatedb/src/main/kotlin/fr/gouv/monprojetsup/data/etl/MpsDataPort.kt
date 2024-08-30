@@ -1,9 +1,6 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.domain.model.Matiere
-import fr.gouv.monprojetsup.data.domain.model.StatsFormation
-import fr.gouv.monprojetsup.data.domain.model.Ville
-import fr.gouv.monprojetsup.data.domain.model.Voeu
+import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.domain.model.bacs.Bac
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers
@@ -32,7 +29,7 @@ interface MpsDataPort {
     fun getDurees(): Map<String, Int?>
     fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>>
     fun getPsupIdToMpsId(): Map<String, String>
-    fun getVoeuxParCandidat(): List<Set<Int>>
+    fun getVoeuxParCandidat(): List<Candidat>
     fun getLasToPasIdMapping(): Map<String, String>
     fun getEdges(): List<Triple<String,String,Int>>
     fun getMatieres(): List<Matiere>

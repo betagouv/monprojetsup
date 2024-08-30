@@ -18,7 +18,7 @@ interface EdgeJPARepository : JpaRepository<SuggestionsEdgeEntity, String> {
 
 @Repository
 open class EdgesRepository(
-            val edgeJPARepository : EdgeJPARepository
+    private val edgeJPARepository : EdgeJPARepository
 )
     : EdgesPort()
 {

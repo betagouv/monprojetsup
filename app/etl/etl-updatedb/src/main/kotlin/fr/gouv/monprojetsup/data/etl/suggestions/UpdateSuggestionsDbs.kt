@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.model.Candidat
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.suggestions.entity.*
 import org.springframework.data.jpa.repository.JpaRepository
@@ -79,11 +78,7 @@ class UpdateSuggestionsDbs(
     }
 
     private fun updateCandidatsDb() {
-        val candidats = mpsDataPort.getVoeuxParCandidat().map { voeuxCandidat ->
-            Candidat(
-                voeuxCandidat
-            )
-        }
+        val candidats = mpsDataPort.getVoeuxParCandidat();
         candidatsPort.deleteAll()
         candidatsPort.saveAll(candidats.map { SuggestionsCandidatEntity(it) })
     }

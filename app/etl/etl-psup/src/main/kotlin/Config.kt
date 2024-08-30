@@ -9,7 +9,4 @@ import org.springframework.context.annotation.PropertySources
 PropertySource("classpath:application.properties"),
 PropertySource("classpath:secret.properties")
 )
-class Config {
-
-
-}
+open class Config

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -33,30 +34,23 @@ public class SuggestionsGenerator {
 
     private static final boolean ONLY_FORMATIONS = true;
 
-    public static final String PROFILS_EXPERTS_MPS_PATH = "mps/profilsExperts.json";
+    public static final String PROFILS_EXPERTS_MPS_PATH = "profilsExperts.json";
 
-    /***************************************************************************
-     ******************* PATHES TO DATA FILES ***********************************
-     ****************************************************************************/
-
-    public static String getSourceDataFilePath(String filename) {
-        String dir = fr.gouv.monprojetsup.data.config.DataServerConfig.getDataRootDirectory();
-        String pathWithSpace = dir + "data/" + filename;
-        val path = java.nio.file.Path.of(pathWithSpace);
-        return path.toString();
-    }
-    public void generate() throws Exception {
-
+    public void generate(String filename) throws IOException {
 
         //we want the server in debug mode, with full explanations
         useRemoteUrl(false);
 
         LOGGER.info("Loading experts profiles...");
-        List<Pair<String, ProfileDTO>> profiles = Serialisation.fromJsonFile(
-                getSourceDataFilePath(PROFILS_EXPERTS_MPS_PATH),
-                new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
-
-        );
+        List<Pair<String, ProfileDTO>> profiles;
+        try {
+            profiles = Serialisation.fromJsonFile(
+                    filename,
+                    new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Impossible d'accéder au fichier '" + filename + "', veuillez fournir l'emplacement du fichier comme premier argument.");
+        }
         ReferenceCases cases = from(profiles);
 
 

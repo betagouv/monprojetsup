@@ -19,14 +19,17 @@ class SuggestionsCandidatEntity {
     val id: Long = 0
 
     fun toCandidat() : Candidat {
-        return Candidat(ArrayList(voeux))
+        return Candidat(bac,ArrayList(voeux))
     }
 
     constructor(c : Candidat) {
-        this.voeux = c.voeux
+        this.bac = c.bac
+        this.voeux = ArrayList(c.voeux)
     }
 
+    lateinit var bac : String
+
     @JdbcTypeCode(SqlTypes.ARRAY)
-    var voeux : List<String> = listOf()
+    lateinit var voeux : List<String>
 
 }
