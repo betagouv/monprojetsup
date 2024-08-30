@@ -10,7 +10,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "triplet_affectation")
+@Table(name = "ref_triplet_affectation")
 class TripletAffectationEntity {
     @Id
     lateinit var id: String

@@ -8,13 +8,14 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "suggestions_matieres")
+@Table(name = "sugg_matieres")
 class SuggestionsMatiereEntity {
 
     constructor()
 
     constructor(matiere: Matiere) {
-        this.id = matiere.id
+        this.id = matiere.idMps
+        this.idPsup = matiere.idPsup
         this.label = matiere.label
         this.estSpecialite = matiere.estSpecialite
         this.bacs = matiere.bacs
@@ -23,6 +24,7 @@ class SuggestionsMatiereEntity {
     fun toMatiere() : Matiere {
         return Matiere(
             id,
+            idPsup,
             label,
             estSpecialite,
             bacs
@@ -30,9 +32,11 @@ class SuggestionsMatiereEntity {
     }
 
     @Id
-    var id: Int = 0
+    lateinit var id: String
 
-    var label: String = ""
+    var idPsup: Int = 0
+
+    lateinit var label: String
 
     var estSpecialite: Boolean = false
 

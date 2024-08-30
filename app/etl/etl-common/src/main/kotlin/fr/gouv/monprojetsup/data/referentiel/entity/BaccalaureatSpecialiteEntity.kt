@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
-@Table(name = "join_baccalaureat_specialite")
+@Table(name = "ref_join_baccalaureat_specialite")
 class BaccalaureatSpecialiteEntity {
 
     @EmbeddedId

@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 
 
 @Entity
-@Table(name = "suggestions_edges")
+@Table(name = "sugg_edges")
 class SuggestionsEdgeEntity {
 
     constructor()

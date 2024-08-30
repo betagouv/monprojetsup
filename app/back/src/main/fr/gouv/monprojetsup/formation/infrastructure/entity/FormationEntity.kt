@@ -12,7 +12,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "formation")
+@Table(name = "ref_formation")
 class FormationCourteEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -29,7 +29,7 @@ class FormationCourteEntity {
 }
 
 @Entity
-@Table(name = "formation")
+@Table(name = "ref_formation")
 class FormationDetailleeEntity {
     @Id
     @Column(name = "id", nullable = false)

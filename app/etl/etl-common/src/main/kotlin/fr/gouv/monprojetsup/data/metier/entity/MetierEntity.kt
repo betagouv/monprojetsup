@@ -10,7 +10,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "metier")
+@Table(name = "ref_metier")
 class MetierEntity {
     @Id
     @Column(name = "id")

@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.data.referentiel.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "domaine_categorie")
+@Table(name = "ref_domaine_categorie")
 class CategorieDomaineEntity {
     @Id
     @Column(name = "id", nullable = false)

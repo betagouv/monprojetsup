@@ -1,12 +1,13 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 public record StatistiquesAdmisParBac(
         //indexé par I_MT_COD, -1 for all, -2 for my bac
         Map<String, StatistiquesAdmisParMatiere> parBac
-) {
+) implements Serializable  {
     public StatistiquesAdmisParBac() { this(new HashMap<>()); }
 
     public void set(Map<String, Map<Integer, int[]>> stringMapMap) {

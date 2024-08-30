@@ -9,7 +9,7 @@ import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
-@Table(name = "baccalaureat")
+@Table(name = "ref_baccalaureat")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class BaccalaureatEntity {
     @Id

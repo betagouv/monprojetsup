@@ -9,7 +9,7 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "suggestions_villes")
+@Table(name = "sugg_villes")
 class SuggestionsVilleEntity {
 
     constructor()

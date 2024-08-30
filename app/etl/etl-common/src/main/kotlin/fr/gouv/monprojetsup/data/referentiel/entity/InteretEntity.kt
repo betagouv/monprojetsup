@@ -6,7 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "interet")
+@Table(name = "ref_interet")
 class InteretEntity {
     @Id
     @Column(name = "id", nullable = false)

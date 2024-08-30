@@ -6,7 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "suggestions_labels")
+@Table(name = "sugg_labels")
 class SuggestionsLabelEntity {
 
     constructor()

@@ -14,7 +14,7 @@ import org.hibernate.annotations.Type
 import java.io.Serializable
 
 @Entity
-@Table(name = "moyenne_generale_admis")
+@Table(name = "ref_moyenne_generale_admis")
 class MoyenneGeneraleAdmisEntity {
     @EmbeddedId
     lateinit var id: MoyenneGeneraleAdmisId

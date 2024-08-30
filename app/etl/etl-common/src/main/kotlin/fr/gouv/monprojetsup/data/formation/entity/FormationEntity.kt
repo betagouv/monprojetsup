@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable
 import java.io.Serializable
 
 @Entity
-@Table(name = "formation")
+@Table(name = "ref_formation")
 class FormationEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -56,7 +56,7 @@ class FormationEntity {
     /** begin ajouts suggestions **/
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)  // Cascading enabled here
-    @JoinColumn(name = "formation_id")
+    @JoinColumn(name = "id_formation")
     var voeux: List<VoeuEntity> = ArrayList()
 
     @JdbcTypeCode(SqlTypes.ARRAY)

@@ -9,7 +9,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "domaine_categorie")
+@Table(name = "ref_domaine_categorie")
 class CategorieDomaineEntity {
     @Id
     @Column(name = "id", nullable = false)

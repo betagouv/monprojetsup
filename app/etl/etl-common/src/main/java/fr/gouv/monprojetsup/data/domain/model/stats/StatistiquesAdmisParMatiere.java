@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYE
 record StatistiquesAdmisParMatiere(
         //indexé par I_TC_COD
         Map<Integer, Statistique> parMatiere
-) {
+) implements Serializable  {
     public StatistiquesAdmisParMatiere() {
         this(new HashMap<>());
     }

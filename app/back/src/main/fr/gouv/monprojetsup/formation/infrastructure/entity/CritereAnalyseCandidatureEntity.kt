@@ -6,7 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "critere_analyse_candidature")
+@Table(name = "ref_critere_analyse_candidature")
 class CritereAnalyseCandidatureEntity {
     @Id
     lateinit var id: String
