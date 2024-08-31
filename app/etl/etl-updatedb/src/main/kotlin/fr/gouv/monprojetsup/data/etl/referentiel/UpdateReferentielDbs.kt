@@ -59,15 +59,15 @@ class UpdateReferentielDbs(
     private val logger: Logger = Logger.getLogger(UpdateReferentielDbs::class.java.simpleName)
 
     fun updateReferentielDbs() {
-        logger.info("Updating bacs db")
+        logger.info("Mise à jour de bacs db")
         updateBaccalaureatDb()
-        logger.info("Updating specialites db")
+        logger.info("Mise à jour de specialites db")
         updateSpecialiteDb()
-        logger.info("Updating bacs specialites db")
+        logger.info("Mise à jour de bacs specialites db")
         updateBaccalaureatSpecialiteDb()
-        logger.info("Updating domaines db")
+        logger.info("Mise à jour de domaines db")
         updateDomainesDbs()
-        logger.info("Updating interets db")
+        logger.info("Mise à jour de interets db")
         updateInteretDbs()
     }
 

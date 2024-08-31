@@ -1,13 +1,13 @@
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Général', 'Série Générale', 'Générale');
 
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Professionnel', 'Série Pro', 'P');
 
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('PA', 'Bac Pro Agricole', 'PA');
 
-INSERT INTO specialite(id, label)
+INSERT INTO ref_specialite(id, label)
 VALUES ('4',
         'Sciences de l''ingénieur'),
        ('5',
@@ -25,7 +25,7 @@ VALUES ('4',
        ('1095',
         'Éducation Physique, Pratiques Et Culture Sportives');
 
-INSERT INTO join_baccalaureat_specialite(id_baccalaureat, id_specialite)
+INSERT INTO ref_join_baccalaureat_specialite(id_baccalaureat, id_specialite)
 VALUES ('Professionnel', '4'),
        ('Général', '4'),
        ('Professionnel', '5'),

@@ -21,7 +21,7 @@ interface MoyennesGeneralesAdmisDb :
     JpaRepository<MoyenneGeneraleAdmisEntity, String>
 
 @Repository
-interface TripletsAffectationDb :
+interface VoeuxDb :
     JpaRepository<VoeuEntity, String>
 
 @Repository
@@ -33,17 +33,18 @@ class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
     private val formationsdb: FormationDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
+    private val voeuxDb: VoeuxDb,
     private val mpsDataPort: MpsDataPort
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun updateFormationDbs() {
-        logger.info("Updating formations and voeux dbs")
+        logger.info("Mise à jour de formations and voeux dbs")
         updateFormationsAndVoeuxDb()
-        logger.info("Updating criteres dbs")
+        logger.info("Mise à jour de criteres dbs")
         updateCriteresDb()
-        logger.info("Updating moyennes generales admis dbs")
+        logger.info("Mise à jour de moyennes generales admis dbs")
         updateMoyennesGeneralesAdmisDb()
     }
 
@@ -160,6 +161,7 @@ class UpdateFormationDbs(
 
     fun clearAll() {
         moyennesGeneralesAdmisDb.deleteAll()
+        voeuxDb.deleteAll()//nécessaire sinon violation de contrainte non null de VoeuEntity.idFormation
         formationsdb.deleteAll()
         criteresDb.deleteAll()
     }

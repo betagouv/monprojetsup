@@ -25,7 +25,7 @@ class RechercheFormationBDDRepository(
                             descriptif_diplome,
                             mots_clefs,
                             t.i as mot_clef
-                    FROM formation
+                    FROM ref_formation
                     LEFT JOIN LATERAL unnest(mots_clefs) AS t(i) ON true)
                 SELECT id,
                        label

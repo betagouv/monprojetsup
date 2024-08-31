@@ -24,7 +24,7 @@ class RechercheMetierBDDRepository(
                                  COALESCE(unaccent(descriptif_general), '') AS descriptif_clean,
                                  similarity(COALESCE(unaccent(label), '') , unaccent(:mot_recherche)) * 1.2 AS similarite_label,
                                  similarity(COALESCE(unaccent(descriptif_general), ''), unaccent(:mot_recherche)) AS similmarite_decriptif
-                          FROM metier)
+                          FROM ref_metier)
                 SELECT id,
                        label
                 FROM metiers_similarites

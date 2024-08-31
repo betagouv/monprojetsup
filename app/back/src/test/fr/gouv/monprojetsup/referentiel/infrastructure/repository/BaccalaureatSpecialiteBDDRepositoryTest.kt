@@ -81,10 +81,10 @@ class BaccalaureatSpecialiteBDDRepositoryTest : BDDRepositoryTest() {
             val idBaccalaureat = "Professionnel"
 
             // When
-            val resultat = baccalaureatSpecialiteBDDRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat)
+            val resultat = baccalaureatSpecialiteBDDRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat).toSet()
 
             // Then
-            val attendu = listOf("4", "5", "1006", "1008", "1009", "1038", "1095")
+            val attendu = setOf("4", "5", "1006", "1008", "1009", "1038", "1095")
             assertThat(resultat).isEqualTo(attendu)
         }
 

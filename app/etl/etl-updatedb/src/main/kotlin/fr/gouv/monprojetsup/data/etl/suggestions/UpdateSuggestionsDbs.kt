@@ -43,19 +43,19 @@ class UpdateSuggestionsDbs(
 
     internal fun updateSuggestionDbs() {
 
-        logger.info("Updating candidats db")
+        logger.info("Mise à jour de candidats db")
         updateCandidatsDb()
 
-        logger.info("Updating edges db")
+        logger.info("Mise à jour de edges db")
         updateEdgesDb()
 
-        logger.info("Updating labels db")
+        logger.info("Mise à jour de labels db")
         updateLabelsDb()
 
-        logger.info("Updating matieres db")
+        logger.info("Mise à jour de matieres db")
         updateMatieresDb()
 
-        logger.info("Updating villes db")
+        logger.info("Mise à jour de villes db")
         updateVillesDb()
 
     }

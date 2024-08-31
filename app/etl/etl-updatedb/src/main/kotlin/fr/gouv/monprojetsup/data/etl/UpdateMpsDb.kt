@@ -45,16 +45,16 @@ open class Runner(
 		updateSuggestionsDbs.clearAll()
 		updateReferentielDbs.clearAll()
 
-		logger.info("Updating referentiel dbs")
+		logger.info("Mise à jour de referentiel dbs")
 		updateReferentielDbs.updateReferentielDbs()
 
-		logger.info("Updating formations dbs")
+		logger.info("Mise à jour de formations dbs")
 		updateFormationRepositories.updateFormationDbs()
 
-		logger.info("Updating metiers dbs")
+		logger.info("Mise à jour de metiers dbs")
 		updateMetierDbs.updateMetierDbs()
 
-		logger.info("Updating suggestions dbs")
+		logger.info("Mise à jour de suggestions dbs")
 		updateSuggestionsDbs.updateSuggestionDbs()
 	}
 }
