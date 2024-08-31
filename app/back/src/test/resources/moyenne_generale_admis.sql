@@ -1,14 +1,14 @@
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Général',
         'Série Générale',
         'Générale');
 
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Professionnel',
         'Série Pro',
         'P');
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0001',
         'CAP Fleuriste',
         'Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
@@ -25,7 +25,7 @@ VALUES ('fl0001',
           }
         ]'::jsonb);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0002',
         'CAP Fleuriste',
         'Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
@@ -42,7 +42,7 @@ VALUES ('fl0002',
           }
         ]'::jsonb);
 
-INSERT INTO moyenne_generale_admis
+INSERT INTO ref_moyenne_generale_admis
 VALUES ('2023',
         'fl0001',
         'Général',
@@ -89,7 +89,7 @@ VALUES ('2023',
             6677
             ]);
 
-INSERT INTO moyenne_generale_admis
+INSERT INTO ref_moyenne_generale_admis
 VALUES ('2022',
         'fl0001',
         'Général',
@@ -135,7 +135,7 @@ VALUES ('2022',
             6420,
             6530
             ]);
-INSERT INTO moyenne_generale_admis
+INSERT INTO ref_moyenne_generale_admis
 VALUES ('2023',
         'fl0001',
         'Professionnel',

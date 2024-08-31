@@ -12,17 +12,12 @@
 --ALTER TABLE interet_sous_categorie RENAME TO ref_interet_sous_categorie;
 --ALTER TABLE specialite RENAME TO ref_specialite;
 
-
 --
 -- PostgreSQL database dump
 --
 
 -- Dumped from database version 16.3 (Debian 16.3-1.pgdg120+1)
 -- Dumped by pg_dump version 16.4 (Homebrew)
-
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE EXTENSION IF NOT EXISTS unaccent;
 
 --
 -- Name: ref_baccalaureat; Type: TABLE; Schema: public; Owner: postgres
@@ -74,16 +69,16 @@ CREATE TABLE ref_domaine_categorie (
 
 CREATE TABLE ref_formation (
     id character varying(255) NOT NULL,
-    label character varying(1023) NOT NULL,
+    label character varying(1023),
     descriptif_general text,
     descriptif_attendu text,
     mots_clefs character varying(300)[],
     descriptif_conseils text,
     descriptif_diplome text,
     formations_associees character varying(20)[],
-    ref_criteres_analyse integer[] NOT NULL,
+    criteres_analyse integer[],
     liens jsonb,
-    apprentissage boolean NOT NULL,
+    apprentissage boolean,
     capacite integer,
     duree integer,
     label_details character varying(1023),
@@ -113,7 +108,7 @@ CREATE TABLE ref_interet_categorie (
     id character varying(255) NOT NULL,
     nom character varying(255) NOT NULL,
     emoji character varying(255) NOT NULL,
-    id_categorie character varying(255) NOT NULL
+    id_categorie character varying(255)
 );
 
 
@@ -183,10 +178,11 @@ CREATE TABLE ref_triplet_affectation (
     commune character varying(255) NOT NULL,
     code_commune character varying(255) NOT NULL,
     id_formation character varying(255) NOT NULL,
-    capacite integer NOT NULL,
-    descriptif jsonb NOT NULL,
+    capacite integer,
+    descriptif jsonb,
     latitude double precision,
-    longitude double precision
+    longitude double precision,
+    coordonnees_geographiques FLOAT[2]
 );
 
 
@@ -368,7 +364,7 @@ ALTER TABLE ONLY ref_specialite
 --
 
 ALTER TABLE ONLY sugg_candidats
-    ADD CONSTRAINT ref_sugg_candidats_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT sugg_candidats_pkey PRIMARY KEY (id);
 
 
 --
@@ -376,7 +372,7 @@ ALTER TABLE ONLY sugg_candidats
 --
 
 ALTER TABLE ONLY sugg_edges
-    ADD CONSTRAINT ref_sugg_edges_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT sugg_edges_pkey PRIMARY KEY (id);
 
 
 --
@@ -384,7 +380,7 @@ ALTER TABLE ONLY sugg_edges
 --
 
 ALTER TABLE ONLY sugg_labels
-    ADD CONSTRAINT ref_sugg_labels_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT sugg_labels_pkey PRIMARY KEY (id);
 
 
 --
@@ -392,7 +388,7 @@ ALTER TABLE ONLY sugg_labels
 --
 
 ALTER TABLE ONLY sugg_matieres
-    ADD CONSTRAINT ref_sugg_matieres_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT sugg_matieres_pkey PRIMARY KEY (id);
 
 
 --
@@ -400,7 +396,7 @@ ALTER TABLE ONLY sugg_matieres
 --
 
 ALTER TABLE ONLY sugg_villes
-    ADD CONSTRAINT ref_sugg_villes_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT sugg_villes_pkey PRIMARY KEY (id);
 
 
 --

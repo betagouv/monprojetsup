@@ -39,7 +39,7 @@ class FormationEntity {
 
     //même taille que critere_analyse_candidature
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "criteres_analyse", columnDefinition = "int[]")
+    @Column(name = "criteres_analyse", columnDefinition = "int[]", nullable = true)
     lateinit var criteresAnalyse: List<Int>
 
     @JdbcTypeCode(SqlTypes.JSON)
@@ -69,8 +69,8 @@ class FormationEntity {
     @Column(name = "capacite", nullable = true)
     var capacite: Int? = null
 
-    @Column(name = "apprentissage", nullable = false)
-    var apprentissage: Boolean = false
+    @Column(name = "apprentissage", nullable = true)
+    var apprentissage: Boolean? = false
 
     @Nullable
     @Column(name = "duree", nullable = true)
@@ -141,7 +141,7 @@ class FormationEntity {
             label,
             labelDetails,
             capacite ?: -1,
-            apprentissage,
+            apprentissage ?: false,
             duree ?: -1,
             las,
             voeux.map { it.toVoeu() },

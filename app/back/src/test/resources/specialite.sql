@@ -1,4 +1,4 @@
-INSERT INTO specialite(id, label)
+INSERT INTO ref_specialite(id, label)
 VALUES
     (
         '4',

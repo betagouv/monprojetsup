@@ -3,11 +3,13 @@ package fr.gouv.monprojetsup.data.formation.entity
 import fr.gouv.monprojetsup.data.domain.model.Voeu
 import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.Type
 import org.hibernate.type.SqlTypes
 
 @Entity
@@ -21,6 +23,7 @@ class VoeuEntity {
         this.codeCommune = voeu.codeCommune
         this.lat = voeu.lat
         this.lng = voeu.lng
+        this.coordonneesGeographiques = listOf(voeu.lat, voeu.lng)
         this.idFormation = voeu.formation
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
@@ -45,6 +48,10 @@ class VoeuEntity {
 
     @Column(name = "longitude", nullable = true)
     var lng : Double? = null
+
+    //@Deprecated("Replaced by latitude and longitude fields")
+    @Column(name = "coordonnees_geographiques", nullable = false)
+    lateinit var coordonneesGeographiques: List<Double?>
 
     @Column(name = "id_formation", nullable = false)
     var idFormation: String = ""

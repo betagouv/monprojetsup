@@ -1,9 +1,9 @@
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Général',
         'Série Générale',
         'Générale');
 
-INSERT INTO baccalaureat
+INSERT INTO ref_baccalaureat
 VALUES ('Professionnel',
         'Série Pro',
         'P');

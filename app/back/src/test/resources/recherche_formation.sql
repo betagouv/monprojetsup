@@ -1,4 +1,4 @@
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0001',
         'CAP Fleuriste',
         null,
@@ -10,7 +10,7 @@ VALUES ('fl0001',
         ARRAY [0, 50, 0, 50, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0002',
         'Bac pro Fleuriste',
         null,
@@ -22,7 +22,7 @@ VALUES ('fl0002',
         ARRAY [13, 50, 12, 5, 15],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0003',
         'ENSA',
         null,
@@ -34,7 +34,7 @@ VALUES ('fl0003',
         ARRAY [13, 50, 12, 5, 15],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0005',
         'L1 - Géographie',
         null,
@@ -46,7 +46,7 @@ VALUES ('fl0005',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0004',
         'L1 - Histoire',
         null,
@@ -58,7 +58,7 @@ VALUES ('fl0004',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0006',
         'L1 - Histoire de l''art',
         null,
@@ -70,7 +70,7 @@ VALUES ('fl0006',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0007',
         'DEUST - Technicien en qualité et distribution des produits alimentaires',
         null,
@@ -82,7 +82,7 @@ VALUES ('fl0007',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0008',
         'BUT Numerique',
         null,
@@ -94,7 +94,7 @@ VALUES ('fl0008',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0009',
         'but',
         null,
@@ -106,7 +106,7 @@ VALUES ('fl0009',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0010',
         'BUT Numérique',
         null,
@@ -118,7 +118,7 @@ VALUES ('fl0010',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0011',
         'BÙT',
         null,
@@ -130,7 +130,7 @@ VALUES ('fl0011',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0012',
         'Classe préparatoire aux études supérieures - Cinéma audiovisuel',
         null,
@@ -142,7 +142,7 @@ VALUES ('fl0012',
         ARRAY [100, 0, 0, 0, 0],
         null);
 
-INSERT INTO formation
+INSERT INTO ref_formation
 VALUES ('fl0013',
         'L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)',
         null,
