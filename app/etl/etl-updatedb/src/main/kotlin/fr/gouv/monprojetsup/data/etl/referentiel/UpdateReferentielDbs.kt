@@ -73,7 +73,7 @@ class UpdateReferentielDbs(
 
     private fun updateBaccalaureatDb() {
         //delete table already using bacs foreign keys
-        baccalaureatBd.deleteAll()
+        //baccalaureatBd.deleteAll() bot doing that becaus eit would break a constraint on profil_eleve
         val bacs = mpsDataPort.getBacs()
         bacs.forEach { baccalaureat ->
             val entity = BaccalaureatEntity()
