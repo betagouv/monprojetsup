@@ -3,11 +3,11 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {
-  public COMMUNE_RECHERCHÉE = "Brest";
+  public COMMUNE_RECHERCHÉE = "Str";
 
-  public PREMIÈRE_COMMUNE = "Brest";
+  public PREMIÈRE_COMMUNE = "Strasbourg";
 
-  public SECONDE_COMMUNE = "Brestot";
+  public SECONDE_COMMUNE = "Strazeele";
 
   public constructor(protected _page: Page) {
     super(_page, "/eleve/inscription/etude", "/eleve/inscription/formations", {
@@ -64,7 +64,7 @@ test.describe("Inscription élève - Mes études", () => {
     await testhelper.renseignerChampRechercheCommunes(testhelper.COMMUNE_RECHERCHÉE);
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(3);
+    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(5);
   });
 
   test("Je peux sélectionner des communes", async ({ page }) => {
@@ -78,7 +78,7 @@ test.describe("Inscription élève - Mes études", () => {
     await testhelper.boutonOptionSuggérée(testhelper.SECONDE_COMMUNE).click();
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(1);
+    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(3);
     await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(2);
   });
 
@@ -94,7 +94,7 @@ test.describe("Inscription élève - Mes études", () => {
     await testhelper.boutonOptionSélectionnée(testhelper.SECONDE_COMMUNE).click();
 
     // THEN
-    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(2);
+    await expect(testhelper.listeDesOptionsSuggérées().getByRole("listitem")).toHaveCount(4);
     await expect(testhelper.listeDesOptionsSélectionnées().getByRole("listitem")).toHaveCount(1);
   });
 

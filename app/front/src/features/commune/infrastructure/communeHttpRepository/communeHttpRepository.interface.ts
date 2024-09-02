@@ -1,4 +1,4 @@
-export type CommuneHTTP = {
+export type CommuneHttp = {
   type: "Feature";
   geometry: {
     type: "Point";
@@ -22,6 +22,6 @@ export type CommuneHTTP = {
   };
 };
 
-export type RechercherCommunesRéponseHTTP = {
-  features: CommuneHTTP[];
+export type RechercherCommunesRéponseHttp = {
+  features: CommuneHttp[];
 };

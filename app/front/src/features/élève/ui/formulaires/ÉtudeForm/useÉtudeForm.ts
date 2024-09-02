@@ -36,7 +36,9 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
   } = useQuery(rechercheCommunesQueryOptions(rechercheCommune));
 
   useEffect(() => {
-    rechercherCommunes();
+    if (rechercheCommune && rechercheCommune.length >= 3) {
+      rechercherCommunes();
+    }
   }, [rechercheCommune, rechercherCommunes]);
 
   useEffect(() => setValue("communesFavorites", []), [setValue]);

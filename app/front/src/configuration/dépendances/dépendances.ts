@@ -1,5 +1,6 @@
 import { env } from "@/configuration/environnement";
-import { communeHTTPRepository } from "@/features/commune/infrastructure/communeHTTPRepository/communeHTTPRepository";
+import { communeHttpRepository } from "@/features/commune/infrastructure/communeHttpRepository/communeHttpRepository";
+import { communeInMemoryRepository } from "@/features/commune/infrastructure/communeInMemoryRepository/communeInMemoryRepository";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
@@ -81,7 +82,9 @@ export class Dépendances {
     this._métierRepository = env.VITE_TEST_MODE
       ? new métierInMemoryRepository()
       : new métierHttpRepository(this._mpsApiHttpClient);
-    this._communeRepository = new communeHTTPRepository(this._httpClient);
+    this._communeRepository = env.VITE_TEST_MODE
+      ? new communeInMemoryRepository()
+      : new communeHttpRepository(this._httpClient);
 
     // Référentiel de données
     this.récupérerRéférentielDonnéesUseCase = new RécupérerRéférentielDonnéesUseCase(
