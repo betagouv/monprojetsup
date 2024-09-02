@@ -50,9 +50,6 @@ class FormationEntity {
     @Column(name = "mots_clefs", nullable = true, columnDefinition = "varchar[]")
     var motsClefs: List<String>? = null
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    var metiers: List<String> = ArrayList()
-
     /** begin ajouts suggestions **/
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)  // Cascading enabled here
@@ -145,7 +142,6 @@ class FormationEntity {
             duree ?: -1,
             las,
             voeux.map { it.toVoeu() },
-            metiers,
             stats.toStats(),
             formationsAssociees ?: emptyList(),
         )

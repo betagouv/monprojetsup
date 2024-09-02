@@ -10,20 +10,22 @@ import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 
 interface MpsDataPort {
+
+    fun getFormationsMpsIds(): List<String>
+    fun getMetiersMpsIds(): List<String>
     fun getLabels(): Map<String, String>
     fun getDescriptifs(): DescriptifsFormationsMetiers
     fun getSpecialites(): Specialites
     fun getAttendus(): Map<String, String>
     fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>>
     fun getGrilles(): Map<String, GrilleAnalyse>
-    fun getMotsCles(): Map<String, List<String>>
-    fun getFormationsMpsIds(): List<String>
+    fun getMotsClesFormations(): Map<String, List<String>>
     fun getApprentissage(): Collection<String>
     fun getLasToGenericIdMapping(): Map<String, String>
     fun getVoeux(): List<Voeu>
     fun getDebugLabels(): Map<String, String>
     fun getCapacitesAccueil(): Map<String, Int>
-    fun getFormationsVersMetiers(): Map<String, Set<String>>
+    fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>>
     fun getStatsFormation(): Map<String, StatsFormation>
     fun getMpsIdToPsupFlIds(): Map<String, Collection<String>>
     fun getDurees(): Map<String, Int?>
@@ -40,4 +42,6 @@ interface MpsDataPort {
     fun getCities(): List<Ville>
     fun getFormationsLabels(): Map<String, String>
     fun getMetiersLabels(): Map<String, String>
+
+    fun getMetiersAssocies(): Map<String, List<String>>
 }

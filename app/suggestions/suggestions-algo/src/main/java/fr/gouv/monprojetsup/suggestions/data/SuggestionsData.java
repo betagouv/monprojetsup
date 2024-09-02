@@ -27,6 +27,7 @@ public class SuggestionsData {
     private final EdgesPort edgesPort;
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
+    private final FormationsMetiersPort formationsMetierPort;
     private final MatieresPort matieresPort;
     private final VillesPort villesPort;
 
@@ -36,13 +37,15 @@ public class SuggestionsData {
             LabelsPort labelsPort,
             FormationsPort formationsPort,
             MatieresPort matieresPort,
-            VillesPort villesPort
+            VillesPort villesPort,
+            FormationsMetiersPort formationsMetierPort
             ) {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
         this.formationsPort = formationsPort;
         this.matieresPort = matieresPort;
         this.villesPort = villesPort;
+        this.formationsMetierPort = formationsMetierPort;
     }
 
 
@@ -122,9 +125,8 @@ public class SuggestionsData {
                 .orElse(null);
     }
 
-    public Set<String> getAllCandidatesMetiers(String formationID) {
-        val f = formationsPort.retrieveFormation(formationID);
-        return f.map(formation -> new HashSet<>(formation.metiers())).orElse(new HashSet<>());
+    public Collection<String> getAllCandidatesMetiers(String formationID) {
+        return formationsMetierPort.getMetiersOfFormation(formationID);
     }
 
     public int getNbVoeux(String formationId) {
@@ -204,13 +206,6 @@ public class SuggestionsData {
     }
 
 
-    public Map<String,String> getFormationToFilieres() {
-        val formations = formationsPort.retrieveFormations();
-        Map<String,String> result = new HashMap<>();
-        formations.values().forEach(f -> f.voeux().forEach(v -> result.put(v.id(), f.id())));
-        return result;
-    }
-
     public Set<String> getLASFormations() {
         return formationsPort.retrieveFormations().entrySet()
                 .stream()
@@ -220,9 +215,13 @@ public class SuggestionsData {
     }
 
     public Map<String, Set<String>> getMetiersVersFormations() {
-        return formationsPort.retrieveFormations().entrySet().stream()
-                .flatMap(e -> e.getValue().metiers().stream().map(m -> Pair.of(m, e.getKey())))
-                .collect(Collectors.groupingBy(Pair::getLeft, Collectors.mapping(Pair::getRight, Collectors.toSet())));
+        return formationsMetierPort.findAll().stream()
+                .collect(Collectors.groupingBy( e -> e.idMetier))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> e.getValue().stream().map(t -> t.idFormation).collect(Collectors.toSet())
+                ));
     }
 
     public Set<String> getMetiersPass() {

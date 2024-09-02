@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntit
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
+import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -27,11 +28,14 @@ interface VoeuxDb :
 @Repository
 interface FormationDb : JpaRepository<FormationEntity, String>
 
+@Repository
+interface JoinFormationMetierDb : JpaRepository<FormationMetierEntity, String>
 
 @Component
 class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
     private val formationsdb: FormationDb,
+    private val joinFormationsMetiersdb: JoinFormationMetierDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val voeuxDb: VoeuxDb,
     private val mpsDataPort: MpsDataPort
@@ -70,14 +74,13 @@ class UpdateFormationDbs(
         val conseils = mpsDataPort.getConseils()
         val liens = mpsDataPort.getLiens()
         val grilles = mpsDataPort.getGrilles()
-        val tagsSources = mpsDataPort.getMotsCles()
+        val tagsSources = mpsDataPort.getMotsClesFormations()
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val apprentissage = mpsDataPort.getApprentissage()
         val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
         val voeux = mpsDataPort.getVoeux()
         val debugLabels = mpsDataPort.getDebugLabels()
         val capacitesAccueil = mpsDataPort.getCapacitesAccueil()
-        val formationsVersMetiers = mpsDataPort.getFormationsVersMetiers()
         val stats = mpsDataPort.getStatsFormation()
         val durees = mpsDataPort.getDurees()
         val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
@@ -110,7 +113,6 @@ class UpdateFormationDbs(
             entity.motsClefs = tagsSources.getOrDefault(id, listOf(label))
 
             val voeuxFormation = voeux.filter { it.formation == id }
-            val metiers = formationsVersMetiers[id] ?: java.util.HashSet()
 
             entity.labelDetails = debugLabels.getOrDefault(id, id)
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
@@ -118,7 +120,6 @@ class UpdateFormationDbs(
             entity.las = lasToGeneric[id]
             entity.voeux = voeuxFormation.map { VoeuEntity(it) }.toList()
             entity.voeuxIds = voeuxFormation.map { it.id }
-            entity.metiers = metiers.toList()
 
             val statsFormation = stats[id]
             if(statsFormation != null) {
@@ -139,6 +140,7 @@ class UpdateFormationDbs(
             entities.add(entity)
 
         }
+        joinFormationsMetiersdb.deleteAll()
         formationsdb.deleteAll()
         formationsdb.saveAll(entities)
     }

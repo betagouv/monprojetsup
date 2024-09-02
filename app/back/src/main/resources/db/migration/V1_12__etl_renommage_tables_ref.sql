@@ -68,7 +68,7 @@ CREATE TABLE ref_domaine_categorie (
 --
 
 CREATE TABLE ref_formation (
-    id character varying(255) NOT NULL,
+    id character varying(20) NOT NULL,
     label character varying(1023),
     descriptif_general text,
     descriptif_attendu text,
@@ -83,7 +83,6 @@ CREATE TABLE ref_formation (
     duree integer,
     label_details character varying(1023),
     las character varying(255),
-    metiers character varying(255)[],
     stats jsonb,
     voeux character varying(255)[]
 );
@@ -139,7 +138,7 @@ CREATE TABLE ref_join_baccalaureat_specialite (
 --
 
 CREATE TABLE ref_metier (
-    id character varying(255) NOT NULL,
+    id character varying(20) NOT NULL,
     label character varying(1023) NOT NULL,
     descriptif_general text,
     liens jsonb
@@ -152,7 +151,7 @@ CREATE TABLE ref_metier (
 
 CREATE TABLE ref_moyenne_generale_admis (
     annee character varying(255) NOT NULL,
-    id_formation character varying(255) NOT NULL,
+    id_formation character varying(20) NOT NULL,
     id_bac character varying(255) NOT NULL,
     frequences_cumulees integer[] NOT NULL
 );
@@ -177,7 +176,7 @@ CREATE TABLE ref_triplet_affectation (
     nom character varying(1023) NOT NULL,
     commune character varying(255) NOT NULL,
     code_commune character varying(255) NOT NULL,
-    id_formation character varying(255) NOT NULL,
+    id_formation character varying(20) NOT NULL,
     capacite integer,
     descriptif jsonb,
     latitude double precision,
@@ -419,7 +418,7 @@ ALTER TABLE ONLY ref_baccalaureat
 -- Name: triplet_affectation_id_formation_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX ref_triplet_affectation_id_formation_idx ON ref_triplet_affectation USING btree (id_formation);
+CREATE INDEX ref_triplet_affectation_id_formation_idx ON ref_triplet_affectation (id_formation);
 
 
 --

@@ -2,6 +2,8 @@ package fr.gouv.monprojetsup.data.etl.metier
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
+import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntityId
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -18,19 +20,33 @@ class UpdateMetierDbs(
 ) {
 
     fun updateMetierDbs() {
+        clearAll()
+        updateMetierDb()
+    }
+
+
+    private fun updateMetierDb() {
         val descriptifs = mpsDataPort.getDescriptifs()
         val labels = mpsDataPort.getMetiersLabels()
-        val metiersIds = mpsDataPort.getFormationsVersMetiers().flatMap { (_,b) -> b }.toSet()
         val liens = mpsDataPort.getLiens()
 
         val entities = ArrayList<MetierEntity>()
+        val metiersAssocies = mpsDataPort.getMetiersAssocies()
+
+        val metiersIds = mpsDataPort.getMetiersMpsIds()
         metiersIds.forEach { metierId ->
             val label = labels[metierId]
             if(label != null) {
                 val entity = MetierEntity()
                 entity.id = metierId
                 entity.label = label
-                entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(metierId)
+                val descriptifSansMetiersAssocies = descriptifs.getDescriptifGeneralFront(metierId)
+                val autresMetiers = metiersAssocies[metierId].orEmpty()
+                if(autresMetiers.isNotEmpty()) {
+                    entity.descriptifGeneral = descriptifSansMetiersAssocies + "\n\nMétiers associés :" + autresMetiers.joinToString(", ")
+                } else {
+                    entity.descriptifGeneral = descriptifSansMetiersAssocies
+                }
                 val liensMetier = liens[metierId]
                 if(liensMetier != null) {
                     entity.liens.addAll(liensMetier.map { LienEntity(it.uri, it.label) })
@@ -42,7 +58,9 @@ class UpdateMetierDbs(
         metiersDb.saveAll(entities)
     }
 
+
     fun clearAll() {
+        metiersDb.deleteAll()
         metiersDb.deleteAll()
     }
 

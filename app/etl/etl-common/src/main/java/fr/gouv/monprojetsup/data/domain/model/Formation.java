@@ -17,7 +17,6 @@ public record Formation(
         int duree,
         @Nullable String las,
         @NotNull List<@NotNull Voeu> voeux,
-        @NotNull List<@NotNull String> metiers,
         @NotNull StatsFormation stats,
         @NotNull List<@NotNull String> filieresPsup
 

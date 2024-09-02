@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,6 +19,8 @@ class MpsDataPortTest(
 
     @Test
     fun `Doit réussir à accéder aux différents ports de données`() {
+        mpsDataPort.getFormationsMpsIds()
+        mpsDataPort.getMetiersMpsIds()
         mpsDataPort.getMatieres()
         mpsDataPort.getFormationsLabels()
         mpsDataPort.getMetiersLabels()
@@ -29,7 +32,7 @@ class MpsDataPortTest(
         mpsDataPort.getVoeux()
         mpsDataPort.getDebugLabels()
         mpsDataPort.getCapacitesAccueil()
-        mpsDataPort.getFormationsVersMetiers()
+        mpsDataPort.getFormationsVersMetiersEtMetiersAssocies()
         mpsDataPort.getBacs()
         mpsDataPort.getSpecialites()
     }
@@ -60,7 +63,7 @@ class MpsDataPortTest(
     fun `Au moins un mot clé par formation`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
-        val motsCles = mpsDataPort.getMotsCles()
+        val motsCles = mpsDataPort.getMotsClesFormations()
         assertThat(formationsIds).allMatch { motsCles.containsKey(it) && motsCles[it]!!.isNotEmpty() }
 
     }
@@ -122,4 +125,27 @@ class MpsDataPortTest(
         assertThat(specialitesParBac.filter { b -> b.key == TOUS_BACS_CODE_LEGACY }).hasSize(0)
     }
 
+
+    @Nested
+    inner class JoinFormationsMetiersTest {
+
+        @Test
+        fun `90 pourcent des formations ont au moins un métier associé`() {
+            val formationKeys = mpsDataPort.getFormationsMpsIds()
+            val formationsAvecAuMoinsUnMetier =
+                mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().filter { it -> it.value.isNotEmpty() }.keys
+            assertThat(formationKeys).isNotEmpty()
+            val pctOk = 100 * formationsAvecAuMoinsUnMetier.size / formationKeys.size
+            assertThat(pctOk).isGreaterThan(90)
+        }
+
+        @Test
+        fun `70 pourcent des métiers ont au moins une formation associée`() {
+            val metiersIdsRef = mpsDataPort.getMetiersMpsIds()
+            assertThat(metiersIdsRef).isNotEmpty()
+            val metiersAvecauMoinsuneformation  = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().flatMap { (_,b) -> b }.toSet()
+            val pctOk = 100 * metiersAvecauMoinsuneformation.size / metiersIdsRef.size
+            assertThat(pctOk).isGreaterThan(70)
+        }
+    }
 }

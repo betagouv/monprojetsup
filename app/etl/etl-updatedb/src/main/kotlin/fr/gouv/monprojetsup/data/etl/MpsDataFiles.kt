@@ -38,8 +38,6 @@ import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 @Component
@@ -97,6 +95,10 @@ class MpsDataFiles(
         return Labels.getMetiersLabels(
             onisepData
         )
+    }
+
+    override fun getMetiersAssocies(): Map<String, List<String>> {
+        return onisepData.getMetiersAssocies()
     }
 
     override fun getDescriptifs(): DescriptifsFormationsMetiers {
@@ -232,7 +234,7 @@ class MpsDataFiles(
         return GrilleAnalyse.getGrilles(psupData)
     }
 
-    override fun getMotsCles(): Map<String, List<String>> {
+    override fun getMotsClesFormations(): Map<String, List<String>> {
 
         //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
         val motsCles = psupData.motsCles;
@@ -243,27 +245,27 @@ class MpsDataFiles(
 
         motsCles.extendToGroups(psupData.psupKeyToMpsKey)
 
-        val formationsVersMetiers = getFormationsVersMetiers()
-        val mpsIds = getFormationsMpsIds()
         val labels = getLabels()
+
+        val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
+        val mpsIds = getFormationsMpsIds()
 
         //le référentiel des formations front
         mpsIds.forEach { formation ->
             val label = labels.getOrDefault(formation, formation)
             motsCles.add(label, formation)
+            //recherche par clé
+            motsCles.add(formation + "x", formation)
             if (label.contains("L1")) {
                 motsCles.add("licence", formation)
             }
             if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
                 motsCles.add("IFSI", formation)
             }
-            formationsVersMetiers[formation]?.forEach { metier ->
-                val labelMetier = labels[metier]
+            formationsVersMetiers[formation]?.forEach { idMetierOuMetierAssocie ->
+                val labelMetier = labels[idMetierOuMetierAssocie]
                 if(labelMetier != null) {
-                    motsCles.add(
-                        labelMetier,
-                        formation
-                    )
+                    motsCles.add(labelMetier, formation)
                 }
             }
         }
@@ -271,6 +273,10 @@ class MpsDataFiles(
         motsCles.normalize()
 
         return motsCles.getKeyToTags()
+    }
+
+    override fun getMetiersMpsIds(): List<String> {
+        return onisepData.metiers.metiers.keys.toList().sorted()
     }
 
     override fun getFormationsMpsIds(): List<String> {
@@ -335,7 +341,7 @@ class MpsDataFiles(
 
     }
 
-    override fun getFormationsVersMetiers(): Map<String, Set<String>> {
+    override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
         val descriptifs = DescriptifsLoader.loadDescriptifs(
             onisepData,
             psupData.psupKeyToMpsKey,

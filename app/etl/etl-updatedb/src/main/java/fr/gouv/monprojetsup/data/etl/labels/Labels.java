@@ -64,8 +64,6 @@ public class Labels {
     public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData) {
         val result = new HashMap<String, String>();
         oniData.metiers().metiers().forEach((key, metier) -> result.put(cleanup(key), getLibelleFront(cleanup(key), metier.lib())));
-        oniData.interets().interets().forEach((key, interet) -> result.put(cleanup(key), getLibelleFront(cleanup(key), interet)));
-        oniData.thematiques().thematiques().forEach((key, thematiques) -> result.put(cleanup(key), getLibelleFront(cleanup(key), thematiques)));
 
         /* on intègre les associations récupérées dans les métiers associés */
         oniData.fichesMetiers().metiers().metier().stream()
@@ -88,6 +86,8 @@ public class Labels {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData));
         result.putAll(getMetiersLabels(oniData));
+        oniData.interets().interets().forEach((key, interet) -> result.put(cleanup(key), getLibelleFront(cleanup(key), interet)));
+        oniData.thematiques().thematiques().forEach((key, thematiques) -> result.put(cleanup(key), getLibelleFront(cleanup(key), thematiques)));
         return result;
     }
 
