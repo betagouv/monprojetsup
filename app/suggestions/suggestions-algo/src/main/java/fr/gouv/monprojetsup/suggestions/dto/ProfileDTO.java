@@ -14,9 +14,9 @@ import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ProfileDTO(
 
-        @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "secSTHR", "secTMD", "prem", "term"})
+        @Schema(name = "niveau", description = "classe actuelle", example = "term", allowableValues = {"", "sec", "prem", "term"})
         String niveau,
-        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
+        @Schema(name = "bac", description = "type de Bac choisi ou envisagé", example = "Générale", allowableValues = {"NC", "Générale", "P", "PA", "S2TMD", "ST2S", "STAV", "STD2A", "STHR", "STI2D", "STL", "STMG"})
         String bac,
         @Schema(name = "duree", description = "durée envisagée des études", example = "long", allowableValues = {"", "court", "long", "indiff"})
         String duree,

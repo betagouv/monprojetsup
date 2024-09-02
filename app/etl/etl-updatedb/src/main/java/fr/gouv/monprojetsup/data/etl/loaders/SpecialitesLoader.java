@@ -14,12 +14,10 @@ public class SpecialitesLoader {
         Specialites specsWithoutBacInfo =
             fromJsonFile(sources.getSourceDataFilePath(DataSources.SPECIALITES_FILENAME), Specialites.class);
 
-        Specialites specs = Specialites.build(
+        return Specialites.build(
                 specsWithoutBacInfo,
                 statistiques.getAdmisMatiereBacAnneeStats()
         );
-
-        return specs;
     }
 
     private SpecialitesLoader() {

@@ -20,7 +20,9 @@ public record StatistiquesAdmisParBac(
 
     public void minimize() {
         parBac.values().forEach(StatistiquesAdmisParMatiere::minimize);
-        StatistiquesAdmisParMatiere s = parBac.get(PsupStatistiques.TOUS_BACS_CODE);
+        StatistiquesAdmisParMatiere s1 = parBac.get(PsupStatistiques.TOUS_BACS_CODE_LEGACY);
+        StatistiquesAdmisParMatiere s2 = parBac.get(PsupStatistiques.TOUS_BACS_CODE_MPS);
+        StatistiquesAdmisParMatiere s = s2 != null ? s2 : s1;
         if(s == null) {
             parBac.clear();
         } else {
@@ -30,7 +32,7 @@ public record StatistiquesAdmisParBac(
                 parBac.clear();
             } else {
                 if (ss.nb() <= 3) {
-                    parBac.keySet().removeIf( b -> !b.equals(PsupStatistiques.TOUS_BACS_CODE));
+                    parBac.keySet().removeIf( b -> !b.equals(PsupStatistiques.TOUS_BACS_CODE_LEGACY) && !b.equals(PsupStatistiques.TOUS_BACS_CODE_MPS));
                 }
             }
         }

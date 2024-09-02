@@ -294,8 +294,8 @@ public class AffinityEvaluator {
 
 
     private double getBonusTypeBac(String grp, List<Pair<Double, Explanation>> expl, double weight) {
-        if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE)) return Config.NO_MATCH_SCORE;
-        Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE);
+        if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE_MPS)) return Config.NO_MATCH_SCORE;
+        Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE_MPS);
         Integer nbAdmisBac = data.getNbAdmis(grp, pf.bac());
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;

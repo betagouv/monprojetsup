@@ -23,7 +23,10 @@ public class PsupStatistiques implements Serializable {
 
     public static final String TOUS_GROUPES_CODE = "";
     public static final int MOYENNE_BAC_CODE = -2;
-    public static final String TOUS_BACS_CODE = "";
+
+    public static final String TOUS_BACS_CODE_LEGACY = "";
+    public static final String TOUS_BACS_CODE_MPS = "NC";
+    public static final String TOUS_BACS_CODE_FRONT_LIBELLE = "Non-communiqué";
 
     public static final int PRECISION_PERCENTILES = 40;
     public static final int MOYENNE_GENERALE_CODE = -1;
@@ -60,7 +63,7 @@ public class PsupStatistiques implements Serializable {
     }
 
     @Nullable
-    public Map<String, Integer> getPctAdmisParBac(@NotNull String mpsKey) {
+    public Map<@NotNull String, @NotNull Integer> getPctAdmisParBac(@NotNull String mpsKey) {
         return toPct(getNbAdmisParBac(mpsKey));
     }
 
@@ -336,4 +339,5 @@ public class PsupStatistiques implements Serializable {
                     .toList();
         }
     }
+
 }
