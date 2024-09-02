@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
 public record PsupData(
@@ -176,16 +177,15 @@ public record PsupData(
         return filActives.contains(fl);
     }
 
-    public void cleanup() {
+    public void cleanupAfterUpdate() {
         filsim().normalize();
         filActives.addAll(getLasFlCodes());
         filActives.retainAll(formations().filieres.keySet());
         //do not restrict to fil actives because we want to keep apprentissage
         formations().cleanup();
 
-
         Set<String> bacsActifs = new HashSet<>(stats.getBacsWithAtLeastNdAdmis(MIN_NB_ADMIS_FOR_BAC_ACTIF));
-        bacsActifs.add(PsupStatistiques.TOUS_BACS_CODE);
+        bacsActifs.add(TOUS_BACS_CODE_MPS);
         this.bacs.removeIf(b -> !bacsActifs.contains(b.key()));
         try {
             Serialisation.toJsonFile("bacsActifs.json", this.bacs, true);

@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
@@ -37,6 +38,8 @@ import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.logging.Logger
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 @Component
@@ -379,18 +382,29 @@ class MpsDataFiles(
         val result = HashMap<String, StatsFormation>()
         val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
         ids.forEach { id ->
-
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
             if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
-
-            result[id] = StatsFormation(
-                statistiques.getStatsMoyGenParBac(id),
-                statistiques.getNbAdmisParBac(id),
-                statistiques.getPctAdmisParBac(id) ?: mapOf(),
+            val stat = StatsFormation(
+                replaceKey(statistiques.getStatsMoyGenParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
+                replaceKey(statistiques.getNbAdmisParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
+                replaceKey(statistiques.getPctAdmisParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
                 statistiques.getNbAdmisParSpec(id) ?: mapOf(),
                 statistiques.getPctAdmisParSpec(id) ?: mapOf(),
                 psupData.getStatsFilSim(psupKeys)
             )
+            result[id] = stat
+        }
+        return result
+    }
+
+    private fun <T> replaceKey(m: Map<String,T>?, oldKey: String, newKey: String):  Map<String, T> {
+        if(m == null) return mapOf()
+        val result = HashMap<String, T>();
+        result.putAll(m);
+        val value = result[oldKey]
+        if (value != null) {
+            result[newKey] = value
+            result.remove(oldKey);
         }
         return result
     }
@@ -483,7 +497,7 @@ class MpsDataFiles(
     }
 
     override fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>> {
-        val annee = statistiques.getAnnee()
+        val annee = statistiques.annee
         val stats = getStatsFormation()
         val result = HashMap<MoyenneGeneraleAdmisId, List<Int>>()
         stats.values.forEach{ stat -> stat.restrictToBacs(getBacs().map { it.key }) }
@@ -500,7 +514,10 @@ class MpsDataFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        return psupData.bacs;
+        val result = ArrayList<Bac>(psupData.bacs)
+        result.removeIf { it.key == TOUS_BACS_CODE_LEGACY }
+        result.add(Bac(TOUS_BACS_CODE_MPS, TOUS_BACS_CODE_FRONT_LIBELLE))
+        return result
     }
 
     override fun getThematiques(): List<CategorieThematiques> {

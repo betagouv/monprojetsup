@@ -43,8 +43,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_GROUPES_CODE;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*;
 
 public class ConnecteurBackendSQL {
 
@@ -138,9 +137,9 @@ public class ConnecteurBackendSQL {
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
                         String g = Constants.gFlCodToFrontId(gFlCod);
-                        stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, TOUS_BACS_CODE);
-                        stats.incrementeAdmisParFiliere(g, TOUS_BACS_CODE);
-                        if (!bac.equals(TOUS_BACS_CODE)) {
+                        stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, TOUS_BACS_CODE_MPS);
+                        stats.incrementeAdmisParFiliere(g, TOUS_BACS_CODE_MPS);
+                        if (!bac.equals(TOUS_BACS_CODE_MPS)) {
                             stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, bac);
                             stats.incrementeAdmisParFiliere(g, bac);
                         }
@@ -165,8 +164,8 @@ public class ConnecteurBackendSQL {
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
                         String g = Constants.gFlCodToFrontId(gFlCod);
-                        stats.incrementeCandidatsParFiliere(g, TOUS_BACS_CODE);
-                        if (!bac.equals(TOUS_BACS_CODE)) {
+                        stats.incrementeCandidatsParFiliere(g, TOUS_BACS_CODE_MPS);
+                        if (!bac.equals(TOUS_BACS_CODE_MPS)) {
                             stats.incrementeCandidatsParFiliere(g, bac);
                         }
                     }
@@ -254,7 +253,7 @@ public class ConnecteurBackendSQL {
         recupererProfilsScolaires(data.stats(), bacs);
         recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
 
-        data.cleanup();
+        data.cleanupAfterUpdate();
 
         return data;
     }
@@ -324,7 +323,7 @@ public class ConnecteurBackendSQL {
         data.voeuxParCandidat().clear();
         data.voeuxParCandidat().addAll(
                 voeuxParCandidat.entrySet().stream()
-                        .map(e -> new Candidat(bacs.getOrDefault(e.getKey(),TOUS_BACS_CODE), e.getValue()))
+                        .map(e -> new Candidat(bacs.getOrDefault(e.getKey(), TOUS_BACS_CODE_MPS), e.getValue()))
                         .toList()
         );
     }
@@ -705,7 +704,7 @@ public class ConnecteurBackendSQL {
                 String bac = bacs.getOrDefault(gcn, "?");
                 notes.forEach((matiere, note) -> {
                     incremente(bac, group, matiere,note);
-                    incremente(TOUS_BACS_CODE, group, matiere,note);
+                    incremente(TOUS_BACS_CODE_MPS, group, matiere,note);
                 });
             }
         });

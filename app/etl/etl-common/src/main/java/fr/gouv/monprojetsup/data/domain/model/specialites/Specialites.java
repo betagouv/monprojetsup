@@ -64,7 +64,7 @@ public record Specialites(
         });
 
         specialitesParBac()
-                .computeIfAbsent(TOUS_BACS_CODE, k -> new HashSet<>())
+                .computeIfAbsent(TOUS_BACS_CODE_MPS, k -> new HashSet<>())
                 .addAll(specialitesParBac.values().stream().flatMap(Set::stream).toList());
 
     }

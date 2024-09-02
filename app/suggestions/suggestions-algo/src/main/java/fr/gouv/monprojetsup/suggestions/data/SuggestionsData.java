@@ -17,8 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*;
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatFront.getStatistique;
 
 @Component
@@ -111,8 +110,8 @@ public class SuggestionsData {
         if(stats.containsKey(bac)) {
             return Pair.of(bac, stats.get(bac).middle50());
         }
-        if(stats.containsKey(TOUS_BACS_CODE)) {
-            return Pair.of(TOUS_BACS_CODE, stats.get(TOUS_BACS_CODE).middle50());
+        if(stats.containsKey(TOUS_BACS_CODE_MPS)) {
+            return Pair.of(TOUS_BACS_CODE_MPS, stats.get(TOUS_BACS_CODE_MPS).middle50());
         }
         return null;
     }
@@ -165,16 +164,16 @@ public class SuggestionsData {
      * @return les détails
      */
     public @NotNull StatsContainers.SimpleStatGroupParBac getSimpleGroupStats(@Nullable String bac, String formationId) {
-        if(bac == null) bac = TOUS_BACS_CODE;
+        if(bac == null) bac = TOUS_BACS_CODE_MPS;
         val f = formationsPort.retrieveFormation(formationId);
         if(f.isEmpty()) return new StatsContainers.SimpleStatGroupParBac(Map.of());
         val stats = f.get().stats();
 
-        val statsTousBacs = getSimpleStatGroup(formationId, stats, TOUS_BACS_CODE);
+        val statsTousBacs = getSimpleStatGroup(formationId, stats, TOUS_BACS_CODE_MPS);
         val statsBacs = getSimpleStatGroup(formationId, stats, bac);
 
         Map<String, StatsContainers.SimpleStatGroup> statsMap = new HashMap<>();
-        if(statsTousBacs != null) statsMap.put(TOUS_BACS_CODE, statsTousBacs);
+        if(statsTousBacs != null) statsMap.put(TOUS_BACS_CODE_MPS, statsTousBacs);
         if(statsBacs != null) statsMap.put(bac, statsBacs);
         return new StatsContainers.SimpleStatGroupParBac(statsMap);
     }

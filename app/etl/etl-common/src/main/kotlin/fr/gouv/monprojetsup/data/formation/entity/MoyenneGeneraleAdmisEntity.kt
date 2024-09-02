@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
+import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -36,7 +37,7 @@ data class MoyenneGeneraleAdmisId(
     var idFormation : String = "",
 
     @Column(name = "id_bac")
-    var idBaccalaureat : String = ""
+    var idBaccalaureat : String = TOUS_BACS_CODE_MPS
 ) : Serializable {
     constructor() : this("","","")
 
