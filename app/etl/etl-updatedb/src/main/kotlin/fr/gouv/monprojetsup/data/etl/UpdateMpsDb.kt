@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
+import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
@@ -32,7 +33,9 @@ open class Runner(
 	private val updateFormationRepositories: UpdateFormationDbs,
 	private val updateReferentielDbs: UpdateReferentielDbs,
 	private val updateMetierDbs: UpdateMetierDbs,
-	private val updateSuggestionsDbs: UpdateSuggestionsDbs
+	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
+	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs
+
 ) : CommandLineRunner {
 
 	private val logger = java.util.logging.Logger.getLogger(Runner::class.java.simpleName)
@@ -40,21 +43,26 @@ open class Runner(
 	override fun run(vararg args: String?) {
 
 		//clearAll in this order to avoid foreign key constraint errors
+		logger.info("Vidage des tables metiers, formations, suggestions et référentiels")
+		updateFormationsMetiersDbs.clearAll()
 		updateFormationRepositories.clearAll()
 		updateMetierDbs.clearAll()
 		updateSuggestionsDbs.clearAll()
 		updateReferentielDbs.clearAll()
 
-		logger.info("Mise à jour de referentiel dbs")
+		logger.info("Mise à jour des référentiel")
 		updateReferentielDbs.updateReferentielDbs()
 
-		logger.info("Mise à jour de formations dbs")
+		logger.info("Mise à jour des formations")
 		updateFormationRepositories.updateFormationDbs()
 
-		logger.info("Mise à jour de metiers dbs")
+		logger.info("Mise à jour des métiers")
 		updateMetierDbs.updateMetierDbs()
 
-		logger.info("Mise à jour de suggestions dbs")
+		logger.info("Mise à jour des liens formations metiers")
+		updateFormationsMetiersDbs.update()//after formations ert metiers
+
+		logger.info("Mise à jour des suggestions")
 		updateSuggestionsDbs.updateSuggestionDbs()
 	}
 }

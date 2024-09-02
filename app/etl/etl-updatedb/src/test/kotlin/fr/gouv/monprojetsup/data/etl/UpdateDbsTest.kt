@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
+import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
 import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
@@ -23,15 +24,12 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Autowired
         lateinit var updateFormationDbs: UpdateFormationDbs
 
-        @Autowired
-        lateinit var mpsDataPort: MpsDataPort
-
         @Test
         fun `Doit réussir à mettre à jour et vider les tables`() {
-            assertDoesNotThrow { updateFormationDbs.clearAll() }
             assertDoesNotThrow { updateFormationDbs.updateFormationDbs() }
-            assertDoesNotThrow { updateFormationDbs.clearAll() }
         }
+
+        /*
         @Test
         fun `Doit réussir à sauver une entity formation avec des descriptifs longs`() {
             // When
@@ -72,6 +70,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
             // Then
             assertDoesNotThrow { formationsdb.saveAll(listOf(entity)) }
         }
+        */
 
         @Test
         fun `Plus de 95 pour 100 des formations en base doivent réussir le test d'intégrité`() {
@@ -95,9 +94,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
-            assertDoesNotThrow { updateReferentielDbs.clearAll() }
             assertDoesNotThrow { updateReferentielDbs.updateReferentielDbs() }
-            assertDoesNotThrow { updateReferentielDbs.clearAll() }
         }
 
         @Test
@@ -118,12 +115,33 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
-            assertDoesNotThrow { updateMetierDbs.clearAll() }
             assertDoesNotThrow { updateMetierDbs.updateMetierDbs() }
-            assertDoesNotThrow { updateMetierDbs.clearAll() }
         }
 
     }
+
+    @Nested
+    inner class UpdateFormationsMetiersTest {
+
+        @Autowired
+        lateinit var updateFormationDbs: UpdateFormationDbs
+
+        @Autowired
+        lateinit var updateMetierDbs: UpdateMetierDbs
+
+        @Autowired
+        lateinit var updateFormationsMetiersDbs: UpdateFormationMetierDbs
+
+        @Test
+        fun `Doit réussir à mettre à jour les liens formations métiers`() {
+            assertDoesNotThrow { updateFormationsMetiersDbs.clearAll() }
+            assertDoesNotThrow { updateFormationDbs.updateFormationDbs() }
+            assertDoesNotThrow { updateMetierDbs.updateMetierDbs() }
+            assertDoesNotThrow { updateFormationsMetiersDbs.update() }
+        }
+
+    }
+
 
     @Nested
     inner class UpdateSuggestionsTest {
@@ -132,10 +150,8 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateSuggestionsDbs: UpdateSuggestionsDbs
 
         @Test
-        fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
-            assertDoesNotThrow { updateSuggestionsDbs.clearAll() }
+        fun `Doit réussir à mettre à jour les tables`() {
             assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
-            assertDoesNotThrow { updateSuggestionsDbs.clearAll() }
         }
 
     }

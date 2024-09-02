@@ -99,6 +99,24 @@ public record OnisepData(
         return result;
     }
 
+    public @NotNull Map<String, @NotNull List<@NotNull String>> getMetiersAssocies() {
+        Map<String, @NotNull List<@NotNull String>> result = new HashMap<>();
+        //ajout des secteurs d'activité
+        fichesMetiers().metiers().metier().forEach(fiche -> {
+            String keyMetier = cleanup(fiche.identifiant());
+            if (fiche.secteurs_activite() != null
+                    && fiche.secteurs_activite().secteur_activite() != null
+                    && fiche.metiers_associes() != null
+                    && fiche.metiers_associes().metier_associe() != null) {
+                fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
+                    String keyMetierAssocie = cleanup(metierAssocie.id());
+                    result.computeIfAbsent(keyMetier, z -> new ArrayList<>()).add(keyMetierAssocie);
+                });
+            }
+        });
+        return result;
+    }
+
 
 
 
@@ -265,6 +283,7 @@ public record OnisepData(
         });
         return result;
     }
+
 
 
 }
