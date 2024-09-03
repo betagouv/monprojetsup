@@ -28,5 +28,4 @@ open class EdgesRepository(
         return edgeJPARepository.findByType(type).map { it.toEdge() }.toMutableList()
     }
 
-
 }
