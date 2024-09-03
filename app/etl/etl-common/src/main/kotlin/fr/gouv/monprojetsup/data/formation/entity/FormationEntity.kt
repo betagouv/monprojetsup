@@ -37,6 +37,10 @@ class FormationEntity {
     @Column(name = "formations_associees", nullable = true, columnDefinition = "varchar[]")
     var formationsAssociees: List<String>? = null
 
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "formations_ideo", nullable = true, columnDefinition = "varchar[]")
+    var formationsIdeo: List<String>? = null
+
     //même taille que critere_analyse_candidature
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "criteres_analyse", columnDefinition = "int[]", nullable = true)

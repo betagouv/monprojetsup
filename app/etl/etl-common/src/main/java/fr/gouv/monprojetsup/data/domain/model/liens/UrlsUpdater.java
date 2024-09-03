@@ -30,20 +30,21 @@ public class UrlsUpdater {
     ) {
         //metiers
         val urls = new HashMap<String, List<DescriptifsFormationsMetiers.Link>>();
-        onisepData.metiers().metiers().forEach((s, metier) -> addUrl(
-                s,
-                Constants.NEW_ONISEP_METIERS_SLUG_PREFIX + s.replace('_', '.'),
-                metier.lib(), urls
-        ));
+        onisepData.metiersIdeo().forEach(metier -> {
+            addUrl(
+                    metier.idMps(),
+                    Constants.NEW_ONISEP_METIERS_SLUG_PREFIX + metier.ideo().replace('_', '.'),
+                    metier.lib(), urls
+            );
+            if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
+                addUrl(metier.ideo(), metier.urlRome(), metier.libRome(), urls);
+            }
+            metier.urls().forEach(url -> addUrl(metier.idMps(), url, "Voir aussi", urls));
+        });
 
         for (val entry : links.entrySet()) {
             addUrl(entry.getKey(), entry.getValue(), labels.getOrDefault(entry.getKey(), entry.getValue()), urls);
         }
-        onisepData.metiers().metiers().values().forEach(metier -> {
-            if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
-                addUrl(metier.id(), metier.urlRome(), metier.libRome(), urls);
-            }
-        });
 
         //formations
         descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {

@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -288,6 +289,7 @@ public class Explanation {
     }
 
 
+    @JsonIgnore
     public boolean isInheritableFromSingleFormationToItsGroup() {
         return hasNoStats();
     }

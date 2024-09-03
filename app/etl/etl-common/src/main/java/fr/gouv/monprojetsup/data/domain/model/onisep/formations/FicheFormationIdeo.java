@@ -1,10 +1,18 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep.formations;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
-public record FormationAvecMetier(
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record FicheFormationIdeo(
         // "identifiant": "FOR.8943"
+        @NotNull
         String identifiant,
 
         // "code_scolarite": "1702230B",
@@ -49,7 +57,9 @@ public record FormationAvecMetier(
           "NSF_discipline_code": 223,
           "NSF_discipline_libelle": "Métallurgie"
         },*/
-        NsfDiscipline nsf_discipline,
+        @SerializedName("nsf_discipline")
+        NsfDiscipline nsfDiscipline,
+
 
         // IGNORED "nsf_fonction": {
         //          "NSF_fonction_code": "F",
@@ -57,23 +67,19 @@ public record FormationAvecMetier(
         //        },
 
         //"niveau_certification": "niveau 7 (bac + 5)",
-        String niveau_certification,
+        @SerializedName("niveau_certification")
+        String niveauCertification,
 
         /*"niveau_etudes": {
           "id": "REF.410",
           "libelle": "Bac + 5"
         },*/
-        NiveauEtudes niveau_etudes,
+        @SerializedName("niveau_etudes")
+        NiveauEtudes niveauEtudes,
 
         //"niv_code": 170,
         //"niv_code": "16X",
         String niv_code,
-
-        //"annee_premiere_session": "",
-        String annee_premiere_session,
-
-        //"annee_derniere_session": "",
-        String annee_derniere_session,
 
         /*
         "nature_certificat": {
@@ -82,13 +88,13 @@ public record FormationAvecMetier(
             "Diplôme conférant le grade de master"
           ]
         },*/
-        NatureCertificat nature_certificat,
+        List<String> nature_certificat,
 
         //"attendus": "",
         String attendus,
 
         //"element_enseignement": "",
-        ElementEnseignement element_enseignement,
+        List<String> element_enseignement,
 
         //"sous_tutelle": "Ministère chargé de l'Enseignement supérieur et de la Recherche",
         String sous_tutelle,
@@ -97,18 +103,23 @@ public record FormationAvecMetier(
         String descriptif_poursuite_etudes,
 
         //"poursuites_etudes": "",
-        /*  "poursuites_etudes": {
-          "poursuite_etudes": {
-            "type_Poursuite": "poursuite d'études conditionnelle",
-            "formation_poursuite_Etudes": [
-              "Classe préparatoire ATS ingénierie industrielle",
-              "licence pro mention maintenance des systèmes industriels, de production et d'énergie",
-              "licence pro mention maintenance et technologie : contrôle industriel",
-              "licence pro mention maintenance et technologie : organisation de la maintenance",
-              "licence pro mention maintenance et technologie : systèmes pluritechniques"
-            ]
-          }
-        },*/
+        /*  <poursuites_etudes>
+            <poursuite_etudes>
+                <type_Poursuite>poursuite d'études conditionnelle</type_Poursuite>
+                <formation_poursuite_Etudes>licence pro mention industries agroalimentaires : gestion, production et valorisation</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention qualité, hygiène, sécurité, santé, environnement</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention valorisation des agro-ressources</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention métiers de la qualité</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention bio-industries et biotechnologies</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention génie des procédés et bioprocédés industriels</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention commercialisation des produits alimentaires</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>Classe agro véto post BTSA et BTS</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention chimie analytique, contrôle, qualité, environnement</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention métiers de l'instrumentation, de la mesure et du contrôle qualité</formation_poursuite_Etudes>
+                <formation_poursuite_Etudes>licence pro mention chimie : formulation</formation_poursuite_Etudes>
+            </poursuite_etudes>
+        </poursuites_etudes>
+        */
         PoursuitesEtudes poursuites_etudes,
 
         /*
@@ -126,7 +137,7 @@ public record FormationAvecMetier(
             }
           ]
         },*/
-        MetiersFormation metiers_formation,
+        List<MetierFormation> metiers_formation,
 
         /* IGNORED
         "publications": {
@@ -146,7 +157,7 @@ public record FormationAvecMetier(
             "http://www.cordonnerie.org"
           ]
         },*/
-        SourcesNumerique sources_numeriques,
+        List<String> sources_numeriques,
 
         /*
         "sous_domaines_web": {
@@ -181,7 +192,8 @@ public record FormationAvecMetier(
             }
           ]
         }, */
-        SousDomainesWeb sous_domaines_web,
+        @SerializedName("sous_domaines_web")
+        List<SousDomaineWeb> sousDomainesWeb,
 
         /* IGNORED
         "creation_date": "20/06/2023",
@@ -189,12 +201,66 @@ public record FormationAvecMetier(
                 */
         String creation_date,
         String modification_date
+
 ) {
+        public List<String> getMotsCles() {
+                List<String> result = new ArrayList<>(List.of(
+                        identifiant,
+                        libelle_complet,
+                        sigle,
+                        libelle_generique,
+                        libelle_specifique,
+                        type_Formation.type_formation_sigle,
+                        type_Formation.type_formation_libelle_court,
+                        type_Formation.type_formation_libelle,
+                        "duree" + Objects.requireNonNullElse(duree_formation,"").replaceAll(" ", ""),
+                        nsfDiscipline.NSF_discipline_libelle,
+                        niveauCertification,
+                        niveauEtudes.libelle,
+                        attendus,
+                        sous_tutelle,
+                        descriptif_poursuite_etudes
+                ));
+                if(poursuites_etudes != null && poursuites_etudes.poursuite_etudes != null) {
+                        result.addAll(poursuites_etudes.poursuite_etudes);
+                }
+                if(metiers_formation != null) {
+                        for(MetierFormation metier : metiers_formation) {
+                                result.add(metier.id);
+                                result.add(metier.nom_metier);
+                                if(metier.synonymes != null) {
+                                        for(Synonyme synonyme : metier.synonymes) {
+                                                result.add(synonyme.nom_metier);
+                                                result.add(synonyme.libelle_masculin);
+                                                result.add(synonyme.libelle_feminin);
+                                        }
+                                }
+                        }
+                }
+                if(nature_certificat != null) result.addAll(nature_certificat);
+                if(element_enseignement != null) result.addAll(element_enseignement);
+                if(sousDomainesWeb != null) {
+                        for(SousDomaineWeb sousDomaine : sousDomainesWeb) {
+                                result.add(sousDomaine.id);
+                                result.add(sousDomaine.libelle);
+                        }
+                }
+                result.removeIf(Objects::isNull);
+                result.removeIf(String::isBlank);
+                return result;
+        }
+
+        public boolean estFormationDuSup() {
+                return (   niveauCertification != null && niveauCertification.toLowerCase().contains("bac +")
+                        || niveauEtudes != null && niveauEtudes.libelle.toLowerCase().contains("bac +")
+                );
+        }
+
         /*"type_Formation": {
-                  "type_formation_sigle": "",
-                  "type_formation_libelle_court": "ING",
-                  "type_formation_libelle": "diplôme d'ingénieur"
-                },*/
+                          "type_formation_sigle": "",
+                          "type_formation_libelle_court": "ING",
+                          "type_formation_libelle": "diplôme d'ingénieur"
+                        },*/
         public record TypeFormation(
                 String type_formation_sigle,
                 String type_formation_libelle_court,
@@ -209,7 +275,9 @@ public record FormationAvecMetier(
                   "NSF_discipline_libelle": "Métallurgie"
                 },*/
         public record NsfDiscipline(
+                @SerializedName("NSF_discipline_code")
                 Integer NSF_discipline_code,
+                @SerializedName("NSF_discipline_libelle")
                 String NSF_discipline_libelle
         ) {
 
@@ -277,27 +345,19 @@ public record FormationAvecMetier(
 
                 */
         public record Synonyme(
-                String libelle,
+                String nom_metier,
+                String libelle_masculin,
                 String libelle_feminin
         ) {
 
         }
 
-        public record SynonymeList(
-                List<Synonyme> synonyme
-        ) {
-        }
-
         public record MetierFormation(
                 String id,
-                String libelle,
-                SynonymeList synonyme
-        ) {
-
-        }
-
-        public record MetiersFormation(
-                List<MetierFormation> metier
+                String nom_metier,
+                String libelle_feminin,
+                String libelle_masculin,
+                List<Synonyme> synonymes
         ) {
 
         }
@@ -309,8 +369,7 @@ public record FormationAvecMetier(
             "http://www.cordonnerie.org"
           ]
         },*/
-        public record SourcesNumerique(List<String> source) {
-        }
+
 
         public record SousDomaineWeb(
                 String id,
@@ -319,48 +378,30 @@ public record FormationAvecMetier(
 
         }
 
-        public record SousDomainesWeb(
-                List<SousDomaineWeb> sous_domaine_web
-        ) {
 
-        }
-
-   /*  "poursuites_etudes": {
-          "poursuite_etudes": {
-            "type_Poursuite": "poursuite d'études conditionnelle",
-            "formation_poursuite_Etudes": [
-              "Classe préparatoire ATS ingénierie industrielle",
-              "licence pro mention maintenance des systèmes industriels, de production et d'énergie",
-              "licence pro mention maintenance et technologie : contrôle industriel",
-              "licence pro mention maintenance et technologie : organisation de la maintenance",
-              "licence pro mention maintenance et technologie : systèmes pluritechniques"
-            ]
-          }
-        },*/
-
-        public record PoursuiteEtudes(
-                String type_Poursuite,
-                List<String> formation_poursuite_Etudes
-        ) {
-
-        }
-
+        /*
+        <poursuites_etudes>
+                 <poursuite_etudes>
+                     <type_Poursuite>poursuite d'études conditionnelle</type_Poursuite>
+                     <formation_poursuite_Etudes>licence pro mention industries agroalimentaires : gestion, production et valorisation</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention qualité, hygiène, sécurité, santé, environnement</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention valorisation des agro-ressources</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention métiers de la qualité</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention bio-industries et biotechnologies</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention génie des procédés et bioprocédés industriels</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention commercialisation des produits alimentaires</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>Classe agro véto post BTSA et BTS</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention chimie analytique, contrôle, qualité, environnement</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention métiers de l'instrumentation, de la mesure et du contrôle qualité</formation_poursuite_Etudes>
+                     <formation_poursuite_Etudes>licence pro mention chimie : formulation</formation_poursuite_Etudes>
+                 </poursuite_etudes>
+        <poursuites_etudes>
+     */
         public record PoursuitesEtudes(
-                PoursuiteEtudes poursuite_etudes
+                List<String> poursuite_etudes
         ) {
-
         }
 
-        /*"element_enseignement_libelle": [
-                        "projet urbain et métropolisation",
-                        "paysage",
-                        "métropoles de l'Arc Pacifique"
-                        ]*/
-        public record ElementEnseignement(
-                List<String> element_enseignement_libelle
-        ) {
-
-        }
 
 
 }

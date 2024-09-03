@@ -84,6 +84,7 @@ class UpdateFormationDbs(
         val stats = mpsDataPort.getStatsFormation()
         val durees = mpsDataPort.getDurees()
         val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
+        val mpsKeyToIdeoKeys = mpsDataPort.getMpsIdToIdeoIds()
 
         val entities = ArrayList<FormationEntity>()
         formationsMpsIds.forEach { id ->
@@ -97,6 +98,7 @@ class UpdateFormationDbs(
             entity.descriptifConseils = conseils[id]
 
             entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList()
+            entity.formationsIdeo = mpsKeyToIdeoKeys[id].orEmpty()
 
             val grille = grilles[id]
             if (grille == null) {

@@ -43,5 +43,6 @@ interface MpsDataPort {
     fun getFormationsLabels(): Map<String, String>
     fun getMetiersLabels(): Map<String, String>
 
-    fun getMetiersAssocies(): Map<String, List<String>>
+    fun getMetiersAssociesLabels(): Map<String, List<String>>
+    fun getMpsIdToIdeoIds(): Map<String, List<String>>
 }

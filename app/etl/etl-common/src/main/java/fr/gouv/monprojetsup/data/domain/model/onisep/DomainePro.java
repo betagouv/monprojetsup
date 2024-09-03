@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep;
 
+import fr.gouv.monprojetsup.data.domain.Constants;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,13 +28,13 @@ import java.util.Set;
          * @param domainesPro
          * @return the keys
          */
-        public static Set<DomainePro> extractDomaines(@NotNull String domaines, List<DomainePro> domainesPro) {
-            Set<DomainePro> answer = new HashSet<>();
+        public static Set<String> extractDomaines(@NotNull String domaines, List<DomainePro> domainesPro) {
+            Set<String> answer = new HashSet<>();
             String[] split = domaines.split("\\|");
             for (String dom : split) {
-                DomainePro key = extractDomaine(dom.trim(), domainesPro);
-                if (key != null) {
-                    answer.add(key);
+                DomainePro domaine = extractDomaine(dom.trim(), domainesPro);
+                if (domaine != null) {
+                    answer.add(Constants.cleanup(domaine.domaine_onisep));
                 }
             }
             return answer;

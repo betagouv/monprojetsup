@@ -1,10 +1,10 @@
-package fr.gouv.monprojetsup.data.domain.model.onisep.billy;
+package fr.gouv.monprojetsup.data.domain.model.onisep.formations;
 
 
 import java.util.List;
 
 
-public record PsupToOnisepLines(
+public record PsupToIdeoCorrespondance(
         List<PsupToOnisepLine> psupToIdeo2
 ) {
     public record PsupToOnisepLine(
