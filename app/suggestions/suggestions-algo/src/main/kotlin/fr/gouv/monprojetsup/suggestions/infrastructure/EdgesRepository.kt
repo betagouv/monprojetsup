@@ -28,11 +28,5 @@ open class EdgesRepository(
         return edgeJPARepository.findByType(type).map { it.toEdge() }.toMutableList()
     }
 
-    @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
-    override fun getOutgoingEdges(src: String, type: Int): MutableList<String> {
-        return edgeJPARepository.findBySrc(src).filter { it.type == type }.map { it.dst }.toMutableList()
-    }
-
 
 }
