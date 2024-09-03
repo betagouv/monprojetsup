@@ -2,8 +2,6 @@ package fr.gouv.monprojetsup.data.etl.metier
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
-import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntityId
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -31,7 +29,7 @@ class UpdateMetierDbs(
         val liens = mpsDataPort.getLiens()
 
         val entities = ArrayList<MetierEntity>()
-        val metiersAssocies = mpsDataPort.getMetiersAssocies()
+        val metiersAssocies = mpsDataPort.getMetiersAssociesLabels()
 
         val metiersIds = mpsDataPort.getMetiersMpsIds()
         metiersIds.forEach { metierId ->
@@ -49,7 +47,7 @@ class UpdateMetierDbs(
                 }
                 val liensMetier = liens[metierId]
                 if(liensMetier != null) {
-                    entity.liens.addAll(liensMetier.map { LienEntity(it.uri, it.label) })
+                    entity.liens.addAll(liensMetier.map { LienEntity(it.label, it.uri) })
                 }
                 entities.add(entity)
             }

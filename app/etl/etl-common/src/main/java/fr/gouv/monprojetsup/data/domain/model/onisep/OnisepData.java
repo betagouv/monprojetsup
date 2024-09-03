@@ -3,16 +3,21 @@ package fr.gouv.monprojetsup.data.domain.model.onisep;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.domain.model.formations.FilieresToFormationsOnisep;
+import fr.gouv.monprojetsup.data.domain.model.formations.FiliereToFormationsOnisep;
 import fr.gouv.monprojetsup.data.domain.model.graph.Edges;
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
-import fr.gouv.monprojetsup.data.domain.model.metiers.Metiers;
-import fr.gouv.monprojetsup.data.domain.model.onisep.billy.PsupToOnisepLines;
-import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FormationsOnisep;
+import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
+import fr.gouv.monprojetsup.data.domain.model.onisep.formations.PsupToIdeoCorrespondance;
+import fr.gouv.monprojetsup.data.domain.model.onisep.metiers.FicheMetierIdeo;
 import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
 import fr.gouv.monprojetsup.data.domain.model.thematiques.Thematiques;
+import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,8 +26,6 @@ import static fr.gouv.monprojetsup.data.domain.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.domain.Constants.cleanup;
 
 public record OnisepData(
-        Metiers metiers,
-
         Thematiques thematiques,
 
         Interets interets,
@@ -35,13 +38,13 @@ public record OnisepData(
 
         Edges edgesInteretsMetiers,
 
-        FilieresToFormationsOnisep filieresToFormationsOnisep,
+        List<FiliereToFormationsOnisep> filieresToFormationsOnisep,
 
-        PsupToOnisepLines billy,
+        PsupToIdeoCorrespondance billy,
 
-        FichesMetierOnisep fichesMetiers,
+        List<MetierIdeoDuSup> metiersIdeo,
 
-        FormationsOnisep formationsOnisep
+        List<FormationIdeoDuSup> formationsIdeo
         ) {
 
     public static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
@@ -52,20 +55,47 @@ public record OnisepData(
 
     public static final double EDGES_INTERETS_INTERETS_WEIGHT = 1.0;
 
+    /**
+     * maps full string to MET.* code, with spell check
+     * @param metierLabel e.g. "Mécanicien automobile"
+     * @return MET.* code
+     */
+    private static @Nullable String findMetierKey(Map<String, MetierIdeoDuSup> metiers, String metierLabel) {
+        return DictApproxInversion.findKey(
+                metierLabel,
+                metiers.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> e.getValue().lib()
+                            )
+                        )
+        );
+    }
+
+    /**
+     * Extracts metiers from a string, separated by ,;:. or .
+     * @param substring e.g. "Mécanicien automobile, électricien, ..."
+     * @return list of (MET_xxx, original text, metier)
+     */
+    private static @NotNull List<Triple<String,String, MetierIdeoDuSup>> extractMetiers(Map<String, MetierIdeoDuSup> metiers, String substring) {
+        return Arrays.stream(substring.split("[;:,.]"))
+                .map(String::trim)
+                .map(s -> Pair.of(findMetierKey(metiers, s),s))
+                .filter(p -> p.getLeft() != null)
+                .map(p -> Triple.of(p.getLeft(),p.getRight(), metiers.get(p.getLeft())))
+                .toList();
+    }
+
+    public static List<String> extractMetiersKeys(Map<String, MetierIdeoDuSup> metiers, String substring) {
+        return extractMetiers(metiers, substring).stream().map(Triple::getLeft).toList();
+    }
+
 
     public Map<String, Set<String>> getSecteursVersMetiers() {
-        val formationsDuSup = formationsOnisep.getFormationsDuSup();
         Map<String, Set<String>> result = new HashMap<>();
-        fichesMetiers.metiers().metier().forEach(fiche -> {
-            String keyMetier = cleanup(fiche.identifiant());
-            if (fiche.secteurs_activite() != null && fiche.secteurs_activite().secteur_activite() != null) {
-                fiche.secteurs_activite().secteur_activite().forEach(secteur -> {
-                    String keySecteur = cleanup(secteur.id());
-                    if(fiche.isMetierSup(formationsDuSup)) {
-                        result.computeIfAbsent(keySecteur, z -> new HashSet<>()).add(keyMetier);
-                    }
-                });
-            }
+        metiersIdeo.forEach(metier -> {
+            String keyMetier = metier.ideo();
+            metier.domaines().forEach(domaine -> result.computeIfAbsent(domaine, z -> new HashSet<>()).add(keyMetier));
         });
         return result;
     }
@@ -85,37 +115,29 @@ public record OnisepData(
 
     public @NotNull Edges getEdgesMetiersAssocies() {
         Edges result = new Edges();
-        //ajout des secteurs d'activité
-        fichesMetiers().metiers().metier().forEach(fiche -> {
-            String keyMetier = cleanup(fiche.identifiant());
-            if (fiche.secteurs_activite() != null
-                    && fiche.secteurs_activite().secteur_activite() != null
-                    && fiche.metiers_associes() != null
-                    && fiche.metiers_associes().metier_associe() != null) {
-                fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
-                    String keyMetierAssocie = cleanup(metierAssocie.id());
-                    result.put(keyMetier, keyMetierAssocie, true, EDGES_METIERS_METIERS_WEIGHT);
-                });
-            }
 
+        metiersIdeo.forEach(metier -> {
+            String keyMetier = metier.idMps();
+            metier.metiersAssocies().stream()
+                    .map(z -> Constants.cleanup(z.id()))
+                    .sequential()
+                    .forEach(
+                            keyMetierAssocie ->  result.put(keyMetier, keyMetierAssocie, true, EDGES_METIERS_METIERS_WEIGHT)
+                    );
         });
         return result;
     }
 
-    public @NotNull Map<String, @NotNull List<@NotNull String>> getMetiersAssocies() {
+    public @NotNull Map<String, @NotNull List<@NotNull String>> getMetiersAssociesLabels() {
         Map<String, @NotNull List<@NotNull String>> result = new HashMap<>();
         //ajout des secteurs d'activité
-        fichesMetiers().metiers().metier().forEach(fiche -> {
-            String keyMetier = cleanup(fiche.identifiant());
-            if (fiche.secteurs_activite() != null
-                    && fiche.secteurs_activite().secteur_activite() != null
-                    && fiche.metiers_associes() != null
-                    && fiche.metiers_associes().metier_associe() != null) {
-                fiche.metiers_associes().metier_associe().forEach(metierAssocie -> {
-                    String keyMetierAssocie = cleanup(metierAssocie.id());
-                    result.computeIfAbsent(keyMetier, z -> new ArrayList<>()).add(keyMetierAssocie);
-                });
-            }
+        metiersIdeo.forEach(fiche -> {
+            String keyMetier = fiche.idMps();
+            result.computeIfAbsent(keyMetier, z -> new ArrayList<>())
+                    .addAll(
+                            fiche.metiersAssocies().stream()
+                                    .map(FicheMetierIdeo.MetiersAssocies.MetierAssocie::libelle).toList()
+                    );
         });
         return result;
     }
@@ -129,8 +151,8 @@ public record OnisepData(
             Set<String> codes = item.liste_metier().stream()
                     .map(InteretsRome.Metier::code_rome)
                     .collect(Collectors.toSet());
-            List<Metiers.Metier> l = metiers.metiers().values().stream()
-                    .filter(m -> codes.contains(m.codeRome()))
+            List<MetierIdeoDuSup> l = metiersIdeo.stream()
+                    .filter(m -> m.codeRome() != null && codes.contains(m.codeRome()))
                     .toList();
             if (!l.isEmpty()) {
                 String key = Interets.getKey(item);
@@ -138,7 +160,7 @@ public record OnisepData(
                 interets().put(key, item.libelle_centre_interet());
                 //ajout des arètes
                 l.forEach(metier -> {
-                            val id = metier.id();
+                            val id = metier.ideo();
                             if (id != null) {
                                 edgesInteretsMetiers.put(
                                         key,
@@ -155,43 +177,54 @@ public record OnisepData(
 
 
 
-    public static Map<String, Set<String>> getMetiersVersFormations(
-            FilieresToFormationsOnisep filieresToFormationsOnisep,
-            PsupToOnisepLines billy,
-            Metiers metiers
+    //in mps id style flxxx and MET_xxx
+    public static Map<String, Set<String>> getMetiersVersFormationsMps(
+            List<FiliereToFormationsOnisep> filieresToFormationsOnisep,
+            List<FormationIdeoDuSup> formationsIdeoSuSup,
+            PsupToIdeoCorrespondance billy,
+            List<MetierIdeoDuSup> metiersIdeoduSup
     ) {
-        Map<String, Set<String>> result = new HashMap<>();
+
+        Map<String, FormationIdeoDuSup> formationsIdeo = formationsIdeoSuSup.stream()
+                .collect(Collectors.toMap(FormationIdeoDuSup::ideo, z -> z));
+
+        Map<String, MetierIdeoDuSup> metiersIdeo = metiersIdeoduSup.stream()
+                .collect(Collectors.toMap(MetierIdeoDuSup::ideo, z -> z));
+
+        Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
         //two sources of info:
         //the infamous xml with holes
-        filieresToFormationsOnisep.filieres().forEach(
-                fil -> result.put(
+        filieresToFormationsOnisep.forEach(
+                fil -> formationsVersMetiers.put(
                         fil.gFlCod(),
-                        fil.formationOniseps().stream()
-                                .map(FilieresToFormationsOnisep.FormationOnisep::metiers)
+                        fil.ideoIds().stream()
+                                .map(formationsIdeo::get)
+                                .filter(Objects::nonNull)
+                                .map(FormationIdeoDuSup::metiers)
                                 .flatMap(Collection::stream)
+                                .map(Constants::cleanup)
                                 .collect(Collectors.toSet())));
 
-        result.values().removeIf(Set::isEmpty);
+        formationsVersMetiers.values().removeIf(Set::isEmpty);
         //the JM and Claire file
         billy.psupToIdeo2().forEach(
                 line -> {
-                    Set<String> keys =
+                    List<String> keys =
                             Arrays.stream(line.METIER_IDEO2().split(";"))
                                     .map(String::trim)
-                                    .map(metiers::findMetier)
-                                    .filter(Objects::nonNull)
-                                    .map(Metiers.Metier::id)
-                                    .collect(Collectors.toSet());
-                    String key = Constants.FILIERE_PREFIX + line.G_FL_COD();
-                    result
+                                    .filter(metiersIdeo::containsKey)
+                                    .map(Constants::cleanup)
+                                    .toList();
+                    String key = Constants.gFlCodToFrontId(line.G_FL_COD());
+                    formationsVersMetiers
                             .computeIfAbsent(key, z -> new HashSet<>())
                             .addAll(keys);
                 }
         );
-        result.values().removeIf(Set::isEmpty);
+        formationsVersMetiers.values().removeIf(Set::isEmpty);
 
         Map<String, Set<String>> metiersVersFormations = new HashMap<>();
-        result.forEach(
+        formationsVersMetiers.forEach(
                 (f, ms) -> ms.forEach(
                         m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
                 )
@@ -220,7 +253,7 @@ public record OnisepData(
 
         getMetiersVersFormationsFromDescriptifs(
                 descriptifs,
-                this.metiers
+                metiersIdeo
         ).forEach(
                 (f, ms) -> ms.forEach(
                         m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
@@ -264,21 +297,23 @@ public record OnisepData(
     /* filieres to metiers */
     public static Map<String, Set<String>> getMetiersVersFormationsFromDescriptifs(
             DescriptifsFormationsMetiers descriptifs,
-            Metiers metiers
+            List<MetierIdeoDuSup> metiers
     ) {
         Map<String, Set<String>> result = new HashMap<>();
+        Map<String,MetierIdeoDuSup> metiersMap = metiers.stream()
+                .collect(Collectors.toMap(z -> Constants.cleanup(Objects.requireNonNull(z.ideo())), z -> z));
         descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
             if (!descriptif.hasError() && descriptif.presentation() != null) {
                 int i = descriptif.presentation().indexOf("Exemples de métiers");
                 if (i > 0) {
-                    List<String> mets = metiers.extractMetiersKeys(descriptif.presentation().substring(i));
+                    List<String> mets = extractMetiersKeys(metiersMap, descriptif.presentation().substring(i));
                     if(!mets.isEmpty()) {
                         result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
                     }
                 }
             }
             if (!descriptif.hasError() && descriptif.metiers() != null) {
-                List<String> mets = metiers.extractMetiersKeys(descriptif.metiers());
+                List<String> mets = extractMetiersKeys(metiersMap, descriptif.metiers());
                 if(!mets.isEmpty()) {
                     result.computeIfAbsent(key, z -> new HashSet<>()).addAll(mets);
                 }

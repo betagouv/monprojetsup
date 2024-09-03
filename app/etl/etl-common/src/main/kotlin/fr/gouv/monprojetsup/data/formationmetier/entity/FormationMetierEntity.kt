@@ -19,10 +19,13 @@ class FormationMetierEntity {
 }
 
 @Embeddable
-class FormationMetierEntityId : Serializable {
+data class FormationMetierEntityId(
     @Column(name = "id_formation", nullable = false)
-    lateinit var idFormation: String
+    val idFormation: String,
 
     @Column(name = "id_metier", nullable = false)
-    lateinit var idMetier: String
+    val idMetier: String
+) {
+    @Suppress("unused")
+    constructor() : this("", "")
 }

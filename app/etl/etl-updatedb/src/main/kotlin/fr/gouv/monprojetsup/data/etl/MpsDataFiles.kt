@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.Helpers.isMetier
 import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
@@ -67,8 +66,7 @@ class MpsDataFiles(
         statistiques = psupData.stats
 
         logger.info("Chargement des données Onisep")
-        onisepData =
-            OnisepDataLoader.fromFiles(dataSources)
+        onisepData = OnisepDataLoader.fromFiles(dataSources)
 
         logger.info("Chargement des données ROME")
         romeData = RomeDataLoader.load(dataSources)
@@ -98,8 +96,15 @@ class MpsDataFiles(
         )
     }
 
-    override fun getMetiersAssocies(): Map<String, List<String>> {
-        return onisepData.getMetiersAssocies()
+    override fun getMetiersAssociesLabels(): Map<String, List<String>> {
+        return onisepData.getMetiersAssociesLabels()
+    }
+
+    override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
+        val psupToIdeo = onisepData.filieresToFormationsOnisep.associate { it.gFlCod to it.ideoIds }
+        return psupData.mpsKeyToPsupKeys
+            .entries
+            .associate { it.key to it.value.flatMap { psupKey -> psupToIdeo[psupKey].orEmpty() } }
     }
 
     override fun getDescriptifs(): DescriptifsFormationsMetiers {
@@ -150,7 +155,7 @@ class MpsDataFiles(
         val result = HashMap<String, String>()
         mpsIds.forEach { id ->
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
-            val attendusId = psupKeys.map { attendusPsup[it] }.filterNotNull().map { att -> att.conseilsFront }.distinct().joinToString("\n\n")
+            val attendusId = psupKeys.asSequence().map { attendusPsup[it] }.filterNotNull().map { att -> att.conseilsFront }.distinct().joinToString("\n\n")
             if(attendusId.isNotBlank() && !attendusId.contains("null")) {
                 result[id] = attendusId
             }
@@ -238,7 +243,7 @@ class MpsDataFiles(
     override fun getMotsClesFormations(): Map<String, List<String>> {
 
         //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-        val motsCles = psupData.motsCles;
+        val motsCles = psupData.motsCles
 
         motsCles.sources.computeIfAbsent(
             Constants.PASS_MOT_CLE
@@ -249,6 +254,11 @@ class MpsDataFiles(
         val labels = getLabels()
 
         val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
+
+        val mpsToIdeo = getMpsIdToIdeoIds()
+
+        val formationsIdeo = onisepData.formationsIdeo.associateBy { it.ideo }
+
         val mpsIds = getFormationsMpsIds()
 
         //le référentiel des formations front
@@ -262,6 +272,15 @@ class MpsDataFiles(
             }
             if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
                 motsCles.add("IFSI", formation)
+            }
+            if(mpsToIdeo.containsKey(formation)) {
+                val ideoKeys = mpsToIdeo[formation].orEmpty()
+                ideoKeys.forEach { ideoKey ->
+                    val formationIdeo = formationsIdeo[ideoKey]
+                    if (formationIdeo != null) {
+                        motsCles.add(formationIdeo.motsCles, formation)
+                    }
+                }
             }
             formationsVersMetiers[formation]?.forEach { idMetierOuMetierAssocie ->
                 val labelMetier = labels[idMetierOuMetierAssocie]
@@ -277,7 +296,8 @@ class MpsDataFiles(
     }
 
     override fun getMetiersMpsIds(): List<String> {
-        return onisepData.metiers.metiers.keys.toList().sorted()
+        return onisepData.metiersIdeo.asSequence().map { it.idMps() }.toList().sorted()
+            .toList()
     }
 
     override fun getFormationsMpsIds(): List<String> {
@@ -404,14 +424,15 @@ class MpsDataFiles(
         return result
     }
 
+    @Suppress("SameParameterValue")
     private fun <T> replaceKey(m: Map<String,T>?, oldKey: String, newKey: String):  Map<String, T> {
         if(m == null) return mapOf()
-        val result = HashMap<String, T>();
-        result.putAll(m);
+        val result = HashMap<String, T>()
+        result.putAll(m)
         val value = result[oldKey]
         if (value != null) {
             result[newKey] = value
-            result.remove(oldKey);
+            result.remove(oldKey)
         }
         return result
     }
@@ -493,7 +514,7 @@ class MpsDataFiles(
         val result = HashMap<String,Int?>()
         ids.forEach { id ->
             var duree = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
-            if(duree == null && id.startsWith(Constants.FILIERE_PREFIX)) {
+            if(duree == null && isFiliere(id)) {
                 try {
                     val codeFilierePsup = Integer.parseInt(id.substring(Constants.FILIERE_PREFIX.length))
                     val filiere = psupData.filieres()[codeFilierePsup]
@@ -527,7 +548,7 @@ class MpsDataFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        val result = ArrayList<Bac>(psupData.bacs)
+        val result = ArrayList(psupData.bacs)
         result.removeIf { it.key == TOUS_BACS_CODE_LEGACY }
         result.add(Bac(TOUS_BACS_CODE_MPS, TOUS_BACS_CODE_FRONT_LIBELLE))
         return result

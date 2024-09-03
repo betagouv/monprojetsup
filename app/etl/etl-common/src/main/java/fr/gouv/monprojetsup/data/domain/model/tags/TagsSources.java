@@ -26,6 +26,11 @@ public record TagsSources(
         }
     }
 
+    public void add(@NotNull List<String> motsCles, @NotNull String source) {
+        motsCles.forEach(mot -> add(mot, source));
+    }
+
+
     public Set<String> getTags() {
         return sources.keySet();
     }
@@ -83,4 +88,5 @@ public record TagsSources(
         sources.clear();
         sources.putAll(motsCles.sources);
     }
+
 }

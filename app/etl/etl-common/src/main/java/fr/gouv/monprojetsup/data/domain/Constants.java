@@ -28,8 +28,10 @@ public class Constants {
     public static final int DUREE_LAS = 5;
     public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
 
-    /* TODO: move elsewhere */
     public static String gFlCodToFrontId(int cle) {
+        return FILIERE_PREFIX + cle;
+    }
+    public static String gFlCodToFrontId(String cle) {
         return FILIERE_PREFIX + cle;
     }
 

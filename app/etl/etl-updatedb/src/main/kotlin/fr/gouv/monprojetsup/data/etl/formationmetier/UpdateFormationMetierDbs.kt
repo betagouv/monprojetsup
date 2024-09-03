@@ -38,10 +38,7 @@ class UpdateFormationMetierDbs(
             }.distinct()
             .map { (formationId, metierId) ->
                 val entity = FormationMetierEntity()
-                val id = FormationMetierEntityId()
-                id.idFormation = formationId
-                id.idMetier = metierId
-                entity.id = id
+                entity.id = FormationMetierEntityId(formationId, metierId)
                 entity.idFormation = formationId
                 entity.idMetier = metierId
                 entity

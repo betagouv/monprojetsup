@@ -4,8 +4,8 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifFormation;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
+import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.domain.model.onisep.FichesMetierOnisep;
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
@@ -23,23 +22,18 @@ public class DescriptifsLoader {
             DataSources sources
     ) throws IOException {
 
-        FichesMetierOnisep fichesMetiers = FichesMetiersOnisepLoader.loadFichesMetierOnisep(sources);
-        fichesMetiers.metiers().metier().removeIf(fiche ->
-                fiche.identifiant() == null
-                        || !onisepData.metiers().metiers().containsKey(Constants.cleanup(fiche.identifiant()))
-        );
 
         DescriptifsFormationsMetiers descriptifs =
                 Serialisation.fromJsonFile(
                         sources.getSourceDataFilePath(
-                                DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_PATH
+                                DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_PATH
                         ),
                         DescriptifsFormationsMetiers.class
                 );
 
         Map<String, String> summaries = Serialisation.fromJsonFile(
                 sources.getSourceDataFilePath(
-                        DataSources.ONISEP_DESCRIPTIFS_FORMATIONS_RESUMES_PATH
+                        DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_RESUMES_PATH
                 ),
                 new TypeToken<>() {
                 }.getType()
@@ -48,12 +42,12 @@ public class DescriptifsLoader {
 
         MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(
                 sources.getSourceDataFilePath(
-                        DataSources.ONISEP_DESCRIPTIFS_METIERS_PATH
+                        DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH
                 ),
                 MetiersScrapped.class);
         descriptifs.inject(metiersScrapped);
 
-        injectFichesMetiers(fichesMetiers, descriptifs);
+        injectFichesMetiers(onisepData.metiersIdeo(), descriptifs);
 
         addMpsdescriptifs(descriptifs, sources);
 
@@ -69,23 +63,10 @@ public class DescriptifsLoader {
         return descriptifs;
     }
 
-    private static void injectFichesMetiers(FichesMetierOnisep fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
-        //inject descriptifs
-        //inject urls
-        fichesMetiers.metiers().metier().forEach(fiche -> {
-            String key = Constants.cleanup(fiche.identifiant());
-            String descriptif = fiche.accroche_metier();
-            if (descriptif == null) {
-                Map<String, List<FichesMetierOnisep.FormatCourt>> textes
-                        = fiche.formats_courts().format_court().stream().collect(Collectors.groupingBy(FichesMetierOnisep.FormatCourt::type));
-                List<FichesMetierOnisep.FormatCourt> accroches = textes.get("accroche_metier");
-                if (accroches != null && !accroches.isEmpty()) {
-                    FichesMetierOnisep.FormatCourt accroche = accroches.get(0);
-                    if (accroche.descriptif() != null) {
-                        descriptif = accroche.descriptif();
-                    }
-                }
-            }
+    private static void injectFichesMetiers(List<MetierIdeoDuSup> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
+        fichesMetiers.forEach(fiche -> {
+            String key = fiche.idMps();
+            String descriptif = fiche.descriptif();
             descriptifs.inject(
                     key,
                     new DescriptifFormation(

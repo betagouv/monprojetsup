@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
+import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
@@ -266,8 +267,8 @@ public record PsupData(
                 );
 
         Map<String, String> flToGrp = flToFl.entrySet().stream().collect(Collectors.toMap(
-                e -> FILIERE_PREFIX + e.getKey(),
-                e -> FILIERE_PREFIX + e.getValue())
+                e -> Constants.gFlCodToFrontId(e.getKey()),
+                e -> Constants.gFlCodToFrontId(e.getValue()))
         );
 
 
@@ -294,7 +295,7 @@ public record PsupData(
                 String grp = Constants.TYPE_FORMATION_PREFIX + fr;
                 formations.filieres.values().stream()
                         .filter(fil -> fil.gFrCod == fr)
-                        .forEach(fil -> flToGrp.put(FILIERE_PREFIX + fil.gFlCod, grp));
+                        .forEach(fil -> flToGrp.put(Constants.gFlCodToFrontId(fil.gFlCod), grp));
             }
         });
 
@@ -340,7 +341,7 @@ public record PsupData(
         /* ajout des filières dans leurs propres regroupements */
         val filieresWhichAreGroupsAsWell = flToGrp.values()
                 .stream()
-                .filter(key -> key.startsWith(FILIERE_PREFIX))
+                .filter(key -> isFiliere(key))
                 .distinct()
                 .toList();
         filieresWhichAreGroupsAsWell.forEach(s -> flToGrp.put(s, s));
@@ -353,9 +354,9 @@ public record PsupData(
     }
 
     @NotNull
-    public Map<String,Set<String>> getMpsKeyToPsupKeys() {
-        val mpsKeyToPsupKeys = new HashMap<String,Set<String>>();
-        getPsupKeyToMpsKey().forEach((s, s2) -> mpsKeyToPsupKeys.computeIfAbsent(s2, z -> new HashSet<String>() ).add(s));
+    public Map<String,@NotNull Set<@NotNull String>> getMpsKeyToPsupKeys() {
+        val mpsKeyToPsupKeys = new HashMap<String,@NotNull Set<@NotNull String>>();
+        getPsupKeyToMpsKey().forEach((s, s2) -> mpsKeyToPsupKeys.computeIfAbsent(s2, z -> new HashSet<>() ).add(s));
         return mpsKeyToPsupKeys;
     }
 

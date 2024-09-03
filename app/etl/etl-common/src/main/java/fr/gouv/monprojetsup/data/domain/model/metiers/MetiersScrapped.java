@@ -50,5 +50,22 @@ public record MetiersScrapped(Map<String, MetierScrap> metiers) {
         public boolean isError() {
             return error != null && !error.isEmpty();
         }
+
+        public String getDescriptif() {
+            StringBuilder sb = new StringBuilder();
+            if (accroche != null && !accroche.isEmpty()) {
+                sb.append(accroche).append("\n");
+            }
+            if (metier != null && !metier.isEmpty()) {
+                sb.append(metier).append("\n");
+            }
+            if (etudes != null && !etudes.isEmpty()) {
+                sb.append(etudes).append("\n");
+            }
+            if (emploi != null && !emploi.isEmpty()) {
+                sb.append(emploi).append("\n");
+            }
+            return sb.toString();
+        }
     }
 }
