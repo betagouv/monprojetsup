@@ -5,13 +5,14 @@ import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/Ongle
 import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
 import Badge from "@/components/_dsfr/Badge/Badge";
 import Onglets from "@/components/_dsfr/Onglets/Onglets";
+import Bouton from "@/components/Bouton/Bouton";
 import BoutonsFavorisCorbeille from "@/components/BoutonsFavorisCorbeille/BoutonsFavorisCorbeille";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const FicheFormation = ({ formation }: FicheFormationProps) => {
+const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheFormationProps) => {
   const générerLesOnglets = () => {
     const onglets = [];
 
@@ -74,8 +75,17 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
   };
 
   return (
-    <div className="bg-white px-20 pt-12">
-      <div className="mb-6">
+    <div className="bg-white pt-6 md:pl-6 xl:pl-20">
+      <div className="ml-[-1rem] pb-6 md:hidden">
+        <Bouton
+          auClic={afficherBarreLatéraleCallback}
+          icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
+          label={i18n.PAGE_FORMATION.BOUTON_AFFICHER_BARRE_LATÉRALE}
+          type="button"
+          variante="quaternaire"
+        />
+      </div>
+      <div className="mb-6 md:mt-6">
         <Badge
           titre={i18n.COMMUN.FORMATION}
           type="alerte"

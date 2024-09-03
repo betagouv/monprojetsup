@@ -45,6 +45,8 @@ export const localeFR = {
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
   },
   PAGE_FORMATION: {
+    BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour à l'exploration des formations",
+    BOUTON_AFFICHER_FICHE_FORMATION: "Retour à la fiche formation",
     ONGLET_FORMATION: "La formation",
     ONGLET_DÉTAILS: "Plus de détails",
     ONGLET_CRITÈRES: "Critères d'admission",
