@@ -347,13 +347,11 @@ public class AlgoSuggestions {
 
         apprentissage = data.getFormationIdsWithApprentissage();
 
-        lasFilieres = data.getLASFormations();
-
         relatedToHealth.addAll(edgesKeys
                 .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
                 .keySet());
         relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.addAll(lasFilieres);
+        relatedToHealth.addAll(data.getLASFormations());
     }
 
     public void createGraph() {
@@ -378,7 +376,7 @@ public class AlgoSuggestions {
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT);
         edgesKeys.putAll(data.edgesFilieresThematiques());
         edgesKeys.putAll(data.edgesThematiquesMetiers());
-        edgesKeys.putAll(data.edgesSecteursMetiers());
+        edgesKeys.putAll(data.edgesSecteursMetiers()); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, EDGES_METIERS_ASSOCIES_WEIGHT);
 
 

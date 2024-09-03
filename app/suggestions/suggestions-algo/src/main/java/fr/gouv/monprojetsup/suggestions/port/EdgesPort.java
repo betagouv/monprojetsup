@@ -14,9 +14,6 @@ public abstract class EdgesPort {
     @NotNull @Unmodifiable
     public abstract List<Edge> retrieveEdgesOfType(int type);
 
-    @NotNull @Unmodifiable
-    public abstract List<@NotNull String> getOutgoingEdges(@NotNull String src, int type);
-
     public List<Edge> getEdgesInteretsMetiers() {
         return retrieveEdgesOfType(TYPE_EDGE_INTERET_METIER);
     }
@@ -29,9 +26,7 @@ public abstract class EdgesPort {
         return retrieveEdgesOfType(TYPE_EDGE_THEMATIQUES_METIERS);
     }
 
-    public List<Edge> getEdgesSecteursMetiers() {
-        return retrieveEdgesOfType(TYPE_EDGE_SECTEURS_METIERS);
-    }
+    public List<Edge> getEdgesSecteursMetiers() {return retrieveEdgesOfType(TYPE_EDGE_SECTEURS_METIERS); }
 
     public List<Edge> getEdgesMetiersAssocies() { return retrieveEdgesOfType(TYPE_EDGE_METIERS_ASSOCIES); }
 
