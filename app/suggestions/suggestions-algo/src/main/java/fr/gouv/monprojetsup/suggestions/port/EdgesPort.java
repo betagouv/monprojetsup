@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.port;
 import fr.gouv.monprojetsup.data.domain.model.Edge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
