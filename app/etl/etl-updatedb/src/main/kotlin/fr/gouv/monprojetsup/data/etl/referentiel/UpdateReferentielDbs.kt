@@ -118,18 +118,18 @@ class UpdateReferentielDbs(
         interetsDb.deleteAll()
         interets.groupeInterets.forEach { groupeInteret ->
             val entity = InteretCategorieEntity()
-            val ids = groupeInteret.items.flatMap { item -> item.keys }.joinToString( "_")
-            entity.id = ids
-            entity.idCategorie = ids
+            val groupeInteretId = groupeInteret.id
+            entity.id = groupeInteretId
+            entity.idCategorie = groupeInteretId
             entity.nom = groupeInteret.label
             entity.emoji = groupeInteret.emoji
             interetsCategorieDb.save(entity)
             groupeInteret.items.forEach { item ->
                 val sousCategorie = InteretSousCategorieEntity()
-                sousCategorie.id = item.keys.joinToString("_")
+                sousCategorie.id = item.id
                 sousCategorie.nom = item.label
                 sousCategorie.emoji = item.emoji
-                sousCategorie.idCategorie = ids
+                sousCategorie.idCategorie = groupeInteretId
                 interetsSousCategorieDb.save(sousCategorie)
                 item.keys.forEach { key ->
                     val interet = InteretEntity()
@@ -148,10 +148,9 @@ class UpdateReferentielDbs(
         domainesCategoriesDb.deleteAll()
 
         val categories = mpsDataPort.getThematiques()
-        var i = 0
         categories.forEach { categorie ->
             val entity = CategorieDomaineEntity()
-            entity.id = "cat_" + i++
+            entity.id = categorie.id
             entity.nom = categorie.label
             entity.emoji = categorie.emoji
             domainesCategoriesDb.save(entity)

@@ -28,7 +28,7 @@ open class FormationDb(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["myCache"])
+    @Cacheable(value = ["repositories"])
     override fun retrieveFormation(id: String): Optional<Formation> {
         return db.findById(id).map { it.toFormation() }
     }

@@ -83,11 +83,9 @@ public class AffinityEvaluator {
         Set<String> nonZeroScores = new HashSet<>();
         if(pf.interests() != null) {
             nonZeroScores.addAll(pf.interests());
-            nonZeroScores.addAll(
-                    data.getAllRelatedInterests(
-                        pf.interests()
-                    )
-            );
+            /*
+            val relatedInterests = data.getAllRelatedInterests(pf.interests());
+            nonZeroScores.addAll(relatedInterests);*/
         }
 
         //autres formations
@@ -294,7 +292,7 @@ public class AffinityEvaluator {
 
 
     private double getBonusTypeBac(String grp, List<Pair<Double, Explanation>> expl, double weight) {
-        if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE_MPS)) return Config.NO_MATCH_SCORE;
+        if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
         Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE_MPS);
         Integer nbAdmisBac = data.getNbAdmis(grp, pf.bac());
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;

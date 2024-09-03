@@ -1,19 +1,21 @@
+import org.springframework.boot.SpringBootConfiguration
 import org.springframework.cache.annotation.EnableCaching
+import org.springframework.cache.concurrent.ConcurrentMapCache
+import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.cache.CacheManager
-import javax.cache.Caching
 
 
 @Configuration
 @EnableCaching
 class CacheConfig  {
     @Bean
-    fun cacheManager(): CacheManager {
-        val cachingProvider = Caching.getCachingProvider()
-        return cachingProvider.getCacheManager(
-            javaClass.getResource("/ehcache.xml").toURI(),
-            javaClass.classLoader
+    fun cacheManager(): org.springframework.cache.CacheManager {
+        val cacheManager = SimpleCacheManager()
+        cacheManager.setCaches(
+            listOf(
+                )
         )
+        return cacheManager
     }
 }

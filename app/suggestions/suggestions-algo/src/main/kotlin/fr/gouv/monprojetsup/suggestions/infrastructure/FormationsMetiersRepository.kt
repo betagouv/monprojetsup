@@ -28,7 +28,7 @@ open class FormationsMetiersDb(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["myCache"])
+    @Cacheable(value = ["repositories"])
     override fun getMetiersOfFormation(formationID: String): List<String> {
         return db.getMetiersOfFormation(formationID)
     }

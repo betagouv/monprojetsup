@@ -3,17 +3,24 @@ package fr.gouv.monprojetsup.data.domain.model.interets;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public record CategorieInterets(
         @NotNull String label,
         @NotNull String emoji,
         List<@NotNull Item> items
 ) {
+    @NotNull
+    public String getId() {
+        return items.stream().flatMap(i -> i.keys.stream()).sorted().collect(Collectors.joining("_"));
+    }
+
     public static List<CategorieInterets> fromMap(@NotNull List<Map<String, @NotNull String>> groupes) {
         List<CategorieInterets> res = new ArrayList<>();
         //Source,id,label,surcategorie,regroupement,emoji
         CategorieInterets curGroupeInterets = null;
         Item curItem = null;
+        //ordre issu de la source
         for (Map<String, String> g : groupes) {
             String id = g.getOrDefault("id", "");
             String surcategorie = g.getOrDefault("surcategorie", "");
@@ -63,5 +70,9 @@ public record CategorieInterets(
             @NotNull String emoji
 
     ) {
+
+        public String getId() {
+            return keys.stream().sorted().collect(Collectors.joining("_"));
+        }
     }
 }

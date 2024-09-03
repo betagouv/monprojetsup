@@ -75,7 +75,10 @@ public record OnisepData(
     }
 
     public @NotNull Edges getEdgesInteretsToInterets() {
-        Map<String, Collection<String>> m = new HashMap<>(interets.expansion());
+        Map<String,Collection<String>> m = interets.itemVersGroupe().entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> List.of(e.getValue()))
+                );
         return new Edges(m, EDGES_INTERETS_INTERETS_WEIGHT, true);
     }
 

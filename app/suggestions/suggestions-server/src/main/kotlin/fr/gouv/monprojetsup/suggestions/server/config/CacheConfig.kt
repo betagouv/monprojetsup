@@ -15,7 +15,13 @@ class CacheConfig {
     fun cacheManager(): CacheManager {
         val cacheManager = SimpleCacheManager()
         cacheManager.setCaches(
-                listOf(ConcurrentMapCache("myCache"))
+            listOf(
+                ConcurrentMapCache("myCache"),
+                //Caches of algo
+                ConcurrentMapCache("pathes"),
+                ConcurrentMapCache("formations"),
+                ConcurrentMapCache("repositories")
+            ),
         )
         return cacheManager
     }

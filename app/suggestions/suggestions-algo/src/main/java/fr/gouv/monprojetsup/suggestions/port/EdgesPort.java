@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.port;
 import fr.gouv.monprojetsup.data.domain.model.Edge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -48,9 +47,7 @@ public abstract class EdgesPort {
         return retrieveEdgesOfType(TYPE_EDGE_LAS_TO_PASS);
     }
 
-    @Cacheable(value = {"myCache"})
-    public List<String> getFilieresFront() {
-        return retrieveEdgesOfType(TYPE_EDGE_FILIERES_GROUPES).stream().map(Edge::dst).distinct().toList();
+    public List<Edge> getEdgesItemssGroupeItems() {
+        return retrieveEdgesOfType(TYPE_EDGE_INTERET_GROUPE_INTERET);
     }
-
 }

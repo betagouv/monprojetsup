@@ -1,38 +1,61 @@
+
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions
+import fr.gouv.monprojetsup.suggestions.data.SuggestionsData
+import fr.gouv.monprojetsup.suggestions.infrastructure.EdgeJPARepository
+import fr.gouv.monprojetsup.suggestions.infrastructure.EdgesRepository
+import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
 import fr.gouv.monprojetsup.suggestions.server.config.SecurityConfig
 import fr.gouv.monprojetsup.suggestions.server.controllers.SuggestionsControllerz
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer
 import fr.gouv.monprojetsup.suggestions.services.GetExplanationsAndExamplesService
 import fr.gouv.monprojetsup.suggestions.services.GetFormationsOfInterestService
 import fr.gouv.monprojetsup.suggestions.services.GetSimpleStatsService
 import fr.gouv.monprojetsup.suggestions.services.GetSuggestionsService
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+
+
+
 @ContextConfiguration(
     classes = [
         SecurityConfig::class,
+        AlgoSuggestions::class,
+        SuggestionsData::class,
         GetExplanationsAndExamplesService::class,
         GetFormationsOfInterestService::class,
         GetSuggestionsService::class,
         GetSimpleStatsService::class,
-        SuggestionServer::class
+        SuggestionServer::class,
+        SuggestionsControllerzTest::class,
+        EdgesRepository::class,
+        EdgeJPARepository::class,
     ]
 )
 @WebMvcTest(controllers = [SuggestionsControllerz::class])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Configuration
 class SuggestionsControllerzTest(
-    @Autowired val mvc: MockMvc,
-    @Autowired val algo: AlgoSuggestions
+    @Autowired val mvc: MockMvc
+
 ) {
 
     @Autowired

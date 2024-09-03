@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.server
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -14,8 +13,14 @@ fun main(args: Array<String>) {
 }
 
 @SpringBootApplication
+@Configuration
+class ApplicationSuggestions{
+}
+
+@Configuration
 @ComponentScan(basePackages = [
     "fr.gouv.monprojetsup.suggestions",
+    "fr.gouv.monprojetsup.suggestions.config",
     "fr.gouv.monprojetsup.data.formation.infrastructure",
     "fr.gouv.monprojetsup.data.metier.infrastructure",
     "fr.gouv.monprojetsup.data.referentiel.infrastructure",
@@ -27,7 +32,7 @@ fun main(args: Array<String>) {
 @EnableJpaRepositories(basePackages = [
     "fr.gouv.monprojetsup.suggestions"]
 )
-class ApplicationSuggestions{
+class JpaConfig {
 }
 
 /**

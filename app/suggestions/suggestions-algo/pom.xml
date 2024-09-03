@@ -37,6 +37,17 @@
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
         </dependency>
+        <!-- JPA Dependency -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fr.gouv.monprojetsup</groupId>
+            <artifactId>etl-updatedb</artifactId>
+            <version>1.4</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -69,10 +80,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <!--
-                                <source>src/test/kotlin</source>
-                                <source>src/test/java</source>
-                                -->
+                                <source>src/main/java</source>
+                                <source>src/main/kotlin</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
