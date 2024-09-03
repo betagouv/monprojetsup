@@ -13,13 +13,7 @@ fun main(args: Array<String>) {
     runApplication<ApplicationSuggestions>(*args)
 }
 
-@Configuration
-class Config {
-
-}
-
 @SpringBootApplication
-@EnableCaching
 @ComponentScan(basePackages = [
     "fr.gouv.monprojetsup.suggestions",
     "fr.gouv.monprojetsup.data.formation.infrastructure",
