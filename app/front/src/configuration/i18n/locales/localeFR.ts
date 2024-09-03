@@ -38,10 +38,11 @@ export const localeFR = {
     FORMATIONS: "Explorer les formations",
     SÉLECTION: "Consulter ma sélection",
   },
-  PAGE_RECHERCHE: {
-    TITRE: "Rechercher une formation ou un métier",
-    EXEMPLES_MÉTIERS: "Exemples de métiers accessibles après cette formation",
-    FORMATIONS_POUR_APPRENDRE_METIER: "formations pour apprendre le métier",
+  CARTE_FORMATION: {
+    POINTS_AFFINITÉ: "points d'affinité avec ton profil",
+    FORMATION_DISPONIBLES: "Formation disponible dans",
+    FORMATION_DISPONIBLES_SUITE: "ville(s)",
+    MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
   },
   PAGE_FORMATION: {
     ONGLET_FORMATION: "La formation",
@@ -305,7 +306,6 @@ export const localeFR = {
     RETOUR: "Retour",
     FORMATION: "Formation",
     MÉTIER: "Métier",
-    TAUX_AFFINITÉ: "Taux d'affinité",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
     PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
@@ -319,6 +319,7 @@ export const localeFR = {
     PAS_INTÉRESSÉ: "Pas intéressé",
   },
   ACCESSIBILITÉ: {
+    FAVORIS: "Favoris",
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
