@@ -1,10 +1,13 @@
 package fr.gouv.monprojetsup.data.domain.model.interets;
 
+import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.onisep.InteretsOnisep;
 import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
-import fr.gouv.monprojetsup.data.domain.Constants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static fr.gouv.monprojetsup.data.domain.model.interets.CategorieInterets.fromMap;
 
@@ -16,7 +19,7 @@ public record Interets(
 
         List<CategorieInterets> groupeInterets,
 
-        Map<String, List<String>> expansion
+        Map<String, String> itemVersGroupe
 ) {
 
     /* we avoid changing labels of groupes already existing */
@@ -41,11 +44,10 @@ public record Interets(
         this.groupeInterets.forEach(
                 g -> g.items().forEach(
                         item -> item.keys().forEach(
-                                i ->
+                                itemKey ->
                                 {
-                                    expansion.computeIfAbsent(i, k -> new ArrayList<>()).addAll(item.keys());
-                                    //maj du libellé
-                                    this.interets.put(Constants.cleanup(i), item.label());
+                                    itemVersGroupe.put(itemKey, g.getId());
+                                    this.interets.put(itemKey, item.label());
                                 }
                         )
                 )

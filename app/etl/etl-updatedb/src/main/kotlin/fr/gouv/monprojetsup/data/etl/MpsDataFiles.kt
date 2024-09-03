@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.domain.Constants
+import fr.gouv.monprojetsup.data.domain.Helpers.isMetier
 import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
@@ -25,7 +26,7 @@ import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_GROUPES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_THEMATIQUES
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTEREST_TO_INTEREST
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_GROUPE_INTERET
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_METIER
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_GENERIC
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_PASS
@@ -435,6 +436,8 @@ class MpsDataFiles(
         val psupKeyToMpsKey = getPsupIdToMpsId()
         val lasToGeneric = getLasToGenericIdMapping()
         val lasToPass = getLasToPasIdMapping()
+
+        result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTERET_GROUPE_INTERET))
         result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
         result.addAll(getEdges(onisepData.edgesFilieresThematiques, TYPE_EDGE_FILIERES_THEMATIQUES))
         result.addAll(getEdges(onisepData.edgesThematiquesMetiers, TYPE_EDGE_THEMATIQUES_METIERS))
@@ -443,7 +446,11 @@ class MpsDataFiles(
         result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_FILIERES_GROUPES))
         result.addAll(getEdges(lasToGeneric, TYPE_EDGE_LAS_TO_GENERIC))
         result.addAll(getEdges(lasToPass, TYPE_EDGE_LAS_TO_PASS))
-        result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTEREST_TO_INTEREST))
+
+        val metiersIds = getMetiersMpsIds()
+        result.removeIf { (src, _, _) -> isMetier(src) && !metiersIds.contains(src) }
+        result.removeIf { (_, dst, _) -> isMetier(dst) && !metiersIds.contains(dst) }
+        
         return result
     }
 

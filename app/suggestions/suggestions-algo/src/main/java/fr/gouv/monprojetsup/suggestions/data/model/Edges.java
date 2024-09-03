@@ -7,6 +7,7 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,21 +71,9 @@ public final class Edges {
     }
 
 
+    @Cacheable(value = {"pathes"})
     public Set<Path> computePathesFrom(String node, int maxDistance) {
-
         return computePathesFromInternal(node, maxDistance);
-        /*
-        Pair<String,Integer> p = Pair.of(node, maxDistance);
-        Set<Path> cached = cachePathesComputation.get(p);
-        if(cached != null) return new HashSet<>(cached);
-
-        Set<Path> result = computePathesFromInternal(node, maxDistance);
-        cachePathesComputation.put(p, result);
-        cachePathesComputationStats.put(p, cachePathesComputationStats.getOrDefault(p, 0) + 1);
-        if(cachePathesComputation.size() >= CACHE_MAX_SIZE) {
-            slimCache();
-        }
-        return new HashSet<>(result);*/
     }
 
 

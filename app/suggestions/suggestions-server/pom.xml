@@ -52,6 +52,11 @@
             <artifactId>json-sanitizer</artifactId>
             <version>1.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -79,6 +84,12 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -86,6 +97,13 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                        <sourceDirs>
+                            <sourceDir>src/main/kotlin</sourceDir>
+                            <sourceDir>src/main/java</sourceDir>
+                            <sourceDir>test/main/kotlin</sourceDir>
+                        </sourceDirs>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -95,12 +113,6 @@
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
-                    <sourceDirs>
-                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                        <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                        <sourceDir>${project.basedir}/test/main/kotlin</sourceDir>
-                        <sourceDir>${project.basedir}/test/main/java</sourceDir>
-                    </sourceDirs>
                 </configuration>
 
                 <dependencies>

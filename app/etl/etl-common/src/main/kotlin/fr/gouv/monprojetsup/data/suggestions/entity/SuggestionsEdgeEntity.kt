@@ -27,7 +27,7 @@ class SuggestionsEdgeEntity {
         const val TYPE_EDGE_FILIERES_GROUPES: Int = 5
         const val TYPE_EDGE_LAS_TO_GENERIC: Int = 6
         const val TYPE_EDGE_LAS_TO_PASS: Int = 7
-        const val TYPE_EDGE_INTEREST_TO_INTEREST: Int = 8
+        const val TYPE_EDGE_INTERET_GROUPE_INTERET: Int = 8
     }
 
     @Id

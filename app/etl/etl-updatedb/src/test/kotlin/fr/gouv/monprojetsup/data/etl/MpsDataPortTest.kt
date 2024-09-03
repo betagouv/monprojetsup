@@ -11,8 +11,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("test")
-class MpsDataPortTest(
-) {
+class MpsDataPortTest {
 
     @Autowired
     lateinit var mpsDataPort: MpsDataPort

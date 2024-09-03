@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.domain.model.*;
 import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.domain.model.stats.StatsContainers;
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity;
 import fr.gouv.monprojetsup.suggestions.port.*;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,7 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatFront.getStatistique;
 
 @Component
@@ -67,12 +67,6 @@ public class SuggestionsData {
     public @NotNull Map<String, String> getDebugLabels() {
         //return an immutable map of labels
         return labelsPort.retrieveDebugLabels();
-    }
-
-    public List<String> getAllRelatedInterests(@NotNull Collection<String> keys) {
-        return keys.stream().flatMap(
-                key -> edgesPort.getOutgoingEdges(key, SuggestionsEdgeEntity.TYPE_EDGE_INTEREST_TO_INTEREST).stream()
-        ).toList();
     }
 
     public @NotNull Map<String, Integer> getFormationsSimilaires(String formationId, int typeBac) {
@@ -233,12 +227,6 @@ public class SuggestionsData {
                 .collect(Collectors.toSet());
     }
 
-    public Map<String,String> getLasToGeneric() {
-        return formationsPort.retrieveFormations().values().stream()
-                .filter(f -> f.las() != null)
-                .collect(Collectors.toMap(Formation::las, Formation::id));
-    }
-
     public List<Edge> edgesInteretsMetiers() {
         return edgesPort.getEdgesInteretsMetiers();
     }
@@ -272,4 +260,8 @@ public class SuggestionsData {
     }
 
     public List<LatLng> getCityCoords(String cityName) { return villesPort.getCoords(cityName); }
+
+    public List<Edge> edgesItemssGroupeItems() {
+        return edgesPort.getEdgesItemssGroupeItems();
+    }
 }

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class AlgoSuggestions {
     public AlgoSuggestions(SuggestionsData data, EdgesPort edgesPort, FormationsPort formationsPort) {
         this.data = data;
         this.edgesPort = edgesPort;
+        this.formationsPort = formationsPort;
         p50NbFormations = p50(
                 formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
         );
@@ -53,6 +55,8 @@ public class AlgoSuggestions {
 
     private final SuggestionsData data;
     private final EdgesPort edgesPort;
+
+    private final FormationsPort formationsPort;
 
     /* les relations entre les différents indices dans les nomenclatures */
     public final Edges edgesKeys = new Edges();
@@ -168,7 +172,7 @@ public class AlgoSuggestions {
         AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, data, this);
 
         Map<String, Affinite> affinites =
-                edgesPort.getFilieresFront().stream()
+                getFormationIds().stream()
                 .collect(Collectors.toMap(
                         fl -> fl,
                         affinityEvaluator::getAffinityEvaluation
@@ -195,6 +199,11 @@ public class AlgoSuggestions {
                 .map(Pair::of)
                 .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite))
                 .toList();
+    }
+
+    @Cacheable("formations")
+    private List<String> getFormationIds() {
+        return formationsPort.retrieveFormations().values().stream().map(Formation::id).toList();
     }
 
 
@@ -351,18 +360,16 @@ public class AlgoSuggestions {
         LOGGER.info("Creating global graph");
         edgesKeys.clear();
 
-        edgesPort.getFilieresFront().forEach(edgesKeys::addNode);
+        getFormationIds().forEach(edgesKeys::addNode);
 
         // intégration des relations étendues aux graphes
         Map<String, Set<String>> metiersVersFormations = data.getMetiersVersFormations();
         val metiersPass = data.getMetiersPass();
-        val lasCorr = data.getLasToGeneric();
+        val lasCorr = data.getLASFormations();
 
         metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasCorr.containsKey(fil) && metiersPass.contains(metier)) {
+            if(lasCorr.contains(fil) && metiersPass.contains(metier)) {
                 edgesKeys.put(metier, fil, true, LASS_TO_PASS_METIERS_PENALTY);
-                //last evolutiion was t extend metiers generation to all metiers of onisep
-                //        and to use this 0.25 coef. That pushes up PCSI on profile #1
             } else {
                 edgesKeys.put(metier, fil, true, 1.0);
             }
@@ -374,6 +381,10 @@ public class AlgoSuggestions {
         edgesKeys.putAll(data.edgesSecteursMetiers());
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, EDGES_METIERS_ASSOCIES_WEIGHT);
 
+
+        //ajout des correspondances de interets
+        edgesKeys.putAll(data.edgesItemssGroupeItems());
+        edgesKeys.addEdgesFromMoreGenericItem(data.edgesItemssGroupeItems(), 1.0);
 
         //ajout des correspondances de groupes
         edgesKeys.putAll(data.edgesFilieresGroupes());
@@ -396,7 +407,7 @@ public class AlgoSuggestions {
         edgesKeys.addEdgesFromMoreGenericItem(data.lasToPass(), LASS_TO_PASS_METIERS_PENALTY);
 
         //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
-        Set<String> filFront = new HashSet<>(edgesPort.getFilieresFront());
+        Set<String> filFront = new HashSet<>(getFormationIds());
         Set<String> toErase = edgesKeys.keys().stream().filter(
                 s -> isFiliere(s) && !filFront.contains(s)
         ).collect(Collectors.toSet());
@@ -438,7 +449,7 @@ public class AlgoSuggestions {
 
         Map<String,List<Path>> result = pathsFromDistances.get(key);
         if(result != null) return result;
-        //noinspection DataFlowIssue
+        @SuppressWarnings("DataFlowIssue")
         @NotNull Map<String,List<Path>> result2 = edgesKeys
                         .computePathesFrom(n, maxDistance)
                         .stream()
