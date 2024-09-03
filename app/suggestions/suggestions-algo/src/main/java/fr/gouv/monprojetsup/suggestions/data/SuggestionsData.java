@@ -121,7 +121,7 @@ public class SuggestionsData {
 
     public @Nullable Double getStatsSpecialite(String formationId, Integer iMtCod) {
         return formationsPort.retrieveFormation(formationId)
-                .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().get(iMtCod))
+                .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, 0))
                 .orElse(null);
     }
 

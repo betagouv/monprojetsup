@@ -32,6 +32,7 @@ record ExplanationTagShort(List<String> ns) {
                             .map(Path::nodes)
                             .filter(l -> l != null && !l.isEmpty())
                             .map(l -> l.get(0))
+                            .distinct()
                             .toList()
             );
         }
