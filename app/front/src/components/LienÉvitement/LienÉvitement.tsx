@@ -1,0 +1,42 @@
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import { i18n } from "@/configuration/i18n/i18n";
+import { type router } from "@/configuration/lib/tanstack-router";
+import { useRouterState } from "@tanstack/react-router";
+
+const LienÉvitement = () => {
+  const routerState = useRouterState();
+  const routeActuelle = routerState.location.pathname as keyof (typeof router)["routesByPath"];
+
+  return (
+    <div className="fr-skiplinks">
+      <nav
+        aria-label="Accès rapide"
+        className="fr-container"
+        role="navigation"
+      >
+        <ul className="fr-skiplinks__list">
+          <li>
+            <LienInterne
+              ariaLabel={i18n.ACCESSIBILITÉ.CONTENU}
+              hash="contenu"
+              href={routeActuelle}
+            >
+              {i18n.ACCESSIBILITÉ.CONTENU}
+            </LienInterne>
+          </li>
+          <li>
+            <LienInterne
+              ariaLabel={i18n.ACCESSIBILITÉ.PIED_PAGE}
+              hash="footer"
+              href={routeActuelle}
+            >
+              {i18n.ACCESSIBILITÉ.PIED_PAGE}
+            </LienInterne>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+};
+
+export default LienÉvitement;

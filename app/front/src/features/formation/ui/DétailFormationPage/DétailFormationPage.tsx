@@ -26,21 +26,23 @@ const DétailFormationPage = () => {
   return (
     <>
       <Head title={formation.nom} />
-      <div className="fr-container grid grid-flow-col bg-[--background-contrast-beige-gris-galet]">
-        <div className="grid gap-8 pr-10">
-          <p className="mb-0 text-center">
-            Suggestions triées par affinité d’après{" "}
-            <LienInterne
-              ariaLabel="tes préférences"
-              href="/profil"
-              variante="simple"
-            >
-              tes préférences ›
-            </LienInterne>
-          </p>
-          <ListeFormations formations={suggestions} />
+      <div className="h-full bg-gradient-to-r from-[--background-contrast-beige-gris-galet] from-50% to-white to-50%">
+        <div className="fr-container grid grid-flow-col">
+          <div className="grid gap-8 pr-10">
+            <p className="mb-0 text-center">
+              Suggestions triées par affinité d’après{" "}
+              <LienInterne
+                ariaLabel="tes préférences"
+                href="/profil"
+                variante="simple"
+              >
+                tes préférences ›
+              </LienInterne>
+            </p>
+            <ListeFormations formations={suggestions} />
+          </div>
+          <FicheFormation formation={formation} />
         </div>
-        <FicheFormation formation={formation} />
       </div>
     </>
   );

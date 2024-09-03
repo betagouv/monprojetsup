@@ -2,6 +2,7 @@ import {
   type ContenuModale,
   type MétiersAccessiblesFicheFormationProps,
 } from "./MétiersAccessiblesFicheFormation.interface";
+import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
 import Bouton from "@/components/Bouton/Bouton";
 import BoutonsFavorisCorbeille from "@/components/BoutonsFavorisCorbeille/BoutonsFavorisCorbeille";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
@@ -11,6 +12,8 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { useState } from "react";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
+  const NOMBRE_MÉTIERS_À_AFFICHER = 10;
+
   const [contenuModale, setContenuModale] = useState<ContenuModale>();
 
   if (métiers.length === 0) return null;
@@ -28,7 +31,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
         </Titre>
       </div>
       <ul className="flex list-none flex-wrap justify-start gap-1 p-0">
-        {métiers.map((métier) => (
+        {métiers.slice(0, NOMBRE_MÉTIERS_À_AFFICHER).map((métier) => (
           <li key={métier.id}>
             <Bouton
               ariaControls={idModale}
@@ -47,6 +50,15 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
             />
           </li>
         ))}
+        {métiers.length > NOMBRE_MÉTIERS_À_AFFICHER && (
+          <li className="px-[6px]">
+            <BoutonSquelette
+              label={`+${(métiers.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}
+              taille="petit"
+              variante="tertiaire"
+            />
+          </li>
+        )}
       </ul>
       <Modale
         boutons={<BoutonsFavorisCorbeille />}

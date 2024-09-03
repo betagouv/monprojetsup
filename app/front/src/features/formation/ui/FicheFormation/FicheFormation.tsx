@@ -74,7 +74,7 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
   };
 
   return (
-    <div className="bg-white pt-12">
+    <div className="bg-white px-20 pt-12">
       <div className="mb-6">
         <Badge
           titre={i18n.COMMUN.FORMATION}
@@ -104,8 +104,15 @@ const FicheFormation = ({ formation }: FicheFormationProps) => {
             />
             <div>
               <p className="mb-2 text-sm">
-                {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_LA_FORMATION} :{" "}
-                <strong>{formation.communes.join(" • ")}</strong>
+                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES} {formation.communes.length}{" "}
+                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES_SUITE}
+                {formation.explications?.communes && formation.explications.communes.length > 0 && (
+                  <>
+                    {" "}
+                    {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES_SUITE_SI_CORRESPONDANCE}{" "}
+                    <strong>{formation.explications?.communes.map((commune) => commune.nom).join(" • ")}</strong>
+                  </>
+                )}
               </p>
               <LienExterne
                 ariaLabel={i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}

@@ -5,6 +5,7 @@ export type LienInterneProps = {
   children: ReactNode;
   href: keyof (typeof router)["routesByPath"];
   ariaLabel: string;
+  hash?: string;
   taille?: "petit" | "grand";
   variante?: "neutre" | "simple";
   icône?: {

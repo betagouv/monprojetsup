@@ -104,7 +104,7 @@ export class formationHttpRepository implements FormationRepository {
       communes: formationHttp.formation.villes,
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
-        nom: métier.nom,
+        nom: `${métier.nom[0].toUpperCase()}${métier.nom.slice(1)}`,
         descriptif: métier.descriptif ?? null,
         liens: métier.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       })),

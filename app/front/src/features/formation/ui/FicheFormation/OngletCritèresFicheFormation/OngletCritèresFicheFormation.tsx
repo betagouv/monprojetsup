@@ -77,7 +77,7 @@ const OngletCritèresFicheFormation = ({
               niveauDeTitre="h2"
               styleDeTitre="text--lg"
             >
-              {i18n.PAGE_FORMATION.MOYENNE_GÉNÉRALE} ({moyenneGénérale.nomBac})
+              {i18n.PAGE_FORMATION.MOYENNE_GÉNÉRALE} {moyenneGénérale.nomBac && `(${moyenneGénérale.nomBac})`}
             </Titre>
           </div>
           <GraphiqueRépartitionMoyenne notes={moyenneGénérale.centiles.map((centile) => centile.note)} />

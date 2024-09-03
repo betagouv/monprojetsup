@@ -50,7 +50,9 @@ export const localeFR = {
     ONGLET_CRITÈRES: "Critères d'admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l'année dernière",
-    COMMUNES_PROPOSANT_LA_FORMATION: "Villes où trouver cette formation",
+    FORMATION_DISPONIBLES: "Formation disponible dans",
+    FORMATION_DISPONIBLES_SUITE: "ville(s)",
+    FORMATION_DISPONIBLES_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
     RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",
@@ -330,5 +332,7 @@ export const localeFR = {
     ONGLETS_FORMATION: "Détails sur la formation",
     VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
     FERMER_MODALE: "Fermer la fenêtre modale",
+    CONTENU: "Contenu",
+    PIED_PAGE: "Pied de page",
   },
 } as const;

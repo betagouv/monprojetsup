@@ -32,7 +32,7 @@ const CarteFormation = ({ nom, métiersAccessibles, affinité, communes, sélect
           <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
         </div>
       </div>
-      {affinité && (
+      {affinité && affinité > 0 ? (
         <div className="grid grid-flow-col justify-start gap-2">
           <span
             aria-hidden="true"
@@ -42,7 +42,7 @@ const CarteFormation = ({ nom, métiersAccessibles, affinité, communes, sélect
             {affinité} {i18n.CARTE_FORMATION.POINTS_AFFINITÉ}
           </p>
         </div>
-      )}
+      ) : null}
       {communes.length > 0 && (
         <div className="grid grid-flow-col justify-start gap-2">
           <span
