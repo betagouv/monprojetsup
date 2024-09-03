@@ -15,7 +15,7 @@ const CarteFormation = ({ nom, métiersAccessibles, affinité, communes, sélect
     <div
       className={`grid max-w-[470px] gap-4 bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSelection()}`}
     >
-      <div className="grid grid-flow-col items-center justify-between">
+      <div className="grid grid-flow-col justify-between">
         <div className="*:mb-0">
           <Titre
             niveauDeTitre="h2"

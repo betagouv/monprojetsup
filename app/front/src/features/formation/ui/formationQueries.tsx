@@ -20,7 +20,6 @@ export const récupérerFormationsQueryOptions = (formationIds: Array<Formation[
 
       return formations ?? [];
     },
-    enabled: true,
   });
 
 export const rechercherFormationsQueryOptions = (recherche?: string) =>
@@ -35,3 +34,12 @@ export const rechercherFormationsQueryOptions = (recherche?: string) =>
     },
     enabled: false,
   });
+
+export const suggérerFormationsQueryOptions = queryOptions({
+  queryKey: ["formations", "suggérer"],
+  queryFn: async () => {
+    const formations = await dépendances.suggérerFormationsUseCase.run();
+
+    return formations ?? [];
+  },
+});

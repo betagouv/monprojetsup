@@ -1,4 +1,7 @@
-import { type RécupérerFormationsRéponseHTTP } from "./formationHttpRepository.interface";
+import {
+  type RécupérerFormationsRéponseHTTP,
+  type RécupérerSuggestionsFormationsRéponseHTTP,
+} from "./formationHttpRepository.interface";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
@@ -38,6 +41,16 @@ export class formationHttpRepository implements FormationRepository {
     const réponse = await this._mpsApiHttpClient.get<RécupérerFormationsRéponseHTTP>(
       `${this._ENDPOINT}/recherche/detaillee`,
       paramètresDeRequête,
+    );
+
+    if (!réponse) return undefined;
+
+    return réponse.formations.map((formation) => this._mapperVersLeDomaine(formation));
+  }
+
+  public async suggérer(): Promise<Formation[] | undefined> {
+    const réponse = await this._mpsApiHttpClient.get<RécupérerSuggestionsFormationsRéponseHTTP>(
+      `${this._ENDPOINT}/suggestions`,
     );
 
     if (!réponse) return undefined;

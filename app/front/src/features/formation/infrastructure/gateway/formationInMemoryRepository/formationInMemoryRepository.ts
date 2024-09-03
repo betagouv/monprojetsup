@@ -142,4 +142,8 @@ export class formationInMemoryRepository implements FormationRepository {
   public async rechercher(recherche: string): Promise<Formation[] | undefined> {
     return this.FORMATIONS.filter((formation) => formation.nom.toLowerCase().includes(recherche.toLowerCase()));
   }
+
+  public async suggérer(): Promise<Formation[] | undefined> {
+    return this.FORMATIONS.slice(0, 5);
+  }
 }
