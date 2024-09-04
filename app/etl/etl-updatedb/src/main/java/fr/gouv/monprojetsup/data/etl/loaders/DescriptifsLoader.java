@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 
+import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToFrontId;
+
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
             OnisepData onisepData,
@@ -117,6 +120,9 @@ public class DescriptifsLoader {
             String flfrcod = line.getOrDefault(keyFlFr, "");
             if (flfrcod.isBlank()) {
                 throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
+            }
+            if(flfrcod.equals(gFlCodToFrontId(LAS_CONSTANT))) {
+                continue;
             }
 
             String frcod = line.getOrDefault(keyTypeFor, "");

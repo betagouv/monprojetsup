@@ -21,7 +21,14 @@ public record FormationIdeoDuSup(
         List<String> sourcesNumeriques,
         @NotNull List<String> metiers,//preserved in ideo style MET.xxxx
         @NotNull List<String> motsCles,
-        @NotNull List<String> libellesSousdomainesWeb
+        @NotNull List<String> libellesSousdomainesWeb,
+        boolean estIEP,
+        boolean estEcoleIngenieur,
+        boolean estEcoleCommerce,
+        boolean estEcoleArchitecture,
+        boolean estEcoleArt,
+        boolean estConservationRestauration,
+        boolean estDMA
 
 ) {
 
@@ -39,7 +46,14 @@ public record FormationIdeoDuSup(
                         ? new ArrayList<>()
                         : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::id).toList(),
                 f.getMotsCles(),
-                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::libelle).toList()
+                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::libelle).toList(),
+                f.estIEP(),
+                f.estEcoleIngenieur(),
+                f.estEcoleCommerce(),
+                f.estEcoleArchitecture(),
+                f.estEcoleArt(),
+                f.estDiplomeConservationRestauration(),
+                f.estDMA()
         );
     }
 
@@ -55,7 +69,14 @@ public record FormationIdeoDuSup(
                 null,
                 new ArrayList<>(),
                 f.getMotsCles(),
-                List.of(f.domainesousDomaine())
+                List.of(f.domainesousDomaine()),
+                f.estIEP(),
+                f.estEcoleIngenieur(),
+                f.estEcoleCommerce(),
+                f.estEcoleArchitecture(),
+                f.estEcoleArt(),
+                f.estConservationRestauration(),
+                f.estDMA()
         );
     }
 
@@ -67,4 +88,5 @@ public record FormationIdeoDuSup(
         }
         return result;
     }
+
 }

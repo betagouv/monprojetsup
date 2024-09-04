@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep.formations;
 
 import com.google.gson.annotations.SerializedName;
+import fr.gouv.monprojetsup.data.domain.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -92,5 +93,35 @@ public record FormationIdeoSimple(
 
     public boolean aUnIdentifiantIdeo() {
         return identifiant() != null;
+    }
+
+    public boolean estIEP() {
+        return sigleFormation != null && sigleFormation.equals("IEP");
+    }
+
+    public boolean estEcoleIngenieur() {
+        return  libelleTypeFormation.contains("diplôme d'ingénieur")
+                || libelleFormationPrincipal.contains("diplôme d'ingénieur");
+    }
+
+    public boolean estEcoleCommerce() {
+        return libelleTypeFormation.contains("école de commerce");
+    }
+
+    public boolean estEcoleArchitecture() {
+        return libelleTypeFormation.contains("école d'architecture");
+    }
+
+    public boolean estEcoleArt() {
+        return libelleTypeFormation.contains("diplôme national d'art")
+                || libelleFormationPrincipal.contains("DNA");
+    }
+
+    public boolean estConservationRestauration() {
+        return codeNsf.equals(Integer.toString(Constants.CODE_NSF_CONSERVATION_RESTAURATION));
+    }
+
+    public boolean estDMA() {
+        return sigleTypeFormation.equals("DMA");
     }
 }

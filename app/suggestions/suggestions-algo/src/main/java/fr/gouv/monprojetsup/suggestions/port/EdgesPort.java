@@ -31,7 +31,7 @@ public abstract class EdgesPort {
     public List<Edge> getEdgesMetiersAssocies() { return retrieveEdgesOfType(TYPE_EDGE_METIERS_ASSOCIES); }
 
     public List<Edge> getEdgesFilieresGroupes() {
-        return retrieveEdgesOfType(TYPE_EDGE_FILIERES_GROUPES);
+        return retrieveEdgesOfType(TYPE_EDGE_PSUP_KEY_TO_MPS_KEY);
     }
 
     public List<Edge> getEdgesLasToGeneric() {

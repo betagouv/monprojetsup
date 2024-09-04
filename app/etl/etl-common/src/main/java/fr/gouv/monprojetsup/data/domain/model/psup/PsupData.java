@@ -338,6 +338,12 @@ public record PsupData(
 
         flToGrp.keySet().remove("fl250001");//on laisse louvre tel quel
 
+        //Formations d'architecture, du paysage et du patrimoine
+        String archi = "fl250";
+        String archiInge = "fl251";
+        flToGrp.put(archi, archi);//Architecture
+        flToGrp.put(archi, archiInge);//Bicursus Architecture Ingénieur
+
         /* ajout des filières dans leurs propres regroupements */
         val filieresWhichAreGroupsAsWell = flToGrp.values()
                 .stream()
@@ -356,6 +362,7 @@ public record PsupData(
     @NotNull
     public Map<String,@NotNull Set<@NotNull String>> getMpsKeyToPsupKeys() {
         val mpsKeyToPsupKeys = new HashMap<String,@NotNull Set<@NotNull String>>();
+
         getPsupKeyToMpsKey().forEach((s, s2) -> mpsKeyToPsupKeys.computeIfAbsent(s2, z -> new HashSet<>() ).add(s));
         return mpsKeyToPsupKeys;
     }
