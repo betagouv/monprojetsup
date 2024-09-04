@@ -141,7 +141,7 @@ class APISuggestionProfilDTOComponentTest {
                 baccalaureat = "Générale",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("Paris"),
+                preferencesGeographiques = listOf("75015"),
                 specialites =
                     listOf(
                         "Sciences de la vie et de la Terre",
@@ -204,7 +204,7 @@ class APISuggestionProfilDTOComponentTest {
                 baccalaureat = "Générale",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("Paris", "Marseille"),
+                preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
                         "Sciences de la vie et de la Terre",
@@ -252,7 +252,7 @@ class APISuggestionProfilDTOComponentTest {
                 baccalaureat = "STHR",
                 duree = "court",
                 alternance = "C",
-                preferencesGeographiques = listOf("Lyon", "Caen"),
+                preferencesGeographiques = listOf("69380", "14118"),
                 specialites =
                     listOf(
                         "Sciences de la gestion et numérique (SGN)",
@@ -336,7 +336,7 @@ class APISuggestionProfilDTOComponentTest {
                 baccalaureat = "PA",
                 duree = "",
                 alternance = "A",
-                preferencesGeographiques = listOf("Lyon", "Paris"),
+                preferencesGeographiques = listOf("69380", "75015"),
                 specialites = listOf("Culture et sciences théâtrale (CST)"),
                 interets = emptyList(),
                 moyenneGenerale = "4.9",
@@ -380,7 +380,7 @@ class APISuggestionProfilDTOComponentTest {
                 baccalaureat = "",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("Paris", "Marseille"),
+                preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
                         "Sciences de la vie et de la Terre",
