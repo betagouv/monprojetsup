@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.data.domain.model.formations;
 
+import fr.gouv.monprojetsup.data.domain.model.onisep.SousDomaineWeb;
 import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FicheFormationIdeo;
 import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FormationIdeoSimple;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ public record FormationIdeoDuSup(
         //FormationAvecMetier.PoursuitesEtudes poursuitesEtudes,
         List<String> sourcesNumeriques,
         @NotNull List<String> metiers,//preserved in ideo style MET.xxxx
-        @NotNull List<String> motsCles
+        @NotNull List<String> motsCles,
+        @NotNull List<String> libellesSousdomainesWeb
 
 ) {
 
@@ -35,7 +38,8 @@ public record FormationIdeoDuSup(
                 f.metiers_formation() == null
                         ? new ArrayList<>()
                         : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::id).toList(),
-                f.getMotsCles()
+                f.getMotsCles(),
+                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::libelle).toList()
         );
     }
 
@@ -50,8 +54,17 @@ public record FormationIdeoDuSup(
                 null,
                 null,
                 new ArrayList<>(),
-                f.getMotsCles()
+                f.getMotsCles(),
+                List.of(f.domainesousDomaine())
         );
     }
 
+    public List<String> getSousdomainesWebMpsIds(List<SousDomaineWeb> sousDomainesWeb) {
+        List<String> result = new ArrayList<>();
+        for (String libelleDomaine : libellesSousdomainesWeb) {
+            val clesDomaine = SousDomaineWeb.extractDomaines(libelleDomaine, sousDomainesWeb);
+            result.addAll(clesDomaine.stream().map(SousDomaineWeb::mpsId).toList());
+        }
+        return result;
+    }
 }

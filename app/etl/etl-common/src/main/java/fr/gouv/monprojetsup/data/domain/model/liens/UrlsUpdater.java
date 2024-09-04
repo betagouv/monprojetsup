@@ -39,7 +39,7 @@ public class UrlsUpdater {
             if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
                 addUrl(metier.ideo(), metier.urlRome(), metier.libRome(), urls);
             }
-            metier.urls().forEach(url -> addUrl(metier.idMps(), url, "Voir aussi", urls));
+            metier.urls().forEach(url -> addUrl(metier.idMps(), url.valeur(), url.commentaire(), urls));
         });
 
         for (val entry : links.entrySet()) {

@@ -1,8 +1,10 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep.metiers;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.onisep.DomainePro;
+import fr.gouv.monprojetsup.data.domain.model.onisep.SousDomaineWeb;
+import jakarta.xml.bind.annotation.XmlElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -32,12 +34,15 @@ public  record MetierIdeoSimple(
             String code_rome,
             String libelle_rome,
             String lien_rome,
-            @SerializedName("domainesous-domaine")
+            @SerializedName("domainesous-domaine")//gson
+            @JsonProperty("domainesous-domaine")//jackson
+            @XmlElement(name = "domainesous-domaine")//jaxb
             String domaines
     ) {
-        public Set<String> getDomaines(List<DomainePro> domainesPro) {
+        public Set<SousDomaineWeb> getDomaines(List<SousDomaineWeb> domainesPro) {
             if (domaines == null) return Collections.emptySet();
-            return DomainePro.extractDomaines(domaines, domainesPro);
+            return SousDomaineWeb
+                    .extractDomaines(domaines, domainesPro);
         }
 
         public @NotNull String idMps() {

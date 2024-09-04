@@ -20,8 +20,8 @@ class SuggestionsEdgeEntity {
 
     companion object {
         const val TYPE_EDGE_INTERET_METIER: Int = 0
-        const val TYPE_EDGE_FILIERES_THEMATIQUES: Int = 1
-        const val TYPE_EDGE_THEMATIQUES_METIERS: Int = 2
+        const val TYPE_EDGE_FORMATIONS_DOMAINES: Int = 1
+        const val TYPE_EDGE_DOMAINES_METIERS: Int = 2
         const val TYPE_EDGE_SECTEURS_METIERS: Int = 3
         const val TYPE_EDGE_METIERS_ASSOCIES: Int = 4
         const val TYPE_EDGE_FILIERES_GROUPES: Int = 5

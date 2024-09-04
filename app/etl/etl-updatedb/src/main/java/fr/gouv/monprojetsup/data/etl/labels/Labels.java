@@ -84,8 +84,8 @@ public class Labels {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData));
         result.putAll(getMetiersLabels(oniData));
-        oniData.interets().interets().forEach((key, interet) -> result.put(cleanup(key), getLibelleFront(cleanup(key), interet)));
-        oniData.thematiques().thematiques().forEach((key, thematiques) -> result.put(cleanup(key), getLibelleFront(cleanup(key), thematiques)));
+        result.putAll(oniData.interets().getLabels());
+        result.putAll(oniData.getDomainesLabels());
         return result;
     }
 

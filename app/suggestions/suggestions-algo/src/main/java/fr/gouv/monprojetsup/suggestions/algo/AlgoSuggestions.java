@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.domain.Helpers;
-import fr.gouv.monprojetsup.data.domain.model.Formation;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -9,8 +8,6 @@ import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
-import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
-import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -32,8 +29,6 @@ import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
-import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
-import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
 @Component
 public class AlgoSuggestions {
@@ -41,22 +36,13 @@ public class AlgoSuggestions {
     public static final Logger LOGGER = Logger.getLogger(AlgoSuggestions.class.getName());
 
     @Autowired
-    public AlgoSuggestions(SuggestionsData data, EdgesPort edgesPort, FormationsPort formationsPort) {
+    public AlgoSuggestions(SuggestionsData data) {
         this.data = data;
-        this.edgesPort = edgesPort;
-        this.formationsPort = formationsPort;
-        p50NbFormations = p50(
-                formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
-        );
-        p75Capacity = p75(
-                formationsPort.retrieveFormations().values().stream().map(Formation::capacite).toList()
-        );
+        p50NbFormations = data.p50NbFormations();
+        p75Capacity = data.p75Capacity();
     }
 
     private final SuggestionsData data;
-    private final EdgesPort edgesPort;
-
-    private final FormationsPort formationsPort;
 
     /* les relations entre les différents indices dans les nomenclatures */
     public final Edges edgesKeys = new Edges();
@@ -68,11 +54,12 @@ public class AlgoSuggestions {
     private static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
 
     private static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
+    private static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
     private static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.75;
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     private static final double MAX_AFFINITY_PERCENT = 0.90;
     //utilisé par suggestions
-    public static final Map<String, Integer> codesSpecialites = new HashMap<>();
+    protected static final Map<String, Integer> codesSpecialites = new HashMap<>();
     public final int p50NbFormations;
     public final int p75Capacity;
 
@@ -83,17 +70,8 @@ public class AlgoSuggestions {
 
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    public static double getSmallCapacityScore(String fl) {
+    public static double getSmallCapacityScore() {
         return 1.0;
-        /*
-
-        //int nbFormations = ServerData.getNbFormations(fl);
-        int capacity = ServerData.getCapacity(fl);
-
-        double capacityScore = (capacity <= p90Capacity) ? 1.0 : (double) p90Capacity / capacity;
-        //double nbFormationsScore = (nbFormations >= p90NbFormations) ? 1.0 : (double) nbFormations / p90NbFormations;
-        return capacityScore;// * nbFormationsScore;*/
-
     }
 
 
@@ -203,7 +181,7 @@ public class AlgoSuggestions {
 
     @Cacheable("formations")
     private List<String> getFormationIds() {
-        return formationsPort.retrieveFormations().values().stream().map(Formation::id).toList();
+        return data.getFormationIds();
     }
 
 
@@ -373,10 +351,10 @@ public class AlgoSuggestions {
             }
         }));
 
-        edgesKeys.putAll(data.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT);
         edgesKeys.putAll(data.edgesFilieresThematiques());
         edgesKeys.putAll(data.edgesThematiquesMetiers());
-        edgesKeys.putAll(data.edgesSecteursMetiers()); //faible poids
+        edgesKeys.putAll(data.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT); //faible poids
+        edgesKeys.putAll(data.edgesSecteursMetiers(), true, EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, EDGES_METIERS_ASSOCIES_WEIGHT);
 
 

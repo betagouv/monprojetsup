@@ -1,6 +1,9 @@
 package fr.gouv.monprojetsup.data.etl
 
+import com.opencsv.CSVWriterBuilder
 import fr.gouv.monprojetsup.data.domain.Constants
+import fr.gouv.monprojetsup.data.domain.Helpers.isFiliere
+import fr.gouv.monprojetsup.data.domain.Helpers.isMetier
 import fr.gouv.monprojetsup.data.domain.model.*
 import fr.gouv.monprojetsup.data.domain.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
@@ -12,10 +15,8 @@ import fr.gouv.monprojetsup.data.domain.model.formations.Formation
 import fr.gouv.monprojetsup.data.domain.model.graph.Edges
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets
 import fr.gouv.monprojetsup.data.domain.model.liens.UrlsUpdater
-import fr.gouv.monprojetsup.data.domain.model.onisep.InteretsOnisep
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
-import fr.gouv.monprojetsup.data.domain.model.rome.RomeData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*
@@ -23,19 +24,20 @@ import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_DOMAINES_METIERS
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_GROUPES
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FILIERES_THEMATIQUES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATIONS_DOMAINES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_GROUPE_INTERET
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_METIER
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_GENERIC
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_PASS
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_ASSOCIES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_SECTEURS_METIERS
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_THEMATIQUES_METIERS
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
+import java.io.File
 import java.util.*
 import java.util.logging.Logger
 
@@ -47,7 +49,6 @@ class MpsDataFiles(
 
     private lateinit var psupData: PsupData
     private lateinit var  onisepData: OnisepData
-    private lateinit var  romeData: RomeData
     private lateinit var  statistiques: PsupStatistiques
 
     private var descriptifs : DescriptifsFormationsMetiers? = null
@@ -65,13 +66,8 @@ class MpsDataFiles(
         )
         statistiques = psupData.stats
 
-        logger.info("Chargement des données Onisep")
+        logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
-
-        logger.info("Chargement des données ROME")
-        romeData = RomeDataLoader.load(dataSources)
-        logger.info("Insertion des données ROME dans les données Onisep")
-        onisepData.insertRomeData(romeData.centresInterest) //before updateLabels
 
         statistiques.restrictToBacs(getBacs().map { it.key }.toSet())
 
@@ -101,10 +97,64 @@ class MpsDataFiles(
     }
 
     override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
-        val psupToIdeo = onisepData.filieresToFormationsOnisep.associate { it.gFlCod to it.ideoIds }
+        val psupToIdeo = onisepData.filieresToFormationsOnisep.associate { it.gFlCod to it.ideoFormationsIds }
         return psupData.mpsKeyToPsupKeys
             .entries
             .associate { it.key to it.value.flatMap { psupKey -> psupToIdeo[psupKey].orEmpty() } }
+    }
+
+    override fun exportDiagnostic() {
+        val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
+
+        val outputFile = "resumesManquants.csv"
+        val file = File(outputFile)
+        //create a stream to write the diagnostic
+        file.bufferedWriter().use { writer ->
+            val csvWriter = CSVWriterBuilder(writer).build() // will produce a CSVWriter
+            val headers = listOf(
+                "code filiere",
+                "intitulé web",
+                "code type formation",
+                "intitule type formation,",
+                "url onisep",
+                "URL corrections",
+                "url psup",
+                "resume type formation",
+                "resume filiere",
+                "Liens supplémentaires",
+                "Retours à Onisep"
+            )
+            csvWriter.writeNext(headers.toTypedArray())
+            val codesFilieres = mutableSetOf<String>()
+            for (line in lines) {
+                val nextLine = mutableListOf<String>()
+                codesFilieres.add(line["code filiere"].orEmpty())
+                for (header in headers) {
+                    nextLine.add(line[header].orEmpty())
+                }
+                csvWriter.writeNext(nextLine.toTypedArray())
+            }
+            val missingCodes = getFormationsMpsIds().filter { it !in codesFilieres }
+            val labels = getLabels()
+            val liens = getLiens()
+            for (code in missingCodes) {
+                val lienOnisep = liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct().joinToString("\n")
+                val lienPsup = liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct().joinToString("\n")
+                val nextLine = listOf(
+                    code,
+                    labels[code].orEmpty(),
+                    "",
+                    "",
+                    lienOnisep,
+                    "",//url corrections
+                    lienPsup,//url psup
+                    "",//resume type formation
+                    "",//resume filiere
+                    liens[code].orEmpty().joinToString("\n") { it.uri },
+                    "")
+                csvWriter.writeNext(nextLine.toTypedArray())
+            }
+        }
     }
 
     override fun getDescriptifs(): DescriptifsFormationsMetiers {
@@ -460,8 +510,8 @@ class MpsDataFiles(
 
         result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTERET_GROUPE_INTERET))
         result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
-        result.addAll(getEdges(onisepData.edgesFilieresThematiques, TYPE_EDGE_FILIERES_THEMATIQUES))
-        result.addAll(getEdges(onisepData.edgesThematiquesMetiers, TYPE_EDGE_THEMATIQUES_METIERS))
+        result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_DOMAINES))
+        result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
         result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
         result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
         result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_FILIERES_GROUPES))
@@ -473,6 +523,13 @@ class MpsDataFiles(
         result.removeIf { (_, dst, _) -> isMetier(dst) && !metiersIds.contains(dst) }
         
         return result
+    }
+
+    private fun getEdges(
+        m: List<Pair<String, String>>,
+        t: Int
+    ): Collection<Triple<String, String, Int>> {
+        return m.map { (src, dst) -> Triple(src, dst, t) }
     }
 
     override fun getMatieres(): List<Matiere> {
@@ -560,7 +617,7 @@ class MpsDataFiles(
 
         var groupe = ""
         var emojig: String? = ""
-        val listStringStringMap = ThematiquesLoader.loadThematiquesMps(dataSources)
+        val listStringStringMap = DomainesMpsLoader.loadDomainesMps(dataSources)
         for (stringStringMap in listStringStringMap)
         {
             val id = stringStringMap["id"].orEmpty()
@@ -572,13 +629,13 @@ class MpsDataFiles(
                 if (emojiGroupe.isNotEmpty()) {
                     emojig = emojiGroupe
                 } else {
-                    throw java.lang.RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
+                    throw java.lang.RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.DOMAINES_MPS_PATH)
                 }
             }
             val emoji = stringStringMap.getOrDefault("Emojis", "").trim { it <= ' ' }
             val label = stringStringMap.getOrDefault("label", "").trim { it <= ' ' }
-            if (groupe.isEmpty()) throw java.lang.RuntimeException("Groupe vide dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
-            if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.THEMATIQUES_REGROUPEMENTS_PATH)
+            if (groupe.isEmpty()) throw java.lang.RuntimeException("Groupe vide dans " + DataSources.DOMAINES_MPS_PATH)
+            if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.DOMAINES_MPS_PATH)
             var cat = groupes[groupe]
             if (cat == null) {
                 cat =
@@ -603,15 +660,7 @@ class MpsDataFiles(
 
 
     override fun getInterets() : Interets {
-        val interetsOnisep = Serialisation.fromJsonFile(
-            dataSources.getSourceDataFilePath(
-                DataSources.INTERETS_PATH
-            ),
-            InteretsOnisep::class.java
-        )
-        val groupes = InteretsLoader.loadInterets(dataSources)
-
-        return Interets(interetsOnisep, groupes)
+        return onisepData.interets
 
     }
 

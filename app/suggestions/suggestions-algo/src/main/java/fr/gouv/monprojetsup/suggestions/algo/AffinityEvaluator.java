@@ -272,7 +272,7 @@ public class AffinityEvaluator {
         double moyGenMultiplier = getMultiplier(Config.BONUS_MOY_GEN, scores.getOrDefault(Config.BONUS_MOY_GEN, 1.0));
         double bacMultiplier = getMultiplier(BONUS_TYPE_BAC, scores.getOrDefault(Config.BONUS_TYPE_BAC, 0.0));
         double bigCapacityScore = getBigCapacityScore(fl);
-        double smallCapacityScore = AlgoSuggestions.getSmallCapacityScore(fl);
+        double smallCapacityScore = AlgoSuggestions.getSmallCapacityScore();
 
         EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
         quotas.put(Affinite.SuggestionDiversityQuota.NOT_SMALL, bigCapacityScore);

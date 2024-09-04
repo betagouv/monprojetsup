@@ -19,6 +19,8 @@ import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatFront.getStatistique;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
+import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
 @Component
 public class SuggestionsData {
@@ -263,5 +265,21 @@ public class SuggestionsData {
 
     public List<Edge> edgesItemssGroupeItems() {
         return edgesPort.getEdgesItemssGroupeItems();
+    }
+
+    public List<String> getFormationIds() {
+        return formationsPort.retrieveFormations().values().stream().map(Formation::id).toList();
+    }
+
+    public int p75Capacity() {
+        return p75(
+                formationsPort.retrieveFormations().values().stream().map(Formation::capacite).toList()
+        );
+    }
+
+    public int p50NbFormations() {
+        return p50(
+                formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
+        );
     }
 }
