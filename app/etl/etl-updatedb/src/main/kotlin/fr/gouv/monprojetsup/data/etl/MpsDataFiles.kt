@@ -394,7 +394,7 @@ class MpsDataFiles(
             val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
             result.retainAll(groupesWithAtLeastOneFormation)
 
-            result.removeAll(FORMATION_PSUP_EXCLUES);
+            result.removeAll(FORMATION_PSUP_EXCLUES)
 
             val sorted = result.toList().sorted()
             formationsMpsIds =  sorted

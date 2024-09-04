@@ -79,8 +79,8 @@ public class SuggestionsData {
     }
 
     @Cacheable("getVoeuxCoords")
-    public List<Pair<String, LatLng>> getVoeuxCoords(String id) {
-        return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(null);
+    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String id) {
+        return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(List.of());
     }
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {

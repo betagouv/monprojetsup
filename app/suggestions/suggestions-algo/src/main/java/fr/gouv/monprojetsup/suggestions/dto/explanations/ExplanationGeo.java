@@ -18,9 +18,9 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
      * @return the minimal distance of the city to a etablissement providing this filiere
      */
     public static @NotNull List<ExplanationGeo> getGeoExplanations(
-            String cityName,
-            List<LatLng> cityCoords,
-            List<Pair<String, LatLng>> coords) {
+            @NotNull String cityName,
+            @NotNull List<LatLng> cityCoords,
+            @NotNull List<Pair<String, LatLng>> coords) {
         if (cityCoords == null || cityCoords.isEmpty())
             return Collections.emptyList();
         if (coords.isEmpty())
@@ -59,11 +59,11 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
     }
 
     public static @NotNull List<ExplanationGeo> getGeoExplanations(
-            Collection<String> flKeys,
+            @NotNull Collection<@NotNull String> flKeys,
             String cityName,
-            List<LatLng> cityCoords,
+            @NotNull List<@NotNull LatLng> cityCoords,
             int maxResultsPerNode,
-            List<Pair<String,LatLng>> coords
+            @NotNull List<@NotNull Pair<@NotNull String,@NotNull LatLng>> coords
     ) {
         return
                 flKeys.stream().flatMap(n -> getGeoExplanations(cityName, cityCoords, coords)
