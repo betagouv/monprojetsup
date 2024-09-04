@@ -44,7 +44,7 @@ public final class Edges {
     }
 
 
-    @Cacheable(value = {"pathes"})
+    @Cacheable("pathes")
     public Set<Path> computePathesFrom(String node, int maxDistance) {
         return computePathesFromInternal(node, maxDistance);
     }

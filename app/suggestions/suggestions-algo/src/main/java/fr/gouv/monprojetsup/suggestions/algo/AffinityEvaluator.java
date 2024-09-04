@@ -8,13 +8,13 @@ import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.Explanation;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -420,13 +420,7 @@ public class AffinityEvaluator {
         if (pf.geo_pref() == null || pf.geo_pref().isEmpty()) return bonus;
 
         for (String cityName : pf.geo_pref()) {
-            @NotNull val result = ExplanationGeo.getGeoExplanations(
-                    fl,
-                    cityName,
-                    data.getCityCoords(cityName),
-                    data.getVoeuxCoords(fl),
-                    CachedGeoExplanations.distanceCaches
-            );
+            val result = getGeoExplanations(fl, cityName);
             int distanceKm = result.stream().mapToInt(ExplanationGeo::distance).min().orElse(-1);
             if (distanceKm >= 0) {
                 bonus += 1.0 / (1.0 + Math.max(10.0, distanceKm));
@@ -441,6 +435,14 @@ public class AffinityEvaluator {
         return bonus;
     }
 
+    @Cacheable("getGeoExplanations")//naive costly implementation, shall be cached
+    private List<ExplanationGeo> getGeoExplanations(String fl, String cityName) {
+        return ExplanationGeo.getGeoExplanations(
+                cityName,
+                data.getCityCoords(cityName),
+                data.getVoeuxCoords(fl)
+        );
+    }
 
     private double getBonusDuree(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;

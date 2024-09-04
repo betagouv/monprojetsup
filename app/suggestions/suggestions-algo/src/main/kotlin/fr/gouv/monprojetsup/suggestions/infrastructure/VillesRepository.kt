@@ -19,7 +19,7 @@ open class VillesRepository(
 {
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
+    @Cacheable("getCoords")
     override fun getCoords(id: String): List<LatLng> {
         return repo.findById(id).map { it.coords }.orElse(listOf())
     }

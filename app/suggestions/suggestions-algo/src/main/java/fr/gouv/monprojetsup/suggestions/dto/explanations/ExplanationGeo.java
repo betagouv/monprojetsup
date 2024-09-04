@@ -1,8 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 import fr.gouv.monprojetsup.data.domain.model.LatLng;
-import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
-import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,30 +14,21 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
     /**
      * computes minimal distance between a city and a filiere
      *
-     * @param flKey             the node, either "fl123" or "fr1223"
      * @param cityName          the city name
      * @return the minimal distance of the city to a etablissement providing this filiere
      */
     public static @NotNull List<ExplanationGeo> getGeoExplanations(
-            String flKey,
             String cityName,
             List<LatLng> cityCoords,
-            List<Pair<String, LatLng>> coords,
-            ConcurrentBoundedMapQueue<Pair<String, String>,
-                    List<ExplanationGeo>> distanceCaches) {
-        Pair<String,String> p = Pair.of(flKey, cityName);
-        val l = distanceCaches.get(p);
-        if( l != null) return l;
-
+            List<Pair<String, LatLng>> coords) {
         if (cityCoords == null || cityCoords.isEmpty())
             return Collections.emptyList();
-
         if (coords.isEmpty())
             return Collections.emptyList();
         List<Pair<Integer, String>> results = getDistanceKm(cityCoords, coords);
         if(results == null)
             return Collections.emptyList();
-        List<ExplanationGeo> e =
+        return
                 results.stream().map(result -> new ExplanationGeo(
                                         result.getLeft(),
                                         cityName,
@@ -48,8 +37,6 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
                         )
                         .sorted(Comparator.comparing(ExplanationGeo::distance))
                         .toList();
-        distanceCaches.put(p, e);
-        return e;
     }
 
     public static @Nullable List<Pair<Integer,String>> getDistanceKm(List<LatLng> cities, @NotNull List<Pair<String, LatLng>> fors) {
@@ -76,11 +63,10 @@ public record ExplanationGeo(int distance, String city, @Nullable String form) {
             String cityName,
             List<LatLng> cityCoords,
             int maxResultsPerNode,
-            List<Pair<String,LatLng>> coords,
-            ConcurrentBoundedMapQueue<Pair<String, String>, List<ExplanationGeo>> distanceCaches
+            List<Pair<String,LatLng>> coords
     ) {
         return
-                flKeys.stream().flatMap(n -> getGeoExplanations(n, cityName, cityCoords, coords, distanceCaches)
+                flKeys.stream().flatMap(n -> getGeoExplanations(cityName, cityCoords, coords)
                                 .stream().limit(maxResultsPerNode))
                         .filter(Objects::nonNull)
                         .sorted(Comparator.comparing(ExplanationGeo::distance))

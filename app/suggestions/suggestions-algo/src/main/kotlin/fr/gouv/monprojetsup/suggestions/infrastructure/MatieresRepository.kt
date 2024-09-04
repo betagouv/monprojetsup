@@ -25,7 +25,7 @@ open class MatieresRepository(
     : MatieresPort
 {
     @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
+    @Cacheable("retrieveSpecialites")
     override fun retrieveSpecialites(): List<Matiere> {
         return repo.findAll().filter { m -> m.estSpecialite }.map { it.toMatiere() }
     }

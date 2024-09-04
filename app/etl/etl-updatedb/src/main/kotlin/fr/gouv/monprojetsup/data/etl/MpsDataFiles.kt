@@ -283,10 +283,6 @@ class MpsDataFiles(
                 if (gpsCoords.isNotEmpty()) {
                     cities.add(Ville(name, gpsCoords))
                     coords.forEach { c: Coords ->
-                        /*
-                        cities.add(
-                            Ville(c.zip_code(), gpsCoords)
-                        )*/
                         if(c.insee_code != null) {
                             cities.add(
                                 Ville(
