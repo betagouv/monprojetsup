@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
+import { Route as AuthFormationsExplorerIndexImport } from './routes/_auth/formations/explorer/index'
 import { Route as AuthFormationsFormationIdIndexImport } from './routes/_auth/formations/$formationId/index'
 
 // Create Virtual Routes
@@ -73,6 +74,12 @@ const AuthEleveInscriptionRoute = AuthEleveInscriptionImport.update({
   id: '/_inscription',
   getParentRoute: () => AuthEleveRoute,
 } as any)
+
+const AuthFormationsExplorerIndexRoute =
+  AuthFormationsExplorerIndexImport.update({
+    path: '/formations/explorer/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 
 const AuthFormationsFormationIdIndexRoute =
   AuthFormationsFormationIdIndexImport.update({
@@ -210,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFormationsFormationIdIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/formations/explorer/': {
+      id: '/_auth/formations/explorer/'
+      path: '/formations/explorer'
+      fullPath: '/formations/explorer'
+      preLoaderRoute: typeof AuthFormationsExplorerIndexImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/eleve/_inscription/inscription/confirmation/': {
       id: '/_auth/eleve/_inscription/inscription/confirmation/'
       path: '/inscription/confirmation'
@@ -288,6 +302,7 @@ export const routeTree = rootRoute.addChildren({
     }),
     AuthProfilIndexLazyRoute,
     AuthFormationsFormationIdIndexRoute,
+    AuthFormationsExplorerIndexRoute,
   }),
 })
 
@@ -308,7 +323,8 @@ export const routeTree = rootRoute.addChildren({
         "/_auth/",
         "/_auth/eleve",
         "/_auth/profil/",
-        "/_auth/formations/$formationId/"
+        "/_auth/formations/$formationId/",
+        "/_auth/formations/explorer/"
       ]
     },
     "/_auth/": {
@@ -342,6 +358,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_auth/formations/$formationId/": {
       "filePath": "_auth/formations/$formationId/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/formations/explorer/": {
+      "filePath": "_auth/formations/explorer/index.tsx",
       "parent": "/_auth"
     },
     "/_auth/eleve/_inscription/inscription/confirmation/": {

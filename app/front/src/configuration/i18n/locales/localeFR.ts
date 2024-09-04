@@ -45,6 +45,8 @@ export const localeFR = {
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
   },
   PAGE_FORMATION: {
+    SUGGESTIONS_TRIÉES_AFFINITÉ: "Suggestions triées par affinité d’après",
+    SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour à l'exploration des formations",
     BOUTON_AFFICHER_FICHE_FORMATION: "Retour à la fiche formation",
     ONGLET_FORMATION: "La formation",
@@ -320,7 +322,7 @@ export const localeFR = {
     LIRE_SUITE: "Lire la suite",
     MASQUER_SUITE: "Masquer la suite",
     AJOUTER_À_LA_SÉLECTION: "Ajouter à ma sélection",
-    PAS_INTÉRESSÉ: "Pas intéressé",
+    NE_PLUS_VOIR: "Ne plus voir",
   },
   ACCESSIBILITÉ: {
     FAVORIS: "Favoris",

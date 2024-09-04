@@ -42,7 +42,7 @@ const ProfilÉlève = () => {
               </p>
               <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
               <Bouton
-                auClic={() => utilisateur.seDéconnecter()}
+                auClic={async () => await utilisateur.seDéconnecter()}
                 label={i18n.PAGE_PROFIL.SE_DÉCONNECTER}
                 type="button"
                 variante="quaternaire"

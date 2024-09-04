@@ -16,8 +16,8 @@ const BoutonsFavorisCorbeille = ({ taille }: BoutonsFavorisCorbeilleProps) => {
       <Bouton
         // eslint-disable-next-line no-alert
         auClic={() => alert("Pas encore fait")}
-        icône={{ position: "gauche", classe: "fr-icon-close-line" }}
-        label={i18n.COMMUN.PAS_INTÉRESSÉ}
+        icône={{ position: "gauche", classe: "fr-icon-eye-off-line" }}
+        label={i18n.COMMUN.NE_PLUS_VOIR}
         taille={taille}
         type="button"
         variante="secondaire"

@@ -42,8 +42,8 @@ const OngletCritèresFicheFormation = ({
         </div>
       )}
       {critèresAnalyse.length > 0 && (
-        <div>
-          <hr className="mb-2 mt-8" />
+        <>
+          <hr className="mb-2 mt-8 first:hidden" />
           <div className="*:mb-4">
             <Titre
               niveauDeTitre="h2"
@@ -67,11 +67,11 @@ const OngletCritèresFicheFormation = ({
               </Fragment>
             ))}
           </ul>
-        </div>
+        </>
       )}
       {moyenneGénérale.centiles.length > 0 && (
-        <div>
-          <hr className="mb-2 mt-8" />
+        <>
+          <hr className="mb-2 mt-8 first:hidden" />
           <div className="*:mb-4">
             <Titre
               niveauDeTitre="h2"
@@ -81,11 +81,11 @@ const OngletCritèresFicheFormation = ({
             </Titre>
           </div>
           <GraphiqueRépartitionMoyenne notes={moyenneGénérale.centiles.map((centile) => centile.note)} />
-        </div>
+        </>
       )}
       {descriptifAttendus && descriptifAttendus !== "" && (
-        <div>
-          <hr className="mb-2 mt-8" />
+        <>
+          <hr className="mb-2 mt-8 first:hidden" />
           <div className="*:mb-4">
             <Titre
               niveauDeTitre="h2"
@@ -98,7 +98,7 @@ const OngletCritèresFicheFormation = ({
             nombreDeLigneÀAfficher="4"
             texte={descriptifAttendus}
           />
-        </div>
+        </>
       )}
     </div>
   );

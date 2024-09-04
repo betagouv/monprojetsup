@@ -75,8 +75,8 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
   };
 
   return (
-    <div className="bg-white pt-6 md:pl-6 xl:pl-20">
-      <div className="ml-[-1rem] pb-6 md:hidden">
+    <div className="pt-6 lg:pl-14">
+      <div className="ml-[-1rem] pb-6 lg:hidden">
         <Bouton
           auClic={afficherBarreLatéraleCallback}
           icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
@@ -85,7 +85,7 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
           variante="quaternaire"
         />
       </div>
-      <div className="mb-6 md:mt-6">
+      <div className="mb-6 lg:mt-6">
         <Badge
           titre={i18n.COMMUN.FORMATION}
           type="alerte"

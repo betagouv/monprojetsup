@@ -5,11 +5,11 @@ import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuFormulaireAvecSuccès }: UseÉlèveFormArgs) {
-  const { data: valeursParDéfaut } = useQuery(élèveQueryOptions);
+  const valeursParDéfaut = queryClient.getQueryData(élèveQueryOptions.queryKey);
   const {
     register,
     handleSubmit,

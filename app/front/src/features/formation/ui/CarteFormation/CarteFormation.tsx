@@ -1,36 +1,74 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
 import Tag from "@/components/_dsfr/Tag/Tag";
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { queryClient } from "@/configuration/lib/tanstack-query";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { useEffect, useRef } from "react";
 
-const CarteFormation = ({ nom, métiersAccessibles, affinité, communes, sélectionnée = false }: CarteFormationProps) => {
+const CarteFormation = ({
+  id,
+  nom,
+  métiersAccessibles,
+  affinité,
+  communes,
+  sélectionnée = false,
+}: CarteFormationProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const élève = queryClient.getQueryData(élèveQueryOptions.queryKey);
+
   const NOMBRE_MÉTIERS_À_AFFICHER = 3;
 
-  const classEnFonctionDeLaSelection = () => {
-    if (sélectionnée) return "border-2 border-solid border-[--border-active-blue-france]";
-    return "";
+  const classEnFonctionDeLaSélection = () => {
+    if (sélectionnée) return "border-[--border-active-blue-france]";
+    return "border-transparent";
   };
+
+  const estUneFormationFavorite = () => {
+    if (élève?.formationsFavorites)
+      return élève.formationsFavorites.some((formationFavorite) => formationFavorite.id === id);
+    return false;
+  };
+
+  useEffect(() => {
+    if (ref.current && sélectionnée) {
+      ref.current.scrollIntoView({ block: "center" });
+      window.scrollTo({ top: 0 });
+    }
+  }, [sélectionnée]);
 
   return (
     <div
-      className={`grid max-w-[470px] gap-4 bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSelection()}`}
+      className={`fr-enlarge-link grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSélection()}`}
+      ref={ref}
     >
-      <div className="grid grid-flow-col justify-between">
+      <div className="grid grid-flow-col justify-between gap-1">
         <div className="*:mb-0">
-          <Titre
-            niveauDeTitre="h2"
-            styleDeTitre="h4"
+          <LienInterne<"/formations/$formationId">
+            ariaLabel={nom}
+            href="/formations/$formationId"
+            paramètresPath={{ formationId: id }}
+            variante="neutre"
           >
-            {nom}
-          </Titre>
+            <Titre
+              niveauDeTitre="h2"
+              styleDeTitre="h4"
+            >
+              {nom}
+            </Titre>
+          </LienInterne>
         </div>
-        <div>
-          <span
-            aria-hidden="true"
-            className="fr-icon-heart-fill fr-icon--sm rounded bg-[--background-contrast-error] px-1 text-[--text-default-error]"
-          />
-          <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
-        </div>
+        {estUneFormationFavorite() && (
+          <div>
+            <span
+              aria-hidden="true"
+              className="fr-icon-heart-fill fr-icon--sm rounded bg-[--background-contrast-error] px-1 text-[--text-default-error]"
+            />
+            <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
+          </div>
+        )}
       </div>
       {affinité && affinité > 0 ? (
         <div className="grid grid-flow-col justify-start gap-2">

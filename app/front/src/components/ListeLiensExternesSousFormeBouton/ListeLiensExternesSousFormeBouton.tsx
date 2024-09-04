@@ -6,12 +6,12 @@ const ListeLiensExternesSousFormeBouton = ({ liens }: ListeLiensExternesSousForm
   return (
     <>
       {liens.length > 0 && (
-        <div className="grid grid-flow-col justify-start gap-4">
+        <div className="flex flex-wrap justify-start gap-4">
           {liens.map((lien) => (
             <LienExterne
               ariaLabel={lien.intitulé}
               href={lien.url}
-              key={lien.url}
+              key={`${lien.url}${lien.intitulé}`}
               variante="neutre"
             >
               <BoutonSquelette

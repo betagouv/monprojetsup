@@ -1,4 +1,5 @@
 import { env } from "@/configuration/environnement";
+import { queryClient } from "@/configuration/lib/tanstack-query";
 import { useSearch } from "@tanstack/react-router";
 import { useAuth } from "react-oidc-context";
 
@@ -14,9 +15,10 @@ export default function useUtilisateur() {
     return undefined;
   };
 
-  const seDéconnecter = () => {
+  const seDéconnecter = async () => {
     localStorage.clear();
-    auth.signoutRedirect({ id_token_hint: auth.user?.id_token });
+    await queryClient.invalidateQueries();
+    await auth.signoutRedirect({ id_token_hint: auth.user?.id_token });
   };
 
   const récupérerInformationsUtilisateur = () => {
