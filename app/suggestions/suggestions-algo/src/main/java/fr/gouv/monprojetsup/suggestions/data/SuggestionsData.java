@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -77,19 +78,10 @@ public class SuggestionsData {
         return f.stats().formationsSimilaires().getOrDefault(typeBac, Map.of());
     }
 
-    public @NotNull List<String> getVoeuxIds(String formationId) {
-        val f = formationsPort.retrieveFormation(formationId).orElse(null);
-        if(f == null) return List.of();
-        return f.getVoeuxIds();
-    }
-
+    @Cacheable("getVoeuxCoords")
     public List<Pair<String, LatLng>> getVoeuxCoords(String id) {
-        val f = formationsPort.retrieveFormation(id).orElse(null);
-        if(f == null) return List.of();
-        return f.getVoeuxCoords();
+        return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(null);
     }
-
-
 
     public @Nullable Integer getNbAdmis(String formationId, String bac) {
         return formationsPort.retrieveFormation(formationId)
@@ -261,6 +253,7 @@ public class SuggestionsData {
         return edgesPort.getEdgesLasToPass();
     }
 
+    @Cacheable("getCityCoords")
     public List<LatLng> getCityCoords(String cityName) { return villesPort.getCoords(cityName); }
 
     public List<Edge> edgesItemssGroupeItems() {

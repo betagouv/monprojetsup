@@ -34,13 +34,13 @@ open class LabelsRepository(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
+    @Cacheable("retrieveLabel")
     override fun retrieveLabel(id: String): Optional<String> {
         return repo.findById(id).map { it.label }
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
+    @Cacheable("retrieveDebugLabel")
     override fun retrieveDebugLabel(id: String): Optional<String> {
         return repo.findById(id).map { (it.labelDebug ?: it.label) }
     }

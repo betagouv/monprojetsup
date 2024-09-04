@@ -23,7 +23,7 @@ open class EdgesRepository(
     : EdgesPort()
 {
     @Transactional(readOnly = true)
-    @Cacheable(value = ["repositories"])
+    @Cacheable("retrieveEdgesOfType")
     override fun retrieveEdgesOfType(type: Int): MutableList<Edge> {
         return edgeJPARepository.findByType(type).map { it.toEdge() }.toMutableList()
     }

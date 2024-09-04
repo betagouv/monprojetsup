@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.suggestions.services;
 
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader;
-import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,21 +40,24 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
         return cities.stream().flatMap(city ->
                         flKeys.stream()
                                 .flatMap(key ->
-                                        ExplanationGeo
-                                                .getGeoExplanations(
-                                                        List.of(key),
-                                                        city,
-                                                        villesPort.getCoords(city),
-                                                        maxFormationsPerFiliere,
-                                                        data.getVoeuxCoords(key),
-                                                        CachedGeoExplanations.distanceCaches
-                                                ).stream()
+                                        getGeoExplanations2(key, city, maxFormationsPerFiliere).stream()
                                 )
                 ).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ExplanationGeo::distance))
                 .toList();
     }
 
+
+    @Cacheable("getGeoExplanations2")
+    private List<ExplanationGeo> getGeoExplanations2(String key, String city, int maxFormationsPerFiliere) {
+        return ExplanationGeo.getGeoExplanations(
+                List.of(key),
+                city,
+                villesPort.getCoords(city),
+                maxFormationsPerFiliere,
+                data.getVoeuxCoords(key)
+        );
+    }
 
 
     public record Request(

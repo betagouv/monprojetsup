@@ -7,7 +7,6 @@ import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.suggestions.dto.explanations.CachedGeoExplanations;
 import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -38,6 +37,7 @@ public class AlgoSuggestions {
     @Autowired
     public AlgoSuggestions(SuggestionsData data) {
         this.data = data;
+        this.lasFilieres = data.getLASFormations();
         p50NbFormations = data.p50NbFormations();
         p75Capacity = data.p75Capacity();
     }
@@ -59,7 +59,7 @@ public class AlgoSuggestions {
     private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     private static final double MAX_AFFINITY_PERCENT = 0.90;
     //utilisé par suggestions
-    protected static final Map<String, Integer> codesSpecialites = new HashMap<>();
+    protected final Map<String, Integer> codesSpecialites = new HashMap<>();
     public final int p50NbFormations;
     public final int p75Capacity;
 
@@ -452,7 +452,7 @@ public class AlgoSuggestions {
                         + "<br>\nnodes in graph: " + edgesKeys.nodes().size()
                 + "<br>\nedges in graph: " + edgesKeys.size()
                 + "<br>\npathes cache size " + pathsFromDistances.size()
-                + "<br>\ndistance cache size " + CachedGeoExplanations.distanceCaches.size();
+                ;
 
     }
 

@@ -17,10 +17,21 @@ class CacheConfig {
         cacheManager.setCaches(
             listOf(
                 ConcurrentMapCache("myCache"),
-                //Caches of algo
+                //Caches of algo. One cache per call site otherwise
+                //weird behaviours are appearing (type mismatch, etc.
                 ConcurrentMapCache("pathes"),
                 ConcurrentMapCache("formations"),
-                ConcurrentMapCache("repositories")
+                ConcurrentMapCache("retrieveFormation"),
+                ConcurrentMapCache("retrieveSpecialites"),
+                ConcurrentMapCache("retrieveLabel"),
+                ConcurrentMapCache("retrieveDebugLabel"),
+                ConcurrentMapCache("getMetiersOfFormation"),
+                ConcurrentMapCache("retrieveEdgesOfType"),
+                ConcurrentMapCache("getCoords"),
+                ConcurrentMapCache("getVoeuxCoords"),
+                ConcurrentMapCache("getCityCoords"),
+                ConcurrentMapCache("getGeoExplanations"),
+                ConcurrentMapCache("getGeoExplanations2"),
             ),
         )
         return cacheManager
