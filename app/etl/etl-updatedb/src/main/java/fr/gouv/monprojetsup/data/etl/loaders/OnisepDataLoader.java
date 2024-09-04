@@ -116,7 +116,6 @@ public class OnisepDataLoader {
 
         LOGGER.info("Injection des domaines webs onisep dans les domaines MPS");
         val domainesMps = DomainesMpsLoader.load(sources);
-        domainesMps.setSousDomainesWeb(sousDomainesWeb);
 
         return new OnisepData(
                 domainesMps,
@@ -132,7 +131,10 @@ public class OnisepDataLoader {
 
     }
 
-    private static void insertRomeInteretsDansMetiers(InteretsRome romeInterets, List<MetierIdeoDuSup> metiersIdeo) {
+    private static void insertRomeInteretsDansMetiers(
+            InteretsRome romeInterets,
+            List<MetierIdeoDuSup> metiersIdeo
+    ) {
         Map<String,List<MetierIdeoDuSup>> codeRomeVersMetiers = metiersIdeo.stream()
                 .filter(m -> m.codeRome() != null)
                 .collect(Collectors.groupingBy(MetierIdeoDuSup::codeRome));
@@ -143,18 +145,29 @@ public class OnisepDataLoader {
                     .flatMap(codeRome -> codeRomeVersMetiers.getOrDefault(codeRome, List.of()).stream())
                     .toList();
             if (!metiers.isEmpty()) {
-                String key = Interets.getKey(item);
+                String key = item.getKey();
                 //ajout des arètes
-                metiers.forEach(metier -> {
-                    metier.interets().add(key);
-                });
+                metiers.forEach(metier -> metier.interets().add(key));
             }
         });
     }
 
-    private static Interets loadInterets(DataSources sources) {
+    private static Interets loadInterets(DataSources sources) throws IOException, InterruptedException {
         val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
-        return Interets.getInterets(groupes);
+        val metiers = loadFichesMetiersIDeo();
+        val romeData = RomeDataLoader.load(sources);
+        val labels = new HashMap<String,String>();
+        labels.putAll(romeData.getLabels());
+        labels.putAll(
+                metiers.stream()
+                        .flatMap(m -> m.getInterestLabels().stream())
+                        .distinct()
+                        .collect(Collectors.toMap(
+                                Pair::getLeft,
+                                Pair::getRight
+                        ))
+        );
+        return Interets.getInterets(groupes, labels);
     }
 
 
@@ -186,7 +199,7 @@ public class OnisepDataLoader {
     }
 
 
-    private static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources, List<FormationIdeoDuSup> formationsIdeo) throws IOException {
+    private static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources, List<FormationIdeoDuSup> formationsIdeo) {
         LOGGER.info("Chargement de " + DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH);
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
@@ -270,9 +283,24 @@ public class OnisepDataLoader {
         return Serialisation.fromRemoteJson(DataSources.IDEO_OD_FORMATIONS_SIMPLE_URI, typeToken, true);
     }
 
-    private static List<SousDomaineWeb> loadDomainesSousDomaines() throws IOException, InterruptedException {
+    static List<SousDomaineWeb> loadDomainesSousDomaines() throws Exception {
         val typeToken = new TypeToken<List<SousDomaineWeb>>(){}.getType();
-        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_DOMAINES_URI, typeToken, true);
+        List<SousDomaineWeb> domainesSansId = Serialisation.fromRemoteJson(DataSources.IDEO_OD_DOMAINES_URI, typeToken, true);
+
+        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo();
+
+        Map<String, String> sousDomainesAvecId = formationsIdeoAvecFiche.stream()
+                .flatMap(f -> f.getSousdomainesWeb().stream())
+                .distinct()
+                .collect(Collectors.toMap(
+                        Pair::getRight,
+                        Pair::getLeft
+                ));
+
+        return domainesSansId.stream().map(d -> {
+            String id = sousDomainesAvecId.get(d.sousDomaineOnisep());
+            return new SousDomaineWeb(id, d.domaineOnisep(), d.sousDomaineOnisep());
+        }).filter(d -> d.ideo() != null).toList();
     }
 
 

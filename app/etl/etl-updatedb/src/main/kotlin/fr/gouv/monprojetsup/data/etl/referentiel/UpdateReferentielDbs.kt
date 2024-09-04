@@ -65,7 +65,7 @@ class UpdateReferentielDbs(
         updateSpecialiteDb()
         logger.info("Mise à jour de bacs specialites db")
         updateBaccalaureatSpecialiteDb()
-        logger.info("Mise à jour de libellesSousdomainesWeb db")
+        logger.info("Mise à jour de domaines db")
         updateDomainesDbs()
         logger.info("Mise à jour de interets db")
         updateInteretDbs()
@@ -131,10 +131,10 @@ class UpdateReferentielDbs(
                 sousCategorie.emoji = item.emoji
                 sousCategorie.idCategorie = groupeInteretId
                 interetsSousCategorieDb.save(sousCategorie)
-                item.keys.forEach { key ->
+                item.subKeyslabels.forEach { (key,label) ->
                     val interet = InteretEntity()
                     interet.id = key
-                    interet.nom = key
+                    interet.nom = label
                     interet.idSousCategorie = sousCategorie.id
                     interetsDb.save(interet)
                 }
@@ -147,16 +147,16 @@ class UpdateReferentielDbs(
         domainesDb.deleteAll()
         domainesCategoriesDb.deleteAll()
 
-        val categories = mpsDataPort.getThematiques()
+        val categories = mpsDataPort.getDomaines()
         categories.forEach { categorie ->
             val entity = CategorieDomaineEntity()
-            entity.id = categorie.id
+            entity.id = categorie.mpsId
             entity.nom = categorie.label
             entity.emoji = categorie.emoji
             domainesCategoriesDb.save(entity)
             categorie.items.forEach { domaine ->
                 val domaineEntity = DomaineEntity()
-                domaineEntity.id = domaine.key
+                domaineEntity.id = domaine.mpsId
                 domaineEntity.nom = domaine.label
                 domaineEntity.emoji = domaine.emoji
                 domaineEntity.idCategorie = entity.id

@@ -632,51 +632,8 @@ class MpsDataFiles(
         return result
     }
 
-    override fun getThematiques(): List<CategorieThematiques> {
-        val groupes: MutableMap<String, CategorieThematiques> = HashMap()
-        val categories: MutableList<CategorieThematiques> = ArrayList()
-
-        var groupe = ""
-        var emojig: String? = ""
-        val listStringStringMap = DomainesMpsLoader.loadDomainesMps(dataSources)
-        for (stringStringMap in listStringStringMap)
-        {
-            val id = stringStringMap["id"].orEmpty()
-            if(id.isEmpty()) continue
-            val regroupement = stringStringMap["regroupement"].orEmpty().trim { it <= ' ' }
-            if (regroupement.isNotEmpty()) {
-                groupe = regroupement
-                val emojiGroupe = stringStringMap["Emoji"].orEmpty()
-                if (emojiGroupe.isNotEmpty()) {
-                    emojig = emojiGroupe
-                } else {
-                    throw java.lang.RuntimeException("Groupe " + groupe + " sans emoji dans " + DataSources.DOMAINES_MPS_PATH)
-                }
-            }
-            val emoji = stringStringMap.getOrDefault("Emojis", "").trim { it <= ' ' }
-            val label = stringStringMap.getOrDefault("label", "").trim { it <= ' ' }
-            if (groupe.isEmpty()) throw java.lang.RuntimeException("Groupe vide dans " + DataSources.DOMAINES_MPS_PATH)
-            if (emojig.orEmpty().isEmpty()) throw java.lang.RuntimeException("Groupe sans emoji dans " + DataSources.DOMAINES_MPS_PATH)
-            var cat = groupes[groupe]
-            if (cat == null) {
-                cat =
-                    CategorieThematiques(
-                        groupe,
-                        emojig,
-                        ArrayList()
-                    )
-                groupes[groupe] = cat
-                categories.add(cat)
-            }
-            cat.items.add(
-                CategorieThematiques.Item(
-                    id,
-                    label,
-                    emoji
-                )
-            )
-        }
-        return categories
+    override fun getDomaines(): List<CategorieThematiques> {
+        return DomainesMpsLoader.loadDomainesMps(dataSources)
     }
 
 

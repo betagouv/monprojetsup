@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import jakarta.xml.bind.annotation.XmlElement;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -300,11 +302,15 @@ public record FicheFormationIdeo(
                         || type_Formation.type_formation_libelle_court.contains("DMA");
         }
 
-        /*"type_Formation": {
-                          "type_formation_sigle": "",
-                          "type_formation_libelle_court": "ING",
-                          "type_formation_libelle": "diplôme d'ingénieur"
-                        },*/
+    public Collection<Pair<String,String>> getSousdomainesWeb() {
+        return sousDomainesWeb.stream().map(sousDomaineWeb -> Pair.of(sousDomaineWeb.id, sousDomaineWeb.libelle)).toList();
+    }
+
+    /*"type_Formation": {
+                      "type_formation_sigle": "",
+                      "type_formation_libelle_court": "ING",
+                      "type_formation_libelle": "diplôme d'ingénieur"
+                    },*/
         public record TypeFormation(
                 String type_formation_sigle,
                 String type_formation_libelle_court,
