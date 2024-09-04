@@ -99,7 +99,7 @@ class SuggestionApiHttpClientTest {
             baccalaureat = "Générale",
             duree = "indiff",
             alternance = "D",
-            preferencesGeographiques = listOf("Paris"),
+            preferencesGeographiques = listOf("75015"),
             specialites =
                 listOf(
                     "Sciences de la vie et de la Terre",
@@ -382,7 +382,7 @@ class SuggestionApiHttpClientTest {
                         "duree": "indiff",
                         "apprentissage": "D",
                         "geo_pref": [
-                          "Paris"
+                          "75015"
                         ],
                         "spe_classes": [
                           "Sciences de la vie et de la Terre",
@@ -980,7 +980,7 @@ class SuggestionApiHttpClientTest {
                         "duree": "indiff",
                         "apprentissage": "D",
                         "geo_pref": [
-                          "Paris"
+                          "75015"
                         ],
                         "spe_classes": [
                           "Sciences de la vie et de la Terre",
