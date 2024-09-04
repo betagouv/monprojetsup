@@ -1,7 +1,10 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep.formations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
+import fr.gouv.monprojetsup.data.domain.Constants;
+import jakarta.xml.bind.annotation.XmlElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public record FicheFormationIdeo(
           "NSF_discipline_libelle": "Métallurgie"
         },*/
         @SerializedName("nsf_discipline")
+        @JsonProperty("nsf_discipline")
+        @XmlElement(name = "nsf_discipline")
         NsfDiscipline nsfDiscipline,
 
 
@@ -67,14 +72,18 @@ public record FicheFormationIdeo(
         //        },
 
         //"niveau_certification": "niveau 7 (bac + 5)",
-        @SerializedName("niveau_certification")
+        @SerializedName("niveau_certification")//gson
+        @JsonProperty("niveau_certification")//jackson
+        @XmlElement(name = "niveau_certification")//jaxb
         String niveauCertification,
 
         /*"niveau_etudes": {
           "id": "REF.410",
           "libelle": "Bac + 5"
         },*/
-        @SerializedName("niveau_etudes")
+        @SerializedName("niveau_etudes")//gson
+        @JsonProperty("niveau_etudes")//jackson
+        @XmlElement(name = "niveau_etudes")//jaxb
         NiveauEtudes niveauEtudes,
 
         //"niv_code": 170,
@@ -192,7 +201,9 @@ public record FicheFormationIdeo(
             }
           ]
         }, */
-        @SerializedName("sous_domaines_web")
+        @SerializedName("sous_domaines_web")//gson
+        @JsonProperty("sous_domaines_web")//jackson
+        @XmlElement(name = "sous_domaines_web")//jaxb
         List<SousDomaineWeb> sousDomainesWeb,
 
         /* IGNORED
@@ -207,29 +218,29 @@ public record FicheFormationIdeo(
                 List<String> result = new ArrayList<>(List.of(
                         identifiant,
                         libelle_complet,
-                        sigle,
-                        libelle_generique,
-                        libelle_specifique,
-                        type_Formation.type_formation_sigle,
-                        type_Formation.type_formation_libelle_court,
-                        type_Formation.type_formation_libelle,
-                        "duree" + Objects.requireNonNullElse(duree_formation,"").replaceAll(" ", ""),
-                        nsfDiscipline.NSF_discipline_libelle,
-                        niveauCertification,
-                        niveauEtudes.libelle,
-                        attendus,
-                        sous_tutelle,
-                        descriptif_poursuite_etudes
+                        Objects.requireNonNullElse(sigle, ""),
+                        Objects.requireNonNullElse(libelle_generique, ""),
+                        Objects.requireNonNullElse(libelle_specifique, ""),
+                        Objects.requireNonNullElse(type_Formation.type_formation_sigle, ""),
+                        Objects.requireNonNullElse(type_Formation.type_formation_libelle_court, ""),
+                        Objects.requireNonNullElse(type_Formation.type_formation_libelle, ""),
+                        "duree" + Objects.requireNonNullElse(duree_formation, "").replaceAll(" ", ""),
+                        Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_libelle, ""),
+                        Objects.requireNonNullElse(niveauCertification,""),
+                        Objects.requireNonNullElse(niveauEtudes.libelle,""),
+                        //Objects.requireNonNullElse(attendus,""),
+                        Objects.requireNonNullElse(sous_tutelle,"")
+                        //Objects.requireNonNullElse(descriptif_poursuite_etudes, "")
                 ));
-                if(poursuites_etudes != null && poursuites_etudes.poursuite_etudes != null) {
+                if (poursuites_etudes != null && poursuites_etudes.poursuite_etudes != null) {
                         result.addAll(poursuites_etudes.poursuite_etudes);
                 }
-                if(metiers_formation != null) {
-                        for(MetierFormation metier : metiers_formation) {
-                                result.add(metier.id);
+                if (metiers_formation != null) {
+                        for (MetierFormation metier : metiers_formation) {
+                                result.add(Constants.cleanup(metier.id + "x"));
                                 result.add(metier.nom_metier);
-                                if(metier.synonymes != null) {
-                                        for(Synonyme synonyme : metier.synonymes) {
+                                if (metier.synonymes != null) {
+                                        for (Synonyme synonyme : metier.synonymes) {
                                                 result.add(synonyme.nom_metier);
                                                 result.add(synonyme.libelle_masculin);
                                                 result.add(synonyme.libelle_feminin);
@@ -237,11 +248,11 @@ public record FicheFormationIdeo(
                                 }
                         }
                 }
-                if(nature_certificat != null) result.addAll(nature_certificat);
-                if(element_enseignement != null) result.addAll(element_enseignement);
-                if(sousDomainesWeb != null) {
-                        for(SousDomaineWeb sousDomaine : sousDomainesWeb) {
-                                result.add(sousDomaine.id);
+                if (nature_certificat != null) result.addAll(nature_certificat);
+                if (element_enseignement != null) result.addAll(element_enseignement);
+                if (sousDomainesWeb != null) {
+                        for (SousDomaineWeb sousDomaine : sousDomainesWeb) {
+                                result.add(Constants.cleanup(sousDomaine.id + "x"));
                                 result.add(sousDomaine.libelle);
                         }
                 }
@@ -275,9 +286,13 @@ public record FicheFormationIdeo(
                   "NSF_discipline_libelle": "Métallurgie"
                 },*/
         public record NsfDiscipline(
-                @SerializedName("NSF_discipline_code")
+                @SerializedName("NSF_discipline_code")//gson
+                @JsonProperty("NSF_discipline_code")//jackson
+                @XmlElement(name = "NSF_discipline_code")//jaxb
                 Integer NSF_discipline_code,
-                @SerializedName("NSF_discipline_libelle")
+                @SerializedName("NSF_discipline_libelle")//gson
+                @JsonProperty("NSF_discipline_libelle")//jackson
+                @XmlElement(name = "NSF_discipline_libelle")//jaxb
                 String NSF_discipline_libelle
         ) {
 

@@ -4,9 +4,7 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.domain.model.Edge;
 import lombok.Getter;
 import lombok.val;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.*;
@@ -17,36 +15,11 @@ public final class Edges {
     private final @NotNull Map<String, Map<String, Double>> edges = new HashMap<>();
     private final @NotNull Map<String, Map<String, Double>> backEdges = new HashMap<>();
 
-    private boolean cleanupKeys = true;//defaults to true for not creating problems in front
-
-    public Edges() {
-    }
-
-    public Edges(Edges edges) {
-        edges.edges.forEach((k, m) -> this.edges.put(k, new HashMap<>(m)));
-        edges.backEdges.forEach((k, m) -> this.backEdges.put(k, new HashMap<>(m)));
-        this.cleanupKeys = edges.cleanupKeys;
-    }
-
-    public void put(String a, Collection<String> bs) {
-        bs.forEach(b -> this.put(a, b, true, 1.0));
-    }
-
-    public boolean hasEdge(String a, String b) {
-        String ca = cleanupKeys ? Constants.cleanup(a) : a;
-        String cb = cleanupKeys ? Constants.cleanup(b) : b;
-        if(ca.equals(cb)) return true;
-        if(!edges.containsKey(ca)) return false;
-        return edges.get(ca).containsKey(cb);
-    }
-
-    public void put(String a, String b) {
-        this.put(a, b, true, 1.0);
-    }
 
     public void put(String a, String b, boolean reverse, double weight) {
-        String ca = cleanupKeys ? Constants.cleanup(a) : a;
-        String cb = cleanupKeys ? Constants.cleanup(b) : b;
+        //defaults to true for not creating problems in front
+        String ca = Constants.cleanup(a);
+        String cb = Constants.cleanup(b);
         if(!ca.equals(cb)) {//no self loops
             edges.computeIfAbsent(ca, z -> new HashMap<>()).put(cb, weight);
             backEdges.computeIfAbsent(cb, z -> new HashMap<>()).put(ca, weight);
@@ -114,31 +87,9 @@ public final class Edges {
         return resultat;
     }
 
-    /**
-    private Map<Pair<String, Integer>, Set<Path>> cachePathesComputation = new ConcurrentHashMap<>();
-    private Map<Pair<String, Integer>, Integer> cachePathesComputationStats = new ConcurrentHashMap<>();
-    private static final int CACHE_MAX_SIZE = 500;
-
-     * decreases to 75% of the max cache size
-     * by removing from the cache the least used entries
-    private void slimCache() {
-        try {
-            Serialisation.toJsonFile("cachePathesStats.json", cachePathesComputationStats, true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        List<Pair<String, Integer>> top =
-                cachePathesComputationStats.entrySet().stream()
-                        .sorted((e1, e2) -> e2.getValue() - e1.getValue())
-                        .limit(3 * CACHE_MAX_SIZE / 4)
-                        .map(e -> e.getKey())
-                        .toList();
-        cachePathesComputation.keySet().retainAll(top);
-    }
-    */
 
     /**
-     * @param node
+     * @param node the node
      * @return the number of edges going to node
      */
     private int inDegree(String node) {
@@ -146,34 +97,7 @@ public final class Edges {
         return backs == null ? 0 : backs.size();
     }
 
-    /**
-     * add some edges with initial weight
-     *
-     * @param o
-     * @param reverse
-     * @param weight
-     */
-    public void putAll(@Nullable Edges o, boolean reverse, double weight) {
-        if (o != null) putAll(o.edges(), reverse, weight);
-    }
 
-    public void putAll(@Nullable Edges o) {
-        this.putAll(o, true);
-    }
-
-    public void putAll(@Nullable Edges o, boolean reverse) {
-        if (o != null) putAll(o.edges(), reverse, 1.0);
-    }
-
-    public void putAll(Map<String, Set<String>> edges) {
-        this.putAll(edges, true, 1.0);
-    }
-
-
-    public void putAll(Map<String, Set<String>> o, boolean reverse, double weight) {
-        o.forEach((s1, strings) ->
-                strings.forEach(s2 -> this.put(s1, s2, reverse, weight)));
-    }
 
     public void putAll(List<Edge> edges, boolean reverse, double weight) {
         edges.forEach(edge ->
@@ -183,7 +107,6 @@ public final class Edges {
     public void putAll(List<Edge> edges) {
         putAll(edges, true, 1.0);
     }
-
 
 
     public void clear() {
@@ -218,11 +141,6 @@ public final class Edges {
     public String toString() {
         return "Edges[" +
                 "edges=" + edges + ']';
-    }
-
-
-    public void setCleanupKeys(boolean cleanupKeys) {
-        this.cleanupKeys = cleanupKeys;
     }
 
 
@@ -263,11 +181,10 @@ public final class Edges {
             String label = globalDict.get(k);
             if (label == null) label = k;
             String finalKey = label;
-            m.entrySet().forEach(e -> {
-                String s = e.getKey();
+            m.forEach((s, value) -> {
                 String val = globalDict.get(s);
                 if (val == null) val = s;
-                put(finalKey, val, false, e.getValue());
+                put(finalKey, val, false, value);
             });
         });
 
@@ -276,47 +193,23 @@ public final class Edges {
     /**
      * the specifics inherit from the generics
      *
-     * @param specificToGeneric
-     * @param coef
+     * @param specificToGeneric the edges from the specifics to the generics
+     * @param coef             the coefficient to apply to the weights
      */
     public void addEdgesFromMoreGenericItem(List<Edge> specificToGeneric, double coef) {
 
         specificToGeneric.forEach(e -> {
             val specific = e.src();
             val generic = e.dst();
-            String genericc = cleanupKeys ? Constants.cleanup(generic) : generic;
-            Map<String, Double> edges = this.edges.get(genericc);
-            if (edges != null) {
-                edges.forEach((target, weight) -> put(specific, target, false, weight* coef));
+            Map<String, Double> edgesFromGeneric = this.edges.get(Constants.cleanup(generic));
+            if (edgesFromGeneric != null) {
+                edgesFromGeneric.forEach((target, weight) -> put(specific, target, false, weight* coef));
             }
-            Map<String, Double> backEdges = this.backEdges.get(generic);
-            if (backEdges != null) {
-                backEdges.forEach((origin, weight) -> put(origin, specific, false, weight * coef));
+            Map<String, Double> edgesToGeneric = this.backEdges.get(Constants.cleanup(generic));
+            if (edgesToGeneric != null) {
+                edgesToGeneric.forEach((origin, weight) -> put(origin, specific, false, weight * coef));
             }
         });
-        /*
-        Set<String> toErase = specificToGeneric.entrySet().stream().filter(e -> !e.getValue().equals(e.getKey()))
-                .map(e -> e.getKey())
-                .collect(Collectors.toSet());
-                */
-    }
-
-    public void addTransitiveClosure(String theme, Set<String> transitiveClosureOfTheme) {
-        List<ImmutableTriple<String,String ,Double>> triplets = new ArrayList<>();
-        edges.forEach(
-                (s, stringDoubleMap)
-                        -> stringDoubleMap.forEach(
-                        (s1, weight) -> {
-                            if (s1.equals(theme)) {
-                                transitiveClosureOfTheme.forEach(
-                                        s2 -> triplets.add(ImmutableTriple.of(s,s2,weight)) );
-                            }
-                        }
-                )
-        );
-        for (ImmutableTriple<String, String, Double> t : triplets) {
-            put(t.left, t.middle, false, t.right);
-        }
     }
 
     public void eraseNodes(Set<String> toErase) {
@@ -329,35 +222,6 @@ public final class Edges {
     public void addNode(String gFlCodToFrontId) {
         edges.put(gFlCodToFrontId, new HashMap<>());
         backEdges.put(gFlCodToFrontId, new HashMap<>());
-    }
-
-    public boolean hasNode(String a) {
-        String ca = cleanupKeys ? Constants.cleanup(a) : a;
-        return  edges.containsKey(ca);
-    }
-
-    public Set<String> targets() {
-        return backEdges.keySet();
-    }
-
-    public void remove(Set<String> toRemove) {
-        edges.keySet().removeAll(toRemove);
-        backEdges.keySet().removeAll(toRemove);
-        edges.values().forEach(m -> m.keySet().removeAll(toRemove));
-        backEdges.values().forEach(m -> m.keySet().removeAll(toRemove));
-
-    }
-
-    public Map<String, Set<String>> minus(Edges edgesMetiersFilieres) {
-        val toRemove = edgesMetiersFilieres.edges();
-        Map<String, Set<String>> result = new TreeMap<>();
-        edges.forEach((s, stringDoubleMap) -> {
-            Set<String> toRemove2 = toRemove.getOrDefault(s, Set.of());
-            Set<String> newSet = new TreeSet<>(stringDoubleMap.keySet());
-            newSet.removeAll(toRemove2);
-            result.put(s, newSet);
-        });
-        return result;
     }
 
 }

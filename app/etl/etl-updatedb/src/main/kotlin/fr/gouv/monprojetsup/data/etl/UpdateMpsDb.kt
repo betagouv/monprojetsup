@@ -34,13 +34,18 @@ open class Runner(
 	private val updateReferentielDbs: UpdateReferentielDbs,
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
-	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs
+	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs,
+	private val mpsDataPort: MpsDataPort
+
 
 ) : CommandLineRunner {
 
 	private val logger = java.util.logging.Logger.getLogger(Runner::class.java.simpleName)
 
 	override fun run(vararg args: String?) {
+
+		logger.info("Création des fichiers de diagnostic")
+		mpsDataPort.exportDiagnostic()
 
 		//clearAll in this order to avoid foreign key constraint errors
 		logger.info("Vidage des tables metiers, formations, suggestions et référentiels")
@@ -64,6 +69,7 @@ open class Runner(
 
 		logger.info("Mise à jour des suggestions")
 		updateSuggestionsDbs.updateSuggestionDbs()
+
 	}
 }
 

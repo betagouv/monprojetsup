@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 
+
 interface MpsDataPort {
 
     fun getFormationsMpsIds(): List<String>
@@ -45,4 +46,6 @@ interface MpsDataPort {
 
     fun getMetiersAssociesLabels(): Map<String, List<String>>
     fun getMpsIdToIdeoIds(): Map<String, List<String>>
+
+    fun exportDiagnostic()
 }

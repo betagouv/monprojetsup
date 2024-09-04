@@ -1,7 +1,14 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep.metiers;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.gson.annotations.SerializedName;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FicheFormationIdeo;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +38,7 @@ public record FicheMetierIdeo(
         <synonyme>dessinateur/trice cartographe</synonyme>
         <synonyme>ingénieur/e cartographe</synonyme>
     </synonymes>*/
-        List<String> synonymes,
+        List<FicheFormationIdeo.Synonyme> synonymes,
         /*
     <romesV3>
         <romeV3>M1808</romeV3>
@@ -150,58 +157,32 @@ public record FicheMetierIdeo(
             <libelle>master géographie, aménagement, environnement et développement</libelle>
         </formation_min_requise>
     </formations_min_requise>*/
-        List<FormationMinRequise> formations_min_requise, /*
-    <publications/>
-    <sources_numeriques>
-        <source>
-            <valeur>http://www.shom.fr</valeur>
-            <commentaire>Site du Service hydrographique et océanographique de la marine.</commentaire>
-        </source>
-        <source>
-            <valeur>http://www.ign.fr</valeur>
-            <commentaire>Site de l'IGN (Institut national de l'information géographique et forestière).</commentaire>
-        </source>
-    </sources_numeriques>*/
-        SourcesNumeriques sources_numeriques,
-        /*
-    "secteurs_activite": {
-      "secteur_activite": [
-        {
-          "id": "T-IDEO2.4852",
-          "libelle": "Agriculture"
-        },
-        {
-          "id": "T-IDEO2.4863",
-          "libelle": "Bâtiment et travaux publics (BTP)"
-        },
-        {
-          "id": "T-IDEO2.4865",
-          "libelle": "Commerce et distribution"
-        },
-        {
-          "id": "T-IDEO2.4848",
-          "libelle": "Énergie"
-        },
-        {
-          "id": "T-IDEO2.5668",
-          "libelle": "Industries"
-        }
-      ]
-    },*/
-        @SerializedName("secteurs_activite")
-        SecteursActivites secteursActivite,
-    /*
-    <centres_interet>
-        <centre_interet>
-            <id>T-IDEO2.5718</id>
-            <libelle>j'ai un bon coup de crayon</libelle>
-        </centre_interet>
-    </centres_interet>*/
-        @SerializedName("centres_interet")
+        List<FormationMinRequise> formations_min_requise,
+        @SerializedName("sources_numeriques")
+        @JsonProperty("sources_numeriques")//jackson
+        @XmlElement(name = "sources_numeriques")
+        List<SourceNumerique> sourcesNumeriques,
+
+        @SerializedName("centres_interet")//gson
+        @JsonProperty("centres_interet")//jackson
+        @XmlElement(name = "centres_interet")//jaxb
         List<CentreInteret> centresInteret,
 
+
+
+        //associe fonction publique à ouvrier/ère paysagiste
+        @SerializedName("secteurs_activite")
+        @JsonProperty("secteurs_activite")//jackson
+        @XmlElement(name = "secteurs_activite")
+        //List<SecteurActivite> secteursActivite,
+        SecteursActivite secteursActivite,
+
+
+        //associe chorégraphe à maquilleuse
         @SerializedName("metiers_associes")
-        MetiersAssocies metiersAssocies
+        @JsonProperty("metiers_associes")//jackson
+        @XmlElement(name = "metiers_associes")
+        List<MetierAssocie> metiersAssocies
         /*
 </metier>
 */
@@ -217,22 +198,24 @@ public record FicheMetierIdeo(
                 || formations_min_requise != null && isSup(idFormationsSup);
     }
 
+    @SuppressWarnings("unused")//associe fonction publique à ouvrier/ère paysagiste
     public @NotNull List<@NotNull String> getSecteursActiviteMps() {
         if(secteursActivite == null) {
             return List.of();
         } else {
-            return secteursActivite.secteur_activite().stream()
+            return secteursActivite.secteursActivite().stream()
                     .map(s -> Constants.cleanup(s.id()))
                     .map(s -> s.replace(Constants.SEC_ACT_PREFIX_IN_FILES, Constants.SEC_ACT_PREFIX_IN_GRAPH))
                     .toList();
         }
     }
 
+    @SuppressWarnings("unused")//associe chorégraphe à maquilleuse
     public @NotNull List<@NotNull String> getMetiersAssociesMps() {
         if(metiersAssocies == null) {
             return List.of();
         } else {
-            return metiersAssocies.metier_associe().stream()
+            return metiersAssocies.stream()
                     .map(s -> Constants.cleanup(s.id()))
                     .toList();
         }
@@ -243,35 +226,47 @@ public record FicheMetierIdeo(
     }
 
     public @NotNull String getDescriptif() {
-        if(accroche_metier != null) {
-            return accroche_metier;
-        }
-        if(formats_courts != null && !formats_courts.isEmpty()) {
+        StringBuilder sb = new StringBuilder();
+        if (accroche_metier != null) {
+            sb.append(accroche_metier);
+        } else if (formats_courts != null && !formats_courts.isEmpty()) {
             Map<String, List<FormatCourt>> textes
                     = formats_courts().stream().collect(Collectors.groupingBy(FicheMetierIdeo.FormatCourt::type));
             List<FicheMetierIdeo.FormatCourt> accroches = textes.get("accroche_metier");
             if (accroches != null && !accroches.isEmpty()) {
-                for(val accroche : accroches) {
-                    if(accroche.descriptif() != null) {
+                for (val accroche : accroches) {
+                    if (accroche.descriptif() != null) {
                         return accroche.descriptif();
                     }
                 }
             }
         }
-        return "";
-    }
-
-    public record MetiersAssocies(
-            List<MetierAssocie> metier_associe
-    ) {
-        public record MetierAssocie(
-                String id,
-                String libelle
-        ) {
-
+        if(synonymes != null && !synonymes.isEmpty()) {
+            sb.append("\nSynonymes:\n");
+            for (val syn : synonymes) {
+                sb.append("\t").append(syn.nom_metier()).append("\n");
+            }
         }
+        if(metiersAssocies != null && !metiersAssocies.isEmpty()) {
+            sb.append("\nMétiers associés:\n");
+            for (val syn : metiersAssocies) {
+                sb.append("\t").append(syn.libelle()).append("\n");
+            }
+        }
+        return sb.toString();
     }
 
+    @XmlRootElement(name = "metier_associe")
+    @JacksonXmlRootElement(localName = "metier_associe")
+    public record MetierAssocie(
+            String id,
+            String libelle
+    ) {
+
+    }
+
+    @XmlRootElement(name = "format_court")
+    @JacksonXmlRootElement(localName = "format_court")
     public record FormatCourt(
             /*<format_court>
                 <type>Fiche metier (Documentation)</type>
@@ -287,6 +282,8 @@ public record FicheMetierIdeo(
 
     }
 
+    @XmlRootElement(name = "niveau_acces_min")
+    @JacksonXmlRootElement(localName = "niveau_acces_min")
     public record NiveauAccesMin(
             /*<niveau_acces_min>
             <id>REF.410</id>
@@ -306,6 +303,8 @@ public record FicheMetierIdeo(
     }
 
 
+    @JacksonXmlRootElement(localName = "formation_min_requise")
+    @XmlRootElement(name = "formation_min_requise")
     public record FormationMinRequise(
         /*            <formation_min_requise>
                 <id>FOR.1013</id>
@@ -318,28 +317,54 @@ public record FicheMetierIdeo(
 
     }
 
-    public record SourcesNumeriques(
-            List<String> sources_numeriques
+    @JacksonXmlRootElement(localName = "source")
+    @XmlRootElement(name = "source")
+    public record SourceNumerique(
+            /*<sources_numeriques>
+            <source>
+                <valeur>http://www.enac.fr</valeur>
+                <commentaire>Site de l'École nationale de l'aviation civile qui propose une formation de flight dispatcher.</commentaire>
+            </source>
+            <source>
+                <valeur>http://www.airemploi.org</valeur>
+                <commentaire>AIREMPLOI espace information orientation,</commentaire>
+            </source>
+        </sources_numeriques>
+        */
+            String valeur,
+            String commentaire
     ) {
 
     }
 
 
+    public record SecteursActivite(
+            String metierTransverse,
 
+            @JacksonXmlElementWrapper(useWrapping = false)
+            @JacksonXmlProperty(localName = "secteur_activite")
+            List<SecteurActivite> secteursActivite
 
-    public record SecteursActivites(
-            List<SecteurActivite> secteur_activite
     ) {
 
     }
-
+    @JacksonXmlRootElement(localName = "secteur_activite")
+    @XmlRootElement(name = "secteur_activite")
     public record SecteurActivite(
+            /*            <secteur_activite>
+                <id>T-IDEO2.4846</id>
+                <libelle>Fonction publique</libelle>
+            </secteur_activite>
+            */
             String id,
             String libelle
     ) {
 
     }
 
+
+    @JacksonXmlRootElement(localName = "centre_interet")
+    @XmlRootElement(name = "centre_interet")
     public record CentreInteret(
             /*            <centre_interet>
                 <id>T-IDEO2.5718</id>

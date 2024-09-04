@@ -19,8 +19,12 @@ public class DataSources {
     public static final String IDEO_OD_FORMATIONS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa591127f501/5fa591127f501.json";
     public static final String IDEO_OD_METIERS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa5949243f97/5fa5949243f97.json";
     public static final String IDEO_OD_METIERS_FICHES_URI = "https://api.opendata.onisep.fr/downloads/5fe0808a2da6f/5fe0808a2da6f.zip";
-    public static final String THEMATIQUES_PATH = "items_thematiques/ideo-thematiques.json";
-    public static final String THEMATIQUES_REGROUPEMENTS_PATH = "items_thematiques/domaines_pro_MPS_-_Thematiques.tsv";
+
+    public static final String IDEO_OD_DOMAINES_URI = "https://api.opendata.onisep.fr/downloads/5fa58d750a60c/5fa58d750a60c.json";
+
+    // public static final String THEMATIQUES_PATH = "items_thematiques/ideo-thematiques.json";
+
+    public static final String DOMAINES_MPS_PATH = "items_thematiques/domaines_pro_MPS_-_Thematiques.tsv";
 
     public static final String THEMATIQUES_NOUVELLES_PATH = "items_thematiques/thematiques_nouvelles.json";
     public static final String THEMATIQUES_REDIRECTIONS_PATH = "items_thematiques/thematiques_redirections.json";

@@ -39,16 +39,17 @@ public class Serialisation {
     }
 
     private static InputStream getRemoteFile(String urlString, boolean useCache) throws IOException, InterruptedException {
-        String cacheName = urlString.hashCode() + ".cache";
-        if (useCache) {
-            if (Files.exists(Path.of(cacheName))) {
+        int i = urlString.lastIndexOf('/') + 1;
+        String cacheName = urlString.substring(i);
+        if (useCache && Files.exists(Path.of(cacheName))) {
                 LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
                 return new FileInputStream(cacheName);
             }
-        }
+
         LOGGER.info("Téléchargement depuis " + urlString);
+        val uri = URI.create(urlString);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
+                .uri(uri)
                 .timeout(Duration.ofSeconds(10)) // optional timeout setting
                 .header("Content-Type", "application/json")
                 .GET() // or use .POST(), .PUT(), etc.
@@ -126,14 +127,15 @@ public class Serialisation {
     }
 
     public static void toZippedJson(String path, Object object, boolean prettyPrint) throws IOException {
+        Path path1 = Path.of(path);
         try(ZipOutputStream out = new ZipOutputStream(
                 new BufferedOutputStream(
-                        Files.newOutputStream(Path.of(path))
+                        Files.newOutputStream(path1)
                 )
         )) {
             out.setMethod(8);
             out.setLevel(7);
-            out.putNextEntry(new ZipEntry(Path.of(path).getFileName().toString() + ".json"));
+            out.putNextEntry(new ZipEntry(path1.getFileName().toString() + ".json"));
             try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
                 if (prettyPrint) {
                     new GsonBuilder().setPrettyPrinting()./*disableHtmlEscaping().*/create().toJson(object, writer);

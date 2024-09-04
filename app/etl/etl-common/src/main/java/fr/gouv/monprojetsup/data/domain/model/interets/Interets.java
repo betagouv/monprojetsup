@@ -1,61 +1,63 @@
 package fr.gouv.monprojetsup.data.domain.model.interets;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.onisep.InteretsOnisep;
 import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
+import lombok.val;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static fr.gouv.monprojetsup.data.domain.model.interets.CategorieInterets.fromMap;
 
 public record Interets(
-        /**
-         * indexed by interests fl e.g. "T-IDEO2.4819
-         */
-        Map<String,String> interets,
-
-        List<CategorieInterets> groupeInterets,
-
-        Map<String, String> itemVersGroupe
+        List<CategorieInterets> groupeInterets
 ) {
 
-    /* we avoid changing labels of groupes already existing */
-    public void put(String key, String label) {
-        key = Constants.cleanup(key);
-        String finalKey = key;
-        label = groupeInterets.stream()
-                .flatMap(g -> g.items().stream())
-                .filter(
-                        g -> g.keys().contains(finalKey)
-                )
-                .findFirst().map(CategorieInterets.Item::label).orElse(label);
-        interets.put(key, label);
-    }
 
-    public Interets(InteretsOnisep interets, List<Map<String, String>> groupes) {
-        this(new HashMap<>(), new ArrayList<>(), new HashMap<>());
-        interets.interets().forEach(m -> {
-            this.interets.put(Constants.cleanup(m.id()), m.libelle());
-        });
-        this.groupeInterets.addAll(fromMap(groupes));
-        this.groupeInterets.forEach(
-                g -> g.items().forEach(
-                        item -> item.keys().forEach(
-                                itemKey ->
-                                {
-                                    itemVersGroupe.put(itemKey, g.getId());
-                                    this.interets.put(itemKey, item.label());
-                                }
-                        )
-                )
-        );
+    public static Interets getInterets(List<Map<String, String>> groupes) {
+        val result = new Interets(new ArrayList<>());
+        result.groupeInterets.addAll(fromMap(groupes));
+        return result;
     }
 
     public static String getKey(InteretsRome.Item m) {
         return Constants.CENTRE_INTERETS_ROME + Math.abs(m.libelle_centre_interet().hashCode());
     }
 
+    public void retainAll(Set<String> interetsUsed) {
+        groupeInterets.forEach(g -> g.retainAll(interetsUsed));
+        groupeInterets.removeIf(g -> g.items().isEmpty());
+    }
+
+    public int size() {
+        return groupeInterets.stream().mapToInt(g -> g.items().size()).sum();
+    }
+
+    public Map<String, String> getLabels() {
+        val result = new HashMap<String, String>();
+        this.groupeInterets.forEach(
+                g -> g.items().forEach(
+                        item -> {
+                            result.put(item.getId(), item.label());
+                            item.keys().forEach(
+                                    itemKey ->
+                                            result.put(item.getId(), item.label())
+                            );
+                        }
+                )
+        );
+        return result;
+    }
+
+    public Map<String, String> getItemVersGroupe() {
+        val itemVersGroupe = new HashMap<String, String>();
+        this.groupeInterets.forEach(
+                g -> g.items().forEach(
+                        item -> item.keys().forEach(
+                                itemKey ->
+                                        itemVersGroupe.put(itemKey, g.getId())
+                        )
+                )
+        );
+        return itemVersGroupe;
+    }
 }

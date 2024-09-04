@@ -1,8 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
-import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -10,15 +8,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record ThematiquesOnisep(
-        Map<String,ThematiqueOnisep> thematiques,
-        List<Pair<String,String>> redirections,
-        Map<String, Regroupement> regroupements
+public record DomainesMps(
+        Map<String, Regroupement> regroupements,
+        List<SousDomaineWeb> sousDomainesWeb
 ) {
-    public ThematiquesOnisep() {
+    public DomainesMps() {
         this(
-                new HashMap<>(), new ArrayList<>(), new HashMap<>()
+                new HashMap<>(), new ArrayList<>()
         );
+    }
+
+    public void setSousDomainesWeb(List<SousDomaineWeb> domaines) {
+        this.sousDomainesWeb.clear();
+        this.sousDomainesWeb.addAll(domaines);
+    }
+
+    public Map<String, String> getLabels() {
+        Map<String, String> result = new HashMap<>();
+        sousDomainesWeb.forEach(domainePro -> result.put(domainePro.mpsId(), domainePro.sousDomaineOnisep()));
+        regroupements.forEach((key, value) -> result.put(key, value.label));
+        return result;
     }
 
     public record Regroupement(
@@ -33,20 +42,6 @@ public record ThematiquesOnisep(
     public void add(ThematiqueOnisep item) {
         if(item.nom != null && !item.nom.isEmpty()) {
             String kid = Constants.cleanup(item.id);
-            if(!thematiques.containsKey(kid)) {
-                thematiques.put(kid, item);
-            } else {
-                val them = thematiques.get(kid);
-                thematiques.put(kid, new ThematiqueOnisep(
-                        kid,
-                        them.nom,
-                        item.parent,
-                        item.redirection
-                ));
-            }
-        }
-        if(item.redirection != null && !item.redirection.isEmpty() && !item.redirection.equals("X")) {
-            redirections.add(Pair.of(Constants.cleanup(item.id), Constants.cleanup(item.redirection)));
         }
     }
 

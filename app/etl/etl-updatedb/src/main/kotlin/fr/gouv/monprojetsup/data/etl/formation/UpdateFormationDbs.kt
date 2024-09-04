@@ -112,7 +112,13 @@ class UpdateFormationDbs(
                 LienEntity(link.label, link.uri)
             }.toCollection(ArrayList())
 
-            entity.motsClefs = tagsSources.getOrDefault(id, listOf(label))
+            val motsClefs = tagsSources.getOrDefault(id, listOf(label))
+            val motsClefsCourts = motsClefs.filter { it.length <= 300 }
+            val motsClefsLongs = motsClefs.filter { it.length > 300 }
+            if(motsClefsCourts.size != motsClefs.size) {
+                logger.warning("formation $id a des mots clefs trop longs $motsClefsLongs")
+            }
+            entity.motsClefs = motsClefsCourts
 
             val voeuxFormation = voeux.filter { it.formation == id }
 

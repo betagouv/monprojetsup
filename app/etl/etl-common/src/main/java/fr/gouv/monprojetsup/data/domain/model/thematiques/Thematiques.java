@@ -1,14 +1,13 @@
 package fr.gouv.monprojetsup.data.domain.model.thematiques;
 
-import fr.gouv.monprojetsup.data.domain.model.onisep.ThematiquesOnisep;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.model.onisep.DomainesMps;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public record Thematiques(
-        Map<String,String> thematiques,
 
         Map<String,String> categories,
         Map<String,List<String>> parents,
@@ -18,20 +17,8 @@ public record Thematiques(
 ) {
 
 
-    public Thematiques(@NotNull ThematiquesOnisep thematiques) {
-        this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new ArrayList<>());
-
-        thematiques.thematiques().values().forEach(m -> {
-            String cid = Constants.cleanup(m.id());
-                this.thematiques.put(cid, m.nom());
-                String cpar = m.parent() != null ? Constants.cleanup(m.parent()) : null;
-                if (cpar != null)
-                    addParent(cid, cpar);
-        });
-
-        thematiques.redirections().forEach(
-                p -> addParent(p.getLeft(),p.getRight())
-        );
+    public Thematiques(@NotNull DomainesMps thematiques) {
+        this(new HashMap<>(), new HashMap<>(), new ArrayList<>());
 
         Map<String, CategorieThematiques> groupes = new HashMap<>();
         thematiques.regroupements().forEach((s, regroupement) -> {
@@ -39,27 +26,28 @@ public record Thematiques(
             val emoji = regroupement.emojiGroupe();
             CategorieThematiques cat = groupes.computeIfAbsent(key, k -> new CategorieThematiques(key, emoji, new ArrayList<>()));
             cat.items().add(new CategorieThematiques.Item(s, regroupement.label(), regroupement.emoji()));
-            //maj des labels au passage
-            this.thematiques.put(s, regroupement.label());
         });
         this.groupes.addAll(groupes.values());
 
     }
 
-    private void addParent(String child, String parent) {
-        parents.computeIfAbsent(child, z -> new ArrayList<>()).add(parent);
-    }
-
-    public @NotNull List<String> representatives(String dirtyItem) {
-        if (dirtyItem == null) return Collections.emptyList();
-        final String item = Constants.cleanup(dirtyItem);
-        if (parents.containsKey(item)) return parents.get(item).stream().flatMap(parent -> representatives(parent).stream()).toList();
-        if(groupes.stream().anyMatch(g -> g.contains(item))) return List.of(item);
-        return Collections.emptyList();
-    }
-
     public void retainAll(Set<String> themesUsed) {
-        thematiques.keySet().retainAll(themesUsed);
         parents.clear();
+        groupes.forEach(g -> g.retainAll(themesUsed));
+        groupes.removeIf(g -> g.items().isEmpty());
+    }
+
+    public int size() {
+        return groupes.stream().mapToInt(g -> g.items().size()).sum();
+    }
+
+    public Map<String, String> getLabels() {
+        val result = new HashMap<String, String>();
+        this.groupes.forEach(
+                g -> g.items().forEach(
+                        item -> result.put(Constants.cleanup(item.key()), item.label())
+                )
+        );
+        return result;
     }
 }

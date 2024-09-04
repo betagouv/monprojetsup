@@ -19,11 +19,11 @@ public abstract class EdgesPort {
     }
 
     public List<Edge> getEdgesFilieresThematiques() {
-        return retrieveEdgesOfType(TYPE_EDGE_FILIERES_THEMATIQUES);
+        return retrieveEdgesOfType(TYPE_EDGE_FORMATIONS_DOMAINES);
     }
 
     public List<Edge> getEdgesThematiquesMetiers() {
-        return retrieveEdgesOfType(TYPE_EDGE_THEMATIQUES_METIERS);
+        return retrieveEdgesOfType(TYPE_EDGE_DOMAINES_METIERS);
     }
 
     public List<Edge> getEdgesSecteursMetiers() {return retrieveEdgesOfType(TYPE_EDGE_SECTEURS_METIERS); }

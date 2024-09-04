@@ -3,17 +3,12 @@ package fr.gouv.monprojetsup.data.domain.model.onisep;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.domain.model.formations.FiliereToFormationsOnisep;
-import fr.gouv.monprojetsup.data.domain.model.graph.Edges;
+import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersFormationsEtMetiersIdeo;
+import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.onisep.formations.PsupToIdeoCorrespondance;
 import fr.gouv.monprojetsup.data.domain.model.onisep.metiers.FicheMetierIdeo;
-import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
-import fr.gouv.monprojetsup.data.domain.model.thematiques.Thematiques;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
-import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -23,37 +18,27 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.Constants.cleanup;
 
 public record OnisepData(
-        Thematiques thematiques,
+        DomainesMps domainesMps,
 
         Interets interets,
 
-        Edges edgesFilieresThematiques,
+        List<Pair<String,String>> edgesFormationsDomaines,
 
-        Edges edgesThematiquesMetiers,
+        List<Pair<String,String>> edgesDomainesMetiers,
 
-        Edges edgesMetiersFilieres,
+        List<Pair<String,String>> edgesMetiersFormations,
 
-        Edges edgesInteretsMetiers,
+        List<Pair<String,String>> edgesInteretsMetiers,
 
-        List<FiliereToFormationsOnisep> filieresToFormationsOnisep,
-
-        PsupToIdeoCorrespondance billy,
+        List<FilieresPsupVersFormationsEtMetiersIdeo> filieresToFormationsOnisep,
 
         List<MetierIdeoDuSup> metiersIdeo,
 
         List<FormationIdeoDuSup> formationsIdeo
         ) {
 
-    public static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
-
-    public static final double EDGES_METIERS_SECTEURS_WEIGHT = 0.01;
-
-    public static final double EDGES_METIERS_METIERS_WEIGHT = 0.8;
-
-    public static final double EDGES_INTERETS_INTERETS_WEIGHT = 1.0;
 
     /**
      * maps full string to MET.* code, with spell check
@@ -99,33 +84,28 @@ public record OnisepData(
         });
         return result;
     }
-    public @NotNull Edges getEdgesSecteursMetiers() {
-        Map<String, Collection<String>> m = new HashMap<>(getSecteursVersMetiers());
-        return new Edges(m, EDGES_METIERS_SECTEURS_WEIGHT, true);
+    public @NotNull List<Pair<String,String>> getEdgesSecteursMetiers() {
+        return getSecteursVersMetiers().entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(m -> Pair.of(
+                        e.getKey(),
+                        m)))
+                .toList();
     }
 
-    public @NotNull Edges getEdgesInteretsToInterets() {
-        Map<String,Collection<String>> m = interets.itemVersGroupe().entrySet()
+    public @NotNull List<Pair<String,String>> getEdgesInteretsToInterets() {
+        return interets.getItemVersGroupe().entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> List.of(e.getValue()))
-                );
-        return new Edges(m, EDGES_INTERETS_INTERETS_WEIGHT, true);
+                .map(e -> Pair.of(e.getKey(), e.getValue()))
+                .toList();
     }
 
 
-    public @NotNull Edges getEdgesMetiersAssocies() {
-        Edges result = new Edges();
+    public @NotNull List<Pair<String,String>> getEdgesMetiersAssocies() {
 
-        metiersIdeo.forEach(metier -> {
-            String keyMetier = metier.idMps();
-            metier.metiersAssocies().stream()
-                    .map(z -> Constants.cleanup(z.id()))
-                    .sequential()
-                    .forEach(
-                            keyMetierAssocie ->  result.put(keyMetier, keyMetierAssocie, true, EDGES_METIERS_METIERS_WEIGHT)
-                    );
-        });
-        return result;
+        return metiersIdeo.stream()
+                .flatMap(metier -> metier.metiersAssocies().stream()
+                        .map(m -> Pair.of(metier.idMps(), Constants.cleanup(m.id()))))
+                .toList();
     }
 
     public @NotNull Map<String, @NotNull List<@NotNull String>> getMetiersAssociesLabels() {
@@ -136,7 +116,7 @@ public record OnisepData(
             result.computeIfAbsent(keyMetier, z -> new ArrayList<>())
                     .addAll(
                             fiche.metiersAssocies().stream()
-                                    .map(FicheMetierIdeo.MetiersAssocies.MetierAssocie::libelle).toList()
+                                    .map(FicheMetierIdeo.MetierAssocie::libelle).toList()
                     );
         });
         return result;
@@ -144,44 +124,10 @@ public record OnisepData(
 
 
 
-
-
-    public void insertRomeData(InteretsRome romeInterets) {
-        romeInterets.arbo_centre_interet().forEach(item -> {
-            Set<String> codes = item.liste_metier().stream()
-                    .map(InteretsRome.Metier::code_rome)
-                    .collect(Collectors.toSet());
-            List<MetierIdeoDuSup> l = metiersIdeo.stream()
-                    .filter(m -> m.codeRome() != null && codes.contains(m.codeRome()))
-                    .toList();
-            if (!l.isEmpty()) {
-                String key = Interets.getKey(item);
-                //ajout de l'intérêt
-                interets().put(key, item.libelle_centre_interet());
-                //ajout des arètes
-                l.forEach(metier -> {
-                            val id = metier.ideo();
-                            if (id != null) {
-                                edgesInteretsMetiers.put(
-                                        key,
-                                        cleanup(id),
-                                        false,
-                                        EDGES_INTERETS_METIERS_WEIGHT
-                                );
-                            }
-                        }
-                );
-            }
-        });
-    }
-
-
-
     //in mps id style flxxx and MET_xxx
     public static Map<String, Set<String>> getMetiersVersFormationsMps(
-            List<FiliereToFormationsOnisep> filieresToFormationsOnisep,
+            List<FilieresPsupVersFormationsEtMetiersIdeo> filieresToFormationsOnisep,
             List<FormationIdeoDuSup> formationsIdeoSuSup,
-            PsupToIdeoCorrespondance billy,
             List<MetierIdeoDuSup> metiersIdeoduSup
     ) {
 
@@ -192,35 +138,17 @@ public record OnisepData(
                 .collect(Collectors.toMap(MetierIdeoDuSup::ideo, z -> z));
 
         Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
-        //two sources of info:
-        //the infamous xml with holes
         filieresToFormationsOnisep.forEach(
                 fil -> formationsVersMetiers.put(
                         fil.gFlCod(),
-                        fil.ideoIds().stream()
+                        fil.ideoFormationsIds().stream()
                                 .map(formationsIdeo::get)
                                 .filter(Objects::nonNull)
                                 .map(FormationIdeoDuSup::metiers)
                                 .flatMap(Collection::stream)
                                 .map(Constants::cleanup)
                                 .collect(Collectors.toSet())));
-
         formationsVersMetiers.values().removeIf(Set::isEmpty);
-        //the JM and Claire file
-        billy.psupToIdeo2().forEach(
-                line -> {
-                    List<String> keys =
-                            Arrays.stream(line.METIER_IDEO2().split(";"))
-                                    .map(String::trim)
-                                    .filter(metiersIdeo::containsKey)
-                                    .map(Constants::cleanup)
-                                    .toList();
-                    String key = Constants.gFlCodToFrontId(line.G_FL_COD());
-                    formationsVersMetiers
-                            .computeIfAbsent(key, z -> new HashSet<>())
-                            .addAll(keys);
-                }
-        );
         formationsVersMetiers.values().removeIf(Set::isEmpty);
 
         Map<String, Set<String>> metiersVersFormations = new HashMap<>();
@@ -247,9 +175,9 @@ public record OnisepData(
 
         Map<String, Set<String>> metiersVersFormations = new HashMap<>();
 
-        this.edgesMetiersFilieres().edges().forEach((s, strings) ->
-                metiersVersFormations.computeIfAbsent(s, z -> new HashSet<>())
-                        .addAll(strings));
+        this.edgesMetiersFormations().forEach(p ->
+                metiersVersFormations.computeIfAbsent(p.getLeft(), z -> new HashSet<>())
+                        .add(p.getRight()));
 
         getMetiersVersFormationsFromDescriptifs(
                 descriptifs,
@@ -323,5 +251,7 @@ public record OnisepData(
     }
 
 
-
+    public Map<String, String> getDomainesLabels() {
+        return domainesMps.getLabels();
+    }
 }

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep;
 
+import com.google.gson.annotations.SerializedName;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,12 @@ import java.util.Set;
 
 
 
-    public record DomainePro(
-            String domaine_onisep,
-            String sous_domaine_onisep
+    public record SousDomaineWeb(
+
+            @SerializedName("domaine_onisep")
+            @NotNull String domaineOnisep,
+            @SerializedName("sous-domaine_onisep")
+            @NotNull String sousDomaineOnisep
     ) {
 
 
@@ -28,34 +32,34 @@ import java.util.Set;
          * @param domainesPro
          * @return the keys
          */
-        public static Set<String> extractDomaines(@NotNull String domaines, List<DomainePro> domainesPro) {
-            Set<String> answer = new HashSet<>();
+        public static Set<SousDomaineWeb> extractDomaines(@NotNull String domaines, List<SousDomaineWeb> domainesPro) {
+            Set<SousDomaineWeb> answer = new HashSet<>();
             String[] split = domaines.split("\\|");
             for (String dom : split) {
-                DomainePro domaine = extractDomaine(dom.trim(), domainesPro);
+                SousDomaineWeb domaine = extractDomaine(dom.trim(), domainesPro);
                 if (domaine != null) {
-                    answer.add(Constants.cleanup(domaine.domaine_onisep));
+                    answer.add(domaine);
                 }
             }
             return answer;
         }
 
-        private static DomainePro extractDomaine(String label, List<DomainePro> domainesPro) {
+        private static SousDomaineWeb extractDomaine(String label, List<SousDomaineWeb> domainesWeb) {
             int i = label.indexOf("/");
             if (i <= 0 || i >= label.length() - 1) return null;
 
             String domaine = label.substring(0, i);
             String sousdomaine = label.substring(i + 1);
 
-            DomainePro bestMatch = null;
+            SousDomaineWeb bestMatch = null;
             String bestLib = null;
             int bestScore = Integer.MAX_VALUE;
-            for (DomainePro dom : domainesPro) {
-                int distance = levenAlgo.apply(domaine, dom.domaine_onisep) + levenAlgo.apply(sousdomaine, dom.sous_domaine_onisep);
+            for (SousDomaineWeb dom : domainesWeb) {
+                int distance = levenAlgo.apply(domaine, dom.domaineOnisep) + levenAlgo.apply(sousdomaine, dom.sousDomaineOnisep);
                 if (distance >= 0 && distance < bestScore) {
                     bestScore = distance;
                     bestMatch = dom;
-                    bestLib = dom.domaine_onisep + "/" + dom.sous_domaine_onisep;
+                    bestLib = dom.domaineOnisep + "/" + dom.sousDomaineOnisep;
                 }
 
             }
@@ -66,4 +70,9 @@ import java.util.Set;
             }
 
         }
+
+        public @NotNull String mpsId() {
+            return Constants.cleanup(sousDomaineOnisep);
+        }
+
     }

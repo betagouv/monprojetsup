@@ -1,8 +1,10 @@
 package fr.gouv.monprojetsup.data.domain.model.interets;
 
+import fr.gouv.monprojetsup.data.domain.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public record CategorieInterets(
@@ -10,6 +12,8 @@ public record CategorieInterets(
         @NotNull String emoji,
         List<@NotNull Item> items
 ) {
+    private static final Logger LOGGER = Logger.getLogger(CategorieInterets.class.getSimpleName());
+
     @NotNull
     public String getId() {
         return items.stream().flatMap(i -> i.keys.stream()).sorted().collect(Collectors.joining("_"));
@@ -33,7 +37,7 @@ public record CategorieInterets(
                     throw new RuntimeException("Empty groupe " + curGroupeInterets.label);
                 if (curGroupeInterets != null && curItem == null)
                     throw new RuntimeException("Empty item in groupe " + curGroupeInterets.label);
-                if (curGroupeInterets != null && curItem != null && curItem.keys.isEmpty())
+                if (curGroupeInterets != null && curItem.keys.isEmpty())
                     throw new RuntimeException("Empty keys in item " + curItem.label);
                 curGroupeInterets = null;
                 curItem = null;
@@ -64,6 +68,16 @@ public record CategorieInterets(
         return res;
     }
 
+    public void retainAll(Set<String> interetsUsed) {
+        if (interetsUsed.contains(getId())) return;
+        List<@NotNull Item> toRemove =
+                items.stream()
+                        .filter(it -> it.keys.stream().noneMatch(k -> interetsUsed.contains(Constants.cleanup(k))))
+                        .toList();
+        toRemove.forEach(item -> LOGGER.info("Intérêt non utilisé: " + item));
+        items.removeAll(toRemove);
+    }
+
     public record Item(
             @NotNull Set<@NotNull String> keys,
             @NotNull String label,
@@ -74,5 +88,6 @@ public record CategorieInterets(
         public String getId() {
             return keys.stream().sorted().collect(Collectors.joining("_"));
         }
+
     }
 }

@@ -34,13 +34,12 @@ class OnisepDataTest {
     inner class OnisepDataTest {
         @Test
         fun `Doit réussir à charger les données Onisep`() {
-            assertThat(onisepData.formationsOnisep.formations).isNotEmpty()
-            assertThat(onisepData.metiers.metiers).isNotEmpty()
-            assertThat(onisepData.fichesMetiers.metiers.metier).isNotEmpty()
+            assertThat(onisepData.formationsIdeo).isNotEmpty()
+            assertThat(onisepData.metiersIdeo).isNotEmpty()
         }
 
         @Test
-        fun `Doit réussir à expanser les intérêts`() {
+        fun `Doit réussir à étendre les intérêts`() {
             val interets = onisepData.interets
             val expansion = interets.itemVersGroupe
             assertThat(expansion).isNotEmpty()
