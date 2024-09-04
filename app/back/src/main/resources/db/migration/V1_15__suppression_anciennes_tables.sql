@@ -1,0 +1,13 @@
+DROP TABLE moyenne_generale_admis;
+DROP TABLE join_baccalaureat_specialite;
+DROP TABLE interet;
+DROP TABLE interet_sous_categorie;
+DROP TABLE interet_categorie;
+DROP TABLE domaine;
+DROP TABLE domaine_categorie;
+DROP TABLE triplet_affectation;
+DROP TABLE metier;
+DROP TABLE formation;
+DROP TABLE specialite;
+DROP TABLE baccalaureat;
+DROP TABLE critere_analyse_candidature;
