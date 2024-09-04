@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FicheFormationId
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -254,6 +255,12 @@ public record FicheMetierIdeo(
             }
         }
         return sb.toString();
+    }
+
+    public List<Pair<String,String>> getInterestLabels() {
+        return centresInteret.stream()
+                .map(c -> Pair.of(Constants.cleanup(c.id), c.libelle))
+                .toList();
     }
 
     @XmlRootElement(name = "metier_associe")

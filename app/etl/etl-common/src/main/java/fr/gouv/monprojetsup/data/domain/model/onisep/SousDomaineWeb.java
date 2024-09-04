@@ -13,6 +13,8 @@ import java.util.Set;
 
     public record SousDomaineWeb(
 
+            String ideo,
+
             @SerializedName("domaine_onisep")
             @NotNull String domaineOnisep,
             @SerializedName("sous-domaine_onisep")
@@ -72,7 +74,7 @@ import java.util.Set;
         }
 
         public @NotNull String mpsId() {
-            return Constants.cleanup(sousDomaineOnisep);
+            return Constants.cleanup(ideo);
         }
 
     }

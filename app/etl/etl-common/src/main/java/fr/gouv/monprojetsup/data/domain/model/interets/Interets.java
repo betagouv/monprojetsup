@@ -13,15 +13,13 @@ public record Interets(
 ) {
 
 
-    public static Interets getInterets(List<Map<String, String>> groupes) {
+    public static Interets getInterets(List<Map<String, String>> groupes, Map<String,String> labels) {
         val result = new Interets(new ArrayList<>());
-        result.groupeInterets.addAll(fromMap(groupes));
+        result.groupeInterets.addAll(fromMap(groupes,labels));
         return result;
     }
 
-    public static String getKey(InteretsRome.Item m) {
-        return Constants.CENTRE_INTERETS_ROME + Math.abs(m.libelle_centre_interet().hashCode());
-    }
+
 
     public void retainAll(Set<String> interetsUsed) {
         groupeInterets.forEach(g -> g.retainAll(interetsUsed));
@@ -38,10 +36,7 @@ public record Interets(
                 g -> g.items().forEach(
                         item -> {
                             result.put(item.getId(), item.label());
-                            item.keys().forEach(
-                                    itemKey ->
-                                            result.put(item.getId(), item.label())
-                            );
+                            result.put(item.getId(), item.label());
                         }
                 )
         );
@@ -52,7 +47,7 @@ public record Interets(
         val itemVersGroupe = new HashMap<String, String>();
         this.groupeInterets.forEach(
                 g -> g.items().forEach(
-                        item -> item.keys().forEach(
+                        item -> item.subKeyslabels().keySet().forEach(
                                 itemKey ->
                                         itemVersGroupe.put(itemKey, g.getId())
                         )

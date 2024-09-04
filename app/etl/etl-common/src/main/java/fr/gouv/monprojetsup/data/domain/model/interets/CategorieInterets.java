@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public record CategorieInterets(
         @NotNull String label,
@@ -16,10 +15,17 @@ public record CategorieInterets(
 
     @NotNull
     public String getId() {
-        return items.stream().flatMap(i -> i.keys.stream()).sorted().collect(Collectors.joining("_"));
+        return Constants.cleanup(
+                label.replace("je veux", "").trim()
+        ).trim();
     }
 
-    public static List<CategorieInterets> fromMap(@NotNull List<Map<String, @NotNull String>> groupes) {
+    public static List<CategorieInterets> fromMap(
+            @NotNull List<Map<String, @NotNull String>> groupes,
+            Map<String,String> labels
+    ) {
+
+
         List<CategorieInterets> res = new ArrayList<>();
         //Source,id,label,surcategorie,regroupement,emoji
         CategorieInterets curGroupeInterets = null;
@@ -37,7 +43,7 @@ public record CategorieInterets(
                     throw new RuntimeException("Empty groupe " + curGroupeInterets.label);
                 if (curGroupeInterets != null && curItem == null)
                     throw new RuntimeException("Empty item in groupe " + curGroupeInterets.label);
-                if (curGroupeInterets != null && curItem.keys.isEmpty())
+                if (curGroupeInterets != null && curItem.subKeyslabels.isEmpty())
                     throw new RuntimeException("Empty keys in item " + curItem.label);
                 curGroupeInterets = null;
                 curItem = null;
@@ -49,7 +55,7 @@ public record CategorieInterets(
             }
             //new item
             if (!surcategorie.isEmpty()) {
-                curItem = new Item(new HashSet<>(), surcategorie, emoji);
+                curItem = new Item(new HashMap<>(), surcategorie, emoji);
                 if (curGroupeInterets == null) throw new RuntimeException("No groupe for surcategorie " + surcategorie);
                 curGroupeInterets.items.add(curItem);
             }
@@ -59,10 +65,10 @@ public record CategorieInterets(
                     throw new RuntimeException("No groupe for id " + id);
                 }
                 if (curItem == null) {
-                    curItem = new Item(new HashSet<>(), curGroupeInterets.label, emoji);
+                    curItem = new Item(new HashMap<>(), curGroupeInterets.label, emoji);
                     curGroupeInterets.items.add(curItem);
                 }
-                curItem.keys.add(id);
+                curItem.subKeyslabels.put(id,labels.getOrDefault(id,id));
             }
         }
         return res;
@@ -72,21 +78,21 @@ public record CategorieInterets(
         if (interetsUsed.contains(getId())) return;
         List<@NotNull Item> toRemove =
                 items.stream()
-                        .filter(it -> it.keys.stream().noneMatch(k -> interetsUsed.contains(Constants.cleanup(k))))
+                        .filter(it -> it.subKeyslabels.keySet().stream().noneMatch(k -> interetsUsed.contains(Constants.cleanup(k))))
                         .toList();
         toRemove.forEach(item -> LOGGER.info("Intérêt non utilisé: " + item));
         items.removeAll(toRemove);
     }
 
     public record Item(
-            @NotNull Set<@NotNull String> keys,
+            @NotNull Map<String,@NotNull String> subKeyslabels,
             @NotNull String label,
             @NotNull String emoji
 
     ) {
 
         public String getId() {
-            return keys.stream().sorted().collect(Collectors.joining("_"));
+            return Constants.cleanup(label.replace("je veux", "").trim());
         }
 
     }

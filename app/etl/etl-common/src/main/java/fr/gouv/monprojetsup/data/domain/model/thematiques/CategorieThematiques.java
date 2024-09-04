@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.data.domain.model.thematiques;
 
+import fr.gouv.monprojetsup.data.domain.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public record CategorieThematiques(
         String label,
@@ -17,12 +17,12 @@ public record CategorieThematiques(
         return items.stream().anyMatch(i -> i.key.equals(item));
     }
 
-    public @NotNull String getId() {
-        return items.stream().map(Item::key).sorted().collect(Collectors.joining("_"));
+    public @NotNull String getMpsId() {
+        return Constants.cleanup(label);
     }
 
     public void retainAll(Set<String> themesUsed) {
-        if(themesUsed.contains(getId())) return;
+        if(themesUsed.contains(getMpsId())) return;
         items.removeIf(it -> !themesUsed.contains(it.key));
     }
 
@@ -31,5 +31,9 @@ public record CategorieThematiques(
             String label,
             String emoji
     ) {
+        public String getMpsId() {
+            return Constants.cleanup(key);
+        }
+
     }
 }

@@ -21,6 +21,19 @@ public record DomainesMps(
     public void setSousDomainesWeb(List<SousDomaineWeb> domaines) {
         this.sousDomainesWeb.clear();
         this.sousDomainesWeb.addAll(domaines);
+
+        //to remove when data fixed
+        this.regroupements.clear();
+        domaines.forEach(domainePro -> {
+            regroupements.put(
+                    domainePro.mpsId(),
+                    new Regroupement(
+                            domainePro.sousDomaineOnisep(),
+                            domainePro.domaineOnisep(),
+                            "\uD83C\uDF31",
+                            "\uD83E\uDD55")
+            );
+        });
     }
 
     public Map<String, String> getLabels() {

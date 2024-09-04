@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.data.domain.model.rome;
 
 
+import fr.gouv.monprojetsup.data.domain.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public record InteretsRome(List<Item> arbo_centre_interet) {
             this("", new ArrayList<>());
         }
 
+        public String getKey() {
+            return Constants.CENTRE_INTERETS_ROME + Math.abs(libelle_centre_interet().hashCode());
+        }
     }
 
     public InteretsRome() {

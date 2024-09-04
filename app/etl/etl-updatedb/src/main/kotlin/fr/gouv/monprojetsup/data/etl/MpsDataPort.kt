@@ -37,7 +37,7 @@ interface MpsDataPort {
     fun getEdges(): List<Triple<String,String,Int>>
     fun getMatieres(): List<Matiere>
     fun getBacs(): List<Bac>
-    fun getThematiques(): List<CategorieThematiques>
+    fun getDomaines(): List<CategorieThematiques>
     fun getInterets(): Interets
     fun getConseils(): Map<String, String>
     fun getCities(): List<Ville>
