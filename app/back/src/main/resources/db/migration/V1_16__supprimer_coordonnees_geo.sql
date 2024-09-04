@@ -1,0 +1,1 @@
+ALTER TABLE ref_triplet_affectation DROP COLUMN coordonnees_geographiques;

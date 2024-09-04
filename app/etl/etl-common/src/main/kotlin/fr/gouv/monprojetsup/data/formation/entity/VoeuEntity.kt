@@ -23,7 +23,6 @@ class VoeuEntity {
         this.codeCommune = voeu.codeCommune
         this.lat = voeu.lat
         this.lng = voeu.lng
-        this.coordonneesGeographiques = listOf(voeu.lat, voeu.lng)
         this.idFormation = voeu.formation
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
@@ -48,10 +47,6 @@ class VoeuEntity {
 
     @Column(name = "longitude", nullable = true)
     var lng : Double? = null
-
-    //@Deprecated("Replaced by latitude and longitude fields")
-    @Column(name = "coordonnees_geographiques", nullable = false)
-    lateinit var coordonneesGeographiques: List<Double?>
 
     @Column(name = "id_formation", nullable = false)
     var idFormation: String = ""

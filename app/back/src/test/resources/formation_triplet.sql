@@ -66,17 +66,17 @@ VALUES ('fl0004',
           }
         ]'::jsonb);
 
-INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, coordonnees_geographiques, id_formation)
-VALUES ('ta0001', 'Lycée professionnel horticole de Montreuil', 'Montreuil', '93100', '{48.861, 2.443}', 'fl0001');
+INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, latitude, longitude, id_formation)
+VALUES ('ta0001', 'Lycée professionnel horticole de Montreuil', 'Montreuil', '93100', 48.861, 2.443, 'fl0001');
 
-INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, coordonnees_geographiques, id_formation)
-VALUES ('ta0002', 'ENSAPLV', 'Paris', '75019', '{48.889, 2.393}', 'fl0003');
+INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, latitude, longitude, id_formation)
+VALUES ('ta0002', 'ENSAPLV', 'Paris', '75019', 48.889, 2.393, 'fl0003');
 
-INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, coordonnees_geographiques, id_formation)
-VALUES ('ta0003', 'ENSA Nancy', 'Nancy', '54000', '{48.692, 6.184}', 'fl0003');
+INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, latitude, longitude, id_formation)
+VALUES ('ta0003', 'ENSA Nancy', 'Nancy', '54000', 48.692, 6.184, 'fl0003');
 
-INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, coordonnees_geographiques, id_formation)
-VALUES ('ta0004', 'ENSAB', 'Rennes', '35000', '{48.117, 1.677}', 'fl0003');
+INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, latitude, longitude, id_formation)
+VALUES ('ta0004', 'ENSAB', 'Rennes', '35000', 48.117, 1.677, 'fl0003');
 
-INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, coordonnees_geographiques, id_formation)
-VALUES ('ta0005', 'Université Paris 1 Panthéon-Sorbonne', 'Paris', '75005', '{48.846, 2.344}', 'fl0004');
+INSERT INTO ref_triplet_affectation (id, nom, commune, code_commune, latitude, longitude, id_formation)
+VALUES ('ta0005', 'Université Paris 1 Panthéon-Sorbonne', 'Paris', '75005', 48.846, 2.344, 'fl0004');
