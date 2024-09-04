@@ -70,11 +70,8 @@ public class UrlsUpdater {
 
         val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
         mpsIds.forEach(mpsId -> {
-            val l = urls.computeIfAbsent(mpsId, z -> new ArrayList<>());
-            if(l.isEmpty()) {
-                val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
-                addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "l'offre de formation", urls);
-            }
+            val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
+            addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "l'offre de formation", urls);
         });
 
         return urls;

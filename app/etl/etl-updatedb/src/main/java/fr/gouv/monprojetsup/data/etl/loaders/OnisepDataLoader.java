@@ -63,7 +63,7 @@ public class OnisepDataLoader {
         List<Pair<String,String>> edgesMetiersFormations = new ArrayList<>();
 
         //baseline: links from the big xml and jm and cécile correspondances
-        val filieresPsupToFormationsMetiersIdeo = loadPsupToIdeoCorrespondance(sources);
+        val filieresPsupToFormationsMetiersIdeo = loadPsupToIdeoCorrespondance(sources, formationsIdeoDuSup.values().stream().toList());
         filieresPsupToFormationsMetiersIdeo.forEach(
                 fil -> {
                     val psupId = fil.gFlCod();
@@ -186,15 +186,11 @@ public class OnisepDataLoader {
     }
 
 
-    private static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources) throws IOException {
+    private static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources, List<FormationIdeoDuSup> formationsIdeo) throws IOException {
         LOGGER.info("Chargement de " + DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH);
-        val lines =  Serialisation.fromJsonFile(
-                sources.getSourceDataFilePath(
-                        DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH
-                ),
-                PsupToIdeoCorrespondance.class
-        );
-        return FilieresPsupVersFormationsEtMetiersIdeo.get(lines);
+        val csv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
+        val lines = PsupToIdeoCorrespondance.fromCsv(csv);
+        return FilieresPsupVersFormationsEtMetiersIdeo.compute(lines, formationsIdeo);
     }
 
     private static Map<String,FormationIdeoDuSup> extractFormationsIdeoDuSup(List<FormationIdeoSimple> formationsIdeoSansfiche, List<FicheFormationIdeo> formationsIdeoAvecFiche) {

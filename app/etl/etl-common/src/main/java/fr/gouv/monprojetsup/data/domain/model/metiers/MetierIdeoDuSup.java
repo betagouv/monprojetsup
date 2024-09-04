@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.cleanup;
+import static fr.gouv.monprojetsup.data.domain.Helpers.removeHtml;
 
 public record MetierIdeoDuSup(
         @NotNull String ideo,
@@ -31,12 +32,12 @@ public record MetierIdeoDuSup(
 
     public MetierIdeoDuSup(MetiersScrapped.MetierScrap m) {
         this(m.key(),
-                m.nom(),
-                List.of(new FicheMetierIdeo.SourceNumerique(m.url(), m.nom())),
+                removeHtml(m.nom()),
+                List.of(new FicheMetierIdeo.SourceNumerique(m.url(), removeHtml(m.nom()))),
                 null,
                 null,
                 null,
-                m.getDescriptif(),
+                removeHtml(m.getDescriptif()),
                 List.of(),
                 new ArrayList<>(),
                 List.of(),

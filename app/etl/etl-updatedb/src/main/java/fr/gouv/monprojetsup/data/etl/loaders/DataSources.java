@@ -14,7 +14,8 @@ public class DataSources {
 
     public static final String BACK_PSUP_DATA_FILENAME = "parcoursup/psupDataBack.zip";
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
-    public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26.json";
+    //public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26.json";
+    public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26_HG.csv";
     public static final String IDEO_OD_FORMATIONS_FICHES_URI = "https://api.opendata.onisep.fr/downloads/5fe07a9ecc960/5fe07a9ecc960.zip";
     public static final String IDEO_OD_FORMATIONS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa591127f501/5fa591127f501.json";
     public static final String IDEO_OD_METIERS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa5949243f97/5fa5949243f97.json";

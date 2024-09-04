@@ -267,6 +267,39 @@ public record FicheFormationIdeo(
                 );
         }
 
+        public boolean estIEP() {
+                return sigle != null && sigle.equals("IEP");
+        }
+
+        public boolean estEcoleIngenieur() {
+                return type_Formation.type_formation_libelle_court.equals("ING")
+                        || type_Formation.type_formation_libelle.contains("diplôme d'ingénieur");
+        }
+
+        public boolean estEcoleCommerce() {
+                return type_Formation.type_formation_libelle_court.equals("GECOM")
+                        || type_Formation.type_formation_libelle.contains("diplôme d'école de commerce");
+        }
+
+        public boolean estEcoleArchitecture() {
+                return type_Formation.type_formation_libelle_court.equals("ARCHI")
+                        || type_Formation.type_formation_libelle.contains("diplôme des écoles d'architecture");
+        }
+
+        public boolean estEcoleArt() {
+                return type_Formation.type_formation_libelle_court.equals("DNA")
+                        || type_Formation.type_formation_libelle_court.contains("DNA");
+        }
+
+        public boolean estDiplomeConservationRestauration() {
+                return Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_code,-1) == Constants.CODE_NSF_CONSERVATION_RESTAURATION;
+        }
+
+        public boolean estDMA() {
+                return type_Formation.type_formation_libelle_court.equals("DMA")
+                        || type_Formation.type_formation_libelle_court.contains("DMA");
+        }
+
         /*"type_Formation": {
                           "type_formation_sigle": "",
                           "type_formation_libelle_court": "ING",

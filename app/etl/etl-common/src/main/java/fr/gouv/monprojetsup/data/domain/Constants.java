@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.domain;
 
+import java.util.Set;
+
 public class Constants {
     public static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
     public static final String FILIERE_PREFIX = "fl";//like g_fl_cod
@@ -14,7 +16,7 @@ public class Constants {
     public static final String CENTRE_INTERETS_ONISEP = "T_IDEO2";
 
     public static final int PASS_FL_COD = 2047;
-    public static final String URL_ARTICLE_PAS_LAS = "https://www.onisep.fr/formation/les-principaux-domaines-de-formation/les-etudes-de-sante/les-voies-d-acces-aux-etudes-de-maieutique-medecine-odontologie-pharmacie";
+    public static final String URL_ARTICLE_PAS_LAS = "https://explorer-avenirs.onisep.fr/formation/les-principaux-domaines-de-formation/les-etudes-de-sante/les-voies-d-acces-aux-etudes-de-maieutique-medecine-odontologie-pharmacie";
 
     public static final String LABEL_ARTICLE_PAS_LAS = "Les études de santé";
     public static final String PAS_LAS_TEXT = "<p>Pour accéder aux études de santé (maïeutique, médecine, odontologie et pharmacie), les lycéens doivent suivre le PASS (parcours d'accès spécifique santé) ou une L.AS (licence avec option accès santé) à l'université et réussir aux sélections organisées à l'issue.</p>";
@@ -27,6 +29,25 @@ public class Constants {
     public static final String PASS_MOT_CLE = "PASS";
     public static final int DUREE_LAS = 5;
     public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
+    public static final int IEP_PSUP_FR_COD = 90;
+    public static final int ECOLE_INGE_PSUP_FR_COD = 21;
+    public static final int ECOLE_COMMERCE_PSUP_FR_COD = 24;
+    public static final int ECOLE_ARCHI_PSUP_FL_COD = 250;
+    public static final int ECOLE_ARCHI_INGE_PSUP_FL_COD = 251;
+    public static final int ECOLE_ART_PSUP_FR_COD = 27;
+    public static final int DIPLOME_ART_PSUP_FR_COD = 84700;
+    public static final int CODE_NSF_CONSERVATION_RESTAURATION = 342;
+    public static final int ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD = 253;
+    public static final int CUPGE_ECO_GESTION_FR_COD = 85;
+    public static final Set<String> FORMATION_PSUP_EXCLUES = Set.of(
+            "fr63",//année préparatoire
+            "fl85001",//Formation valant grade de licence
+            "fr75000",//Diplôme d'Etablissement
+            "fl231",//Formation Bac + 4
+            "fr70",//Diplôme d'établissement,
+            "fr95000"//Sous-officier
+    );
+    public static final int DMA_PSUP_FR_COD = 81;
 
     public static String gFlCodToFrontId(int cle) {
         return FILIERE_PREFIX + cle;
@@ -43,10 +64,13 @@ public class Constants {
     /**
      * creates a clean string suitable for indexing in js
      *
-     * @param dirty
-     * @return
+     * @param dirty the string to clean
+     * @return the cleaned string
      */
     public static String cleanup(String dirty) {
         return dirty.replaceAll("[^a-zA-Z0-9]", "_");
+    }
+
+    private Constants() {
     }
 }
