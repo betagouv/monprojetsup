@@ -22,11 +22,11 @@ class TripletAffectationEntity {
     @Column(name = "code_commune", nullable = false)
     lateinit var codeCommune: String
 
-    @Column(name = "latitude", nullable = true)
-    var latitude: Double? = null
+    @Column(name = "latitude", nullable = false)
+    var latitude: Double = 0.0
 
-    @Column(name = "longitude", nullable = true)
-    var longitude: Double? = null
+    @Column(name = "longitude", nullable = false)
+    var longitude: Double = 0.0
 
     @Column(name = "id_formation", nullable = false)
     lateinit var idFormation: String
@@ -39,8 +39,8 @@ class TripletAffectationEntity {
                 Commune(
                     codeInsee = codeCommune,
                     nom = commune,
-                    latitude = latitude ?: 0.0,
-                    longitude = longitude ?: 0.0,
+                    latitude = latitude,
+                    longitude = longitude,
                 ),
         )
 }
