@@ -61,10 +61,10 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
 
 
     public record Request(
-            @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]", required = false))
+            @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier, codes INSEE ou en toutes lettres", example = "[\"33514\",\"Nantes\"]"))
             @Nullable Set<String> geo_pref,
 
-            @ArraySchema(arraySchema = @Schema(name = "keys", description = "clés", example = "[\"fl2014\",\"fl2007\"]", required = false))
+            @ArraySchema(arraySchema = @Schema(name = "keys", description = "clés", example = "[\"fl2014\",\"fl2007\"]"))
             @NotNull List<String> keys
         ) {
     }

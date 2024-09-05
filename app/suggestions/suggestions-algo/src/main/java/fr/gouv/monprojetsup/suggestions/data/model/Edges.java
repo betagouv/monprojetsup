@@ -46,11 +46,6 @@ public final class Edges {
 
     @Cacheable("pathes")
     public Set<Path> computePathesFrom(String node, int maxDistance) {
-        return computePathesFromInternal(node, maxDistance);
-    }
-
-
-    private Set<Path> computePathesFromInternal(String node, int maxDistance) {
         Set<Path> resultat = new HashSet<>();
         Path pi = new Path(node, 1.0);
         resultat.add(pi);

@@ -14,8 +14,7 @@ fun main(args: Array<String>) {
 
 @SpringBootApplication
 @Configuration
-class ApplicationSuggestions{
-}
+class ApplicationSuggestions
 
 @Configuration
 @ComponentScan(basePackages = [
@@ -32,8 +31,7 @@ class ApplicationSuggestions{
 @EnableJpaRepositories(basePackages = [
     "fr.gouv.monprojetsup.suggestions"]
 )
-class JpaConfig {
-}
+class JpaConfig
 
 /**
  * Version of the API used to implement the service,

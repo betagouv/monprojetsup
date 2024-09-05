@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*
 )
 
 
-class SuggestionsControllerz(
+class SuggestionsControllers(
     private val getExplanationsAndExamplesService: GetExplanationsAndExamplesService,
     private val getFormationsOfInterestService: GetFormationsOfInterestService,
     private val getSuggestionsService: GetSuggestionsService,

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.Affinite;
-import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.MAX_LENGTH_FOR_SUGGESTIONS;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_LENGTH_FOR_SUGGESTIONS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
 

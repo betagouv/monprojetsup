@@ -7,7 +7,6 @@ import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
-import fr.gouv.monprojetsup.suggestions.tools.ConcurrentBoundedMapQueue;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.val;
@@ -48,16 +47,7 @@ public class AlgoSuggestions {
     public final Edges edgesKeys = new Edges();
 
     private Set<String> apprentissage;
-    static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
 
-    //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
-    private static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
-
-    private static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
-    private static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
-    private static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.75;
-    private static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
-    private static final double MAX_AFFINITY_PERCENT = 0.90;
     //utilisé par suggestions
     protected final Map<String, Integer> codesSpecialites = new HashMap<>();
     public final int p50NbFormations;
@@ -69,6 +59,99 @@ public class AlgoSuggestions {
     protected final Set<String> relatedToHealth = new HashSet<>();
 
     private final AtomicInteger counter = new AtomicInteger(0);
+
+
+
+    /**
+     * Preccmpute some data used to to details details
+     */
+    @PostConstruct
+    void initialize() {
+
+        createGraph();
+
+        data.getSpecialites().forEach(
+                spe -> {
+                    codesSpecialites.put(spe.idMps(), spe.idPsup());//prod ref
+                    codesSpecialites.put(spe.label(), spe.idPsup());//retrocompat pour experts métiers
+                    codesSpecialites.put(Integer.toString(spe.idPsup()), spe.idPsup());//retrocompat pour experts métiers
+                }
+        );
+
+        LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
+        bacsWithSpecialites.addAll(data.getBacsWithAtLeastTwoSpecialites());
+
+        apprentissage = data.getFormationIdsWithApprentissage();
+
+        relatedToHealth.addAll(edgesKeys
+                .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
+                .keySet());
+        relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
+        relatedToHealth.addAll(data.getLASFormations());
+    }
+
+    public void createGraph() {
+        LOGGER.info("Creating global graph");
+        edgesKeys.clear();
+
+        getFormationIds().forEach(edgesKeys::addNode);
+
+        // intégration des relations étendues aux graphes
+        Map<String, Set<String>> metiersVersFormations = data.getMetiersVersFormations();
+        val metiersPass = data.getMetiersPass();
+        val lasCorr = data.getLASFormations();
+
+        metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
+            if(lasCorr.contains(fil) && metiersPass.contains(metier)) {
+                edgesKeys.put(metier, fil, true, Config.LASS_TO_PASS_METIERS_PENALTY);
+            } else {
+                edgesKeys.put(metier, fil, true, 1.0);
+            }
+        }));
+
+        edgesKeys.putAll(data.edgesFilieresThematiques());
+        edgesKeys.putAll(data.edgesThematiquesMetiers());
+        edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
+        edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
+        edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
+
+
+        //ajout des correspondances de interets
+        edgesKeys.putAll(data.edgesItemssGroupeItems());
+        edgesKeys.addEdgesFromMoreGenericItem(data.edgesItemssGroupeItems(), 1.0);
+
+        //ajout des correspondances de groupes
+        edgesKeys.putAll(data.edgesFilieresGroupes());
+        edgesKeys.addEdgesFromMoreGenericItem(data.edgesFilieresGroupes(), 1.0);
+
+        LOGGER.info("Restricting graph to the prestar of recos");
+        Set<String> before = new HashSet<>(edgesKeys.nodes());
+        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
+                Helpers::isFiliere
+        ).collect(Collectors.toSet());
+        Set<String> useful = edgesKeys.preStar(recoNodes);
+        edgesKeys.retainAll(useful);
+        Set<String> after = new HashSet<>(edgesKeys.nodes());
+        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
+        before.removeAll(after);
+        LOGGER.info("Total nb of edges+ " + edgesKeys.size());
+
+        //LAS inheritance, oth from their mother licence and from PASS
+        edgesKeys.addEdgesFromMoreGenericItem(data.lasToGeneric(), 1.0);
+        edgesKeys.addEdgesFromMoreGenericItem(data.lasToPass(), Config.LASS_TO_PASS_METIERS_PENALTY);
+
+        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
+        Set<String> filFront = new HashSet<>(getFormationIds());
+        Set<String> toErase = edgesKeys.keys().stream().filter(
+                s -> isFiliere(s) && !filFront.contains(s)
+        ).collect(Collectors.toSet());
+
+
+
+        edgesKeys.eraseNodes(toErase);
+
+    }
+
 
     public static double getSmallCapacityScore() {
         return 1.0;
@@ -143,7 +226,7 @@ public class AlgoSuggestions {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
-            LOGGER.info(NOTHING_PERSONAL);
+            LOGGER.info(Config.NOTHING_PERSONAL);
             return List.of();
         }
         //computing interests of all alive filieres
@@ -157,7 +240,7 @@ public class AlgoSuggestions {
                 ));
 
         //computing maximal score for etalonnage
-        double maxScore = affinites.values().stream().mapToDouble(aff -> aff.affinite).max().orElse(1.0) / MAX_AFFINITY_PERCENT;
+        double maxScore = affinites.values().stream().mapToDouble(aff -> aff.affinite).max().orElse(1.0) / Config.MAX_AFFINITY_PERCENT;
 
         if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
@@ -256,7 +339,7 @@ public class AlgoSuggestions {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
-            LOGGER.info(NOTHING_PERSONAL);
+            LOGGER.info(Config.NOTHING_PERSONAL);
             return List.of();
         }
 
@@ -304,97 +387,6 @@ public class AlgoSuggestions {
                 && (pf.geo_pref() == null || pf.geo_pref().isEmpty());
     }
 
-    /**
-     * Preccmpute some data used to to details details
-     */
-    @PostConstruct
-    void initialize() {
-
-        createGraph();
-
-        data.getSpecialites().forEach(
-                spe -> {
-                    codesSpecialites.put(spe.idMps(), spe.idPsup());//prod ref
-                    codesSpecialites.put(spe.label(), spe.idPsup());//retrocompat pour experts métiers
-                    codesSpecialites.put(Integer.toString(spe.idPsup()), spe.idPsup());//retrocompat pour experts métiers
-                }
-        );
-
-        LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(data.getBacsWithAtLeastTwoSpecialites());
-
-        apprentissage = data.getFormationIdsWithApprentissage();
-
-        relatedToHealth.addAll(edgesKeys
-                .getSuccessors(gFlCodToFrontId(PASS_FL_COD))
-                .keySet());
-        relatedToHealth.add(gFlCodToFrontId(PASS_FL_COD));
-        relatedToHealth.addAll(data.getLASFormations());
-    }
-
-    public void createGraph() {
-        LOGGER.info("Creating global graph");
-        edgesKeys.clear();
-
-        getFormationIds().forEach(edgesKeys::addNode);
-
-        // intégration des relations étendues aux graphes
-        Map<String, Set<String>> metiersVersFormations = data.getMetiersVersFormations();
-        val metiersPass = data.getMetiersPass();
-        val lasCorr = data.getLASFormations();
-
-        metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasCorr.contains(fil) && metiersPass.contains(metier)) {
-                edgesKeys.put(metier, fil, true, LASS_TO_PASS_METIERS_PENALTY);
-            } else {
-                edgesKeys.put(metier, fil, true, 1.0);
-            }
-        }));
-
-        edgesKeys.putAll(data.edgesFilieresThematiques());
-        edgesKeys.putAll(data.edgesThematiquesMetiers());
-        edgesKeys.putAll(data.edgesInteretsMetiers(), false, EDGES_INTERETS_METIERS_WEIGHT); //faible poids
-        edgesKeys.putAll(data.edgesSecteursMetiers(), true, EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
-        edgesKeys.putAll(data.edgesMetiersAssocies(), true, EDGES_METIERS_ASSOCIES_WEIGHT);
-
-
-        //ajout des correspondances de interets
-        edgesKeys.putAll(data.edgesItemssGroupeItems());
-        edgesKeys.addEdgesFromMoreGenericItem(data.edgesItemssGroupeItems(), 1.0);
-
-        //ajout des correspondances de groupes
-        edgesKeys.putAll(data.edgesFilieresGroupes());
-        edgesKeys.addEdgesFromMoreGenericItem(data.edgesFilieresGroupes(), 1.0);
-
-        LOGGER.info("Restricting graph to the prestar of recos");
-        Set<String> before = new HashSet<>(edgesKeys.nodes());
-        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
-                Helpers::isFiliere
-        ).collect(Collectors.toSet());
-        Set<String> useful = edgesKeys.preStar(recoNodes);
-        edgesKeys.retainAll(useful);
-        Set<String> after = new HashSet<>(edgesKeys.nodes());
-        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
-        before.removeAll(after);
-        LOGGER.info("Total nb of edges+ " + edgesKeys.size());
-
-        //LAS inheritance, oth from their mother licence and from PASS
-        edgesKeys.addEdgesFromMoreGenericItem(data.lasToGeneric(), 1.0);
-        edgesKeys.addEdgesFromMoreGenericItem(data.lasToPass(), LASS_TO_PASS_METIERS_PENALTY);
-
-        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
-        Set<String> filFront = new HashSet<>(getFormationIds());
-        Set<String> toErase = edgesKeys.keys().stream().filter(
-                s -> isFiliere(s) && !filFront.contains(s)
-        ).collect(Collectors.toSet());
-
-
-
-        edgesKeys.eraseNodes(toErase);
-
-    }
-
-
 
     /**
      * @param bac the bac
@@ -410,10 +402,6 @@ public class AlgoSuggestions {
         return apprentissage.contains(grp);
     }
 
-    private static final int PATHES_CACHE_SIZE = 1000;  //1000 is enough ?
-    private static final ConcurrentBoundedMapQueue<Pair<String,Integer>, Map<String,List<Path>>> pathsFromDistances
-            = new ConcurrentBoundedMapQueue<>(PATHES_CACHE_SIZE);
-
     /**
      * return s the set of pathes indexed by last node
      * @param n the node
@@ -421,20 +409,10 @@ public class AlgoSuggestions {
      * @return a map of pathes indexed by last node
      */
     public Map<String,List<Path>> computePathesFrom(String n, int maxDistance) {
-        Pair<String, Integer> key = Pair.of(n, maxDistance);
-
-        Map<String,List<Path>> result = pathsFromDistances.get(key);
-        if(result != null) return result;
-        @SuppressWarnings("DataFlowIssue")
-        @NotNull Map<String,List<Path>> result2 = edgesKeys
-                        .computePathesFrom(n, maxDistance)
-                        .stream()
-                        .filter(p -> p.last() != null)
-                        .collect(
-                                Collectors.groupingBy(Path::last)
-                        );
-        pathsFromDistances.put(key, result2);
-        return result2;
+        return edgesKeys
+                .computePathesFrom(n, maxDistance)
+                .stream()
+                .collect(Collectors.groupingBy(p -> Objects.requireNonNull(p.last())));
     }
 
     public boolean isRelatedToHealth(Set<String> nonZeroScores) {
@@ -451,7 +429,6 @@ public class AlgoSuggestions {
                 "<br>\ndetails served since last boot: " + counter.get()
                         + "<br>\nnodes in graph: " + edgesKeys.nodes().size()
                 + "<br>\nedges in graph: " + edgesKeys.size()
-                + "<br>\npathes cache size " + pathsFromDistances.size()
                 ;
 
     }
