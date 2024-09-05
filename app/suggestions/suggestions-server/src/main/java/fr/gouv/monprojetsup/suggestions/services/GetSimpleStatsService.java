@@ -39,7 +39,7 @@ public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.R
     }
 
     @Override
-    protected @NotNull Response handleRequest(@NotNull Request req) throws Exception {
+    protected @NotNull Response handleRequest(@NotNull Request req) {
         @NotNull StatsContainers.SimpleStatGroupParBac stats = data.getSimpleGroupStats(
                 req.bac(),
                 req.key

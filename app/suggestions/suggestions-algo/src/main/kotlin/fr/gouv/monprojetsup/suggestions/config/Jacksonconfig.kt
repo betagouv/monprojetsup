@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.suggestions.server.config
+package fr.gouv.monprojetsup.suggestions.config
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
