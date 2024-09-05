@@ -17,9 +17,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class ExportSuggestionsData {
-    private final SuggestionsData data;
-    private final AlgoSuggestions algo;
-    private final Map<String, String> labels;
+
+    protected SuggestionsData data;
+    protected AlgoSuggestions algo;
+    protected Map<String, String> labels;
 
     @Autowired
     public ExportSuggestionsData(
