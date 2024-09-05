@@ -48,7 +48,8 @@ public class AlgoSuggestions {
      */
 
     /* le graphe des relations entre les différentes clés dans les nomenclatures */
-    public final Edges edgesKeys = new Edges();
+    @Getter
+    private final Edges edgesKeys = new Edges();
 
     /* les formations en apprentissage */
     private Set<String> apprentissage;
@@ -114,14 +115,14 @@ public class AlgoSuggestions {
 
         metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
             if(lasCorr.contains(fil) && metiersPass.contains(metier)) {
-                edgesKeys.put(metier, fil, true, Config.LASS_TO_PASS_METIERS_PENALTY);
+                edgesKeys.put(metier, fil, true, Config.LASS_TO_PASS_INHERITANCE_PENALTY);
             } else {
                 edgesKeys.put(metier, fil, true, 1.0);
             }
         }));
 
-        edgesKeys.putAll(data.edgesFilieresThematiques());
-        edgesKeys.putAll(data.edgesThematiquesMetiers());
+        edgesKeys.putAll(data.edgesFormationsDomaines());
+        edgesKeys.putAll(data.edgesDomainesMetiers());
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
@@ -129,11 +130,12 @@ public class AlgoSuggestions {
 
         //ajout des correspondances de interets
         edgesKeys.putAll(data.edgesItemssGroupeItems());
-        edgesKeys.addEdgesFromMoreGenericItem(data.edgesItemssGroupeItems(), 1.0);
+        edgesKeys.replaceSpecificByGeneric(data.edgesItemssGroupeItems(), 1.0);
 
         //ajout des correspondances de groupes
-        edgesKeys.putAll(data.edgesFilieresGroupes());
-        edgesKeys.addEdgesFromMoreGenericItem(data.edgesFilieresGroupes(), 1.0);
+        val edgesFilieresGroupes = data.edgesFilieresGroupes();
+        edgesKeys.putAll(edgesFilieresGroupes);
+        edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
 
         LOGGER.info("Restricting graph to the prestar of recos");
         Set<String> before = new HashSet<>(edgesKeys.nodes());
@@ -148,17 +150,15 @@ public class AlgoSuggestions {
         LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 
         //LAS inheritance, oth from their mother licence and from PASS
-        edgesKeys.addEdgesFromMoreGenericItem(data.lasToGeneric(), 1.0);
-        edgesKeys.addEdgesFromMoreGenericItem(data.lasToPass(), Config.LASS_TO_PASS_METIERS_PENALTY);
+        edgesKeys.inheritEdgesFromRicherItem(data.lasToGeneric(), 1.0);
+        edgesKeys.inheritEdgesFromRicherItem(data.lasToPass(), Config.LASS_TO_PASS_INHERITANCE_PENALTY);
 
-        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances
+        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances, e.g. Année préparatoire
         Set<String> filFront = new HashSet<>(getFormationIds());
         Set<String> toErase = edgesKeys.keys().stream().filter(
                 s -> isFiliere(s) && !filFront.contains(s)
         ).collect(Collectors.toSet());
-
-
-
+        LOGGER.info("Erasing filieres which are not indexed by MPS " + toErase.size());
         edgesKeys.eraseNodes(toErase);
 
     }

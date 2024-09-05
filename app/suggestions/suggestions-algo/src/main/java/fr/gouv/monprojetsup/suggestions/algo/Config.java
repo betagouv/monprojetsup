@@ -14,7 +14,7 @@ public final class Config {
     public static final int MAX_NG_SUGGESTIONS = 20;
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
-    static final double LASS_TO_PASS_METIERS_PENALTY = 0.25;
+    static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.75;

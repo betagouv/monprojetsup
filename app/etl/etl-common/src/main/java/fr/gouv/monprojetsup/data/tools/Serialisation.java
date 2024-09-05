@@ -43,9 +43,9 @@ public class Serialisation {
         String dirName = dataDir;
         String cacheName = dirName + "/" + urlString.substring(i);
         if (dataDir != null && Files.exists(Path.of(cacheName))) {
-                LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
-                return new FileInputStream(cacheName);
-            }
+            LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
+            return new FileInputStream(cacheName);
+        }
 
         LOGGER.info("Téléchargement depuis " + urlString);
         val uri = URI.create(urlString);
@@ -61,7 +61,7 @@ public class Serialisation {
             val stream = response.body();
             if (dataDir != null) {
                 LOGGER.warning("Sauvegarde de " + urlString + " dans le cache " + cacheName);
-                if(!Files.exists(Path.of(dirName))) Files.createDirectory(Path.of(dirName));
+                if(!Files.exists(Path.of(dirName))) Files.createDirectories(Path.of(dirName));
                 try (OutputStream out = new FileOutputStream(cacheName)) {
                     stream.transferTo(out);
                 }

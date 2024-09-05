@@ -41,60 +41,26 @@ public class OnisepDataLoader {
 
         Interets interets = loadInterets(sources);
 
-        LOGGER.info("Chargements des formations");
-        List<FormationIdeoSimple> formationsIdeoSansfiche = loadFormationsSimplesIdeo();
-        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo();
-        Map<String,FormationIdeoDuSup> formationsIdeoDuSup = extractFormationsIdeoDuSup(
-                formationsIdeoSansfiche,
-                formationsIdeoAvecFiche
-        );
+        LOGGER.info("Chargements des formations ideo");
+        val formationsIdeoDuSup = loadFormationsIdeoDuSup();
 
-
-        LOGGER.info("Chargement des metiers");
-        List<MetierIdeoDuSup> metiersIdeoDuSup = loadMetiers(formationsIdeoDuSup.values(), sousDomainesWeb, sources);
+        LOGGER.info("Chargement des metiers ideo");
+        val metiersIdeoDuSup = loadMetiers(formationsIdeoDuSup.values(), sousDomainesWeb, sources);
 
         LOGGER.info("Insertion des données ROME dans les données Onisep");
         val romeData = RomeDataLoader.load(sources);
         insertRomeInteretsDansMetiers(romeData.centresInterest(), metiersIdeoDuSup); //before updateLabels
 
         LOGGER.info("Chargement des correspondances");
-        List<Pair<String,String>> edgesDomainesMetiers = new ArrayList<>();
-        List<Pair<String,String>> edgesFormationsDomaines = new ArrayList<>();
-        List<Pair<String,String>> edgesInteretsMetiers = new ArrayList<>();
-        List<Pair<String,String>> edgesMetiersFormations = new ArrayList<>();
-
-        //baseline: links from the big xml and jm and cécile correspondances
         val filieresPsupToFormationsMetiersIdeo = loadPsupToIdeoCorrespondance(sources, formationsIdeoDuSup.values().stream().toList());
-        filieresPsupToFormationsMetiersIdeo.forEach(
-                fil -> {
-                    val psupId = fil.gFlCod();
-                    fil.ideoFormationsIds().stream()
-                            .map(formationsIdeoDuSup::get)
-                            .filter(Objects::nonNull)
-                            .forEach( f -> {
-                                edgesMetiersFormations.addAll(
-                                        f.metiers().stream()
-                                                .map(metier -> Pair.of(cleanup(metier), psupId))
-                                                .toList()
-                                );
-                                edgesFormationsDomaines.addAll(
-                                        f.getSousdomainesWebMpsIds(sousDomainesWeb).stream()
-                                                .map(cleDomaineMps -> Pair.of(psupId, cleDomaineMps))
-                                                .toList()
-                                );
-                            }
-                            );
-                });
 
-        metiersIdeoDuSup.forEach(m -> {
-            m.domaines().forEach(domaineKey
-                    -> edgesDomainesMetiers.add(Pair.of(cleanup(domaineKey), m.idMps()))
-            );
-            m.interets().forEach(interetKey
-                    -> edgesInteretsMetiers.add(Pair.of(cleanup(interetKey), m.idMps()))
-            );
-        });
+        val edgesFormations = getEdgesFormations(sousDomainesWeb, formationsIdeoDuSup, filieresPsupToFormationsMetiersIdeo);
+        val edgesFormationsDomaines = edgesFormations.getLeft();
+        val edgesMetiersFormations = edgesFormations.getRight();
 
+        val edgesMetiers = getEdgesMetiers(metiersIdeoDuSup);
+        val edgesDomainesMetiers = edgesMetiers.getLeft();
+        val edgesInteretsMetiers = edgesMetiers.getRight();
 
         LOGGER.info("Restriction des domaines et intérêts aux valeurs utilisées");
         Set<String> domainesUsed = new HashSet<>();
@@ -129,6 +95,55 @@ public class OnisepDataLoader {
                 metiersIdeoDuSup,
                 formationsIdeoDuSup.values().stream().toList()
         );
+
+    }
+
+    protected static Pair<ArrayList<Pair<String, String>>, ArrayList<Pair<String, String>>> getEdgesMetiers(List<MetierIdeoDuSup> metiersIdeoDuSup) {
+        val edgesDomainesMetiers = new ArrayList<Pair<String,String>>();
+        val edgesInteretsMetiers = new ArrayList<Pair<String,String>>();
+        metiersIdeoDuSup.forEach(m -> {
+            m.domaines().forEach(domaineKey
+                    -> edgesDomainesMetiers.add(Pair.of(cleanup(domaineKey), m.idMps()))
+            );
+            m.interets().forEach(interetKey
+                    -> edgesInteretsMetiers.add(Pair.of(cleanup(interetKey), m.idMps()))
+            );
+        });
+        return Pair.of(edgesDomainesMetiers, edgesInteretsMetiers);
+    }
+
+    protected static Pair<List<Pair<String, String>>, List<Pair<String, String>>> getEdgesFormations(
+            List<SousDomaineWeb> sousDomainesWeb,
+            Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
+            List<FilieresPsupVersFormationsEtMetiersIdeo> filieresPsupToFormationsMetiersIdeo
+    ) {
+        val edgesFormationsDomaines = new ArrayList<Pair<String,String>>();
+        val edgesMetiersFormations = new ArrayList<Pair<String,String>>();
+
+        //baseline: links from the big xml and jm and cécile correspondances
+        val sousdomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
+        filieresPsupToFormationsMetiersIdeo.forEach(
+                fil -> {
+                    val psupId = fil.gFlCod();
+                    fil.ideoFormationsIds().stream()
+                            .map(formationsIdeoDuSup::get)
+                            .filter(Objects::nonNull)
+                            .forEach( f -> {
+                                        edgesMetiersFormations.addAll(
+                                                f.metiers().stream()
+                                                        .map(metier -> Pair.of(cleanup(metier), psupId))
+                                                        .toList()
+                                        );
+                                        edgesFormationsDomaines.addAll(
+                                                f.getSousdomainesWebMpsIds(sousdomainesWebByIdeoKey).stream()
+                                                        .map(cleDomaineMps -> Pair.of(psupId, cleDomaineMps))
+                                                        .toList()
+                                        );
+                                    }
+                            );
+                }
+                );
+        return Pair.of(edgesFormationsDomaines, edgesMetiersFormations);
 
     }
 
@@ -200,14 +215,14 @@ public class OnisepDataLoader {
     }
 
 
-    private static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources, List<FormationIdeoDuSup> formationsIdeo) {
+    protected static List<FilieresPsupVersFormationsEtMetiersIdeo> loadPsupToIdeoCorrespondance(DataSources sources, List<FormationIdeoDuSup> formationsIdeo) {
         LOGGER.info("Chargement de " + DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH);
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
         return FilieresPsupVersFormationsEtMetiersIdeo.compute(lines, formationsIdeo);
     }
 
-    private static Map<String,FormationIdeoDuSup> extractFormationsIdeoDuSup(List<FormationIdeoSimple> formationsIdeoSansfiche, List<FicheFormationIdeo> formationsIdeoAvecFiche) {
+    protected static Map<String,FormationIdeoDuSup> extractFormationsIdeoDuSup(List<FormationIdeoSimple> formationsIdeoSansfiche, List<FicheFormationIdeo> formationsIdeoAvecFiche) {
 
         Map<String, FormationIdeoDuSup> formationsPerKey = new HashMap<>();
 
@@ -244,7 +259,7 @@ public class OnisepDataLoader {
             List<MetiersScrapped.MetierScrap> metiersScrapped,
             List<FicheMetierIdeo> fichesMetiers,
             Set<String> formationsDuSup,
-            List<SousDomaineWeb> domainesPro
+            List<SousDomaineWeb> sousDomainesWeb
     ) {
 
         Map<String,MetierIdeoDuSup> metiers = new HashMap<>();
@@ -256,9 +271,10 @@ public class OnisepDataLoader {
             }
         });
 
+        val sousDomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
         for (MetierIdeoSimple m : metiersIdeoSimples) {
             var met = metiers.get(m.idMps());
-            met = MetierIdeoDuSup.merge(m, domainesPro, met);
+            met = MetierIdeoDuSup.merge(m, sousDomainesWebByIdeoKey, met);
             metiers.put(met.idMps(), met);
         }
 
@@ -335,4 +351,14 @@ public class OnisepDataLoader {
 
 
     private OnisepDataLoader() {}
+
+    @NotNull
+    public static Map<String, @NotNull FormationIdeoDuSup> loadFormationsIdeoDuSup() throws Exception {
+        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo();
+        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo();
+        return extractFormationsIdeoDuSup(
+                formationsIdeoSansfiche,
+                formationsIdeoAvecFiche
+        );
+    }
 }

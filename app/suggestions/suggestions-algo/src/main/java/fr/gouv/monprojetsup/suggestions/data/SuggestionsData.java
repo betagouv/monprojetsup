@@ -225,11 +225,11 @@ public class SuggestionsData {
         return edgesPort.getEdgesInteretsMetiers();
     }
 
-    public List<Edge> edgesFilieresThematiques() {
+    public List<Edge> edgesFormationsDomaines() {
         return edgesPort.getEdgesFilieresThematiques();
     }
 
-    public List<Edge> edgesThematiquesMetiers() {
+    public List<Edge> edgesDomainesMetiers() {
         return edgesPort.getEdgesThematiquesMetiers();
     }
 

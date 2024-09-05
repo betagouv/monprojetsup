@@ -100,7 +100,9 @@ public final class Edges {
     }
 
     public void putAll(List<Edge> edges) {
+
         putAll(edges, true, 1.0);
+
     }
 
 
@@ -188,23 +190,46 @@ public final class Edges {
     /**
      * the specifics inherit from the generics
      *
-     * @param specificToGeneric the edges from the specifics to the generics
+     * @param poorToRich the edges from the specifics to the generics
      * @param coef             the coefficient to apply to the weights
      */
-    public void addEdgesFromMoreGenericItem(List<Edge> specificToGeneric, double coef) {
+    public void inheritEdgesFromRicherItem(List<Edge> poorToRich, double coef) {
 
-        specificToGeneric.forEach(e -> {
-            val specific = e.src();
-            val generic = e.dst();
-            Map<String, Double> edgesFromGeneric = this.edges.get(Constants.cleanup(generic));
-            if (edgesFromGeneric != null) {
-                edgesFromGeneric.forEach((target, weight) -> put(specific, target, false, weight* coef));
+        poorToRich.forEach(e -> {
+            val poor = e.src();//e.g. las
+            val rich = e.dst();//e.g. not las
+            Map<String, Double> edgesFromRich = this.edges.get(Constants.cleanup(rich));
+            if (edgesFromRich != null) {
+                edgesFromRich.forEach((target, weight) -> put(poor, target, false, weight* coef));
             }
-            Map<String, Double> edgesToGeneric = this.backEdges.get(Constants.cleanup(generic));
-            if (edgesToGeneric != null) {
-                edgesToGeneric.forEach((origin, weight) -> put(origin, specific, false, weight * coef));
+            Map<String, Double> edgesToRich = this.backEdges.get(Constants.cleanup(rich));
+            if (edgesToRich != null) {
+                edgesToRich.forEach((origin, weight) -> put(origin, poor, false, weight * coef));
             }
         });
+    }
+
+    public void replaceSpecificByGeneric(List<Edge> specificToGeneric, double coef) {
+
+        specificToGeneric.forEach(e -> {
+            val specific = e.src();//e.g. fl4041 = CMI meca
+            val generic = e.dst();//e.g. fr22 = CMI en général
+            Map<String, Double> edgesFromSpecific = this.edges.get(Constants.cleanup(specific));
+            if (edgesFromSpecific != null) {
+                edgesFromSpecific.forEach((target, weight) -> put(generic, target, false, weight* coef));
+            }
+            Map<String, Double> edgesToSpecific = this.backEdges.get(Constants.cleanup(specific));
+            if (edgesToSpecific != null) {
+                edgesToSpecific.forEach((origin, weight) -> put(origin, generic, false, weight * coef));
+            }
+        });
+
+        /* now we remove the specifics and obtain a smaller graph */
+        val allSpecifics = specificToGeneric.stream().map(Edge::src).collect(Collectors.toSet());
+        val allGenerics = specificToGeneric.stream().map(Edge::dst).collect(Collectors.toSet());
+        val allSpecificsWhichAreNotGeneric = allSpecifics.stream().filter(s -> !allGenerics.contains(s)).collect(Collectors.toSet());
+        eraseNodes(allSpecificsWhichAreNotGeneric);
+
     }
 
     public void eraseNodes(Set<String> toErase) {

@@ -45,7 +45,7 @@ public record MetierIdeoDuSup(
                 );
     }
 
-    public static @NotNull MetierIdeoDuSup merge(MetierIdeoSimple m, List<SousDomaineWeb> domainesPro, MetierIdeoDuSup o) {
+    public static @NotNull MetierIdeoDuSup merge(MetierIdeoSimple m, Map<String, SousDomaineWeb> sousdomainesWeb, MetierIdeoDuSup o) {
 
         Set<String> motsCles = new HashSet<>();
         Set<String> domaines = new HashSet<>();
@@ -56,7 +56,7 @@ public record MetierIdeoDuSup(
             metiersAssocies.addAll(o.metiersAssocies());
         }
 
-        domaines.addAll(m.getDomaines(domainesPro).stream().map(SousDomaineWeb::mpsId).toList());
+        domaines.addAll(m.getDomaines(sousdomainesWeb).stream().map(SousDomaineWeb::mpsId).toList());
         motsCles.addAll(m.getMotsCles());
 
         return new MetierIdeoDuSup(

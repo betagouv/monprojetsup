@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.domain.Constants.includeKey;
+
 public record DomainesMps(
         Map<String, Regroupement> regroupements,
         List<SousDomaineWeb> sousDomainesWeb
@@ -36,10 +38,10 @@ public record DomainesMps(
         });
     }
 
-    public Map<String, String> getLabels() {
+    public Map<String, String> getLabels(boolean includeKeys) {
         Map<String, String> result = new HashMap<>();
-        sousDomainesWeb.forEach(domainePro -> result.put(domainePro.mpsId(), domainePro.sousDomaineOnisep()));
-        regroupements.forEach((key, value) -> result.put(key, value.label));
+        sousDomainesWeb.forEach(domainePro -> result.put(domainePro.mpsId(), includeKeys ? includeKey(domainePro.mpsId(), domainePro.sousDomaineOnisep()) :  domainePro.sousDomaineOnisep()));
+        regroupements.forEach((key, value) -> result.put(key, includeKeys ? includeKey(key,  value.label) : value.label));
         return result;
     }
 

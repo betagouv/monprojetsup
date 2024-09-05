@@ -167,14 +167,6 @@ public class PsupStatistiques implements Serializable {
         }
     }
 
-    public void removeSmallPopulations() {
-        statsAdmis.parGroupe().values().forEach(
-                StatistiquesAdmisParBac::removeSmallPopulations
-        );
-        statsAdmis.parGroupe().values().removeIf(statistiquesAdmisParBac -> statistiquesAdmisParBac.parBac().isEmpty());
-    }
-
-
 
     public void createGroupAdmisStatistique(@NotNull Map<String, String> flGroups) {
         Map<String, Set<String>> reverseFlGroups = new HashMap<>();

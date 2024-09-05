@@ -6,7 +6,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -34,11 +34,11 @@ import java.util.Set;
          * @param domainesPro
          * @return the keys
          */
-        public static Set<SousDomaineWeb> extractDomaines(@NotNull String domaines, List<SousDomaineWeb> domainesPro) {
+        public static Set<SousDomaineWeb> extractDomaines(@NotNull String domaines, Map<String, SousDomaineWeb> sousDomainesWeb) {
             Set<SousDomaineWeb> answer = new HashSet<>();
             String[] split = domaines.split("\\|");
             for (String dom : split) {
-                SousDomaineWeb domaine = extractDomaine(dom.trim(), domainesPro);
+                SousDomaineWeb domaine = extractDomaine(dom.trim(), sousDomainesWeb);
                 if (domaine != null) {
                     answer.add(domaine);
                 }
@@ -46,7 +46,13 @@ import java.util.Set;
             return answer;
         }
 
-        private static SousDomaineWeb extractDomaine(String label, List<SousDomaineWeb> domainesWeb) {
+        private static SousDomaineWeb extractDomaine(String label, Map<String, SousDomaineWeb> domainesWeb) {
+
+            //when it is the key and not the label
+            if(domainesWeb.containsKey(label)){
+                return domainesWeb.get(label);
+            }
+
             int i = label.indexOf("/");
             if (i <= 0 || i >= label.length() - 1) return null;
 
@@ -56,7 +62,7 @@ import java.util.Set;
             SousDomaineWeb bestMatch = null;
             String bestLib = null;
             int bestScore = Integer.MAX_VALUE;
-            for (SousDomaineWeb dom : domainesWeb) {
+            for (SousDomaineWeb dom : domainesWeb.values()) {
                 int distance = levenAlgo.apply(domaine, dom.domaineOnisep) + levenAlgo.apply(sousdomaine, dom.sousDomaineOnisep);
                 if (distance >= 0 && distance < bestScore) {
                     bestScore = distance;

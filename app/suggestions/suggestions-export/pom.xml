@@ -33,6 +33,16 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>fr.gouv.monprojetsup.suggestions.export.RunDiagnostics</mainClass>
+                    <classifier>exec</classifier>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -70,6 +80,7 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
+                    <jvmTarget>${maven.compiler.target}</jvmTarget>
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
@@ -81,7 +92,6 @@
                         <artifactId>kotlin-maven-noarg</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
-
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-allopen</artifactId>
