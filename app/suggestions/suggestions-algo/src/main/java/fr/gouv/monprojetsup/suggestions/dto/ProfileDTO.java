@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
 
@@ -22,7 +22,7 @@ public record ProfileDTO(
         String duree,
         @Schema(name = "apprentissage", description = "intérêt pour les formations en apprentissage", example = "C", allowableValues = {"", "A", "B", "C", "D"})
         String apprentissage,
-        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier", example = "[\"Soulac-sur-Mer\",\"Nantes\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "geo_pref", description = "villes préférées pour étudier (code insee ou nom)", example = "[\"33514\",\"Nantes\"]"))
         Set<String> geo_pref,
         @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
         Set<String> spe_classes,
@@ -38,11 +38,11 @@ public record ProfileDTO(
 ) {
 
     public List<SuggestionDTO> suggApproved() {
-        return choices == null ? List.of() : choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_APPROVED)).toList();
+        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_APPROVED)).toList();
     }
 
     public List<SuggestionDTO> suggRejected() {
-        return choices == null ? List.of() : choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).toList();
+        return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_REJECTED)).toList();
     }
 
     public int bacIndex() {
@@ -55,20 +55,6 @@ public record ProfileDTO(
         };
     }
 
-
-    private List<SuggestionDTO> cleanupDates(List<SuggestionDTO> choices) {
-        return choices.stream().map(e -> e.anonymize()).toList();
-    }
-
-    public boolean isFavori(String key) {
-        if (choices == null) return false;
-        return choices.stream().anyMatch(s -> s.fl().equals(key) && s.status().equals(SuggestionDTO.SUGG_APPROVED));
-    }
-
-    public Set<String> bin() {
-        if(choices == null) return Set.of();
-        return choices.stream().filter(s -> s.status().equals(SuggestionDTO.SUGG_REJECTED)).map(SuggestionDTO::fl).collect(Collectors.toSet());
-    }
 
     public void removeAllFormationChoices() {
           choices.removeIf(s -> isFiliere(s.fl()));
