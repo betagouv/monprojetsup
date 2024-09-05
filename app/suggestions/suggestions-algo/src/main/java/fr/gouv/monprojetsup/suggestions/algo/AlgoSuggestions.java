@@ -36,34 +36,42 @@ public class AlgoSuggestions {
     @Autowired
     public AlgoSuggestions(SuggestionsData data) {
         this.data = data;
-        this.lasFilieres = data.getLASFormations();
+        this.las = data.getLASFormations();
         p50NbFormations = data.p50NbFormations();
         p75Capacity = data.p75Capacity();
     }
 
     private final SuggestionsData data;
 
-    /* les relations entre les différents indices dans les nomenclatures */
+    /**
+     * Données en cache utilisées par le service, précalculées au démarrage
+     */
+
+    /* le graphe des relations entre les différentes clés dans les nomenclatures */
     public final Edges edgesKeys = new Edges();
 
+    /* les formations en apprentissage */
     private Set<String> apprentissage;
-
-    //utilisé par suggestions
+    /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
+    protected Set<String> las;
+    /* le décodage des matières qui sont des spécialités, soit par nom soit par code string */
     protected final Map<String, Integer> codesSpecialites = new HashMap<>();
+    /* la médiane du nombre d'action de formation dans une formation, permet de définir beaucoup d'offre ou peu d'offre */
     public final int p50NbFormations;
+    /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
     public final int p75Capacity;
-
-    protected Set<String> lasFilieres;
-
+    /* la liste des éléments (formations, métiers, ntérêts et domaines) qui sont directement liés aux études de santé, i.e. à PASS */
     @Getter
     protected final Set<String> relatedToHealth = new HashSet<>();
+    /**
+     * end cache data
+     */
 
+    /* compteur d'usage du service */
     private final AtomicInteger counter = new AtomicInteger(0);
 
-
-
-    /**
-     * Preccmpute some data used to to details details
+     /**
+     * Précalcul des données en cache avant démarrage du service
      */
     @PostConstruct
     void initialize() {
@@ -90,6 +98,9 @@ public class AlgoSuggestions {
         relatedToHealth.addAll(data.getLASFormations());
     }
 
+    /**
+     * Création du graphe global
+     */
     public void createGraph() {
         LOGGER.info("Creating global graph");
         edgesKeys.clear();
@@ -158,63 +169,6 @@ public class AlgoSuggestions {
     }
 
 
-    @SuppressWarnings("unused")
-    public record Affinite(
-            double affinite,
-            EnumMap<SuggestionDiversityQuota, Double> scores
-    ) {
-
-        public boolean satisfiesAllOf(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
-            return affinite > NO_MATCH_SCORE &&  scores.entrySet().stream().allMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
-        }
-
-        public boolean satisfiesOneOf(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
-            return affinite > NO_MATCH_SCORE &&scores.entrySet().stream().anyMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
-        }
-
-        public int getNbQuotasSatisfied(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
-            if(affinite <= NO_MATCH_SCORE) return 0;
-            /*if(scores.entrySet().stream().anyMatch(e -> e.getValue() == null)) {
-                throw new IllegalStateException("Null score");
-            }*/
-            return (int) scores.entrySet().stream().filter(e -> e.getValue() >= minScoreForQuota.get(e.getKey())).count();
-        }
-
-        public enum SuggestionDiversityQuota {
-            NOT_SMALL,
-            NOT_BIG,
-            BAC,
-            MOYGEN
-        }
-
-        public static final EnumMap<SuggestionDiversityQuota, Double> quotas;
-
-        static {
-            quotas = new EnumMap<>(SuggestionDiversityQuota.class);
-            quotas.put(SuggestionDiversityQuota.BAC, 0.9);
-            quotas.put(SuggestionDiversityQuota.NOT_SMALL, 0.75);
-            quotas.put(SuggestionDiversityQuota.NOT_BIG, 0.5);
-            quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
-        }
-
-        public static Affinite getNoMatch() {
-            return new Affinite(NO_MATCH_SCORE, new EnumMap<>(SuggestionDiversityQuota.class));
-        }
-
-        public static Affinite round(Affinite aff, double finalMaxScore) {
-            double newAffinite = Math.max(0.0, Math.min(1.0, Math.round( (aff.affinite / finalMaxScore) * 10e6) / 10e6));
-            return new Affinite(newAffinite,aff.scores);
-        }
-
-        public @NotNull Affinite max(@Nullable Affinite affinite) {
-            if(affinite == null) return this;
-            if(affinite.affinite() > this.affinite) return affinite;
-            return this;
-        }
-
-
-    }
-
     /**
      * Get affinities associated to a profile.
      *
@@ -240,7 +194,7 @@ public class AlgoSuggestions {
                 ));
 
         //computing maximal score for etalonnage
-        double maxScore = affinites.values().stream().mapToDouble(aff -> aff.affinite).max().orElse(1.0) / Config.MAX_AFFINITY_PERCENT;
+        double maxScore = affinites.values().stream().mapToDouble(Affinite::affinite).max().orElse(1.0) / Config.MAX_AFFINITY_PERCENT;
 
         if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
@@ -258,7 +212,7 @@ public class AlgoSuggestions {
         affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
         return affinites.entrySet().stream()
                 .map(Pair::of)
-                .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite))
+                .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite()))
                 .toList();
     }
 
@@ -296,7 +250,7 @@ public class AlgoSuggestions {
 
             Pair<String, Affinite> choice;
 
-            val candidates = affinities.stream().filter(c -> c.getRight().affinite > 0).toList();
+            val candidates = affinities.stream().filter(c -> c.getRight().affinite() > 0).toList();
 
             Map<String, Integer> scores =
                     candidates.stream()
@@ -316,10 +270,10 @@ public class AlgoSuggestions {
                 choice = affinities.getFirst();
             }
 
-            result.add(Pair.of(choice.getLeft(), choice.getRight().affinite));
+            result.add(Pair.of(choice.getLeft(), choice.getRight().affinite()));
             affinities.remove(choice);
 
-            choice.getRight().scores.forEach((k,v) -> totals.merge(k, v, Double::sum));
+            choice.getRight().scores().forEach((k,v) -> totals.merge(k, v, Double::sum));
 
         }
 
@@ -421,7 +375,7 @@ public class AlgoSuggestions {
     }
 
     public boolean isLas(String fl) {
-        return lasFilieres.contains(fl);
+        return las.contains(fl);
     }
 
     public String getStats() {

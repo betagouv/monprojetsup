@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions.Affinite;
+
 import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_LENGTH_FOR_SUGGESTIONS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
@@ -44,6 +44,7 @@ public class AffinityEvaluator {
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
     public static final boolean USE_BIN = false;
 
+    /* le profil contient t'il une marque d'intérêt pour le domaine de la santé. Utilisé pour filtrer les LAS.  */
     private final boolean isInterestedinHealth;
     private final Set<String> rejected =  new HashSet<>();
     private final SuggestionsData data;
@@ -83,9 +84,6 @@ public class AffinityEvaluator {
         Set<String> nonZeroScores = new HashSet<>();
         if(pf.interests() != null) {
             nonZeroScores.addAll(pf.interests());
-            /*
-            val relatedInterests = data.getAllRelatedInterests(pf.interests());
-            nonZeroScores.addAll(relatedInterests);*/
         }
 
         //autres formations
