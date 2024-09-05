@@ -3,7 +3,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { useMemo } from "react";
 
 const useLien = ({ href, ariaLabel, taille, variante, icône, estUnTéléchargement, estUnTag }: useLienProps) => {
-  const estLienExterne = useMemo(() => /^https?:\/\/|www\./imu.test(href), [href]);
+  const estLienExterne = useMemo(() => /^(?:https?:\/\/|www)\./imu.test(href), [href]);
   const estLienEmail = useMemo(() => /^mailto:/imu.test(href), [href]);
   const estLienTéléphone = useMemo(() => /^tel:/imu.test(href), [href]);
 

@@ -108,57 +108,65 @@ export class formationHttpRepository implements FormationRepository {
         descriptif: métier.descriptif ?? null,
         liens: métier.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       })),
-      explications: formationHttp.explications
-        ? {
-            communes:
-              formationHttp.explications.geographique.map((commune) => ({
-                nom: commune.nomVille,
-                distanceKm: commune.distanceKm,
-              })) ?? [],
-            formationsSimilaires:
-              formationHttp.explications.formationsSimilaires.map((formation) => ({
-                id: formation.id,
-                nom: formation.nom,
-              })) ?? [],
-            duréeÉtudesPrévue: formationHttp.explications.dureeEtudesPrevue ?? null,
-            alternance: formationHttp.explications.alternance ?? null,
-            intêretsEtDomainesChoisis: {
-              intêrets:
-                formationHttp.explications.interetsEtDomainesChoisis?.interets.map((intêret) => ({
-                  id: intêret.id,
-                  nom: intêret.nom,
-                })) ?? [],
-              domaines:
-                formationHttp.explications.interetsEtDomainesChoisis?.domaines.map((domaine) => ({
-                  id: domaine.id,
-                  nom: domaine.nom,
-                })) ?? [],
-            },
-            spécialitésChoisies: formationHttp.explications.specialitesChoisies.map((spécialité) => ({
-              nom: spécialité.nomSpecialite,
-              pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
-            })),
-            typeBaccalaureat: formationHttp.explications.typeBaccalaureat
-              ? {
-                  id: formationHttp.explications.typeBaccalaureat.baccalaureat.id,
-                  nom: formationHttp.explications.typeBaccalaureat.baccalaureat.nom,
-                  pourcentageAdmisAnnéePrécédente: formationHttp.explications.typeBaccalaureat?.pourcentage,
-                }
-              : null,
-            autoEvaluationMoyenne: formationHttp.explications.autoEvaluationMoyenne
-              ? {
-                  moyenne: formationHttp.explications.autoEvaluationMoyenne.moyenne,
-                  intervalBas: formationHttp.explications.autoEvaluationMoyenne.basIntervalleNotes,
-                  intervalHaut: formationHttp.explications.autoEvaluationMoyenne.hautIntervalleNotes,
-                  idBacUtilisé: formationHttp.explications.autoEvaluationMoyenne.baccalaureatUtilise.id,
-                  nomBacUtilisé: formationHttp.explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
-                }
-              : null,
-          }
-        : null,
+      explications: this._mapperLesExplications(formationHttp.explications),
       affinité: this._calculerNombrePointsAffinité(formationHttp.explications),
     };
   }
+
+  private _mapperLesExplications = (
+    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
+  ): Formation["explications"] => {
+    if (!explications) {
+      return null;
+    }
+
+    return {
+      communes:
+        explications.geographique.map((commune) => ({
+          nom: commune.nomVille,
+          distanceKm: commune.distanceKm,
+        })) ?? [],
+      formationsSimilaires:
+        explications.formationsSimilaires.map((formation) => ({
+          id: formation.id,
+          nom: formation.nom,
+        })) ?? [],
+      duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
+      alternance: explications.alternance ?? null,
+      intêretsEtDomainesChoisis: {
+        intêrets:
+          explications.interetsEtDomainesChoisis?.interets.map((intêret) => ({
+            id: intêret.id,
+            nom: intêret.nom,
+          })) ?? [],
+        domaines:
+          explications.interetsEtDomainesChoisis?.domaines.map((domaine) => ({
+            id: domaine.id,
+            nom: domaine.nom,
+          })) ?? [],
+      },
+      spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
+        nom: spécialité.nomSpecialite,
+        pourcentageAdmisAnnéePrécédente: spécialité.pourcentage,
+      })),
+      typeBaccalaureat: explications.typeBaccalaureat
+        ? {
+            id: explications.typeBaccalaureat.baccalaureat.id,
+            nom: explications.typeBaccalaureat.baccalaureat.nom,
+            pourcentageAdmisAnnéePrécédente: explications.typeBaccalaureat?.pourcentage,
+          }
+        : null,
+      autoEvaluationMoyenne: explications.autoEvaluationMoyenne
+        ? {
+            moyenne: explications.autoEvaluationMoyenne.moyenne,
+            intervalBas: explications.autoEvaluationMoyenne.basIntervalleNotes,
+            intervalHaut: explications.autoEvaluationMoyenne.hautIntervalleNotes,
+            idBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.id,
+            nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
+          }
+        : null,
+    };
+  };
 
   private _calculerNombrePointsAffinité = (
     explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],

@@ -45,6 +45,7 @@ const Navigation = () => {
                 <Link
                   activeProps={{ "aria-current": "page" }}
                   className="fr-nav__link"
+                  preload={false}
                   target="_self"
                   to={page.href}
                 >

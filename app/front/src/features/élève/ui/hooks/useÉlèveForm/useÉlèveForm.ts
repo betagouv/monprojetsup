@@ -19,7 +19,7 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
     formState: { errors, dirtyFields },
   } = useForm<Élève>({
     resolver: zodResolver(schémaValidation),
-    defaultValues: valeursParDéfaut,
+    defaultValues: valeursParDéfaut ?? undefined,
   });
 
   const mutationÉlève = useMutation({

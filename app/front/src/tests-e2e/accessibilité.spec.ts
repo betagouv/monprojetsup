@@ -1,6 +1,6 @@
 import { TestHelper } from "./testHelper";
 import { type router } from "@/configuration/lib/tanstack-router";
-import AxeBuilder from "@axe-core/playwright";
+import Axe from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
 const PAGES_PATH: Array<keyof (typeof router)["routesByPath"]> = [
@@ -35,7 +35,7 @@ for (const pagePath of PAGES_PATH) {
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage(pagePath);
 
-    const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+    const accessibilityScanResults = await new Axe({ page }).analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);
   });

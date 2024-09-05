@@ -62,7 +62,7 @@ const ChampDeSaisie = ({
         {label} {obligatoire && <span className="text-[--artwork-minor-red-marianne]">*</span>}
         {description && <span className="fr-hint-text">{description}</span>}
       </label>
-      {estChampDeRecherche ? (
+      {estChampDeRecherche && (
         <div
           className="fr-search-bar mt-2"
           id="header-search"
@@ -76,11 +76,9 @@ const ChampDeSaisie = ({
             {i18n.COMMUN.RECHERCHER}
           </button>
         </div>
-      ) : icône ? (
-        <div className={`fr-input-wrap ${icône}`}>{inputJSX}</div>
-      ) : (
-        inputJSX
       )}
+      {!estChampDeRecherche && icône && <div className={`fr-input-wrap ${icône}`}>{inputJSX}</div>}
+      {!estChampDeRecherche && !icône && inputJSX}
       <div id={`status-${id}`}>
         {status && ["erreur", "succès"].includes(status.type) && (
           <p className={classEnFonctionDuStatus().message}>{status.message}</p>

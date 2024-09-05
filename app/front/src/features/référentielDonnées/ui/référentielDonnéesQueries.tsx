@@ -4,6 +4,6 @@ import { queryOptions } from "@tanstack/react-query";
 export const référentielDonnéesQueryOptions = queryOptions({
   queryKey: ["référentielDonnées"],
   queryFn: async () => {
-    return await dépendances.récupérerRéférentielDonnéesUseCase.run();
+    return (await dépendances.récupérerRéférentielDonnéesUseCase.run()) ?? null;
   },
 });

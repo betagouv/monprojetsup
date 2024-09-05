@@ -20,6 +20,8 @@ module.exports = {
     "testing-library"
   ],
   rules: {
+    "sonarjs/class-name": ["error", { format: "^[A-Za-zÀ-ÖØ-öø-ÿ]*$" }],
+    "sonarjs/slow-regex": "off",
     "typescript-sort-keys/interface": "off",
     "react/no-danger": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
