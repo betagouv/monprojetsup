@@ -20,7 +20,6 @@ public class Constants {
 
     public static final String LABEL_ARTICLE_PAS_LAS = "Les études de santé";
     public static final String PAS_LAS_TEXT = "<p>Pour accéder aux études de santé (maïeutique, médecine, odontologie et pharmacie), les lycéens doivent suivre le PASS (parcours d'accès spécifique santé) ou une L.AS (licence avec option accès santé) à l'université et réussir aux sélections organisées à l'issue.</p>";
-    public static final String GROUPE_INFIX = " groupe ";
     public static final String NEW_ONISEP_METIERS_SLUG_PREFIX = "https://explorer-avenirs.onisep.fr/http/redirection/metiers/slug/";
     public static final String EXPLORER_AVENIRS_URL = "https://explorer-avenirs.onisep.fr";
     public static final String ONISEP_URL1 = "http://www.onisep.fr";
@@ -49,6 +48,10 @@ public class Constants {
     );
     public static final int DMA_PSUP_FR_COD = 81;
     public static final String DATA_IDEO_DIRNAME = "data/ideo";
+    public static final String CMI_MECA_FL_COD_PSUP = "fl4041";
+    public static final String BTS_AERONAUTIQUE_FL_COD_PSUP = "fl393";
+    public static final String BTS_AERONAUTIQUE_IDEO_COD = "FOR.9627";
+    public static final String CMI_MECA_IDEO_COD = "FOR.5013";
 
     public static String gFlCodToFrontId(int cle) {
         return FILIERE_PREFIX + cle;
@@ -73,5 +76,9 @@ public class Constants {
     }
 
     private Constants() {
+    }
+
+    public static String includeKey(String key, String libelle) {
+        return   libelle + " (" + key + ")";
     }
 }

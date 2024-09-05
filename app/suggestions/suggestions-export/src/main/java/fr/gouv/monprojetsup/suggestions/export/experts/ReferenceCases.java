@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.Gson;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
-import fr.gouv.monprojetsup.data.tools.csv.CsvTools;
-import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.tools.CsvTools;
+import fr.gouv.monprojetsup.data.tools.Serialisation;
+import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
@@ -178,26 +178,6 @@ public record ReferenceCases(
     public static ReferenceCases loadFromFile(String filename) throws IOException {
         return Serialisation.fromJsonFile(filename, ReferenceCases.class);
     }
-
-    /*
-    public static void main(String[] args) throws Exception {
-
-
-        ReferenceCases cases = ReferenceCases.loadFromFile("referenceCases.json");
-
-        SuggestionServer.loadConfig();
-
-        SuggestionsData.initStatistiques();
-
-        try (
-                OutputStreamWriter fos = new OutputStreamWriter(
-                        Files.newOutputStream(Path.of("profiles_expectations_suggestions.txt")),
-                        StandardCharsets.UTF_8
-                )
-        ) {
-            fos.write(cases.resume());
-        }
-    }*/
 
     public String resume(Map<String,String> labels) {
         StringBuilder fos = new StringBuilder();

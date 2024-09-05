@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public record FormationIdeoDuSup(
@@ -21,7 +22,7 @@ public record FormationIdeoDuSup(
         List<String> sourcesNumeriques,
         @NotNull List<String> metiers,//preserved in ideo style MET.xxxx
         @NotNull List<String> motsCles,
-        @NotNull List<String> libellesSousdomainesWeb,
+        @NotNull List<String> libellesOuClesSousdomainesWeb,
         boolean estIEP,
         boolean estEcoleIngenieur,
         boolean estEcoleCommerce,
@@ -46,7 +47,7 @@ public record FormationIdeoDuSup(
                         ? new ArrayList<>()
                         : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::id).toList(),
                 f.getMotsCles(),
-                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::libelle).toList(),
+                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::id).toList(),
                 f.estIEP(),
                 f.estEcoleIngenieur(),
                 f.estEcoleCommerce(),
@@ -80,9 +81,9 @@ public record FormationIdeoDuSup(
         );
     }
 
-    public List<String> getSousdomainesWebMpsIds(List<SousDomaineWeb> sousDomainesWeb) {
+    public List<String> getSousdomainesWebMpsIds(Map<String, SousDomaineWeb> sousDomainesWeb) {
         List<String> result = new ArrayList<>();
-        for (String libelleDomaine : libellesSousdomainesWeb) {
+        for (String libelleDomaine : libellesOuClesSousdomainesWeb) {
             val clesDomaine = SousDomaineWeb.extractDomaines(libelleDomaine, sousDomainesWeb);
             result.addAll(clesDomaine.stream().map(SousDomaineWeb::mpsId).toList());
         }

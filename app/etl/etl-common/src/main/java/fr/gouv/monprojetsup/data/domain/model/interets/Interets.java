@@ -1,11 +1,10 @@
 package fr.gouv.monprojetsup.data.domain.model.interets;
 
-import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
 import lombok.val;
 
 import java.util.*;
 
+import static fr.gouv.monprojetsup.data.domain.Constants.includeKey;
 import static fr.gouv.monprojetsup.data.domain.model.interets.CategorieInterets.fromMap;
 
 public record Interets(
@@ -30,13 +29,12 @@ public record Interets(
         return groupeInterets.stream().mapToInt(g -> g.items().size()).sum();
     }
 
-    public Map<String, String> getLabels() {
+    public Map<String, String> getLabels(boolean includeKeys) {
         val result = new HashMap<String, String>();
         this.groupeInterets.forEach(
                 g -> g.items().forEach(
                         item -> {
-                            result.put(item.getId(), item.label());
-                            result.put(item.getId(), item.label());
+                            result.put(item.getId(), includeKeys ? includeKey(item.getId(), item.label()) : item.label());
                         }
                 )
         );

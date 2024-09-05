@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.data.tools.csv;
+package fr.gouv.monprojetsup.data.tools;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -103,10 +103,7 @@ public class CsvTools implements Closeable {
     }
 
     public void appendHeaders(List<String> headers) throws IOException {
-        for(String h : headers) {
-            append(h);
-        }
-        newLine();
+        append(headers);
     }
 
     public void append(boolean b) throws IOException {
@@ -118,4 +115,10 @@ public class CsvTools implements Closeable {
     public void append(Stream<Map.Entry<String, Integer>> entryStream, String s) {
     }
 
+    public void append(List<String> items) throws IOException {
+        for(String h : items) {
+            append(h);
+        }
+        newLine();
+    }
 }

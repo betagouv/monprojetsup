@@ -16,22 +16,18 @@ import org.springframework.stereotype.Component
 
 
 fun main(args: Array<String>) {
-    runApplication<ExporterDiagnostics>(*args)
+    runApplication<RunDiagnostics>(*args)
 }
 
 @SpringBootApplication
-class ExporterDiagnostics
+class RunDiagnostics
 
 
 @Configuration
 @ComponentScan(basePackages = [
     "fr.gouv.monprojetsup.suggestions",
     "fr.gouv.monprojetsup.suggestions.export",
-    "fr.gouv.monprojetsup.suggestions.config",
-    "fr.gouv.monprojetsup.data.formation.infrastructure",
-    "fr.gouv.monprojetsup.data.metier.infrastructure",
-    "fr.gouv.monprojetsup.data.referentiel.infrastructure",
-    "fr.gouv.monprojetsup.data.suggestions.infrastructure"
+    "fr.gouv.monprojetsup.suggestions.config"
 ])
 @EntityScan(basePackages = [
     "fr.gouv.monprojetsup.data"]
@@ -39,18 +35,25 @@ class ExporterDiagnostics
 @EnableJpaRepositories(basePackages = [
     "fr.gouv.monprojetsup.suggestions"]
 )
-open class JpaConfig
+class JpaConfig
 
 @Component
-//@Profile("!experts_evaluate & !experts_docs & !test")
 class DefaultExportRunner(
-    val exportSuggestionsData: ExportSuggestionsData,
-    val analyzeSuggestionsData: AnalyzeSuggestionsData
+    val diagnoseSuggestionsData: AnalyzeSuggestionsData
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-        exportSuggestionsData.export()
-        analyzeSuggestionsData.analyze()
+        diagnoseSuggestionsData.analyze()
     }
+}
+
+@Component
+@Profile("export")
+class Export(val exportSuggestionsData: ExportSuggestionsData) : CommandLineRunner
+{
+    override fun run(vararg args: String?) {
+        exportSuggestionsData.export()
+    }
+
 }
 
 @Component

@@ -1,7 +1,8 @@
-package fr.gouv.monprojetsup.data.etl
+package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -132,7 +133,7 @@ class MpsDataPortTest {
         fun `90 pourcent des formations ont au moins un métier associé`() {
             val formationKeys = mpsDataPort.getFormationsMpsIds()
             val formationsAvecAuMoinsUnMetier =
-                mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().filter { it -> it.value.isNotEmpty() }.keys
+                mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().filter { it.value.isNotEmpty() }.keys
             assertThat(formationKeys).isNotEmpty()
             val pctOk = 100 * formationsAvecAuMoinsUnMetier.size / formationKeys.size
             assertThat(pctOk).isGreaterThan(90)

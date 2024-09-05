@@ -251,7 +251,7 @@ public record OnisepData(
     }
 
 
-    public Map<String, String> getDomainesLabels() {
-        return domainesMps.getLabels();
+    public Map<String, String> getDomainesLabels(boolean includeKeys) {
+        return domainesMps.getLabels(includeKeys);
     }
 }

@@ -1,10 +1,10 @@
-package fr.gouv.monprojetsup.data.etl
+package fr.gouv.monprojetsup.data.etl.loaders
 
-import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class LoadersTest {
+
+class LoadersTest() {
 
     @Test
     fun `Doit réussir à récupérer les formaitons ideo depuis le site onisep`() {
@@ -51,4 +51,9 @@ class LoadersTest {
         assertThat(metiers.map{ m -> m.descriptif}).allMatch { it.isNotBlank() }
     }
 
+
+
+
 }
+
+

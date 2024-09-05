@@ -290,7 +290,7 @@ public record FicheFormationIdeo(
 
         public boolean estEcoleArt() {
                 return type_Formation.type_formation_libelle_court.equals("DNA")
-                        || type_Formation.type_formation_libelle_court.contains("DNA");
+                        || type_Formation.type_formation_libelle.contains("DNA");
         }
 
         public boolean estDiplomeConservationRestauration() {
@@ -299,7 +299,7 @@ public record FicheFormationIdeo(
 
         public boolean estDMA() {
                 return type_Formation.type_formation_libelle_court.equals("DMA")
-                        || type_Formation.type_formation_libelle_court.contains("DMA");
+                        || type_Formation.type_formation_libelle.contains("DMA");
         }
 
     public Collection<Pair<String,String>> getSousdomainesWeb() {

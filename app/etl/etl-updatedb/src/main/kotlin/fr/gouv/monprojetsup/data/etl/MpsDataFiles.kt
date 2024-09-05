@@ -82,15 +82,25 @@ class MpsDataFiles(
         )
     }
 
+    override fun getDebugLabels(): Map<String, String> {
+        return Labels.getDebugLabels(
+            psupData,
+            onisepData
+        )
+    }
+
+
     override fun getFormationsLabels(): Map<String, String> {
         return Labels.getFormationsLabels(
-            psupData
+            psupData,
+            false
         )
     }
 
     override fun getMetiersLabels(): Map<String, String> {
         return Labels.getMetiersLabels(
-            onisepData
+            onisepData,
+            false
         )
     }
 
@@ -416,16 +426,6 @@ class MpsDataFiles(
     }
 
 
-    override fun getDebugLabels(): Map<String, String> {
-        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val labels = getLabels()
-        val debugLabels = HashMap(labels)
-        mpsKeyToPsupKeys.forEach { (key, value) ->
-            if(value.size >= 2)
-                debugLabels[key] = labels[key] + Constants.GROUPE_INFIX + value.toString()
-        }
-        return debugLabels
-    }
 
     override fun getCapacitesAccueil(): Map<String, Int> {
         val result = HashMap<String, Int>()

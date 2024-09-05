@@ -5,7 +5,11 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.formations.PsupToIdeoCorres
 import jakarta.validation.constraints.NotNull;
 import lombok.val;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -25,6 +29,11 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
             PsupToIdeoCorrespondance lines,
             List<FormationIdeoDuSup> formationsIdeo) {
 
+        try {
+            lines.generateDiagnostic(formationsIdeo.stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         val ideoKeysIEP = formationsIdeo.stream()
                 .filter(FormationIdeoDuSup::estIEP)
@@ -89,9 +98,9 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
                 .distinct()
                 .toList();
         if(ideoKeysConservationRestauration.isEmpty()) {
-            throw new IllegalStateException("Pas d'école d'art dans les formations Ideo du Sup");
+            throw new IllegalStateException("Pas de formations de conservation ou restauration dans les formations Ideo du Sup");
         } else {
-            logger.info("Codes IDEO pour écoles d'art: " + String.join(" ; ", ideoKeysConservationRestauration));
+            logger.info("Codes IDEO pour formations de conservation ou restauration: " + String.join(" ; ", ideoKeysConservationRestauration));
         }
 
         val ideoKeysDMA = formationsIdeo.stream()
@@ -99,7 +108,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
                 .toList();
-        if(ideoKeysConservationRestauration.isEmpty()) {
+        if(ideoKeysDMA.isEmpty()) {
             throw new IllegalStateException("Pas de DMA dans les formations Ideo du Sup");
         } else {
             logger.info("Codes IDEO pour les DMA: " + String.join(" ; ", ideoKeysDMA));

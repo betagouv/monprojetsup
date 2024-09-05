@@ -39,10 +39,10 @@ public  record MetierIdeoSimple(
             @XmlElement(name = "domainesous-domaine")//jaxb
             String domaines
     ) {
-        public Set<SousDomaineWeb> getDomaines(List<SousDomaineWeb> domainesPro) {
+        public Set<SousDomaineWeb> getDomaines(Map<String, SousDomaineWeb> sousDomainesWeb) {
             if (domaines == null) return Collections.emptySet();
             return SousDomaineWeb
-                    .extractDomaines(domaines, domainesPro);
+                    .extractDomaines(domaines, sousDomainesWeb);
         }
 
         public @NotNull String idMps() {

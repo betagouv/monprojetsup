@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
-import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.suggestions.entity.*
 import org.springframework.data.jpa.repository.JpaRepository
@@ -67,12 +66,14 @@ class UpdateSuggestionsDbs(
 
     private fun updateLabelsDb() {
         val labels = mpsDataPort.getLabels()
+        val debugLabels = mpsDataPort.getDebugLabels()
+        /*
         val debugLabels = HashMap(labels)
         val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
         mpsKeyToPsupKeys.forEach { (key, value) ->
             if(value.size >= 2)
                 debugLabels[key] = labels[key] + Constants.GROUPE_INFIX + value.toString()
-        }
+        }*/
         labelsPort.deleteAll()
         labelsPort.saveAll(labels.entries.map { SuggestionsLabelEntity(it.key, it.value, debugLabels[it.key]) })
     }
