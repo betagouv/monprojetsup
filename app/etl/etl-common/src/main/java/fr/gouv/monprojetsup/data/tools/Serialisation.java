@@ -38,10 +38,11 @@ public class Serialisation {
         }
     }
 
-    private static InputStream getRemoteFile(String urlString, boolean useCache) throws IOException, InterruptedException {
+    private static InputStream getRemoteFile(String urlString, String dataDir) throws IOException, InterruptedException {
         int i = urlString.lastIndexOf('/') + 1;
-        String cacheName = urlString.substring(i);
-        if (useCache && Files.exists(Path.of(cacheName))) {
+        String dirName = dataDir;
+        String cacheName = dirName + "/" + urlString.substring(i);
+        if (dataDir != null && Files.exists(Path.of(cacheName))) {
                 LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
                 return new FileInputStream(cacheName);
             }
@@ -58,8 +59,9 @@ public class Serialisation {
         HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
         if (response.statusCode() == HTTP_OK) {
             val stream = response.body();
-            if (useCache) {
+            if (dataDir != null) {
                 LOGGER.warning("Sauvegarde de " + urlString + " dans le cache " + cacheName);
+                if(!Files.exists(Path.of(dirName))) Files.createDirectory(Path.of(dirName));
                 try (OutputStream out = new FileOutputStream(cacheName)) {
                     stream.transferTo(out);
                 }
@@ -72,13 +74,13 @@ public class Serialisation {
         }
     }
 
-    public static <T> @NotNull T fromRemoteJson(String urlString, Type type, boolean useCache) throws IOException, InterruptedException {
-        try (InputStreamReader reader = new InputStreamReader(getRemoteFile(urlString, useCache), StandardCharsets.UTF_8)) {
+    public static <T> @NotNull T fromRemoteJson(String urlString, Type type, String dataDir) throws IOException, InterruptedException {
+        try (InputStreamReader reader = new InputStreamReader(getRemoteFile(urlString, dataDir), StandardCharsets.UTF_8)) {
             return new Gson().fromJson( reader, type);
         }
     }
 
-    public static <T> @NotNull T fromRemoteZippedXml(String urlString, JavaType type, boolean useCache) throws IOException, InterruptedException {
+    public static <T> @NotNull T fromRemoteZippedXml(String urlString, JavaType type, String useCache) throws IOException, InterruptedException {
         try (InputStream stream = getRemoteFile(urlString, useCache)) {
             ZipInputStream zip = new ZipInputStream(stream);
             ZipEntry entry = zip.getNextEntry();

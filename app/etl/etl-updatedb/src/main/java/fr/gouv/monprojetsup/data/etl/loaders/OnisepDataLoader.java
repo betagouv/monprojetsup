@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.loaders;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.reflect.TypeToken;
+import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersFormationsEtMetiersIdeo;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
@@ -280,12 +281,12 @@ public class OnisepDataLoader {
 
     public static List<FormationIdeoSimple> loadFormationsSimplesIdeo() throws Exception {
         val typeToken = new TypeToken<List<FormationIdeoSimple>>(){}.getType();
-        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_FORMATIONS_SIMPLE_URI, typeToken, true);
+        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_FORMATIONS_SIMPLE_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
     }
 
     static List<SousDomaineWeb> loadDomainesSousDomaines() throws Exception {
         val typeToken = new TypeToken<List<SousDomaineWeb>>(){}.getType();
-        List<SousDomaineWeb> domainesSansId = Serialisation.fromRemoteJson(DataSources.IDEO_OD_DOMAINES_URI, typeToken, true);
+        List<SousDomaineWeb> domainesSansId = Serialisation.fromRemoteJson(DataSources.IDEO_OD_DOMAINES_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
 
         List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo();
 
@@ -306,7 +307,7 @@ public class OnisepDataLoader {
 
     public static List<MetierIdeoSimple> loadMetiersSimplesIdeo() throws Exception {
         val typeToken = new TypeToken<List<MetierIdeoSimple>>(){}.getType();
-        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_METIERS_SIMPLE_URI, typeToken, true);
+        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_METIERS_SIMPLE_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
     }
 
 
@@ -317,7 +318,7 @@ public class OnisepDataLoader {
         );
         return Serialisation.fromRemoteZippedXml(
                 DataSources.IDEO_OD_FORMATIONS_FICHES_URI,
-                listType, true
+                listType, Constants.DATA_IDEO_DIRNAME
         );
     }
 
@@ -328,7 +329,7 @@ public class OnisepDataLoader {
         );
         return Serialisation.fromRemoteZippedXml(
                 DataSources.IDEO_OD_METIERS_FICHES_URI,
-                listType, true
+                listType, Constants.DATA_IDEO_DIRNAME
         );
     }
 

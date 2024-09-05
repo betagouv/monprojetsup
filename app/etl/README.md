@@ -38,6 +38,8 @@ La dernière valeur doit pointer sur un dossier contenant les fichiers de réfé
 - Placez-vous dans le dossier `app/etl/`
 - Installez les librairies dans le repo local avec ```mvn clean compile install -DskipTests=true```
 - Lancez la tâche de mise à jour avec ```mvn clean compile -fetl-updatedb/pom.xml exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
+- Le dossier `data/ideo` à la racine de `app/etl/` contient les fichiers IDEO opendata récupérés via internet depuis l'open data Onisep. Si le dossier est supprimé ou non disponible dans le répertoire de lancement, les données sont retéléchargées automatiquement.
+
 
 ## Mettre à jour les données de référence Parcoursup
 

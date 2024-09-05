@@ -48,6 +48,7 @@ public class Constants {
             "fr95000"//Sous-officier
     );
     public static final int DMA_PSUP_FR_COD = 81;
+    public static final String DATA_IDEO_DIRNAME = "data/ideo";
 
     public static String gFlCodToFrontId(int cle) {
         return FILIERE_PREFIX + cle;
