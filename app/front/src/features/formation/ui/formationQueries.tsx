@@ -4,7 +4,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 export const récupérerFormationQueryOptions = (formationId: Formation["id"]) =>
   queryOptions({
-    queryKey: ["formation", formationId],
+    queryKey: ["formations", formationId],
     queryFn: async () => {
       return (await dépendances.récupérerFormationUseCase.run(formationId)) ?? null;
     },

@@ -17,7 +17,7 @@ export default function useUtilisateur() {
 
   const seDéconnecter = async () => {
     localStorage.clear();
-    await queryClient.invalidateQueries();
+    queryClient.removeQueries();
     await auth.signoutRedirect({ id_token_hint: auth.user?.id_token });
   };
 

@@ -43,7 +43,9 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {explications.communes.length > 0 && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.COMMUNES}
-            éléments={explications.communes.map((commune) => `${commune.nom} (${commune.distanceKm}km)`)}
+            éléments={explications.communes.map(
+              (commune) => commune.nom + (commune.distanceKm > 0 ? ` (${commune.distanceKm}km)` : ""),
+            )}
           />
         )}
         {explications.formationsSimilaires.length > 0 && (

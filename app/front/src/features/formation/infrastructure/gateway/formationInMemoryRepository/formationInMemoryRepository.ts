@@ -21,7 +21,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 3,
       explications: null,
     },
     {
@@ -42,7 +42,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 2,
       explications: null,
     },
     {
@@ -63,7 +63,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 0,
       explications: null,
     },
     {
@@ -84,7 +84,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 2,
       explications: null,
     },
     {
@@ -105,7 +105,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 5,
       explications: null,
     },
     {
@@ -126,7 +126,7 @@ export class formationInMemoryRepository implements FormationRepository {
       formationsAssociées: [],
       critèresAnalyse: [],
       métiersAccessibles: [],
-      affinité: null,
+      affinité: 3,
       explications: null,
     },
   ];

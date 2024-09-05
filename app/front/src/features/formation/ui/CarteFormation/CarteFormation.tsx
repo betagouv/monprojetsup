@@ -3,8 +3,8 @@ import Tag from "@/components/_dsfr/Tag/Tag";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import { queryClient } from "@/configuration/lib/tanstack-query";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 const CarteFormation = ({
@@ -17,7 +17,7 @@ const CarteFormation = ({
 }: CarteFormationProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const élève = queryClient.getQueryData(élèveQueryOptions.queryKey);
+  const { data: élève } = useQuery(élèveQueryOptions);
 
   const NOMBRE_MÉTIERS_À_AFFICHER = 3;
 
@@ -45,21 +45,21 @@ const CarteFormation = ({
       ref={ref}
     >
       <div className="grid grid-flow-col justify-between gap-1">
-        <div className="*:mb-0">
-          <LienInterne<"/formations/$formationId">
-            ariaLabel={nom}
-            href="/formations/$formationId"
-            paramètresPath={{ formationId: id }}
-            variante="neutre"
-          >
+        <LienInterne<"/formations/$formationId">
+          ariaLabel={nom}
+          href="/formations/$formationId"
+          paramètresPath={{ formationId: id }}
+          variante="neutre"
+        >
+          <div className="*:mb-0">
             <Titre
               niveauDeTitre="h2"
               styleDeTitre="h4"
             >
               {nom}
             </Titre>
-          </LienInterne>
-        </div>
+          </div>
+        </LienInterne>
         {estUneFormationFavorite() && (
           <div>
             <span

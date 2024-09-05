@@ -5,11 +5,11 @@ import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuFormulaireAvecSuccès }: UseÉlèveFormArgs) {
-  const valeursParDéfaut = queryClient.getQueryData(élèveQueryOptions.queryKey);
+  const { data: valeursParDéfaut } = useQuery(élèveQueryOptions);
   const {
     register,
     handleSubmit,
@@ -28,7 +28,9 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
       return await dépendances.mettreÀJourProfilÉlèveUseCase.run(élève);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: élèveQueryOptions.queryKey });
+      queryClient.removeQueries({ queryKey: ["formations"] });
+      queryClient.removeQueries({ queryKey: ["métiers"] });
+      await queryClient.invalidateQueries(élèveQueryOptions);
     },
   });
 

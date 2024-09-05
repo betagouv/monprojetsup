@@ -42,7 +42,7 @@ export type Formation = {
       url: string;
     }>;
   }>;
-  affinité: number | null;
+  affinité: number;
   explications: {
     communes: Array<{
       nom: string;

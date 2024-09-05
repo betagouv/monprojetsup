@@ -108,7 +108,6 @@ export class formationHttpRepository implements FormationRepository {
         descriptif: métier.descriptif ?? null,
         liens: métier.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       })),
-      affinité: formationHttp.formation.tauxAffinite ?? null,
       explications: formationHttp.explications
         ? {
             communes:
@@ -157,6 +156,36 @@ export class formationHttpRepository implements FormationRepository {
               : null,
           }
         : null,
+      affinité: this._calculerNombrePointsAffinité(formationHttp.explications),
     };
   }
+
+  private _calculerNombrePointsAffinité = (
+    explications: RécupérerFormationsRéponseHTTP["formations"][number]["explications"],
+  ): number => {
+    if (!explications) {
+      return 0;
+    }
+
+    const conditionsDeValidationExplication = [
+      explications.geographique.length > 0,
+      explications.formationsSimilaires.length > 0,
+      explications.dureeEtudesPrevue,
+      explications.alternance,
+      explications.interetsEtDomainesChoisis,
+      explications.specialitesChoisies.length > 0,
+      explications.typeBaccalaureat,
+      explications.autoEvaluationMoyenne,
+    ];
+
+    let points = 0;
+
+    for (const condition of conditionsDeValidationExplication) {
+      if (condition) {
+        points++;
+      }
+    }
+
+    return points;
+  };
 }

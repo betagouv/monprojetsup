@@ -2,13 +2,13 @@ import Head from "@/components/_layout/Head/Head";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import { queryClient } from "@/configuration/lib/tanstack-query";
 import FicheFormation from "@/features/formation/ui/FicheFormation/FicheFormation";
 import {
   récupérerFormationQueryOptions,
   suggérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
 import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormations";
+import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -18,8 +18,8 @@ const DétailFormationPage = () => {
   const route = getRouteApi("/_auth/formations/$formationId/");
   const { formationId } = route.useParams();
 
-  const suggestions = queryClient.getQueryData(suggérerFormationsQueryOptions.queryKey);
-  const formation = queryClient.getQueryData(récupérerFormationQueryOptions(formationId).queryKey);
+  const { data: suggestions } = useQuery(suggérerFormationsQueryOptions);
+  const { data: formation } = useQuery(récupérerFormationQueryOptions(formationId));
 
   if (!formation || !suggestions) {
     return null;
