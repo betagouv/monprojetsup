@@ -30,8 +30,8 @@ public class DataSources {
 
     /* MPS data */
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
-    public static final String DOMAINES_MPS_PATH = "items_thematiques/domaines_pro_MPS_-_Thematiques.tsv";
-    public static final String INTERETS_GROUPES_PATH = "items_centres_interets/centres_d_interets_MPS_-_Feuille_1.tsv";
+    public static final String DOMAINES_MPS_PATH = "mps/domaines_pro_MPS_-_Thematiques.tsv";
+    public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.tsv";
     public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26_HG.csv";
 
     /* ROME data */
