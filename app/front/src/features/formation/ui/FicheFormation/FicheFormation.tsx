@@ -75,7 +75,7 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
   };
 
   return (
-    <div className="pt-6 lg:pl-14">
+    <div className="pb-12 pt-6 lg:pl-14">
       <div className="ml-[-1rem] pb-6 lg:hidden">
         <Bouton
           auClic={afficherBarreLatéraleCallback}
@@ -140,17 +140,27 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
         <BoutonsFavorisCorbeille taille="grand" />
       </div>
       <hr className="mb-9 mt-5" />
-      <div className="mb-12 grid">
-        <Onglets
-          nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
-          onglets={générerLesOnglets()}
-        />
-      </div>
-      <div className="mb-12">
+      <div className="grid gap-12">
+        <div className="grid">
+          <Onglets
+            nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
+            onglets={générerLesOnglets()}
+          />
+        </div>
         <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
-      </div>
-      <div className="mb-12">
-        {formation.explications && <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />}
+        {formation.explications &&
+          (formation.explications.communes.length > 0 ||
+            formation.explications.formationsSimilaires.length > 0 ||
+            formation.explications.duréeÉtudesPrévue ||
+            formation.explications.alternance ||
+            (formation.explications.intêretsEtDomainesChoisis &&
+              (formation.explications.intêretsEtDomainesChoisis.domaines.length > 0 ||
+                formation.explications.intêretsEtDomainesChoisis.intêrets.length > 0)) ||
+            formation.explications.spécialitésChoisies.length > 0 ||
+            formation.explications.typeBaccalaureat ||
+            formation.explications.autoEvaluationMoyenne) && (
+            <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />
+          )}
       </div>
     </div>
   );

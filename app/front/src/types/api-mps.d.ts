@@ -250,8 +250,8 @@ export interface components {
             /**
              * @description Enseignements de spécialité de terminale choisis ou envisagés
              * @example [
-             *       "707",
-             *       "700"
+             *       "mat707",
+             *       "mat700"
              *     ]
              */
             specialites?: string[];
@@ -268,10 +268,10 @@ export interface components {
             /**
              * @description Centres d'intérêt
              * @example [
-             *       "transmettre_enfants",
-             *       "travail_manuel_bricoler",
-             *       "aider_soigner",
-             *       "diriger_equipe"
+             *       "T_ROME_609891024_T_IDEO2_4815",
+             *       "T_IDEO2_4822_T_IDEO2_4806",
+             *       "T_ROME_731379930_T_IDEO2_4812_T_ROME_803089798",
+             *       "T_ROME_2018646295_T_IDEO2_4814"
              *     ]
              */
             centresInterets?: string[];

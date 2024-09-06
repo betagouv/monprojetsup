@@ -3,7 +3,7 @@ import CarteFormation from "@/features/formation/ui/CarteFormation/CarteFormatio
 
 const ListeFormations = ({ formations, formationIdAffichée }: ListeFormationsProps) => {
   return (
-    <ul className="m-0 grid list-none justify-center gap-6 px-2 pb-6 lg:overflow-y-auto xl:px-7">
+    <ul className="m-0 grid h-full list-none justify-center gap-6 px-2 pb-6 lg:overflow-y-auto xl:px-7">
       {formations.map((formation) => (
         <li key={formation.id}>
           <CarteFormation

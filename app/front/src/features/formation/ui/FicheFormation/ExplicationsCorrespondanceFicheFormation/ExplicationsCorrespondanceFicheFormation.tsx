@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type ExplicationsCorrespondanceFicheFormationProps } from "./ExplicationsCorrespondanceFicheFormation.interface";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -5,6 +6,22 @@ import ExplicationCorrespondanceÉlementFicheFormation from "@/features/formatio
 import ExplicationCorrespondanceListeÉlementsFicheFormation from "@/features/formation/ui/FicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation";
 
 const ExplicationsCorrespondanceFicheFormation = ({ explications }: ExplicationsCorrespondanceFicheFormationProps) => {
+  if (!explications) return null;
+
+  if (
+    explications.communes.length === 0 &&
+    explications.formationsSimilaires.length === 0 &&
+    explications.spécialitésChoisies.length === 0 &&
+    explications.intêretsEtDomainesChoisis.domaines.length === 0 &&
+    explications.intêretsEtDomainesChoisis.intêrets.length === 0 &&
+    !explications.duréeÉtudesPrévue &&
+    !explications.alternance &&
+    !explications.duréeÉtudesPrévue &&
+    !explications.typeBaccalaureat &&
+    !explications.autoEvaluationMoyenne
+  )
+    return null;
+
   return (
     <div className="border border-l-4 border-solid border-[--border-default-grey] border-l-[--border-plain-blue-france] px-8 py-6">
       <Titre

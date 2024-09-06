@@ -180,7 +180,9 @@ export class formationHttpRepository implements FormationRepository {
       explications.formationsSimilaires.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.interetsEtDomainesChoisis,
+      explications.interetsEtDomainesChoisis &&
+        (explications.interetsEtDomainesChoisis.domaines.length > 0 ||
+          explications.interetsEtDomainesChoisis.interets.length > 0),
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
       explications.autoEvaluationMoyenne,
