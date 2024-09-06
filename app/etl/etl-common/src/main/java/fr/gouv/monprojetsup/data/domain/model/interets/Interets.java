@@ -34,7 +34,7 @@ public record Interets(
         this.groupeInterets.forEach(
                 g -> g.items().forEach(
                         item -> {
-                            result.put(item.getId(), includeKeys ? includeKey(item.getId(), item.label()) : item.label());
+                            result.put(item.getId(), includeKeys ? includeKey(item.getId(), item.getFrontLabel()) : item.getFrontLabel());
                         }
                 )
         );

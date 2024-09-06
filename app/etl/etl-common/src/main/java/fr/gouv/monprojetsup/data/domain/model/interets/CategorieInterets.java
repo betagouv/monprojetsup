@@ -20,6 +20,10 @@ public record CategorieInterets(
         ).trim();
     }
 
+    public String getFrontLabel() {
+        return label.replace("je veux", "").trim();
+    }
+
     public static List<CategorieInterets> fromMap(
             @NotNull List<Map<String, @NotNull String>> groupes,
             Map<String,String> labels
@@ -65,7 +69,7 @@ public record CategorieInterets(
                     throw new RuntimeException("No groupe for id " + id);
                 }
                 if (curItem == null) {
-                    curItem = new Item(new HashMap<>(), curGroupeInterets.label, emoji);
+                    curItem = new Item(new HashMap<>(), curGroupeInterets.getFrontLabel(), emoji);
                     curGroupeInterets.items.add(curItem);
                 }
                 curItem.subKeyslabels.put(id,labels.getOrDefault(id,id));
@@ -92,7 +96,11 @@ public record CategorieInterets(
     ) {
 
         public String getId() {
-            return Constants.cleanup(label.replace("je veux", "").trim());
+            return Constants.cleanup(getFrontLabel()).trim();
+        }
+
+        public String getFrontLabel() {
+            return label.replace("je veux", "").trim();
         }
 
     }

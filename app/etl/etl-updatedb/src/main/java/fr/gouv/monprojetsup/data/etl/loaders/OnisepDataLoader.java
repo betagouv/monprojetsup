@@ -168,7 +168,7 @@ public class OnisepDataLoader {
         });
     }
 
-    private static Interets loadInterets(DataSources sources) throws IOException, InterruptedException {
+    protected static Interets loadInterets(DataSources sources) throws IOException, InterruptedException {
         val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
         val metiers = loadFichesMetiersIDeo();
         val romeData = RomeDataLoader.load(sources);

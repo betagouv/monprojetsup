@@ -121,13 +121,13 @@ class UpdateReferentielDbs(
             val groupeInteretId = groupeInteret.id
             entity.id = groupeInteretId
             entity.idCategorie = groupeInteretId
-            entity.nom = groupeInteret.label
+            entity.nom = groupeInteret.frontLabel
             entity.emoji = groupeInteret.emoji
             interetsCategorieDb.save(entity)
             groupeInteret.items.forEach { item ->
                 val sousCategorie = InteretSousCategorieEntity()
                 sousCategorie.id = item.id
-                sousCategorie.nom = item.label
+                sousCategorie.nom = item.frontLabel
                 sousCategorie.emoji = item.emoji
                 sousCategorie.idCategorie = groupeInteretId
                 interetsSousCategorieDb.save(sousCategorie)
