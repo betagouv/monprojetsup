@@ -27,6 +27,7 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 ## Les différentes URLs
 - Frontend: http://localhost:5001
 - Swagger Backend: http://localhost:5002/swagger-ui/index.html/
+- Swagger suggestions: http://localhost:8004/swagger-ui/index.html
 - Keycloak: http://localhost:5003
 
 
