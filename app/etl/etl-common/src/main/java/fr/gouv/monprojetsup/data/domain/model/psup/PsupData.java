@@ -338,11 +338,18 @@ public record PsupData(
 
         flToGrp.keySet().remove("fl250001");//on laisse louvre tel quel
 
+        //L1 droit bizarre
+        String l1Droit = "fl2002";
+        String l1DroitInnovation = "fl250";
+        String l1DroitInnovationLAS = "flfl1002079";
+        flToGrp.put(l1DroitInnovation, l1Droit);
+        flToGrp.put(l1DroitInnovationLAS, l1Droit);
+
         //Formations d'architecture, du paysage et du patrimoine
         String archi = "fl250";
         String archiInge = "fl251";
         flToGrp.put(archi, archi);//Architecture
-        flToGrp.put(archi, archiInge);//Bicursus Architecture Ingénieur
+        flToGrp.put(archiInge, archi);//Bicursus Architecture Ingénieur
 
         /* ajout des filières dans leurs propres regroupements */
         val filieresWhichAreGroupsAsWell = flToGrp.values()
@@ -354,7 +361,15 @@ public record PsupData(
 
 
         //ajout de la correspondance LAS
-        getGenericToLas().values().forEach(mpsLasKey -> flToGrp.put(mpsLasKey,mpsLasKey));
+        val genericToLas = getGenericToLas();
+        genericToLas.forEach((genericKey, mpsLasKey) -> {
+            val grpKey = flToGrp.get(genericKey);
+            if (grpKey != null) {
+                flToGrp.put(mpsLasKey, genericToLas.getOrDefault(grpKey, grpKey));
+            } else {
+                flToGrp.put(mpsLasKey, mpsLasKey);
+            }
+        });
 
         return flToGrp;
     }

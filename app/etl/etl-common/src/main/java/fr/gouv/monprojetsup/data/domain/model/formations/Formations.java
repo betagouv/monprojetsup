@@ -66,24 +66,7 @@ public class Formations  implements Serializable {
     }
 
     final Map<Integer, Filiere> _groupesToFilieres = new HashMap<>();
-    public Map<Integer, Filiere> getGroupesToFilieres() {
-        if(_groupesToFilieres.isEmpty()) {
-            filieres.values().forEach(f -> f.groupes().forEach(g -> _groupesToFilieres.put(g, f)));
-        }
-        return _groupesToFilieres;
-    }
 
-
-    public Map<Filiere, Integer> capaciteParFiliere() {
-        Map<Filiere, Integer> result = new HashMap<>();
-        formations.values().forEach(
-                f -> {
-                    Filiere fil = filieres.get(f.gFlCod);
-                    result.put(fil, f.capacite +  result.getOrDefault(fil, 0));
-                }
-        );
-        return result;
-    }
 
     public void ajouterSiInconnu(Formations o) {
         o.formations.forEach((key, value) -> {

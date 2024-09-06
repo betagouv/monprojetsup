@@ -45,7 +45,7 @@ public record FormationIdeoDuSup(
                 f.sources_numeriques(),
                 f.metiers_formation() == null
                         ? new ArrayList<>()
-                        : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::id).toList(),
+                        : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::mpsId).toList(),
                 f.getMotsCles(),
                 f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::id).toList(),
                 f.estIEP(),

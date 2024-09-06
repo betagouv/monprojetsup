@@ -44,7 +44,8 @@ public class Constants {
             "fr75000",//Diplôme d'Etablissement
             "fl231",//Formation Bac + 4
             "fr70",//Diplôme d'établissement,
-            "fr95000"//Sous-officier
+            "fr95000",//Sous-officier,
+            "fr75"//Diplôme d'Université
     );
     public static final int DMA_PSUP_FR_COD = 81;
     public static final String DATA_IDEO_DIRNAME = "data/ideo";
