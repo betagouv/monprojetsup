@@ -20,7 +20,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
     inner class UpdateFormationsDbTest {
 
         @Autowired
-        lateinit var formationsdb : FormationDb
+        lateinit var formationsdb: FormationDb
 
         @Autowired
         lateinit var updateReferentielsDbs: UpdateReferentielDbs
@@ -36,6 +36,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Test
         fun `Doit réussir à mettre à jour et vider les tables`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationDbs() }
+            assertThat(formationsdb.findAll()).isNotEmpty
         }
 
         @Test
@@ -46,6 +47,14 @@ class UpdateDbsTest : BDDRepositoryTest() {
             assertThat(formations.filter { it.integrityCheck() }).hasSizeGreaterThanOrEqualTo(95 * nbFormations / 100)
         }
 
+        @Test
+        fun `Les stats incluent l'indice tous bacs`() {
+            //When
+            val formation = formationsdb.findAll()
+            assertThat(formation).allSatisfy { it.stats.toStats().inclutTousBacs() }
+        }
+
+    }
 
     @Nested
     inner class UpdateReferentielsTest {
@@ -68,7 +77,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
     }
 
-    }
 
     @Nested
     inner class UpdateMetiersTest {
@@ -95,13 +103,18 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Autowired
         lateinit var updateFormationsMetiersDbs: UpdateFormationMetierDbs
 
+        fun update() {
+            updateFormationsMetiersDbs.clearAll()
+            updateFormationDbs.updateFormationDbs()
+            updateMetierDbs.updateMetierDbs()
+            updateFormationsMetiersDbs.update()
+        }
         @Test
         fun `Doit réussir à mettre à jour les liens formations métiers`() {
-            assertDoesNotThrow { updateFormationsMetiersDbs.clearAll() }
-            assertDoesNotThrow { updateFormationDbs.updateFormationDbs() }
-            assertDoesNotThrow { updateMetierDbs.updateMetierDbs() }
-            assertDoesNotThrow { updateFormationsMetiersDbs.update() }
+            assertDoesNotThrow { update() }
+
         }
+
 
     }
 

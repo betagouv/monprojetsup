@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+
 public record StatsFormation(
 
         //typeBac --> mid50
@@ -23,6 +25,13 @@ public record StatsFormation(
         @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull String, @NotNull Integer>> formationsSimilaires
 
 ) {
+
+    public boolean inclutTousBacs() {
+        return
+                admissions.isEmpty() || admissions.containsKey(TOUS_BACS_CODE_MPS)
+                && nbAdmisParBac.isEmpty() || nbAdmisParBac.containsKey(TOUS_BACS_CODE_MPS)
+                && pctAdmisParBac.isEmpty() || pctAdmisParBac.containsKey(TOUS_BACS_CODE_MPS);
+    }
 
     public void restrictToBacs(@NotNull List<String> bacsKeys) {
         admissions.keySet().retainAll(bacsKeys);
