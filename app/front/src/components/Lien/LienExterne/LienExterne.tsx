@@ -11,7 +11,7 @@ const LienExterne = ({
   estUnTéléchargement,
   estUnTag,
 }: LienExterneProps) => {
-  const { ariaLabelFormaté, classesCSS, target } = useLien({
+  const { ariaLabelFormaté, classesCSS } = useLien({
     ariaLabel,
     href,
     taille,
@@ -27,7 +27,8 @@ const LienExterne = ({
       className={classesCSS}
       download={estUnTéléchargement}
       href={href}
-      target={target}
+      rel="noreferrer noopener"
+      target="_blank"
     >
       {children}
     </a>
