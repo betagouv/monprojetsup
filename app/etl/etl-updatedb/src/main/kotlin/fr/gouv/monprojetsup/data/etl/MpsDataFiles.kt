@@ -250,25 +250,25 @@ class MpsDataFiles(
     }
 
     override fun getCities(): List<Ville> {
-        logger.info("Double indexation des villes")
         val citiesOld = Serialisation.fromJsonFile(
             dataSources.getSourceDataFilePath(DataSources.CITIES_FILE_PATH),
             CitiesExternal::class.java
         )
 
-        val mByDpt: MutableMap<String, Pair<String, MutableList<Coords>>> = HashMap()
+        //indexation département --> villes du département
+        val mByDpt = HashMap<String, Pair<String, MutableList<Coords>>>()
         citiesOld.cities()
             .filter { c -> c.zip_code != null }
             .forEach { c ->
                 var key = c.name()
                 key += c.zip_code().toInt() / 1000
-                val toto = mByDpt.computeIfAbsent(key) { _ ->
+                val paireNomCoords = mByDpt.computeIfAbsent(key) { _ ->
                     Pair.of(
                         c.name(),
                         ArrayList()
                     )
                 }
-                toto.right.add(
+                paireNomCoords.right.add(
                     Coords(
                         c.zip_code(),
                         c.insee_code(),
@@ -279,7 +279,9 @@ class MpsDataFiles(
             }
         val cities: MutableList<Ville> = ArrayList()
         mByDpt.values.forEach { value: Pair<String, MutableList<Coords>> ->
-            val name = value.left
+            //dans un même département on regroupe toutes les coordonnées à nom fixé.
+            //Par exemple Lyon regroupe différents code insee pour ses différents arrondissements.
+            val nom = value.left
             val coords = value.right
             if (coords != null) {
                 val gpsCoords: List<LatLng> = coords
@@ -291,12 +293,12 @@ class MpsDataFiles(
                         )
                     }
                 if (gpsCoords.isNotEmpty()) {
-                    cities.add(Ville(name, gpsCoords))
                     coords.forEach { c: Coords ->
                         if(c.insee_code != null) {
                             cities.add(
                                 Ville(
                                     c.insee_code(),
+                                    nom,
                                     gpsCoords
                                 )
                             )

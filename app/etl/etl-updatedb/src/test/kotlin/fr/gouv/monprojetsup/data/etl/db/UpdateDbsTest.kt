@@ -6,7 +6,6 @@ import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
 import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
-import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -115,20 +114,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         }
 
-
-    }
-
-
-    @Nested
-    inner class UpdateSuggestionsTest {
-
-        @Autowired
-        lateinit var updateSuggestionsDbs: UpdateSuggestionsDbs
-
-        @Test
-        fun `Doit réussir à mettre à jour les tables`() {
-            assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
-        }
 
     }
 

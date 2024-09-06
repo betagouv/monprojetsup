@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.domain.model.Ville;
 import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
@@ -21,8 +22,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
-
-import static fr.gouv.monprojetsup.suggestions.algo.Config.MAX_LENGTH_FOR_SUGGESTIONS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
 
@@ -433,11 +432,12 @@ public class AffinityEvaluator {
         return bonus;
     }
 
-    @Cacheable("getGeoExplanations")//naive costly implementation, shall be cached
-    private List<ExplanationGeo> getGeoExplanations(String fl, String cityName) {
+    @Cacheable("getGeoExplanations")//naive costly implementation, needs to be cached
+    private List<ExplanationGeo> getGeoExplanations(String fl, String nomVille) {
+        Ville ville = algo.getVille(nomVille);
+        if(ville == null) return List.of();
         return ExplanationGeo.getGeoExplanations(
-                cityName,
-                data.getCityCoords(cityName),
+                ville,
                 data.getVoeuxCoords(fl)
         );
     }

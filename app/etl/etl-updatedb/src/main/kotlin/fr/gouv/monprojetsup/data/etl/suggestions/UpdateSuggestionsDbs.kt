@@ -42,19 +42,19 @@ class UpdateSuggestionsDbs(
 
     internal fun updateSuggestionDbs() {
 
-        logger.info("Mise à jour de candidats db")
+        logger.info("Mise à jour des voeux candidats")
         updateCandidatsDb()
 
-        logger.info("Mise à jour de edges db")
+        logger.info("Mise à jour des edges")
         updateEdgesDb()
 
-        logger.info("Mise à jour de labels db")
+        logger.info("Mise à jour des labels")
         updateLabelsDb()
 
-        logger.info("Mise à jour de matieres db")
+        logger.info("Mise à jour des matieres")
         updateMatieresDb()
 
-        logger.info("Mise à jour de villes db")
+        logger.info("Mise à jour des villes")
         updateVillesDb()
 
     }
@@ -78,20 +78,20 @@ class UpdateSuggestionsDbs(
         labelsPort.saveAll(labels.entries.map { SuggestionsLabelEntity(it.key, it.value, debugLabels[it.key]) })
     }
 
-    private fun updateCandidatsDb() {
+    internal fun updateCandidatsDb() {
         val candidats = mpsDataPort.getVoeuxParCandidat();
         candidatsPort.deleteAll()
         candidatsPort.saveAll(candidats.map { SuggestionsCandidatEntity(it) })
     }
 
 
-    private fun updateVillesDb() {
+    internal fun updateVillesDb() {
         val cities = mpsDataPort.getCities()
         villesPort.deleteAll()
-        villesPort.saveAll(cities.map { SuggestionsVilleEntity(it) })
+        villesPort.saveAll(cities.flatMap {  SuggestionsVilleEntity.getEntities(it) })
     }
 
-    private fun updateEdgesDb() {
+    internal fun updateEdgesDb() {
         val edges = mpsDataPort.getEdges()
         edgesPort.deleteAll()
         edgesPort.saveAll(edges.map { SuggestionsEdgeEntity(it.first, it.second, it.third) })

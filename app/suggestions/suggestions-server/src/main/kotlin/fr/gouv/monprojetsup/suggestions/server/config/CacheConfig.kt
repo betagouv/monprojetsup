@@ -28,6 +28,7 @@ class CacheConfig {
                 ConcurrentMapCache("getMetiersOfFormation"),
                 ConcurrentMapCache("retrieveEdgesOfType"),
                 ConcurrentMapCache("getCoords"),
+                ConcurrentMapCache("getVille"),
                 ConcurrentMapCache("getVoeuxCoords"),
                 ConcurrentMapCache("getCityCoords"),
                 ConcurrentMapCache("getGeoExplanations"),
