@@ -33,7 +33,6 @@ public  record MetierIdeoSimple(
             String gfe,
             String code_rome,
             String libelle_rome,
-            String lien_rome,
             @SerializedName("domainesous-domaine")//gson
             @JsonProperty("domainesous-domaine")//jackson
             @XmlElement(name = "domainesous-domaine")//jaxb
@@ -71,5 +70,10 @@ public  record MetierIdeoSimple(
             result.addAll(Arrays.stream(domaines.split("\\|")).toList());
         }
         return result;
+    }
+
+    public String getRomeUrl() {
+        if(code_rome == null) return null;
+        return Constants.FRANCE_TRAVAIL_FICHE_METIER_PREFIX + code_rome;
     }
 }

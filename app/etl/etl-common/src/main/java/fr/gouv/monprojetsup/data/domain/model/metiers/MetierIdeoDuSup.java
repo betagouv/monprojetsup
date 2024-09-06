@@ -66,7 +66,7 @@ public record MetierIdeoDuSup(
                         ? List.of(new FicheMetierIdeo.SourceNumerique(m.lien_site_onisepfr(), m.libelle_metier()))
                         : List.of(),
                 m.libelle_rome(),
-                m.lien_rome(),
+                m.getRomeUrl(),
                 m.code_rome(),
                 o == null ? "" : o.descriptif(),
                 domaines.stream().toList(),

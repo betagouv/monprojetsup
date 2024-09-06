@@ -53,6 +53,7 @@ public class Constants {
     public static final String BTS_AERONAUTIQUE_FL_COD_PSUP = "fl393";
     public static final String BTS_AERONAUTIQUE_IDEO_COD = "FOR.9627";
     public static final String CMI_MECA_IDEO_COD = "FOR.5013";
+    public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
 
     public static String gFlCodToFrontId(int cle) {
         return FILIERE_PREFIX + cle;
