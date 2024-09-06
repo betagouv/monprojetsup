@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.domain.model.Ville;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -391,4 +392,7 @@ public class AlgoSuggestions {
     }
 
 
+    public Ville getVille(String nomVille) {
+        return data.getVille(nomVille);
+    }
 }

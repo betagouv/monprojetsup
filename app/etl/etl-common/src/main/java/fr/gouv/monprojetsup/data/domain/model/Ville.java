@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public record Ville(
-        @NotNull String id,
+        @NotNull String codeInsee,
+        @NotNull String nom,
         @NotNull List<@NotNull LatLng> coords
 ) {
 

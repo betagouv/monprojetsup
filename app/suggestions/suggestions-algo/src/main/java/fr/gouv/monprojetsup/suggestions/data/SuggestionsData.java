@@ -254,7 +254,15 @@ public class SuggestionsData {
     }
 
     @Cacheable("getCityCoords")
-    public List<LatLng> getCityCoords(String cityName) { return villesPort.getCoords(cityName); }
+    public List<LatLng> getCityCoords(String id) {
+        Ville ville = villesPort.getVille(id);
+        if(ville == null) return List.of();
+        return ville.coords();
+    }
+
+    public @Nullable Ville getVille(String id) {
+        return villesPort.getVille(id);
+    }
 
     public List<Edge> edgesItemssGroupeItems() {
         return edgesPort.getEdgesItemssGroupeItems();
@@ -275,4 +283,5 @@ public class SuggestionsData {
                 formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
         );
     }
+
 }

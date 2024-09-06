@@ -14,15 +14,38 @@ class SuggestionsVilleEntity {
 
     constructor()
 
-    constructor(it: Ville) {
-        this.id = it.id
-        this.coords = it.coords
+    fun toVille(): Ville {
+        return Ville(this.insee, this.nom, this.coords)
     }
 
     @Id
-    var id: String = ""
+    //code insee ou nom de la ville (double indexation)
+    lateinit var id: String
+
+    lateinit var nom: String
+
+    lateinit var insee: String
 
     @JdbcTypeCode(SqlTypes.JSON)
-    var coords : List<LatLng>  = listOf()
+    lateinit var coords : List<LatLng>
+
+    companion object {
+        fun getEntities(it: Ville): Iterable<SuggestionsVilleEntity> {
+            return listOf(
+                SuggestionsVilleEntity().apply {
+                    id = it.codeInsee
+                    nom = it.nom
+                    insee = it.codeInsee
+                    coords = it.coords
+                },
+                SuggestionsVilleEntity().apply {
+                    id = it.nom
+                    nom = it.nom
+                    insee = it.codeInsee
+                    coords = it.coords
+                }
+            )
+        }
+    }
 
 }

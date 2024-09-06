@@ -171,7 +171,7 @@ class UpdateReferentielDbs(
 
         specialitesBacDb.deleteAll()
         specialitesDb.deleteAll()
-        baccalaureatBd.deleteAll()
+        //baccalaureatBd.deleteAll()
 
         domainesDb.deleteAll()
         domainesCategoriesDb.deleteAll()

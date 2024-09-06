@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.domain.model.LatLng
+import fr.gouv.monprojetsup.data.domain.model.Ville
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
 import fr.gouv.monprojetsup.suggestions.port.VillesPort
 import org.springframework.cache.annotation.Cacheable
@@ -19,9 +19,9 @@ open class VillesRepository(
 {
 
     @Transactional(readOnly = true)
-    @Cacheable("getCoords")
-    override fun getCoords(id: String): List<LatLng> {
-        return repo.findById(id).map { it.coords }.orElse(listOf())
+    @Cacheable("getVille")
+    override fun getVille(id: String): Ville? {
+        return repo.findById(id).map { it.toVille() }.orElse(null)
     }
 
 }

@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
+import fr.gouv.monprojetsup.data.domain.model.Ville;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.dto.explanations.ExplanationGeo;
@@ -49,11 +50,12 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
 
 
     @Cacheable("getGeoExplanations2")
-    private List<ExplanationGeo> getGeoExplanations2(String key, String city, int maxFormationsPerFiliere) {
+    private List<ExplanationGeo> getGeoExplanations2(String key, String nomVille, int maxFormationsPerFiliere) {
+        Ville ville = villesPort.getVille(nomVille);
+        if(ville == null) return Collections.emptyList();
         return ExplanationGeo.getGeoExplanations(
                 List.of(key),
-                city,
-                villesPort.getCoords(city),
+                ville,
                 maxFormationsPerFiliere,
                 data.getVoeuxCoords(key)
         );
@@ -79,13 +81,13 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
     @Override
     protected @NotNull Response handleRequest(@NotNull Request req) {
 
-        List<String> gtas = getGeographicInterests(
+        List<String> formationsAccueil = getGeographicInterests(
                 req.keys(),
                 req.geo_pref(),
                 2
-        ).stream().map(ExplanationGeo::form).toList();
+        ).stream().map(ExplanationGeo::formationAccueil).toList();
 
-        return new Response(gtas);
+        return new Response(formationsAccueil);
     }
 
 
