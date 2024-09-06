@@ -2,7 +2,6 @@ import {
   type ContenuModale,
   type MétiersAccessiblesFicheFormationProps,
 } from "./MétiersAccessiblesFicheFormation.interface";
-import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
 import Bouton from "@/components/Bouton/Bouton";
 import BoutonsFavorisCorbeille from "@/components/BoutonsFavorisCorbeille/BoutonsFavorisCorbeille";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
@@ -50,15 +49,6 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
             />
           </li>
         ))}
-        {métiers.length > NOMBRE_MÉTIERS_À_AFFICHER && (
-          <li className="px-[6px]">
-            <BoutonSquelette
-              label={`+${(métiers.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}
-              taille="petit"
-              variante="tertiaire"
-            />
-          </li>
-        )}
       </ul>
       <Modale
         boutons={<BoutonsFavorisCorbeille />}

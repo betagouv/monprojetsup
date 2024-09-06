@@ -7,6 +7,8 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl1002093",
       nom: "L1 - Tourisme -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
+
       liens: [],
       communes: [],
       admis: {
@@ -28,6 +30,8 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl1464",
       nom: "BTS - Tourisme - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
+
       liens: [],
       communes: [],
       admis: {
@@ -49,6 +53,8 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl2093",
       nom: "L1 - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
+
       liens: [],
       communes: [],
       admis: {
@@ -70,6 +76,8 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl464",
       nom: "BTS - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
+
       liens: [],
       communes: [],
       admis: {
@@ -91,6 +99,8 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl467",
       nom: "BTS - Métiers de l'eau",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
+
       liens: [],
       communes: [],
       admis: {
@@ -112,6 +122,7 @@ export class formationInMemoryRepository implements FormationRepository {
       id: "fl470",
       nom: "BTS - Biotechnologies",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
+      lienParcoursSup: null,
       liens: [],
       communes: [],
       admis: {

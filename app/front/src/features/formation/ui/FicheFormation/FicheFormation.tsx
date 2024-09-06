@@ -124,14 +124,16 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
                   </>
                 )}
               </p>
-              <LienExterne
-                ariaLabel={i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
-                href={`https://dossier.parcoursup.fr/Candidat/carte?search=${formation.id}%20${formation.formationsAssociées.join("x%20")}`}
-                taille="petit"
-                variante="simple"
-              >
-                {i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
-              </LienExterne>
+              {formation.lienParcoursSup && (
+                <LienExterne
+                  ariaLabel={i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
+                  href={formation.lienParcoursSup}
+                  taille="petit"
+                  variante="simple"
+                >
+                  {i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
+                </LienExterne>
+              )}
             </div>
           </div>
         )}

@@ -59,6 +59,7 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   private _mapperVersLeDomaine(formationHttp: RécupérerFormationsRéponseHTTP["formations"][number]): Formation {
+    const regexLienParcoursSup = /\/\/dossier\.parcoursup\.fr/u;
     return {
       id: formationHttp.formation.id,
       nom: formationHttp.formation.nom,
@@ -68,10 +69,13 @@ export class formationHttpRepository implements FormationRepository {
         attendus: formationHttp.formation.descriptifAttendus ?? null,
         conseils: formationHttp.formation.descriptifConseils ?? null,
       },
-      liens: formationHttp.formation.liens.map((lien) => ({
-        intitulé: lien.nom,
-        url: lien.url,
-      })),
+      lienParcoursSup: formationHttp.formation.liens.find((lien) => lien.url.match(regexLienParcoursSup))?.url ?? null,
+      liens: formationHttp.formation.liens
+        .filter((lien) => !regexLienParcoursSup.test(lien.url))
+        .map((lien) => ({
+          intitulé: lien.nom,
+          url: lien.url,
+        })),
       admis: {
         moyenneGénérale: {
           idBac: formationHttp.formation.moyenneGeneraleDesAdmis?.baccalaureat?.id ?? null,

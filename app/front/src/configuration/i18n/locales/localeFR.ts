@@ -71,15 +71,13 @@ export const localeFR = {
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
     EXPLICATIONS_CORRESPONDANCE_PROFIL: {
       TITRE: "Pourquoi cette formation devrait te plaire",
-      COMMUNES: "Plusieurs établissements proposant cette formation se trouvent à proximité des villes",
+      COMMUNES: "Plusieurs formations disponibles à proximité de",
       BAC: "Idéal si tu as un",
-      SPÉCIALITÉS:
-        "Les lycéennes et lycéens admis dans cette formation l'année dernière, avaient choisi ce(s) spécialité(s)",
-      DURÉE_FORMATION: "La durée de la formation est",
+      SPÉCIALITÉS: "Tes choix d’enseignements de spécialités correspondent",
+      DURÉE_FORMATION: "Tu as une préférence pour les études",
       ALTERNANCE: "Formation réalisable",
       ALTERNANCE_SUITE: "en alternance",
-      FORMATIONS_SIMILAIRES:
-        "Les candidates et candidats sur Parcoursup s'intéressant à cette formation s'intéressent également à",
+      FORMATIONS_SIMILAIRES: "Cette formation est similaire à",
       INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
       ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
       ADMISSION_BAC_SUITE: "étaient des bacheliers de série",

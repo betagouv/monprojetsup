@@ -43,6 +43,12 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
             texteMisEnAvant={`${explications.autoEvaluationMoyenne.nomBacUtilisé} ${i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.MOYENNE_SUITE} [${explications.autoEvaluationMoyenne.intervalBas},${explications.autoEvaluationMoyenne.intervalHaut}]`}
           />
         )}
+        {explications.spécialitésChoisies.length > 0 && (
+          <ExplicationCorrespondanceListeÉlementsFicheFormation
+            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.SPÉCIALITÉS}
+            éléments={explications.spécialitésChoisies.map((spécialité) => spécialité.nom)}
+          />
+        )}
         {explications.duréeÉtudesPrévue && (
           <ExplicationCorrespondanceÉlementFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.DURÉE_FORMATION}
@@ -69,12 +75,6 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.FORMATIONS_SIMILAIRES}
             éléments={explications.formationsSimilaires.map((formation) => formation.nom)}
-          />
-        )}
-        {explications.spécialitésChoisies.length > 0 && (
-          <ExplicationCorrespondanceListeÉlementsFicheFormation
-            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.SPÉCIALITÉS}
-            éléments={explications.spécialitésChoisies.map((spécialité) => spécialité.nom)}
           />
         )}
         {(explications.intêretsEtDomainesChoisis.intêrets.length > 0 ||
