@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToFrontId;
+import static fr.gouv.monprojetsup.data.domain.Constants.*;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
@@ -143,15 +143,21 @@ public class DescriptifsLoader {
                 descriptif.setSummary(descForm);
             }
 
-            val urlSupplementaire = line.getOrDefault(keyUrlSupplementaire, "");
+            val urlSupplementaire = line.getOrDefault(keyUrlSupplementaire, "").trim();
             if (!urlSupplementaire.isBlank()) {
                 descriptif.getMultiUrls().addAll(Arrays.stream(urlSupplementaire.split("\n")).map(String::trim).toList());
             }
 
-            val urlCorrection = line.getOrDefault(keyUrlCorrection, "");
+            val urlCorrection = line.getOrDefault(keyUrlCorrection, "").trim();
             if (!urlCorrection.isBlank()) {
                 descriptif.setCorrectedUrl(true);
-                descriptif.getMultiUrls().addAll(Arrays.stream(urlCorrection.split("\n")).map(String::trim).toList());
+                descriptif.getMultiUrls().addAll(Arrays.stream(
+                        urlCorrection.split("\n"))
+                        .map(String::trim)
+                        .map(s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL))
+                        .map(s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL))
+                        .toList()
+                );
             }
 
             descriptif.setMpsData(line);
