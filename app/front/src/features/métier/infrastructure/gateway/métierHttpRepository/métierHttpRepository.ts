@@ -1,4 +1,7 @@
-import { type RécupérerMétiersRéponseHTTP } from "./métierHttpRepository.interface";
+import {
+  type RechercheSuccincteMétiersRéponseHTTP,
+  type RécupérerMétiersRéponseHTTP,
+} from "./métierHttpRepository.interface";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
@@ -26,14 +29,19 @@ export class métierHttpRepository implements MétierRepository {
     const paramètresDeRequête = new URLSearchParams();
     paramètresDeRequête.set("recherche", recherche);
 
-    const réponse = await this._mpsApiHttpClient.get<RécupérerMétiersRéponseHTTP>(
+    const réponse = await this._mpsApiHttpClient.get<RechercheSuccincteMétiersRéponseHTTP>(
       `${this._ENDPOINT}/recherche/succincte`,
       paramètresDeRequête,
     );
 
     if (!réponse) return undefined;
 
-    return réponse.metiers.map((métier) => this._mapperVersLeDomaine(métier));
+    return réponse.metiers.map((métier) =>
+      this._mapperVersLeDomaine({
+        ...métier,
+        liens: [],
+      }),
+    );
   }
 
   private _mapperVersLeDomaine(métierHttp: RécupérerMétiersRéponseHTTP["metiers"][number]): Métier {
