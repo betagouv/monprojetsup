@@ -71,7 +71,7 @@ public class UrlsUpdater {
         val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
         mpsIds.forEach(mpsId -> {
             val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
-            addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "l'offre de formation", urls);
+            addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "L'offre de formation", urls);
         });
 
         return urls;
