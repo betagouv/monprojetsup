@@ -44,11 +44,11 @@ class UpdateFormationDbs(
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun updateFormationDbs() {
-        logger.info("Mise à jour de formations and voeux dbs")
+        logger.info("Mise à jour des formations voeux")
         updateFormationsAndVoeuxDb()
-        logger.info("Mise à jour de criteres dbs")
+        logger.info("Mise à jour des criteres")
         updateCriteresDb()
-        logger.info("Mise à jour de moyennes generales admis dbs")
+        logger.info("Mise à jour des moyennes generales admis")
         updateMoyennesGeneralesAdmisDb()
     }
 
@@ -92,10 +92,10 @@ class UpdateFormationDbs(
             entity.id = id
             val label = labels[id] ?: throw RuntimeException("Pas de label pour la formation $id")
             entity.label = label
-            entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(id)
-            entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(id)
-            entity.descriptifAttendus = attendus[id]
-            entity.descriptifConseils = conseils[id]
+            entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(id).orEmpty()
+            entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(id).orEmpty()
+            entity.descriptifAttendus = attendus[id].orEmpty()
+            entity.descriptifConseils = conseils[id].orEmpty()
 
             entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList()
             entity.formationsIdeo = mpsKeyToIdeoKeys[id].orEmpty()
@@ -108,9 +108,11 @@ class UpdateFormationDbs(
             }
 
             val urlListe = liens.getOrDefault(id, ArrayList())
-            entity.liens = urlListe.map { link ->
-                LienEntity(link.label, link.uri)
-            }.toCollection(ArrayList())
+            entity.liens = urlListe
+                .map { link -> Pair(link.label, link.uri) }
+                .distinct()
+                .map { pair -> LienEntity(pair.first, pair.second) }
+                .toList()
 
             val motsClefs = tagsSources.getOrDefault(id, listOf(label))
             val motsClefsCourts = motsClefs.filter { it.length <= 300 }

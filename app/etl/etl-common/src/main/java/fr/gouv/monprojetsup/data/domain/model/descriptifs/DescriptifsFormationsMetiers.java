@@ -19,10 +19,6 @@ public record DescriptifsFormationsMetiers(
     Map<String, DescriptifFormation> keyToDescriptifs
 ) {
 
-    public DescriptifsFormationsMetiers() {
-        this(new HashMap<>());
-    }
-
     public static Link toAvenirs(String uri, String label) {
         if(uri == null) return null;
         uri =  uri

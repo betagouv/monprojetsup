@@ -137,17 +137,6 @@ public class AlgoSuggestions {
         edgesKeys.putAll(edgesFilieresGroupes);
         edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
 
-        LOGGER.info("Restricting graph to the prestar of recos");
-        Set<String> before = new HashSet<>(edgesKeys.nodes());
-        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
-                Helpers::isFiliere
-        ).collect(Collectors.toSet());
-        Set<String> useful = edgesKeys.preStar(recoNodes);
-        edgesKeys.retainAll(useful);
-        Set<String> after = new HashSet<>(edgesKeys.nodes());
-        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
-        before.removeAll(after);
-        LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 
         //LAS inheritance, oth from their mother licence and from PASS
         edgesKeys.inheritEdgesFromRicherItem(data.lasToGeneric(), 1.0);
@@ -160,6 +149,20 @@ public class AlgoSuggestions {
         ).collect(Collectors.toSet());
         LOGGER.info("Erasing filieres which are not indexed by MPS " + toErase.size());
         edgesKeys.eraseNodes(toErase);
+
+
+        LOGGER.info("Restricting graph to the prestar of recos");
+        Set<String> before = new HashSet<>(edgesKeys.nodes());
+        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
+                Helpers::isFiliere
+        ).collect(Collectors.toSet());
+        Set<String> useful = edgesKeys.preStar(recoNodes);
+        edgesKeys.retainAll(useful);
+        Set<String> after = new HashSet<>(edgesKeys.nodes());
+        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
+        before.removeAll(after);
+        LOGGER.info("Total nb of edges+ " + edgesKeys.size());
+
 
     }
 

@@ -44,11 +44,11 @@ class FormationEntity {
     //même taille que critere_analyse_candidature
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "criteres_analyse", columnDefinition = "int[]", nullable = true)
-    lateinit var criteresAnalyse: List<Int>
+    var criteresAnalyse: List<Int>? = null
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "liens", columnDefinition = "jsonb")
-    var liens = arrayListOf<LienEntity>()
+    lateinit var liens: List<LienEntity>
 
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "mots_clefs", nullable = true, columnDefinition = "varchar[]")
@@ -58,11 +58,11 @@ class FormationEntity {
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)  // Cascading enabled here
     @JoinColumn(name = "id_formation")
-    var voeux: List<VoeuEntity> = ArrayList()
+    lateinit var voeux: List<VoeuEntity>
 
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "voeux")
-    var voeuxIds : List<String> = ArrayList()
+    lateinit var voeuxIds : List<String>
 
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     var labelDetails: String? = null
