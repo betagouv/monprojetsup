@@ -100,18 +100,17 @@ public class Labels {
     public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData, boolean includeKeys) {
         val result = new HashMap<String, String>();
         oniData.metiersIdeo().forEach(metier -> {
-                    String libelle = getLibelleFront(metier.idMps(), metier.lib());
-                    if (includeKeys) libelle = includeKey(metier.idMps(), libelle);
+                    String libelle = metier.lib();
+                    if (includeKeys) libelle = includeKey(metier.ideo(), libelle);
                     result.put(
                             metier.idMps(),
                             libelle);
                     metier.metiersAssocies().forEach(metierAssocie
                             -> {
                         String libelleMetierAssocie = metierAssocie.libelle();
-                        String key = cleanup(metierAssocie.id());
                         if (includeKeys) libelleMetierAssocie = includeKey(metierAssocie.id(), libelleMetierAssocie);
                         result.put(
-                                key,
+                                cleanup(metierAssocie.id()),
                                 libelleMetierAssocie
                         );
                     });

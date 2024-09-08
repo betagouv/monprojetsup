@@ -18,10 +18,12 @@ public abstract class EdgesPort {
         return retrieveEdgesOfType(TYPE_EDGE_INTERET_METIER);
     }
 
-    public List<Edge> getEdgesFilieresThematiques() {
-        return retrieveEdgesOfType(TYPE_EDGE_FORMATIONS_DOMAINES);
+    public List<Edge> getEdgesFormationsPsupThematiques() {
+        return retrieveEdgesOfType(TYPE_EDGE_FORMATIONS_PSUP_DOMAINES);
     }
-
+    public List<Edge> getEdgesMetiersFormationsPsup() {
+        return retrieveEdgesOfType(TYPE_EDGE_METIERS_FORMATIONS_PSUP);
+    }
     public List<Edge> getEdgesThematiquesMetiers() {
         return retrieveEdgesOfType(TYPE_EDGE_DOMAINES_METIERS);
     }
@@ -30,8 +32,8 @@ public abstract class EdgesPort {
 
     public List<Edge> getEdgesMetiersAssocies() { return retrieveEdgesOfType(TYPE_EDGE_METIERS_ASSOCIES); }
 
-    public List<Edge> getEdgesFilieresGroupes() {
-        return retrieveEdgesOfType(TYPE_EDGE_PSUP_KEY_TO_MPS_KEY);
+    public List<Edge> getEdgesFormationPsupFormationMps() {
+        return retrieveEdgesOfType(TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS);
     }
 
     public List<Edge> getEdgesLasToGeneric() {

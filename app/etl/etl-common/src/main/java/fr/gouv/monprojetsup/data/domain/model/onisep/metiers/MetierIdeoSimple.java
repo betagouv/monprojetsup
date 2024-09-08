@@ -44,10 +44,6 @@ public  record MetierIdeoSimple(
                     .extractDomaines(domaines, sousDomainesWeb);
         }
 
-        public @NotNull String idMps() {
-            return Constants.cleanup(idIdeo());
-        }
-
         public @NotNull String idIdeo() {
             String url = lien_site_onisepfr();
             if (url == null) {

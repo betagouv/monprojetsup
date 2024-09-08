@@ -420,9 +420,6 @@ public record FicheFormationIdeo(
             List<Synonyme> synonymes
     ) {
 
-        public String mpsId() {
-            return Constants.cleanup(id);
-        }
     }
 
         /*
