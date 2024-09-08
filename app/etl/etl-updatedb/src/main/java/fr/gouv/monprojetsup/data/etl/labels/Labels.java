@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.labels;
 
+import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
 import lombok.val;
@@ -8,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
 
@@ -80,6 +82,19 @@ public class Labels {
         return result;
     }
 
+
+    private static @NotNull Map<String, @NotNull String> getFormationsLabels(OnisepData oniData, boolean includeKeys) {
+        return oniData.formationsIdeo().stream()
+                .collect(Collectors.toMap(
+                        FormationIdeoDuSup::ideo,
+                        formation -> {
+                            String libelle = formation.label();
+                            if(includeKeys) libelle = includeKey(formation.ideo(), libelle);
+                            return libelle;
+                        }
+                ));
+    }
+
     @NotNull
     public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData, boolean includeKeys) {
         val result = new HashMap<String, String>();
@@ -109,6 +124,7 @@ public class Labels {
             OnisepData oniData) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, false));
+        result.putAll(getFormationsLabels(oniData, false));
         result.putAll(getMetiersLabels(oniData, false));
         result.putAll(oniData.interets().getLabels(false));
         result.putAll(oniData.getDomainesLabels(false));
@@ -119,12 +135,14 @@ public class Labels {
     public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, true));
+        result.putAll(getFormationsLabels(oniData, true));
         result.putAll(getMetiersLabels(oniData, true));
         result.putAll(oniData.interets().getLabels(true));
         result.putAll(oniData.getDomainesLabels(true));
         return result;
 
     }
+
 
 
     private static String getLibelleFront(String key, String libelle) {

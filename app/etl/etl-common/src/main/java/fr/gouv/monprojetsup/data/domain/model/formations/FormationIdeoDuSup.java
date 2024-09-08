@@ -6,13 +6,12 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.formations.FormationIdeoSim
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public record FormationIdeoDuSup(
         @NotNull String ideo,//preserved in ideo style FOR.xxxx
+        @NotNull String label,
         String descriptifFormatCourt,
         String descriptifAcces,
         String descriptifPoursuite,
@@ -20,9 +19,9 @@ public record FormationIdeoDuSup(
         String attendus,
         //FormationAvecMetier.PoursuitesEtudes poursuitesEtudes,
         List<String> sourcesNumeriques,
-        @NotNull List<String> metiers,//preserved in ideo style MET.xxxx
-        @NotNull List<String> motsCles,
-        @NotNull List<String> libellesOuClesSousdomainesWeb,
+        @NotNull Set<String> metiers,//preserved in ideo style MET.xxxx
+        @NotNull Set<String> motsCles,
+        @NotNull Set<String> libellesOuClesSousdomainesWeb,
         boolean estIEP,
         boolean estEcoleIngenieur,
         boolean estEcoleCommerce,
@@ -33,9 +32,16 @@ public record FormationIdeoDuSup(
 
 ) {
 
+    public void inheritFrom(FormationIdeoDuSup rich) {
+        metiers.addAll(rich.metiers);
+        motsCles.addAll(rich.motsCles);
+        libellesOuClesSousdomainesWeb.addAll(rich.libellesOuClesSousdomainesWeb);
+    }
+
     public FormationIdeoDuSup(@NotNull FicheFormationIdeo f) {
         this(
                 f.identifiant(),
+                f.libelle_complet(),
                 f.descriptif_format_court(),
                 f.descriptif_acces(),
                 f.descriptif_poursuite_etudes(),
@@ -44,10 +50,12 @@ public record FormationIdeoDuSup(
                 //f.poursuites_etudes(),
                 f.sources_numeriques(),
                 f.metiers_formation() == null
-                        ? new ArrayList<>()
-                        : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::mpsId).toList(),
-                f.getMotsCles(),
-                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::id).toList(),
+                        ? new HashSet<>()
+                        : f.metiers_formation().stream().map(FicheFormationIdeo.MetierFormation::id)
+                            .collect(Collectors.toCollection(HashSet::new)),
+                new HashSet<>(f.getMotsCles()),
+                f.sousDomainesWeb().stream().map(FicheFormationIdeo.SousDomaineWeb::id)
+                        .collect(Collectors.toCollection(HashSet::new)),
                 f.estIEP(),
                 f.estEcoleIngenieur(),
                 f.estEcoleCommerce(),
@@ -61,6 +69,7 @@ public record FormationIdeoDuSup(
     public FormationIdeoDuSup(@NotNull FormationIdeoSimple f) {
         this(
                 Objects.requireNonNull(f.identifiant()),
+                f.libelleFormationPrincipal(),
                 null,
                 null,
                 null,
@@ -68,9 +77,9 @@ public record FormationIdeoDuSup(
                 //null,
                 null,
                 null,
-                new ArrayList<>(),
-                f.getMotsCles(),
-                List.of(f.domainesousDomaine()),
+                new HashSet<>(),
+                new HashSet<>(f.getMotsCles()),
+                new HashSet<>(List.of(f.domainesousDomaine())),
                 f.estIEP(),
                 f.estEcoleIngenieur(),
                 f.estEcoleCommerce(),
@@ -84,10 +93,20 @@ public record FormationIdeoDuSup(
     public List<String> getSousdomainesWebMpsIds(Map<String, SousDomaineWeb> sousDomainesWeb) {
         List<String> result = new ArrayList<>();
         for (String libelleDomaine : libellesOuClesSousdomainesWeb) {
-            val clesDomaine = SousDomaineWeb.extractDomaines(libelleDomaine, sousDomainesWeb);
-            result.addAll(clesDomaine.stream().map(SousDomaineWeb::mpsId).toList());
+            val domaines = SousDomaineWeb.extractDomaines(libelleDomaine, sousDomainesWeb);
+            result.addAll(domaines.stream().map(SousDomaineWeb::mpsId).toList());
         }
         return result;
     }
 
+    private static final String IDEO_FORMATION_KEY_PATTERN = "FOR\\.\\d+";
+    public static boolean isIdeoFormationKey(@NotNull String it) {
+        return it.matches(IDEO_FORMATION_KEY_PATTERN);
+    }
+
+
+    private static final String IDEO_METIER_KEY_PATTERN = "MET\\.\\d+";
+    public static boolean isIdeoMetierKey(@NotNull String it) {
+        return it.matches(IDEO_METIER_KEY_PATTERN);
+    }
 }

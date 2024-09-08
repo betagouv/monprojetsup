@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.data.domain.model.onisep;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersFormationsEtMetiersIdeo;
+import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
@@ -32,7 +32,7 @@ public record OnisepData(
 
         List<Pair<String,String>> edgesInteretsMetiers,
 
-        List<FilieresPsupVersFormationsEtMetiersIdeo> filieresToFormationsOnisep,
+        List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
 
         List<MetierIdeoDuSup> metiersIdeo,
 
@@ -126,7 +126,7 @@ public record OnisepData(
 
     //in mps id style flxxx and MET_xxx
     public static Map<String, Set<String>> getMetiersVersFormationsMps(
-            List<FilieresPsupVersFormationsEtMetiersIdeo> filieresToFormationsOnisep,
+            List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
             List<FormationIdeoDuSup> formationsIdeoSuSup,
             List<MetierIdeoDuSup> metiersIdeoduSup
     ) {

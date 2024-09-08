@@ -23,6 +23,12 @@ public class DataSources {
     public static final String IDEO_OD_METIERS_FICHES_URI = "https://api.opendata.onisep.fr/downloads/5fe0808a2da6f/5fe0808a2da6f.zip";
     public static final String IDEO_OD_DOMAINES_URI = "https://api.opendata.onisep.fr/downloads/5fa58d750a60c/5fa58d750a60c.json";
 
+    /* Onisep data */
+    public static final String IDEO_HERITAGES_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
+    public static final String IDEO_HERITAGES_HERITIER_HEADER = "IDEO2_PREPA";
+    public static final String IDEO_HERITAGES_LEGATAIRES_HEADER = "IDEO2_LICENCE";
+
+
     /* Onisep scrapping */
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_PATH = "onisep_scrap/descriptifs.json";
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_RESUMES_PATH = "onisep_scrap/summaries.json";
@@ -33,6 +39,10 @@ public class DataSources {
     public static final String DOMAINES_MPS_PATH = "mps/domaines_pro_MPS_-_Thematiques.tsv";
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.tsv";
     public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/T_livre_a_Parcoursup_2024_01_26_HG.csv";
+    public static final String MPS_HERITAGES_PATH = "mps/MPS_heritages.csv";
+    public static final String MPS_HERITAGES_HERITIER_HEADER = "mps_heritier";
+    public static final String MPS_HERITAGES_LEGATAIRES_HEADER = "mps_legataire";
+
 
     /* ROME data */
     public static final String ROME_CENTRES_INTERETS_PATH = "ROME/unix_arborescence_centre_interet_v451.json";

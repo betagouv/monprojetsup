@@ -33,6 +33,9 @@ public class CsvTools implements Closeable {
     }
 
     public static List<Map<String,String>> readCSV(String path, char separator) {
+        return readCSV(path, separator, List.of());
+    }
+    public static List<Map<String,String>> readCSV(String path, char separator, List<String> requiredFields) {
         List<Map<String,String>> data = new ArrayList<>();
         val parser = new CSVParserBuilder().withSeparator(separator).build();
         try (BufferedReader br = new BufferedReader(new FileReader(path));
@@ -63,6 +66,16 @@ public class CsvTools implements Closeable {
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
         }
+
+        data.removeIf(Map::isEmpty);
+        if(data.isEmpty()) {
+            throw new RuntimeException("Pas de ligne dans le fichier " + path);
+        }
+        requiredFields.forEach(field -> {
+            if(data.stream().anyMatch(l -> !l.containsKey(field))) {
+                throw new RuntimeException("Echec de chargement de `" + path + " champ manquant '" + field + "'");
+            }
+        });
 
         return data;
     }
