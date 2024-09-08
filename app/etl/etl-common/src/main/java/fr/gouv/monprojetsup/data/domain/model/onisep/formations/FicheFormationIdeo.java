@@ -216,93 +216,99 @@ public record FicheFormationIdeo(
         String modification_date
 
 ) {
-        public List<String> getMotsCles() {
-                List<String> result = new ArrayList<>(List.of(
-                        identifiant,
-                        libelle_complet,
-                        Objects.requireNonNullElse(sigle, ""),
-                        Objects.requireNonNullElse(libelle_generique, ""),
-                        Objects.requireNonNullElse(libelle_specifique, ""),
-                        Objects.requireNonNullElse(type_Formation.type_formation_sigle, ""),
-                        Objects.requireNonNullElse(type_Formation.type_formation_libelle_court, ""),
-                        Objects.requireNonNullElse(type_Formation.type_formation_libelle, ""),
-                        "duree" + Objects.requireNonNullElse(duree_formation, "").replaceAll(" ", ""),
-                        Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_libelle, ""),
-                        Objects.requireNonNullElse(niveauCertification,""),
-                        Objects.requireNonNullElse(niveauEtudes.libelle,""),
-                        //Objects.requireNonNullElse(attendus,""),
-                        Objects.requireNonNullElse(sous_tutelle,"")
-                        //Objects.requireNonNullElse(descriptif_poursuite_etudes, "")
-                ));
-                if (poursuites_etudes != null && poursuites_etudes.poursuite_etudes != null) {
-                        result.addAll(poursuites_etudes.poursuite_etudes);
-                }
-                if (metiers_formation != null) {
-                        for (MetierFormation metier : metiers_formation) {
-                                result.add(Constants.cleanup(metier.id + "x"));
-                                result.add(metier.nom_metier);
-                                if (metier.synonymes != null) {
-                                        for (Synonyme synonyme : metier.synonymes) {
-                                                result.add(synonyme.nom_metier);
-                                                result.add(synonyme.libelle_masculin);
-                                                result.add(synonyme.libelle_feminin);
-                                        }
-                                }
-                        }
-                }
-                if (nature_certificat != null) result.addAll(nature_certificat);
-                if (element_enseignement != null) result.addAll(element_enseignement);
-                if (sousDomainesWeb != null) {
-                        for (SousDomaineWeb sousDomaine : sousDomainesWeb) {
-                                result.add(Constants.cleanup(sousDomaine.id + "x"));
-                                result.add(sousDomaine.libelle);
-                        }
-                }
-                result.removeIf(Objects::isNull);
-                result.removeIf(String::isBlank);
-                return result;
+    public List<String> getMotsCles() {
+        List<String> result = new ArrayList<>(List.of(
+                identifiant,
+                libelle_complet,
+                Objects.requireNonNullElse(sigle, ""),
+                Objects.requireNonNullElse(libelle_generique, ""),
+                Objects.requireNonNullElse(libelle_specifique, ""),
+                Objects.requireNonNullElse(type_Formation.type_formation_sigle, ""),
+                Objects.requireNonNullElse(type_Formation.type_formation_libelle_court, ""),
+                Objects.requireNonNullElse(type_Formation.type_formation_libelle, ""),
+                "duree" + Objects.requireNonNullElse(duree_formation, "").replaceAll(" ", ""),
+                Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_libelle, ""),
+                Objects.requireNonNullElse(niveauCertification, ""),
+                Objects.requireNonNullElse(niveauEtudes.libelle, ""),
+                //Objects.requireNonNullElse(attendus,""),
+                Objects.requireNonNullElse(sous_tutelle, "")
+                //Objects.requireNonNullElse(descriptif_poursuite_etudes, "")
+        ));
+        if (poursuites_etudes != null && poursuites_etudes.poursuite_etudes != null) {
+            result.addAll(poursuites_etudes.poursuite_etudes);
         }
+        if (metiers_formation != null) {
+            for (MetierFormation metier : metiers_formation) {
+                result.add(Constants.cleanup(metier.id + "x"));
+                result.add(metier.nom_metier);
+                if (metier.synonymes != null) {
+                    for (Synonyme synonyme : metier.synonymes) {
+                        result.add(synonyme.nom_metier);
+                        result.add(synonyme.libelle_masculin);
+                        result.add(synonyme.libelle_feminin);
+                    }
+                }
+            }
+        }
+        if (nature_certificat != null) result.addAll(nature_certificat);
+        if (element_enseignement != null) result.addAll(element_enseignement);
+        if (sousDomainesWeb != null) {
+            for (SousDomaineWeb sousDomaine : sousDomainesWeb) {
+                result.add(Constants.cleanup(sousDomaine.id + "x"));
+                result.add(sousDomaine.libelle);
+            }
+        }
+        result.removeIf(Objects::isNull);
+        result.removeIf(String::isBlank);
+        return result;
+    }
 
-        public boolean estFormationDuSup() {
-                return (   niveauCertification != null && niveauCertification.toLowerCase().contains("bac +")
+    public boolean estFormationDuSup() {
+        return (
+                niveauCertification != null && niveauCertification.toLowerCase().contains("bac +")
                         || niveauEtudes != null && niveauEtudes.libelle.toLowerCase().contains("bac +")
-                );
-        }
+                        || estBpjeps()
+        );
+    }
 
-        public boolean estIEP() {
-                return sigle != null && sigle.equals("IEP");
-        }
+    private boolean estBpjeps() {
+        return type_Formation != null && Objects.equals(type_Formation.type_formation_sigle, "BPJEPS");
+    }
 
-        public boolean estEcoleIngenieur() {
-                return type_Formation.type_formation_libelle_court.equals("ING")
-                        || type_Formation.type_formation_libelle.contains("diplôme d'ingénieur");
-        }
+    public boolean estIEP() {
+        return sigle != null && sigle.equals("IEP");
+    }
 
-        public boolean estEcoleCommerce() {
-                return type_Formation.type_formation_libelle_court.equals("GECOM")
-                        || type_Formation.type_formation_libelle.contains("diplôme d'école de commerce");
-        }
+    public boolean estEcoleIngenieur() {
+        return type_Formation.type_formation_libelle_court.equals("ING")
+                || type_Formation.type_formation_libelle.contains("diplôme d'ingénieur");
+    }
 
-        public boolean estEcoleArchitecture() {
-                return type_Formation.type_formation_libelle_court.equals("ARCHI")
-                        || type_Formation.type_formation_libelle.contains("diplôme des écoles d'architecture");
-        }
+    public boolean estEcoleCommerce() {
+        return type_Formation.type_formation_libelle_court.equals("GECOM")
+                || type_Formation.type_formation_libelle.contains("diplôme d'école de commerce");
+    }
 
-        public boolean estEcoleArt() {
-                return type_Formation.type_formation_libelle_court.equals("DNA")
-                        || type_Formation.type_formation_libelle.contains("DNA");
-        }
+    public boolean estEcoleArchitecture() {
+        return type_Formation.type_formation_libelle_court.equals("ARCHI")
+                || type_Formation.type_formation_libelle.contains("diplôme des écoles d'architecture");
+    }
 
-        public boolean estDiplomeConservationRestauration() {
-                return Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_code,-1) == Constants.CODE_NSF_CONSERVATION_RESTAURATION;
-        }
+    public boolean estEcoleArt() {
+        return type_Formation.type_formation_libelle_court.equals("DNA")
+                || type_Formation.type_formation_libelle.contains("DNA");
+    }
 
-        public boolean estDMA() {
-                return type_Formation.type_formation_libelle_court.equals("DMA")
-                        || type_Formation.type_formation_libelle.contains("DMA");
-        }
+    public boolean estDiplomeConservationRestauration() {
+        return Objects.requireNonNullElse(nsfDiscipline.NSF_discipline_code, -1) == Constants.CODE_NSF_CONSERVATION_RESTAURATION;
+    }
 
-    public Collection<Pair<String,String>> getSousdomainesWeb() {
+    public boolean estDMA() {
+        return type_Formation.type_formation_libelle_court.equals("DMA")
+                || type_Formation.type_formation_libelle.contains("DMA");
+    }
+
+    public Collection<Pair<String, String>> getSousdomainesWeb() {
         return sousDomainesWeb.stream().map(sousDomaineWeb -> Pair.of(sousDomaineWeb.id, sousDomaineWeb.libelle)).toList();
     }
 
@@ -311,113 +317,113 @@ public record FicheFormationIdeo(
                       "type_formation_libelle_court": "ING",
                       "type_formation_libelle": "diplôme d'ingénieur"
                     },*/
-        public record TypeFormation(
-                String type_formation_sigle,
-                String type_formation_libelle_court,
-                String type_formation_libelle
-        ) {
+    public record TypeFormation(
+            String type_formation_sigle,
+            String type_formation_libelle_court,
+            String type_formation_libelle
+    ) {
 
+    }
+
+    /*
+            "nsf_discipline": {
+              "NSF_discipline_code": 223,
+              "NSF_discipline_libelle": "Métallurgie"
+            },*/
+    public record NsfDiscipline(
+            @SerializedName("NSF_discipline_code")//gson
+            @JsonProperty("NSF_discipline_code")//jackson
+            @XmlElement(name = "NSF_discipline_code")//jaxb
+            Integer NSF_discipline_code,
+            @SerializedName("NSF_discipline_libelle")//gson
+            @JsonProperty("NSF_discipline_libelle")//jackson
+            @XmlElement(name = "NSF_discipline_libelle")//jaxb
+            String NSF_discipline_libelle
+    ) {
+
+    }
+
+    /*"niveau_etudes": {
+              "id": "REF.410",
+              "libelle": "Bac + 5"
+            },*/
+    public record NiveauEtudes(
+            String id,
+            String libelle
+    ) {
+
+    }
+
+    /* "nature_certificat": {
+              "libelle_nature_certificat": [
+                "Titre habilité par la Commission des titres d'ingénieur",
+                "Diplôme conférant le grade de master"
+              ]
+            },*/
+    public record NatureCertificat(
+            List<String> libelle_nature_certificat
+    ) {
+
+    }
+
+    /*
+            <metiers_formation>
+                <metier>
+                    <id>MET.904</id>
+                    <libelle>constructeur / constructrice de routes et d'aménagements urbains</libelle>
+                    <synonymes>
+                        <synonyme>
+                            <libelle>maçon / maçonne travaux routiers</libelle>
+                            <libelle_feminin>maçonne travaux routiers</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>maçon / maçonne VRD (voiries réseaux divers)</libelle>
+                            <libelle_feminin>maçonne VRD (voiries réseaux divers)</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>constructeur / constructrice en VRD (voiries réseaux divers)</libelle>
+                            <libelle_feminin>constructrice en VRD (voiries réseaux divers)</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>applicateur /applicatrice de revêtements routiers</libelle>
+                            <libelle_feminin>applicatrice de revêtements routiers</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>constructeur / constructrice en voirie urbaine</libelle>
+                            <libelle_feminin>constructrice en voirie urbaine</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>maçon / maçonne en VRD (voiries réseaux divers)</libelle>
+                            <libelle_feminin>maçonne en VRD (voiries réseaux divers)</libelle_feminin>
+                        </synonyme>
+                        <synonyme>
+                            <libelle>ouvrier / ouvrière routière</libelle>
+                            <libelle_feminin>ouvrière routière</libelle_feminin>
+                        </synonyme>
+                    </synonymes>
+                </metier>
+
+            */
+    public record Synonyme(
+            String nom_metier,
+            String libelle_masculin,
+            String libelle_feminin
+    ) {
+
+    }
+
+    public record MetierFormation(
+            String id,
+            String nom_metier,
+            String libelle_feminin,
+            String libelle_masculin,
+            List<Synonyme> synonymes
+    ) {
+
+        public String mpsId() {
+            return Constants.cleanup(id);
         }
-
-        /*
-                "nsf_discipline": {
-                  "NSF_discipline_code": 223,
-                  "NSF_discipline_libelle": "Métallurgie"
-                },*/
-        public record NsfDiscipline(
-                @SerializedName("NSF_discipline_code")//gson
-                @JsonProperty("NSF_discipline_code")//jackson
-                @XmlElement(name = "NSF_discipline_code")//jaxb
-                Integer NSF_discipline_code,
-                @SerializedName("NSF_discipline_libelle")//gson
-                @JsonProperty("NSF_discipline_libelle")//jackson
-                @XmlElement(name = "NSF_discipline_libelle")//jaxb
-                String NSF_discipline_libelle
-        ) {
-
-        }
-
-        /*"niveau_etudes": {
-                  "id": "REF.410",
-                  "libelle": "Bac + 5"
-                },*/
-        public record NiveauEtudes(
-                String id,
-                String libelle
-        ) {
-
-        }
-
-        /* "nature_certificat": {
-                  "libelle_nature_certificat": [
-                    "Titre habilité par la Commission des titres d'ingénieur",
-                    "Diplôme conférant le grade de master"
-                  ]
-                },*/
-        public record NatureCertificat(
-                List<String> libelle_nature_certificat
-        ) {
-
-        }
-
-        /*
-                <metiers_formation>
-                    <metier>
-                        <id>MET.904</id>
-                        <libelle>constructeur / constructrice de routes et d'aménagements urbains</libelle>
-                        <synonymes>
-                            <synonyme>
-                                <libelle>maçon / maçonne travaux routiers</libelle>
-                                <libelle_feminin>maçonne travaux routiers</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>maçon / maçonne VRD (voiries réseaux divers)</libelle>
-                                <libelle_feminin>maçonne VRD (voiries réseaux divers)</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>constructeur / constructrice en VRD (voiries réseaux divers)</libelle>
-                                <libelle_feminin>constructrice en VRD (voiries réseaux divers)</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>applicateur /applicatrice de revêtements routiers</libelle>
-                                <libelle_feminin>applicatrice de revêtements routiers</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>constructeur / constructrice en voirie urbaine</libelle>
-                                <libelle_feminin>constructrice en voirie urbaine</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>maçon / maçonne en VRD (voiries réseaux divers)</libelle>
-                                <libelle_feminin>maçonne en VRD (voiries réseaux divers)</libelle_feminin>
-                            </synonyme>
-                            <synonyme>
-                                <libelle>ouvrier / ouvrière routière</libelle>
-                                <libelle_feminin>ouvrière routière</libelle_feminin>
-                            </synonyme>
-                        </synonymes>
-                    </metier>
-
-                */
-        public record Synonyme(
-                String nom_metier,
-                String libelle_masculin,
-                String libelle_feminin
-        ) {
-
-        }
-
-        public record MetierFormation(
-                String id,
-                String nom_metier,
-                String libelle_feminin,
-                String libelle_masculin,
-                List<Synonyme> synonymes
-        ) {
-
-            public String mpsId() {
-                return Constants.cleanup(id);
-            }
-        }
+    }
 
         /*
         "sources_numeriques": {
@@ -428,37 +434,36 @@ public record FicheFormationIdeo(
         },*/
 
 
-        public record SousDomaineWeb(
-                String id,
-                String libelle
-        ) {
+    public record SousDomaineWeb(
+            String id,
+            String libelle
+    ) {
 
-        }
+    }
 
 
-        /*
-        <poursuites_etudes>
-                 <poursuite_etudes>
-                     <type_Poursuite>poursuite d'études conditionnelle</type_Poursuite>
-                     <formation_poursuite_Etudes>licence pro mention industries agroalimentaires : gestion, production et valorisation</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention qualité, hygiène, sécurité, santé, environnement</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention valorisation des agro-ressources</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention métiers de la qualité</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention bio-industries et biotechnologies</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention génie des procédés et bioprocédés industriels</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention commercialisation des produits alimentaires</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>Classe agro véto post BTSA et BTS</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention chimie analytique, contrôle, qualité, environnement</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention métiers de l'instrumentation, de la mesure et du contrôle qualité</formation_poursuite_Etudes>
-                     <formation_poursuite_Etudes>licence pro mention chimie : formulation</formation_poursuite_Etudes>
-                 </poursuite_etudes>
-        <poursuites_etudes>
-     */
-        public record PoursuitesEtudes(
-                List<String> poursuite_etudes
-        ) {
-        }
-
+    /*
+    <poursuites_etudes>
+             <poursuite_etudes>
+                 <type_Poursuite>poursuite d'études conditionnelle</type_Poursuite>
+                 <formation_poursuite_Etudes>licence pro mention industries agroalimentaires : gestion, production et valorisation</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention qualité, hygiène, sécurité, santé, environnement</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention valorisation des agro-ressources</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention métiers de la qualité</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention bio-industries et biotechnologies</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention génie des procédés et bioprocédés industriels</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention commercialisation des produits alimentaires</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>Classe agro véto post BTSA et BTS</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention chimie analytique, contrôle, qualité, environnement</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention métiers de l'instrumentation, de la mesure et du contrôle qualité</formation_poursuite_Etudes>
+                 <formation_poursuite_Etudes>licence pro mention chimie : formulation</formation_poursuite_Etudes>
+             </poursuite_etudes>
+    <poursuites_etudes>
+ */
+    public record PoursuitesEtudes(
+            List<String> poursuite_etudes
+    ) {
+    }
 
 
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 
 public record FilieresToFormationsOnisep(
-        List<FilieresPsupVersFormationsEtMetiersIdeo> filieres
+        List<FilieresPsupVersIdeoData> filieres
 ) {
 
 }

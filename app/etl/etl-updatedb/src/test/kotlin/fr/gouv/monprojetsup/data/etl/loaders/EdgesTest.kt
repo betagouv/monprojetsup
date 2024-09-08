@@ -30,7 +30,10 @@ class EdgesTest {
             formationsIdeoAvecFiche
         )
         val filieresPsupToFormationsMetiersIdeo =
-            OnisepDataLoader.loadPsupToIdeoCorrespondance(sources, formationsIdeoDuSup.values.stream().toList())
+            OnisepDataLoader.loadPsupToIdeoCorrespondance(
+                sources,
+                formationsIdeoDuSup
+            )
 
         val edgesFormations = OnisepDataLoader.getEdgesFormations(
             sousDomainesWeb,

@@ -26,7 +26,7 @@ public record TagsSources(
         }
     }
 
-    public void add(@NotNull List<String> motsCles, @NotNull String source) {
+    public void add(@NotNull Collection<String> motsCles, @NotNull String source) {
         motsCles.forEach(mot -> add(mot, source));
     }
 

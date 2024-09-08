@@ -75,7 +75,8 @@ public record PsupToIdeoCorrespondance(
 
         public boolean isEcoleCommerce() {
             return G_FR_COD.equals(Integer.toString(Constants.ECOLE_COMMERCE_PSUP_FR_COD))
-                    || G_FR_COD.equals(Integer.toString(Constants.CUPGE_ECO_GESTION_FR_COD));
+                    //|| G_FR_COD.equals(Integer.toString(Constants.CUPGE_ECO_GESTION_FR_COD))
+                ;
         }
 
         public boolean isEcoleArchitecture() {

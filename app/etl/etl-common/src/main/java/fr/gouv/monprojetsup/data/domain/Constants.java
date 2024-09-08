@@ -29,12 +29,24 @@ public class Constants {
     public static final int DUREE_LAS = 5;
     public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
     public static final int IEP_PSUP_FR_COD = 90;
+    public static final int CMI_PSUP_FR_COD = 90;
     public static final int ECOLE_INGE_PSUP_FR_COD = 21;
     public static final int ECOLE_COMMERCE_PSUP_FR_COD = 24;
+    public static final int ECOLE_COMMERCE_BAC_3_PSUP_FL_COD = 241;
+    public static final int ECOLE_COMMERCE_BAC_4_PSUP_FL_COD = 242;
+    public static final int ECOLE_COMMERCE_BAC_5_PSUP_FL_COD = 240;
     public static final int ECOLE_ARCHI_PSUP_FL_COD = 250;
     public static final int ECOLE_ARCHI_INGE_PSUP_FL_COD = 251;
     public static final int ECOLE_ART_PSUP_FR_COD = 27;
     public static final int DIPLOME_ART_PSUP_FR_COD = 84700;
+    public static final int CMI_MECA_FL_COD_PSUP = 4041;
+    public static final int BTS_AERONAUTIQUE_FL_COD_PSUP = 393;
+    public static final int CPGE_LETTRES_PSUP_FL_COD = 31;
+    public static final int CUPGE_ECO_GESTION_PSUP_FR_COD = 85;
+
+    public static final int CUPGE_ECO_GESTION_PSUP_FL_COD1 = 984;
+    public static final int CUPGE_ECO_GESTION_PSUP_FL_COD2 = 985;
+
     public static final int CODE_NSF_CONSERVATION_RESTAURATION = 342;
     public static final int ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD = 253;
     public static final int CUPGE_ECO_GESTION_FR_COD = 85;
@@ -49,17 +61,20 @@ public class Constants {
     );
     public static final int DMA_PSUP_FR_COD = 81;
     public static final String DATA_IDEO_DIRNAME = "data/ideo";
-    public static final String CMI_MECA_FL_COD_PSUP = "fl4041";
-    public static final String BTS_AERONAUTIQUE_FL_COD_PSUP = "fl393";
     public static final String BTS_AERONAUTIQUE_IDEO_COD = "FOR.9627";
     public static final String CMI_MECA_IDEO_COD = "FOR.5013";
-    public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
 
+    public static final String PREPA_LETTRE_IDEO_CODE = "FOR.1471";
+
+    public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
     public static String gFlCodToFrontId(int cle) {
         return FILIERE_PREFIX + cle;
     }
     public static String gFlCodToFrontId(String cle) {
         return FILIERE_PREFIX + cle;
+    }
+    public static String gFrCodToFrontId(int cle) {
+        return TYPE_FORMATION_PREFIX + cle;
     }
 
     public static String gTaCodToFrontId(int cle) {

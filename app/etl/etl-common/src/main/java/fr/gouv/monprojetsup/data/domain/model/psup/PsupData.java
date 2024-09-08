@@ -281,15 +281,15 @@ public record PsupData(
                     || name.contains("CUPGE")
                     || name.contains("FCIL")
                     || fr == 64 // FCIL
-                    || name.contains("C.M.I")
-                    || fr == 22 // CMI
+                    || fr == CMI_PSUP_FR_COD // CMI
                     || name.contains("BPJEPS")
                     || fr == 63 //année préparatoire
                     || name.contains("Année préparatoire")//année préparatoire
                     || fr == 75000 // Diplôme d'Etablissement
-                    || fr == 90 //sciences po
+                    || fr == IEP_PSUP_FR_COD //sciences po
                     || fr == 75001 // DSP
-                    || fr == 75 // DU
+                    || fr == 75 // DU,
+                    || fr == ECOLE_COMMERCE_PSUP_FR_COD // DU,
 
             ) {
                 String grp = Constants.TYPE_FORMATION_PREFIX + fr;
