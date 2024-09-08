@@ -6,36 +6,37 @@ import jakarta.validation.constraints.NotNull;
 import lombok.val;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.TYPE_FORMATION_PREFIX;
+import static java.util.stream.Collectors.toCollection;
 
-public record FilieresPsupVersFormationsEtMetiersIdeo(
+public record FilieresPsupVersIdeoData(
         String gFlCod,
         String gFrCod,
         String gFrLib,
         String gFlLib,
         @NotNull List<@NotNull String> ideoFormationsIds,
-        @NotNull List<@NotNull String> ideoMetiersIds
+        @NotNull List<@NotNull String> ideoMetiersIds,
+        @NotNull List<@NotNull String> ideoDomainesIds
+
 ) {
 
-    private static final Logger logger = Logger.getLogger(FilieresPsupVersFormationsEtMetiersIdeo.class.getSimpleName());
-    public static List<FilieresPsupVersFormationsEtMetiersIdeo> compute(
+    private static final Logger logger = Logger.getLogger(FilieresPsupVersIdeoData.class.getSimpleName());
+    public static List<FilieresPsupVersIdeoData> compute(
             PsupToIdeoCorrespondance lines,
-            List<FormationIdeoDuSup> formationsIdeo) {
+            Map<String, FormationIdeoDuSup> formationsIdeo
+    ) {
 
         try {
-            lines.generateDiagnostic(formationsIdeo.stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()));
+            lines.generateDiagnostic(formationsIdeo.values().stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        val ideoKeysIEP = formationsIdeo.stream()
+        val ideoKeysIEP = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estIEP)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -47,7 +48,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
         }
 
 
-        val ideoKeysEcoleIngenieur = formationsIdeo.stream()
+        val ideoKeysEcoleIngenieur = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estEcoleIngenieur)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -59,7 +60,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
         }
 
 
-        val ideoKeysEcoleCommerce = formationsIdeo.stream()
+        val ideoKeysEcoleCommerce = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estEcoleCommerce)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -70,7 +71,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
             logger.info("Codes IDEO pour écoles de commerce: " + String.join(" ; ", ideoKeysEcoleCommerce));
         }
 
-        val ideoKeysEcoleArchi = formationsIdeo.stream()
+        val ideoKeysEcoleArchi = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estEcoleArchitecture)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -81,7 +82,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
             logger.info("Codes IDEO pour écoles de architecture: " + String.join(" ; ", ideoKeysEcoleArchi));
         }
 
-        val ideoKeysEcoleArt = formationsIdeo.stream()
+        val ideoKeysEcoleArt = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estEcoleArt)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -92,7 +93,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
             logger.info("Codes IDEO pour écoles d'art: " + String.join(" ; ", ideoKeysEcoleArt));
         }
 
-        val ideoKeysConservationRestauration = formationsIdeo.stream()
+        val ideoKeysConservationRestauration = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estConservationRestauration)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -103,7 +104,7 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
             logger.info("Codes IDEO pour formations de conservation ou restauration: " + String.join(" ; ", ideoKeysConservationRestauration));
         }
 
-        val ideoKeysDMA = formationsIdeo.stream()
+        val ideoKeysDMA = formationsIdeo.values().stream()
                 .filter(FormationIdeoDuSup::estDMA)
                 .map(FormationIdeoDuSup::ideo)
                 .distinct()
@@ -113,13 +114,6 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
         } else {
             logger.info("Codes IDEO pour les DMA: " + String.join(" ; ", ideoKeysDMA));
         }
-
-        val formationsIdeoIndexed = formationsIdeo.stream()
-                .collect(Collectors.toMap(
-                        FormationIdeoDuSup::ideo,
-                        f -> f
-                ));
-
 
         return new ArrayList<>( lines.psupToIdeo2().stream().map(line ->
                 {
@@ -131,22 +125,39 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
                                             .split(";"))
                                     .map(String::trim)
                                     .filter(s -> !s.isBlank())
+                                    .distinct()
+                                    .sorted()
                                     .toList());
 
-                    List<String> ideoMetiersIds =
+
+                            List<String> ideoMetiersIds =
                             new ArrayList<>(Arrays.stream(line.METIER_IDEO2().split(";"))
                                     .map(String::trim)
                                     .map(Constants::cleanup)
+                                    .filter(s -> !s.isBlank())
+                                    .distinct()
+                                    .sorted()
                                     .toList());
 
                     ideoMetiersIds.addAll(ideoFormationsIds.stream()
-                            .map(formationsIdeoIndexed::get)
+                            .map(formationsIdeo::get)
                             .filter(Objects::nonNull)
                             .map(FormationIdeoDuSup::metiers)
-                            .flatMap(List::stream)
+                            .flatMap(Collection::stream)
                             .distinct()
+                            .sorted()
                             .toList()
                     );
+
+                    val ideoDomainesIds = ideoFormationsIds.stream()
+                            .map(formationsIdeo::get)
+                            .filter(Objects::nonNull)
+                            .map(FormationIdeoDuSup::libellesOuClesSousdomainesWeb)
+                            .flatMap(Collection::stream)
+                            .distinct()
+                            .sorted()
+                            .toList();
+
 
                     if(line.isIEP()) ideoFormationsIds.addAll(ideoKeysIEP);
                     if(line.isEcoleIngenieur()) ideoFormationsIds.addAll(ideoKeysEcoleIngenieur);
@@ -156,17 +167,22 @@ public record FilieresPsupVersFormationsEtMetiersIdeo(
                     if(line.isEcoleconservationRestauration()) ideoFormationsIds.addAll(ideoKeysConservationRestauration);
                     if(line.isDMA()) ideoFormationsIds.addAll(ideoKeysDMA);
 
-                    return new FilieresPsupVersFormationsEtMetiersIdeo(
+                    return new FilieresPsupVersIdeoData(
                             mpsId,
                             TYPE_FORMATION_PREFIX + line.G_FR_COD(),
                             line.G_FR_LIB(),
                             line.G_FL_LIB(),
-                            ideoFormationsIds,
-                            ideoMetiersIds
+                            ideoFormationsIds.stream().sorted().collect(toCollection(ArrayList::new)),
+                            ideoMetiersIds.stream().sorted().collect(toCollection(ArrayList::new)),
+                            ideoDomainesIds.stream().sorted().collect(toCollection(ArrayList::new))
                     );
                 }
         ).toList());
     }
 
 
+    public void inheritMetiersAndDomainesFrom(FilieresPsupVersIdeoData rich) {
+        this.ideoMetiersIds().addAll(rich.ideoMetiersIds());
+        this.ideoDomainesIds().addAll(rich.ideoDomainesIds());
+    }
 }

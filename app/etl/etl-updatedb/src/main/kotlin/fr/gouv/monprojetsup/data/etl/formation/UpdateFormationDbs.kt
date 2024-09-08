@@ -44,11 +44,11 @@ class UpdateFormationDbs(
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun updateFormationDbs() {
-        logger.info("Mise à jour des formations voeux")
+        logger.info("Mise à jour de la table des formations et de la table des voeux")
         updateFormationsAndVoeuxDb()
-        logger.info("Mise à jour des criteres")
+        logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
-        logger.info("Mise à jour des moyennes generales admis")
+        logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
     }
 
@@ -97,8 +97,8 @@ class UpdateFormationDbs(
             entity.descriptifAttendus = attendus[id].orEmpty()
             entity.descriptifConseils = conseils[id].orEmpty()
 
-            entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList()
-            entity.formationsIdeo = mpsKeyToIdeoKeys[id].orEmpty()
+            entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList().sorted()
+            entity.formationsIdeo = mpsKeyToIdeoKeys[id].orEmpty().sorted()
 
             val grille = grilles[id]
             if (grille == null) {
@@ -111,8 +111,8 @@ class UpdateFormationDbs(
             entity.liens = urlListe
                 .map { link -> Pair(link.label, link.uri) }
                 .distinct()
+                .sortedBy { it.first }
                 .map { pair -> LienEntity(pair.first, pair.second) }
-                .toList()
 
             val motsClefs = tagsSources.getOrDefault(id, listOf(label))
             val motsClefsCourts = motsClefs.filter { it.length <= 300 }
@@ -122,13 +122,13 @@ class UpdateFormationDbs(
             }
             entity.motsClefs = motsClefsCourts
 
-            val voeuxFormation = voeux.filter { it.formation == id }
+            val voeuxFormation = voeux.filter { it.formation == id }.sortedBy { it.libelle }
 
             entity.labelDetails = debugLabels.getOrDefault(id, id)
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
             entity.apprentissage = apprentissage.contains(id)
             entity.las = lasToGeneric[id]
-            entity.voeux = voeuxFormation.map { VoeuEntity(it) }.toList()
+            entity.voeux = voeuxFormation.map { VoeuEntity(it) }
             entity.voeuxIds = voeuxFormation.map { it.id }
 
             val statsFormation = stats[id]
