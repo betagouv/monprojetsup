@@ -104,7 +104,7 @@ public record PsupData(
         Set<String> lasCodes = getLasMpsKeys();
         lasCodes.forEach(las -> {
             List<Formation> formations = grpToFormations.getOrDefault(las, List.of());
-            formations.forEach(formation -> result.put(gTaCodToFrontId(formation.gTaCod), las));
+            formations.forEach(formation -> result.put(gTaCodToMpsId(formation.gTaCod), las));
         });
         return result;
 
@@ -138,12 +138,12 @@ public record PsupData(
 
     public void addFiliereSimilaire(int gFlCodOri, int gFlCodSim, int gFsSco, int iTcCod) {
         if (!estFiliereActive(gFlCodOri) || !estFiliereActive(gFlCodSim)) return;
-        filsim.add(Constants.gFlCodToFrontId(gFlCodOri), Constants.gFlCodToFrontId(gFlCodSim), gFsSco, iTcCod);
+        filsim.add(Constants.gFlCodToMpsId(gFlCodOri), Constants.gFlCodToMpsId(gFlCodSim), gFsSco, iTcCod);
     }
 
     public void addDuree(int gFlCod, int gFrCod, String gFlLib, String gFrLib, String gFrSig) {
         if (!estFiliereActive(gFlCod)) return;
-        duree.add(Constants.gFlCodToFrontId(gFlCod), gFrCod, gFlLib, gFrLib, gFrSig);
+        duree.add(Constants.gFlCodToMpsId(gFlCod), gFrCod, gFlLib, gFrLib, gFrSig);
     }
 
     public @Nullable Integer getDuree(
@@ -163,7 +163,7 @@ public record PsupData(
     @Nullable
     public Integer getDuree(@NotNull Filiere filiere) {
         return DureesEtudes.getDuree(
-                Constants.gFlCodToFrontId(filiere.cle),
+                Constants.gFlCodToMpsId(filiere.cle),
                 filiere.cle,
                 filiere.libelle,
                 filiere.libelle,
@@ -211,7 +211,7 @@ public record PsupData(
                 //nomsFilieres est initialisé avec les noms de filières de v_car
                 // il n'y a pas tout
                 // typiquement il manque les LAS qui sont récupérés via la carte
-                String idfiliere = gFlCodToFrontId(filiere.cle);
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
                 if(!this.nomsFilieres.containsKey(idfiliere)) {
                     this.nomsFilieres.put(idfiliere, filiere.libelle);
                 }
@@ -267,8 +267,8 @@ public record PsupData(
                 );
 
         Map<String, String> flToGrp = flToFl.entrySet().stream().collect(Collectors.toMap(
-                e -> Constants.gFlCodToFrontId(e.getKey()),
-                e -> Constants.gFlCodToFrontId(e.getValue()))
+                e -> Constants.gFlCodToMpsId(e.getKey()),
+                e -> Constants.gFlCodToMpsId(e.getValue()))
         );
 
 
@@ -282,20 +282,22 @@ public record PsupData(
                     || name.contains("FCIL")
                     || fr == 64 // FCIL
                     || fr == CMI_PSUP_FR_COD // CMI
-                    || name.contains("BPJEPS")
+                    || fr == BPJEPS_PSUP_FR_COD
                     || fr == 63 //année préparatoire
                     || name.contains("Année préparatoire")//année préparatoire
                     || fr == 75000 // Diplôme d'Etablissement
                     || fr == IEP_PSUP_FR_COD //sciences po
+                    || fr == ECOLES_ARTS_PSUP_FR_COD
+                    || fr == ECOLES_INGE_PSUP_FR_COD
                     || fr == 75001 // DSP
                     || fr == 75 // DU,
-                    || fr == ECOLE_COMMERCE_PSUP_FR_COD // DU,
+                    || fr == ECOLE_COMMERCE_PSUP_FR_COD
 
             ) {
                 String grp = Constants.TYPE_FORMATION_PREFIX + fr;
                 formations.filieres.values().stream()
                         .filter(fil -> fil.gFrCod == fr)
-                        .forEach(fil -> flToGrp.put(Constants.gFlCodToFrontId(fil.gFlCod), grp));
+                        .forEach(fil -> flToGrp.put(Constants.gFlCodToMpsId(fil.gFlCod), grp));
             }
         });
 
@@ -391,7 +393,7 @@ public record PsupData(
         val psupKeytoMpsKey = getPsupKeyToMpsKey();
         return formations.formations.values().stream()
                 .filter(f -> las.contains(f.gTaCod))
-                .map(f -> gFlCodToFrontId(f.gFlCod))
+                .map(f -> Constants.gFlCodToMpsId(f.gFlCod))
                 .map(mpsKey -> psupKeytoMpsKey.getOrDefault(mpsKey,mpsKey))
                 .collect(Collectors.toSet());
     }
@@ -403,8 +405,8 @@ public record PsupData(
                 .map(f -> f.gFlCod)
                 .distinct()
                 .collect(Collectors.toMap(
-                        Constants::gFlCodToFrontId,
-                        gFlCod -> gFlCodToFrontId(LAS_CONSTANT + gFlCod)
+                        Constants::gFlCodToMpsId,
+                        gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod)
                         )
                 );
     }
@@ -416,8 +418,8 @@ public record PsupData(
                 .map(f -> f.gFlCod)
                 .distinct()
                 .collect(Collectors.toMap(
-                        gFlCod -> gFlCodToFrontId(LAS_CONSTANT + gFlCod),
-                                Constants::gFlCodToFrontId
+                        gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod),
+                                Constants::gFlCodToMpsId
                         )
                 );
     }
@@ -428,8 +430,8 @@ public record PsupData(
                 .map(f -> f.gFlCod)
                 .distinct()
                 .collect(Collectors.toMap(
-                                gFlCod -> gFlCodToFrontId(LAS_CONSTANT + gFlCod),
-                                gFlCod -> gFlCodToFrontId(PASS_FL_COD)
+                                gFlCod -> Constants.gFlCodToMpsId(LAS_CONSTANT + gFlCod),
+                                gFlCod -> Constants.gFlCodToMpsId(PASS_FL_COD)
                         )
                 );
     }
@@ -471,7 +473,7 @@ public record PsupData(
         result.addAll(
                 filActives.stream()
                         .filter(formations.filieres::containsKey)
-                        .map(Constants::gFlCodToFrontId)
+                        .map(Constants::gFlCodToMpsId)
                         .filter(key -> !corr.containsKey(key) || corr.get(key).equals(key))
                         .collect(Collectors.toSet())
         );
@@ -515,7 +517,7 @@ public record PsupData(
                             String pctStr = m.getOrDefault(fullKey, "0");
                             int pct = Integer.parseInt(pctStr);
                             juryToFils.get(cja).forEach(fl -> {
-                                String flStr = Constants.gFlCodToFrontId(fl);
+                                String flStr = Constants.gFlCodToMpsId(fl);
                                 filToPctsListe.computeIfAbsent(
                                         flStr,
                                         z -> new HashMap<>()
@@ -565,7 +567,7 @@ public record PsupData(
         formations().formations.values()
                 .forEach(f -> {
                     int gFlCod = (f.isLAS() && f.gFlCod < LAS_CONSTANT) ? f.gFlCod + LAS_CONSTANT : f.gFlCod;
-                    String filKey = Constants.gFlCodToFrontId(gFlCod);
+                    String filKey = Constants.gFlCodToMpsId(gFlCod);
                     val grKey = groupes.getOrDefault(filKey, filKey);
                     result
                             .computeIfAbsent(grKey, z -> new ArrayList<>())
@@ -581,8 +583,8 @@ public record PsupData(
         //apprentissage
         formations().filieres.values().forEach(filiere -> {
             if (filiere.apprentissage) {
-                val key1 = gFlCodToFrontId(filiere.gFlCod);
-                val key2 = gFlCodToFrontId(filiere.gFlCodeFi);
+                val key1 = Constants.gFlCodToMpsId(filiere.gFlCod);
+                val key2 = Constants.gFlCodToMpsId(filiere.gFlCodeFi);
                 result.addAll(List.of(
                         key1,
                         key2,
@@ -609,7 +611,7 @@ public record PsupData(
             Map<Integer, DescriptifVoeu> indexedDescriptifs,
             Map<String, String> psupIndextoMpsIndex,
             List<String> formationsMps) {
-        val candidateMpsKey = gFlCodToFrontId(f.isLAS() ? (LAS_CONSTANT + f.gFlCod) : f.gFlCod);
+        val candidateMpsKey = Constants.gFlCodToMpsId(f.isLAS() ? (LAS_CONSTANT + f.gFlCod) : f.gFlCod);
         var mpsKey = psupIndextoMpsIndex.get(candidateMpsKey);
         if(mpsKey == null) {
             if(formationsMps.contains(candidateMpsKey)) {
@@ -623,7 +625,7 @@ public record PsupData(
             throw new RuntimeException("No libelle for psup key " + candidateMpsKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
         }
         return new Voeu(
-                    Constants.gTaCodToFrontId(f.gTaCod),
+                    Constants.gTaCodToMpsId(f.gTaCod),
                     mpsKey,
                     f.lat,
                     f.lng,

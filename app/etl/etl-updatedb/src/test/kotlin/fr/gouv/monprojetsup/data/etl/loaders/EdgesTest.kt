@@ -1,8 +1,9 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
 import fr.gouv.monprojetsup.data.TestData
+import fr.gouv.monprojetsup.data.domain.Constants
 import org.apache.commons.lang3.tuple.Pair
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,15 +21,9 @@ class EdgesTest {
     @BeforeEach
     fun setUp() {
         // Given
-        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo()
-        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo()
         val sousDomainesWeb = ArrayList(OnisepDataLoader.loadDomainesSousDomaines())
+        val formationsIdeoDuSup = OnisepDataLoader.loadFormationsIdeoDuSup(sources)
 
-        // When
-        val formationsIdeoDuSup = OnisepDataLoader.extractFormationsIdeoDuSup(
-            formationsIdeoSansfiche,
-            formationsIdeoAvecFiche
-        )
         val filieresPsupToFormationsMetiersIdeo =
             OnisepDataLoader.loadPsupToIdeoCorrespondance(
                 sources,
@@ -37,7 +32,6 @@ class EdgesTest {
 
         val edgesFormations = OnisepDataLoader.getEdgesFormations(
             sousDomainesWeb,
-            formationsIdeoDuSup,
             filieresPsupToFormationsMetiersIdeo
         )
         edgesFormationsDomaines = edgesFormations.left
@@ -46,21 +40,28 @@ class EdgesTest {
 
     @Test
     fun `Chaque formation mps a au moins un domaine associé`() {
-        Assertions.assertThat(edgesFormationsDomaines).isNotEmpty()
+        assertThat(edgesFormationsDomaines).isNotEmpty()
     }
     @Test
     fun `Chaque formation mps a au moins un metier associé`() {
-        Assertions.assertThat(edgesMetiersFormations).isNotEmpty()
+        assertThat(edgesMetiersFormations).isNotEmpty()
     }
 
     @Test
     fun `Les formations de référence ont au moins un domaine et un métier associé`() {
         val formationsWithAtLeastOneDomaine = edgesFormationsDomaines.map { it.left }.toSet()
         val formationsWithAtLEastOneMetier = edgesMetiersFormations.map { it.right }.toSet()
-        Assertions.assertThat(TestData.psupToIdeoReference.keys).allSatisfy { psup ->
-            Assertions.assertThat(formationsWithAtLeastOneDomaine).contains(psup)
-            Assertions.assertThat(formationsWithAtLEastOneMetier).contains(psup)
+        assertThat(TestData.psupToIdeoReference.keys).allSatisfy { psup ->
+            assertThat(formationsWithAtLeastOneDomaine).contains(psup)
+            assertThat(formationsWithAtLEastOneMetier).contains(psup)
         }
+        assertThat(listOf(
+            Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD1),
+            Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD2)
+        )).allSatisfy { psup ->
+                assertThat(formationsWithAtLeastOneDomaine).contains(psup)
+                assertThat(formationsWithAtLEastOneMetier).contains(psup)
+            }
     }
 
 

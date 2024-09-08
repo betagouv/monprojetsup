@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId;
 
 public record OnisepData(
         DomainesMps domainesMps,
@@ -134,13 +135,10 @@ public record OnisepData(
         Map<String, FormationIdeoDuSup> formationsIdeo = formationsIdeoSuSup.stream()
                 .collect(Collectors.toMap(FormationIdeoDuSup::ideo, z -> z));
 
-        Map<String, MetierIdeoDuSup> metiersIdeo = metiersIdeoduSup.stream()
-                .collect(Collectors.toMap(MetierIdeoDuSup::ideo, z -> z));
-
         Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
         filieresToFormationsOnisep.forEach(
                 fil -> formationsVersMetiers.put(
-                        fil.gFlCod(),
+                        gFlCodToMpsId(fil.gFlCod()),
                         fil.ideoFormationsIds().stream()
                                 .map(formationsIdeo::get)
                                 .filter(Objects::nonNull)
@@ -179,7 +177,7 @@ public record OnisepData(
                 metiersVersFormations.computeIfAbsent(p.getLeft(), z -> new HashSet<>())
                         .add(p.getRight()));
 
-        getMetiersVersFormationsFromDescriptifs(
+        getFormationsVersMetiersFromDescriptifs(
                 descriptifs,
                 metiersIdeo
         ).forEach(
@@ -192,8 +190,9 @@ public record OnisepData(
         metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !Helpers.isFiliere(s)));
 
 
-        /* ajouts des las aux metiers PASS */
-        String passKey = Constants.gFlCodToFrontId(PASS_FL_COD);
+        /* ajouts des las aux metiers PASS.
+        * Remarque: c'est refait côté suggestions.... */
+        String passKey = Constants.gFlCodToMpsId(PASS_FL_COD);
         Set<String> metiersPass =
                 metiersVersFormations.entrySet().stream()
                         .filter(e -> e.getValue().contains( passKey))
@@ -223,7 +222,7 @@ public record OnisepData(
     }
 
     /* filieres to metiers */
-    public static Map<String, Set<String>> getMetiersVersFormationsFromDescriptifs(
+    public static Map<String, Set<String>> getFormationsVersMetiersFromDescriptifs(
             DescriptifsFormationsMetiers descriptifs,
             List<MetierIdeoDuSup> metiers
     ) {

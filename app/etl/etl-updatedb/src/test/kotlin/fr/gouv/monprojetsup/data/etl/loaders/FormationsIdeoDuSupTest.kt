@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.loaders
 import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup
+import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +31,7 @@ class FormationsIdeoDuSupTest {
         // Then
         assertThat(formationsIdeoDuSup).isNotEmpty()
         assertThat(formationsIdeoDuSup.values).allSatisfy { f ->
-            f.getSousdomainesWebMpsIds(sousdomainesWebByIdeoKey).isNotEmpty()
+            getSousdomainesWebMpsIds(f.libellesOuClesSousdomainesWeb(), sousdomainesWebByIdeoKey).isNotEmpty()
         }
     }
 

@@ -90,13 +90,13 @@ public record FormationIdeoDuSup(
         );
     }
 
-    public List<String> getSousdomainesWebMpsIds(Map<String, SousDomaineWeb> sousDomainesWeb) {
+    public static List<String> getSousdomainesWebMpsIds(Collection<String> libellesOuClesSousdomainesWeb, Map<String, SousDomaineWeb> sousDomainesWeb) {
         List<String> result = new ArrayList<>();
         for (String libelleDomaine : libellesOuClesSousdomainesWeb) {
             val domaines = SousDomaineWeb.extractDomaines(libelleDomaine, sousDomainesWeb);
             result.addAll(domaines.stream().map(SousDomaineWeb::mpsId).toList());
         }
-        return result;
+        return result.stream().distinct().sorted().toList();
     }
 
     private static final String IDEO_FORMATION_KEY_PATTERN = "FOR\\.\\d+";
