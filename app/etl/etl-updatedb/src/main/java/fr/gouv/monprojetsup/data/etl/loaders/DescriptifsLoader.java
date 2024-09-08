@@ -121,7 +121,7 @@ public class DescriptifsLoader {
             if (flfrcod.isBlank()) {
                 throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
             }
-            if(flfrcod.equals(gFlCodToFrontId(LAS_CONSTANT))) {
+            if(flfrcod.equals(Constants.gFlCodToMpsId(LAS_CONSTANT))) {
                 continue;
             }
 

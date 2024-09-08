@@ -23,7 +23,7 @@ public record Attendus(
         filActives.addAll(backPsupData.las());
 
         filActives.forEach(gFlCod -> {
-            String key = Constants.gFlCodToFrontId(gFlCod);
+            String key = Constants.gFlCodToMpsId(gFlCod);
 
             val recoPremGeneriques = backPsupData.getRecoPremGeneriques(gFlCod);
             val recoTermGeneriques = backPsupData.getRecoTermGeneriques(gFlCod);

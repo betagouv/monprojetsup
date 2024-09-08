@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.port
 
+import fr.gouv.monprojetsup.data.domain.Constants
+import fr.gouv.monprojetsup.data.domain.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
@@ -146,6 +148,29 @@ class MpsDataPortTest {
             val metiersAvecauMoinsuneformation  = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().flatMap { (_,b) -> b }.toSet()
             val pctOk = 100 * metiersAvecauMoinsuneformation.size / metiersIdsRef.size
             assertThat(pctOk).isGreaterThan(70)
+        }
+
+        @Test
+        fun `CUPGE - Droit-économie-gestion hérite de tous les métiers des écoles de commerce`() {
+            //c'est le mapping CPGE - licence qui crée les assciations métiers
+            val mpsIds = mpsDataPort.getFormationsMpsIds()
+            val cupgeEcoGestionMpsId = gFrCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FR_COD)
+            assertThat(mpsIds).contains(cupgeEcoGestionMpsId)
+
+            val ecoleCommerceMpsId = gFrCodToMpsId(Constants.ECOLE_COMMERCE_PSUP_FR_COD)
+            assertThat(mpsIds).contains(ecoleCommerceMpsId)
+
+            val formationsVersMetiers = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies()
+
+            val metiersEcoleCommerce = formationsVersMetiers[ecoleCommerceMpsId]
+            assertThat(metiersEcoleCommerce).isNotNull()
+            assertThat(metiersEcoleCommerce).isNotEmpty()
+
+            val metiersCupge = formationsVersMetiers[cupgeEcoGestionMpsId]
+            assertThat(metiersCupge).isNotNull()
+
+            assertThat(metiersCupge).containsAll(metiersEcoleCommerce)
+
         }
     }
 }

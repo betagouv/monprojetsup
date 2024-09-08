@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.labels;
 
+import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
@@ -37,7 +38,7 @@ public class Labels {
 
         /* used for LAS */
         psupData.formations().filieres.forEach((gFlCod, filiere) -> {
-            String key = gFlCodToFrontId(gFlCod);
+            String key = Constants.gFlCodToMpsId(gFlCod);
             if (!result.containsKey(key)) {
                 String frLib = psupData.formations().typesMacros.get(filiere.gFrCod);
                 String libelle = filiere.libelle;
@@ -65,7 +66,7 @@ public class Labels {
         });
 
         psupData.formations().formations.forEach((gTaCod, form) -> {
-            String key = gTaCodToFrontId(gTaCod);
+            String key = gTaCodToMpsId(gTaCod);
             String libelle = getLibelleFront(key, form.toString());
             //if(includeKeys) libelle = includeKey(key, libelle);
             result.put(key, libelle);
