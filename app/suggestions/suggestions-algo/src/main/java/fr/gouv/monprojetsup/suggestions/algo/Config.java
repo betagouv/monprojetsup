@@ -17,7 +17,7 @@ public final class Config {
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
-    static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.75;
+    static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
     static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     static final double MAX_AFFINITY_PERCENT = 0.90;
     static final int PATHES_CACHE_SIZE = 1000;  //1000 is enough ?

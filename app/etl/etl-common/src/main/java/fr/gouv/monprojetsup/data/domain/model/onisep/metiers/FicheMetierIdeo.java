@@ -212,18 +212,14 @@ public record FicheMetierIdeo(
     }
 
     @SuppressWarnings("unused")//associe chorégraphe à maquilleuse
-    public @NotNull List<@NotNull String> getMetiersAssociesMps() {
+    public @NotNull List<@NotNull String> getMetiersAssocies() {
         if(metiersAssocies == null) {
             return List.of();
         } else {
             return metiersAssocies.stream()
-                    .map(s -> Constants.cleanup(s.id()))
+                    .map(MetierAssocie::id)
                     .toList();
         }
-    }
-
-    public String idMps() {
-        return Constants.cleanup(identifiant);
     }
 
     public @NotNull String getDescriptif() {

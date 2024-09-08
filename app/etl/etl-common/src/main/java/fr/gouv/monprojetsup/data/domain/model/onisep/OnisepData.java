@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.model.onisep;
 
 import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
@@ -16,9 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static fr.gouv.monprojetsup.data.domain.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId;
 
 public record OnisepData(
         DomainesMps domainesMps,
@@ -126,6 +122,7 @@ public record OnisepData(
 
 
     //in mps id style flxxx and MET_xxx
+    /*
     public static Map<String, Set<String>> getMetiersVersFormationsMps(
             List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
             List<FormationIdeoDuSup> formationsIdeoSuSup,
@@ -158,68 +155,8 @@ public record OnisepData(
         return metiersVersFormations;
     }
 
+    */
 
-
-    /**
-     * metiers vers filieres
-     * @return a map metiers -> filieres
-     */
-    public Map<String, Set<String>> getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
-            Map<String, String> psupKeyToMpsKey,
-            Map<String, String> genericToLas,
-            DescriptifsFormationsMetiers descriptifs
-            ) {
-
-
-        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
-
-        this.edgesMetiersFormations().forEach(p ->
-                metiersVersFormations.computeIfAbsent(p.getLeft(), z -> new HashSet<>())
-                        .add(p.getRight()));
-
-        getFormationsVersMetiersFromDescriptifs(
-                descriptifs,
-                metiersIdeo
-        ).forEach(
-                (f, ms) -> ms.forEach(
-                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
-                )
-        );
-
-        metiersVersFormations.keySet().removeIf(k -> !k.startsWith(Constants.MET_PREFIX));
-        metiersVersFormations.values().forEach(strings -> strings.removeIf(s -> !Helpers.isFiliere(s)));
-
-
-        /* ajouts des las aux metiers PASS.
-        * Remarque: c'est refait côté suggestions.... */
-        String passKey = Constants.gFlCodToMpsId(PASS_FL_COD);
-        Set<String> metiersPass =
-                metiersVersFormations.entrySet().stream()
-                        .filter(e -> e.getValue().contains( passKey))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toSet());
-        metiersPass.forEach(m ->
-                metiersVersFormations.computeIfAbsent( m,
-                z -> new HashSet<>())
-                        .addAll(genericToLas.values())
-        );
-
-
-        metiersVersFormations.entrySet().forEach(e -> {
-            Set<String> mpsFormationsKeysBase = new HashSet<>(e.getValue());
-            Set<String> mpsFormationsKeys = new HashSet<>(mpsFormationsKeysBase);
-            mpsFormationsKeysBase.forEach(mpsKey -> {
-                /* ajouts des groupes génériques aux metiers des formations correspondantes */
-                mpsFormationsKeys.add(psupKeyToMpsKey.getOrDefault(mpsKey,mpsKey));
-                /* ajouts des las aux metiers des génériques correspondants */
-                if(genericToLas.containsKey(mpsKey)) {
-                    mpsFormationsKeys.add(genericToLas.get(mpsKey));
-                }
-            });
-            e.setValue(mpsFormationsKeys);
-        });
-        return metiersVersFormations;
-    }
 
     /* filieres to metiers */
     public static Map<String, Set<String>> getFormationsVersMetiersFromDescriptifs(

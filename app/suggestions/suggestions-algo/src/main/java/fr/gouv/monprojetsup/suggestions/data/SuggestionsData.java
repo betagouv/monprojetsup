@@ -225,8 +225,12 @@ public class SuggestionsData {
         return edgesPort.getEdgesInteretsMetiers();
     }
 
-    public List<Edge> edgesFormationsDomaines() {
-        return edgesPort.getEdgesFilieresThematiques();
+    public List<Edge> edgesFormationsPsupDomaines() {
+        return edgesPort.getEdgesFormationsPsupThematiques();
+    }
+    //getEdgesMetiersFormationsPsup
+    public List<Edge> edgesMetiersFormationsPsup() {
+        return edgesPort.getEdgesMetiersFormationsPsup();
     }
 
     public List<Edge> edgesDomainesMetiers() {
@@ -241,8 +245,8 @@ public class SuggestionsData {
         return edgesPort.getEdgesMetiersAssocies();
     }
 
-    public List<Edge> edgesFilieresGroupes() {
-        return edgesPort.getEdgesFilieresGroupes();
+    public List<Edge> edgesFormationPsupFormationMps() {
+        return edgesPort.getEdgesFormationPsupFormationMps();
     }
 
     public List<Edge> lasToGeneric() {
