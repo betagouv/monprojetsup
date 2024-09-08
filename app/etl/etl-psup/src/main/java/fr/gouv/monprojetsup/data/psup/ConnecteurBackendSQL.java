@@ -113,7 +113,7 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gFlCod = result.getInt(1);
                     if(!filActives.contains(gFlCod)) continue;
-                    data.nomsFilieres().put(Constants.gFlCodToFrontId(gFlCod), result.getString(2));
+                    data.nomsFilieres().put(Constants.gFlCodToMpsId(gFlCod), result.getString(2));
                 }
             }
         }
@@ -136,7 +136,7 @@ public class ConnecteurBackendSQL {
                     if(!filActives.contains(gFlCod)) continue;
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
-                        String g = Constants.gFlCodToFrontId(gFlCod);
+                        String g = Constants.gFlCodToMpsId(gFlCod);
                         stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, TOUS_BACS_CODE_MPS);
                         stats.incrementeAdmisParFiliere(g, TOUS_BACS_CODE_MPS);
                         if (!bac.equals(TOUS_BACS_CODE_MPS)) {
@@ -163,7 +163,7 @@ public class ConnecteurBackendSQL {
                     if(!filActives.contains(gFlCod)) continue;
                     String bac = bacs.get(gCnCod);
                     if(bac != null) {
-                        String g = Constants.gFlCodToFrontId(gFlCod);
+                        String g = Constants.gFlCodToMpsId(gFlCod);
                         stats.incrementeCandidatsParFiliere(g, TOUS_BACS_CODE_MPS);
                         if (!bac.equals(TOUS_BACS_CODE_MPS)) {
                             stats.incrementeCandidatsParFiliere(g, bac);
@@ -193,7 +193,7 @@ public class ConnecteurBackendSQL {
                     int nb = result.getInt(1);
                     int mtCod = result.getInt(2);
                     int gFlCod = result.getInt(3);
-                    stats.setAdmisParFiliereMatiere(Constants.gFlCodToFrontId(gFlCod),mtCod,nb);
+                    stats.setAdmisParFiliereMatiere(Constants.gFlCodToMpsId(gFlCod),mtCod,nb);
                 }
             }
         }
@@ -219,7 +219,7 @@ public class ConnecteurBackendSQL {
                     int nb = result.getInt(1);
                     int mtCod = result.getInt(2);
                     int gFlCod = result.getInt(3);
-                    stats.setCandidatsParFiliereMatiere(Constants.gFlCodToFrontId(gFlCod),mtCod,nb);
+                    stats.setCandidatsParFiliereMatiere(Constants.gFlCodToMpsId(gFlCod),mtCod,nb);
                 }
             }
         }
@@ -621,7 +621,7 @@ public class ConnecteurBackendSQL {
         carte.filieres.values().forEach(filiere -> {
             if (filActives.contains(filiere.cle)) {
                 //une fois avec et une fois sans accents
-                String idfiliere = Constants.gFlCodToFrontId(filiere.cle);
+                String idfiliere = Constants.gFlCodToMpsId(filiere.cle);
                 String[] chunks = filiere.libelle.split("\\P{L}+");
                 for (String s : chunks) {
                     String chunk = s.toLowerCase();
@@ -800,7 +800,7 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int gFlCod = result.getInt(2);
-                    flToGcn.computeIfAbsent(Constants.gFlCodToFrontId(gFlCod), z -> new HashSet<>()).add(gCnCod);
+                    flToGcn.computeIfAbsent(Constants.gFlCodToMpsId(gFlCod), z -> new HashSet<>()).add(gCnCod);
                 }
             }
         }

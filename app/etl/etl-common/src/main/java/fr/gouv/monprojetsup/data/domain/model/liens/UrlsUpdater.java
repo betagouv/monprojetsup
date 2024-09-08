@@ -61,7 +61,7 @@ public class UrlsUpdater {
         psupKeytoMpsKey.forEach((psupKey, mpsKey) -> urls.getOrDefault(psupKey, List.of()).forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls)));
 
         /* traitement spécifique études de santé */
-        addUrl(Constants.gFlCodToFrontId(Constants.PASS_FL_COD), Constants.URL_ARTICLE_PAS_LAS, Constants.LABEL_ARTICLE_PAS_LAS, urls);
+        addUrl(Constants.gFlCodToMpsId(Constants.PASS_FL_COD), Constants.URL_ARTICLE_PAS_LAS, Constants.LABEL_ARTICLE_PAS_LAS, urls);
         lasToGeneric.forEach((keyLas, keyGeneric) -> {
             //ajout article études de santé
             addUrl(keyLas, Constants.URL_ARTICLE_PAS_LAS, Constants.LABEL_ARTICLE_PAS_LAS, urls);

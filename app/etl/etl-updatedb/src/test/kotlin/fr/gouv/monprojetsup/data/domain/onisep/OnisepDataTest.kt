@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.domain.onisep
 
+import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
@@ -38,6 +39,11 @@ class OnisepDataTest {
         assertThat(expansion).isNotEmpty()
     }
 
+    @Test
+    fun `CUPGE Eco Gestion a au moins un metier`() {
+        assertThat(onisepData.edgesMetiersFormations).anyMatch { it.right == Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD1) }
+        assertThat(onisepData.edgesMetiersFormations).anyMatch { it.right == Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD2) }
+    }
 
 
 }

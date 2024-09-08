@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
+import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId;
+import static fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.*;
 import static fr.gouv.monprojetsup.data.tools.CsvTools.readCSV;
 
@@ -54,13 +56,16 @@ public class OnisepDataLoader {
         val romeData = RomeDataLoader.load(sources);
         insertRomeInteretsDansMetiers(romeData.centresInterest(), metiersIdeoDuSup.values()); //before updateLabels
 
-        LOGGER.info("Chargement des correspondances");
         val filieresPsupToFormationsMetiersIdeo = loadPsupToIdeoCorrespondance(
                 sources,
                 formationsIdeoDuSup
         );
 
-        val edgesFormations = getEdgesFormations(sousDomainesWeb, formationsIdeoDuSup, filieresPsupToFormationsMetiersIdeo);
+        val edgesFormations = getEdgesFormations(
+                sousDomainesWeb,
+                filieresPsupToFormationsMetiersIdeo
+        );
+
         val edgesFormationsDomaines = edgesFormations.getLeft();
         val edgesMetiersFormations = edgesFormations.getRight();
 
@@ -104,6 +109,8 @@ public class OnisepDataLoader {
 
     }
 
+
+    @SuppressWarnings("unused")
     private static void injectInMetiers(
             List<MetierIdeoDuSup> metiersIdeoDuSup,
             Map<String, Set<String>> richIdeoToPoorIdeo
@@ -141,8 +148,8 @@ public class OnisepDataLoader {
     ) {
         val formationsParCod = formations.stream()
                 .flatMap(f -> Stream.of(
-                        Pair.of(f.gFrCod(), f),
-                        Pair.of(f.gFlCod(), f)
+                        Pair.of(gFrCodToMpsId(f.gFrCod()), f),
+                        Pair.of(gFlCodToMpsId(f.gFlCod()), f)
                         )
                 ).collect(Collectors.groupingBy(Pair::getLeft));
 
@@ -250,48 +257,20 @@ public class OnisepDataLoader {
 
     protected static Pair<List<Pair<String, String>>, List<Pair<String, String>>> getEdgesFormations(
             List<SousDomaineWeb> sousDomainesWeb,
-            Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
             List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo) {
 
-        val edgesFormationsDomaines = new ArrayList<Pair<String,String>>();
-        val edgesMetiersFormations = new ArrayList<Pair<String,String>>();
+        val edgesMetiersFormations = filieresPsupToFormationsMetiersIdeo.stream().flatMap(
+                fil -> fil.ideoMetiersIds().stream().map(metier -> Pair.of(cleanup(metier), fil.mpsId()))
+        ).toList();
 
-        //baseline: links from the big xml and jm and cécile correspondances
         val sousdomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
-        filieresPsupToFormationsMetiersIdeo.forEach(
-                fil -> {
-                    val psupId = fil.gFlCod();
-                    fil.ideoFormationsIds().stream()
-                            .map(formationsIdeoDuSup::get)
-                            .filter(Objects::nonNull)
-                            .forEach( f -> {
-                                        edgesMetiersFormations.addAll(
-                                                f.metiers().stream()
-                                                        .map(metier -> Pair.of(cleanup(metier), psupId))
-                                                        .toList()
-                                        );
-                                        edgesFormationsDomaines.addAll(
-                                                f.getSousdomainesWebMpsIds(sousdomainesWebByIdeoKey).stream()
-                                                        .map(cleDomaineMps -> Pair.of(psupId, cleDomaineMps))
-                                                        .toList()
-                                        );
-                                    }
-                            );
-                }
-                );
+        val edgesFormationsDomaines = filieresPsupToFormationsMetiersIdeo.stream().flatMap(
+                fil -> getSousdomainesWebMpsIds(fil.libellesOuClesSousdomainesWeb(),sousdomainesWebByIdeoKey)
+                        .stream().map(domaineId -> Pair.of(fil.mpsId(), cleanup(domaineId)))
+        ).toList();
+
         return Pair.of(edgesFormationsDomaines, edgesMetiersFormations);
 
-    }
-
-    private static Collection<String> extend(List<String> keys, Map<String, String> richToPoor) {
-        val result = new HashSet<>(keys);
-        result.addAll(
-                richToPoor.entrySet().stream()
-                        .filter(e -> result.contains(e.getValue()))
-                        .map(Map.Entry::getKey)
-                        .toList()
-        );
-        return result;
     }
 
     private static void insertRomeInteretsDansMetiers(
@@ -365,21 +344,27 @@ public class OnisepDataLoader {
 
     protected static List<FilieresPsupVersIdeoData> loadPsupToIdeoCorrespondance(
             DataSources sources,
-            Map<String, FormationIdeoDuSup> formationsIdeo
+            Map<String, FormationIdeoDuSup> formationsIdeoDuSup
     ) {
         LOGGER.info("Chargement de " + DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH);
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
-        val result = FilieresPsupVersIdeoData.compute(lines, formationsIdeo);
-        val formationsMps = lines.psupToIdeo2().stream()
+        val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup);
+
+        LOGGER.info("Chargement des héritages mps --> mps");
+        val formationsMps = filieresPsupToFormationsMetiersIdeo.stream()
                 .flatMap(l -> Stream.of(
-                        gFlCodToFrontId(Integer.parseInt(l.G_FL_COD())),
-                        gFrCodToFrontId(Integer.parseInt(l.G_FR_COD()))
+                        Constants.gFlCodToMpsId(l.gFlCod()),
+                        gFrCodToMpsId(l.gFrCod())
                 ))
                 .collect(Collectors.toSet());
+
         val heritages = loadMpsHeritages(sources, formationsMps);
-        injectInFormationsMps(result, heritages);
-        return result;
+
+        LOGGER.info("Application des héritages mps --> mps");
+        injectInFormationsMps(filieresPsupToFormationsMetiersIdeo, heritages);
+
+        return filieresPsupToFormationsMetiersIdeo;
     }
 
 

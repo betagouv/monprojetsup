@@ -12,6 +12,6 @@ public record Candidat(
         @NotNull List<@NotNull String> voeux
 ) implements Serializable {
     public Candidat(@NotNull String bac, @NotNull Set<Integer> voeux) {
-        this(bac, voeux.stream().map(Constants::gTaCodToFrontId).toList());
+        this(bac, voeux.stream().map(Constants::gTaCodToMpsId).toList());
     }
 }

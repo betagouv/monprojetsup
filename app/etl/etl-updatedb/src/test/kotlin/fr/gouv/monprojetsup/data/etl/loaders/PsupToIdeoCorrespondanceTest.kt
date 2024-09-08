@@ -27,17 +27,12 @@ class PsupToIdeoCorrespondanceTest {
 
     @BeforeEach
     fun setUp() {
-        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo()
-        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo()
-        formationsIdeoDuSup = OnisepDataLoader.extractFormationsIdeoDuSup(
-            formationsIdeoSansfiche,
-            formationsIdeoAvecFiche
-        )
+        formationsIdeoDuSup = OnisepDataLoader.loadFormationsIdeoDuSup(sources)
         filieresPsupToFormationsMetiersIdeo =
             OnisepDataLoader.loadPsupToIdeoCorrespondance(
                 sources,
                 formationsIdeoDuSup
-            ).associateBy { it.gFlCod }
+            ).associateBy { gFlCodToMpsId(it.gFlCod) }
 
         val sousDomainesWeb: List<SousDomaineWeb> = ArrayList(OnisepDataLoader.loadDomainesSousDomaines())
         metiersIdeoDuSup = OnisepDataLoader.loadMetiers(formationsIdeoDuSup.values, sousDomainesWeb, sources)
@@ -60,7 +55,7 @@ class PsupToIdeoCorrespondanceTest {
     @Test
     fun `CPGE lettres est indexée et mène à des métiers`() {
         //c'est le mapping CPGE - licence qui crée les assciations métiers
-        val cpge = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(Constants.CPGE_LETTRES_PSUP_FL_COD)]
+        val cpge = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(Constants.CPGE_LETTRES_PSUP_FL_COD)]
         assertThat(cpge).isNotNull
         assertThat(cpge!!.ideoMetiersIds).isNotEmpty()
     }
@@ -68,11 +63,11 @@ class PsupToIdeoCorrespondanceTest {
     @Test
     fun `CUPGE - Droit-économie-gestion hérite de tous les métiers des écoles de commerce`() {
         //c'est le mapping CPGE - licence qui crée les assciations métiers
-        val cupge1 = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(CUPGE_ECO_GESTION_PSUP_FL_COD1)]
-        val cupge2 = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(CUPGE_ECO_GESTION_PSUP_FL_COD2)]
-        val ecoleCommerce3 = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(ECOLE_COMMERCE_BAC_3_PSUP_FL_COD)]
-        val ecoleCommerce4 = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(ECOLE_COMMERCE_BAC_4_PSUP_FL_COD)]
-        val ecoleCommerce5 = filieresPsupToFormationsMetiersIdeo[gFlCodToFrontId(ECOLE_COMMERCE_BAC_5_PSUP_FL_COD)]
+        val cupge1 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(CUPGE_ECO_GESTION_PSUP_FL_COD1)]
+        val cupge2 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(CUPGE_ECO_GESTION_PSUP_FL_COD2)]
+        val ecoleCommerce3 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_3_PSUP_FL_COD)]
+        val ecoleCommerce4 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_4_PSUP_FL_COD)]
+        val ecoleCommerce5 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_5_PSUP_FL_COD)]
         assertThat(listOf(cupge1, cupge2, ecoleCommerce3, ecoleCommerce4, ecoleCommerce5)).allSatisfy { assertThat(it).isNotNull }
         assertThat(ecoleCommerce3!!.ideoMetiersIds).isNotEmpty()
         assertThat(ecoleCommerce4!!.ideoMetiersIds).isNotEmpty()

@@ -3,8 +3,7 @@ package fr.gouv.monprojetsup.data.etl
 import com.opencsv.CSVWriterBuilder
 import fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.Constants.FORMATION_PSUP_EXCLUES
-import fr.gouv.monprojetsup.data.domain.Constants.gFlCodToFrontId
+import fr.gouv.monprojetsup.data.domain.Constants.*
 import fr.gouv.monprojetsup.data.domain.Helpers.isFiliere
 import fr.gouv.monprojetsup.data.domain.Helpers.isMetier
 import fr.gouv.monprojetsup.data.domain.model.*
@@ -109,11 +108,19 @@ class MpsDataFiles(
     }
 
     override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
-        val psupToIdeo = onisepData.filieresToFormationsOnisep.associate { it.gFlCod to it.ideoFormationsIds }
+        val psupToIdeo = HashMap<String, ArrayList<String>>()
+        onisepData.filieresToFormationsOnisep.forEach {
+            val flKey = gFrCodToMpsId(it.gFlCod)
+            val frKey = gFrCodToMpsId(it.gFrCod)
+            psupToIdeo.computeIfAbsent(flKey) { ArrayList() }.addAll(it.ideoFormationsIds)
+            psupToIdeo.computeIfAbsent(frKey) { ArrayList() }.addAll(it.ideoFormationsIds)
+        }
         val las = getLasToGenericIdMapping()
         val result = HashMap<String, List<String>>()
         getFormationsMpsIds().forEach { mpsId ->
-            result[mpsId] = psupData.mpsKeyToPsupKeys.getOrDefault(mpsId, listOf(mpsId)).flatMap { psupToIdeo[it].orEmpty() }.toList()
+            result[mpsId] =
+                psupData.mpsKeyToPsupKeys.getOrDefault(mpsId, listOf(mpsId)).
+                flatMap { psupToIdeo[it].orEmpty() }.toList()
         }
         //ajout des las
         las.forEach { (las, generic) ->
@@ -178,7 +185,7 @@ class MpsDataFiles(
                 csvWriter.writeNext(nextLine.toTypedArray())
             }
             val nextLineLas = listOf(
-                gFlCodToFrontId(LAS_CONSTANT),
+                gFlCodToMpsId(LAS_CONSTANT),
                 Constants.LABEL_ARTICLE_PAS_LAS,
                 "",
                 "",
@@ -334,7 +341,7 @@ class MpsDataFiles(
 
         motsCles.sources.computeIfAbsent(
             Constants.PASS_MOT_CLE
-        ) { HashSet() }.add(gFlCodToFrontId(Constants.PASS_FL_COD))
+        ) { HashSet() }.add(gFlCodToMpsId(Constants.PASS_FL_COD))
 
         motsCles.extendToGroups(psupData.psupKeyToMpsKey)
 
@@ -393,7 +400,7 @@ class MpsDataFiles(
             resultInt.addAll(psupData.lasFlCodes)
 
             val result = HashSet(resultInt.stream()
-                .map { cle -> gFlCodToFrontId(cle) }
+                .map { cle -> gFlCodToMpsId(cle) }
                 .toList()
             )
 
@@ -457,7 +464,7 @@ class MpsDataFiles(
 
         val psupKeyToMpsKey = psupData.psupKeyToMpsKey
 
-        val passKey = gFlCodToFrontId(Constants.PASS_FL_COD)
+        val passKey = gFlCodToMpsId(Constants.PASS_FL_COD)
         val metiersPass = metiersVersFormations
             .filter { it.value.contains(passKey) }
             .map { it.key }
