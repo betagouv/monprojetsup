@@ -122,7 +122,8 @@ public class AlgoSuggestions {
             }
         }));
 
-        edgesKeys.putAll(data.edgesFormationsDomaines());
+        edgesKeys.putAll(data.edgesFormationsPsupDomaines());
+        edgesKeys.putAll(data.edgesMetiersFormationsPsup());
         edgesKeys.putAll(data.edgesDomainesMetiers());
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
@@ -133,24 +134,22 @@ public class AlgoSuggestions {
         edgesKeys.putAll(data.edgesItemssGroupeItems());
         edgesKeys.replaceSpecificByGeneric(data.edgesItemssGroupeItems(), 1.0);
 
-        //ajout des correspondances de groupes
-        val edgesFilieresGroupes = data.edgesFilieresGroupes();
+        //passage au référentiel des formations MPS
+        val edgesFilieresGroupes = data.edgesFormationPsupFormationMps();
         edgesKeys.putAll(edgesFilieresGroupes);
         edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
 
-
-        //LAS inheritance, oth from their mother licence and from PASS
+        //LAS inheritance, both from their mother licence and from PASS
         edgesKeys.inheritEdgesFromRicherItem(data.lasToGeneric(), 1.0);
         edgesKeys.inheritEdgesFromRicherItem(data.lasToPass(), Config.LASS_TO_PASS_INHERITANCE_PENALTY);
 
-        //suppression des filières inactives, qui peuvent réapparaitre via les correspondances, e.g. Année préparatoire
-        Set<String> filFront = new HashSet<>(getFormationIds());
+        //suppression des formations hors référentiel MPS
+        Set<String> mpsFormationsIds = new HashSet<>(getFormationIds());
         Set<String> toErase = edgesKeys.keys().stream().filter(
-                s -> isFiliere(s) && !filFront.contains(s)
+                s -> isFiliere(s) && !mpsFormationsIds.contains(s)
         ).collect(Collectors.toSet());
         LOGGER.info("Erasing filieres which are not indexed by MPS " + toErase.size());
         edgesKeys.eraseNodes(toErase);
-
 
         LOGGER.info("Restricting graph to the prestar of recos");
         Set<String> before = new HashSet<>(edgesKeys.nodes());
@@ -160,7 +159,7 @@ public class AlgoSuggestions {
         Set<String> useful = edgesKeys.preStar(recoNodes);
         edgesKeys.retainAll(useful);
         Set<String> after = new HashSet<>(edgesKeys.nodes());
-        LOGGER.info("Removed  " + (before.size() - after.size()) + " elments using prestar computation");
+        LOGGER.info("Removed  " + (before.size() - after.size()) + " elements using prestar computation");
         before.removeAll(after);
         LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 

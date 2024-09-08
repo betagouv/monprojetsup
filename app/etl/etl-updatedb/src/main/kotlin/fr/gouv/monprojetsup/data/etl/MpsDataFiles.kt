@@ -3,7 +3,8 @@ package fr.gouv.monprojetsup.data.etl
 import com.opencsv.CSVWriterBuilder
 import fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT
 import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.Constants.*
+import fr.gouv.monprojetsup.data.domain.Constants.FORMATION_PSUP_EXCLUES
+import fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.domain.Helpers.isFiliere
 import fr.gouv.monprojetsup.data.domain.Helpers.isMetier
 import fr.gouv.monprojetsup.data.domain.model.*
@@ -16,6 +17,7 @@ import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsM
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation
 import fr.gouv.monprojetsup.data.domain.model.interets.Interets
 import fr.gouv.monprojetsup.data.domain.model.liens.UrlsUpdater
+import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
@@ -26,13 +28,14 @@ import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_DOMAINES_METIERS
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATIONS_DOMAINES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATIONS_PSUP_DOMAINES
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_GROUPE_INTERET
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_METIER
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_GENERIC
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_PASS
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_ASSOCIES
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_PSUP_KEY_TO_MPS_KEY
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_FORMATIONS_PSUP
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_SECTEURS_METIERS
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
@@ -108,18 +111,16 @@ class MpsDataFiles(
     }
 
     override fun getMpsIdToIdeoIds(): Map<String, List<String>> {
-        val psupToIdeo = HashMap<String, ArrayList<String>>()
-        onisepData.filieresToFormationsOnisep.forEach {
-            val flKey = gFrCodToMpsId(it.gFlCod)
-            val frKey = gFrCodToMpsId(it.gFrCod)
-            psupToIdeo.computeIfAbsent(flKey) { ArrayList() }.addAll(it.ideoFormationsIds)
-            psupToIdeo.computeIfAbsent(frKey) { ArrayList() }.addAll(it.ideoFormationsIds)
-        }
+
+        val psupToIdeo = onisepData.filieresToFormationsOnisep
+            .associate { Pair(gFlCodToMpsId(it.gFlCod)!!, it.ideoFormationsIds!!) }
+
+        val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
         val las = getLasToGenericIdMapping()
         val result = HashMap<String, List<String>>()
         getFormationsMpsIds().forEach { mpsId ->
             result[mpsId] =
-                psupData.mpsKeyToPsupKeys.getOrDefault(mpsId, listOf(mpsId)).
+                mpsKeyToPsupKeys.getOrDefault(mpsId, listOf(mpsId)).
                 flatMap { psupToIdeo[it].orEmpty() }.toList()
         }
         //ajout des las
@@ -456,7 +457,9 @@ class MpsDataFiles(
             dataSources
         )
 
-        val metiersVersFormations = onisepData.getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+        val metiersVersFormations = getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+            onisepData.edgesMetiersFormations,
+            onisepData.metiersIdeo,
             psupData.psupKeyToMpsKey,
             psupData.genericToLas,
             descriptifs
@@ -488,6 +491,102 @@ class MpsDataFiles(
         }
 
         return  formationsVersMetiers
+    }
+
+    //in mps id style flxxx and MET_xxx
+    /*
+    public static Map<String, Set<String>> getMetiersVersFormationsMps(
+            List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
+            List<FormationIdeoDuSup> formationsIdeoSuSup,
+            List<MetierIdeoDuSup> metiersIdeoduSup
+    ) {
+
+        Map<String, FormationIdeoDuSup> formationsIdeo = formationsIdeoSuSup.stream()
+                .collect(Collectors.toMap(FormationIdeoDuSup::ideo, z -> z));
+
+        Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
+        filieresToFormationsOnisep.forEach(
+                fil -> formationsVersMetiers.put(
+                        gFlCodToMpsId(fil.gFlCod()),
+                        fil.ideoFormationsIds().stream()
+                                .map(formationsIdeo::get)
+                                .filter(Objects::nonNull)
+                                .map(FormationIdeoDuSup::metiers)
+                                .flatMap(Collection::stream)
+                                .map(Constants::cleanup)
+                                .collect(Collectors.toSet())));
+        formationsVersMetiers.values().removeIf(Set::isEmpty);
+        formationsVersMetiers.values().removeIf(Set::isEmpty);
+
+        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
+        formationsVersMetiers.forEach(
+                (f, ms) -> ms.forEach(
+                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
+                )
+        );
+        return metiersVersFormations;
+    }
+
+    */
+    /**
+     * metiers vers filieres
+     * @return a map metiers -> filieres
+     */
+    private fun getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+        edgesMetiersFormations: List<Pair<String, String>>,
+        metiersIdeo: List<MetierIdeoDuSup>,
+        psupKeyToMpsKey: Map<String?, String>,
+        genericToLas: Map<String?, String>,
+        descriptifs: DescriptifsFormationsMetiers
+    ): Map<String, Set<String>> {
+        val metiersVersFormations: MutableMap<String, MutableSet<String>> = HashMap()
+
+        edgesMetiersFormations.forEach { p ->
+            metiersVersFormations.computeIfAbsent(p.left) { HashSet() }.add(p.right)
+        }
+
+        val edgesFormationsMetiers =  OnisepData.getFormationsVersMetiersFromDescriptifs(
+            descriptifs,
+            metiersIdeo
+        )
+
+        edgesFormationsMetiers.forEach { (f, ms) ->
+            ms.forEach { m ->
+                metiersVersFormations.computeIfAbsent(m) { HashSet() } .add(f)
+            }
+        }
+
+        metiersVersFormations.keys.removeIf { k -> !isMetier(k) }
+
+        metiersVersFormations.values.forEach { strings ->
+            strings.removeIf { s -> !isFiliere(s) }
+        }
+
+
+        /* ajouts des las aux metiers PASS.
+        * Remarque: c'est refait côté suggestions.... */
+        val passKey = gFlCodToMpsId(Constants.PASS_FL_COD)
+        val metiersPass = metiersVersFormations.entries
+                .filter { e ->  e.value.contains(passKey) }
+                .map { z -> z.key }
+                .toSet()
+        metiersPass.forEach { m ->
+            metiersVersFormations.computeIfAbsent(m) { HashSet() }.addAll(genericToLas.values)
+        }
+        metiersVersFormations.entries.forEach { e ->
+            val mpsFormationsKeysBase = HashSet(e.value)
+            val mpsFormationsKeys = HashSet(mpsFormationsKeysBase)
+            mpsFormationsKeysBase.forEach { mpsKey ->
+                /* ajouts des groupes génériques aux metiers des formations correspondantes */
+                mpsFormationsKeys.add(psupKeyToMpsKey.getOrDefault(mpsKey, mpsKey))
+                /* ajouts des las aux metiers des génériques correspondants */
+                if (genericToLas.containsKey(mpsKey)) {
+                    mpsFormationsKeys.add(genericToLas[mpsKey])
+                }
+            }
+            e.setValue(mpsFormationsKeys)
+        }
+        return metiersVersFormations
     }
 
     override fun getStatsFormation(): Map<String, StatsFormation> {
@@ -549,11 +648,12 @@ class MpsDataFiles(
 
         result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTERET_GROUPE_INTERET))
         result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
-        result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_DOMAINES))
+        result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
+        result.addAll(getEdges(onisepData.edgesMetiersFormations, TYPE_EDGE_METIERS_FORMATIONS_PSUP))
         result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
         result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
         result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
-        result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_PSUP_KEY_TO_MPS_KEY))
+        result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS))
         result.addAll(getEdges(lasToGeneric, TYPE_EDGE_LAS_TO_GENERIC))
         result.addAll(getEdges(lasToPass, TYPE_EDGE_LAS_TO_PASS))
 

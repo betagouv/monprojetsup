@@ -413,27 +413,27 @@ public class OnisepDataLoader {
         metiersScrapped.forEach(m -> {
             if(m.nom()!= null && !m.nom().isEmpty()) {
                 val met = new MetierIdeoDuSup(m);
-                metiers.put(met.idMps(), met);
+                metiers.put(met.ideo(), met);
             }
         });
 
         val sousDomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
         for (MetierIdeoSimple m : metiersIdeoSimples) {
-            var met = metiers.get(m.idMps());
+            var met = metiers.get(m.idIdeo());
             met = MetierIdeoDuSup.merge(m, sousDomainesWebByIdeoKey, met);
-            metiers.put(met.idMps(), met);
+            metiers.put(met.ideo(), met);
         }
 
         for(FicheMetierIdeo m : fichesMetiers) {
-            var met = metiers.get(m.idMps());
+            var met = metiers.get(m.identifiant());
             met = MetierIdeoDuSup.merge(m, met);
-            metiers.put(met.idMps(), met);
+            metiers.put(met.ideo(), met);
         }
 
         LOGGER.info("Suppression des metiers non post bac");
         Set<String> metiersToRemove = fichesMetiers.stream()
                 .filter(m -> !m.isMetierSup(formationsDuSup))
-                .map(FicheMetierIdeo::idMps)
+                .map(FicheMetierIdeo::identifiant)
                 .collect(Collectors.toSet());
 
         metiers.keySet().removeAll(metiersToRemove);

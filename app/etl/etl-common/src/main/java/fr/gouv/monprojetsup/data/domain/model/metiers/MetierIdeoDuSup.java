@@ -66,7 +66,7 @@ public record MetierIdeoDuSup(
         motsCles.addAll(m.getMotsCles());
 
         return new MetierIdeoDuSup(
-                m.idMps(),
+                m.idIdeo(),
                 m.libelle_metier(),
                 m.lien_site_onisepfr() != null
                         ? List.of(new FicheMetierIdeo.SourceNumerique(m.lien_site_onisepfr(), m.libelle_metier()))
@@ -98,7 +98,7 @@ public record MetierIdeoDuSup(
         }
         if (m.centresInteret() != null) {
             val centesInteretsList = m.centresInteret().stream().toList();
-            interets.addAll(centesInteretsList.stream().map(z -> cleanup(z.id())).toList());
+            interets.addAll(centesInteretsList.stream().map(FicheMetierIdeo.CentreInteret::id).toList());
             motsCles.addAll(centesInteretsList.stream().map(FicheMetierIdeo.CentreInteret::libelle).toList());
         }
         if (m.metiersAssocies() != null) {
