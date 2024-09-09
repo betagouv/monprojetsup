@@ -43,6 +43,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       dureeEtudesPrevue: élève.duréeÉtudesPrévue ?? undefined,
       alternance: élève.alternance ?? undefined,
       communesFavorites: élève.communesFavorites ?? undefined,
+      corbeilleFormations: élève.formationsMasquées ?? undefined,
       formationsFavorites:
         élève.formationsFavorites?.map((formationFavorite) => ({
           idFormation: formationFavorite.id,
@@ -65,6 +66,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
       duréeÉtudesPrévue: élève.dureeEtudesPrevue ?? null,
       alternance: élève.alternance ?? null,
       communesFavorites: élève.communesFavorites ?? null,
+      formationsMasquées: élève.corbeilleFormations ?? null,
       formationsFavorites:
         élève.formationsFavorites?.map((formationFavorite) => ({
           id: formationFavorite.idFormation,

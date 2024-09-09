@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { type UseÉlèveFormArgs } from "./useÉlèveForm.interface";
-import { dépendances } from "@/configuration/dépendances/dépendances";
-import { queryClient } from "@/configuration/lib/tanstack-query";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +8,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 
 export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuFormulaireAvecSuccès }: UseÉlèveFormArgs) {
   const { data: valeursParDéfaut } = useQuery(élèveQueryOptions);
+  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: ["mettreÀJourÉlève"] });
   const {
     register,
     handleSubmit,
@@ -22,20 +21,8 @@ export default function useÉlèveForm({ schémaValidation, àLaSoumissionDuForm
     defaultValues: valeursParDéfaut ?? undefined,
   });
 
-  const mutationÉlève = useMutation({
-    mutationFn: async (changementsProfilÉlève: Élève) => {
-      const élève = { ...valeursParDéfaut, ...changementsProfilÉlève };
-      return await dépendances.mettreÀJourProfilÉlèveUseCase.run(élève);
-    },
-    onSuccess: async () => {
-      queryClient.removeQueries({ queryKey: ["formations"] });
-      queryClient.removeQueries({ queryKey: ["métiers"] });
-      await queryClient.invalidateQueries(élèveQueryOptions);
-    },
-  });
-
   const mettreÀJourÉlève: SubmitHandler<Élève> = async (données) => {
-    await mutationÉlève.mutateAsync(données);
+    await mutationÉlève.mutateAsync({ ...valeursParDéfaut, ...données });
     àLaSoumissionDuFormulaireAvecSuccès?.();
   };
 

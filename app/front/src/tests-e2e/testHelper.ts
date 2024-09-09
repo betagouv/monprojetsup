@@ -6,7 +6,7 @@ export class TestHelper {
 
   protected initialiserProfilÉlèveParDéfaut = async (profilÉlève: Partial<Élève>) => {
     await this._page.context().addInitScript((argProfilÉlève) => {
-      const élève = {
+      const élève: Élève = {
         situation: null,
         classe: null,
         bac: null,
@@ -18,6 +18,7 @@ export class TestHelper {
         alternance: null,
         communesFavorites: null,
         formationsFavorites: null,
+        formationsMasquées: null,
         ...argProfilÉlève,
       };
 
@@ -38,6 +39,7 @@ export class TestHelper {
       communesFavorites: [],
       duréeÉtudesPrévue: "courte",
       formationsFavorites: [],
+      formationsMasquées: [],
     };
 
     await this.initialiserProfilÉlèveParDéfaut(profilÉlève);

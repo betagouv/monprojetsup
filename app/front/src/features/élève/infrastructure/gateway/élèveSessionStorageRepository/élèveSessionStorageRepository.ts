@@ -16,6 +16,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     alternance: null,
     communesFavorites: null,
     formationsFavorites: null,
+    formationsMasquées: null,
   };
 
   public async récupérerProfil(): Promise<Élève | undefined> {

@@ -20,6 +20,7 @@ export class RécupérerÉlèveUseCase {
         alternance: null,
         communesFavorites: null,
         formationsFavorites: null,
+        formationsMasquées: null,
       });
 
       return await this._élèveRepository.récupérerProfil();

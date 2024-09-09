@@ -321,7 +321,9 @@ export const localeFR = {
     },
     LIRE_SUITE: "Lire la suite",
     MASQUER_SUITE: "Masquer la suite",
-    AJOUTER_À_LA_SÉLECTION: "Ajouter à ma sélection",
+    AJOUTER_À_MA_SÉLECTION: "Ajouter à ma sélection",
+    AJOUTÉE_À_MA_SÉLECTION: "Ajoutée à ma sélection",
+    SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
     NE_PLUS_VOIR: "Ne plus voir",
   },
   ACCESSIBILITÉ: {

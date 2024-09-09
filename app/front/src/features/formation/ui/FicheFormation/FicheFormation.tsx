@@ -1,79 +1,15 @@
+import BoutonsActionsFicheFormation from "./BoutonsActionsFicheFormation/BoutonsActionsFicheFormation";
 import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondanceFicheFormation/ExplicationsCorrespondanceFicheFormation";
 import { type FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
-import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
-import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
+import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation";
 import Badge from "@/components/_dsfr/Badge/Badge";
-import Onglets from "@/components/_dsfr/Onglets/Onglets";
 import Bouton from "@/components/Bouton/Bouton";
-import BoutonsFavorisCorbeille from "@/components/BoutonsFavorisCorbeille/BoutonsFavorisCorbeille";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
-import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheFormationProps) => {
-  const générerLesOnglets = () => {
-    const onglets = [];
-
-    if ((formation.descriptifs.formation && formation.descriptifs.formation !== "") || formation.liens.length > 0) {
-      onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_FORMATION,
-        contenu: (
-          <OngletFormationFicheFormation
-            liens={formation.liens}
-            texte={formation.descriptifs.formation}
-          />
-        ),
-      });
-    }
-
-    if (formation.descriptifs.détails && formation.descriptifs.détails !== "") {
-      onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_DÉTAILS,
-        contenu: (
-          <TexteTronqué
-            nombreDeLigneÀAfficher="4"
-            texte={formation.descriptifs.détails}
-          />
-        ),
-      });
-    }
-
-    if (
-      (formation.descriptifs.attendus && formation.descriptifs.attendus !== "") ||
-      formation.critèresAnalyse.length > 0 ||
-      formation.admis.répartition.parBac.length > 0 ||
-      formation.admis.moyenneGénérale.centiles.length > 0
-    ) {
-      onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_CRITÈRES,
-        contenu: (
-          <OngletCritèresFicheFormation
-            critèresAnalyse={formation.critèresAnalyse}
-            descriptifAttendus={formation.descriptifs.attendus}
-            moyenneGénérale={formation.admis.moyenneGénérale}
-            répartitionParBac={formation.admis.répartition.parBac}
-          />
-        ),
-      });
-    }
-
-    if (formation.descriptifs.conseils && formation.descriptifs.conseils !== "") {
-      onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_CONSEILS,
-        contenu: (
-          <TexteTronqué
-            nombreDeLigneÀAfficher="4"
-            texte={formation.descriptifs.conseils}
-          />
-        ),
-      });
-    }
-
-    return onglets;
-  };
-
   return (
     <div className="pb-12 pt-6 lg:pl-14">
       <div className="ml-[-1rem] pb-6 lg:hidden">
@@ -139,30 +75,13 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
         )}
       </div>
       <div className="mt-9">
-        <BoutonsFavorisCorbeille taille="grand" />
+        <BoutonsActionsFicheFormation formation={formation} />
       </div>
       <hr className="mb-9 mt-5" />
       <div className="grid gap-12">
-        <div className="grid">
-          <Onglets
-            nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
-            onglets={générerLesOnglets()}
-          />
-        </div>
+        <OngletsFicheFormation formation={formation} />
         <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
-        {formation.explications &&
-          (formation.explications.communes.length > 0 ||
-            formation.explications.formationsSimilaires.length > 0 ||
-            formation.explications.duréeÉtudesPrévue ||
-            formation.explications.alternance ||
-            (formation.explications.intêretsEtDomainesChoisis &&
-              (formation.explications.intêretsEtDomainesChoisis.domaines.length > 0 ||
-                formation.explications.intêretsEtDomainesChoisis.intêrets.length > 0)) ||
-            formation.explications.spécialitésChoisies.length > 0 ||
-            formation.explications.typeBaccalaureat ||
-            formation.explications.autoEvaluationMoyenne) && (
-            <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />
-          )}
+        <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />
       </div>
     </div>
   );

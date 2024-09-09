@@ -21,6 +21,7 @@ export type Élève = {
   alternance: AlternanceÉlève | null;
   communesFavorites: Commune[] | null;
   formationsFavorites: FormationFavorite[] | null;
+  formationsMasquées: string[] | null;
 };
 
 type FormationFavorite = {

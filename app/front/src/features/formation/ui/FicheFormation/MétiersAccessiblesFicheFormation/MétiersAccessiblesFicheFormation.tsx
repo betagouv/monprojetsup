@@ -3,7 +3,7 @@ import {
   type MétiersAccessiblesFicheFormationProps,
 } from "./MétiersAccessiblesFicheFormation.interface";
 import Bouton from "@/components/Bouton/Bouton";
-import BoutonsFavorisCorbeille from "@/components/BoutonsFavorisCorbeille/BoutonsFavorisCorbeille";
+import BoutonsActionsFormationMétier from "@/components/BoutonsActionsFormationMétier/BoutonsActionsFormationMétier";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
 import Modale from "@/components/Modale/Modale";
 import Titre from "@/components/Titre/Titre";
@@ -51,7 +51,12 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
         ))}
       </ul>
       <Modale
-        boutons={<BoutonsFavorisCorbeille />}
+        boutons={
+          <BoutonsActionsFormationMétier
+            estFavori={false}
+            estUneFormation={false}
+          />
+        }
         id={idModale}
         titre={contenuModale?.titre ?? ""}
       >
