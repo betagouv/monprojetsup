@@ -47,6 +47,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
             description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
             key={`${valeurBac}${spécialitésSélectionnéesParDéfaut.length}`}
             label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
+            nombreDeCaractèreMinimumRecherche={2}
             optionsSuggérées={spécialitésSuggérées}
             optionsSélectionnéesParDéfaut={spécialitésSélectionnéesParDéfaut}
             rechercheSuggestionsEnCours={false}

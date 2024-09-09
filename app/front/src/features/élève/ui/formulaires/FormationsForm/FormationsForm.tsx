@@ -34,6 +34,7 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
             auChangementOptionsSélectionnées={auChangementDesFormationsSélectionnées}
             description={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.DESCRIPTION}
             label={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL}
+            nombreDeCaractèreMinimumRecherche={2}
             optionsSuggérées={formationsSuggérées}
             optionsSélectionnéesParDéfaut={formationsSélectionnéesParDéfaut}
             rechercheSuggestionsEnCours={rechercheFormationsEnCours}

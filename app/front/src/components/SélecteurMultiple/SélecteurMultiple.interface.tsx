@@ -5,6 +5,7 @@ export type SélecteurMultipleProps = {
   auChangementOptionsSélectionnées: (optionsSélectionnées: SélecteurMultipleOption[]) => void;
   àLaRechercheDUneOption: (recherche: string) => void;
   rechercheSuggestionsEnCours: boolean;
+  nombreDeCaractèreMinimumRecherche: number;
   description?: string;
   optionsSélectionnéesParDéfaut?: SélecteurMultipleOption[];
 };

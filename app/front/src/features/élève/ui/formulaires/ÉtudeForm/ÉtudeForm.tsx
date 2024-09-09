@@ -49,6 +49,7 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
           auChangementOptionsSélectionnées={auChangementDesCommunesSélectionnées}
           description={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.DESCRIPTION}
           label={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.LABEL}
+          nombreDeCaractèreMinimumRecherche={3}
           optionsSuggérées={communesSuggérées}
           optionsSélectionnéesParDéfaut={communesSélectionnéesParDéfaut}
           rechercheSuggestionsEnCours={rechercheCommunesEnCours}
