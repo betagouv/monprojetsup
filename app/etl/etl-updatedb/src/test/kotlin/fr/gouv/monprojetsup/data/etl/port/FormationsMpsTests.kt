@@ -65,4 +65,11 @@ class FormationsMpsTests() {
         assertThat(mpsDataPort.getMotsClesFormations()[cupgeSciencesTechnoSanteMpsId]).doesNotContain("commerce international")
     }
 
+    @Test
+    fun `les liens ne sont pas dupliqués`() {
+        mpsDataPort.getLiens().values
+            .map { liens -> liens.map { l -> l.uri} }
+            .forEach { uris -> assertThat(uris).doesNotHaveDuplicates() }
+    }
+
 }

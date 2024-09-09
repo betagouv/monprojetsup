@@ -15,7 +15,14 @@ public class UrlsUpdater {
         if (uri != null && !uri.isEmpty()) {
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label);
             val liste = urls.computeIfAbsent(Constants.cleanup(key), z -> new ArrayList<>());
-            if (!liste.contains(url)) liste.add(url);
+            val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(url.uri())).findFirst();
+            if(firstWithSameUri.isEmpty()) {
+                liste.add(url);
+            } else if(!firstWithSameUri.get().label().contains(url.label())){
+                val newLabel = firstWithSameUri.get().label() + " / " + url.label();
+                liste.remove(firstWithSameUri.get());
+                liste.add(new DescriptifsFormationsMetiers.Link(newLabel, url.uri()));
+            }
         }
     }
 
