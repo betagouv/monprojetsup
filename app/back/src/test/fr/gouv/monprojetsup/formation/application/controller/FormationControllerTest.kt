@@ -151,7 +151,6 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
             tripletsAffectation =
                 listOf(
                     TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
@@ -364,7 +363,6 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        communesTrieesParAffinites = emptyList(),
                         tripletsAffectation = emptyList(),
                         explications = null,
                     ),
@@ -468,12 +466,6 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ],
-                                "villes": [
-                                  "Lyon",
-                                  "Paris",
-                                  "Strasbourg",
-                                  "Marseille"
                                 ],
                                 "tripletAffectationAssocies": [
                                   {
@@ -619,7 +611,6 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "villes": [],
                                 "tripletAffectationAssocies": [],
                                 "metiers": [],
                                 "tauxAffinite": 17
@@ -764,12 +755,6 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ],
-                                "villes": [
-                                  "Lyon",
-                                  "Paris",
-                                  "Strasbourg",
-                                  "Marseille"
                                 ],
                                 "tripletAffectationAssocies": [
                                   {
@@ -1150,12 +1135,6 @@ class FormationControllerTest(
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                               }
                             ],
-                            "villes": [
-                              "Lyon",
-                              "Paris",
-                              "Strasbourg",
-                              "Marseille"
-                            ],
                             "tripletAffectationAssocies": [
                               {
                                 "id": "ta10",
@@ -1353,7 +1332,6 @@ class FormationControllerTest(
                                         "cycle-pluridisciplinaire-d-etudes-superieures",
                             ),
                         ),
-                    communes = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
                     tripletsAffectation =
                         listOf(
                             TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
@@ -1436,12 +1414,6 @@ class FormationControllerTest(
                                 "nom": "Voir sur l'ONISEP",
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                               }
-                            ],
-                            "villes": [
-                              "Lyon",
-                              "Paris",
-                              "Strasbourg",
-                              "Marseille"
                             ],
                             "tripletAffectationAssocies": [
                               {
@@ -1881,7 +1853,6 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        communesTrieesParAffinites = emptyList(),
                         explications = null,
                     ),
                 )
@@ -1997,12 +1968,6 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ],
-                                "villes": [
-                                  "Lyon",
-                                  "Paris",
-                                  "Strasbourg",
-                                  "Marseille"
                                 ],
                                 "tripletAffectationAssocies": [
                                   {
@@ -2148,7 +2113,6 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "villes": [],
                                 "tripletAffectationAssocies": [
                                   {
                                     "id": "ta10",
@@ -2317,7 +2281,6 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        communesTrieesParAffinites = emptyList(),
                         tripletsAffectation = emptyList(),
                         explications = null,
                     ),
@@ -2434,12 +2397,6 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
-                                ],
-                                "villes": [
-                                  "Lyon",
-                                  "Paris",
-                                  "Strasbourg",
-                                  "Marseille"
                                 ],
                                 "tripletAffectationAssocies": [
                                   {
@@ -2585,7 +2542,6 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "villes": [],
                                 "tripletAffectationAssocies": [],
                                 "metiers": [],
                                 "tauxAffinite": 17

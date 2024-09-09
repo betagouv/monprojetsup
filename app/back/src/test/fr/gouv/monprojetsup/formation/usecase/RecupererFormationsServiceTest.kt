@@ -207,7 +207,6 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier123, metier534),
-                communesTrieesParAffinites = listOf("Paris", "Saint-Malo", "Marseille"),
                 tripletsAffectation = tripletFormationFL0001,
                 explications = explicationsFL0001,
             )
@@ -225,7 +224,6 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                 tauxAffinite = 87,
                 metiersTriesParAffinites = listOf(metier234, metier534),
-                communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
                 tripletsAffectation = tripletFormationFL0003,
                 explications = explicationsFL0003,
             )
@@ -362,7 +360,6 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier534),
-                communesTrieesParAffinites = listOf("Paris", "Saint-Malo", "Marseille"),
                 tripletsAffectation = tripletFormationFL0001,
                 explications = explicationsFL0001,
             )
@@ -380,7 +377,6 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = null,
                 tauxAffinite = 0,
                 metiersTriesParAffinites = emptyList(),
-                communesTrieesParAffinites = emptyList(),
                 tripletsAffectation = emptyList(),
                 explications = null,
             )

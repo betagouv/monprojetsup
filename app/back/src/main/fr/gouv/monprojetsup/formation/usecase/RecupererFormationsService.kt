@@ -61,7 +61,6 @@ class RecupererFormationsService(
                         metiers = exemplesDeMetiersDeLaFormation,
                         idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
-                communesTrieesParAffinites = tripletsAffectations[formation.id]?.map { it.commune.nom }?.distinct() ?: emptyList(),
                 tripletsAffectation = tripletsAffectations[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,

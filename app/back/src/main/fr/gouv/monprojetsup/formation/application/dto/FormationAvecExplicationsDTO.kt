@@ -47,7 +47,6 @@ data class FormationAvecExplicationsDTO(
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
-        val villes: List<String>,
         val tripletAffectationAssocies: List<TripletAffectationDTO>,
         val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
@@ -70,7 +69,6 @@ data class FormationAvecExplicationsDTO(
                 },
             descriptifConseils = ficheFormation.descriptifConseils,
             liens = ficheFormation.liens.map { LienDTO(it) },
-            villes = ficheFormation.communes,
             tripletAffectationAssocies = ficheFormation.tripletsAffectation.map { TripletAffectationDTO(it) },
             metiers =
                 ficheFormation.metiers.map { metier ->
