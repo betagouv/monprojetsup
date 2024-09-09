@@ -1,0 +1,101 @@
+[
+  {
+    "left": "expert1",
+    "right": {
+      "niveau": "term",
+      "bac": "STD2A",
+      "duree": "court",
+      "apprentissage": "A",
+      "geo_pref": [],
+      "spe_classes": [
+        "Conception et création en design et métiers d\u0026#39;art (CCDMA)",
+        "Analyse et méthodes en design (AMD)"
+      ],
+      "interests": [
+        "T_IDEO2_4387",
+        "T_IDEO2_4402",
+        "T_IDEO2_4398",
+        "T_IDEO2_4404"
+      ],
+      "moygen": "16",
+      "choices": [
+        {
+          "fl": "fl10413",
+          "status": 1,
+          "score": 3
+        },
+        {
+          "fl": "MET_936)",
+          "status": 1,
+          "score": 5
+        }
+        ],
+      "statut": "2"
+    }
+  },
+  {
+    "left": "expert1",
+    "right": {
+      "niveau": "term",
+      "bac": "Générale",
+      "duree": "long",
+      "apprentissage": "C",
+      "geo_pref": [],
+      "spe_classes": [
+        "Arts Plastiques (AP)",
+        "Sciences Economiques et Sociales (SES)",
+        "Mathématiques"
+      ],
+      "interests": [
+        "T_IDEO2_4809",
+        "T_ROME_1814691478",
+        "T_ROME_2018646295",
+        "T_ITM_1248",
+        "T_ITM_PERSO1"
+      ],
+      "moygen": "13.5",
+      "choices": [
+        {
+          "fl": "MET_161",
+          "status": 1,
+          "score": 4
+        },
+        {
+          "fl": "fl250",
+          "status": 1,
+          "score": 5
+        }
+      ]
+    }
+  },
+  {
+    "left": "expert1",
+    "right": {
+      "niveau": "term",
+      "bac": "Générale",
+      "duree": "long",
+      "apprentissage": "C",
+      "geo_pref": [],
+      "spe_classes": [
+        "Physique-Chimie (PC)",
+        "Mathématiques"
+      ],
+      "interests": [
+        "T_IDEO2_4337","T_IDEO2_4375","T_IDEO2_4407","T_IDEO2_4342","T_IDEO2_4412","T_IDEO2_4333"
+      ],
+      "moygen": "10",
+      "choices": [
+        {
+          "fl": "fl18",
+          "status": 1,
+          "score": 5
+        },
+        {
+          "fl": "fl481018",
+          "status": 2,
+          "score": 0
+        }
+      ]
+    }
+  }
+]
