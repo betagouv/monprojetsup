@@ -63,7 +63,6 @@ class RecupererFormationService(
                         metiers = exemplesDeMetiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
-                communesTrieesParAffinites = tripletsAffectation.map { it.commune.nom }.distinct(),
                 tripletsAffectation = tripletsAffectation,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
@@ -80,7 +79,6 @@ class RecupererFormationService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                communes = tripletsAffectation.map { it.commune.nom }.distinct(),
                 tripletsAffectation = tripletsAffectation,
                 metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,

@@ -146,7 +146,6 @@ class RecupererFormationServiceTest {
                             Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                         ),
                     metiers = emptyList(),
-                    communes = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
                     tripletsAffectation = tripletFormationFL0001,
                     criteresAnalyseCandidature =
                         listOf(
@@ -401,7 +400,6 @@ class RecupererFormationServiceTest {
                                 formations = emptyList(),
                             ),
                         ),
-                    communesTrieesParAffinites = listOf("Lyon", "Paris", "Strasbourg", "Marseille"),
                     tripletsAffectation = tripletFormationFL0001,
                     tauxAffinite = 70,
                     explications = explicationsEtExemplesMetiers.first,
