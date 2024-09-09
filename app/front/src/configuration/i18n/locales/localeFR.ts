@@ -70,7 +70,7 @@ export const localeFR = {
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
     EXPLICATIONS_CORRESPONDANCE_PROFIL: {
-      TITRE: "Pourquoi cette formation devrait te plaire",
+      TITRE: "Pourquoi cette formation pourrait te plaire",
       COMMUNES: "Plusieurs formations disponibles à proximité de",
       BAC: "Idéal si tu as un",
       SPÉCIALITÉS: "Tes choix d’enseignements de spécialités correspondent",
@@ -311,11 +311,13 @@ export const localeFR = {
     FORMATION: "Formation",
     MÉTIER: "Métier",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
-    PRÉCISER_CATÉGORIES: "N’hésite pas à préciser certaines catégories",
+    PRÉCISER_CATÉGORIES: "Sélectionne la ou les catégories qui t'intéressent",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
+      AU_MOINS_X_CARACTÈRES: "Saisissez au moins",
+      AU_MOINS_X_CARACTÈRES_SUITE: "caractères",
     },
     LIRE_SUITE: "Lire la suite",
     MASQUER_SUITE: "Masquer la suite",

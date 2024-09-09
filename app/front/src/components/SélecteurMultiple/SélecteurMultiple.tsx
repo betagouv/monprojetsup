@@ -15,6 +15,7 @@ const SélecteurMultiple = ({
   auChangementOptionsSélectionnées,
   àLaRechercheDUneOption,
   rechercheSuggestionsEnCours,
+  nombreDeCaractèreMinimumRecherche,
 }: SélecteurMultipleProps) => {
   const [recherche, setRecherche] = useState<string>();
   const [optionsAffichées, setOptionsAffichées] = useState<SélecteurMultipleOption[]>([]);
@@ -25,11 +26,18 @@ const SélecteurMultiple = ({
   const debouncedSetRecherche = useDebounceCallback(setRecherche, 400);
 
   const statusChampDeSaisie = useMemo(() => {
+    if (recherche && recherche.length < nombreDeCaractèreMinimumRecherche) {
+      return {
+        type: "erreur" as const,
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${nombreDeCaractèreMinimumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES_SUITE}`,
+      };
+    }
+
     if (recherche && optionsSuggérées.length === 0 && !rechercheSuggestionsEnCours)
       return { type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT };
 
     return undefined;
-  }, [optionsSuggérées, recherche, rechercheSuggestionsEnCours]);
+  }, [nombreDeCaractèreMinimumRecherche, optionsSuggérées, recherche, rechercheSuggestionsEnCours]);
 
   const supprimerOptionSélectionnée = (optionÀSupprimer: SélecteurMultipleOption) => {
     const nouvellesOptionsSélectionnées = optionsSélectionnées.filter(
