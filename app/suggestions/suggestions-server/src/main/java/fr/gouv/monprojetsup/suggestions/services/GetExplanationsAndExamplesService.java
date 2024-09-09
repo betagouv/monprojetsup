@@ -20,7 +20,7 @@ public class GetExplanationsAndExamplesService extends MySuggService<GetExplanat
     public GetExplanationsAndExamplesService(
             AlgoSuggestions algo
     ) {
-        super(GetExplanationsAndExamplesServiceDTO.Request.class);
+        super();
         this.algo = algo;
     }
 
@@ -34,6 +34,11 @@ public class GetExplanationsAndExamplesService extends MySuggService<GetExplanat
                         SuggestionServer.getConfig().getSuggFilConfig()
         );
         return new GetExplanationsAndExamplesServiceDTO.Response( eae);
+    }
+
+    @Override
+    public String getServiceName() {
+        return GetExplanationsAndExamplesService.class.getSimpleName();
     }
 
 
