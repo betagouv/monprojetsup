@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public class Constants {
@@ -35,9 +37,6 @@ public class Constants {
     public static final int ECOLES_INGE_PSUP_FR_COD = 21;
     public static final int CMI_PSUP_FR_COD = 90;
     public static final int ECOLE_COMMERCE_PSUP_FR_COD = 24;
-    public static final int ECOLE_COMMERCE_BAC_3_PSUP_FL_COD = 241;
-    public static final int ECOLE_COMMERCE_BAC_4_PSUP_FL_COD = 242;
-    public static final int ECOLE_COMMERCE_BAC_5_PSUP_FL_COD = 240;
     public static final int ECOLE_ARCHI_PSUP_FL_COD = 250;
     public static final int ECOLE_ARCHI_INGE_PSUP_FL_COD = 251;
     public static final int ECOLE_ART_PSUP_FR_COD = 27;
@@ -47,12 +46,13 @@ public class Constants {
     public static final int CPGE_LETTRES_PSUP_FL_COD = 31;
     public static final int CUPGE_ECO_GESTION_PSUP_FR_COD = 85;
 
+    public static final int CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD = 83;
+
     public static final int CUPGE_ECO_GESTION_PSUP_FL_COD1 = 984;
     public static final int CUPGE_ECO_GESTION_PSUP_FL_COD2 = 985;
 
     public static final int CODE_NSF_CONSERVATION_RESTAURATION = 342;
     public static final int ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD = 253;
-    public static final int CUPGE_ECO_GESTION_FR_COD = 85;
     public static final Set<String> FORMATION_PSUP_EXCLUES = Set.of(
             "fr63",//année préparatoire
             "fl85001",//Formation valant grade de licence
@@ -70,6 +70,9 @@ public class Constants {
     public static final String PREPA_LETTRE_IDEO_CODE = "FOR.1471";
 
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
+    @NotNull
+    public static final int COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE = 4445;
+
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
     }

@@ -28,7 +28,7 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
             SuggestionsData data,
             VillesPort villesPort
     ) {
-        super(Request.class);
+        super();
         this.data = data;
         this.villesPort = villesPort;
     }
@@ -90,5 +90,9 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
         return new Response(formationsAccueil);
     }
 
+    @Override
+    public String getServiceName() {
+        return GetFormationsOfInterestService.class.getSimpleName();
+    }
 
 }

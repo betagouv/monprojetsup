@@ -14,14 +14,14 @@ import java.util.List;
 @Service
 public class GetSuggestionsService extends MySuggService<GetAffinitiesServiceDTO.Request, GetAffinitiesServiceDTO.Response> {
 
-    public final static  String SUGGESTIONS_ENDPOINT = "suggestions";
+    public static final  String SUGGESTIONS_ENDPOINT = "suggestions";
     private final AlgoSuggestions algo;
 
     @Autowired
     public GetSuggestionsService(
             AlgoSuggestions algo
     ) {
-        super(GetAffinitiesServiceDTO.class);
+        super();
         this.algo = algo;
     }
 
@@ -44,4 +44,10 @@ public class GetSuggestionsService extends MySuggService<GetAffinitiesServiceDTO
     public String checkHealth() {
         return "OK" + "\n" + algo.getStats();
     }
+
+    @Override
+    public String getServiceName() {
+        return GetSuggestionsService.class.getSimpleName();
+    }
+
 }

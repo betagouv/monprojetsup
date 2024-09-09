@@ -18,7 +18,7 @@ public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.R
     public GetSimpleStatsService(
             SuggestionsData data
     ) {
-        super(Request.class);
+        super();
         this.data = data;
     }
 
@@ -47,5 +47,9 @@ public class GetSimpleStatsService extends MySuggService<GetSimpleStatsService.R
         return new Response(stats);
     }
 
+    @Override
+    public String getServiceName() {
+        return GetSimpleStatsService.class.getSimpleName();
+    }
 
 }
