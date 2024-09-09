@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.suggestions.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,10 @@ public record ProfileDTO(
         String statut
 
 ) {
+
+    public ProfileDTO(@NotNull ProfileDTO profil) {
+        this(profil.niveau(), profil.bac(), profil.duree(), profil.apprentissage(), profil.geo_pref(), profil.spe_classes(), profil.interests(), profil.moygen(), profil.choices(), profil.statut());
+    }
 
     public List<SuggestionDTO> suggApproved() {
         return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_APPROVED)).toList();
