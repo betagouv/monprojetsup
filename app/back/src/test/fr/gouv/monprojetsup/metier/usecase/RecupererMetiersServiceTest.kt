@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.metier.usecase
 
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -47,6 +48,11 @@ class RecupererMetiersServiceTest {
                                 url = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/MET.356",
                             ),
                         ),
+                    formations =
+                        listOf(
+                            FormationCourte(id = "fl1", nom = "CPGE MPSI"),
+                            FormationCourte(id = "fl7", nom = "BUT Informatique"),
+                        ),
                 ),
                 Metier(
                     id = "MET_355",
@@ -56,6 +62,7 @@ class RecupererMetiersServiceTest {
                             "contrôle. Sous la direction du responsable de laboratoire de contrôle, des tests sont effectués pour " +
                             "évaluer sa qualité et sa conformité aux normes. </p>",
                     liens = emptyList(),
+                    formations = emptyList(),
                 ),
                 Metier(
                     id = "MET_358",
@@ -74,6 +81,12 @@ class RecupererMetiersServiceTest {
                                 nom = "Pilotage et navigation technique aérienne",
                                 url = "https://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=N2102",
                             ),
+                        ),
+                    formations =
+                        listOf(
+                            FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+                            FormationCourte(id = "fl1000", nom = "BPJEPS"),
+                            FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                         ),
                 ),
             )

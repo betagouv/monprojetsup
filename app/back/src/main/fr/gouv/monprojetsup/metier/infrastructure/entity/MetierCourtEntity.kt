@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.metier.infrastructure.dto
+package fr.gouv.monprojetsup.metier.infrastructure.entity
 
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import jakarta.persistence.Column

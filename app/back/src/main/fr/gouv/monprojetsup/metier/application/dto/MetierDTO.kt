@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.metier.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
+import fr.gouv.monprojetsup.formation.application.dto.FormationCourteDTO
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 
 data class MetierDTO(
@@ -8,11 +9,13 @@ data class MetierDTO(
     val nom: String,
     val descriptif: String?,
     val liens: List<LienDTO>,
+    val formations: List<FormationCourteDTO>,
 ) {
     constructor(metier: Metier) : this(
         id = metier.id,
         nom = metier.nom,
         descriptif = metier.descriptif,
         liens = metier.liens.map { LienDTO(it) },
+        formations = metier.formations.map { FormationCourteDTO(it) },
     )
 }
