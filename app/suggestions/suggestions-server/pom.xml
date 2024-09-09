@@ -104,7 +104,7 @@
                         <sourceDirs>
                             <sourceDir>src/main/kotlin</sourceDir>
                             <sourceDir>src/main/java</sourceDir>
-                            <sourceDir>src/test/kotlin</sourceDir>
+                            <sourceDir>src/test</sourceDir>
                         </sourceDirs>
                         </configuration>
                     </execution>
