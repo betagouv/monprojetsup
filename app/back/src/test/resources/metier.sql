@@ -29,3 +29,22 @@ VALUES ('MET003',
             "url": "https://www.onisep.fr/ressources/univers-metier/metiers/architecte"
           }
         ]'::jsonb);
+
+INSERT INTO ref_formation (id, label)
+VALUES ('fl660008', 'BTSA - Métiers du Végétal : Alimentation, Ornement, Environnement');
+
+INSERT INTO ref_formation (id, label)
+VALUES ('fl250', 'EA-BAC5 - Architecture');
+
+INSERT INTO ref_formation (id, label)
+VALUES ('fl10419', 'BTS - Architectures en Métal : conception et Réalisation');
+
+INSERT INTO ref_join_formation_metier(id_formation, id_metier)
+VALUES ('fl660008', 'MET002');
+
+INSERT INTO ref_join_formation_metier(id_formation, id_metier)
+VALUES ('fl10419', 'MET003');
+
+INSERT INTO ref_join_formation_metier(id_formation, id_metier)
+VALUES ('fl250', 'MET003');
+

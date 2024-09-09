@@ -176,12 +176,18 @@ class FormationControllerTest(
                                     url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
                                 ),
                             ),
+                        formations =
+                            listOf(
+                                FormationCourte(id = "fl1", nom = "CPGE MPSI"),
+                                FormationCourte(id = "fl7", nom = "BUT Informatique"),
+                            ),
                     ),
                     Metier(
                         id = "MET002",
                         nom = "documentaliste",
                         descriptif = null,
                         liens = emptyList(),
+                        formations = emptyList(),
                     ),
                 ),
             tauxAffinite = 90,
@@ -1306,12 +1312,18 @@ class FormationControllerTest(
                                             url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
                                         ),
                                     ),
+                                formations =
+                                    listOf(
+                                        FormationCourte(id = "fl1", nom = "CPGE MPSI"),
+                                        FormationCourte(id = "fl7", nom = "BUT Informatique"),
+                                    ),
                             ),
                             Metier(
                                 id = "MET002",
                                 nom = "documentaliste",
                                 descriptif = null,
                                 liens = emptyList(),
+                                formations = emptyList(),
                             ),
                         ),
                     formationsAssociees = listOf("fl0012"),

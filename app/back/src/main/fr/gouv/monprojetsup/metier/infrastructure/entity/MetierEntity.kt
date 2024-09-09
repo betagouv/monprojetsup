@@ -1,7 +1,6 @@
-package fr.gouv.monprojetsup.metier.infrastructure.dto
+package fr.gouv.monprojetsup.metier.infrastructure.entity
 
 import fr.gouv.monprojetsup.commun.lien.infrastructure.entity.LienEntity
-import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -25,12 +24,4 @@ class MetierEntity {
     @Type(JsonType::class)
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
-
-    fun toMetier() =
-        Metier(
-            id = id,
-            nom = label,
-            descriptif = descriptifGeneral,
-            liens = liens.map { it.toLien() },
-        )
 }

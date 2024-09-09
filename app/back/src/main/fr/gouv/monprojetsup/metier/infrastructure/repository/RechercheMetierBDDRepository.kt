@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.metier.infrastructure.repository
 
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.RechercheMetierRepository
-import fr.gouv.monprojetsup.metier.infrastructure.dto.MetierCourtEntity
+import fr.gouv.monprojetsup.metier.infrastructure.entity.MetierCourtEntity
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
