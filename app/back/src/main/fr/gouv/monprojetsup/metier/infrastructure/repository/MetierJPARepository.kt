@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.metier.infrastructure.repository
 
-import fr.gouv.monprojetsup.metier.infrastructure.dto.MetierEntity
+import fr.gouv.monprojetsup.metier.infrastructure.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MetierJPARepository : JpaRepository<MetierEntity, String> {

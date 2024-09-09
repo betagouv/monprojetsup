@@ -2,7 +2,9 @@ package fr.gouv.monprojetsup.metier.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -21,11 +23,14 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var metierJPARepository: MetierJPARepository
 
+    @Autowired
+    lateinit var entityManager: EntityManager
+
     lateinit var metierBDDRepository: MetierBDDRepository
 
     @BeforeEach
     fun setup() {
-        metierBDDRepository = MetierBDDRepository(metierJPARepository, logger)
+        metierBDDRepository = MetierBDDRepository(metierJPARepository, entityManager, logger)
     }
 
     @Nested
@@ -64,6 +69,11 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                                     url = "https://www.onisep.fr/ressources/univers-metier/metiers/architecte",
                                 ),
                             ),
+                        formations =
+                            listOf(
+                                FormationCourte(id = "fl10419", nom = "BTS - Architectures en Métal : conception et Réalisation"),
+                                FormationCourte(id = "fl250", nom = "EA-BAC5 - Architecture"),
+                            ),
                     ),
                     Metier(
                         id = "MET002",
@@ -80,6 +90,10 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                                     url = "https://www.hellowork.com/fr-fr/metiers/fleuriste.html",
                                 ),
                             ),
+                        formations =
+                            listOf(
+                                FormationCourte(id = "fl660008", nom = "BTSA - Métiers du Végétal : Alimentation, Ornement, Environnement"),
+                            ),
                     ),
                     Metier(
                         id = "MET001",
@@ -90,6 +104,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                                 "choix des fleurs et des plantes en fonction de l occasion et de leur budget. Le fleuriste peut " +
                                 "travailler en boutique, en grande surface, en jardinerie ou en atelier de composition florale.",
                         liens = emptyList(),
+                        formations = emptyList(),
                     ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
