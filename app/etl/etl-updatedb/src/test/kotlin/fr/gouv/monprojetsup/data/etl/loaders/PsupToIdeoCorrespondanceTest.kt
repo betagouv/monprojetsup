@@ -18,12 +18,12 @@ class PsupToIdeoCorrespondanceTest {
 
     private lateinit var formationsIdeoDuSup: Map<String, FormationIdeoDuSup>
 
-    private lateinit var metiersIdeoDuSup: Map<String,MetierIdeoDuSup>
+    private lateinit var metiersIdeoDuSup: Map<String, MetierIdeoDuSup>
 
     private lateinit var filieresPsupToFormationsMetiersIdeo: Map<String, FilieresPsupVersIdeoData>
 
     @Autowired
-    lateinit var sources : DataSources
+    lateinit var sources: DataSources
 
     @BeforeEach
     fun setUp() {
@@ -63,21 +63,22 @@ class PsupToIdeoCorrespondanceTest {
     @Test
     fun `CUPGE - Droit-économie-gestion hérite de tous les métiers des écoles de commerce`() {
         //c'est le mapping CPGE - licence qui crée les assciations métiers
-        val cupge1 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(CUPGE_ECO_GESTION_PSUP_FL_COD1)]
-        val cupge2 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(CUPGE_ECO_GESTION_PSUP_FL_COD2)]
-        val ecoleCommerce3 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_3_PSUP_FL_COD)]
-        val ecoleCommerce4 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_4_PSUP_FL_COD)]
-        val ecoleCommerce5 = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(ECOLE_COMMERCE_BAC_5_PSUP_FL_COD)]
-        assertThat(listOf(cupge1, cupge2, ecoleCommerce3, ecoleCommerce4, ecoleCommerce5)).allSatisfy { assertThat(it).isNotNull }
-        assertThat(ecoleCommerce3!!.ideoMetiersIds).isNotEmpty()
-        assertThat(ecoleCommerce4!!.ideoMetiersIds).isNotEmpty()
-        assertThat(ecoleCommerce5!!.ideoMetiersIds).isNotEmpty()
-        assertThat(cupge1!!.ideoMetiersIds).containsAll(ecoleCommerce3.ideoMetiersIds)
-        assertThat(cupge2!!.ideoMetiersIds).containsAll(ecoleCommerce3.ideoMetiersIds)
-        assertThat(cupge1.ideoMetiersIds).containsAll(ecoleCommerce4.ideoMetiersIds)
-        assertThat(cupge2.ideoMetiersIds).containsAll(ecoleCommerce4.ideoMetiersIds)
-        assertThat(cupge1.ideoMetiersIds).containsAll(ecoleCommerce5.ideoMetiersIds)
-        assertThat(cupge2.ideoMetiersIds).containsAll(ecoleCommerce5.ideoMetiersIds)
+        val cupges = filieresPsupToFormationsMetiersIdeo.values.filter { l -> l.gFrCod == CUPGE_ECO_GESTION_PSUP_FR_COD }
+        val ecolesCommerce = filieresPsupToFormationsMetiersIdeo.values.filter { l -> l.gFrCod == ECOLE_COMMERCE_PSUP_FR_COD }
+
+        val metiersEcoleCommerce = ecolesCommerce.flatMap { l -> l.ideoMetiersIds }.toSet()
+        assertThat(metiersEcoleCommerce).isNotEmpty
+
+        assertThat(cupges).isNotEmpty
+        assertThat(cupges).allMatch { l -> l.ideoMetiersIds.containsAll(metiersEcoleCommerce) }
     }
 
-}
+    @Test
+    fun `CUPGE - Sciences, technologie, santé ne contient pas le mot-clé commerce international `() {
+        val cupges = filieresPsupToFormationsMetiersIdeo.values.filter { l -> l.gFrCod == CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD }
+        assertThat(cupges).isNotEmpty
+        assertThat(cupges).allMatch { l -> l.libellesOuClesSousdomainesWeb.none { it.contains("commerce international") } }
+        assertThat(cupges).allMatch { l -> l.libellesOuClesSousdomainesWeb.none { it.contains(COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE.toString()) } }
+    }
+
+    }
