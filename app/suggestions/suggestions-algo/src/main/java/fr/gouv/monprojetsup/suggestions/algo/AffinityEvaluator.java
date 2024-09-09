@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.*;
 import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
 
@@ -48,12 +50,18 @@ public class AffinityEvaluator {
     private final Set<String> rejected =  new HashSet<>();
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
+    private final @NotNull String bac;
 
     public AffinityEvaluator(ProfileDTO pf, Config cfg, SuggestionsData data, AlgoSuggestions algo) {
         this.cfg = cfg;
         this.pf = pf;
         this.data = data;
         this.algo = algo;
+
+        String bac = pf.bac();
+        if(bac == null) bac = TOUS_BACS_CODE_MPS;
+        if(bac.equals(TOUS_BACS_CODE_LEGACY)) bac = TOUS_BACS_CODE_MPS;
+        this.bac = bac;
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
@@ -199,8 +207,6 @@ public class AffinityEvaluator {
 
          if(rejected.contains(fl)) return Affinite.getNoMatch();
 
-        final int bacIndex = pf.bacIndex();
-
         /* LAS filter: is the formation is a LAS and santé was not checked, it is not proposed */
         if (algo.isLas(fl) && !isInterestedinHealth) {
             return Affinite.getNoMatch();
@@ -212,7 +218,7 @@ public class AffinityEvaluator {
 
         Map<String, Double> scores = new HashMap<>(
                 Map.ofEntries(
-                        entry(Config.BONUS_SIM, getBonusSimilaires(fl, bacIndex, expl, cfg.weights().getOrDefault(Config.BONUS_SIM, 0.0))),
+                        entry(Config.BONUS_SIM, getBonusSimilaires(fl, pf.bacIndex(), expl, cfg.weights().getOrDefault(Config.BONUS_SIM, 0.0))),
                         entry(Config.BONUS_TAGS, getBonusTags(fl, expl, cfg.weights().getOrDefault(Config.BONUS_TAGS, 0.0)))
                 )
         );
@@ -289,9 +295,9 @@ public class AffinityEvaluator {
 
 
     private double getBonusTypeBac(String grp, List<Pair<Double, Explanation>> expl, double weight) {
-        if (pf.bac() == null || pf.bac().equals(PsupStatistiques.TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
-        Integer nbAdmisTousBac = data.getNbAdmis(grp, PsupStatistiques.TOUS_BACS_CODE_MPS);
-        Integer nbAdmisBac = data.getNbAdmis(grp, pf.bac());
+        if (bac.equals(TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
+        Integer nbAdmisTousBac = data.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
+        Integer nbAdmisBac = data.getNbAdmis(grp, bac);
         if(nbAdmisTousBac != null && nbAdmisBac == null) return MULTIPLIER_FOR_UNFITTED_BAC;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = 1.0 * nbAdmisBac / nbAdmisTousBac;
@@ -302,7 +308,7 @@ public class AffinityEvaluator {
             bonus = (percentage - Config.SEUIL_TYPE_BAC_NO_MATCH) / (Config.SEUIL_TYPE_BAC_FULL_MATCH - Config.SEUIL_TYPE_BAC_NO_MATCH);
         if (expl != null && percentage >= Config.SEUIL_TYPE_BAC_FITTED) {
             expl.add(
-                    Pair.of(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), pf.bac()))
+                    Pair.of(bonus * weight, Explanation.getTypeBacExplanation((int) (100 * percentage), bac))
             );
         }
         return bonus;
@@ -311,7 +317,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
-        val stats = data.getStatsBac(fl, pf.bac());
+        val stats = data.getStatsBac(fl, this.bac);
         String moyBacEstimee = pf.moygen();
         return getBonusNotes(expl, weight, stats, moyBacEstimee);
     }
@@ -623,7 +629,7 @@ public class AffinityEvaluator {
     }
 
     private double getBonusSpecialites(String fl, List<Pair<Double, Explanation>> expl, double weight) {
-        if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !algo.hasSpecialitesInTerminale(pf.bac()))
+        if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !algo.hasSpecialitesInTerminale(bac))
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
