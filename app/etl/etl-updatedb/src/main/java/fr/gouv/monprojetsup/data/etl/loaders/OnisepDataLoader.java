@@ -460,10 +460,23 @@ public class OnisepDataLoader {
                         Pair::getLeft
                 ));
 
-        return domainesSansId.stream().map(d -> {
+        val result =  domainesSansId.stream().map(d -> {
             String id = sousDomainesAvecId.get(d.sousDomaineOnisep());
             return new SousDomaineWeb(id, d.domaineOnisep(), d.sousDomaineOnisep());
-        }).filter(d -> d.ideo() != null).toList();
+        }).filter(d -> d.ideo() != null)
+                .sorted(Comparator.comparing(d -> d.domaineOnisep() + d.sousDomaineOnisep())).toList();
+
+        try(val csv = new CsvTools("domaines_sous_domaines.csv", ',')) {
+            csv.appendHeaders(List.of("ideo","domaine","sousDomaine"));
+            for (SousDomaineWeb d : result) {
+                csv.append(d.ideo());
+                csv.append(d.domaineOnisep());
+                csv.append(d.sousDomaineOnisep());
+                csv.newLine();
+            }
+        }
+
+        return result;
     }
 
 
