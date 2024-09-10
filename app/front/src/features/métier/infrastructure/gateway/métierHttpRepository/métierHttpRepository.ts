@@ -40,6 +40,7 @@ export class métierHttpRepository implements MétierRepository {
       this._mapperVersLeDomaine({
         ...métier,
         liens: [],
+        formations: [],
       }),
     );
   }

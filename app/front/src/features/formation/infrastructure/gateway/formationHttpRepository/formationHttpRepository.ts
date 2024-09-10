@@ -105,7 +105,7 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
-      communes: formationHttp.formation.villes,
+      communes: this._extraireCommunesDesTripletsAffectation(formationHttp.formation.tripletAffectationAssocies),
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
         nom: `${métier.nom[0].toUpperCase()}${métier.nom.slice(1)}`,
@@ -202,4 +202,11 @@ export class formationHttpRepository implements FormationRepository {
 
     return points;
   };
+
+  private _extraireCommunesDesTripletsAffectation(
+    tripletAffectationAssociés: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["tripletAffectationAssocies"],
+  ): string[] {
+    const nomsCommunes = tripletAffectationAssociés.map((tripletAffectation) => tripletAffectation.nomCommune);
+    return [...new Set(nomsCommunes)];
+  }
 }

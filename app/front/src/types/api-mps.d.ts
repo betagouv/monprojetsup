@@ -390,6 +390,10 @@ export interface components {
             id: string;
             nom: string;
         };
+        FormationCourteDTO: {
+            id: string;
+            nom: string;
+        };
         LienDTO: {
             nom: string;
             url: string;
@@ -403,6 +407,7 @@ export interface components {
             nom: string;
             descriptif?: string;
             liens: components["schemas"]["LienDTO"][];
+            formations: components["schemas"]["FormationCourteDTO"][];
         };
         MetiersDTO: {
             metiers: components["schemas"]["MetierDTO"][];
@@ -470,7 +475,6 @@ export interface components {
             criteresAnalyseCandidature: components["schemas"]["CriteresAnalyseCandidatureDTO"][];
             repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
             liens: components["schemas"]["LienDTO"][];
-            villes: string[];
             tripletAffectationAssocies: components["schemas"]["TripletAffectationDTO"][];
             metiers: components["schemas"]["MetierDTO"][];
             /** Format: int32 */
@@ -520,10 +524,6 @@ export interface components {
             baccalaureat: components["schemas"]["BaccalaureatDTO"];
             /** Format: int32 */
             pourcentage: number;
-        };
-        FormationCourteDTO: {
-            id: string;
-            nom: string;
         };
         FormationsCourtesDTO: {
             formations: components["schemas"]["FormationCourteDTO"][];
