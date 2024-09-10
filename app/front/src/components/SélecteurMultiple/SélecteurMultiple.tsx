@@ -1,5 +1,5 @@
 import { type SélecteurMultipleOption, type SélecteurMultipleProps } from "./SélecteurMultiple.interface";
-import ChampDeSaisie from "@/components/_dsfr/ChampDeSaisie/ChampDeSaisie";
+import ChampDeRecherche from "@/components/_dsfr/ChampDeRecherche/ChampDeRecherche";
 import TagCliquable from "@/components/_dsfr/TagCliquable/TagCliquable";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -68,12 +68,11 @@ const SélecteurMultiple = ({
 
   return (
     <>
-      <ChampDeSaisie
+      <ChampDeRecherche
         auChangement={(événement) => debouncedSetRecherche(événement.target.value ?? undefined)}
         description={description}
-        estChampDeRecherche
-        icône="fr-icon-search-line"
         label={label}
+        obligatoire={false}
         status={statusChampDeSaisie}
       />
       {rechercheSuggestionsEnCours ? (
