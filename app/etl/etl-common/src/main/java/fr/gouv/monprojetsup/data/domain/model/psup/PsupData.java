@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.domain.model.psup;
 import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
 import fr.gouv.monprojetsup.data.carte.algos.Filiere;
 import fr.gouv.monprojetsup.data.domain.Constants;
+import fr.gouv.monprojetsup.data.domain.Helpers;
 import fr.gouv.monprojetsup.data.domain.model.Candidat;
 import fr.gouv.monprojetsup.data.domain.model.Voeu;
 import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse;
@@ -11,19 +12,16 @@ import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
 import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
-import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*;
 
 
 public record PsupData(
@@ -86,6 +84,14 @@ public record PsupData(
         );
     }
 
+
+    public @NotNull List<@NotNull Bac> getBacs() {
+        val result = new ArrayList<>(bacs);
+        result.removeIf( it -> it.key().equals(TOUS_BACS_CODE_LEGACY ));
+        result.add(new Bac(TOUS_BACS_CODE_MPS, TOUS_BACS_CODE_FRONT_LIBELLE));
+        return result;
+    }
+
     public List<Filiere> getFilieres() {
         return new ArrayList<>(filieres.values());
     }
@@ -93,21 +99,33 @@ public record PsupData(
         return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
     }
 
-    public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
-        liensOnisep.put(FILIERE_PREFIX + gFlCod, lien);
+    public PsupStatistiques buildStats() {
+
+        val bacsKeys = getBacs().stream().map(Bac::key).collect(Collectors.toSet());
+        val groups = getGtaToMpsIdMapping();
+        return PsupStatistiques.build(
+                stats,
+                bacsKeys,
+                groups
+        );
     }
 
-    public  Map<String, String> getGtaToLasMapping() {
-        Map<String, List<Formation>> grpToFormations = getFormationToVoeux();
-        Map<String, String> result = new HashMap<>();
+    public Map<String, String> getGtaToMpsIdMapping() {
+        val gtaToFl = formations.formations.values().stream()
+                .collect(Collectors.toMap(
+                        f -> Constants.gTaCodToMpsId(f.gTaCod),
+                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
+                ));
+        val psupKeyToMpsKey = getPsupKeyToMpsKey();
+        return gtaToFl.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
+                ));
+    }
 
-        Set<String> lasCodes = getLasMpsKeys();
-        lasCodes.forEach(las -> {
-            List<Formation> formations = grpToFormations.getOrDefault(las, List.of());
-            formations.forEach(formation -> result.put(gTaCodToMpsId(formation.gTaCod), las));
-        });
-        return result;
-
+    public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
+        liensOnisep.put(FILIERE_PREFIX + gFlCod, lien);
     }
 
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
@@ -187,19 +205,8 @@ public record PsupData(
 
         Set<String> bacsActifs = new HashSet<>(stats.getBacsWithAtLeastNdAdmis(MIN_NB_ADMIS_FOR_BAC_ACTIF));
         bacsActifs.add(TOUS_BACS_CODE_MPS);
-        this.bacs.removeIf(b -> !bacsActifs.contains(b.key()));
-        try {
-            Serialisation.toJsonFile("bacsActifs.json", this.bacs, true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         this.stats.restrictToBacs(bacsActifs);
-
-        //stats.removeSmallPopulations();//not the moment to do that
         stats.cleanup();
-        stats.rebuildMiddle50();
-        stats.createGroupAdmisStatistique(getPsupKeyToMpsKey());
-        stats.createGroupAdmisStatistique(getGtaToLasMapping());
     }
 
     public void injecterNomsFilieresManquants(AlgoCarteEntree carte, Set<Integer> filActives) {
@@ -218,6 +225,7 @@ public record PsupData(
             }
         });
     }
+
     /**
      * Maps a fl** to an fl** or a fr**
      *
@@ -301,14 +309,13 @@ public record PsupData(
             }
         });
 
-        /* ajouts à la main
-         "DEUST - Animation et gestion des activités physiques, sportives ou culturelles (fl828)": [
-      "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités de pleine nature (fl851)(100 places)",
-      "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités aquatiques (fl898)(62 places)",
-      "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours animation (fl850)(33 places)",
-      "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours agent de développement de club sportif (fl849)(28 places)"
-    ],
-         */
+        // ajouts à la main
+        //      "DEUST - Animation et gestion des activités physiques, sportives ou culturelles (fl828)":
+        //   "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités de pleine nature (fl851)(100 places)"
+        //   "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours activités aquatiques (fl898)(62 places)"
+        //   "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours animation (fl850)(33 places)"
+        //   "DEUST - Animation et gestion des activités sportives, physiques ou culturelles, parcours agent de développement de club sportif (fl849)(28 places
+        // ,
         String deustSport = "fl828";
         flToGrp.remove(deustSport);
         flToGrp.put("fl851", deustSport);
@@ -356,7 +363,7 @@ public record PsupData(
         /* ajout des filières dans leurs propres regroupements */
         val filieresWhichAreGroupsAsWell = flToGrp.values()
                 .stream()
-                .filter(key -> isFiliere(key))
+                .filter(Helpers::isFiliere)
                 .distinct()
                 .toList();
         filieresWhichAreGroupsAsWell.forEach(s -> flToGrp.put(s, s));
@@ -386,16 +393,6 @@ public record PsupData(
 
     public void setMotsCles(TagsSources motsCles) {
         this.motsCles.set(motsCles);
-    }
-
-    @NotNull
-    public Set<@NotNull String> getLasMpsKeys() {
-        val psupKeytoMpsKey = getPsupKeyToMpsKey();
-        return formations.formations.values().stream()
-                .filter(f -> las.contains(f.gTaCod))
-                .map(f -> Constants.gFlCodToMpsId(f.gFlCod))
-                .map(mpsKey -> psupKeytoMpsKey.getOrDefault(mpsKey,mpsKey))
-                .collect(Collectors.toSet());
     }
 
     @NotNull
@@ -436,7 +433,15 @@ public record PsupData(
                 );
     }
 
-
+    @NotNull
+    public Set<@NotNull String> getLasMpsKeys() {
+        val psupKeytoMpsKey = getPsupKeyToMpsKey();
+        return formations.formations.values().stream()
+                .filter(f -> las.contains(f.gTaCod))
+                .map(f -> Constants.gFlCodToMpsLasId( f.gFlCod))
+                .map(mpsKey -> psupKeytoMpsKey.getOrDefault(mpsKey,mpsKey))
+                .collect(Collectors.toSet());
+    }
 
     private void addFormationsPrefixFomAnother(Map<Integer, Integer> result) {
         Map<String, Integer> inverse =
@@ -465,20 +470,6 @@ public record PsupData(
                 i++;
             }
         }
-    }
-
-    public Set<String> displayedFilieres() {
-        Set<String> result = new HashSet<>();
-        Map<String, String> corr = getPsupKeyToMpsKey();
-        result.addAll(
-                filActives.stream()
-                        .filter(formations.filieres::containsKey)
-                        .map(Constants::gFlCodToMpsId)
-                        .filter(key -> !corr.containsKey(key) || corr.get(key).equals(key))
-                        .collect(Collectors.toSet())
-        );
-        result.addAll(corr.values());
-        return result;
     }
 
 
@@ -611,7 +602,10 @@ public record PsupData(
             Map<Integer, DescriptifVoeu> indexedDescriptifs,
             Map<String, String> psupIndextoMpsIndex,
             List<String> formationsMps) {
-        val candidateMpsKey = Constants.gFlCodToMpsId(f.isLAS() ? (LAS_CONSTANT + f.gFlCod) : f.gFlCod);
+        val candidateMpsKey = f.isLAS()
+                ? Constants.gFlCodToMpsLasId(f.gFlCod)
+                : Constants.gFlCodToMpsId(f.gFlCod)
+                ;
         var mpsKey = psupIndextoMpsIndex.get(candidateMpsKey);
         if(mpsKey == null) {
             if(formationsMps.contains(candidateMpsKey)) {

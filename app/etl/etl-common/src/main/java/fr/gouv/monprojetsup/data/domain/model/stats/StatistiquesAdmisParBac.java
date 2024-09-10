@@ -1,14 +1,33 @@
 package fr.gouv.monprojetsup.data.domain.model.stats;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public record StatistiquesAdmisParBac(
         //indexé par I_MT_COD, -1 for all, -2 for my bac
         Map<String, StatistiquesAdmisParMatiere> parBac
 ) implements Serializable  {
     public StatistiquesAdmisParBac() { this(new HashMap<>()); }
+
+    public StatistiquesAdmisParBac(
+            StatistiquesAdmisParBac v,
+            Set<String> bacsKeys
+    ) {
+        this(new HashMap<>());
+        v.parBac.forEach(
+                (k, v1) -> {
+                    if (bacsKeys.contains(k)) {
+                        parBac.put(k, v1);
+                    }
+                }
+        );
+    }
 
     public void set(Map<String, Map<Integer, int[]>> stringMapMap) {
         parBac.clear();
@@ -26,8 +45,8 @@ public record StatistiquesAdmisParBac(
         if(s == null) {
             parBac.clear();
         } else {
-            s.parMatiere().keySet().removeIf( m -> m != PsupStatistiques.MOYENNE_GENERALE_CODE && m != PsupStatistiques.MOYENNE_BAC_CODE);
-            Statistique ss = s.parMatiere().get(PsupStatistiques.MOYENNE_GENERALE_CODE);
+            s.parMatiere().keySet().removeIf( m -> m != PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE && m != PsupStatistiques.MATIERE_MOYENNE_BAC_CODE);
+            Statistique ss = s.parMatiere().get(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE);
             if (ss == null) {
                 parBac.clear();
             } else {
@@ -38,8 +57,45 @@ public record StatistiquesAdmisParBac(
         }
     }
 
-    public void removeSmallPopulations() {
-        this.parBac.values().forEach(StatistiquesAdmisParMatiere::removeSmallPopulations);
-        this.parBac.values().removeIf(statistiquesAdmisParMatiere -> statistiquesAdmisParMatiere.parMatiere().isEmpty());
+    public static StatistiquesAdmisParBac getStatAgregee(
+            @NotNull List<@NotNull StatistiquesAdmisParBac> toList,
+            @NotNull Set<@NotNull String> bacsKeys
+    ) {
+
+        return new StatistiquesAdmisParBac(
+                toList.stream()
+                        .flatMap(e -> e.parBac.entrySet().stream())
+                        .filter(e -> bacsKeys.contains(e.getKey()))
+                        .collect(Collectors.groupingBy(Map.Entry::getKey))
+                        .entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> StatistiquesAdmisParMatiere.getStatAgregee(e.getValue().stream().map(Map.Entry::getValue).toList())
+                        ))
+        );
+    }
+
+
+    public void removeEmptyGroups() {
+        parBac.values().forEach(StatistiquesAdmisParMatiere::removeEmptyGroups);
+        parBac.values().removeIf(StatistiquesAdmisParMatiere::isEmpty);
+    }
+
+    public boolean isEmpty() {
+        return parBac.isEmpty();
+    }
+
+    public @NotNull Map<@NotNull String, @NotNull Integer> getAdmisParBacs() {
+        return parBac.entrySet().stream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> e.getValue().getNbAvecMoyGen()
+        ));
+    }
+
+    public TauxSpecialites getStatsSpecialites() {
+        return parBac.getOrDefault(
+                PsupStatistiques.TOUS_BACS_CODE_MPS,
+                new StatistiquesAdmisParMatiere()
+        ).getStatsSpecialites();
     }
 }

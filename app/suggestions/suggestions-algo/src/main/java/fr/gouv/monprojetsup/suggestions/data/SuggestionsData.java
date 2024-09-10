@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MOYENNE_GENERALE_CODE;
+import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
 import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.data.domain.model.stats.StatFront.getStatistique;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
@@ -187,7 +187,7 @@ public class SuggestionsData {
                     formationId,
                     nbAdmis,
                     statsSpecs,
-                    Map.of(MOYENNE_GENERALE_CODE, stat)
+                    Map.of(MATIERE_MOYENNE_GENERALE_CODE, stat)
             );
         }
         return null;

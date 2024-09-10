@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.domain;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Set;
+
+import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
 
 public class Constants {
     public static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
@@ -35,7 +35,7 @@ public class Constants {
     public static final int BPJEPS_PSUP_FR_COD = 640;
     public static final int ECOLES_ARTS_PSUP_FR_COD = 27;
     public static final int ECOLES_INGE_PSUP_FR_COD = 21;
-    public static final int CMI_PSUP_FR_COD = 90;
+    public static final int CMI_PSUP_FR_COD = 22;
     public static final int ECOLE_COMMERCE_PSUP_FR_COD = 24;
     public static final int ECOLE_ARCHI_PSUP_FL_COD = 250;
     public static final int ECOLE_ARCHI_INGE_PSUP_FL_COD = 251;
@@ -70,11 +70,13 @@ public class Constants {
     public static final String PREPA_LETTRE_IDEO_CODE = "FOR.1471";
 
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
-    @NotNull
     public static final int COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE = 4445;
 
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
+    }
+    public static String gFlCodToMpsLasId(int cle) {
+        return   FILIERE_PREFIX + (cle < LAS_CONSTANT ? LAS_CONSTANT + cle : cle);
     }
     public static String gFrCodToMpsId(int cle) {
         return TYPE_FORMATION_PREFIX + cle;
