@@ -23,7 +23,7 @@ interface MpsDataPort {
     fun getMotsClesFormations(): Map<String, List<String>>
     fun getApprentissage(): Collection<String>
     fun getLasToGenericIdMapping(): Map<String, String>
-    fun getVoeux(): List<Voeu>
+    fun getVoeux(): Map<String,Collection<Voeu>>
     fun getDebugLabels(): Map<String, String>
     fun getCapacitesAccueil(): Map<String, Int>
     fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>>

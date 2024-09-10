@@ -22,7 +22,6 @@ import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*
 import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
@@ -68,12 +67,11 @@ class MpsDataFiles(
             dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
             PsupData::class.java
         )
-        statistiques = psupData.stats
+        statistiques = psupData.buildStats()
 
         logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
 
-        statistiques.restrictToBacs(getBacs().map { it.key }.toSet())
 
     }
 
@@ -430,9 +428,9 @@ class MpsDataFiles(
         return psupData.lasToGeneric
     }
 
-    override fun getVoeux(): List<Voeu> {
+    override fun getVoeux(): Map<String, Collection<Voeu>> {
         val formationsMps = getFormationsMpsIds()
-        return psupData.getVoeux(formationsMps)
+        return psupData.getVoeux(formationsMps).groupBy { it.formation }
     }
 
 
@@ -597,9 +595,9 @@ class MpsDataFiles(
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
             if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
             val stat = StatsFormation(
-                replaceKey(statistiques.getStatsMoyGenParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
-                replaceKey(statistiques.getNbAdmisParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
-                replaceKey(statistiques.getPctAdmisParBac(id), TOUS_BACS_CODE_LEGACY,TOUS_BACS_CODE_MPS),
+                statistiques.getStatsMoyGenParBac(id),
+                statistiques.getNbAdmisParBac(id),
+                statistiques.getPctAdmisParBac(id),
                 statistiques.getNbAdmisParSpec(id) ?: mapOf(),
                 statistiques.getPctAdmisParSpec(id) ?: mapOf(),
                 psupData.getStatsFilSim(psupKeys)
@@ -735,10 +733,7 @@ class MpsDataFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        val result = ArrayList(psupData.bacs)
-        result.removeIf { it.key == TOUS_BACS_CODE_LEGACY }
-        result.add(Bac(TOUS_BACS_CODE_MPS, TOUS_BACS_CODE_FRONT_LIBELLE))
-        return result
+        return psupData.bacs
     }
 
     override fun getDomaines(): List<CategorieThematiques> {

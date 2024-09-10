@@ -38,4 +38,14 @@ public record StatsFormation(
         nbAdmisParBac.keySet().retainAll(bacsKeys);
         pctAdmisParBac.keySet().retainAll(bacsKeys);
     }
+
+    public boolean hasStatsAdmissions() {
+        return !admissions.isEmpty() || !nbAdmisParBac.isEmpty() || !pctAdmisParBac.isEmpty()
+                || !nbAdmisParSpecialite.isEmpty() || !pctAdmisParSpecialite.isEmpty();
+    }
+
+    public boolean hasFullStats() {
+        return !admissions.isEmpty() && !nbAdmisParBac.isEmpty() && !pctAdmisParBac.isEmpty()
+                && !nbAdmisParSpecialite.isEmpty() && !pctAdmisParSpecialite.isEmpty();
+    }
 }

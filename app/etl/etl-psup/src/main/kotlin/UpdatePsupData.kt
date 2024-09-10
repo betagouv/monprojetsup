@@ -67,8 +67,6 @@ class Runner : CommandLineRunner {
 				true
 			)
 
-
-
 			logger.info("Export du legacy front data set")
 			data.minimizeForFront()
 			Serialisation.toZippedJson(

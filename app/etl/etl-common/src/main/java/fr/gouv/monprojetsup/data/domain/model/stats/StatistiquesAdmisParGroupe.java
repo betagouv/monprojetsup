@@ -3,8 +3,8 @@ package fr.gouv.monprojetsup.data.domain.model.stats;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public record StatistiquesAdmisParGroupe(
         //indexé par groupes
@@ -24,5 +24,55 @@ public record StatistiquesAdmisParGroupe(
 
     public @NotNull String toString() {
         return String.valueOf(parGroupe.size());
+    }
+
+    public void rebuilMiddle50() {
+        parGroupe().values().stream()
+                .flatMap(e -> e.parBac().values().stream())
+                .flatMap(s -> s.parMatiere().entrySet().stream())
+                .forEach(e -> e.setValue(e.getValue().updateMiddle50FromFrequencesCumulees()));
+    }
+
+    public void removeEmptyGroups() {
+        parGroupe.values().forEach(StatistiquesAdmisParBac::removeEmptyGroups);
+        parGroupe().values().removeIf(StatistiquesAdmisParBac::isEmpty);
+    }
+
+   StatistiquesAdmisParGroupe createGroupAdmisStatistique(
+            Map<String, String> groups,
+            Set<String> bacsKeys
+    ) {
+
+        Map<String, Set<String>> reverseGroups = new HashMap<>();
+        groups.forEach((s, s2) -> reverseGroups.computeIfAbsent(s2, z -> new HashSet<>()).add(s));
+       StatistiquesAdmisParGroupe result = new StatistiquesAdmisParGroupe();
+        reverseGroups.forEach((s, keys) ->
+                result.parGroupe.put(
+                        s,
+                        StatistiquesAdmisParBac.getStatAgregee(
+                                keys.stream().map(parGroupe::get).filter(Objects::nonNull).toList(),
+                                bacsKeys
+                        )
+                )
+        );
+        return result;
+    }
+
+    //par groupe puis par bac
+    public @NotNull Map<String,@NotNull Map<@NotNull String, @NotNull Integer>> getAdmisParGroupes() {
+        return parGroupe.entrySet().stream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> e.getValue().getAdmisParBacs()
+        ));
+    }
+
+    public TauxSpecialitesParGroupe getStatsSpecialites() {
+        return new TauxSpecialitesParGroupe(
+                parGroupe.entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().getStatsSpecialites()
+                )
+                )
+        );
     }
 }

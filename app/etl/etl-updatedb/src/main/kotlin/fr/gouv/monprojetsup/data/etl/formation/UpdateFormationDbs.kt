@@ -122,7 +122,7 @@ class UpdateFormationDbs(
             }
             entity.motsClefs = motsClefsCourts
 
-            val voeuxFormation = voeux.filter { it.formation == id }.sortedBy { it.libelle }
+            val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
 
             entity.labelDetails = debugLabels.getOrDefault(id, id)
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
