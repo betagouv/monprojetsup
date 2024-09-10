@@ -4,6 +4,7 @@ export default function useChampDeSaisieSquelette({
   id,
   status,
   obligatoire,
+  placeholder,
   auChangement,
 }: useChampDeSaisieSqueletteArgs) {
   const classesCSSEnFonctionDuStatus = () => {
@@ -24,6 +25,7 @@ export default function useChampDeSaisieSquelette({
     name: id,
     onChange: auChangement,
     required: obligatoire ?? false,
+    placeholder,
   };
 
   return {

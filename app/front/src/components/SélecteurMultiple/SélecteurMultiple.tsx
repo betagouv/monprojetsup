@@ -70,8 +70,7 @@ const SélecteurMultiple = ({
     <>
       <ChampDeRecherche
         auChangement={(événement) => debouncedSetRecherche(événement.target.value ?? undefined)}
-        description={description}
-        label={label}
+        entête={{ description, label }}
         obligatoire={false}
         status={statusChampDeSaisie}
       />

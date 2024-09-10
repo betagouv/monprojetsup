@@ -44,6 +44,8 @@ export const localeFR = {
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
   },
   PAGE_FORMATION: {
+    CHAMP_RECHERCHE_LABEL: "Recherche une formation",
+    CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Suggestions triées par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour à l'exploration des formations",

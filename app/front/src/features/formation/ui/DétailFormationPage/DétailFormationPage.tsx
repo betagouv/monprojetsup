@@ -1,14 +1,15 @@
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
-import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import FicheFormation from "@/features/formation/ui/FicheFormation/FicheFormation";
 import {
+  rechercherFormationsQueryOptions,
   récupérerFormationQueryOptions,
   suggérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
 import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormations";
+import RechercheFormations from "@/features/formation/ui/RechercheFormations/RechercheFormations";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useState } from "react";
@@ -20,7 +21,12 @@ const DétailFormationPage = () => {
   const { formationId } = route.useParams();
 
   const { data: suggestions } = useQuery(suggérerFormationsQueryOptions);
-  const { data: formation, isLoading: récupérationFormationEnCours } = useQuery(
+  const { data: résultatsDeRecherche, isFetching: rechercheEnCours } = useQuery({
+    ...rechercherFormationsQueryOptions(),
+    enabled: false,
+  });
+
+  const { data: formation, isFetching: récupérationFormationEnCours } = useQuery(
     récupérerFormationQueryOptions(formationId),
   );
 
@@ -47,8 +53,10 @@ const DétailFormationPage = () => {
       <Head title={formation?.nom ?? ""} />
       <div className={classBackgroundEnFonctionDeAfficherLaBarreLatérale()}>
         <div className="fr-container lg:grid lg:grid-cols-[490px_1fr]">
-          <div className={`grid gap-8 lg:sticky lg:left-0 lg:top-0 lg:max-h-screen ${afficherLaBarreLatérale()}`}>
-            <div className="px-2 pt-6 xl:px-7">
+          <div
+            className={`grid content-start gap-8 pt-6 lg:sticky lg:left-0 lg:top-0 lg:max-h-screen ${afficherLaBarreLatérale()}`}
+          >
+            <div className="grid gap-6 px-2 xl:px-7">
               <div className="ml-[-1rem] lg:hidden">
                 <Bouton
                   auClic={() => setAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
@@ -58,21 +66,18 @@ const DétailFormationPage = () => {
                   variante="quaternaire"
                 />
               </div>
-              <p className="mb-0 text-center">
-                {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_AFFINITÉ}{" "}
-                <LienInterne
-                  ariaLabel={i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE}
-                  href="/profil"
-                  variante="simple"
-                >
-                  {i18n.PAGE_FORMATION.SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE}
-                </LienInterne>
-              </p>
+              <div className="[&_.fr-input]:bg-white">
+                <RechercheFormations />
+              </div>
             </div>
-            <ListeFormations
-              formationIdAffichée={formationId}
-              formations={suggestions}
-            />
+            {rechercheEnCours ? (
+              <AnimationChargement />
+            ) : (
+              <ListeFormations
+                formationIdAffichée={formationId}
+                formations={résultatsDeRecherche ?? suggestions}
+              />
+            )}
           </div>
           <div className={`bg-white ${afficherLaFicheFormation()}`}>
             {récupérationFormationEnCours || !formation ? (

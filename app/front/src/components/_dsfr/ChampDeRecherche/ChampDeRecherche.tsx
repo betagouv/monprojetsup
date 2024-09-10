@@ -5,9 +5,9 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { useId } from "react";
 
 const ChampDeRecherche = ({
-  label,
-  description,
+  entête,
   status,
+  placeholder,
   auChangement,
   obligatoire,
   registerHookForm,
@@ -18,15 +18,15 @@ const ChampDeRecherche = ({
     id,
     status,
     obligatoire,
+    placeholder,
     auChangement,
   });
 
   return (
     <ChampDeSaisieSquelette
       auChangement={auChangement}
-      description={description}
+      entête={entête}
       id={id}
-      label={label}
       obligatoire={obligatoire}
       status={status}
     >
