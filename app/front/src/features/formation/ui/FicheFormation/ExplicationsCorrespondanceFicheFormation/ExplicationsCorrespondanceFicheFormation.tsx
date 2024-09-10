@@ -31,6 +31,16 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.TITRE}
       </Titre>
       <ul className="m-0 grid list-none justify-start gap-6 p-0">
+        {(explications.intêretsEtDomainesChoisis.intêrets.length > 0 ||
+          explications.intêretsEtDomainesChoisis.domaines.length > 0) && (
+          <ExplicationCorrespondanceListeÉlementsFicheFormation
+            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÊRETS_ET_DOMAINES}
+            éléments={[
+              ...explications.intêretsEtDomainesChoisis.intêrets.map((intêret) => intêret.nom),
+              ...explications.intêretsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
+            ]}
+          />
+        )}
         {explications.typeBaccalaureat && (
           <ExplicationCorrespondanceÉlementFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.ADMISSION_BAC}
@@ -75,16 +85,6 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.FORMATIONS_SIMILAIRES}
             éléments={explications.formationsSimilaires.map((formation) => formation.nom)}
-          />
-        )}
-        {(explications.intêretsEtDomainesChoisis.intêrets.length > 0 ||
-          explications.intêretsEtDomainesChoisis.domaines.length > 0) && (
-          <ExplicationCorrespondanceListeÉlementsFicheFormation
-            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÊRETS_ET_DOMAINES}
-            éléments={[
-              ...explications.intêretsEtDomainesChoisis.intêrets.map((intêret) => intêret.nom),
-              ...explications.intêretsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
-            ]}
           />
         )}
       </ul>

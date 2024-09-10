@@ -65,7 +65,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
   }, [spécialitésAssociéesAuBacSélectionné, spécialitésSélectionnéesParDéfautIds]);
 
   useEffect(() => {
-    if (!rechercheSpécialité || !spécialitésAssociéesAuBacSélectionné) return;
+    if (!rechercheSpécialité || rechercheSpécialité.length < 2 || !spécialitésAssociéesAuBacSélectionné) return;
 
     const fuse = new Fuse<SpécialitéBac>(spécialitésAssociéesAuBacSélectionné, {
       distance: 200,
