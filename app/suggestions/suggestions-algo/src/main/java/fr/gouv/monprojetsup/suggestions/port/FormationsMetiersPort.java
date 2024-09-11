@@ -1,11 +1,10 @@
 package fr.gouv.monprojetsup.suggestions.port;
 
-import fr.gouv.monprojetsup.data.domain.model.Formation;
-import fr.gouv.monprojetsup.data.formation.entity.FormationEntity;
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 public interface FormationsMetiersPort {
 
