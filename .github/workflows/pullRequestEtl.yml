@@ -11,3 +11,5 @@ jobs:
   checkEtl:
     name: Etl
     uses: ./.github/workflows/etl.yml
+    secrets:
+      DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"
