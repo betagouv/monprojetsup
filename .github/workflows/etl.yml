@@ -32,6 +32,8 @@ jobs:
     name: Pull
     runs-on: ubuntu-latest
     steps:
+      - name: Cleanup data directory
+        run: rm -fr ${{ env.DATA_DIR }}
       - name: Fetch data Repository
         run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ env.DATA_DIR }}
       
