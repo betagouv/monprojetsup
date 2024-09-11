@@ -169,7 +169,20 @@
                     <jvmTarget>${maven.compiler.target}</jvmTarget>
                 </configuration>
             </plugin>
-        </plugins>
+			<plugin>
+				<groupId>com.github.gantsign.maven</groupId>
+				<artifactId>ktlint-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>format-and-check</id>
+						<goals>
+							<goal>format</goal>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
     </build>
 
 

@@ -15,3 +15,6 @@ metabase/db
 **tmp**
 **target**
 **.idea**
+**.env**
+**#**
+**bin**
