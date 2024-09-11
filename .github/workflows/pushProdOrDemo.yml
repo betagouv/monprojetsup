@@ -18,8 +18,6 @@ jobs:
   checkEtl: 
     name: Etl
     uses: ./.github/workflows/etl.yml
-    with:
-      runner_temp: ${{ runner.temp }}   # Passing runner.temp as input to etl.yml
 
   pushToOnisep: 
     name: ONISEP Repository

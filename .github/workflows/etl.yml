@@ -5,6 +5,10 @@ on:
     secrets:
       DATA_REPOSITORY:
         required: true
+    inputs:
+      runner_temp:
+        description: 'The temporary directory for the runner'
+        required: true
 
 env:
   WORKING_DIRECTORY: ./app/etl
