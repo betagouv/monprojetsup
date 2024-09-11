@@ -43,7 +43,7 @@ const DétailFormationPage = () => {
     <>
       <Head title={formation.nom} />
       <div className={classBackgroundEnFonctionDeAfficherLaBarreLatérale()}>
-        <div className="fr-container lg:grid lg:grid-flow-col">
+        <div className="fr-container lg:grid lg:grid-cols-[490px_1fr]">
           <div className={`grid gap-8 lg:sticky lg:left-0 lg:top-0 lg:max-h-screen ${afficherLaBarreLatérale()}`}>
             <div className="px-2 pt-6 xl:px-7">
               <div className="ml-[-1rem] lg:hidden">

@@ -4,15 +4,17 @@ import { i18n } from "@/configuration/i18n/i18n";
 
 const BoutonsActionsFormationMétier = ({
   estFavori,
+  estMasqué,
   estUneFormation,
   ajouterEnFavoriCallback,
   supprimerDesFavoris,
   masquerCallback,
+  afficherÀNouveauCallback,
   taille,
 }: BoutonsActionsFormationMétierProps) => {
   return (
     <div className="grid justify-start justify-items-start gap-4 sm:grid-flow-col">
-      {estFavori ? (
+      {estFavori && (
         <>
           <div className="grid grid-flow-col items-center gap-2 font-medium text-[--artwork-minor-red-marianne]">
             <span
@@ -30,7 +32,8 @@ const BoutonsActionsFormationMétier = ({
             variante="secondaire"
           />
         </>
-      ) : (
+      )}
+      {!estMasqué && !estFavori && (
         <Bouton
           auClic={ajouterEnFavoriCallback}
           icône={{ position: "gauche", classe: "fr-icon-heart-line" }}
@@ -39,7 +42,7 @@ const BoutonsActionsFormationMétier = ({
           type="button"
         />
       )}
-      {!estFavori && estUneFormation && (
+      {!estFavori && estUneFormation && !estMasqué && (
         <Bouton
           auClic={masquerCallback}
           icône={{ position: "gauche", classe: "fr-icon-eye-off-line" }}
@@ -47,6 +50,15 @@ const BoutonsActionsFormationMétier = ({
           taille={taille}
           type="button"
           variante="secondaire"
+        />
+      )}
+      {!estFavori && estUneFormation && estMasqué && (
+        <Bouton
+          auClic={afficherÀNouveauCallback}
+          icône={{ position: "gauche", classe: "fr-icon-eye-line" }}
+          label={i18n.COMMUN.AFFICHER_À_NOUVEAU}
+          taille={taille}
+          type="button"
         />
       )}
     </div>

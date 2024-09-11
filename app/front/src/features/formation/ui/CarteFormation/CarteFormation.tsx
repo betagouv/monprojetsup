@@ -27,9 +27,11 @@ const CarteFormation = ({
   };
 
   const estUneFormationFavorite = () => {
-    if (élève?.formationsFavorites)
-      return élève.formationsFavorites.some((formationFavorite) => formationFavorite.id === id);
-    return false;
+    return élève?.formationsFavorites?.some((formationFavorite) => formationFavorite.id === id) ?? false;
+  };
+
+  const estUneFormationMasquée = () => {
+    return élève?.formationsMasquées?.includes(id) ?? false;
   };
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const CarteFormation = ({
       className={`fr-enlarge-link grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSélection()}`}
       ref={ref}
     >
-      <div className="grid grid-flow-col justify-between gap-1">
+      <div className="grid grid-flow-col items-center justify-between gap-1">
         <LienInterne<"/formations/$formationId">
           ariaLabel={nom}
           href="/formations/$formationId"
@@ -67,6 +69,15 @@ const CarteFormation = ({
               className="fr-icon-heart-fill fr-icon--sm rounded bg-[--background-contrast-error] px-1 text-[--text-default-error]"
             />
             <span className="sr-only">{i18n.ACCESSIBILITÉ.FAVORIS}</span>
+          </div>
+        )}
+        {estUneFormationMasquée() && (
+          <div>
+            <span
+              aria-hidden="true"
+              className="fr-icon-eye-off-line fr-icon--sm rounded bg-[--background-alt-beige-gris-galet] px-1 text-[--text-mention-grey]"
+            />
+            <span className="sr-only">{i18n.ACCESSIBILITÉ.MASQUÉ}</span>
           </div>
         )}
       </div>

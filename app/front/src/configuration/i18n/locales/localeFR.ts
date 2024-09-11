@@ -325,9 +325,11 @@ export const localeFR = {
     AJOUTÉE_À_MA_SÉLECTION: "Ajoutée à ma sélection",
     SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
     NE_PLUS_VOIR: "Ne plus voir",
+    AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
   },
   ACCESSIBILITÉ: {
     FAVORIS: "Favoris",
+    MASQUÉ: "Masqué",
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",

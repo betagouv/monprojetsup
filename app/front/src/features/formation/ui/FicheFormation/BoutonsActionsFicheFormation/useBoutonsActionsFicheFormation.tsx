@@ -10,6 +10,9 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
   const estFavorite =
     élève?.formationsFavorites?.some((formationFavorite) => formationFavorite.id === formation.id) ?? false;
 
+  const estMasquée =
+    élève?.formationsMasquées?.some((formationsMasquée) => formationsMasquée === formation.id) ?? false;
+
   const modifierFormationsFavorites = async (formationsFavorites: Élève["formationsFavorites"]) => {
     if (!élève) return;
 
@@ -56,10 +59,20 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
     await modifierFormationsMasquées([...formationsMasquées, formation.id]);
   };
 
+  const afficherÀNouveauUneFormation = async () => {
+    const formationsMasquées = élève?.formationsMasquées?.filter(
+      (formationMasquée) => formationMasquée !== formation.id,
+    );
+
+    await modifierFormationsMasquées(formationsMasquées ?? []);
+  };
+
   return {
     estFavorite,
+    estMasquée,
     ajouterEnFavori,
     supprimerDesFavoris,
     masquerUneFormation,
+    afficherÀNouveauUneFormation,
   };
 }
