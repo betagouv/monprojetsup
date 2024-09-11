@@ -5,10 +5,6 @@ on:
     secrets:
       DATA_REPOSITORY:
         required: true
-    inputs:
-      runner_temp:
-        description: 'The temporary directory for the runner'
-        required: true
 
 env:
   WORKING_DIRECTORY: ./app/etl
@@ -34,13 +30,11 @@ jobs:
   pullDataRepository:
     name: Pull
     runs-on: ubuntu-latest
-    env:
-      DATA_DIR: ${{ runner.temp }}/mps_data
     steps:
       - name: Cleanup data directory
-        run: mkdir -p $DATA_DIR
+        run: mkdir -p ${{ runner.temp }}/mps_data
       - name: Fetch data Repository
-        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} $DATA_DIR
+        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
 
 
 
