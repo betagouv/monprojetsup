@@ -1,19 +1,17 @@
-import {
-  type ContenuModale,
-  type MétiersAccessiblesFicheFormationProps,
-} from "./MétiersAccessiblesFicheFormation.interface";
+import { type MétiersAccessiblesFicheFormationProps } from "./MétiersAccessiblesFicheFormation.interface";
 import Bouton from "@/components/Bouton/Bouton";
-import BoutonsActionsFormationMétier from "@/components/BoutonsActionsFormationMétier/BoutonsActionsFormationMétier";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
 import Modale from "@/components/Modale/Modale";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { type Métier } from "@/features/métier/domain/métier.interface";
+import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
 import { useState } from "react";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
   const NOMBRE_MÉTIERS_À_AFFICHER = 10;
 
-  const [contenuModale, setContenuModale] = useState<ContenuModale>();
+  const [métierSélectionné, setMétierSélectionné] = useState<Métier>(métiers[0]);
 
   if (métiers.length === 0) return null;
 
@@ -34,13 +32,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
           <li key={métier.id}>
             <Bouton
               ariaControls={idModale}
-              auClic={() =>
-                setContenuModale({
-                  titre: métier.nom,
-                  contenu: métier.descriptif,
-                  liens: métier.liens,
-                })
-              }
+              auClic={() => setMétierSélectionné(métier)}
               dataFrOpened="false"
               label={métier.nom}
               taille="petit"
@@ -50,21 +42,23 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
           </li>
         ))}
       </ul>
-      <Modale
-        boutons={
-          <BoutonsActionsFormationMétier
-            estFavori={false}
-            estUneFormation={false}
-          />
-        }
-        id={idModale}
-        titre={contenuModale?.titre ?? ""}
-      >
-        <div className="grid gap-6">
-          <p className="mb-0">{contenuModale?.contenu ?? null}</p>
-          <ListeLiensExternesSousFormeBouton liens={contenuModale?.liens ?? []} />
-        </div>
-      </Modale>
+      {métierSélectionné && (
+        <Modale
+          boutons={
+            <BoutonsActionsMétier
+              métier={métierSélectionné}
+              taille="grand"
+            />
+          }
+          id={idModale}
+          titre={métierSélectionné?.nom ?? ""}
+        >
+          <div className="grid gap-6">
+            <p className="mb-0">{métierSélectionné?.descriptif ?? null}</p>
+            <ListeLiensExternesSousFormeBouton liens={métierSélectionné?.liens ?? []} />
+          </div>
+        </Modale>
+      )}
     </div>
   );
 };
