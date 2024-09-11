@@ -27,20 +27,8 @@ jobs:
       - name: Run lint command
         run: mvn ktlint:check
 
-  pullDataRepository:
-    name: Pull
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cleanup data directory
-        run: mkdir -p ${{ runner.temp }}/mps_data
-      - name: Fetch data Repository
-        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
-
-
-
   tests:
     name: Tests
-    needs: pullDataRepository
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -67,6 +55,10 @@ jobs:
           distribution: '${{ env.JAVA_VENDOR }}' 
           java-version: '${{ env.JAVA_VERSION }}'
 
+      - name: Create data directory
+        run: mkdir -p ${{ runner.temp }}/mps_data
+      - name: Fetch data Repository
+        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
       - name: Run test command
         run: mvn test
         env:
