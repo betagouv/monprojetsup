@@ -1,0 +1,13 @@
+name: Pull Request Etl
+
+on:
+  pull_request:
+    paths:
+      - 'app/etl/**'
+      - '.github/**'
+
+jobs:
+
+  checkEtl:
+    name: Etl
+    uses: ./.github/workflows/etl.yml

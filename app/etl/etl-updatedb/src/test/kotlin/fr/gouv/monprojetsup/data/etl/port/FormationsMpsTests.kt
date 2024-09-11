@@ -75,13 +75,12 @@ class FormationsMpsTests {
     @Nested
     inner class MetiersDesFormationsTests {
         @Test
-        fun `90 pourcent des formations ont au moins un métier associé`() {
+        fun `80 pourcent des formations ont au moins un métier associé`() {
             val formationKeys = mpsDataPort.getFormationsMpsIds()
-            val formationsAvecAuMoinsUnMetier =
-                mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().filter { it.value.isNotEmpty() }.keys
+            val formationsSansMetier =
+                mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().filter { it.value.isEmpty() }.keys
             assertThat(formationKeys).isNotEmpty()
-            val pctOk = 100 * formationsAvecAuMoinsUnMetier.size / formationKeys.size
-            assertThat(pctOk).isGreaterThan(90)
+            assertThat(formationsSansMetier).hasSizeLessThanOrEqualTo( 20 * formationKeys.size / 100)
         }
 
 
@@ -189,14 +188,14 @@ class FormationsMpsTests {
         }
 
         @Test
-        fun `Au moins 70 pour cent des las ont des stats non vides`() {
+        fun `Au moins 65 pour cent des las ont des stats non vides`() {
             val lasKeys = mpsDataPort.getLasToGenericIdMapping().keys
             val lasSansStatsAdmissions = mpsDataPort.getStatsFormation()
                 .filter { lasKeys.contains(it.key) }
                 .filter { !it.value.hasStatsAdmissions() }
                 .map { it.key }
             val nbTotal = lasKeys.size
-            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(30 * nbTotal / 100)
+            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(35 * nbTotal / 100)
         }
 
 

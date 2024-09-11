@@ -1,0 +1,84 @@
+name: (Etl) Lint & Tests
+
+on:
+  workflow_call:
+    secrets:
+      DATA_REPOSITORY:
+        required: true
+
+env:
+  WORKING_DIRECTORY: ./app/etl
+  DATA_DIR: /data
+  APP_DB: postgres
+  APP_DB_USERNAME: postgres
+  APP_DB_PASSWORD: postgres
+  APP_DB_PORT: 5432
+  JAVA_VENDOR: temurin
+  JAVA_VERSION: 17
+
+jobs:
+  lint:
+    name: Linters
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run lint command
+        run: mvn ktlint:check
+
+  pullDataRepository:
+    name: Pull
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create directory
+        run: mkdir -p ${{ env.DATA_DIR }}
+
+      - name: Checkout data
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch mim-libre Repository
+        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ env.DATA_DIR }}
+      
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ${{ env.APP_DB }}
+          POSTGRES_USER: ${{ env.APP_DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.APP_DB_PASSWORD }}
+          PGPORT: ${{ env.APP_DB_PORT }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: '${{ env.JAVA_VENDOR }}' 
+          java-version: '${{ env.JAVA_VERSION }}'
+
+      - name: Run test command
+        run: mvn test
+        env:
+          DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
+          DB_USER: ${{ env.APP_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.APP_DB_PASSWORD }}
+          MPS_DATA_DIR: ${{ env.DATA_DIR }}
+
+
+
+

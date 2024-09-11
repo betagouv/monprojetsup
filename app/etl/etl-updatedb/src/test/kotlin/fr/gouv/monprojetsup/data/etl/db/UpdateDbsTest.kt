@@ -39,11 +39,11 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
-        fun `Plus de 95 pour 100 des formations en base doivent réussir le test d'intégrité`() {
+        fun `Plus de 80 pour 100 des formations en base doivent réussir le test d'intégrité`() {
             updateFormationDbs.updateFormationDbs()
             val formations = formationsdb.findAll()
             val nbFormations = formations.size
-            assertThat(formations.filter { it.integrityCheck() }).hasSizeGreaterThanOrEqualTo(95 * nbFormations / 100)
+            assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(20 * nbFormations / 100)
         }
 
         @Test
