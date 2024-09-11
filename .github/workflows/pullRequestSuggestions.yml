@@ -1,0 +1,15 @@
+name: Pull Request Suggestions
+
+on:
+  pull_request:
+    paths:
+      - 'app/suggestions/**'
+      - '.github/**'
+
+jobs:
+
+  checkSuggestions:
+    name: Suggestions
+    uses: ./.github/workflows/suggestions.yml
+    secrets:
+      DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"

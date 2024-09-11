@@ -20,10 +20,16 @@ jobs:
     uses: ./.github/workflows/etl.yml
     secrets:
       DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"
+
+  checkSuggestions: 
+    name: Suggestions
+    uses: ./.github/workflows/suggestions.yml
+    secrets:
+      DATA_REPOSITORY: "${{ secrets.DATA_REPOSITORY }}"
       
   pushToOnisep: 
     name: ONISEP Repository
-    needs: [checkFrontend, checkBackend, checkEtl]
+    needs: [checkFrontend, checkBackend, checkEtl, checkSuggestions]
     uses: ./.github/workflows/onisep.yml
     secrets:
       GITLAB_ONISEP_SSH_KEY: "${{ secrets.GITLAB_ONISEP_SSH_KEY }}"
