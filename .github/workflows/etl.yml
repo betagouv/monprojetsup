@@ -8,7 +8,7 @@ on:
 
 env:
   WORKING_DIRECTORY: ./app/etl
-  DATA_DIR: /data
+  DATA_DIR: /mps_data
   APP_DB: postgres
   APP_DB_USERNAME: postgres
   APP_DB_PASSWORD: postgres
