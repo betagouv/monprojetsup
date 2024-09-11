@@ -15,6 +15,10 @@ jobs:
     name: Backend
     uses: ./.github/workflows/backend.yml
 
+  checkEtl: 
+    name: Etl
+    uses: ./.github/workflows/etl.yml
+
   pushToOnisep: 
     name: ONISEP Repository
     needs: [checkFrontend, checkBackend]
