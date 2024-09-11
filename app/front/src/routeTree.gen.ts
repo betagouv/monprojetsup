@@ -16,13 +16,15 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
 import { Route as AuthFormationsExplorerIndexImport } from './routes/_auth/formations/explorer/index'
-import { Route as AuthFormationsFormationIdIndexImport } from './routes/_auth/formations/$formationId/index'
 
 // Create Virtual Routes
 
 const AuthEleveImport = createFileRoute('/_auth/eleve')()
 const AuthIndexLazyImport = createFileRoute('/_auth/')()
 const AuthProfilIndexLazyImport = createFileRoute('/_auth/profil/')()
+const AuthFormationsFormationIdIndexLazyImport = createFileRoute(
+  '/_auth/formations/$formationId/',
+)()
 const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
   '/_auth/eleve/_inscription/inscription/scolarite/',
 )()
@@ -75,14 +77,8 @@ const AuthEleveInscriptionRoute = AuthEleveInscriptionImport.update({
   getParentRoute: () => AuthEleveRoute,
 } as any)
 
-const AuthFormationsExplorerIndexRoute =
-  AuthFormationsExplorerIndexImport.update({
-    path: '/formations/explorer/',
-    getParentRoute: () => AuthRoute,
-  } as any)
-
-const AuthFormationsFormationIdIndexRoute =
-  AuthFormationsFormationIdIndexImport.update({
+const AuthFormationsFormationIdIndexLazyRoute =
+  AuthFormationsFormationIdIndexLazyImport.update({
     path: '/formations/$formationId/',
     getParentRoute: () => AuthRoute,
   } as any).lazy(() =>
@@ -90,6 +86,12 @@ const AuthFormationsFormationIdIndexRoute =
       (d) => d.Route,
     ),
   )
+
+const AuthFormationsExplorerIndexRoute =
+  AuthFormationsExplorerIndexImport.update({
+    path: '/formations/explorer/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 
 const AuthEleveInscriptionInscriptionScolariteIndexLazyRoute =
   AuthEleveInscriptionInscriptionScolariteIndexLazyImport.update({
@@ -210,18 +212,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfilIndexLazyImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/formations/$formationId/': {
-      id: '/_auth/formations/$formationId/'
-      path: '/formations/$formationId'
-      fullPath: '/formations/$formationId'
-      preLoaderRoute: typeof AuthFormationsFormationIdIndexImport
-      parentRoute: typeof AuthImport
-    }
     '/_auth/formations/explorer/': {
       id: '/_auth/formations/explorer/'
       path: '/formations/explorer'
       fullPath: '/formations/explorer'
       preLoaderRoute: typeof AuthFormationsExplorerIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/formations/$formationId/': {
+      id: '/_auth/formations/$formationId/'
+      path: '/formations/$formationId'
+      fullPath: '/formations/$formationId'
+      preLoaderRoute: typeof AuthFormationsFormationIdIndexLazyImport
       parentRoute: typeof AuthImport
     }
     '/_auth/eleve/_inscription/inscription/confirmation/': {
@@ -301,8 +303,8 @@ export const routeTree = rootRoute.addChildren({
       }),
     }),
     AuthProfilIndexLazyRoute,
-    AuthFormationsFormationIdIndexRoute,
     AuthFormationsExplorerIndexRoute,
+    AuthFormationsFormationIdIndexLazyRoute,
   }),
 })
 
@@ -323,8 +325,8 @@ export const routeTree = rootRoute.addChildren({
         "/_auth/",
         "/_auth/eleve",
         "/_auth/profil/",
-        "/_auth/formations/$formationId/",
-        "/_auth/formations/explorer/"
+        "/_auth/formations/explorer/",
+        "/_auth/formations/$formationId/"
       ]
     },
     "/_auth/": {
@@ -356,12 +358,12 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth/profil/index.lazy.tsx",
       "parent": "/_auth"
     },
-    "/_auth/formations/$formationId/": {
-      "filePath": "_auth/formations/$formationId/index.tsx",
-      "parent": "/_auth"
-    },
     "/_auth/formations/explorer/": {
       "filePath": "_auth/formations/explorer/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/formations/$formationId/": {
+      "filePath": "_auth/formations/$formationId/index.lazy.tsx",
       "parent": "/_auth"
     },
     "/_auth/eleve/_inscription/inscription/confirmation/": {

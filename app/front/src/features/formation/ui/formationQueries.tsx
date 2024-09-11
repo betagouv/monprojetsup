@@ -36,7 +36,7 @@ export const rechercherFormationsQueryOptions = (recherche?: string) =>
   });
 
 export const suggérerFormationsQueryOptions = queryOptions({
-  queryKey: ["formations", "suggérer"],
+  queryKey: ["formationsSuggestions"],
   queryFn: async () => {
     const formations = await dépendances.suggérerFormationsUseCase.run();
 

@@ -33,13 +33,13 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
 
   const ajouterEnFavori = async () => {
     const formationsFavorites = [
-      ...(élève?.formationsFavorites ?? []),
       {
         id: formation.id,
         commentaire: null,
         niveauAmbition: null,
         tripletsAffectationsChoisis: [],
       },
+      ...(élève?.formationsFavorites ?? []),
     ];
 
     await modifierFormationsFavorites(formationsFavorites);
@@ -56,7 +56,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
   const masquerUneFormation = async () => {
     const formationsMasquées = élève?.formationsMasquées ?? [];
 
-    await modifierFormationsMasquées([...formationsMasquées, formation.id]);
+    await modifierFormationsMasquées([formation.id, ...formationsMasquées]);
   };
 
   const afficherÀNouveauUneFormation = async () => {

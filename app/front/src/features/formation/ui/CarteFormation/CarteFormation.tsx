@@ -46,7 +46,7 @@ const CarteFormation = ({
       className={`fr-enlarge-link grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSélection()}`}
       ref={ref}
     >
-      <div className="grid grid-flow-col items-center justify-between gap-1">
+      <div className="grid grid-flow-col items-baseline justify-between gap-1">
         <LienInterne<"/formations/$formationId">
           ariaLabel={nom}
           href="/formations/$formationId"

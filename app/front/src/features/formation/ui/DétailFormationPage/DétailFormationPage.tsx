@@ -1,4 +1,5 @@
 import Head from "@/components/_layout/Head/Head";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -19,10 +20,12 @@ const DétailFormationPage = () => {
   const { formationId } = route.useParams();
 
   const { data: suggestions } = useQuery(suggérerFormationsQueryOptions);
-  const { data: formation } = useQuery(récupérerFormationQueryOptions(formationId));
+  const { data: formation, isLoading: récupérationFormationEnCours } = useQuery(
+    récupérerFormationQueryOptions(formationId),
+  );
 
-  if (!formation || !suggestions) {
-    return null;
+  if (!suggestions) {
+    return <AnimationChargement />;
   }
 
   const afficherLaBarreLatérale = () => {
@@ -41,7 +44,7 @@ const DétailFormationPage = () => {
 
   return (
     <>
-      <Head title={formation.nom} />
+      <Head title={formation?.nom ?? ""} />
       <div className={classBackgroundEnFonctionDeAfficherLaBarreLatérale()}>
         <div className="fr-container lg:grid lg:grid-cols-[490px_1fr]">
           <div className={`grid gap-8 lg:sticky lg:left-0 lg:top-0 lg:max-h-screen ${afficherLaBarreLatérale()}`}>
@@ -72,10 +75,14 @@ const DétailFormationPage = () => {
             />
           </div>
           <div className={`bg-white ${afficherLaFicheFormation()}`}>
-            <FicheFormation
-              afficherBarreLatéraleCallback={() => setAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
-              formation={formation}
-            />
+            {récupérationFormationEnCours || !formation ? (
+              <AnimationChargement />
+            ) : (
+              <FicheFormation
+                afficherBarreLatéraleCallback={() => setAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
+                formation={formation}
+              />
+            )}
           </div>
         </div>
       </div>
