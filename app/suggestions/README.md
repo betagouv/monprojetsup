@@ -7,7 +7,8 @@ Elle utilise les technologies Kotlin/Java/Spring Boot.
 
 ### Installation de la dépendance etl-common
 - La compilation du serveur de suggestion dépend du module ```etl-common``` (qui fournit la définition des entities de la bdd)
-- Depuis le dossier `app/etl/etl-common` lancez la commande ```mvn clean compile install -DskipTests=true``` pour installer le module dans votre repository local
+- Placez vous dans le dossier `app/etl/`
+- Exécutez la commande ```mvn clean compile install -DskipTests=true``` pour installer le module dans votre repository local
 
 ### Paramétrage de l'accès à la BDD et du port du service
 - Avant de pouvoir démarrer l'application il est nécessaire de créer un fichier `secrets.properties` situé au même niveau que `application.properties` dans le dossier `app/suggestions/suggestions-server/src/main/resources` qui définira la port exposé du service ainsi que la connection à la bdd.

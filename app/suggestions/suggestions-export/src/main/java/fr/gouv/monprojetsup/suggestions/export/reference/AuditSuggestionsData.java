@@ -13,12 +13,13 @@ import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.export.DomainesDb;
 import fr.gouv.monprojetsup.suggestions.export.InteretsDb;
 import fr.gouv.monprojetsup.suggestions.export.MetiersDb;
-import fr.gouv.monprojetsup.suggestions.infrastructure.FormationDb;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,7 +27,11 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.DIAGNOSTICS_OUTPUT_DIR;
 
-@SuppressWarnings("unused")
+@Repository
+interface FormationDb extends JpaRepository<FormationEntity, String> {
+
+}
+
 @Slf4j
 @Component
 public class AuditSuggestionsData {
