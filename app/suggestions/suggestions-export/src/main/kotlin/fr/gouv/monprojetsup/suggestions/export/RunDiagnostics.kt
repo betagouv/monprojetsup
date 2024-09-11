@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.suggestions.export
 
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsEvaluator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator
-import fr.gouv.monprojetsup.suggestions.export.reference.AnalyzeSuggestionsData
+import fr.gouv.monprojetsup.suggestions.export.reference.AuditSuggestionsData
 import fr.gouv.monprojetsup.suggestions.export.reference.ExportSuggestionsData
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -39,10 +39,10 @@ class JpaConfig
 
 @Component
 class DefaultExportRunner(
-    val diagnoseSuggestionsData: AnalyzeSuggestionsData
+    val diagnoseSuggestionsData: AuditSuggestionsData
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-        diagnoseSuggestionsData.analyze()
+        diagnoseSuggestionsData.outputDiagnostics()
     }
 }
 

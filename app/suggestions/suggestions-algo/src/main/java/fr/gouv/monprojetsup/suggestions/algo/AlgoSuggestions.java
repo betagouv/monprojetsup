@@ -62,7 +62,7 @@ public class AlgoSuggestions {
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
     public final int p75Capacity;
-    /* la liste des éléments (formations, métiers, ntérêts et domaines) qui sont directement liés aux études de santé, i.e. à PASS */
+    /* la liste des éléments (formations, métiers, ntérêts et secteursActivite) qui sont directement liés aux études de santé, i.e. à PASS */
     @Getter
     protected final Set<String> relatedToHealth = new HashSet<>();
     /**

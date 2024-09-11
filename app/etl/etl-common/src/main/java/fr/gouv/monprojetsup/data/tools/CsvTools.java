@@ -1,35 +1,41 @@
 package fr.gouv.monprojetsup.data.tools;
 
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
+import com.opencsv.*;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.val;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class CsvTools implements Closeable {
 
-    boolean skipNextSeparator;
-    final Writer writer;
-    final char separator;
-    final boolean ownWriter;
-
+    private final ICSVWriter csvWriter;
+    //
     public CsvTools(String filename, char separator) throws IOException {
-        this.writer = new BufferedWriter(new FileWriter(filename));
-        this.skipNextSeparator = true;
-        this.separator = separator;
-        ownWriter = true;
+        Path filePath = Paths.get(filename);
+        Path parentDir = filePath.getParent();
+        // Create the parent directories if they do not exist
+        if (parentDir != null && !Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
+        val writer = new BufferedWriter(new FileWriter(filename, StandardCharsets.UTF_8));
+        this.csvWriter = new CSVWriterBuilder(writer).withSeparator(separator).build();
     }
 
-    public CsvTools(Writer writer, char separator) {
-        this.writer = writer;
-        this.skipNextSeparator = true;
-        this.separator = separator;
-        ownWriter = false;
+    private CsvTools(String filename, char separator, Charset charset) throws IOException {
+        Path filePath = Paths.get(filename);
+        Path parentDir = filePath.getParent();
+        // Create the parent directories if they do not exist
+        if (parentDir != null && !Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
+        val writer = new BufferedWriter(new FileWriter(filename, charset));
+        this.csvWriter = new CSVWriterBuilder(writer).withSeparator(separator).build();
     }
 
     public static List<Map<String,String>> readCSV(String path, char separator) {
@@ -58,12 +64,10 @@ public class CsvTools implements Closeable {
                     }
                     data.add(entry);
                 } else {
-                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + values);
+                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + Arrays.toString(values));
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (CsvValidationException e) {
+        } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
         }
 
@@ -80,58 +84,22 @@ public class CsvTools implements Closeable {
         return data;
     }
 
-    public void append(@Nullable String val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append("\"" + (Objects.isNull(val) ? "" : val.replace("\"","'")) + "\"");
-        skipNextSeparator = false;
+    public static CsvTools getWriter(String filename) throws IOException {
+        return new CsvTools(filename, ';', StandardCharsets.ISO_8859_1);
     }
 
-    public void append(double val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-
-    public void append(int val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-    public void append(long val) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(val));
-        skipNextSeparator = false;
-    }
-
-    public void newLine() throws IOException {
-        writer.append(System.lineSeparator());
-        skipNextSeparator = true;
-    }
 
     @Override
     public void close() throws IOException {
-        if(ownWriter) {
-            writer.close();
-        }
+        csvWriter.close();
     }
 
     public void appendHeaders(List<String> headers) throws IOException {
         append(headers);
     }
-
-    public void append(boolean b) throws IOException {
-        if(!this.skipNextSeparator) writer.append(separator);
-        writer.append(String.valueOf(b));
-        skipNextSeparator = false;
-    }
-
-    public void append(Stream<Map.Entry<String, Integer>> entryStream, String s) {
-    }
-
     public void append(List<String> items) throws IOException {
-        for(String h : items) {
-            append(h);
-        }
-        newLine();
+        csvWriter.writeNext(items.toArray(new String[0]));
     }
+
+
 }

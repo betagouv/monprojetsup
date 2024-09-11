@@ -13,6 +13,7 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +200,13 @@ public record FicheMetierIdeo(
                 || formations_min_requise != null && isSup(idFormationsSup);
     }
 
+    public List<SecteurActivite> getSecteursActivite() {
+        if(this.secteursActivite == null) return List.of();
+        if(this.secteursActivite.secteursActivite == null) return List.of();
+        return new ArrayList<>(this.secteursActivite.secteursActivite);
+    }
+
+
     @SuppressWarnings("unused")//associe fonction publique à ouvrier/ère paysagiste
     public @NotNull List<@NotNull String> getSecteursActiviteMps() {
         if(secteursActivite == null) {
@@ -258,6 +266,7 @@ public record FicheMetierIdeo(
                 .map(c -> Pair.of(Constants.cleanup(c.id), c.libelle))
                 .toList();
     }
+
 
     @XmlRootElement(name = "metier_associe")
     @JacksonXmlRootElement(localName = "metier_associe")

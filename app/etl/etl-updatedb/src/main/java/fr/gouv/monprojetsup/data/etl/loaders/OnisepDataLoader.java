@@ -20,6 +20,7 @@ import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.domain.Constants.*;
-import static fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds;
 import static fr.gouv.monprojetsup.data.etl.loaders.DataSources.*;
 import static fr.gouv.monprojetsup.data.tools.CsvTools.readCSV;
@@ -40,7 +40,7 @@ public class OnisepDataLoader {
 
     public static @NotNull OnisepData fromFiles(DataSources sources) throws Exception {
 
-        LOGGER.info("Chargement des intérêts et des domaines");
+        LOGGER.info("Chargement des intérêts et des secteursActivite");
 
         List<SousDomaineWeb> sousDomainesWeb =  new ArrayList<>(loadDomainesSousDomaines());
 
@@ -71,17 +71,25 @@ public class OnisepDataLoader {
 
         val edgesMetiers = getEdgesMetiers(metiersIdeoDuSup.values());
         val edgesDomainesMetiers = edgesMetiers.getLeft();
-        val edgesInteretsMetiers = edgesMetiers.getRight();
+        val edgesInteretsMetiers = edgesMetiers.getMiddle();
+        val edgesSecteursMetiers = edgesMetiers.getRight();
 
-        LOGGER.info("Restriction des domaines et intérêts aux valeurs utilisées");
+        LOGGER.info("Restriction des secteursActivite et intérêts aux valeurs utilisées");
         Set<String> domainesUsed = new HashSet<>();
+
         domainesUsed.addAll(edgesDomainesMetiers.stream().map(Pair::getLeft).toList());
         domainesUsed.addAll(edgesFormationsDomaines.stream().map(Pair::getRight).toList());
-        int before = sousDomainesWeb.size();
-        sousDomainesWeb.forEach(sdb -> {
-                    if(!domainesUsed.contains(sdb.mpsId())) LOGGER.info("Domaine non utilisé: " + sdb);
+
+        try(val csv = CsvTools.getWriter(Constants.DIAGNOSTICS_OUTPUT_DIR + "domainesInutilises.csv")) {
+            csv.append(List.of("id","domaine","sousdomaine"));
+            for (SousDomaineWeb sdb : sousDomainesWeb) {
+                if (!domainesUsed.contains(sdb.mpsId())) {
+                    csv.append(List.of(sdb.ideo(), sdb.domaineOnisep(), sdb.sousDomaineOnisep()));
                 }
-        );
+            }
+        }
+
+        int before = sousDomainesWeb.size();
         sousDomainesWeb.removeIf(d -> !domainesUsed.contains(d.mpsId()));
         int after = sousDomainesWeb.size();
         LOGGER.info("Domaines: " + before + " -> " + after);
@@ -92,7 +100,7 @@ public class OnisepDataLoader {
         after = interets.size();
         LOGGER.info("Intérêts: " + before + " -> " + after);
 
-        LOGGER.info("Injection des domaines webs onisep dans les domaines MPS");
+        LOGGER.info("Injection des secteursActivite webs onisep dans les secteursActivite MPS");
         val domainesMps = DomainesMpsLoader.load(sources);
 
         return new OnisepData(
@@ -100,6 +108,7 @@ public class OnisepDataLoader {
                 interets,
                 edgesFormationsDomaines,
                 edgesDomainesMetiers,
+                edgesSecteursMetiers,
                 edgesMetiersFormations,
                 edgesInteretsMetiers,
                 filieresPsupToFormationsMetiersIdeo,
@@ -239,20 +248,26 @@ public class OnisepDataLoader {
         );
     }
 
-    protected static Pair<ArrayList<Pair<String, String>>, ArrayList<Pair<String, String>>> getEdgesMetiers(
+    protected static Triple<
+                List<Pair<String, String>>,
+                List<Pair<String, String>>,
+                List<Pair<String, String>>
+                > getEdgesMetiers(
             Collection<MetierIdeoDuSup> metiersIdeoDuSup
     ) {
         val edgesDomainesMetiers = new ArrayList<Pair<String,String>>();
         val edgesInteretsMetiers = new ArrayList<Pair<String,String>>();
+        val edgesSecteursMetiers = new ArrayList<Pair<String,String>>();
         metiersIdeoDuSup.forEach(m -> {
-            m.domaines().forEach(domaineKey
-                    -> edgesDomainesMetiers.add(Pair.of(cleanup(domaineKey), m.idMps()))
+            val idMps = m.idMps();
+            m.secteursActivite().forEach(key
+                    -> edgesSecteursMetiers.add(Pair.of(cleanup(key), idMps))
             );
             m.interets().forEach(interetKey
-                    -> edgesInteretsMetiers.add(Pair.of(cleanup(interetKey), m.idMps()))
+                    -> edgesInteretsMetiers.add(Pair.of(cleanup(interetKey), idMps))
             );
         });
-        return Pair.of(edgesDomainesMetiers, edgesInteretsMetiers);
+        return Triple.of(edgesDomainesMetiers, edgesInteretsMetiers, edgesSecteursMetiers);
     }
 
     protected static Pair<List<Pair<String, String>>, List<Pair<String, String>>> getEdgesFormations(
@@ -466,13 +481,10 @@ public class OnisepDataLoader {
         }).filter(d -> d.ideo() != null)
                 .sorted(Comparator.comparing(d -> d.domaineOnisep() + d.sousDomaineOnisep())).toList();
 
-        try(val csv = new CsvTools("domaines_sous_domaines.csv", ',')) {
+        try(val csv = CsvTools.getWriter(Constants.DIAGNOSTICS_OUTPUT_DIR + "domaines_sous_domaines.csv")) {
             csv.appendHeaders(List.of("ideo","domaine","sousDomaine"));
             for (SousDomaineWeb d : result) {
-                csv.append(d.ideo());
-                csv.append(d.domaineOnisep());
-                csv.append(d.sousDomaineOnisep());
-                csv.newLine();
+                csv.append(List.of(d.ideo(),d.domaineOnisep(),d.sousDomaineOnisep()));
             }
         }
 

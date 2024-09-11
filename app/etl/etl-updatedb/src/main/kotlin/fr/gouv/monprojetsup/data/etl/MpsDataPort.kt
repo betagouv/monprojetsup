@@ -47,5 +47,5 @@ interface MpsDataPort {
     fun getMetiersAssociesLabels(): Map<String, List<String>>
     fun getMpsIdToIdeoIds(): Map<String, List<String>>
 
-    fun exportDiagnostic()
+    fun exportDiagnostics()
 }

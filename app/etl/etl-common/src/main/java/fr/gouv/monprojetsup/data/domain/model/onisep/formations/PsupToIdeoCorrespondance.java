@@ -19,12 +19,13 @@ public record PsupToIdeoCorrespondance(
 ) {
 
     public void generateDiagnostic(Set<String> formationsIdeo) throws IOException {
-        try(val csvTools = new CsvTools("psupToIdeoCorrespondanceIdeosInconnus.csv",',')) {
+        try(val csvTools = CsvTools.getWriter(
+                Constants.DIAGNOSTICS_OUTPUT_DIR + "psupToIdeoCorrespondanceIdeosInconnus.csv")) {
             csvTools.appendHeaders(List.of(
-                    "G_FR_COD",
-                    "G_FR_LIB",
-                    "G_FL_COD",
-                    "G_FL_LIB",
+                    "G_FR_COD type formation psup",
+                    "G_FR_LIB type formation psup",
+                    "G_FL_COD filiere psup",
+                    "G_FL_LIB filiere psup",
                     "IDS_IDEO2_ORIGINAUX",
                     "IDS_IDEO2_INCONNUS"
             ));

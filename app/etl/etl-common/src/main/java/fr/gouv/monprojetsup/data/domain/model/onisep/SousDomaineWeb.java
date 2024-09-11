@@ -27,7 +27,7 @@ import java.util.Set;
         private static final LevenshteinDistance levenAlgo = new LevenshteinDistance(10);
 
         /**
-         * Extract keys from strings in the domaines fields of DataSources.METIERS_PATH like for example
+         * Extract keys from strings in the secteursActivite fields of DataSources.METIERS_PATH like for example
          * ""information-communication, audiovisuel/communication| commerce, marketing, vente/marketing, vente"
          *
          * @param domaines    the field to extract keys from

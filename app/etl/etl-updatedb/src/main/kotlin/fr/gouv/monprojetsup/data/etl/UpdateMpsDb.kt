@@ -45,7 +45,7 @@ open class Runner(
 	override fun run(vararg args: String?) {
 
 		logger.info("Création des fichiers de diagnostic")
-		mpsDataPort.exportDiagnostic()
+		mpsDataPort.exportDiagnostics()
 
 		//clearAll in this order to avoid foreign key constraint errors
 		logger.info("Vidage des tables metiers, formations, suggestions et référentiels")

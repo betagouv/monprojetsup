@@ -71,6 +71,7 @@ public class Constants {
 
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
     public static final int COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE = 4445;
+    public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
 
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;

@@ -21,19 +21,19 @@ public record MetierIdeoDuSup(
         @Nullable String urlRome,
         @Nullable String codeRome,
         @Nullable String descriptif,
-        @NotNull HashSet<String> domaines,//from DomainesPro
+        @NotNull HashSet<String> domainesWeb,
+        @NotNull HashSet<String> secteursActivite,
         @NotNull HashSet<String> interets,
         @NotNull HashSet<String> motsCles,
-
         @NotNull HashSet<FicheMetierIdeo.MetierAssocie> metiersAssocies
-
         ) {
 
     public void inheritFrom(MetierIdeoDuSup rich) {
-        domaines.addAll(rich.domaines);
+        secteursActivite.addAll(rich.secteursActivite);
         interets.addAll(rich.interets);
         motsCles.addAll(rich.motsCles);
         metiersAssocies.addAll(rich.metiersAssocies);
+        domainesWeb.addAll(rich.domainesWeb);
     }
 
     public MetierIdeoDuSup(MetiersScrapped.MetierScrap m) {
@@ -47,23 +47,22 @@ public record MetierIdeoDuSup(
                 new HashSet<>(),
                 new HashSet<>(),
                 new HashSet<>(),
+                new HashSet<>(),
                 new HashSet<>()
         );
     }
 
     public static @NotNull MetierIdeoDuSup merge(MetierIdeoSimple m, Map<String, SousDomaineWeb> sousdomainesWeb, MetierIdeoDuSup o) {
 
-        Set<String> motsCles = new HashSet<>();
-        Set<String> domaines = new HashSet<>();
-        Set<FicheMetierIdeo.MetierAssocie> metiersAssocies = new HashSet<>();
+        HashSet<String> motsCles = new HashSet<>();
+        HashSet<String> domainesWeb = new HashSet<>();
         if (o != null) {
             motsCles.addAll(o.motsCles());
-            domaines.addAll(o.domaines());
-            metiersAssocies.addAll(o.metiersAssocies());
+            domainesWeb.addAll(o.domainesWeb());
         }
 
-        domaines.addAll(m.getDomaines(sousdomainesWeb).stream().map(SousDomaineWeb::mpsId).toList());
         motsCles.addAll(m.getMotsCles());
+        domainesWeb.addAll(m.getDomaines(sousdomainesWeb).stream().map(SousDomaineWeb::ideo).toList());
 
         return new MetierIdeoDuSup(
                 m.idIdeo(),
@@ -75,27 +74,34 @@ public record MetierIdeoDuSup(
                 m.getRomeUrl(),
                 m.code_rome(),
                 o == null ? "" : o.descriptif(),
-                new HashSet<>(domaines),
-                o == null ? new HashSet<>() : o.interets(),
-                new HashSet<>(motsCles),
-                new HashSet<>(metiersAssocies)
+                domainesWeb,
+                new HashSet<>(o == null ? Set.of() : o.secteursActivite()),//les secteurs activité sont dans ls fiches
+                new HashSet<>(o == null ? Set.of() : o.interets()),//les intérêts sont dans ls fiches
+                motsCles,
+                new HashSet<>(o == null ? Set.of() : o.metiersAssocies())//les métiers associés sont dans ls fiches
         );
     }
 
     public static MetierIdeoDuSup merge(@NotNull FicheMetierIdeo m, @Nullable MetierIdeoDuSup o) {
 
-        Set<String> interets = new HashSet<>();
-        Set<String> motsCles = new HashSet<>();
-        Set<FicheMetierIdeo.MetierAssocie> metiersAssocies = new HashSet<>();
+        HashSet<String> interets = new HashSet<>();
+        HashSet<String> motsCles = new HashSet<>();
+        HashSet<String> secteursActivite = new HashSet<>();
+        HashSet<FicheMetierIdeo.MetierAssocie> metiersAssocies = new HashSet<>();
+
         if (o != null) {
             interets.addAll(o.interets());
             motsCles.addAll(o.motsCles());
+            secteursActivite.addAll(o.secteursActivite());
             metiersAssocies.addAll(o.metiersAssocies());
         }
 
         if (m.synonymes() != null) {
             motsCles.addAll(m.synonymes().stream().map(FicheFormationIdeo.Synonyme::nom_metier).toList());
         }
+
+        secteursActivite.addAll(m.getSecteursActivite().stream().map(FicheMetierIdeo.SecteurActivite::id).toList());
+
         if (m.centresInteret() != null) {
             val centesInteretsList = m.centresInteret().stream().toList();
             interets.addAll(centesInteretsList.stream().map(FicheMetierIdeo.CentreInteret::id).toList());
@@ -117,10 +123,11 @@ public record MetierIdeoDuSup(
                 o == null ? null : o.urlRome,
                 o == null ? null : o.codeRome,
                 descriptif.isBlank() && o != null ? o.descriptif : descriptif,
-                o == null ? new HashSet<>() : o.domaines(),
-                new HashSet<>(interets.stream().toList()),
-                new HashSet<>(motsCles),
-                new HashSet<>(metiersAssocies)
+                new HashSet<>(o == null ? Set.of() : o.domainesWeb()),//pas de domaines dans les fiches
+                secteursActivite,
+                interets,
+                motsCles,
+                metiersAssocies
         );
     }
 

@@ -60,7 +60,7 @@ public class ConnecteurJsonCarteSQL {
     public void recuperationDomainesOnisep(AlgoCarteEntree entree) throws VerificationException, SQLException {
 
         try (Statement stmt = connection.createStatement()) {
-            LOGGER.info("Récupération des domaines onisep v2");
+            LOGGER.info("Récupération des secteursActivite onisep v2");
             stmt.setFetchSize(1_000_000);
             String sql = SELECT +
                     "g_fl_cod,g_io_met,g_io_dis,g_io_sdm " +

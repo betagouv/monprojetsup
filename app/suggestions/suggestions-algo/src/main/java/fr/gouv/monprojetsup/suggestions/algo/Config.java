@@ -20,7 +20,6 @@ public final class Config {
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
     static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
     static final double MAX_AFFINITY_PERCENT = 0.90;
-    static final int PATHES_CACHE_SIZE = 1000;  //1000 is enough ?
 
     @Getter
     @Setter
@@ -55,7 +54,6 @@ public final class Config {
 
     /* sspecial wiehg tused to indicate that we use the score has a multiplier rather than addition */
     public static final double SPECIAL_WEIGHT_MULTIPLIER = 0.0000007777777;
-    public static final double NEUTRAL_MULTIPLIER = SPECIAL_WEIGHT_MULTIPLIER;
 
     private final Map<String, Double> weights = new HashMap<>(Map.ofEntries(
             entry(BONUS_APPRENTISSAGE, 500.0),
