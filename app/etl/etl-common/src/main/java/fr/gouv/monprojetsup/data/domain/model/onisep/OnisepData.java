@@ -24,6 +24,7 @@ public record OnisepData(
         List<Pair<String,String>> edgesFormationsDomaines,
 
         List<Pair<String,String>> edgesDomainesMetiers,
+        List<Pair<String,String>> edgesSecteursMetiers,
 
         List<Pair<String,String>> edgesMetiersFormations,
 
@@ -72,21 +73,11 @@ public record OnisepData(
         return extractMetiers(metiers, substring).stream().map(Triple::getLeft).toList();
     }
 
-
-    public Map<String, Set<String>> getSecteursVersMetiers() {
-        Map<String, Set<String>> result = new HashMap<>();
-        metiersIdeo.forEach(metier -> {
-            String keyMetier = metier.ideo();
-            metier.domaines().forEach(domaine -> result.computeIfAbsent(domaine, z -> new HashSet<>()).add(keyMetier));
-        });
-        return result;
-    }
     public @NotNull List<Pair<String,String>> getEdgesSecteursMetiers() {
-        return getSecteursVersMetiers().entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(m -> Pair.of(
-                        e.getKey(),
-                        m)))
-                .toList();
+        return metiersIdeo.stream().flatMap(metier -> metier.secteursActivite().stream().map(key -> Pair.of(metier.ideo(), key))).toList();
+    }
+    public @NotNull List<Pair<String,String>> getEdgesDomainesMetiers() {
+        return metiersIdeo.stream().flatMap(metier -> metier.domainesWeb().stream().map(key -> Pair.of(metier.ideo(), key))).toList();
     }
 
     public @NotNull List<Pair<String,String>> getEdgesInteretsToInterets() {
@@ -120,42 +111,6 @@ public record OnisepData(
     }
 
 
-
-    //in mps id style flxxx and MET_xxx
-    /*
-    public static Map<String, Set<String>> getMetiersVersFormationsMps(
-            List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
-            List<FormationIdeoDuSup> formationsIdeoSuSup,
-            List<MetierIdeoDuSup> metiersIdeoduSup
-    ) {
-
-        Map<String, FormationIdeoDuSup> formationsIdeo = formationsIdeoSuSup.stream()
-                .collect(Collectors.toMap(FormationIdeoDuSup::ideo, z -> z));
-
-        Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
-        filieresToFormationsOnisep.forEach(
-                fil -> formationsVersMetiers.put(
-                        gFlCodToMpsId(fil.gFlCod()),
-                        fil.ideoFormationsIds().stream()
-                                .map(formationsIdeo::get)
-                                .filter(Objects::nonNull)
-                                .map(FormationIdeoDuSup::metiers)
-                                .flatMap(Collection::stream)
-                                .map(Constants::cleanup)
-                                .collect(Collectors.toSet())));
-        formationsVersMetiers.values().removeIf(Set::isEmpty);
-        formationsVersMetiers.values().removeIf(Set::isEmpty);
-
-        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
-        formationsVersMetiers.forEach(
-                (f, ms) -> ms.forEach(
-                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
-                )
-        );
-        return metiersVersFormations;
-    }
-
-    */
 
 
     /* filieres to metiers */

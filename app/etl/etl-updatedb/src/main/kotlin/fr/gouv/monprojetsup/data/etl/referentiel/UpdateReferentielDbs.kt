@@ -65,7 +65,7 @@ class UpdateReferentielDbs(
         updateSpecialiteDb()
         logger.info("Mise à jour de bacs specialites db")
         updateBaccalaureatSpecialiteDb()
-        logger.info("Mise à jour de domaines db")
+        logger.info("Mise à jour de secteursActivite db")
         updateDomainesDbs()
         logger.info("Mise à jour de interets db")
         updateInteretDbs()

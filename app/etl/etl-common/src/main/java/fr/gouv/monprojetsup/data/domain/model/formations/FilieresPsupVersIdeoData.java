@@ -172,7 +172,7 @@ public record FilieresPsupVersIdeoData(
                         .filter(Objects::nonNull)
                         .forEach( f -> {
                             fil.ideoMetiersIds().addAll(f.metiers());
-                            fil.libellesOuClesSousdomainesWeb().addAll(f.libellesOuClesSousdomainesWeb());
+                            fil.domainesWeb().addAll(f.domainesWeb());
                         })
         );*/
 

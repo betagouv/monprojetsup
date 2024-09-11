@@ -206,7 +206,7 @@ public record ReferenceCases(
 
     public void resumeCsv(String filename, Map<String, String> labels) throws IOException {
 
-        try (CsvTools output = new CsvTools(filename, ',')) {
+        try (CsvTools output =  CsvTools.getWriter(filename)) {
             output.appendHeaders(List.of(
                     "Nom",
                     "Profil",
@@ -226,31 +226,32 @@ public record ReferenceCases(
                 String name = "Profil " + i;
                 i++;
                 if (refCase.name() != null && !refCase.name().contains("ProfileDTO")) name = refCase.name();
-                output.append(name);
-                output.append(toExplanationStringShort(refCase.pf(), ""));
+                val line = new ArrayList<String >();
+                line.add(name);
+                line.add(toExplanationStringShort(refCase.pf(), ""));
 
-                output.append(toExplanations(
+                line.add(toExplanations(
                         refCase.pf().interests().stream()
                         .filter(Helpers::isInteret
                         )
                         .toList(),"", labels));
 
-                output.append(toExplanations(refCase.pf().interests().stream()
+                line.add(toExplanations(refCase.pf().interests().stream()
                         .filter(Helpers::isTheme
                         )
                         .toList(),"", labels));
 
-                output.append(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), "", labels));
-                output.append(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), "", labels));
-                output.append(toExplanationString(refCase.pf().suggRejected(), "", labels));
-                output.append(
+                line.add(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), "", labels));
+                line.add(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), "", labels));
+                line.add(toExplanationString(refCase.pf().suggRejected(), "", labels));
+                line.add(
                         refCase.expectations() == null ? "" :
                                 String.join("\n", refCase.expectations())
                 );
-                output.append(toExplanationString(refCase.suggestions().stream().map(Suggestion::toDTO).toList(), "", labels));
-                output.append("");
-                output.append("");
-                output.newLine();
+                line.add(toExplanationString(refCase.suggestions().stream().map(Suggestion::toDTO).toList(), "", labels));
+                line.add("");
+                line.add("");
+                output.append(line);
             }
         }
     }

@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.domain.Constants.DIAGNOSTICS_OUTPUT_DIR;
+
 @SuppressWarnings("unused")
 @Slf4j
 @Component
-public class AnalyzeSuggestionsData {
+public class AuditSuggestionsData {
 
     private final Map<String, String> labels;
 
@@ -41,7 +43,7 @@ public class AnalyzeSuggestionsData {
     private final Set<String> formationsIds;
 
     @Autowired
-    public AnalyzeSuggestionsData(
+    public AuditSuggestionsData(
             SuggestionsData data,
             AlgoSuggestions algo,
             DomainesDb domainesDb,
@@ -83,11 +85,11 @@ public class AnalyzeSuggestionsData {
         return formationsIds.contains(key);
     }
 
-    public void analyze() throws Exception {
+    public void outputDiagnostics() throws Exception {
 
-        outputFormationsAnalysis();
+        outputFormationDiagnostics();
 
-        outputMetiersanalysis();
+        outputMetiersDiagnostics();
 
         /*
         outputRelatedToHealth();
@@ -100,7 +102,7 @@ public class AnalyzeSuggestionsData {
         */
     }
 
-    private void outputMetiersanalysis() throws IOException {
+    private void outputMetiersDiagnostics() throws IOException {
 
         val metiersedges = edges.edges().entrySet().stream()
                 .filter(e -> isMetier(e.getKey()))
@@ -108,47 +110,61 @@ public class AnalyzeSuggestionsData {
                 .sorted(Comparator.comparing(Triple::getMiddle))
                 .toList();
 
-        Serialisation.toJsonFile("metiers_sans_interets_ni_formation.json",
-                metiersedges.stream()
-                        .filter(e -> e.getRight().stream().noneMatch(f -> isInteret(f) || isFormation(f)))
-                        .map(Triple::getMiddle)
-                        .toList(),
-                true);
+        outputMetierDiagnostic(
+                metiersedges.stream().filter(e -> e.getRight().stream().noneMatch(this::isInteret)).map(Triple::getMiddle).toList(),
+                DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_centres_interets.csv"
+                );
+
+        outputMetierDiagnostic(
+                metiersedges.stream().filter(e -> e.getRight().stream().noneMatch(this::isFormation)).map(Triple::getMiddle).toList(),
+                DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_formation_mps.csv"
+        );
+
+        outputMetierDiagnostic(
+                metiersedges.stream().filter(e -> e.getRight().stream().noneMatch(this::isDomaine)).map(Triple::getMiddle).toList(),
+                DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_domaines.csv"
+        );
 
     }
 
+    private void outputMetierDiagnostic(List<String> list, String fileName) throws IOException {
+        try(CsvTools tools = CsvTools.getWriter(fileName)) {
+            tools.append(List.of("label"));
+            for (String s : list) {
+                tools.append(List.of(s));
+            }
+        }
+    }
 
-    private void outputFormationsAnalysis() throws IOException {
 
-        val formationsEdges = edges.edges().entrySet().stream()
+    private void outputFormationDiagnostics() throws IOException {
+
+        val formationsEdges =
+                edges.edges().entrySet().stream()
                 .filter(e -> isFormation(e.getKey()))
                 .map(e -> Triple.of(e.getKey(), getDebugLabel(e.getKey()), e.getValue()))
                 .sorted(Comparator.comparing(Triple::getMiddle))
                 .toList();
 
 
-        Serialisation.toJsonFile("formations_sans_domaines.json",
-                formationsEdges.stream()
-                        .filter(e -> e.getRight().stream().noneMatch(this::isDomaine))
-                        .map(Triple::getMiddle)
-                        .toList(),
-                true);
+        exportDiagnostic(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations.csv");
 
-        Serialisation.toJsonFile("formations_sans_domaines_ni_metier.json",
-                formationsEdges.stream()
-                        .filter(e -> e.getRight().stream().noneMatch(f -> isDomaine(f) || isMetier(f)))
-                        .map(Triple::getMiddle)
-                        .toList(),
-                true);
+        val sansDomaines = formationsEdges.stream()
+                .filter(e -> e.getRight().stream().noneMatch(this::isDomaine))
+                .toList();
+        exportDiagnostic(sansDomaines, DIAGNOSTICS_OUTPUT_DIR + "formations_sans_domaines.csv");
 
-        Serialisation.toJsonFile("formations_sans_domaines.json",
-                formationsEdges.stream()
-                        .filter(e -> e.getRight().stream().noneMatch(this::isDomaine))
-                        .map(Triple::getMiddle)
-                        .toList(),
-                true);
+        val sansMetiers = formationsEdges.stream()
+                .filter(e -> e.getRight().stream().noneMatch(this::isMetier))
+                .toList();
+        exportDiagnostic(sansMetiers, DIAGNOSTICS_OUTPUT_DIR + "formations_sans_metiers.csv");
 
-        try (val csvTools = new CsvTools("formations.csv", ',')) {
+    }
+
+    private void exportDiagnostic(List<Triple<String, String, Set<String>>> formationsEdges, String filename) throws IOException {
+
+
+        try (val csvTools = CsvTools.getWriter(filename)) {
             csvTools.appendHeaders(List.of(
                     "remarque",
                     "clé MPS",
@@ -156,12 +172,15 @@ public class AnalyzeSuggestionsData {
                     "formations ideos",
                     "formations psup",
                     "metiers",
-                    "domaines",
+                    "domainesWeb",
                     "liens psup",
                     "liens onisep",
-                    "liens autre"
+                    "liens autre",
+                    "capacité accueil"
             ));
-            for (Triple<String, String, Set<String>> keyLabelEdgesFormation : formationsEdges) {
+            for (val keyLabelEdgesFormation : formationsEdges) {
+
+                val key = keyLabelEdgesFormation.getLeft();
                 val domainess = keyLabelEdgesFormation.getRight().stream()
                         .filter(this::isDomaine)
                         .map(this::getDebugLabel)
@@ -180,14 +199,13 @@ public class AnalyzeSuggestionsData {
                         .map(LienEntity::getUrl)
                         .sorted()
                         .toList();
-                val key = keyLabelEdgesFormation.getLeft();
-                val remarque = new StringBuilder();
-                if(domainess.isBlank()) remarque.append("Pas de domaine\n");
-                if(metierss.isBlank()) remarque.append("Pas de métiers\n");
-                if(liens.isEmpty()) remarque.append("Pas de liens\n");
+                val remarque = new ArrayList<String>();
+                if(domainess.isBlank()) remarque.add("Pas de domaine");
+                if(metierss.isBlank()) remarque.add("Pas de métiers");
+                if(liens.isEmpty()) remarque.add("Pas de liens");
                 csvTools.append(
                         List.of(
-                                remarque.toString(),
+                                String.join(" - ", remarque),
                                 key,
                                 labels.get(key),
                                 String.join("\n", Objects.requireNonNull(formation.getFormationsIdeo()).stream().map(this::getDebugLabel).toList()),
@@ -196,12 +214,11 @@ public class AnalyzeSuggestionsData {
                                 domainess,
                                 liens.stream().filter(s -> s.contains("parcoursup")).collect(Collectors.joining("\n")),
                                 liens.stream().filter(s -> s.contains("avenirs")).collect(Collectors.joining("\n")),
-                                liens.stream().filter(s -> !s.contains("parcoursup") && !s.contains("avenirs")).collect(Collectors.joining("\n"))
+                                liens.stream().filter(s -> !s.contains("parcoursup") && !s.contains("avenirs")).collect(Collectors.joining("\n")),
+                                Integer.toString(formation.getCapacite())
                         ));
             }
         }
-
-
     }
 
 

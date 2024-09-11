@@ -24,7 +24,7 @@ public abstract class EdgesPort {
     public List<Edge> getEdgesMetiersFormationsPsup() {
         return retrieveEdgesOfType(TYPE_EDGE_METIERS_FORMATIONS_PSUP);
     }
-    public List<Edge> getEdgesThematiquesMetiers() {
+    public List<Edge> getEdgesDomainesMetiers() {
         return retrieveEdgesOfType(TYPE_EDGE_DOMAINES_METIERS);
     }
 

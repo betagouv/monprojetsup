@@ -234,7 +234,7 @@ public class SuggestionsData {
     }
 
     public List<Edge> edgesDomainesMetiers() {
-        return edgesPort.getEdgesThematiquesMetiers();
+        return edgesPort.getEdgesDomainesMetiers();
     }
 
     public List<Edge> edgesSecteursMetiers() {
