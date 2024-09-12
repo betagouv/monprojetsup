@@ -20,7 +20,6 @@ export const localeFR = {
   ENTÊTE: {
     DESCRIPTION_SERVICE: app.DESCRIPTION,
     SE_CONNECTER: "Se connecter",
-    MON_ESPACE: "Mon espace",
     PLATEFORME_AVENIRS: "Plateforme Avenir(s)",
   },
   PIED_DE_PAGE: {

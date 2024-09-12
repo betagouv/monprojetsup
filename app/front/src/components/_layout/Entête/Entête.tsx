@@ -81,12 +81,10 @@ const Entête = () => {
                     {utilisateur.type ? (
                       <li>
                         <LienInterne
-                          ariaLabel={`${utilisateur.prénom} ${utilisateur.nom}` ?? i18n.ENTÊTE.MON_ESPACE}
+                          ariaLabel={`${utilisateur.prénom} ${utilisateur.nom}`}
                           href="/profil"
                         >
-                          <span className="fr-btn fr-icon-user-fill">
-                            {`${utilisateur.prénom} ${utilisateur.nom}` ?? i18n.ENTÊTE.MON_ESPACE}
-                          </span>
+                          <span className="fr-btn fr-icon-user-fill">{`${utilisateur.prénom} ${utilisateur.nom}`}</span>
                         </LienInterne>
                       </li>
                     ) : (
