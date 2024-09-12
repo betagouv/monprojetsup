@@ -13,7 +13,7 @@
 
 	<groupId>fr.gouv.monprojetsup</groupId>
 	<artifactId>suggestions</artifactId>
-	<version>1.4</version>
+	<version>1.4.2</version>
     <packaging>pom</packaging>
 
 	<description>suggestions personnalisées dans MonProjetSup</description>
@@ -29,7 +29,6 @@
 		<java.version>19</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
-		<mps.suggestions.version>1.4.1</mps.suggestions.version>
 	</properties>
 
 
@@ -143,6 +142,7 @@
 			<plugin>
 				<groupId>com.github.gantsign.maven</groupId>
 				<artifactId>ktlint-maven-plugin</artifactId>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>format-and-check</id>
