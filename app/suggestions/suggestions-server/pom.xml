@@ -6,17 +6,17 @@
     <parent>
         <groupId>fr.gouv.monprojetsup</groupId>
         <artifactId>suggestions</artifactId>
-        <version>1.4</version>
+        <version>1.4.2</version>
     </parent>
 
     <artifactId>suggestions-server</artifactId>
-    <version>${mps.suggestions.version}</version>
+    <version>1.4.2</version>
 
     <dependencies>
         <dependency>
             <groupId>fr.gouv.monprojetsup</groupId>
             <artifactId>suggestions-algo</artifactId>
-            <version>${mps.suggestions.version}</version>
+            <version>1.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
