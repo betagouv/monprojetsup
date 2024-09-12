@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds
 import org.assertj.core.api.Assertions.assertThat
@@ -45,8 +44,8 @@ class FormationsIdeoDuSupTest {
 
     @Test
     fun `Les formations ideo du sup incluent prépa lettre et cette formation a des metiers`() {
-        assertThat(formationsIdeoDuSup).containsKey(Constants.PREPA_LETTRE_IDEO_CODE)
-        val prepaLettre = formationsIdeoDuSup[Constants.PREPA_LETTRE_IDEO_CODE]!!
+        assertThat(formationsIdeoDuSup).containsKey(TestData.CPGE_LETTRE_IDEO_CODE)
+        val prepaLettre = formationsIdeoDuSup[TestData.CPGE_LETTRE_IDEO_CODE]!!
         assertThat(prepaLettre.metiers).isNotEmpty
     }
 

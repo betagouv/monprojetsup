@@ -1,7 +1,11 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
-import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.Constants.*
+import fr.gouv.monprojetsup.data.TestData.Companion.COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE
+import fr.gouv.monprojetsup.data.TestData.Companion.CPGE_LETTRES_PSUP_FL_COD
+import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_GESTION_PSUP_FR_COD
+import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD
+import fr.gouv.monprojetsup.data.domain.Constants.ECOLE_COMMERCE_PSUP_FR_COD
+import fr.gouv.monprojetsup.data.domain.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoData
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup
@@ -55,7 +59,7 @@ class PsupToIdeoCorrespondanceTest {
     @Test
     fun `CPGE lettres est indexée et mène à des métiers`() {
         //c'est le mapping CPGE - licence qui crée les assciations métiers
-        val cpge = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(Constants.CPGE_LETTRES_PSUP_FL_COD)]
+        val cpge = filieresPsupToFormationsMetiersIdeo[gFlCodToMpsId(CPGE_LETTRES_PSUP_FL_COD)]
         assertThat(cpge).isNotNull
         assertThat(cpge!!.ideoMetiersIds).isNotEmpty()
     }

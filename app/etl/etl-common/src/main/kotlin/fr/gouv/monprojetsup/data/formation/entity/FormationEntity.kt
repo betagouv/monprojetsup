@@ -56,7 +56,7 @@ class FormationEntity {
 
     /** begin ajouts suggestions **/
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)  // Cascading enabled here
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)  // Cascading enabled here
     @JoinColumn(name = "id_formation")
     lateinit var voeux: List<VoeuEntity>
 

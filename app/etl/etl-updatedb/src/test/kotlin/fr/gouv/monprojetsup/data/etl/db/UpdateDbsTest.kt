@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.db
 
+import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
 import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
@@ -39,11 +40,11 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
-        fun `Plus de 80 pour 100 des formations en base doivent réussir le test d'intégrité`() {
+        fun `La plupart des formations en base doivent réussir le test d'intégrité`() {
             updateFormationDbs.updateFormationDbs()
             val formations = formationsdb.findAll()
             val nbFormations = formations.size
-            assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(20 * nbFormations / 100)
+            assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE * nbFormations / 100)
         }
 
         @Test

@@ -56,8 +56,8 @@ class EdgesTest {
             assertThat(formationsWithAtLEastOneMetier).contains(psup)
         }
         assertThat(listOf(
-            Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD1),
-            Constants.gFlCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FL_COD2)
+            Constants.gFlCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FL_COD1),
+            Constants.gFlCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FL_COD2)
         )).allSatisfy { psup ->
                 assertThat(formationsWithAtLeastOneDomaine).contains(psup)
                 assertThat(formationsWithAtLEastOneMetier).contains(psup)
