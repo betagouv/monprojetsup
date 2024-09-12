@@ -55,10 +55,15 @@ jobs:
           distribution: '${{ env.JAVA_VENDOR }}' 
           java-version: '${{ env.JAVA_VERSION }}'
 
+      - name: Create data directory
+        run: mkdir -p ${{ runner.temp }}/mps_data
+
+      - name: Increase Git buffer size
+        run: git config --global http.postBuffer 524288000
+
       - name: Fetch data Repository
-        run: |
-          mkdir -p ${{ runner.temp }}/mps_data
-          git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
+        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
+
       - name: Run test command
         run: mvn test
         env:

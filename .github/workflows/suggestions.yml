@@ -55,12 +55,16 @@ jobs:
           distribution: '${{ env.JAVA_VENDOR }}' 
           java-version: '${{ env.JAVA_VERSION }}'
 
-      - name: Fetch data Repository
-        run: |
-          mkdir -p ${{ runner.temp }}/mps_data
-          git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
+      - name: Create data directory
+        run: mkdir -p ${{ runner.temp }}/mps_data
 
-      - name: Install etl-common depedency
+      - name: Increase Git buffer size
+        run: git config --global http.postBuffer 524288000
+
+      - name: Fetch data Repository
+        run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
+
+      - name: Install etl-common dependency
         run: mvn -f ../etl/pom.xml clean compile install -DskipTests=true
 
       - name: Initialize test db with reference data
