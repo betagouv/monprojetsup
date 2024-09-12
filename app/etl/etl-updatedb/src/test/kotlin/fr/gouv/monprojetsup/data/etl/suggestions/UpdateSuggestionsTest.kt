@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
+import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.db.BDDRepositoryTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -45,9 +46,9 @@ class UpdateSuggestionsTest : BDDRepositoryTest() {
     }
 
     @Test
-    fun `La table des edges doit contenir au moins 1000 arètes`() {
+    fun `La table des edges doit contenir suffisamment d arètes`() {
         updateSuggestionsDbs.updateEdgesDb()
-        assertThat(edgesDb.count()).isGreaterThanOrEqualTo(1000)
+        assertThat(edgesDb.count()).isGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_SUGGESTIONS_GRAPH)
     }
 
 }

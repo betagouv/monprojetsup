@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.port
 
+import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.domain.Constants
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
@@ -17,9 +18,9 @@ class FormationsMpsTests {
     lateinit var mpsDataPort: MpsDataPort
 
     @Test
-    fun `Il y a au moins 200 formations MPS`() {
+    fun `Il y a un nombre important de formations MPS`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
-        assertThat(formationsIds).hasSizeGreaterThanOrEqualTo(200)
+        assertThat(formationsIds).hasSizeGreaterThanOrEqualTo(TestData.MIN_NB_FORMATIONS_MPS)
     }
 
     @Test
@@ -32,12 +33,12 @@ class FormationsMpsTests {
     }
 
     @Test
-    fun `au plus 10 formations n'ont pas de durée`() {
+    fun `au plus 1 formation n'a pas de durée`() {
         val formationsIds = mpsDataPort.getFormationsMpsIds()
         assert(formationsIds.isNotEmpty())
         val durees = mpsDataPort.getDurees()
         val nbSansDuree = formationsIds.count { durees[it] == null }
-        assertThat(nbSansDuree).isLessThan(10)
+        assertThat(nbSansDuree).isLessThan(TestData.MAX_NB_FORMATIONS_SANS_DUREE)
 
     }
 
@@ -88,10 +89,10 @@ class FormationsMpsTests {
         fun `CUPGE - Droit-économie-gestion hérite de tous les métiers des écoles de commerce`() {
             //c'est le mapping CPGE - licence qui crée les assciations métiers
             val mpsIds = mpsDataPort.getFormationsMpsIds()
-            val cupgeEcoGestionMpsId = Constants.gFrCodToMpsId(Constants.CUPGE_ECO_GESTION_PSUP_FR_COD)
+            val cupgeEcoGestionMpsId = Constants.gFrCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FR_COD)
             assertThat(mpsIds).contains(cupgeEcoGestionMpsId)
 
-            val ecoleCommerceMpsId = Constants.gFrCodToMpsId(Constants.ECOLE_COMMERCE_PSUP_FR_COD)
+            val ecoleCommerceMpsId = Constants.gFrCodToMpsId(TestData.ECOLE_COMMERCE_PSUP_FR_COD)
             assertThat(mpsIds).contains(ecoleCommerceMpsId)
 
             val formationsVersMetiers = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies()
@@ -113,7 +114,7 @@ class FormationsMpsTests {
     fun `CUPGE - Sciences, technologie, santé ne contient pas le mot-clé commerce international `() {
         val mpsIds = mpsDataPort.getFormationsMpsIds()
         val cupgeSciencesTechnoSanteMpsId =
-            Constants.gFrCodToMpsId(Constants.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD)
+            Constants.gFrCodToMpsId(TestData.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD)
         assertThat(mpsIds).contains(cupgeSciencesTechnoSanteMpsId)
         assertThat(mpsDataPort.getMotsClesFormations()[cupgeSciencesTechnoSanteMpsId]).doesNotContain("commerce international")
     }
@@ -157,7 +158,7 @@ class FormationsMpsTests {
 
 
         @Test
-        fun `au moins 90 pour cent des formations hors apprentissage ont des stats non vides`() {
+        fun `la plupart des formations hors apprentissage ont des stats non vides`() {
             val stats = mpsDataPort.getStatsFormation()
             val mpsids = mpsDataPort.getFormationsMpsIds()
             val labels = mpsDataPort.getFormationsLabels()
@@ -168,12 +169,12 @@ class FormationsMpsTests {
             val nbTotalHosApprentissage = labels.filter { !it.value.contains("apprentissage", ignoreCase = true) }.size
             val formationsSansStatsNb = stats.filter { !it.value.hasStatsAdmissions() }.keys
 
-            assertThat(formationsSansStatsNb).hasSizeLessThanOrEqualTo(5 * nbTotalHosApprentissage / 100)
+            assertThat(formationsSansStatsNb).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_SANS_STATS_HORS_APPRENTISSAGE * nbTotalHosApprentissage / 100)
 
         }
 
         @Test
-        fun `au moins 60 pour cent des formations ont des stats complètes`() {
+        fun `la plupart des formations ont des stats complètes`() {
             val stats = mpsDataPort.getStatsFormation()
             val mpsids = mpsDataPort.getFormationsMpsIds()
 
@@ -181,21 +182,21 @@ class FormationsMpsTests {
             assertThat(mpsids.toSet()).containsAll(stats.keys)
 
             val nbTotal = mpsids.size
-            val formationsAvecStatsNb = stats.filter { it.value.hasFullStats() }.keys
+            val formationsSansStats = stats.filter { !it.value.hasFullStats() }.keys
 
-            assertThat(formationsAvecStatsNb).hasSizeGreaterThanOrEqualTo(60 * nbTotal / 100)
+            assertThat(formationsSansStats).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_SANS_STATS_COMPLETES * nbTotal / 100)
 
         }
 
         @Test
-        fun `Au moins 65 pour cent des las ont des stats non vides`() {
+        fun `LA plupart des des las ont des stats non vides`() {
             val lasKeys = mpsDataPort.getLasToGenericIdMapping().keys
             val lasSansStatsAdmissions = mpsDataPort.getStatsFormation()
                 .filter { lasKeys.contains(it.key) }
                 .filter { !it.value.hasStatsAdmissions() }
                 .map { it.key }
             val nbTotal = lasKeys.size
-            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(35 * nbTotal / 100)
+            assertThat(lasSansStatsAdmissions).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_LAS_AVEC_STATS_VIDES * nbTotal / 100)
         }
 
 

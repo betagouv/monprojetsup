@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.port
 
+import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -16,12 +17,12 @@ class MetiersMpsTests {
     lateinit var mpsDataPort: MpsDataPort
 
     @Test
-    fun `70 pourcent des métiers ont au moins une formation associée`() {
+    fun `la plupart des métiers ont au moins une formation associée`() {
         val metiersIdsRef = mpsDataPort.getMetiersMpsIds()
         Assertions.assertThat(metiersIdsRef).isNotEmpty()
         val metiersAvecauMoinsuneformation  = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies().flatMap { (_,b) -> b }.toSet()
-        val pctOk = 100 * metiersAvecauMoinsuneformation.size / metiersIdsRef.size
-        Assertions.assertThat(pctOk).isGreaterThan(70)
+        val metiersSansFormation = metiersIdsRef.filter { !metiersAvecauMoinsuneformation.contains(it) }.toSet()
+        Assertions.assertThat(metiersSansFormation).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_METIERS_SANS_FORMATION_ASSOCIEE * metiersIdsRef.size / 100)
     }
 
 }

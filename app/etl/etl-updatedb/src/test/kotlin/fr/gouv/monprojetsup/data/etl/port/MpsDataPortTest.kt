@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.port
 
+import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
@@ -39,11 +40,11 @@ class MpsDataPortTest {
 
 
     @Test
-    fun `moins de 200 voeux n'ont pas de coordonnées gps`() {
+    fun `peu de voeux n'ont pas de coordonnées gps`() {
         val voeux = mpsDataPort.getVoeux()
         assert(voeux.isNotEmpty())
         val nbSansCoordonnees = voeux.flatMap { it.value }.count { it.lat == null || it.lng == null }
-        assertThat(nbSansCoordonnees).isLessThan(200)
+        assertThat(nbSansCoordonnees).isLessThan(TestData.MAX_NB_VOEUX_SANS_COORDONNEES_GPS)
     }
 
 
