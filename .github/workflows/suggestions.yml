@@ -30,6 +30,8 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
+    env:
+      MPS_DATA_DIR: ${{ runner.temp }}/mps_data
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -55,21 +57,27 @@ jobs:
           distribution: '${{ env.JAVA_VENDOR }}' 
           java-version: '${{ env.JAVA_VERSION }}'
 
-      - name: Install etl-common depedency
-        run: mvn -f ../etl/pom.xml clean compile install -DskipTests=true
-
       - name: Fetch data Repository
         run: |
           mkdir -p ${{ runner.temp }}/mps_data
-          git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
+          git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} $MPS_DATA_DIR
 
+      - name: Install etl-common depedency
+        run: mvn -f ../etl/pom.xml clean compile install -DskipTests=true
+
+      - name: Initialize test db with reference data
+        run: mvn -f ../etl/pom.xml clean compile -f../etl/etl-updatedb/pom.xml exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt
+        env:
+          DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
+          DB_USER: ${{ env.APP_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.APP_DB_PASSWORD }}
+	  
       - name: Run test command
         run: mvn test
         env:
           DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
           DB_USER: ${{ env.APP_DB_USERNAME }}
           DB_PASSWORD: ${{ env.APP_DB_PASSWORD }}
-          MPS_DATA_DIR: ${{ runner.temp }}/mps_data/
 
 
 
