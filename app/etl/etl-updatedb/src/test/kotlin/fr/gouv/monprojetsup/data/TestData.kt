@@ -27,12 +27,15 @@ class TestData {
         const val COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE: Int = 4445
 
         private const val CMI_MECA_FL_COD_PSUP: Int = 4041
+        private const val CMI_SVT_FL_COD_PSUP: Int = 4039
         private const val BTS_AERONAUTIQUE_FL_COD_PSUP: Int = 393
         private const val BTS_AERONAUTIQUE_IDEO_COD: String = "FOR.9627"
-        private const val CMI_MECA_IDEO_COD: String = "FOR.5013"
+        private const val CMI_MECA_IDEO_COD: String = "FOR.10294"
+        private const val CMI_SVT_IDEO_COD: String = "FOR.4980"
         val psupToIdeoReference = mapOf(
             Constants.gFlCodToMpsId(BTS_AERONAUTIQUE_FL_COD_PSUP) to BTS_AERONAUTIQUE_IDEO_COD,
-            Constants.gFlCodToMpsId(CMI_MECA_FL_COD_PSUP) to CMI_MECA_IDEO_COD
+            Constants.gFlCodToMpsId(CMI_SVT_FL_COD_PSUP) to CMI_SVT_IDEO_COD
+            //Constants.gFlCodToMpsId(CMI_MECA_FL_COD_PSUP) to CMI_MECA_IDEO_COD
         )
 
     }
