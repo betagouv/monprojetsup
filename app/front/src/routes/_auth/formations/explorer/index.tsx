@@ -4,6 +4,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/_auth/formations/explorer/")({
   loader: async ({ context: { queryClient } }) => {
     queryClient.removeQueries({ queryKey: ["formationsSuggestions"] });
+    queryClient.removeQueries({ queryKey: ["formations", "rechercher"] });
     const suggestions = await queryClient.ensureQueryData(suggérerFormationsQueryOptions);
 
     throw redirect({
