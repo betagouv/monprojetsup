@@ -38,7 +38,7 @@ class PsupToIdeoCorrespondanceTest {
                 formationsIdeoDuSup
             ).associateBy { gFlCodToMpsId(it.gFlCod) }
 
-        val sousDomainesWeb: List<SousDomaineWeb> = ArrayList(OnisepDataLoader.loadDomainesSousDomaines())
+        val sousDomainesWeb: List<SousDomaineWeb> = ArrayList(OnisepDataLoader.loadDomainesSousDomaines(sources))
         metiersIdeoDuSup = OnisepDataLoader.loadMetiers(formationsIdeoDuSup.values, sousDomainesWeb, sources)
     }
 

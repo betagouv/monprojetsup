@@ -25,7 +25,7 @@ class FormationsIdeoDuSupTest {
     @Test
     fun `Chaque formation ideo du sup a au moins un domaine associé`() {
         // Given
-        val sousDomainesWeb = ArrayList(OnisepDataLoader.loadDomainesSousDomaines())
+        val sousDomainesWeb = ArrayList(OnisepDataLoader.loadDomainesSousDomaines(sources))
         val sousdomainesWebByIdeoKey = sousDomainesWeb.associateBy { it.ideo }
         // Then
         assertThat(formationsIdeoDuSup).isNotEmpty()

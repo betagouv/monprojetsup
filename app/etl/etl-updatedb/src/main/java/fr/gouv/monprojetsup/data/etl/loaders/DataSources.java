@@ -17,6 +17,12 @@ public class DataSources {
     public static final String SPECIALITES_FILENAME = "parcoursup/specialites.json";
 
     /* Ideo data */
+
+    public static final String IDEO_OD_FORMATIONS_FICHES_PATH = "ideo/5fe07a9ecc960.zip";
+    public static final String IDEO_OD_FORMATIONS_SIMPLE_PATH = "ideo/5fa591127f501.json";
+    public static final String IDEO_OD_METIERS_SIMPLE_PATH = "ideo/5fa5949243f97.json";
+    public static final String IDEO_OD_METIERS_FICHES_PATH = "ideo/5fe0808a2da6f.zip";
+    public static final String IDEO_OD_DOMAINES_PATH = "ideo/5fa58d750a60c.json";
     public static final String IDEO_OD_FORMATIONS_FICHES_URI = "https://api.opendata.onisep.fr/downloads/5fe07a9ecc960/5fe07a9ecc960.zip";
     public static final String IDEO_OD_FORMATIONS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa591127f501/5fa591127f501.json";
     public static final String IDEO_OD_METIERS_SIMPLE_URI = "https://api.opendata.onisep.fr/downloads/5fa5949243f97/5fa5949243f97.json";
