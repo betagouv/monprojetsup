@@ -17,6 +17,7 @@
 		<module>etl-common</module>
 		<module>etl-psup</module>
 		<module>etl-updatedb</module>
+		<module>etl-ideo</module>
     </modules>
     <properties>
 		<etl.version>1.4.2</etl.version>

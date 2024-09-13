@@ -39,9 +39,9 @@ public class Serialisation {
         }
     }
 
-    private static InputStream getRemoteFile(String urlString, String dataDir) throws IOException, InterruptedException {
-        int i = urlString.lastIndexOf('/') + 1;
+    public static InputStream getRemoteFile(String urlString, String dataDir) throws IOException, InterruptedException {
         String dirName = dataDir;
+        int i = urlString.lastIndexOf('/') + 1;
         String cacheName = dirName + "/" + urlString.substring(i);
         if (dataDir != null && Files.exists(Path.of(cacheName))) {
             LOGGER.warning("Utilisation du cache pour " + urlString + " depuis " + cacheName);
