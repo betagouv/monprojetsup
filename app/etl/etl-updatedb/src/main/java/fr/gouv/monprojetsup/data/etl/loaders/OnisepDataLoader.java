@@ -144,12 +144,18 @@ public class OnisepDataLoader {
             Map<String, Set<String>> richIdeoToPoorIdeo) {
         richIdeoToPoorIdeo.forEach((richId, poorsId) -> {
             val rich = formationsIdeoDuSup.get(richId);
-            if (rich == null) throw new RuntimeException(FORMATION_INCONNUE + richId);
-            poorsId.forEach(poorId -> {
-                val poor = formationsIdeoDuSup.get(poorId);
-                if (poor == null) throw new RuntimeException(FORMATION_INCONNUE + poorId);
-                poor.inheritFrom(rich);
-            });
+            if (rich == null) {
+                LOGGER.warning(FORMATION_INCONNUE + " légataire " + richId);
+            } else {
+                poorsId.forEach(poorId -> {
+                    val poor = formationsIdeoDuSup.get(poorId);
+                    if (poor == null) {
+                        LOGGER.warning(FORMATION_INCONNUE + " héritier " +  poorId);
+                    } else {
+                        poor.inheritFrom(rich);
+                    }
+                });
+            }
         });
     }
 
@@ -236,7 +242,7 @@ public class OnisepDataLoader {
                         !formationsIdeoDuSup.contains(id))
                 .findAny();
         if (ligneAvecCodeInconnu.isPresent()) {
-            throw new RuntimeException(FORMATION_INCONNUE + ligneAvecCodeInconnu.get());
+            LOGGER.info("Formation inconnue " + ligneAvecCodeInconnu.get() + " ignorée dans " + IDEO_HERITAGES_PATH);
         }
 
         //l'existence des headers est garantie
