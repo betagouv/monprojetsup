@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.suggestions.export
 
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import fr.gouv.monprojetsup.data.referentiel.entity.*
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -44,6 +45,10 @@ interface InteretsSousCategorieDb :
 @Repository
 interface MetiersDb :
     JpaRepository<MetierEntity, String>
+
+@Repository
+interface EdgesDb :
+    JpaRepository<SuggestionsEdgeEntity, String>
 
 /* already defined elsewhere
 @Repository

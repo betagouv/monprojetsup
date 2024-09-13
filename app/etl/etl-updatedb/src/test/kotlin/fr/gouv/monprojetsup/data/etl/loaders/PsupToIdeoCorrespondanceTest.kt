@@ -10,14 +10,13 @@ import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoDat
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.onisep.SousDomaineWeb
-import fr.gouv.monprojetsup.data.domain.onisep.OnisepDataTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [OnisepDataTest::class, DataSources::class] )
+@SpringBootTest(classes = [OnisepDataLoaderTest::class, DataSources::class] )
 class PsupToIdeoCorrespondanceTest {
 
     private lateinit var formationsIdeoDuSup: Map<String, FormationIdeoDuSup>
