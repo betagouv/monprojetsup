@@ -1,11 +1,10 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
 import Tag from "@/components/_dsfr/Tag/Tag";
-import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { actionsFicheFormationStore } from "@/features/formation/ui/store/useFicheFormation/useFicheFormation";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
 
 const CarteFormation = ({
   id,
@@ -15,8 +14,7 @@ const CarteFormation = ({
   communes,
   sélectionnée = false,
 }: CarteFormationProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-
+  const { changerFormationAffichéeId } = actionsFicheFormationStore();
   const { data: élève } = useQuery(élèveQueryOptions);
 
   const NOMBRE_MÉTIERS_À_AFFICHER = 3;
@@ -34,34 +32,21 @@ const CarteFormation = ({
     return élève?.formationsMasquées?.includes(id) ?? false;
   };
 
-  useEffect(() => {
-    if (ref.current && sélectionnée) {
-      ref.current.scrollIntoView({ block: "center" });
-      window.scrollTo({ top: 0 });
-    }
-  }, [sélectionnée]);
-
   return (
-    <div
-      className={`fr-enlarge-link grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 shadow-md ${classEnFonctionDeLaSélection()}`}
-      ref={ref}
+    <button
+      className={`grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
+      onClick={() => changerFormationAffichéeId(id)}
+      type="button"
     >
       <div className="grid grid-flow-col items-baseline justify-between gap-1">
-        <LienInterne<"/formations/$formationId">
-          ariaLabel={nom}
-          href="/formations/$formationId"
-          paramètresPath={{ formationId: id }}
-          variante="neutre"
-        >
-          <div className="*:mb-0">
-            <Titre
-              niveauDeTitre="h2"
-              styleDeTitre="h4"
-            >
-              {nom}
-            </Titre>
-          </div>
-        </LienInterne>
+        <div className="*:mb-0">
+          <Titre
+            niveauDeTitre="h2"
+            styleDeTitre="h4"
+          >
+            {nom}
+          </Titre>
+        </div>
         {estUneFormationFavorite() && (
           <div>
             <span
@@ -129,7 +114,7 @@ const CarteFormation = ({
           </ul>
         </div>
       )}
-    </div>
+    </button>
   );
 };
 

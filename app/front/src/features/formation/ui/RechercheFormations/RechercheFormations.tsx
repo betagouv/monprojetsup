@@ -1,17 +1,17 @@
 import useRechercheFormations from "./useRechercheFormations";
-import ChampDeRecherche from "@/components/_dsfr/ChampDeRecherche/ChampDeRecherche";
+import ChampDeRechercheFormulaire from "@/components/ChampDeRechercheFormulaire/ChampDeRechercheFormulaire";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const RechercheFormations = () => {
-  const { statusChampDeRecherche, debouncedSetRecherche } = useRechercheFormations();
+  const { statusChampDeRecherche, rechercher } = useRechercheFormations();
 
   return (
-    <ChampDeRecherche
-      auChangement={(événement) => debouncedSetRecherche(événement.target.value ?? undefined)}
+    <ChampDeRechercheFormulaire
       entête={{ labelAccessibilité: i18n.PAGE_FORMATION.CHAMP_RECHERCHE_LABEL }}
       obligatoire={false}
       placeholder={i18n.PAGE_FORMATION.CHAMP_RECHERCHE_PLACEHOLDER}
       status={statusChampDeRecherche}
+      àLaSoumission={rechercher}
     />
   );
 };

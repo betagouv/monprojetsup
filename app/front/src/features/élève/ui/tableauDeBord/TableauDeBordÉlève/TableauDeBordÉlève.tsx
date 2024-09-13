@@ -21,7 +21,7 @@ const TableauDeBordÉlève = () => {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.SOUS_TITRE,
       illustration: explorerSVG,
-      lien: "/formations/explorer",
+      lien: "/formations",
     },
     {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.FAVORIS.TITRE,

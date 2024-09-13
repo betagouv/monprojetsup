@@ -11,7 +11,10 @@ import { i18n } from "@/configuration/i18n/i18n";
 
 const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheFormationProps) => {
   return (
-    <div className="pb-12 pt-6 lg:pl-14">
+    <div
+      aria-live="assertive"
+      className="pb-12 pt-6 lg:pl-14"
+    >
       <div className="ml-[-1rem] pb-6 lg:hidden">
         <Bouton
           auClic={afficherBarreLatéraleCallback}

@@ -2,10 +2,10 @@ import { type ReactNode } from "react";
 
 export type useChampDeSaisieSqueletteArgs = {
   id: ChampDeSaisieSqueletteProps["id"];
-  status: ChampDeSaisieSqueletteProps["status"];
-  placeholder: ChampDeSaisieSqueletteProps["placeholder"];
-  obligatoire: ChampDeSaisieSqueletteProps["obligatoire"];
-  auChangement: ChampDeSaisieSqueletteProps["auChangement"];
+  status?: ChampDeSaisieSqueletteProps["status"];
+  placeholder?: ChampDeSaisieSqueletteProps["placeholder"];
+  obligatoire?: ChampDeSaisieSqueletteProps["obligatoire"];
+  auChangement?: ChampDeSaisieSqueletteProps["auChangement"];
 };
 
 export type ChampDeSaisieSqueletteProps = {

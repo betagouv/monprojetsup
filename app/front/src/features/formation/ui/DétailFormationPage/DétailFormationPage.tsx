@@ -10,29 +10,30 @@ import {
 } from "@/features/formation/ui/formationQueries";
 import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormations";
 import RechercheFormations from "@/features/formation/ui/RechercheFormations/RechercheFormations";
+import { formationAffichéeIdFicheFormationStore } from "@/features/formation/ui/store/useFicheFormation/useFicheFormation";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useState } from "react";
 
 const DétailFormationPage = () => {
   const [afficherBarreLatéraleEnMobile, setAfficherBarreLatéraleEnMobile] = useState(false);
+  const formationAffichéeId = formationAffichéeIdFicheFormationStore();
+  const route = getRouteApi("/_auth/formations/");
+  const { recherche } = route.useSearch();
 
-  const route = getRouteApi("/_auth/formations/$formationId/");
-  const { formationId } = route.useParams();
-
-  const { data: suggestions } = useQuery(suggérerFormationsQueryOptions);
-  const { data: résultatsDeRecherche, isFetching: rechercheEnCours } = useQuery({
-    ...rechercherFormationsQueryOptions(),
-    enabled: false,
+  const { data: suggestions } = useQuery({
+    ...suggérerFormationsQueryOptions,
+    enabled: recherche === undefined,
   });
 
-  const { data: formation, isFetching: récupérationFormationEnCours } = useQuery(
-    récupérerFormationQueryOptions(formationId),
-  );
+  const { data: résultatsDeRecherche } = useQuery({
+    ...rechercherFormationsQueryOptions(recherche),
+    enabled: recherche !== undefined,
+  });
 
-  if (!suggestions) {
-    return <AnimationChargement />;
-  }
+  const { data: formation, isFetching: chargementFormationEnCours } = useQuery(
+    récupérerFormationQueryOptions(formationAffichéeId ?? résultatsDeRecherche?.[0].id ?? suggestions?.[0].id ?? ""),
+  );
 
   const afficherLaBarreLatérale = () => {
     return afficherBarreLatéraleEnMobile ? "" : "hidden lg:grid";
@@ -66,27 +67,29 @@ const DétailFormationPage = () => {
                   variante="quaternaire"
                 />
               </div>
-              <div className="[&_.fr-input]:bg-white">
-                <RechercheFormations />
+              <div>
+                <div className="[&_.fr-input]:bg-white">
+                  <RechercheFormations />
+                </div>
               </div>
             </div>
-            {rechercheEnCours ? (
+            {!suggestions && !résultatsDeRecherche ? (
               <AnimationChargement />
             ) : (
               <ListeFormations
-                formationIdAffichée={formationId}
-                formations={résultatsDeRecherche ?? suggestions}
+                formationIdAffichée={formationAffichéeId ?? résultatsDeRecherche?.[0].id ?? suggestions?.[0].id ?? ""}
+                formations={résultatsDeRecherche ?? suggestions ?? []}
               />
             )}
           </div>
           <div className={`bg-white ${afficherLaFicheFormation()}`}>
-            {récupérationFormationEnCours || !formation ? (
-              <AnimationChargement />
-            ) : (
+            {formation && !chargementFormationEnCours ? (
               <FicheFormation
                 afficherBarreLatéraleCallback={() => setAfficherBarreLatéraleEnMobile(!afficherBarreLatéraleEnMobile)}
                 formation={formation}
               />
+            ) : (
+              <AnimationChargement />
             )}
           </div>
         </div>

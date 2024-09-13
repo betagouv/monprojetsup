@@ -13,6 +13,7 @@ const LienInterne = <H extends keyof (typeof router)["routesByPath"]>({
   estUnTag,
   hash,
   paramètresPath,
+  paramètresSearch,
 }: LienInterneProps<H>) => {
   const { ariaLabelFormaté, classesCSS, target } = useLien({ ariaLabel, href, taille, variante, icône, estUnTag });
 
@@ -22,6 +23,7 @@ const LienInterne = <H extends keyof (typeof router)["routesByPath"]>({
       className={classesCSS}
       hash={hash}
       params={paramètresPath}
+      search={paramètresSearch}
       target={target}
       to={href}
     >
