@@ -25,10 +25,14 @@ public class DataSources {
     public static final String IDEO_OD_DOMAINES_PATH = "ideo/5fa58d750a60c.json";
 
     /* Onisep data */
-    public static final String IDEO_HERITAGES_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
-    public static final String IDEO_HERITAGES_HERITIER_HEADER = "IDEO2_PREPA";
-    public static final String IDEO_HERITAGES_LEGATAIRES_HEADER = "IDEO2_LICENCE";
+    public static final String IDEO_HERITAGES_LICENCES_CPGE_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
+    public static final String IDEO_HERITAGES_LICENCES_MASTERS_PATH = "onisep_ideo_hotline/MPS_LiensLicencesMasters_valideOnisep.csv";
 
+    public static final String IDEO_HERITAGES_LICENCES_CPGE_HERITIER_HEADER = "IDEO2_PREPA";
+    public static final String IDEO_HERITAGES_LICENCES_CPGE_LEGATAIRES_HEADER = "IDEO2_LICENCE";
+
+    public static final String IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER = "ID_Licence_ONISEP";
+    public static final String IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER = "ID_Master_ONISEP";
 
     /* Onisep scrapping */
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_PATH = "onisep_scrap/descriptifs.json";
