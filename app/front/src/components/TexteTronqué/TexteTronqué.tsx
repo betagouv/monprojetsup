@@ -2,7 +2,7 @@ import { type TexteTronquéProps } from "./TexteTronqué.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { useEffect, useRef, useState } from "react";
 
-const TexteTronqué = ({ texte, nombreDeLigneÀAfficher }: TexteTronquéProps) => {
+const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   const [afficherEnEntier, setAfficherEnEntier] = useState(false);
   const [afficherBoutonLireLaSuite, setAfficherBoutonLireLaSuite] = useState(false);
 
@@ -11,7 +11,7 @@ const TexteTronqué = ({ texte, nombreDeLigneÀAfficher }: TexteTronquéProps) =
   const classEnFonctionDeAfficherEnEntier = () => {
     if (afficherEnEntier) return "";
 
-    return `line-clamp-${nombreDeLigneÀAfficher}`;
+    return `line-clamp-4`;
   };
 
   useEffect(() => {

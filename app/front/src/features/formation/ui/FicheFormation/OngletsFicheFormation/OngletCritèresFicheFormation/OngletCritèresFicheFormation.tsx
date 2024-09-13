@@ -94,10 +94,7 @@ const OngletCritèresFicheFormation = ({
               {i18n.PAGE_FORMATION.LES_ATTENDUS}
             </Titre>
           </div>
-          <TexteTronqué
-            nombreDeLigneÀAfficher="4"
-            texte={descriptifAttendus}
-          />
+          <TexteTronqué texte={descriptifAttendus} />
         </>
       )}
     </div>

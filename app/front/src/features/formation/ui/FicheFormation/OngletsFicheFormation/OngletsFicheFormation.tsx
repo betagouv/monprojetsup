@@ -24,12 +24,7 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
     if (formation.descriptifs.détails && formation.descriptifs.détails !== "") {
       onglets.push({
         titre: i18n.PAGE_FORMATION.ONGLET_DÉTAILS,
-        contenu: (
-          <TexteTronqué
-            nombreDeLigneÀAfficher="4"
-            texte={formation.descriptifs.détails}
-          />
-        ),
+        contenu: <TexteTronqué texte={formation.descriptifs.détails} />,
       });
     }
 
@@ -55,12 +50,7 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
     if (formation.descriptifs.conseils && formation.descriptifs.conseils !== "") {
       onglets.push({
         titre: i18n.PAGE_FORMATION.ONGLET_CONSEILS,
-        contenu: (
-          <TexteTronqué
-            nombreDeLigneÀAfficher="4"
-            texte={formation.descriptifs.conseils}
-          />
-        ),
+        contenu: <TexteTronqué texte={formation.descriptifs.conseils} />,
       });
     }
 

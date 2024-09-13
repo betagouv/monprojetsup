@@ -5,10 +5,7 @@ import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 const OngletFormationFicheFormation = ({ texte, liens }: OngletFormationFicheFormationProps) => {
   return (
     <div className="grid gap-6">
-      <TexteTronqué
-        nombreDeLigneÀAfficher="4"
-        texte={texte}
-      />
+      <TexteTronqué texte={texte} />
       <ListeLiensExternesSousFormeBouton liens={liens} />
     </div>
   );
