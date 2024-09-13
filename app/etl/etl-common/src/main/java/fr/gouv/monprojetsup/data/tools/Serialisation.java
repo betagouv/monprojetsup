@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -80,17 +81,41 @@ public class Serialisation {
         }
     }
 
+    public static <T> @NotNull List<T> fromLocalJson(String path, Type type) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(
+                new BufferedInputStream(
+                        Files.newInputStream(Path.of(path))
+                ), StandardCharsets.UTF_8)
+        ) {
+            return new Gson().fromJson(reader, type);
+        }
+    }
+
+
+    @SuppressWarnings("unused")
     public static <T> @NotNull T fromRemoteZippedXml(String urlString, JavaType type, String useCache) throws IOException, InterruptedException {
         try (InputStream stream = getRemoteFile(urlString, useCache)) {
-            ZipInputStream zip = new ZipInputStream(stream);
-            ZipEntry entry = zip.getNextEntry();
-            if (entry == null)
-                throw new RuntimeException("No data in zip file " + urlString);
-            try (BufferedReader r = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
-                XmlMapper xmlMapper = new XmlMapper();
-                xmlMapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                return xmlMapper.readValue(r, type);
-            }
+            return fromZippedXmlStream(stream, type);
+        }
+    }
+
+    public static <T> @NotNull List<T> fromZippedXml(String path, JavaType listType) throws IOException {
+        try (BufferedInputStream s = new BufferedInputStream(
+                Files.newInputStream(Path.of(path)))
+        ) {
+            return fromZippedXmlStream(s, listType);
+        }
+    }
+
+    private static <T> T fromZippedXmlStream(InputStream stream, JavaType type) throws IOException {
+        ZipInputStream zip = new ZipInputStream(stream);
+        ZipEntry entry = zip.getNextEntry();
+        if (entry == null)
+            throw new RuntimeException("No data in zip file");
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8))) {
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return xmlMapper.readValue(r, type);
         }
     }
 
@@ -127,6 +152,8 @@ public class Serialisation {
             }
         }
     }
+
+
 
     public static void toZippedJson(String path, Object object, boolean prettyPrint) throws IOException {
         Path path1 = Path.of(path);

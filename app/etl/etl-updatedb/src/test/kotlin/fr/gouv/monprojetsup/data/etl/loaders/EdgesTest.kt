@@ -21,7 +21,7 @@ class EdgesTest {
     @BeforeEach
     fun setUp() {
         // Given
-        val sousDomainesWeb = ArrayList(OnisepDataLoader.loadDomainesSousDomaines())
+        val sousDomainesWeb = ArrayList(OnisepDataLoader.loadDomainesSousDomaines(sources))
         val formationsIdeoDuSup = OnisepDataLoader.loadFormationsIdeoDuSup(sources)
 
         val filieresPsupToFormationsMetiersIdeo =

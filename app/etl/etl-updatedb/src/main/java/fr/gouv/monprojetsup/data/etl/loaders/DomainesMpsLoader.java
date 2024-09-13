@@ -69,7 +69,7 @@ public class DomainesMpsLoader {
             );
         }
         if(FORCE_ONISEP_DOMAINES) {
-            List<SousDomaineWeb> sousDomainesWeb = new ArrayList<>(loadDomainesSousDomaines());
+            List<SousDomaineWeb> sousDomainesWeb = new ArrayList<>(loadDomainesSousDomaines(sources));
 
             Map<String, CategorieThematiques> catsMap
                     = sousDomainesWeb.stream().map(SousDomaineWeb::domaineOnisep)
@@ -119,7 +119,7 @@ public class DomainesMpsLoader {
         }
 
         if(FORCE_ONISEP_DOMAINES) {
-            List<SousDomaineWeb> sousDomainesWeb = new ArrayList<>(loadDomainesSousDomaines());
+            List<SousDomaineWeb> sousDomainesWeb = new ArrayList<>(loadDomainesSousDomaines(sources));
             res.setSousDomainesWeb(sousDomainesWeb);
         }
 

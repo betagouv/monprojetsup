@@ -37,12 +37,14 @@ import static fr.gouv.monprojetsup.data.tools.CsvTools.readCSV;
 
 public class OnisepDataLoader {
     private static final Logger LOGGER = Logger.getLogger(OnisepData.class.getSimpleName());
+    private static final String FORMATION_INCONNUE = "Formation inconnue ";
+    private static final String METIER_INCONNU = "Métier inconnu ";
 
     public static @NotNull OnisepData fromFiles(DataSources sources) throws Exception {
 
         LOGGER.info("Chargement des intérêts et des secteursActivite");
 
-        List<SousDomaineWeb> sousDomainesWeb =  new ArrayList<>(loadDomainesSousDomaines());
+        List<SousDomaineWeb> sousDomainesWeb =  new ArrayList<>(loadDomainesSousDomaines(sources));
 
         Interets interets = loadInterets(sources);
 
@@ -128,10 +130,10 @@ public class OnisepDataLoader {
                 .collect(Collectors.toMap(MetierIdeoDuSup::idMps, m -> m));
             richIdeoToPoorIdeo.forEach((richId, poorsId) -> {
                 val rich = metiersIdeoDuSupByKey.get(richId);
-                if(rich == null) throw new RuntimeException("Métier inconnu " + richId);
+                if(rich == null) throw new RuntimeException(METIER_INCONNU + richId);
                 poorsId.forEach(poorId -> {
                     val poor = metiersIdeoDuSupByKey.get(poorId);
-                    if(poor == null) throw new RuntimeException("Métier inconnue " + poorId);
+                    if(poor == null) throw new RuntimeException(METIER_INCONNU + poorId);
                     poor.inheritFrom(rich);
                 });
             });
@@ -142,10 +144,10 @@ public class OnisepDataLoader {
             Map<String, Set<String>> richIdeoToPoorIdeo) {
         richIdeoToPoorIdeo.forEach((richId, poorsId) -> {
             val rich = formationsIdeoDuSup.get(richId);
-            if (rich == null) throw new RuntimeException("Formation inconnue " + richId);
+            if (rich == null) throw new RuntimeException(FORMATION_INCONNUE + richId);
             poorsId.forEach(poorId -> {
                 val poor = formationsIdeoDuSup.get(poorId);
-                if (poor == null) throw new RuntimeException("Formation inconnue " + poorId);
+                if (poor == null) throw new RuntimeException(FORMATION_INCONNUE + poorId);
                 poor.inheritFrom(rich);
             });
         });
@@ -164,10 +166,10 @@ public class OnisepDataLoader {
 
         richMpsToPoorMps.forEach((richId, poorsId) -> {
             val riches = formationsParCod.get(richId);
-            if (riches == null) throw new RuntimeException("Formation inconnue " + richId);
+            if (riches == null) throw new RuntimeException(FORMATION_INCONNUE + richId);
             riches.forEach(rich -> poorsId.forEach(poorId -> {
                 val poors = formationsParCod.get(poorId);
-                if (poors == null) throw new RuntimeException("Formation inconnue " + poorId);
+                if (poors == null) throw new RuntimeException(FORMATION_INCONNUE + poorId);
                 poors.forEach(p -> p.getRight().inheritMetiersAndDomainesFrom(rich.getRight()));
             }));
         });
@@ -197,7 +199,7 @@ public class OnisepDataLoader {
                         !formationsMps.contains(id))
                 .findAny();
         if (ligneAvecCodeInconnu.isPresent()) {
-            throw new RuntimeException("Formation inconnue " + ligneAvecCodeInconnu.get());
+            throw new RuntimeException(FORMATION_INCONNUE + ligneAvecCodeInconnu.get());
         }
 
         //l'existence des headers est garantie
@@ -234,7 +236,7 @@ public class OnisepDataLoader {
                         !formationsIdeoDuSup.contains(id))
                 .findAny();
         if (ligneAvecCodeInconnu.isPresent()) {
-            throw new RuntimeException("Formation inconnue " + ligneAvecCodeInconnu.get());
+            throw new RuntimeException(FORMATION_INCONNUE + ligneAvecCodeInconnu.get());
         }
 
         //l'existence des headers est garantie
@@ -309,9 +311,9 @@ public class OnisepDataLoader {
         });
     }
 
-    protected static Interets loadInterets(DataSources sources) throws IOException, InterruptedException {
+    protected static Interets loadInterets(DataSources sources) throws IOException {
         val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
-        val metiers = loadFichesMetiersIDeo();
+        val metiers = loadFichesMetiersIDeo(sources);
         val romeData = RomeDataLoader.load(sources);
         val labels = new HashMap<String,String>();
         labels.putAll(romeData.getLabels());
@@ -333,9 +335,9 @@ public class OnisepDataLoader {
             List<SousDomaineWeb> domainesPro,
             DataSources sources
     ) throws Exception {
-        List<MetierIdeoSimple> metiersOnisep = loadMetiersSimplesIdeo();
+        List<MetierIdeoSimple> metiersOnisep = loadMetiersSimplesIdeo(sources);
         List<MetiersScrapped.MetierScrap> metiersScrapped = loadMetiersScrapped(sources);
-        List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIDeo();
+        List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIDeo(sources);
 
         return extractMetiersIdeoDuSup(
                 metiersOnisep,
@@ -456,16 +458,11 @@ public class OnisepDataLoader {
         return metiers.values().stream().toList();
     }
 
-    public static List<FormationIdeoSimple> loadFormationsSimplesIdeo() throws Exception {
-        val typeToken = new TypeToken<List<FormationIdeoSimple>>(){}.getType();
-        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_FORMATIONS_SIMPLE_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
-    }
+    static List<SousDomaineWeb> loadDomainesSousDomaines(DataSources sources) throws Exception {
 
-    static List<SousDomaineWeb> loadDomainesSousDomaines() throws Exception {
-        val typeToken = new TypeToken<List<SousDomaineWeb>>(){}.getType();
-        List<SousDomaineWeb> domainesSansId = Serialisation.fromRemoteJson(DataSources.IDEO_OD_DOMAINES_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
+        List<SousDomaineWeb> domainesSansId = loadDomainesideo(sources);
 
-        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo();
+        List<FicheFormationIdeo> formationsIdeoAvecFiche = loadFichesFormationsIdeo(sources);
 
         Map<String, String> sousDomainesAvecId = formationsIdeoAvecFiche.stream()
                 .flatMap(f -> f.getSousdomainesWeb().stream())
@@ -491,32 +488,43 @@ public class OnisepDataLoader {
         return result;
     }
 
-
-    public static List<MetierIdeoSimple> loadMetiersSimplesIdeo() throws Exception {
-        val typeToken = new TypeToken<List<MetierIdeoSimple>>(){}.getType();
-        return Serialisation.fromRemoteJson(DataSources.IDEO_OD_METIERS_SIMPLE_URI, typeToken, Constants.DATA_IDEO_DIRNAME);
+    private static List<SousDomaineWeb> loadDomainesideo(DataSources sources) throws IOException {
+        val typeToken = new TypeToken<List<SousDomaineWeb>>(){}.getType();
+        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_DOMAINES_PATH), typeToken);
     }
 
 
-    public static List<FicheFormationIdeo> loadFichesFormationsIdeo() throws Exception {
+    public static List<FormationIdeoSimple> loadFormationsSimplesIdeo(DataSources sources) throws Exception {
+        val typeToken = new TypeToken<List<FormationIdeoSimple>>(){}.getType();
+        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_FORMATIONS_SIMPLE_PATH), typeToken);
+    }
+
+
+    public static List<MetierIdeoSimple> loadMetiersSimplesIdeo(DataSources sources) throws Exception {
+        val typeToken = new TypeToken<List<MetierIdeoSimple>>(){}.getType();
+        return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_METIERS_SIMPLE_PATH), typeToken);
+    }
+
+
+    public static List<FicheFormationIdeo> loadFichesFormationsIdeo(DataSources sources) throws Exception {
         JavaType listType = new ObjectMapper().getTypeFactory().constructCollectionType(
                 List.class,
                 FicheFormationIdeo.class
         );
-        return Serialisation.fromRemoteZippedXml(
-                DataSources.IDEO_OD_FORMATIONS_FICHES_URI,
-                listType, Constants.DATA_IDEO_DIRNAME
+        return Serialisation.fromZippedXml(
+                sources.getSourceDataFilePath(DataSources.IDEO_OD_FORMATIONS_FICHES_PATH),
+                listType
         );
     }
 
-    public static List<FicheMetierIdeo> loadFichesMetiersIDeo() throws IOException, InterruptedException {
+    public static List<FicheMetierIdeo> loadFichesMetiersIDeo(DataSources sources) throws IOException {
         JavaType listType = new ObjectMapper().getTypeFactory().constructCollectionType(
                 List.class,
                 FicheMetierIdeo.class
         );
-        return Serialisation.fromRemoteZippedXml(
-                DataSources.IDEO_OD_METIERS_FICHES_URI,
-                listType, Constants.DATA_IDEO_DIRNAME
+        return Serialisation.fromZippedXml(
+                sources.getSourceDataFilePath(DataSources.IDEO_OD_METIERS_FICHES_PATH),
+                listType
         );
     }
 
@@ -525,8 +533,8 @@ public class OnisepDataLoader {
 
     @NotNull
     public static Map<String, @NotNull FormationIdeoDuSup> loadFormationsIdeoDuSup(DataSources sources) throws Exception {
-        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo();
-        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo();
+        val formationsIdeoSansfiche = OnisepDataLoader.loadFormationsSimplesIdeo(sources);
+        val formationsIdeoAvecFiche = OnisepDataLoader.loadFichesFormationsIdeo(sources);
         val formationsIdeoDuSup = extractFormationsIdeoDuSup(
                 formationsIdeoSansfiche,
                 formationsIdeoAvecFiche

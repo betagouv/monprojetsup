@@ -15,7 +15,7 @@ class LoadersTest {
     @Test
     fun `Doit réussir à récupérer les formaitons ideo depuis le site onisep`() {
         // Given
-        val formations = OnisepDataLoader.loadFormationsSimplesIdeo()
+        val formations = OnisepDataLoader.loadFormationsSimplesIdeo(sources)
         // When
         // Then
         assertThat(formations).isNotEmpty()
