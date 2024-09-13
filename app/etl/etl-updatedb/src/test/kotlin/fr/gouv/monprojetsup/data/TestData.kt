@@ -6,6 +6,7 @@ class TestData {
     companion object {
 
 
+        const val MIN_NB_CORR_PSUP_IDEO: Int = 600
         const val MIN_NB_FORMATIONS_MPS: Int = 200
         const val MAX_NB_FORMATIONS_SANS_DUREE: Int = 1
         const val MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE: Int = 20

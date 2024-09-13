@@ -311,7 +311,7 @@ public class OnisepDataLoader {
         });
     }
 
-    protected static Interets loadInterets(DataSources sources) throws IOException {
+    public static Interets loadInterets(DataSources sources) throws IOException {
         val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
         val metiers = loadFichesMetiersIDeo(sources);
         val romeData = RomeDataLoader.load(sources);
