@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "ref_domaine_categorie")
-class CategorieDomaineEntity {
+class DomainesCategorieEntity {
     @Id
     @Column(name = "id", nullable = false)
     lateinit var id: String

@@ -14,14 +14,13 @@ import fr.gouv.monprojetsup.data.domain.model.cities.CitiesExternal
 import fr.gouv.monprojetsup.data.domain.model.cities.Coords
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.domain.model.formations.Formation
-import fr.gouv.monprojetsup.data.domain.model.interets.Interets
+import fr.gouv.monprojetsup.data.domain.model.interets.Taxonomie
 import fr.gouv.monprojetsup.data.domain.model.liens.UrlsUpdater
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.domain.model.psup.PsupData
 import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques
-import fr.gouv.monprojetsup.data.domain.model.thematiques.CategorieThematiques
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
@@ -746,12 +745,12 @@ class MpsDataFiles(
         return psupData.bacs
     }
 
-    override fun getDomaines(): List<CategorieThematiques> {
-        return DomainesMpsLoader.loadDomainesMps(dataSources)
+    override fun getDomaines(): Taxonomie {
+        return onisepData.domaines
     }
 
 
-    override fun getInterets() : Interets {
+    override fun getInterets() : Taxonomie {
         return onisepData.interets
 
     }

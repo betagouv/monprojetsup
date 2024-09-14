@@ -20,7 +20,7 @@ interface BaccalaureatSpecialiteDb :
 
 @Repository
 interface CategorieDomaineDb :
-    JpaRepository<CategorieDomaineEntity, String>
+    JpaRepository<DomainesCategorieEntity, String>
 
 @Repository
 interface DomainesDb :
@@ -28,7 +28,7 @@ interface DomainesDb :
 
 @Repository
 interface DomainesCategoryDb :
-    JpaRepository<CategorieDomaineEntity, String>
+    JpaRepository<DomainesCategorieEntity, String>
 
 @Repository
 interface InteretsDb :

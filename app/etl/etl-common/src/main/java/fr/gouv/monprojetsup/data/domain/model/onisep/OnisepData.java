@@ -4,7 +4,7 @@ import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
+import fr.gouv.monprojetsup.data.domain.model.interets.Taxonomie;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.onisep.metiers.FicheMetierIdeo;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
@@ -17,9 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public record OnisepData(
-        DomainesMps domainesMps,
+        Taxonomie domaines,
 
-        Interets interets,
+        Taxonomie interets,
 
         List<Pair<String,String>> edgesFormationsDomaines,
 
@@ -143,6 +143,6 @@ public record OnisepData(
 
 
     public Map<String, String> getDomainesLabels(boolean includeKeys) {
-        return domainesMps.getLabels(includeKeys);
+        return domaines.getLabels(includeKeys);
     }
 }

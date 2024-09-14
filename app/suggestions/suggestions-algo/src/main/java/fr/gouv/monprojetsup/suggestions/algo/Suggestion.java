@@ -25,7 +25,7 @@ public record Suggestion(
         @Nullable Integer status,
 
 
-        List<String> items//items, like filiere in a grouped filiere
+        List<String> items//elements, like filiere in a grouped filiere
 ) {
 
     public Suggestion(String fl) {
