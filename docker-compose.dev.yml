@@ -46,7 +46,7 @@ services:
     entrypoint: /opt/keycloak/bin/kc.sh start-dev
 
   appdb:
-    image: postgres:16
+    image: postgres:15.8
     restart: always
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
