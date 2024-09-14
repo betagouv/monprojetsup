@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record OnisepData(
         Taxonomie domaines,
@@ -80,11 +81,11 @@ public record OnisepData(
         return metiersIdeo.stream().flatMap(metier -> metier.domainesWeb().stream().map(key -> Pair.of(metier.ideo(), key))).toList();
     }
 
-    public @NotNull List<Pair<String,String>> getEdgesInteretsToInterets() {
-        return interets.getItemVersGroupe().entrySet()
-                .stream()
-                .map(e -> Pair.of(e.getKey(), e.getValue()))
-                .toList();
+    public @NotNull List<Pair<String,String>> getEdgesAtomeToElement() {
+        return Stream.concat(
+                interets.getItemVersGroupe(),
+                domaines.getItemVersGroupe()
+        ).toList();
     }
 
 
