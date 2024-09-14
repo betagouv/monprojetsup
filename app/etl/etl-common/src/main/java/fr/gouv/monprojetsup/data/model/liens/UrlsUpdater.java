@@ -15,13 +15,13 @@ public class UrlsUpdater {
 
     private static void addUrl(String key, String uri, String label, Map<String, List<DescriptifsFormationsMetiers.Link>> urls) {
         if (uri != null && !uri.isEmpty()) {
-            if(uri.contains("francetravail")) {
+            if(uri.contains("francetravail") && !label.startsWith("France Travail")) {
                 label = "France Travail - " + capitalizeFirstLetter(label);
             }
-            else if(uri.contains("onisep") || uri.contains("avenirs")) {
+            else if((uri.contains("onisep") || uri.contains("avenirs")) && !label.startsWith("Onisep")) {
                 label = "Onisep - " + capitalizeFirstLetter(label);
             } else {
-                label = capitalizeFirstLetter(label);
+                label = capitalizeFirstLetter(label).replace("."," ").trim();
             }
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label);
             val liste = urls.computeIfAbsent(Constants.cleanup(key), z -> new ArrayList<>());
