@@ -24,12 +24,12 @@ class UpdateSuggestionsTest : BDDRepositoryTest() {
     lateinit var edgesDb: SuggestionsEdgesDb
 
     @Test
-    fun `Doit réussir à mettre à jour les tables`() {
+    fun `Doit réussir à mettre à jour les tables sugg_`() {
         assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
     }
 
     @Test
-    fun `La table des villes doit inclure Soulac-sur-Mer`() {
+    fun `La table des villes doit inclure Soulac-sur-Mer, à la fois sous son nom et sous son code INSEE`() {
         updateSuggestionsDbs.updateVillesDb()
         val ville1 = villesDb.findById("33514").map { it.toVille() }
         val ville2 = villesDb.findById("Soulac-sur-Mer").map { it.toVille() }
