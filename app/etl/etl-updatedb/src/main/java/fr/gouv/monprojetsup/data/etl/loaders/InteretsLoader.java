@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.domain.model.interets.TaxonomieCategorie;
+import fr.gouv.monprojetsup.data.model.taxonomie.TaxonomieCategorie;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

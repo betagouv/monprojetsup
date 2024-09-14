@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.port;
 
-import fr.gouv.monprojetsup.data.domain.model.Candidat;
+import fr.gouv.monprojetsup.data.model.Candidat;
 
 import java.util.List;
 

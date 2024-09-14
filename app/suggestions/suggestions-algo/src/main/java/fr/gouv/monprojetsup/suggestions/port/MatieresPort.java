@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.port;
 
-import fr.gouv.monprojetsup.data.domain.model.Matiere;
+import fr.gouv.monprojetsup.data.model.Matiere;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

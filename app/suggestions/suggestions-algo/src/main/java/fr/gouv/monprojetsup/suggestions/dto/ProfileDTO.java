@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static fr.gouv.monprojetsup.data.domain.Helpers.isFiliere;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

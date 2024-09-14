@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites;
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.specialites.Specialites;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 
 import java.io.IOException;
 

@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.model.stats.Middle50;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import lombok.AllArgsConstructor;
 import lombok.Data;

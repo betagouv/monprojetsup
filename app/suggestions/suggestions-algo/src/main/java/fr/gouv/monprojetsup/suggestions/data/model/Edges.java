@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.data.model;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.domain.model.Edge;
+import fr.gouv.monprojetsup.data.model.Edge;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;

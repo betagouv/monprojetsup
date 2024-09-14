@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.domain.model.*;
-import fr.gouv.monprojetsup.data.domain.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.domain.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.data.model.*;
+import fr.gouv.monprojetsup.data.model.stats.Middle50;
+import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.port.*;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,9 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.data.domain.model.stats.StatFront.getStatistique;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+import static fr.gouv.monprojetsup.data.model.stats.StatFront.getStatistique;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 

@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifFormation;
-import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.metiers.MetiersScrapped;
-import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
+import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifFormation;
+import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
+import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 
-import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.domain.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.Constants.*;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(

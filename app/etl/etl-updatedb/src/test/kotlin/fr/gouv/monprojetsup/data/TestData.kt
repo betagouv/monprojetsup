@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data
 
-import fr.gouv.monprojetsup.data.domain.Constants
+import fr.gouv.monprojetsup.data.Constants
 
 class TestData {
     companion object {

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.port;
 
-import fr.gouv.monprojetsup.data.domain.model.Edge;
+import fr.gouv.monprojetsup.data.model.Edge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 

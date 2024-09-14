@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.domain.Constants.DIAGNOSTICS_OUTPUT_DIR;
+import static fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR;
 
 
 @Slf4j

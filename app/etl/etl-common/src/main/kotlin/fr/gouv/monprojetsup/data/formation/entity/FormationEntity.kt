@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.domain.model.Formation
-import fr.gouv.monprojetsup.data.domain.model.StatsFormation
-import fr.gouv.monprojetsup.data.domain.model.stats.Statistique
+import fr.gouv.monprojetsup.data.model.Formation
+import fr.gouv.monprojetsup.data.model.StatsFormation
+import fr.gouv.monprojetsup.data.model.stats.Statistique
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode

@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.port;
 
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity;
-import fr.gouv.monprojetsup.data.domain.model.Formation;
+import fr.gouv.monprojetsup.data.model.Formation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
