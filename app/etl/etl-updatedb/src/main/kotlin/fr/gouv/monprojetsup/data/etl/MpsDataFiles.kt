@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT
-import fr.gouv.monprojetsup.data.Constants
-import fr.gouv.monprojetsup.data.Constants.FORMATION_PSUP_EXCLUES
-import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
+import fr.gouv.monprojetsup.data.Constants.*
 import fr.gouv.monprojetsup.data.Helpers.isFiliere
 import fr.gouv.monprojetsup.data.Helpers.isMetier
+import fr.gouv.monprojetsup.data.etl.labels.Labels
+import fr.gouv.monprojetsup.data.etl.loaders.*
+import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.model.*
 import fr.gouv.monprojetsup.data.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
@@ -14,20 +14,17 @@ import fr.gouv.monprojetsup.data.model.cities.CitiesExternal
 import fr.gouv.monprojetsup.data.model.cities.Coords
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.model.formations.Formation
-import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
-import fr.gouv.monprojetsup.data.etl.labels.Labels
-import fr.gouv.monprojetsup.data.etl.loaders.*
-import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_ATOME_ELEMENT
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_DOMAINES_METIERS
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATIONS_PSUP_DOMAINES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_GROUPE_INTERET
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_INTERET_METIER
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_GENERIC
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_LAS_TO_PASS
@@ -127,13 +124,13 @@ class MpsDataFiles(
     }
 
     override fun exportDiagnostics() {
-        exportResumesManquants();
+        exportResumesManquants()
     }
 
-    fun exportResumesManquants() {
+    private fun exportResumesManquants() {
         val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
 
-        val outputFile = Constants.DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv"
+        val outputFile = DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv"
         CsvTools.getWriter(outputFile).use { csv ->
             {
 
@@ -192,12 +189,12 @@ class MpsDataFiles(
                 }
                 val nextLineLas = listOf(
                     gFlCodToMpsId(LAS_CONSTANT),
-                    Constants.LABEL_ARTICLE_PAS_LAS,
+                    LABEL_ARTICLE_PAS_LAS,
                     "",
                     "",
-                    Constants.URL_ARTICLE_PAS_LAS,
+                    URL_ARTICLE_PAS_LAS,
                     "",//url corrections
-                    Constants.CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
+                    CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
                     "",//resume type formation
                     "",//resume filiere
                     "",
@@ -348,8 +345,8 @@ class MpsDataFiles(
         val motsCles = psupData.motsCles
 
         motsCles.sources.computeIfAbsent(
-            Constants.PASS_MOT_CLE
-        ) { HashSet() }.add(gFlCodToMpsId(Constants.PASS_FL_COD))
+            PASS_MOT_CLE
+        ) { HashSet() }.add(gFlCodToMpsId(PASS_FL_COD))
 
         motsCles.extendToGroups(psupData.psupKeyToMpsKey)
 
@@ -474,7 +471,7 @@ class MpsDataFiles(
 
         val psupKeyToMpsKey = psupData.psupKeyToMpsKey
 
-        val passKey = gFlCodToMpsId(Constants.PASS_FL_COD)
+        val passKey = gFlCodToMpsId(PASS_FL_COD)
         val metiersPass = metiersVersFormations
             .filter { it.value.contains(passKey) }
             .map { it.key }
@@ -572,7 +569,7 @@ class MpsDataFiles(
 
         /* ajouts des las aux metiers PASS.
         * Remarque: c'est refait côté suggestions.... */
-        val passKey = gFlCodToMpsId(Constants.PASS_FL_COD)
+        val passKey = gFlCodToMpsId(PASS_FL_COD)
         val metiersPass = metiersVersFormations.entries
                 .filter { e ->  e.value.contains(passKey) }
                 .map { z -> z.key }
@@ -608,23 +605,10 @@ class MpsDataFiles(
                 statistiques.getNbAdmisParBac(id),
                 statistiques.getPctAdmisParBac(id),
                 statistiques.getNbAdmisParSpec(id) ?: mapOf(),
-                statistiques.getPctAdmisParSpec(id) ?: mapOf(),
+                statistiques.getPctAdmisParSpec(id),
                 psupData.getStatsFilSim(psupKeys)
             )
             result[id] = stat
-        }
-        return result
-    }
-
-    @Suppress("SameParameterValue")
-    private fun <T> replaceKey(m: Map<String,T>?, oldKey: String, newKey: String):  Map<String, T> {
-        if(m == null) return mapOf()
-        val result = HashMap<String, T>()
-        result.putAll(m)
-        val value = result[oldKey]
-        if (value != null) {
-            result[newKey] = value
-            result.remove(oldKey)
         }
         return result
     }
@@ -653,7 +637,7 @@ class MpsDataFiles(
         val lasToGeneric = getLasToGenericIdMapping()
         val lasToPass = getLasToPasIdMapping()
 
-        result.addAll(getEdges(onisepData.edgesInteretsToInterets, TYPE_EDGE_INTERET_GROUPE_INTERET))
+        result.addAll(getEdges(onisepData.edgesAtomeToElement, TYPE_EDGE_ATOME_ELEMENT))
         result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
         result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
         result.addAll(getEdges(onisepData.edgesMetiersFormations, TYPE_EDGE_METIERS_FORMATIONS_PSUP))
@@ -710,7 +694,7 @@ class MpsDataFiles(
             var duree = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
             if(duree == null && isFiliere(id)) {
                 try {
-                    val codeFilierePsup = Integer.parseInt(id.substring(Constants.FILIERE_PREFIX.length))
+                    val codeFilierePsup = Integer.parseInt(id.substring(FILIERE_PREFIX.length))
                     val filiere = psupData.filieres()[codeFilierePsup]
                     if(filiere != null) {
                         duree = psupData.getDuree(filiere)

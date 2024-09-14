@@ -1,11 +1,13 @@
 package fr.gouv.monprojetsup.data.model.taxonomie;
 
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.Constants.includeKey;
 
@@ -34,16 +36,12 @@ public record Taxonomie(
         return result;
     }
 
-    public Map<String, String> getItemVersGroupe() {
-        val itemVersGroupe = new HashMap<String, String>();
-        this.categories.forEach(
-                g -> g.elements().forEach(
-                        item -> item.atomes().keySet().forEach(
-                                itemKey ->
-                                        itemVersGroupe.put(itemKey, g.getId())
+    public Stream<Pair<String,String>> getItemVersGroupe() {
+        return categories.stream()
+                .flatMap(g -> g.elements().stream()
+                        .flatMap(item -> item.atomes().keySet().stream()
+                                .map(itemKey -> Pair.of(itemKey, g.getId()))
                         )
-                )
-        );
-        return itemVersGroupe;
+                );
     }
 }

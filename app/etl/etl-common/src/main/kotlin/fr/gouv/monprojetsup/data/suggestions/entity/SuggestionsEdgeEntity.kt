@@ -27,7 +27,7 @@ class SuggestionsEdgeEntity {
         const val TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS: Int = 5
         const val TYPE_EDGE_LAS_TO_GENERIC: Int = 6
         const val TYPE_EDGE_LAS_TO_PASS: Int = 7
-        const val TYPE_EDGE_INTERET_GROUPE_INTERET: Int = 8
+        const val TYPE_EDGE_ATOME_ELEMENT: Int = 8
         const val TYPE_EDGE_METIERS_FORMATIONS_PSUP: Int = 9
     }
 
