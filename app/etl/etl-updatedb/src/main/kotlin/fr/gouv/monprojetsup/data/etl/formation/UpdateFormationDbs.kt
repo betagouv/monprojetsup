@@ -1,13 +1,13 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -87,6 +87,7 @@ class UpdateFormationDbs(
         val mpsKeyToIdeoKeys = mpsDataPort.getMpsIdToIdeoIds()
 
         val entities = ArrayList<FormationEntity>()
+
         formationsMpsIds.forEach { id ->
             val entity = FormationEntity()
             entity.id = id
@@ -128,8 +129,8 @@ class UpdateFormationDbs(
             entity.capacite = capacitesAccueil.getOrDefault(id, 0)
             entity.apprentissage = apprentissage.contains(id)
             entity.las = lasToGeneric[id]
+
             entity.voeux = voeuxFormation.map { VoeuEntity(it) }
-            entity.voeuxIds = voeuxFormation.map { it.id }
 
             val statsFormation = stats[id]
             if(statsFormation != null) {
@@ -151,6 +152,7 @@ class UpdateFormationDbs(
 
         }
         joinFormationsMetiersdb.deleteAll()
+
         formationsdb.deleteAll()
         formationsdb.saveAll(entities)
     }

@@ -51,18 +51,14 @@ class FormationEntity {
     lateinit var liens: List<LienEntity>
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "mots_clefs", nullable = true, columnDefinition = "varchar[]")
+    @Column(name = "mots_clefs", nullable = true)
     var motsClefs: List<String>? = null
 
     /** begin ajouts suggestions **/
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)  // Cascading enabled here
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "id_formation")
     lateinit var voeux: List<VoeuEntity>
-
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "voeux")
-    lateinit var voeuxIds : List<String>
 
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)
     var labelDetails: String? = null

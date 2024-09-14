@@ -17,6 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @ActiveProfiles("test")
 open class BDDRepositoryTest {
+
     companion object {
         @JvmStatic
         private var postgres: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:15-alpine")
