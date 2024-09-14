@@ -11,11 +11,22 @@ import java.util.stream.Collectors;
 
 public class UrlsUpdater {
 
+
+
     private static void addUrl(String key, String uri, String label, Map<String, List<DescriptifsFormationsMetiers.Link>> urls) {
         if (uri != null && !uri.isEmpty()) {
+            if(uri.contains("francetravail")) {
+                label = "France Travail - " + capitalizeFirstLetter(label);
+            }
+            else if(uri.contains("onisep") || uri.contains("avenirs")) {
+                label = "Onisep - " + capitalizeFirstLetter(label);
+            } else {
+                label = capitalizeFirstLetter(label);
+            }
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label);
             val liste = urls.computeIfAbsent(Constants.cleanup(key), z -> new ArrayList<>());
             val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(url.uri())).findFirst();
+            //"Fiche métier France Travail:" +
             if(firstWithSameUri.isEmpty()) {
                 liste.add(url);
             } else if(!firstWithSameUri.get().label().contains(url.label())){
@@ -24,6 +35,17 @@ public class UrlsUpdater {
                 liste.add(new DescriptifsFormationsMetiers.Link(newLabel, url.uri()));
             }
         }
+    }
+
+
+    public static String capitalizeFirstLetter(String sentence) {
+        if (sentence == null || sentence.isEmpty()) {
+            return sentence;
+        }
+        // Trim leading and trailing spaces
+        sentence = sentence.trim();
+        // Capitalize the first character and concatenate it with the rest of the string
+        return sentence.substring(0, 1).toUpperCase() + sentence.substring(1);
     }
 
     public static @NotNull Map<String, @NotNull List<DescriptifsFormationsMetiers.Link>> updateUrls(
@@ -65,7 +87,12 @@ public class UrlsUpdater {
             }
         });
 
-        psupKeytoMpsKey.forEach((psupKey, mpsKey) -> urls.getOrDefault(psupKey, List.of()).forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls)));
+        psupKeytoMpsKey.forEach(
+                (psupKey, mpsKey) -> {
+                    val l = new ArrayList<>(urls.getOrDefault(psupKey, List.of()));
+                    l.forEach(s -> addUrl(mpsKey, s.uri(), s.label(), urls));
+                }
+                );
 
         /* traitement spécifique études de santé */
         addUrl(Constants.gFlCodToMpsId(Constants.PASS_FL_COD), Constants.URL_ARTICLE_PAS_LAS, Constants.LABEL_ARTICLE_PAS_LAS, urls);
