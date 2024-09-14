@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.TestData
+import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
-import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -66,5 +66,12 @@ class MpsDataPortTest {
         }
 
     }
+
+    @Test
+    fun `Les bacs sont chargés correctemetnt`() {
+        assertThat(mpsDataPort.getBacs()).isNotEmpty
+        assertThat(mpsDataPort.getBacs()).anyMatch { it.key == "Générale" }
+    }
+
 
 }
