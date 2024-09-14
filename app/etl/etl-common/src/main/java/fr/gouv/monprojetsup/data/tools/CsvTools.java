@@ -64,7 +64,7 @@ public class CsvTools implements Closeable {
                     }
                     data.add(entry);
                 } else {
-                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + Arrays.toString(values));
+                    throw new RuntimeException(" csv line with a number of elements inconsistent with the header: " + Arrays.toString(values));
                 }
             }
         } catch (IOException | CsvValidationException e) {

@@ -21,4 +21,7 @@ class DomaineEntity {
     @Column(name = "id_categorie", nullable = false)
     lateinit var idCategorie: String
 
+    @Column(name = "description", nullable = false)
+    lateinit var description: String
+
 }

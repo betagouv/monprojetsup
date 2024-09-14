@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.domain.Constants;
 import fr.gouv.monprojetsup.data.domain.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.interets.Interets;
+import fr.gouv.monprojetsup.data.domain.model.interets.Taxonomie;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetierIdeoDuSup;
 import fr.gouv.monprojetsup.data.domain.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
@@ -46,7 +46,9 @@ public class OnisepDataLoader {
 
         List<SousDomaineWeb> sousDomainesWeb =  new ArrayList<>(loadDomainesSousDomaines(sources));
 
-        Interets interets = loadInterets(sources);
+        Taxonomie interets = loadInterets(sources);
+
+        Taxonomie domaines = loadDomaines(sources);
 
         LOGGER.info("Chargements des formations ideo");
         var formationsIdeoDuSup = loadFormationsIdeoDuSup(sources);
@@ -103,10 +105,10 @@ public class OnisepDataLoader {
         LOGGER.info("Intérêts: " + before + " -> " + after);
 
         LOGGER.info("Injection des secteursActivite webs onisep dans les secteursActivite MPS");
-        val domainesMps = DomainesMpsLoader.load(sources);
+
 
         return new OnisepData(
-                domainesMps,
+                domaines,
                 interets,
                 edgesFormationsDomaines,
                 edgesDomainesMetiers,
@@ -303,40 +305,34 @@ public class OnisepDataLoader {
         });
     }
 
-    public static Interets loadInterets(DataSources sources) throws IOException {
-        val groupes = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
-        val metiers = loadFichesMetiersIDeo(sources);
-        val romeData = RomeDataLoader.load(sources);
-        val labels = new HashMap<String,String>();
-        labels.putAll(romeData.getLabels());
-        labels.putAll(
-                metiers.stream()
-                        .flatMap(m -> m.getInterestLabels().stream())
-                        .distinct()
-                        .collect(Collectors.toMap(
-                                Pair::getLeft,
-                                Pair::getRight
-                        ))
-        );
-        return Interets.getInterets(groupes, labels);
+    public static Taxonomie loadInterets(DataSources sources) {
+        val lignesCsv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
+        return new  Taxonomie(InteretsLoader.getTaxonomieCategories(lignesCsv));
+    }
+
+    public static Taxonomie loadDomaines(DataSources sources) throws Exception {
+        val sousDomainesWeb = loadDomainesSousDomaines(sources);
+        val lignesCsv = CsvTools.readCSV(sources.getSourceDataFilePath(DOMAINES_MPS_PATH));
+        val labels = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, SousDomaineWeb::domaineOnisep));
+        return new Taxonomie(DomainesMpsLoader.getTaxonomieCategories(lignesCsv, labels));
     }
 
 
     public static Map<String, MetierIdeoDuSup> loadMetiers(
             Collection<FormationIdeoDuSup> formationsIdeoSuSup,
-            List<SousDomaineWeb> domainesPro,
+            List<SousDomaineWeb> sousDomainesWeb,
             DataSources sources
     ) throws Exception {
         List<MetierIdeoSimple> metiersOnisep = loadMetiersSimplesIdeo(sources);
         List<MetiersScrapped.MetierScrap> metiersScrapped = loadMetiersScrapped(sources);
-        List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIDeo(sources);
+        List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIdeo(sources);
 
         return extractMetiersIdeoDuSup(
                 metiersOnisep,
                 metiersScrapped,
                 fichesMetiers,
                 formationsIdeoSuSup.stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()),
-                domainesPro
+                sousDomainesWeb
         ).stream().collect(Collectors.toMap(MetierIdeoDuSup::ideo, z -> z));
 
     }
@@ -508,7 +504,7 @@ public class OnisepDataLoader {
         );
     }
 
-    public static List<FicheMetierIdeo> loadFichesMetiersIDeo(DataSources sources) throws IOException {
+    public static List<FicheMetierIdeo> loadFichesMetiersIdeo(DataSources sources) throws IOException {
         JavaType listType = new ObjectMapper().getTypeFactory().constructCollectionType(
                 List.class,
                 FicheMetierIdeo.class

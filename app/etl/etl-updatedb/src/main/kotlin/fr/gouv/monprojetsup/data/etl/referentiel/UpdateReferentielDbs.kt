@@ -21,15 +21,19 @@ interface BaccalaureatSpecialiteDb :
 
 @Repository
 interface CategorieDomaineDb :
-    JpaRepository<CategorieDomaineEntity, String>
+    JpaRepository<DomainesCategorieEntity, String>
 
 @Repository
 interface DomainesDb :
     JpaRepository<DomaineEntity, String>
 
 @Repository
+interface DomainesIdeoDb :
+    JpaRepository<DomaineIdeoEntity, String>
+
+@Repository
 interface DomainesCategoryDb :
-    JpaRepository<CategorieDomaineEntity, String>
+    JpaRepository<DomainesCategorieEntity, String>
 
 @Repository
 interface InteretsDb :
@@ -48,6 +52,7 @@ class UpdateReferentielDbs(
     private val baccalaureatBd: BaccalaureatDb,
     private val specialitesDb: SpecialitesDb,
     private val specialitesBacDb: BaccalaureatSpecialiteDb,
+    private val domainesIdeoDb: DomainesIdeoDb,
     private val domainesDb: DomainesDb,
     private val domainesCategoriesDb: DomainesCategoryDb,
     private val interetsDb: InteretsDb,
@@ -115,23 +120,26 @@ class UpdateReferentielDbs(
 
     private fun updateInteretDbs() {
         val interets = mpsDataPort.getInterets()
+
         interetsDb.deleteAll()
-        interets.groupeInterets.forEach { groupeInteret ->
+        interetsSousCategorieDb.deleteAll()
+        interetsCategorieDb.deleteAll()
+
+        interets.categories.forEach { categorie ->
             val entity = InteretCategorieEntity()
-            val groupeInteretId = groupeInteret.id
+            val groupeInteretId = categorie.id
             entity.id = groupeInteretId
-            entity.idCategorie = groupeInteretId
-            entity.nom = groupeInteret.frontLabel
-            entity.emoji = groupeInteret.emoji
+            entity.nom = categorie.label
+            entity.emoji = categorie.emoji
             interetsCategorieDb.save(entity)
-            groupeInteret.items.forEach { item ->
+            categorie.elements.forEach { element ->
                 val sousCategorie = InteretSousCategorieEntity()
-                sousCategorie.id = item.id
-                sousCategorie.nom = item.frontLabel
-                sousCategorie.emoji = item.emoji
+                sousCategorie.id = element.id
+                sousCategorie.nom = element.label
+                sousCategorie.emoji = element.emoji
                 sousCategorie.idCategorie = groupeInteretId
                 interetsSousCategorieDb.save(sousCategorie)
-                item.subKeyslabels.forEach { (key,label) ->
+                element.atomes.forEach { (key,label) ->
                     val interet = InteretEntity()
                     interet.id = key
                     interet.nom = label
@@ -144,23 +152,32 @@ class UpdateReferentielDbs(
 
     private fun updateDomainesDbs() {
 
+        domainesIdeoDb.deleteAll()
         domainesDb.deleteAll()
         domainesCategoriesDb.deleteAll()
 
-        val categories = mpsDataPort.getDomaines()
-        categories.forEach { categorie ->
-            val entity = CategorieDomaineEntity()
-            entity.id = categorie.mpsId
+        val domaines = mpsDataPort.getDomaines()
+        domaines.categories.forEach { categorie ->
+            val entity = DomainesCategorieEntity()
+            val groupeId = categorie.id
+            entity.id = groupeId
             entity.nom = categorie.label
             entity.emoji = categorie.emoji
             domainesCategoriesDb.save(entity)
-            categorie.items.forEach { domaine ->
-                val domaineEntity = DomaineEntity()
-                domaineEntity.id = domaine.mpsId
-                domaineEntity.nom = domaine.label
-                domaineEntity.emoji = domaine.emoji
-                domaineEntity.idCategorie = entity.id
-                domainesDb.save(domaineEntity)
+            categorie.elements.forEach { element ->
+                val domaine = DomaineEntity()
+                domaine.id = element.id
+                domaine.nom = element.label
+                domaine.emoji = element.emoji
+                domaine.idCategorie = groupeId
+                domainesDb.save(domaine)
+                element.atomes.forEach { (key,label) ->
+                    val domaineIdeo = DomaineIdeoEntity()
+                    domaineIdeo.id = key
+                    domaineIdeo.nom = label
+                    domaineIdeo.idDomaineMps = domaine.id
+                    domainesIdeoDb.save(domaineIdeo)
+                }
             }
         }
     }

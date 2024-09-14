@@ -31,6 +31,9 @@ public class CsvTools implements Closeable {
         return new CsvTools(filename, ';', StandardCharsets.ISO_8859_1);
     }
 
+    public static @NotNull List<Map<@NotNull String,@NotNull String>> readCSV(String path) {
+        return readCSV(path, ',');
+    }
     public static @NotNull List<Map<@NotNull String,@NotNull String>> readCSV(String path, char separator) {
         List<Map<String,String>> data = new ArrayList<>();
         val parser = new CSVParserBuilder().withSeparator(separator).build();
@@ -54,7 +57,7 @@ public class CsvTools implements Closeable {
                     }
                     data.add(entry);
                 } else {
-                    throw new RuntimeException(" csv line with a number of items inconsistent with the header: " + Arrays.toString(values));
+                    throw new RuntimeException(" csv line with a number of elements inconsistent with the header: " + Arrays.toString(values));
                 }
             }
         } catch (IOException | CsvValidationException e) {
