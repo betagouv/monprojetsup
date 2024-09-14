@@ -1,22 +1,14 @@
 package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = [MpsDataPort::class] )
-class MpsDataPortTest {
+class MpsDataPortTest : DataPortTest(){
 
-    @Autowired
-    lateinit var mpsDataPort: MpsDataPort
 
     @Test
     fun `Doit réussir à accéder aux différents ports de données`() {

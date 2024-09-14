@@ -2,20 +2,12 @@ package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = [MpsDataPort::class] )
-class FormationsMpsTests {
+class FormationsMpsTests : DataPortTest() {
 
-    @Autowired
-    lateinit var mpsDataPort: MpsDataPort
 
     @Test
     fun `Il y a un nombre important de formations MPS`() {
