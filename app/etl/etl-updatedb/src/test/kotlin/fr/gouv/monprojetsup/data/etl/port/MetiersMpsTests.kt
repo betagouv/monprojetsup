@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
 
-@SpringBootTest
 @ActiveProfiles("test")
+@SpringBootTest(classes = [MpsDataPort::class] )
 class MetiersMpsTests {
 
     @Autowired
