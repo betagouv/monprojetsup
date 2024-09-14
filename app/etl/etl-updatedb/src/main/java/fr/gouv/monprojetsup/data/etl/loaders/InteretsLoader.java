@@ -59,7 +59,7 @@ public class InteretsLoader {
                 if (element != null && element.atomes().isEmpty()) {
                     throw new RuntimeException("Element sans atome " + element.label());
                 }
-                element = new TaxonomieCategorie.TaxonomieElement(new HashMap<>(), elementLabel, emoji);
+                element = new TaxonomieCategorie.TaxonomieElement(new HashMap<>(), elementLabel, emoji, "");
                 categorie.elements().add(element);
             }
             if (!atomeKey.isBlank()) {

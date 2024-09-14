@@ -32,7 +32,9 @@ public record TaxonomieCategorie(
     public record TaxonomieElement(
             @NotNull Map<String,@NotNull String> atomes,
             @NotNull String label,
-            @NotNull String emoji
+            @NotNull String emoji,
+            @NotNull String description
+
 
     ) {
 

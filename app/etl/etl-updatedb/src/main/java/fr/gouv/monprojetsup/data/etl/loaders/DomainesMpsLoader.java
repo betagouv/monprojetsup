@@ -52,7 +52,8 @@ public class DomainesMpsLoader {
             if(atomes.isEmpty()) {
                 throw new RuntimeException("Element sans atome");
             }
-            val element = new TaxonomieCategorie.TaxonomieElement(atomes, labelElement, emojiElement);
+            val description = g.getOrDefault("descriptif", "");
+            val element = new TaxonomieCategorie.TaxonomieElement(atomes, labelElement, emojiElement ,description);
             categorie.elements().add(element);
         }
         return res;
