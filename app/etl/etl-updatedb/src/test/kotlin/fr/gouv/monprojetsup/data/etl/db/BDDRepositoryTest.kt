@@ -43,5 +43,7 @@ open class BDDRepositoryTest {
             registry.add("flyway.user", postgres::getUsername)
             registry.add("flyway.password", postgres::getPassword)
         }
+
+
     }
 }

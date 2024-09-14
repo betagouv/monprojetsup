@@ -55,10 +55,6 @@ jobs:
           distribution: '${{ env.JAVA_VENDOR }}' 
           java-version: '${{ env.JAVA_VERSION }}'
 
-      - name: Set Java options
-        run: |
-          echo "JAVA_OPTS=-Xms512m -Xmx2048m" >> $GITHUB_ENV
-
       - name: Create data directory
         run: mkdir -p ${{ runner.temp }}/mps_data
 
@@ -69,7 +65,7 @@ jobs:
         run: git clone --depth 1 ${{ secrets.DATA_REPOSITORY }} ${{ runner.temp }}/mps_data
 
       - name: Run test command
-        run: mvn test
+        run: JAVA_OPTS="-Xms4096m -Xmx4096m" mvn test
         env:
           DB_URL: jdbc:postgresql://localhost:${{ env.APP_DB_PORT }}/${{ env.APP_DB }}
           DB_USER: ${{ env.APP_DB_USERNAME }}
