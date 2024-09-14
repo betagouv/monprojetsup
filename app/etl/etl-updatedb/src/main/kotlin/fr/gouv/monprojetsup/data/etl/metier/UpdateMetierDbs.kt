@@ -17,7 +17,7 @@ class UpdateMetierDbs(
     private val mpsDataPort : MpsDataPort
 ) {
 
-    fun updateMetierDbs() {
+    fun update() {
         clearAll()
         updateMetierDb()
     }

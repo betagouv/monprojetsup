@@ -88,7 +88,7 @@ class UpdateSuggestionsDbs(
     internal fun updateVillesDb() {
         val cities = mpsDataPort.getCities()
         villesPort.deleteAll()
-        villesPort.saveAll(cities.flatMap {  SuggestionsVilleEntity.getEntities(it) })
+        villesPort.saveAll(cities.flatMap {  SuggestionsVilleEntity.getEntities(it) }.toList())
     }
 
     internal fun updateEdgesDb() {

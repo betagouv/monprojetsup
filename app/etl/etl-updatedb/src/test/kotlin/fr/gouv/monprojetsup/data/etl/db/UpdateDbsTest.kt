@@ -40,13 +40,13 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         fun `Doit réussir à mettre à jour et vider les tables`() {
-            assertDoesNotThrow { updateFormationDbs.updateFormationDbs() }
+            assertDoesNotThrow { updateFormationDbs.update() }
             assertThat(formationsdb.findAll()).isNotEmpty
         }
 
         @Test
         fun `La plupart des formations en base doivent réussir le test d'intégrité`() {
-            updateFormationDbs.updateFormationDbs()
+            updateFormationDbs.update()
             val formations = formationsdb.findAll()
             val nbFormations = formations.size
             assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE * nbFormations / 100)
@@ -91,7 +91,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
-            assertDoesNotThrow { updateMetierDbs.updateMetierDbs() }
+            assertDoesNotThrow { updateMetierDbs.update() }
         }
 
     }
@@ -110,8 +110,8 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         private fun update() {
             updateFormationsMetiersDbs.clearAll()
-            updateFormationDbs.updateFormationDbs()
-            updateMetierDbs.updateMetierDbs()
+            updateFormationDbs.update()
+            updateMetierDbs.update()
             updateFormationsMetiersDbs.update()
         }
         @Test

@@ -43,7 +43,7 @@ class UpdateFormationDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
-    internal fun updateFormationDbs() {
+    internal fun update() {
         logger.info("Mise à jour de la table des formations et de la table des voeux")
         updateFormationsAndVoeuxDb()
         logger.info("Mise à jour de la table des critères d'admission")

@@ -59,10 +59,10 @@ open class Runner(
 		updateReferentielDbs.updateReferentielDbs()
 
 		logger.info("Mise à jour des formations")
-		updateFormationRepositories.updateFormationDbs()
+		updateFormationRepositories.update()
 
 		logger.info("Mise à jour des métiers")
-		updateMetierDbs.updateMetierDbs()
+		updateMetierDbs.update()
 
 		logger.info("Mise à jour des liens formations metiers")
 		updateFormationsMetiersDbs.update()//after formations ert metiers
