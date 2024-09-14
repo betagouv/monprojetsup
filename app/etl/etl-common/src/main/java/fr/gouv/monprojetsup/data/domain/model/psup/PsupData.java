@@ -46,7 +46,7 @@ public record PsupData(
 
         @NotNull Map<@NotNull Integer, @NotNull Filiere> filieres,//from carte, including data on LAS
 
-//nom des filieres, par code, tels qu'affichés sur la carte
+        //nom des filieres, par code, tels qu'affichés sur la carte
         //auxquels on rajoute les noms spécifiques LAS
         @NotNull Map<String, @NotNull String> nomsFilieres,
 
@@ -237,13 +237,12 @@ public record PsupData(
         //si un libellé de flAAA est un préfixe strict du libellé de flBBB alors flBBB est dans le groupe de flAAA
         addFormationsPrefixFomAnother(flToFl);
 
-        /* regroupement explicite des filières en apprentissage */
+        /* regroupement explicite et systématique des filières en apprentissage */
         formations.filieres.values().stream()
                 .filter(f -> f.apprentissage
                         && f.gFlCodeFi != f.gFlCod
                         && f.gFlCodeFi > 0//equivalent of null
-                        && filActives.contains(f.gFlCod)
-                        && filActives.contains(f.gFlCodeFi)
+                        && (filActives.contains(f.gFlCod) || filActives.contains(f.gFlCodeFi))
                 )
                 .forEach(f -> flToFl.put(f.gFlCod, f.gFlCodeFi));
 

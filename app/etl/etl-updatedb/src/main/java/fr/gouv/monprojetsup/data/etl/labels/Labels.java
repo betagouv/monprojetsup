@@ -26,6 +26,7 @@ public class Labels {
         val mpsKeyToPsupKeys = psupData.getMpsKeyToPsupKeys();
 
         nomsFilieres.forEach((key, libelle) -> {
+            libelle = getLibelleFront(key, libelle);
             if(includeKeys) {
                 val psupKeys = mpsKeyToPsupKeys.getOrDefault(key, Set.of());
                 if (psupKeys.size() >= 2) {
@@ -49,20 +50,29 @@ public class Labels {
                 if(includeKeys) libelle = includeKey(key, libelle);
                 result.put(key, libelle);
             }
+            //fallback pour les formations qui n'apparaissent qu'en apprentisssage dans psupData.formations().filieres
+            if(filiere.gFlCodeFi > 0) {
+                String keyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi);
+                if(!result.containsKey(keyFi)) {
+                    String libelle;
+                    var formationSansApprentissage = psupData.formations().formations.get(filiere.gFlCodeFi);
+                    if (formationSansApprentissage != null) {
+                        libelle = formationSansApprentissage.libelle;
+                    } else {
+                        libelle = filiere.libelle.replace((" en apprentissage"), "");
+                    }
+                    libelle = getLibelleFront(keyFi, libelle);
+                    if (includeKeys) libelle = includeKey(keyFi, libelle);
+                    result.put(keyFi, libelle);
+                }
+            }
         });
 
-        //on prend seulement les types macros intéressants
-        psupKeysToMpsKeys.values().forEach(key -> {
-            if(key.startsWith(TYPE_FORMATION_PREFIX)) {
-                Integer frCod = Integer.parseInt(key.substring(TYPE_FORMATION_PREFIX.length()));
-                String frLib = psupData.formations().typesMacros.get(frCod);
-                if(frLib == null) {
-                    throw new RuntimeException("Failed to retrieve label of " + key);
-                }
-                String libelle = getLibelleFront(key, frLib);
-                if(includeKeys) libelle = includeKey(key, libelle);
-                result.put(key, libelle);
-            }
+        psupData.formations().typesMacros.forEach((frCod, frLib) -> {
+                    String key = TYPE_FORMATION_PREFIX + frCod;
+                    String libelle = getLibelleFront(key, frLib);
+                    if(includeKeys) libelle = includeKey(key, libelle);
+                    result.put(key, libelle);
         });
 
         psupData.formations().formations.forEach((gTaCod, form) -> {

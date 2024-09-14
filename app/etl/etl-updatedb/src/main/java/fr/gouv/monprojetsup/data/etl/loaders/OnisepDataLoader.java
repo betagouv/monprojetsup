@@ -159,9 +159,9 @@ public class OnisepDataLoader {
         });
     }
 
-    private static void injectInFormationsMps(
+    private static void injectInFormationsPsup(
             List<FilieresPsupVersIdeoData> formations,
-            Map<String, Set<String>> richMpsToPoorMps
+            Map<String, Set<String>> richPsupToPoorPsup
     ) {
         val formationsParCod = formations.stream()
                 .flatMap(f -> Stream.of(
@@ -170,7 +170,7 @@ public class OnisepDataLoader {
                         )
                 ).collect(Collectors.groupingBy(Pair::getLeft));
 
-        richMpsToPoorMps.forEach((richId, poorsId) -> {
+        richPsupToPoorPsup.forEach((richId, poorsId) -> {
             val riches = formationsParCod.get(richId);
             if (riches == null) throw new RuntimeException(FORMATION_INCONNUE + richId);
             riches.forEach(rich -> poorsId.forEach(poorId -> {
@@ -184,12 +184,12 @@ public class OnisepDataLoader {
 
 
 
-    protected static Map<String,Set<String>> loadMpsHeritages(
+    protected static Map<String,Set<String>> loadPsupHeritages(
             DataSources sources,
             Set<String> formations
     ) {
         //mps_heritier,libelle_pauvre,mps_legataire,libelle_riche
-        return loadHeritageCsv(sources.getSourceDataFilePath(MPS_HERITAGES_PATH), MPS_HERITAGES_HERITIER_HEADER, MPS_HERITAGES_LEGATAIRES_HEADER, formations);
+        return loadHeritageCsv(sources.getSourceDataFilePath(PSUP_HERITAGES_PATH), PSUP_HERITAGES_HERITIER_HEADER, PSUP_HERITAGES_LEGATAIRES_HEADER, formations);
     }
 
     private static Map<String, Set<String>> loadHeritageCsv(String filename, String heritierHeader, String legataireHeader, Set<String> formations) {
@@ -360,17 +360,17 @@ public class OnisepDataLoader {
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
         val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup);
 
-        LOGGER.info("Chargement des héritages mps --> mps");
-        val formationsMps = filieresPsupToFormationsMetiersIdeo.stream()
+        LOGGER.info("Chargement des héritages psup --> psup");
+        val formationsPsup = filieresPsupToFormationsMetiersIdeo.stream()
                 .flatMap(l -> Stream.of(
                         Constants.gFlCodToMpsId(l.gFlCod()),
                         gFrCodToMpsId(l.gFrCod())
                 ))
                 .collect(Collectors.toSet());
-        val heritages = loadMpsHeritages(sources, formationsMps);
+        val heritages = loadPsupHeritages(sources, formationsPsup);
 
-        LOGGER.info("Application des héritages mps --> mps");
-        injectInFormationsMps(filieresPsupToFormationsMetiersIdeo, heritages);
+        LOGGER.info("Application des héritages psup --> psup");
+        injectInFormationsPsup(filieresPsupToFormationsMetiersIdeo, heritages);
 
         return filieresPsupToFormationsMetiersIdeo;
     }
