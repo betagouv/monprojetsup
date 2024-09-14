@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
-import fr.gouv.monprojetsup.data.domain.model.LatLng;
-import fr.gouv.monprojetsup.data.domain.model.Ville;
+import fr.gouv.monprojetsup.data.model.LatLng;
+import fr.gouv.monprojetsup.data.model.Ville;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;

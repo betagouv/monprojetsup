@@ -1,9 +1,6 @@
 package fr.gouv.monprojetsup.data.psup;
 
-import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
-import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
-import fr.gouv.monprojetsup.data.carte.algos.Filiere;
-import fr.gouv.monprojetsup.data.carte.algos.tags.FormationCarteAlgoTags;
+import fr.gouv.monprojetsup.data.model.psup.Filiere;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage;
 import fr.gouv.monprojetsup.data.psup.exceptions.VerificationException;
@@ -16,10 +13,10 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.FILIERE;
-import static fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig.TYPE_FORMATION;
-import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.carte.algos.tags.Scores.cleanAndSplit;
+import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.FILIERE;
+import static fr.gouv.monprojetsup.data.psup.AlgoCarteConfig.TYPE_FORMATION;
+import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.psup.Scores.cleanAndSplit;
 import static fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesExceptionMessage.CONNECTEUR_ORACLE_CONNEXION_NULL;
 
 
@@ -35,6 +32,7 @@ public class ConnecteurJsonCarteSQL {
         }
         this.connection = connection;
     }
+
 
     /**
      * @return récupération des données de la carte

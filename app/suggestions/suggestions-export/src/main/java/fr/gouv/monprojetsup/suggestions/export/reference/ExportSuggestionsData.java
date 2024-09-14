@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.reference;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;

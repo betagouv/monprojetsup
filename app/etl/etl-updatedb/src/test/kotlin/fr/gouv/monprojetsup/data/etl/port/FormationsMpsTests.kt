@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.domain.Constants
+import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

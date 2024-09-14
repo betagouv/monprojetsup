@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup
-import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds
+import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup
+import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup.getSousdomainesWebMpsIds
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

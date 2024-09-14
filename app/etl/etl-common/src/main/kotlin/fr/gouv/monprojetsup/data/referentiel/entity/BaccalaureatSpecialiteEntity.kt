@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.referentiel.entity
 
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import jakarta.persistence.*
 import java.io.Serializable
 

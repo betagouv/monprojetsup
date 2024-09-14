@@ -21,18 +21,16 @@ l'Innovation,
  */
 package fr.gouv.monprojetsup.data.psup;
 
-import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteConfig;
-import fr.gouv.monprojetsup.data.carte.algos.AlgoCarteEntree;
-import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.Candidat;
-import fr.gouv.monprojetsup.data.domain.model.bacs.Bac;
-import fr.gouv.monprojetsup.data.domain.model.formations.Filiere;
-import fr.gouv.monprojetsup.data.domain.model.formations.Formation;
-import fr.gouv.monprojetsup.data.domain.model.formations.Formations;
-import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu;
-import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques;
-import fr.gouv.monprojetsup.data.domain.model.tags.TagsSources;
+import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.Candidat;
+import fr.gouv.monprojetsup.data.model.bacs.Bac;
+import fr.gouv.monprojetsup.data.model.formations.Filiere;
+import fr.gouv.monprojetsup.data.model.formations.Formation;
+import fr.gouv.monprojetsup.data.model.formations.Formations;
+import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu;
+import fr.gouv.monprojetsup.data.model.psup.PsupData;
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +40,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static fr.gouv.monprojetsup.data.carte.algos.Filiere.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 
 public class ConnecteurBackendSQL {
 
@@ -551,7 +549,7 @@ public class ConnecteurBackendSQL {
         AlgoCarteEntree donneesCarte = connection.recupererDonneesJSONCarte(config);
 
         data.injecterNomsFilieresManquants(
-                donneesCarte,
+                donneesCarte.filieres,
                 filActives
         );
 

@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.suggestions.server.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
-import fr.gouv.monprojetsup.data.domain.Helpers.isFiliere
+import fr.gouv.monprojetsup.data.Helpers.isFiliere
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO
 import org.apache.commons.lang3.tuple.ImmutablePair

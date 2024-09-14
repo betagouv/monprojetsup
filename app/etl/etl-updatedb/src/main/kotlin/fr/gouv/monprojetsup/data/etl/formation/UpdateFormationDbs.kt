@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
-import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity

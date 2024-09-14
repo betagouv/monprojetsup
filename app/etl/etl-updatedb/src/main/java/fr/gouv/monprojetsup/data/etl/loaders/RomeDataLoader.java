@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.domain.model.rome.InteretsRome;
-import fr.gouv.monprojetsup.data.domain.model.rome.RomeData;
-import fr.gouv.monprojetsup.data.domain.model.rome.Themes;
+import fr.gouv.monprojetsup.data.model.rome.InteretsRome;
+import fr.gouv.monprojetsup.data.model.rome.RomeData;
+import fr.gouv.monprojetsup.data.model.rome.Themes;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 
 import java.io.IOException;

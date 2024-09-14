@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.suggestions.entity
 
-import fr.gouv.monprojetsup.data.domain.model.Matiere
+import fr.gouv.monprojetsup.data.model.Matiere
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table

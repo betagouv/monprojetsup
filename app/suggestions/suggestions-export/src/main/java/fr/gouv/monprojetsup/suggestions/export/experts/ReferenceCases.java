@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.Gson;
-import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.tools.CsvTools;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;

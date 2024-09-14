@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.data.domain.model.stats.StatsContainers;
+import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ResponseHeader;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;

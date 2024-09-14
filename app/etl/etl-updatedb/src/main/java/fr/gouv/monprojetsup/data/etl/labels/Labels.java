@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.data.etl.labels;
 
-import fr.gouv.monprojetsup.data.domain.Constants;
-import fr.gouv.monprojetsup.data.domain.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData;
-import fr.gouv.monprojetsup.data.domain.model.psup.PsupData;
+import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
+import fr.gouv.monprojetsup.data.model.psup.PsupData;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.domain.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.*;
 
 public class Labels {
 

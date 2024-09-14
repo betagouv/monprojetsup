@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu
+import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.suggestions.port.VoeuxPort
 import org.springframework.data.jpa.repository.JpaRepository

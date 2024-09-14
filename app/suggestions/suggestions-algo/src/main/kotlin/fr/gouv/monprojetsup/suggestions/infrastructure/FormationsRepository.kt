@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.domain.model.Formation
+import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort
 import org.springframework.cache.annotation.Cacheable

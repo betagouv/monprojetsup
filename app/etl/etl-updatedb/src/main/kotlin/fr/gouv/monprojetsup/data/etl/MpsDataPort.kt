@@ -1,11 +1,11 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.domain.model.*
-import fr.gouv.monprojetsup.data.domain.model.attendus.GrilleAnalyse
-import fr.gouv.monprojetsup.data.domain.model.bacs.Bac
-import fr.gouv.monprojetsup.data.domain.model.descriptifs.DescriptifsFormationsMetiers
-import fr.gouv.monprojetsup.data.domain.model.interets.Taxonomie
-import fr.gouv.monprojetsup.data.domain.model.specialites.Specialites
+import fr.gouv.monprojetsup.data.model.*
+import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.data.model.bacs.Bac
+import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
+import fr.gouv.monprojetsup.data.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 
 

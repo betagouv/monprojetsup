@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.port
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
-import fr.gouv.monprojetsup.data.domain.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

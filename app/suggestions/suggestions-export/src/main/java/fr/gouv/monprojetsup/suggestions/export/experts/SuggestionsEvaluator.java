@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
-import fr.gouv.monprojetsup.data.domain.Helpers;
+import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import lombok.val;

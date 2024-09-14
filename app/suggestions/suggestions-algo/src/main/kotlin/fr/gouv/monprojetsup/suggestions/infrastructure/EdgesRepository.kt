@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.domain.model.Edge
+import fr.gouv.monprojetsup.data.model.Edge
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort
 import org.springframework.cache.annotation.Cacheable

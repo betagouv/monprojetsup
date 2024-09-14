@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
-import fr.gouv.monprojetsup.data.domain.model.Voeu
-import fr.gouv.monprojetsup.data.domain.model.psup.DescriptifVoeu
+import fr.gouv.monprojetsup.data.model.Voeu
+import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column

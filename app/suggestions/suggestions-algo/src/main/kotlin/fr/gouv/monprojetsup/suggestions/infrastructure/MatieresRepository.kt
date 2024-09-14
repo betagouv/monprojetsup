@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.domain.model.Matiere
+import fr.gouv.monprojetsup.data.model.Matiere
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
 import fr.gouv.monprojetsup.suggestions.port.MatieresPort
 import org.springframework.cache.annotation.Cacheable

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.suggestions.entity
 
-import fr.gouv.monprojetsup.data.domain.model.Candidat
+import fr.gouv.monprojetsup.data.model.Candidat
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id

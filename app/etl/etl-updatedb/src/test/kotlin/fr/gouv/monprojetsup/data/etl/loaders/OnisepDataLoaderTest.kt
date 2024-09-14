@@ -1,8 +1,8 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
 import fr.gouv.monprojetsup.data.TestData
-import fr.gouv.monprojetsup.data.domain.Constants
-import fr.gouv.monprojetsup.data.domain.model.onisep.OnisepData
+import fr.gouv.monprojetsup.data.Constants
+import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
