@@ -13,7 +13,12 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.TestPropertySource
 
+@TestPropertySource(properties = [
+    "logging.level.org.hibernate.SQL=WARN",
+    "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=WARN"
+])
 class UpdateDbsTest : BDDRepositoryTest() {
 
     @Nested
@@ -103,7 +108,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Autowired
         lateinit var updateFormationsMetiersDbs: UpdateFormationMetierDbs
 
-        fun update() {
+        private fun update() {
             updateFormationsMetiersDbs.clearAll()
             updateFormationDbs.updateFormationDbs()
             updateMetierDbs.updateMetierDbs()
