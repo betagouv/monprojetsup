@@ -1,13 +1,13 @@
 package fr.gouv.monprojetsup.data.model.onisep;
 
-import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.onisep.metiers.FicheMetierIdeo;
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie;
 import fr.gouv.monprojetsup.data.tools.DictApproxInversion;
+import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static fr.gouv.monprojetsup.data.Constants.cleanup;
+
 public record OnisepData(
         Taxonomie domaines,
 
@@ -24,12 +26,7 @@ public record OnisepData(
 
         List<Pair<String,String>> edgesFormationsDomaines,
 
-        List<Pair<String,String>> edgesDomainesMetiers,
-        List<Pair<String,String>> edgesSecteursMetiers,
-
         List<Pair<String,String>> edgesMetiersFormations,
-
-        List<Pair<String,String>> edgesInteretsMetiers,
 
         List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
 
@@ -75,10 +72,19 @@ public record OnisepData(
     }
 
     public @NotNull List<Pair<String,String>> getEdgesSecteursMetiers() {
-        return metiersIdeo.stream().flatMap(metier -> metier.secteursActivite().stream().map(key -> Pair.of(metier.ideo(), key))).toList();
+        return metiersIdeo.stream().flatMap(metier -> metier.secteursActivite().stream().map(secKey -> Pair.of(secKey, metier.ideo()))).toList();
     }
     public @NotNull List<Pair<String,String>> getEdgesDomainesMetiers() {
-        return metiersIdeo.stream().flatMap(metier -> metier.domainesWeb().stream().map(key -> Pair.of(metier.ideo(), key))).toList();
+        val idDomaines = domaines.getAtomesIds();
+        return metiersIdeo.stream().flatMap(metier -> metier.domainesWeb().stream()
+                .filter(idDomaines::contains)
+                .map(domKey -> Pair.of(domKey, metier.ideo()))).toList();
+    }
+    public @NotNull List<Pair<String,String>> getEdgesInteretsMetiers() {
+        val idInterets = interets.getAtomesIds();
+        return metiersIdeo.stream().flatMap(metier -> metier.interets().stream()
+                .filter(idInterets::contains)
+                .map(intKey -> Pair.of(intKey, metier.ideo()))).toList();
     }
 
     public @NotNull List<Pair<String,String>> getEdgesAtomeToElement() {
@@ -93,7 +99,7 @@ public record OnisepData(
 
         return metiersIdeo.stream()
                 .flatMap(metier -> metier.metiersAssocies().stream()
-                        .map(m -> Pair.of(metier.idMps(), Constants.cleanup(m.id()))))
+                        .map(m -> Pair.of(metier.ideo(), cleanup(m.id()))))
                 .toList();
     }
 
@@ -101,7 +107,7 @@ public record OnisepData(
         Map<String, @NotNull List<@NotNull String>> result = new HashMap<>();
         //ajout des secteurs d'activité
         metiersIdeo.forEach(fiche -> {
-            String keyMetier = fiche.idMps();
+            String keyMetier = fiche.ideo();
             result.computeIfAbsent(keyMetier, z -> new ArrayList<>())
                     .addAll(
                             fiche.metiersAssocies().stream()
@@ -121,7 +127,7 @@ public record OnisepData(
     ) {
         Map<String, Set<String>> result = new HashMap<>();
         Map<String,MetierIdeoDuSup> metiersMap = metiers.stream()
-                .collect(Collectors.toMap(z -> Constants.cleanup(Objects.requireNonNull(z.ideo())), z -> z));
+                .collect(Collectors.toMap(z -> cleanup(Objects.requireNonNull(z.ideo())), z -> z));
         descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
             if (!descriptif.hasError() && descriptif.presentation() != null) {
                 int i = descriptif.presentation().indexOf("Exemples de métiers");

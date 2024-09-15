@@ -113,7 +113,7 @@ public class Labels {
                     String libelle = metier.lib();
                     if (includeKeys) libelle = includeKey(metier.ideo(), libelle);
                     result.put(
-                            metier.idMps(),
+                            metier.ideo(),
                             libelle);
                     metier.metiersAssocies().forEach(metierAssocie
                             -> {
