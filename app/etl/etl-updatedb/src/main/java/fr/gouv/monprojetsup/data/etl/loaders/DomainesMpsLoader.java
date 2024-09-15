@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.model.taxonomie.TaxonomieCategorie;
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie;
 import lombok.val;
 
 import java.util.*;
@@ -12,12 +12,12 @@ public class DomainesMpsLoader {
     private DomainesMpsLoader() {
     }
 
-    public static List<TaxonomieCategorie> getTaxonomieCategories(
+    public static List<Taxonomie.TaxonomieCategorie> getTaxonomieCategories(
             List<Map<String, String>> lignesCsv,
             Map<String, String> labelsAtomes
     ) {
-        List<TaxonomieCategorie> res = new ArrayList<>();
-        TaxonomieCategorie categorie = null;
+        List<Taxonomie.TaxonomieCategorie> res = new ArrayList<>();
+        Taxonomie.TaxonomieCategorie categorie = null;
 
         for (Map<String, String> g : lignesCsv) {
             String labelCategorie = g.getOrDefault("regroupement", "");
@@ -30,7 +30,7 @@ public class DomainesMpsLoader {
                 if(emojiCategorie.isBlank()) {
                     throw new RuntimeException(" Regroupement " + labelCategorie + "sans emoji");
                 }
-                categorie = new TaxonomieCategorie(labelCategorie, emojiCategorie, new ArrayList<>());
+                categorie = new Taxonomie.TaxonomieCategorie(labelCategorie, emojiCategorie);
                 res.add(categorie);
             }
             if(categorie == null) {
@@ -53,7 +53,12 @@ public class DomainesMpsLoader {
                 throw new RuntimeException("Element sans atome");
             }
             val description = g.getOrDefault("descriptif", "");
-            val element = new TaxonomieCategorie.TaxonomieElement(atomes, labelElement, emojiElement ,description);
+            val element = Taxonomie.TaxonomieCategorie.TaxonomieElement.build(
+                    atomes,
+                    labelElement,
+                    emojiElement,
+                    description
+            );
             categorie.elements().add(element);
         }
         return res;

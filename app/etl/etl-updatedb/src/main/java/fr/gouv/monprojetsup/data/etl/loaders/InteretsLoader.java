@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import fr.gouv.monprojetsup.data.model.taxonomie.TaxonomieCategorie;
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class InteretsLoader {
 
-    public static List<TaxonomieCategorie> getTaxonomieCategories(
+    public static List<Taxonomie.TaxonomieCategorie> getTaxonomieCategories(
             @NotNull List<Map<String, @NotNull String>> lignesCsv
     ) {
-        List<TaxonomieCategorie> res = new ArrayList<>();
+        List<Taxonomie.TaxonomieCategorie> res = new ArrayList<>();
         //Source,id,label,surcategorie,regroupement,emoji
-        TaxonomieCategorie categorie = null;
-        TaxonomieCategorie.TaxonomieElement element = null;
+        Taxonomie.TaxonomieCategorie categorie = null;
+        Taxonomie.TaxonomieCategorie.TaxonomieElement element = null;
         //ordre issu de la source
         for (Map<String, String> g : lignesCsv) {
             //une ligne = 1 atome, sauf les lignes blanches qui terminent un groupe
@@ -37,7 +37,7 @@ public class InteretsLoader {
                     throw new RuntimeException("Element vide " + categorie.label());
                 if (categorie != null && element.atomes().isEmpty())
                     throw new RuntimeException("Element sans atome " + element.label());
-                categorie = new TaxonomieCategorie(categorieLabel, emoji, new ArrayList<>());
+                categorie = new Taxonomie.TaxonomieCategorie(categorieLabel, emoji);
                 res.add(categorie);
             }
             if(categorieLabel.isBlank() && atomeKey.isBlank() ) {
@@ -59,7 +59,12 @@ public class InteretsLoader {
                 if (element != null && element.atomes().isEmpty()) {
                     throw new RuntimeException("Element sans atome " + element.label());
                 }
-                element = new TaxonomieCategorie.TaxonomieElement(new HashMap<>(), elementLabel, emoji, "");
+                element = Taxonomie.TaxonomieCategorie.TaxonomieElement.build(
+                        new HashMap<>(),
+                        elementLabel,
+                        emoji,
+                        ""
+                );
                 categorie.elements().add(element);
             }
             if (!atomeKey.isBlank()) {
