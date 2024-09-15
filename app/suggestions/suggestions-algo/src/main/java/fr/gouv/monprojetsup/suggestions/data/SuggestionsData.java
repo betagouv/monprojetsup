@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
-import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.data.model.*;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.data.model.stats.StatFront.getStatistique;
@@ -171,11 +171,10 @@ public class SuggestionsData {
     private static @Nullable StatsContainers.SimpleStatGroup getSimpleStatGroup(String formationId, StatsFormation stats, String bac) {
         if(stats.admissions().containsKey(bac)) {
 
-            val nbAdmis = stats.nbAdmisParBac().get(bac);
+            @Nullable Integer nbAdmis = stats.nbAdmisParBac().get(bac);
             if(nbAdmis == null) return null;
 
             val frequencesCumulees = stats.admissions().get(bac).frequencesCumulees();
-            if(frequencesCumulees == null) return null;
 
             val stat = getStatistique(frequencesCumulees, true);
 
@@ -207,7 +206,7 @@ public class SuggestionsData {
                 .collect(Collectors.groupingBy( e -> e.idMetier))
                 .entrySet().stream()
                 .collect(Collectors.toMap(
-                        e -> e.getKey(),
+                        Map.Entry::getKey,
                         e -> e.getValue().stream().map(t -> t.idFormation).collect(Collectors.toSet())
                 ));
     }
@@ -255,13 +254,6 @@ public class SuggestionsData {
 
     public List<Edge> lasToPass() {
         return edgesPort.getEdgesLasToPass();
-    }
-
-    @Cacheable("getCityCoords")
-    public List<LatLng> getCityCoords(String id) {
-        Ville ville = villesPort.getVille(id);
-        if(ville == null) return List.of();
-        return ville.coords();
     }
 
     public @Nullable Ville getVille(String id) {

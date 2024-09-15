@@ -1,11 +1,10 @@
 package fr.gouv.monprojetsup.data
 
-import fr.gouv.monprojetsup.data.Constants
-
 class TestData {
     companion object {
 
 
+        const val MIN_NB_ARETES_FORMATIONS_METIERS: Int = 3000
         const val MIN_NB_CORR_PSUP_IDEO: Int = 600
         const val MIN_NB_FORMATIONS_MPS: Int = 200
         const val MAX_NB_FORMATIONS_SANS_DUREE: Int = 1

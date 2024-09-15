@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.suggestions.server.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
-import fr.gouv.monprojetsup.data.Helpers.isFiliere
+import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO
 import org.apache.commons.lang3.tuple.ImmutablePair
@@ -59,11 +59,11 @@ class SuggestionsControllersTest(
         fun `les suggestions sont conformes aux profils de référence`() {
             // given
             //load fichier de proils de référence
-            val type = object : TypeToken<List<org.apache.commons.lang3.tuple.ImmutablePair<String, ProfileDTO>>>() {}.type
+            val type = object : TypeToken<List<ImmutablePair<String, ProfileDTO>>>() {}.type
             resourceFile.file.bufferedReader().use { reader ->
                 val gsonBuilder = GsonBuilder()
                 gsonBuilder.registerTypeAdapter(ImmutablePair::class.java, ImmutablePairDeserializer())
-                val profils = gsonBuilder.create().fromJson<List<org.apache.commons.lang3.tuple.ImmutablePair<String, ProfileDTO>>>(reader, type)
+                val profils = gsonBuilder.create().fromJson<List<ImmutablePair<String, ProfileDTO>>>(reader, type)
                 profils.filter { it.right != null && it.right!!.suggApproved().isNotEmpty() }.forEach { pair ->
                     logger.info("Test du profil ${pair.left}")
                     val profil = pair.right!!

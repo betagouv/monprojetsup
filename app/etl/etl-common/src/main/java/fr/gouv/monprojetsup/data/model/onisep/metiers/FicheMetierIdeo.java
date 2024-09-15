@@ -213,8 +213,7 @@ public record FicheMetierIdeo(
             return List.of();
         } else {
             return secteursActivite.secteursActivite().stream()
-                    .map(s -> Constants.cleanup(s.id()))
-                    .map(s -> s.replace(Constants.SEC_ACT_PREFIX_IN_FILES, Constants.SEC_ACT_PREFIX_IN_GRAPH))
+                    .map(SecteurActivite::id)
                     .toList();
         }
     }

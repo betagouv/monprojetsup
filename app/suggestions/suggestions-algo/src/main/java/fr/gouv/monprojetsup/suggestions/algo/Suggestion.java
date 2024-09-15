@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.data.Constants.BR;
+import static fr.gouv.monprojetsup.suggestions.Constants.BR;
 import static fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO.SUGG_PENDING;
 import static java.lang.System.lineSeparator;
 

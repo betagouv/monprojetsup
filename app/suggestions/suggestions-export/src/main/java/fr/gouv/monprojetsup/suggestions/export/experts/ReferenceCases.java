@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.Gson;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.tools.CsvTools;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
@@ -232,17 +231,12 @@ public record ReferenceCases(
 
                 line.add(toExplanations(
                         refCase.pf().interests().stream()
-                        .filter(Helpers::isInteret
-                        )
                         .toList(),"", labels));
 
                 line.add(toExplanations(refCase.pf().interests().stream()
-                        .filter(Helpers::isTheme
-                        )
                         .toList(),"", labels));
 
-                line.add(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isMetier(s.fl())).toList(), "", labels));
-                line.add(toExplanationString(refCase.pf().suggApproved().stream().filter(s -> Helpers.isFiliere(s.fl())).toList(), "", labels));
+                line.add(toExplanationString(refCase.pf().suggApproved(), "", labels));
                 line.add(toExplanationString(refCase.pf().suggRejected(), "", labels));
                 line.add(
                         refCase.expectations() == null ? "" :
@@ -364,7 +358,7 @@ public record ReferenceCases(
 
     public static List<GetAffinitiesServiceDTO.Affinity> callSuggestionsService(ProfileDTO pf) throws IOException, InterruptedException {
         String url = (USE_LOCAL_URL ? LOCAL_URL : REMOTE_URL) + "suggestions";
-        String response = post(url, new GetAffinitiesServiceDTO.Request(pf));
+        String response = post(url, new GetAffinitiesServiceDTO.Request(pf, true));
         return new Gson().fromJson(response, GetAffinitiesServiceDTO.Response.class).affinites();
     }
 

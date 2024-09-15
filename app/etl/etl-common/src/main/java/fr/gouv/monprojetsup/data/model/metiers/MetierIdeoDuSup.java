@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static fr.gouv.monprojetsup.data.Constants.cleanup;
 import static fr.gouv.monprojetsup.data.Helpers.removeHtml;
 
 public record MetierIdeoDuSup(
@@ -130,11 +129,5 @@ public record MetierIdeoDuSup(
                 metiersAssocies
         );
     }
-
-
-    public @NotNull String idMps() {
-        return cleanup(Objects.requireNonNull(ideo()));
-    }
-
 
 }

@@ -11,8 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.cleanup;
-
 public record DescriptifsFormationsMetiers(
 
         //indexed by formation
@@ -84,7 +82,7 @@ public record DescriptifsFormationsMetiers(
 
     public void inject(MetiersScrapped metiersScrapped) {
         metiersScrapped.metiers().values().forEach(m -> {
-            String cs = cleanup(m.key());
+            String cs = m.key();
             if(!keyToDescriptifs.containsKey(cs)) {
                 String text = null;
                 if(m.accroche() != null) {
