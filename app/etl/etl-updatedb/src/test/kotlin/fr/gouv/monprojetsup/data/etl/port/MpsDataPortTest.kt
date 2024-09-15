@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.port
 import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -63,6 +64,16 @@ class MpsDataPortTest : DataPortTest(){
     fun `Les bacs sont chargés correctemetnt`() {
         assertThat(mpsDataPort.getBacs()).isNotEmpty
         assertThat(mpsDataPort.getBacs()).anyMatch { it.key == "Générale" }
+    }
+
+    @Test
+    fun `Les elements des aretes atome element sont en lien avec les référentiels`() {
+        val edgesAtomeElement = mpsDataPort.getEdges().filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_ATOME_ELEMENT }
+        val idRef = HashSet<String>()
+        idRef.addAll(mpsDataPort.getDomaines().elementIds)
+        idRef.addAll(mpsDataPort.getInterets().elementIds)
+        val idElementsAppearingInEdges : Set<String> = edgesAtomeElement.map { it.second }.toSet()
+        assertThat(idElementsAppearingInEdges).allMatch { idRef.contains(it) }
     }
 
 

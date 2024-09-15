@@ -40,6 +40,8 @@ public final class Config {
     public static final String BONUS_MOY_GEN = "moygen";
     public static final double NO_MATCH_SCORE = 0.0;
 
+    public static final double FULL_MATCH_SCORE = 1.0;
+
     public static final Map<String,String> BONUS_LABELS = Map.of(
             BONUS_TAGS,"mots-clés",
             BONUS_SPECIALITE,"EDS",

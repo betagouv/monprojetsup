@@ -34,7 +34,7 @@ class OnisepDataLoaderTest {
     @Test
     fun `Doit réussir à étendre les intérêts`() {
         val interets = onisepData.interets
-        val expansion = interets.itemVersGroupe
+        val expansion = interets.atomesversElements
         assertThat(expansion).isNotEmpty()
     }
 

@@ -44,7 +44,7 @@ public abstract class EdgesPort {
         return retrieveEdgesOfType(TYPE_EDGE_LAS_TO_PASS);
     }
 
-    public List<Edge> getEdgesItemssGroupeItems() {
+    public List<Edge> getEdgesAtometoElement() {
         return retrieveEdgesOfType(TYPE_EDGE_ATOME_ELEMENT);
     }
 }

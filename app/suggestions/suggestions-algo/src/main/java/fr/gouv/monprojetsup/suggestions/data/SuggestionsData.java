@@ -268,8 +268,8 @@ public class SuggestionsData {
         return villesPort.getVille(id);
     }
 
-    public List<Edge> edgesItemssGroupeItems() {
-        return edgesPort.getEdgesItemssGroupeItems();
+    public List<Edge> edgesAtometoElement() {
+        return edgesPort.getEdgesAtometoElement();
     }
 
     public List<String> getFormationIds() {

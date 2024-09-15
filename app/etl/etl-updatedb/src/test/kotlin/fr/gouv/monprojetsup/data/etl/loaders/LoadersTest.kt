@@ -64,7 +64,9 @@ class LoadersTest {
         val interets = OnisepDataLoader.loadInterets(dataSources)
         Assertions.assertThat(interets.categories).isNotEmpty
         Assertions.assertThat(interets.categories).allMatch { it.label.isNotBlank() }
+        Assertions.assertThat(interets.categories).allMatch { it.label.isNotBlank() }
         Assertions.assertThat(interets.categories).allMatch { it.elements.isNotEmpty() }
+        Assertions.assertThat(interets.categories.flatMap { it.elements }).allMatch { it.id.isNotBlank() }
         Assertions.assertThat(interets.categories.flatMap { it.elements }).allMatch { it.label.isNotBlank() }
         Assertions.assertThat(interets.categories.flatMap { it.elements }).allMatch { it.atomes.isNotEmpty() }
 
@@ -78,6 +80,7 @@ class LoadersTest {
         Assertions.assertThat(domaines.categories).isNotEmpty
         Assertions.assertThat(domaines.categories).allMatch { it.label.isNotBlank() }
         Assertions.assertThat(domaines.categories).allMatch { it.elements.isNotEmpty() }
+        Assertions.assertThat(domaines.categories.flatMap { it.elements }).allMatch { it.id.isNotBlank() }
         Assertions.assertThat(domaines.categories.flatMap { it.elements }).allMatch { it.label.isNotBlank() }
         Assertions.assertThat(domaines.categories.flatMap { it.elements }).allMatch { it.atomes.isNotEmpty() }
     }

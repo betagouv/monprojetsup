@@ -29,19 +29,27 @@ public record Taxonomie(
         val result = new HashMap<String, String>();
         this.categories.forEach(
                 g -> g.elements().forEach(
-                        item -> result.put(item.getId(), includeKeys ? includeKey(item.getId(), item.label()) : item.label())
+                        item -> result.put(item.id, includeKeys ? includeKey(item.id, item.label()) : item.label())
                 )
         );
         return result;
     }
 
-    public Stream<Pair<String,String>> getItemVersGroupe() {
+    public Stream<Pair<String,String>> getAtomesversElements() {
         return categories.stream()
                 .flatMap(g -> g.elements().stream()
                         .flatMap(item -> item.atomes().keySet().stream()
-                                .map(itemKey -> Pair.of(itemKey, g.getId()))
+                                .map(atomeKey -> Pair.of(atomeKey, item.id))
                         )
                 );
+    }
+
+    @NotNull
+    public Collection<@NotNull String> getElementIds() {
+        return categories.stream()
+                .flatMap(g -> g.elements().stream())
+                .map(TaxonomieCategorie.TaxonomieElement::id)
+                .toList();
     }
 
 
@@ -58,7 +66,7 @@ public record Taxonomie(
 
         @NotNull
         public String getId() {
-            return Constants.cleanup(label);
+            return Constants.cleanup(label.toLowerCase());
         }
 
 
@@ -73,6 +81,7 @@ public record Taxonomie(
         }
 
         public record TaxonomieElement(
+                @NotNull String id,
                 @NotNull Map<String,@NotNull String> atomes,
                 @NotNull String label,
                 @NotNull String emoji,
@@ -81,16 +90,13 @@ public record Taxonomie(
 
         ) {
 
-            public String getId() {
-                return Constants.cleanup(label).trim();
-            }
-
             public static TaxonomieElement build(
+                    @NotNull String id,
                     @NotNull Map<String,@NotNull String> atomes,
                     @NotNull String label,
                     @NotNull String emoji,
                     @Nullable  String description) {
-                return new TaxonomieElement(atomes, capitalizeFirstLetter(label), emoji, description);
+                return new TaxonomieElement(id, atomes, capitalizeFirstLetter(label), emoji, description);
             }
         }
     }

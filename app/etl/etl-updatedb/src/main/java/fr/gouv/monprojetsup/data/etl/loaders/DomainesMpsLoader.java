@@ -21,6 +21,7 @@ public class DomainesMpsLoader {
 
         for (Map<String, String> g : lignesCsv) {
             String labelCategorie = g.getOrDefault("regroupement", "");
+            String idElement = g.getOrDefault("id MPS", "");
             String labelElement = g.getOrDefault("domaines MPS", "");
             String emojiCategorie = g.getOrDefault("emoji regroupement", "");
             String emojiElement = g.getOrDefault("emoji", "");
@@ -42,18 +43,23 @@ public class DomainesMpsLoader {
             if(emojiElement.isBlank()) {
                 throw new RuntimeException("Element sans emoji: " + labelElement);
             }
-            val atomes = Arrays.stream(atomesList.split(","))
+            val atomes = Arrays.stream(atomesList.split(";"))
                     .map(String::trim)
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.toMap(
                             a -> a,
-                            a -> labelsAtomes.getOrDefault(a,a)
+                            labelsAtomes::get
                     ));
             if(atomes.isEmpty()) {
                 throw new RuntimeException("Element sans atome");
             }
+            if(atomes.containsValue(null)) {
+                throw new RuntimeException("Atome avec code inconnu:" + atomes);
+            }
+
             val description = g.getOrDefault("descriptif", "");
             val element = Taxonomie.TaxonomieCategorie.TaxonomieElement.build(
+                    idElement,
                     atomes,
                     labelElement,
                     emojiElement,

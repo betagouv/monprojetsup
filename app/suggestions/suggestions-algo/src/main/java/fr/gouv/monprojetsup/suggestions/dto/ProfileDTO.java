@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +28,7 @@ public record ProfileDTO(
         Set<String> geo_pref,
         @ArraySchema(arraySchema = @Schema(name = "spe_classes", description = "enseignements de spécialité de terminale choisis ou envisagés", example = "[\"Sciences de la vie et de la Terre\",\"Mathématiques\"]"))
         Set<String> spe_classes,
-        @ArraySchema(arraySchema = @Schema(name = "interests", description = "centres d'intérêt", example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\", \"T_ROME_2092381917\", \"T_IDEO2_4812\"]"))
+        @ArraySchema(arraySchema = @Schema(name = "interests", description = "domaines et intérêts", example = "[\"ci1\",\"ci2\",\"ci3\",\"dom1\", \"dom2\", \"dom3\"]"))
         List<String> interests,
         @Schema(description = "moyenne générale scolaire estimée en terminale", example = "14")
         String moygen,
@@ -39,10 +38,6 @@ public record ProfileDTO(
         String statut
 
 ) {
-
-    public ProfileDTO(@NotNull ProfileDTO profil) {
-        this(profil.niveau(), profil.bac(), profil.duree(), profil.apprentissage(), profil.geo_pref(), profil.spe_classes(), profil.interests(), profil.moygen(), profil.choices(), profil.statut());
-    }
 
     public List<SuggestionDTO> suggApproved() {
         return choices == null ? List.of() : choices.stream().filter(s -> Objects.equals(s.status(), SuggestionDTO.SUGG_APPROVED)).toList();

@@ -306,14 +306,14 @@ public class OnisepDataLoader {
     }
 
     public static Taxonomie loadInterets(DataSources sources) {
-        val lignesCsv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), '\t');
+        val lignesCsv = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.INTERETS_GROUPES_PATH), ',');
         return new  Taxonomie(InteretsLoader.getTaxonomieCategories(lignesCsv));
     }
 
     public static Taxonomie loadDomaines(DataSources sources) throws Exception {
         val sousDomainesWeb = loadDomainesSousDomaines(sources);
         val lignesCsv = CsvTools.readCSV(sources.getSourceDataFilePath(DOMAINES_MPS_PATH));
-        val labels = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, SousDomaineWeb::domaineOnisep));
+        val labels = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, SousDomaineWeb::sousDomaineOnisep));
         return new Taxonomie(DomainesMpsLoader.getTaxonomieCategories(lignesCsv, labels));
     }
 

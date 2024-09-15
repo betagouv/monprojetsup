@@ -58,10 +58,10 @@ public class AffinityEvaluator {
         this.data = data;
         this.algo = algo;
 
-        String bac = pf.bac();
-        if(bac == null) bac = TOUS_BACS_CODE_MPS;
-        if(bac.equals(TOUS_BACS_CODE_LEGACY)) bac = TOUS_BACS_CODE_MPS;
-        this.bac = bac;
+        String pfBac = pf.bac();
+        if(pfBac == null) pfBac = TOUS_BACS_CODE_MPS;
+        if(pfBac.equals(TOUS_BACS_CODE_LEGACY)) pfBac = TOUS_BACS_CODE_MPS;
+        this.bac = pfBac;
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
@@ -127,9 +127,9 @@ public class AffinityEvaluator {
     }
 
     /* the public entry points */
-    public Affinite getAffinityEvaluation(String fl) {
+    public Affinite getAffinityEvaluation(String fl, boolean inclureScores) {
         if (USE_BIN && rejected.contains(fl)) return Affinite.getNoMatch();
-        return getScoreAndExplanation(fl, null, null);
+        return getScoreAndExplanation(fl, null, null, inclureScores);
     }
 
     /**
@@ -145,7 +145,7 @@ public class AffinityEvaluator {
         List<Pair<Double, Explanation>> unsortedExpl = new ArrayList<>();
 
         //the computation
-        Affinite totalScoreforFiliere = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores);
+        Affinite totalScoreforFiliere = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores, true);
 
         unsortedExpl.sort(Comparator.comparing(e -> -e.getLeft()));
 
@@ -202,7 +202,8 @@ public class AffinityEvaluator {
     private Affinite getScoreAndExplanation(
             String fl,
             List<Pair<Double, Explanation>> expl,
-            Map<String, Double> matches
+            Map<String, Double> matches,
+            boolean includeScores
             ) {
 
          if(rejected.contains(fl)) return Affinite.getNoMatch();
@@ -283,7 +284,7 @@ public class AffinityEvaluator {
         quotas.put(Affinite.SuggestionDiversityQuota.BAC, bacMultiplier);
         quotas.put(Affinite.SuggestionDiversityQuota.MOYGEN, moyGenMultiplier);
 
-        return new Affinite(score, quotas);
+        return new Affinite(score, includeScores ? scores : Map.of(), quotas);
     }
 
 
