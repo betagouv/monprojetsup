@@ -23,6 +23,7 @@ public class InteretsLoader {
             String atomeKey = g.getOrDefault("id", "");
             String atomeLabel = g.getOrDefault("label", "");
             String categorieLabel = g.getOrDefault("regroupement", "").replace("je veux", "");
+            String elementId = g.getOrDefault("idMPS", "");
             String elementLabel = g.getOrDefault("surcategorie", "").replace("je veux", "");
             String emoji = g.getOrDefault("emoji", "");
 
@@ -45,11 +46,7 @@ public class InteretsLoader {
                 element = null;
                 continue;
             }
-            if(element == null && elementLabel.isBlank()  && !atomeKey.isBlank()) {
-                //monocategorie
-                elementLabel = categorieLabel;
-            }
-            if (!elementLabel.isEmpty()) {
+            if(!elementId.isEmpty()) {
                 if (categorie == null) {
                     throw new RuntimeException("Pas de catégorie pour l'élément " + elementLabel);
                 }
@@ -59,7 +56,11 @@ public class InteretsLoader {
                 if (element != null && element.atomes().isEmpty()) {
                     throw new RuntimeException("Element sans atome " + element.label());
                 }
+                if(elementLabel.isBlank()) {
+                    throw new RuntimeException("Element sans label " + elementId);
+                }
                 element = Taxonomie.TaxonomieCategorie.TaxonomieElement.build(
+                        elementId,
                         new HashMap<>(),
                         elementLabel,
                         emoji,

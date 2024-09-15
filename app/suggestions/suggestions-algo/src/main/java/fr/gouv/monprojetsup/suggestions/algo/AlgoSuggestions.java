@@ -27,6 +27,7 @@ import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -130,13 +131,13 @@ public class AlgoSuggestions {
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
 
 
-        //ajout des correspondances de interets
-        edgesKeys.putAll(data.edgesItemssGroupeItems());
-        edgesKeys.replaceSpecificByGeneric(data.edgesItemssGroupeItems(), 1.0);
+        //ajout des correspondances atome --> groupement atomes
+        //edgesKeys.putAll(data.edgesAtometoElement());
+        edgesKeys.replaceSpecificByGeneric(data.edgesAtometoElement(), 1.0);
 
         //passage au référentiel des formations MPS
         val edgesFilieresGroupes = data.edgesFormationPsupFormationMps();
-        edgesKeys.putAll(edgesFilieresGroupes);
+        //edgesKeys.putAll(edgesFilieresGroupes);
         edgesKeys.replaceSpecificByGeneric(edgesFilieresGroupes, 1.0);
 
         //LAS inheritance, both from their mother licence and from PASS
@@ -168,18 +169,19 @@ public class AlgoSuggestions {
 
 
     public static double getSmallCapacityScore() {
-        return 1.0;
+        return FULL_MATCH_SCORE;
     }
 
 
     /**
      * Get affinities associated to a profile.
      *
-     * @param pf  the profile
-     * @param cfg the config
+     * @param pf            the profile
+     * @param cfg           the config
+     * @param inclureScores if true, the scores are included in the result
      * @return the affinities
      */
-    public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg) {
+    public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg, boolean inclureScores) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -193,7 +195,7 @@ public class AlgoSuggestions {
                 getFormationIds().stream()
                 .collect(Collectors.toMap(
                         fl -> fl,
-                        affinityEvaluator::getAffinityEvaluation
+                        fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
                 ));
 
         //computing maximal score for etalonnage
@@ -232,9 +234,12 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the suggestions, each indexed with a score
      */
-    public @NotNull List<Pair<String, Double>> getFormationsSuggestions(@NotNull ProfileDTO pf, @NotNull Config cfg) {
+    public @NotNull Map<String, @NotNull Map<String,@NotNull Double>> getFormationsSuggestions(
+            @NotNull ProfileDTO pf,
+            @NotNull Config cfg,
+            boolean inclureScores) {
 
-        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(getFormationsAffinities(pf, cfg));
+        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(getFormationsAffinities(pf, cfg, inclureScores));
 
         //reordering with the following diversity rules
         //the concatenation of the favoris and the suggestions shoudl include at most 1/3 rare formation
@@ -242,7 +247,7 @@ public class AlgoSuggestions {
 
         Map<Affinite.SuggestionDiversityQuota, Double> totals = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
 
-        List<Pair<String, Double>> result = new ArrayList<>();
+        Map<String, @NotNull Map<String,@NotNull Double>> result = new HashMap<>();
 
         while(!affinities.isEmpty()) {
             int nb = result.size() + 1;
@@ -269,14 +274,17 @@ public class AlgoSuggestions {
                     .findFirst().orElse(null);
 
             if(choice == null) {
-                //can happen when all scores are zer
+                //can happen when all scoresDiversiteResultats are zer
                 choice = affinities.getFirst();
             }
 
-            result.add(Pair.of(choice.getLeft(), choice.getRight().affinite()));
+            result.put(
+                    choice.getLeft(),
+                    choice.getRight().toMap()
+            );
             affinities.remove(choice);
 
-            choice.getRight().scores().forEach((k,v) -> totals.merge(k, v, Double::sum));
+            choice.getRight().scoresDiversiteResultats().forEach((k, v) -> totals.merge(k, v, Double::sum));
 
         }
 

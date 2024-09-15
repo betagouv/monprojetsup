@@ -4,27 +4,41 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @SuppressWarnings("unused")
 public record Affinite(
         double affinite,
-        EnumMap<SuggestionDiversityQuota, Double> scores
+        Map<String,Double> scoresAdequationProfil,
+
+        EnumMap<SuggestionDiversityQuota, Double> scoresDiversiteResultats
+
 ) {
 
+    public static final String CHAMP_SCORE_AGGREGE = "aggrege";
+
     public boolean satisfiesAllOf(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
-        return affinite > NO_MATCH_SCORE && scores.entrySet().stream().allMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
+        return affinite > NO_MATCH_SCORE && scoresDiversiteResultats.entrySet().stream().allMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
     }
 
     public boolean satisfiesOneOf(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
-        return affinite > NO_MATCH_SCORE && scores.entrySet().stream().anyMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
+        return affinite > NO_MATCH_SCORE && scoresDiversiteResultats.entrySet().stream().anyMatch(e -> e.getValue() >= minScoreForQuota.get(e.getKey()));
     }
 
     public int getNbQuotasSatisfied(Map<SuggestionDiversityQuota, Double> minScoreForQuota) {
         if (affinite <= NO_MATCH_SCORE) return 0;
-        return (int) scores.entrySet().stream().filter(e -> e.getValue() >= minScoreForQuota.get(e.getKey())).count();
+        return (int) scoresDiversiteResultats.entrySet().stream().filter(e -> e.getValue() >= minScoreForQuota.get(e.getKey())).count();
+    }
+
+    public Map<String, Double> toMap() {
+        HashMap<String,Double> result = new HashMap<>(scoresAdequationProfil);
+        result.put(CHAMP_SCORE_AGGREGE, affinite);
+        return result;
     }
 
     public enum SuggestionDiversityQuota {
@@ -45,12 +59,21 @@ public record Affinite(
     }
 
     public static Affinite getNoMatch() {
-        return new Affinite(NO_MATCH_SCORE, new EnumMap<>(SuggestionDiversityQuota.class));
+        return new Affinite(NO_MATCH_SCORE, Map.of(), new EnumMap<>(SuggestionDiversityQuota.class));
     }
 
     public static Affinite round(Affinite aff, double finalMaxScore) {
-        double newAffinite = Math.max(0.0, Math.min(1.0, Math.round((aff.affinite / finalMaxScore) * 10e6) / 10e6));
-        return new Affinite(newAffinite, aff.scores);
+        double newAffinite = roundScore(aff.affinite, finalMaxScore);
+        Map<String,Double> newScoresAdequationProfil = aff.scoresAdequationProfil.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> roundScore(e.getValue(), FULL_MATCH_SCORE)
+                ));
+        return new Affinite(newAffinite, newScoresAdequationProfil, aff.scoresDiversiteResultats);
+    }
+
+    private static double roundScore(double affinite, double finalMaxScore) {
+        return Math.max(0.0, Math.min(1.0, Math.round((affinite / finalMaxScore) * 10e6) / 10e6));
     }
 
     public @NotNull Affinite max(@Nullable Affinite affinite) {

@@ -83,8 +83,8 @@ public record OnisepData(
 
     public @NotNull List<Pair<String,String>> getEdgesAtomeToElement() {
         return Stream.concat(
-                interets.getItemVersGroupe(),
-                domaines.getItemVersGroupe()
+                interets.getAtomesversElements(),
+                domaines.getAtomesversElements()
         ).toList();
     }
 
