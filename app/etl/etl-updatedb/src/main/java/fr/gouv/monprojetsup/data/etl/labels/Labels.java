@@ -69,7 +69,7 @@ public class Labels {
         });
 
         psupData.formations().typesMacros.forEach((frCod, frLib) -> {
-                    String key = TYPE_FORMATION_PREFIX + frCod;
+                    String key = gFrCodToMpsId(frCod);
                     String libelle = getLibelleFront(key, frLib);
                     if(includeKeys) libelle = includeKey(key, libelle);
                     result.put(key, libelle);

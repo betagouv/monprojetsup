@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
+import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Suggestion;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.SuggestionDTO;
 import lombok.val;
@@ -79,13 +79,13 @@ public class SuggestionsEvaluator {
                 Map<String, Integer> suggestionsRanks = new HashMap<>();
                 int k = 1;
                 for (Suggestion sugg : refCase.suggestions()) {
-                    if(Helpers.isFiliere(sugg.fl())) {
+                    if(Constants.isFiliere(sugg.fl())) {
                         suggestionsRanks.put(sugg.fl(), k);
                         k++;
                     }
                 }
                 Suggestion worstExpl = refCase.suggestions()
-                        .stream().filter(s -> Helpers.isFiliere(s.fl()) )
+                        .stream().filter(s -> Constants.isFiliere(s.fl()) )
                         .reduce((suggestion, suggestion2) -> suggestion2)
                         .orElse(null);
                 String worst = worstExpl == null ? "null" : worstExpl.humanReadable(labels);
@@ -143,7 +143,7 @@ public class SuggestionsEvaluator {
                     if(refCase.suggestions() != null) {
                         fos.write("************ ACTUAL SUGGESTIONS ******************\n");
                         fos.append(refCase.suggestions().stream()
-                                .filter(s -> Helpers.isFiliere(s.fl()))
+                                .filter(s -> Constants.isFiliere(s.fl()))
                                 .map(e -> getOKPrefix(refCase, e.fl()) + data.getLabel(e.fl()))
                                 .collect(Collectors.joining("\n", "", "\n")));
                     }
@@ -163,7 +163,7 @@ public class SuggestionsEvaluator {
     private static String getOKPrefix(ReferenceCase refCase, String flCodSugg) {
         val favoris = refCase.pf().suggApproved().stream()
                 .map(SuggestionDTO::fl)
-                .filter(Helpers::isFiliere)
+                .filter(Constants::isFiliere)
                 .collect(Collectors.toMap(fl -> fl, fl -> 1));
         int rank = getRank(flCodSugg, favoris);
         if(rank > 0) return "fav      \t";

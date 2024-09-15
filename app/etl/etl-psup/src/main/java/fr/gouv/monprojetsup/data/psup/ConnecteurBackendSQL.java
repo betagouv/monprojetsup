@@ -41,6 +41,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 
 public class ConnecteurBackendSQL {
@@ -739,7 +740,7 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int gTaCod = result.getInt(2);
-                    gtaToGcn.computeIfAbsent(Constants.FORMATION_PREFIX + gTaCod, z -> new HashSet<>()).add(gCnCod);
+                    gtaToGcn.computeIfAbsent(gTaCodToMpsId(gTaCod), z -> new HashSet<>()).add(gCnCod);
                 }
             }
         }

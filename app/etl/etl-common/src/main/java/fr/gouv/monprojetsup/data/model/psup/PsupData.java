@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.model.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.model.Candidat;
 import fr.gouv.monprojetsup.data.model.Voeu;
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
@@ -122,7 +121,7 @@ public record PsupData(
     }
 
     public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
-        liensOnisep.put(FILIERE_PREFIX + gFlCod, lien);
+        liensOnisep.put(gFlCodToMpsId(gFlCod), lien);
     }
 
     public @Nullable String getRecoPremGeneriques(Integer gFlCod) {
@@ -298,7 +297,7 @@ public record PsupData(
                     || fr == ECOLE_COMMERCE_PSUP_FR_COD
 
             ) {
-                String grp = Constants.TYPE_FORMATION_PREFIX + fr;
+                String grp = gFrCodToMpsId(fr);
                 formations.filieres.values().stream()
                         .filter(fil -> fil.gFrCod == fr)
                         .forEach(fil -> flToGrp.put(Constants.gFlCodToMpsId(fil.gFlCod), grp));
@@ -359,7 +358,7 @@ public record PsupData(
         /* ajout des filières dans leurs propres regroupements */
         val filieresWhichAreGroupsAsWell = flToGrp.values()
                 .stream()
-                .filter(Helpers::isFiliere)
+                .filter(Constants::isPsupFiliere)
                 .distinct()
                 .toList();
         filieresWhichAreGroupsAsWell.forEach(s -> flToGrp.put(s, s));

@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.data.model.rome;
 
 import fr.gouv.monprojetsup.data.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public record InteretsRome(List<Item> arbo_centre_interet) {
@@ -20,17 +19,9 @@ public record InteretsRome(List<Item> arbo_centre_interet) {
             List<Metier> liste_metier
     ) {
 
-        public Item() {
-            this("", new ArrayList<>());
-        }
-
         public String getKey() {
             return Constants.CENTRE_INTERETS_ROME + Math.abs(libelle_centre_interet().hashCode());
         }
-    }
-
-    public InteretsRome() {
-        this(new ArrayList<>());
     }
 
 }

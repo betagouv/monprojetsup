@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
@@ -23,9 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
-import static fr.gouv.monprojetsup.data.Constants.gFlCodToFrontId;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.Constants.isFiliere;
+import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
@@ -154,9 +154,7 @@ public class AlgoSuggestions {
 
         LOGGER.info("Restricting graph to the prestar of recos");
         Set<String> before = new HashSet<>(edgesKeys.nodes());
-        Set<String> recoNodes = edgesKeys.nodes().stream().filter(
-                Helpers::isFiliere
-        ).collect(Collectors.toSet());
+        Set<String> recoNodes = edgesKeys.nodes().stream().filter(Constants::isFiliere).collect(Collectors.toSet());
         Set<String> useful = edgesKeys.preStar(recoNodes);
         edgesKeys.retainAll(useful);
         Set<String> after = new HashSet<>(edgesKeys.nodes());
@@ -313,7 +311,7 @@ public class AlgoSuggestions {
         if(cles != null) {
             clesFiltrees = new HashSet<>(cles);
         } else {
-            clesFiltrees = new HashSet<>(edgesKeys.nodes().stream().filter(Helpers::isMetier).toList());
+            clesFiltrees = new HashSet<>(edgesKeys.nodes().stream().filter(Constants::isMetier).toList());
         }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 

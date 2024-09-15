@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.dto.explanations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,25 +45,9 @@ record ExplanationTagShort(List<String> ns) {
     public String toExplanation(String sep, Map<String,String> labels) {
 
         return this.ns().stream()
-                .filter(Helpers::isFiliere)
                 .sorted().map(
                         z -> labels.getOrDefault(z,z)
-                ).collect(Collectors.joining(sep, "\t", "\n")) +
-                this.ns().stream()
-                        .filter(Helpers::isMetier)
-                        .sorted().map(
-                                z -> labels.getOrDefault(z,z)
-                        ).collect(Collectors.joining(sep, "\n\t", "\n")) +
-                this.ns().stream()
-                        .filter(Helpers::isTheme)
-                        .sorted().map(
-                                z -> labels.getOrDefault(z,z)
-                        ).collect(Collectors.joining(sep, "\n\t", "\n")) +
-                this.ns().stream()
-                        .filter(Helpers::isInteret)
-                        .sorted().map(
-                                z -> labels.getOrDefault(z,z)
-                        ).collect(Collectors.joining(sep, "\n\t", "\n"));
+                ).collect(Collectors.joining(sep, "\t", "\n"));
     }
 }
 

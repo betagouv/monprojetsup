@@ -12,10 +12,8 @@
         "Analyse et méthodes en design (AMD)"
       ],
       "interests": [
-        "T_IDEO2_4387",
-        "T_IDEO2_4402",
-        "T_IDEO2_4398",
-        "T_IDEO2_4404"
+        "dom5",
+        "dom22"
       ],
       "moygen": "16",
       "choices": [
@@ -25,7 +23,7 @@
           "score": 3
         },
         {
-          "fl": "MET_936)",
+          "fl": "MET.936)",
           "status": 1,
           "score": 5
         }
@@ -47,21 +45,19 @@
         "Mathématiques"
       ],
       "interests": [
-        "T_IDEO2_4809",
-        "T_ROME_1814691478",
-        "T_ROME_2018646295",
-        "T_ITM_1248",
-        "T_ITM_PERSO1"
+        "ci1",
+        "ci6",
+        "ci25"
       ],
       "moygen": "13.5",
       "choices": [
         {
-          "fl": "MET_161",
+          "fl": "MET.161",
           "status": 1,
           "score": 4
         },
         {
-          "fl": "fl250",
+          "fl": "fl2042",
           "status": 1,
           "score": 5
         }
@@ -81,7 +77,7 @@
         "Mathématiques"
       ],
       "interests": [
-        "T_IDEO2_4337","T_IDEO2_4375","T_IDEO2_4407","T_IDEO2_4342","T_IDEO2_4412","T_IDEO2_4333"
+        "dom34","dom32","dom33","dom34","dom35","dom36"
       ],
       "moygen": "10",
       "choices": [

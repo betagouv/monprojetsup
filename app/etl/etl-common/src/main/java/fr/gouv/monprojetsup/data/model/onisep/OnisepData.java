@@ -17,8 +17,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.gouv.monprojetsup.data.Constants.cleanup;
-
 public record OnisepData(
         Taxonomie domaines,
 
@@ -99,7 +97,7 @@ public record OnisepData(
 
         return metiersIdeo.stream()
                 .flatMap(metier -> metier.metiersAssocies().stream()
-                        .map(m -> Pair.of(metier.ideo(), cleanup(m.id()))))
+                        .map(m -> Pair.of(metier.ideo(), m.id())))
                 .toList();
     }
 
@@ -127,7 +125,7 @@ public record OnisepData(
     ) {
         Map<String, Set<String>> result = new HashMap<>();
         Map<String,MetierIdeoDuSup> metiersMap = metiers.stream()
-                .collect(Collectors.toMap(z -> cleanup(Objects.requireNonNull(z.ideo())), z -> z));
+                .collect(Collectors.toMap(z -> Objects.requireNonNull(z.ideo()), z -> z));
         descriptifs.keyToDescriptifs().forEach((key, descriptif) -> {
             if (!descriptif.hasError() && descriptif.presentation() != null) {
                 int i = descriptif.presentation().indexOf("Exemples de métiers");

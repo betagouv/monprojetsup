@@ -51,5 +51,11 @@ class OnisepDataLoaderTest {
         assertThat(onisepData.edgesMetiersFormations).anyMatch { it.right == Constants.gFlCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FL_COD2) }
     }
 
+    @Test
+    fun `Il y a suffisament arètes formations métiers`() {
+        assertThat(onisepData.edgesMetiersFormations).hasSizeGreaterThanOrEqualTo(TestData.MIN_NB_ARETES_FORMATIONS_METIERS);
+    }
+
+
 }
 

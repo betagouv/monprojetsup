@@ -6,7 +6,6 @@ import fr.gouv.monprojetsup.data.metier.entity.MetierEntity;
 import fr.gouv.monprojetsup.data.referentiel.entity.DomaineEntity;
 import fr.gouv.monprojetsup.data.referentiel.entity.InteretEntity;
 import fr.gouv.monprojetsup.data.tools.CsvTools;
-import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
@@ -35,7 +34,6 @@ public class AuditSuggestionsData {
 
     private final Map<String, String> debugLabels;
     private final Edges edges;
-    private final Set<String> relatedtoHealth;
     private final Set<String> domaines;
     private final Set<String> metiers;
     private final Set<String> interets;
@@ -54,7 +52,6 @@ public class AuditSuggestionsData {
         this.labels = data.getLabels();
         this.debugLabels = data.getDebugLabels();
         this.edges = algo.getEdgesKeys();
-        this.relatedtoHealth = algo.getRelatedToHealth();
         this.domaines = domainesDb.findAll().stream().map(DomaineEntity::getId).collect(Collectors.toSet());
         this.metiers = metiersDb.findAll().stream().map(MetierEntity::getId).collect(Collectors.toSet());
         this.interets = interetsDb.findAll().stream().map(InteretEntity::getId).collect(Collectors.toSet());
@@ -222,22 +219,4 @@ public class AuditSuggestionsData {
     }
 
 
-    private void outputGraph() throws IOException {
-        Serialisation.toJsonFile("graph.json", edges.edges(), true);
-    }
-    private void outputSemanticGraph() throws IOException {
-        Edges edgesLabels = new Edges();
-        edgesLabels.createLabelledGraphFrom(edges, debugLabels);
-        Serialisation.toJsonFile("semantic_graph.json", edgesLabels, true);
-    }
-
-    private void outputRelatedToHealth() throws IOException {
-        /* formations liés aux métiers de la santé */
-        Serialisation.toJsonFile("relatedToHealth.json",
-                relatedtoHealth
-                        .stream().map(this::getDebugLabel)
-                        .toList()
-                , true);
-
-    }
 }

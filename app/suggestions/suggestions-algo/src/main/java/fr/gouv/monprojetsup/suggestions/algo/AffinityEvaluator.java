@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
-import fr.gouv.monprojetsup.data.Helpers;
 import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
@@ -20,10 +20,10 @@ import org.springframework.cache.annotation.Cacheable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.Helpers.isFiliere;
+import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+import static fr.gouv.monprojetsup.suggestions.Constants.BR;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.*;
 import static java.util.Map.entry;
 
@@ -68,7 +68,7 @@ public class AffinityEvaluator {
         List<SuggestionDTO> approved = pf.suggApproved();
         this.flApproved = approved.stream()
                 .filter(s -> s.score() == null || s.score() >= 3)
-                .map(SuggestionDTO::fl).filter(s -> s.startsWith(FILIERE_PREFIX)).toList();
+                .map(SuggestionDTO::fl).filter(Constants::isMpsFormation).toList();
 
         List<SuggestionDTO> rejectedSuggestions = pf.suggRejected();
 
@@ -555,65 +555,6 @@ public class AffinityEvaluator {
                 )) + ").";
     }
 
-    public void restrictPathesToTarget(String key) {
-        pathesFromTagsIndexedByTarget.keySet().retainAll(List.of(key));
-    }
-
-    public List<Suggestion> getCloseTagsSuggestionsOrderedByIncreasingDistance(
-            int maxLength,
-            boolean includeExplanations,
-            int maxNbSuggestions
-    ) {
-
-        //stocke les chemins de chaque match
-        Map<String, Set<Path>> matches = new HashMap<>();
-
-        //stocke les interests de chaque match, obtenus en sommant les interests des chemins individuels
-        Map<String, Double> scores = new HashMap<>();
-
-        //on itère sur les chemins depuis les noeuds activés, source par source
-        pathesFromTagsIndexedByTarget.forEach((s1, paths) -> {
-            if (!alreadyKnown.contains(s1)) {
-                paths.forEach(path -> {
-                    if (path.size() > 1 && path.size() <= maxLength) {
-                        Set<Path> pathesSet = matches.computeIfAbsent(s1, z -> new HashSet<>());
-                        if(includeExplanations) pathesSet.add(path);
-                        double subscore = path.score();
-                        scores.put(s1, subscore + scores.getOrDefault(s1, 0.0));
-                    }
-                });
-            }
-        });
-
-        List<String> nodes = new ArrayList<>(matches.keySet());
-        nodes.sort(Comparator.comparingDouble(node -> -scores.get(node)));
-
-        return nodes.stream()
-                .filter(s -> s.startsWith(SEC_ACT_PREFIX_IN_GRAPH))
-                .limit(Math.min(maxNbSuggestions, cfg.maxNbSuggestions()))
-                .map(s -> {
-                            Set<Path> pathes = matches.getOrDefault(s, Collections.emptySet());
-                            List<Explanation> explanations;
-                            if(includeExplanations) {
-                                explanations = new ArrayList<>();
-                                if (cfg.isVerboseMode()) {
-                                    double score = scores.getOrDefault(s, 0.0);
-                                    explanations.add(Explanation.getDebugExplanation("Score : " + score + BR));
-                                }
-                                explanations.add(Explanation.getTagExplanationShort(pathes));
-                            } else {
-                                explanations = null;
-                            }
-                            return Suggestion.getPendingSuggestion(
-                                    s,
-                                    explanations,
-                                    null
-                            );
-                        }
-                )
-                .toList();
-    }
-
     private double getBonusApprentissage(String grp, List<Pair<Double, Explanation>> expl, double weight) {
         if (pf.apprentissage() == null) return 0.0;
         boolean isApp = algo.existsInApprentissage(grp);
@@ -685,21 +626,10 @@ public class AffinityEvaluator {
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 
         List<Explanation> explanations;
-        if (Helpers.isFiliere(key)) {
+        if (isFiliere(key)) {
             explanations = getExplanations(key).getLeft();
         } else {
-            restrictPathesToTarget(key);
-            explanations =
-                    getCloseTagsSuggestionsOrderedByIncreasingDistance(
-                            MAX_LENGTH_FOR_SUGGESTIONS,
-                            true,
-                            cfg.maxNbSuggestions()
-                    )
-                            .stream()
-                            .filter(e -> e.expl() != null)
-                            .flatMap(e -> e.expl().stream())
-                            .toList();
-
+            explanations = List.of();
         }
         return new GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples(
                 key,

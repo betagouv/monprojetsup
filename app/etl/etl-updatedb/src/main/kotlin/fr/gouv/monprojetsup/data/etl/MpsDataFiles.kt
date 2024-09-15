@@ -1,8 +1,7 @@
 package fr.gouv.monprojetsup.data.etl
 
+import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.Constants.*
-import fr.gouv.monprojetsup.data.Helpers.isFiliere
-import fr.gouv.monprojetsup.data.Helpers.isMetier
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.*
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
@@ -695,9 +694,9 @@ class MpsDataFiles(
         val result = HashMap<String,Int?>()
         ids.forEach { id ->
             var duree = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
-            if(duree == null && isFiliere(id)) {
+            if(duree == null && Constants.isPsupFiliere(id)) {
                 try {
-                    val codeFilierePsup = Integer.parseInt(id.substring(FILIERE_PREFIX.length))
+                    val codeFilierePsup = mpsIdToGFlCod(id);
                     val filiere = psupData.filieres()[codeFilierePsup]
                     if(filiere != null) {
                         duree = psupData.getDuree(filiere)

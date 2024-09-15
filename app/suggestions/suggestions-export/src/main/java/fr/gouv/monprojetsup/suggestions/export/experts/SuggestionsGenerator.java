@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.export.experts;
 
 import com.google.gson.reflect.TypeToken;
-import fr.gouv.monprojetsup.data.Helpers;
+import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
@@ -59,7 +59,7 @@ public class SuggestionsGenerator {
 
         if(ONLY_FORMATIONS) {
             results.cases().forEach(referenceCase -> referenceCase.suggestions().removeIf(
-                    suggestion -> !Helpers.isFiliere(suggestion.fl())
+                    suggestion -> !Constants.isFiliere(suggestion.fl())
             ));
         }
 

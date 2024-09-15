@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.export
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsEvaluator
 import fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator
 import fr.gouv.monprojetsup.suggestions.export.reference.AuditSuggestionsData
-import fr.gouv.monprojetsup.suggestions.export.reference.ExportSuggestionsData
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -44,16 +43,6 @@ class DefaultExportRunner(
     override fun run(vararg args: String?) {
         diagnoseSuggestionsData.outputDiagnostics()
     }
-}
-
-@Component
-@Profile("export")
-class Export(val exportSuggestionsData: ExportSuggestionsData) : CommandLineRunner
-{
-    override fun run(vararg args: String?) {
-        exportSuggestionsData.export()
-    }
-
 }
 
 @Component

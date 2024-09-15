@@ -1,19 +1,10 @@
 package fr.gouv.monprojetsup.data;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public class Constants {
-    public static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
-    public static final String FILIERE_PREFIX = "fl";//like g_fl_cod
-    public static final String FORMATION_PREFIX = "ta";//like g_ta_cod
-    public static final String MET_PREFIX = "MET_";
-    public static final String THEME_PREFIX = "T_ITM";
-
-    public static final String SEC_ACT_PREFIX_IN_FILES = "T_IDEO2_";
-    public static final String SEC_ACT_PREFIX_IN_GRAPH = "SEC_";
-
-    public static final String CENTRE_INTERETS_ROME = "T_ROME_";
-    public static final String CENTRE_INTERETS_ONISEP = "T_IDEO2";
 
     public static final int PASS_FL_COD = 2047;
     public static final String URL_ARTICLE_PAS_LAS = "https://explorer-avenirs.onisep.fr/formation/les-principaux-domaines-de-formation/les-etudes-de-sante/les-voies-d-acces-aux-etudes-de-maieutique-medecine-odontologie-pharmacie";
@@ -50,11 +41,15 @@ public class Constants {
             "fr95000",//Sous-officier,
             "fr75"//Diplôme d'Université
     );
-    public static final String DATA_IDEO_DIRNAME = "data/ideo";
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
     /* constant added to the las gFlCod indexes */
     public static final Integer LAS_CONSTANT = 1000000;
+    public static final String CENTRE_INTERETS_ROME = "T-ROME.";
+
+    private static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
+    private static final String FILIERE_PREFIX = "fl";//like g_fl_cod
+    private static final String FORMATION_PREFIX = "ta";//like g_ta_cod
 
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
@@ -78,7 +73,8 @@ public class Constants {
      * @return the cleaned string
      */
     public static String cleanup(String dirty) {
-        return dirty.replaceAll("[^a-zA-Z0-9]", "_");
+        return dirty;
+        //return dirty.replaceAll("[^a-zA-Z0-9]", "_");
     }
 
     private Constants() {
@@ -86,5 +82,25 @@ public class Constants {
 
     public static String includeKey(String key, String libelle) {
         return   libelle + " (" + key + ")";
+    }
+
+    public static boolean isFiliere(@NotNull String key) {
+        return key.startsWith(Constants.FILIERE_PREFIX)
+                || key.startsWith(Constants.TYPE_FORMATION_PREFIX);
+    }
+
+    private static final String METIER_PREFIX = "MET";//like g_ta_cod
+
+    public static boolean isMetier(@NotNull String key) {
+        return key.startsWith(METIER_PREFIX);
+    }
+
+
+    public static int mpsIdToGFlCod(@NotNull String id) {
+        return Integer.parseInt(id.substring(FILIERE_PREFIX.length()));
+    }
+
+    public static boolean isPsupFiliere(@NotNull String id) {
+        return  id.startsWith(FILIERE_PREFIX);
     }
 }
