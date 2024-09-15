@@ -25,6 +25,6 @@ La Bdd doit avoir été initialisée avec l'etl.
 ### Lancer le serveur
 - Assurez-vous de disposer de java en version 19
 - Placez vous dans le dossier `app/suggestions/` 
-- Tapez ```mvn clean compile install```
-- Lancer le serveur avec ```mvn clean compile -f./suggestions-server exec:java -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.server.ApplicationSuggestionsKt```
+- Tapez ```mvn -DskipTests=true clean compile install```
+- Lancer le serveur avec ```mvn clean compile -f./suggestions-server exec:java -DskipTests=true -Dexec.mainClass=fr.gouv.monprojetsup.suggestions.server.ApplicationSuggestionsKt```
 
