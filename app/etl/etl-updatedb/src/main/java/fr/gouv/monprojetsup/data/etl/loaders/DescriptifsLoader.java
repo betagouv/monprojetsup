@@ -68,7 +68,7 @@ public class DescriptifsLoader {
 
     private static void injectFichesMetiers(List<MetierIdeoDuSup> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
         fichesMetiers.forEach(fiche -> {
-            String key = fiche.idMps();
+            String key = fiche.ideo();
             String descriptif = fiche.descriptif();
             descriptifs.inject(
                     key,

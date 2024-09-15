@@ -67,13 +67,72 @@ class MpsDataPortTest : DataPortTest(){
     }
 
     @Test
-    fun `Les elements des aretes atome element sont en lien avec les référentiels`() {
-        val edgesAtomeElement = mpsDataPort.getEdges().filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_ATOME_ELEMENT }
-        val idRef = HashSet<String>()
-        idRef.addAll(mpsDataPort.getDomaines().elementIds)
-        idRef.addAll(mpsDataPort.getInterets().elementIds)
-        val idElementsAppearingInEdges : Set<String> = edgesAtomeElement.map { it.second }.toSet()
-        assertThat(idElementsAppearingInEdges).allMatch { idRef.contains(it) }
+    fun `Les elements des aretes sont en lien avec les référentiels`() {
+        val edges = mpsDataPort.getEdges()
+
+        val idAtomesDomaines = mpsDataPort.getDomaines().atomesIds
+        val idAtomesInterets = mpsDataPort.getInterets().atomesIds
+        val idAtomes = HashSet<String>()
+        idAtomes.addAll(idAtomesDomaines)
+        idAtomes.addAll(idAtomesInterets)
+
+        val idDomaines = mpsDataPort.getDomaines().elementIds
+        val idInterets = mpsDataPort.getInterets().elementIds
+        val idElements = HashSet<String>()
+        idElements.addAll(idDomaines)
+        idElements.addAll(idInterets)
+
+        val idFormations = mpsDataPort.getFormationsMpsIds()
+        val idMetiers = mpsDataPort.getMetiersMpsIds()
+
+
+        assertThat( idAtomesInterets ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_INTERET_METIER }
+                .map { it.first }.toSet()
+        )
+        assertThat( idMetiers ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_INTERET_METIER }
+                .map { it.second }.toSet()
+        )
+        assertThat( idAtomesDomaines ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_DOMAINES_METIERS }
+                .map { it.first }.toSet()
+        )
+        assertThat( idMetiers ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_DOMAINES_METIERS }
+                .map { it.second }.toSet()
+        )
+        assertThat( idAtomes ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_ATOME_ELEMENT }
+                .map { it.first }.toSet()
+        )
+        assertThat( idElements ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_ATOME_ELEMENT }
+                .map { it.second }.toSet()
+        )
+        assertThat( idFormations ).containsAll(
+            edges
+                .filter { it.third == SuggestionsEdgeEntity.TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS }
+                .map { it.second }.toSet()
+        )
+
+        /*        const val TYPE_EDGE_INTERET_METIER: Int = 0
+        const val TYPE_EDGE_FORMATIONS_PSUP_DOMAINES: Int = 1
+        const val TYPE_EDGE_DOMAINES_METIERS: Int = 2
+        const val TYPE_EDGE_SECTEURS_METIERS: Int = 3
+        const val TYPE_EDGE_METIERS_ASSOCIES: Int = 4
+        const val TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS: Int = 5
+        const val TYPE_EDGE_LAS_TO_GENERIC: Int = 6
+        const val TYPE_EDGE_LAS_TO_PASS: Int = 7
+        const val TYPE_EDGE_ATOME_ELEMENT: Int = 8
+        const val TYPE_EDGE_METIERS_FORMATIONS_PSUP: Int = 9
+        */
     }
 
 

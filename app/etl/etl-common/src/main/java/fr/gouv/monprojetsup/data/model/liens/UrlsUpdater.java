@@ -61,14 +61,14 @@ public class UrlsUpdater {
         val urls = new HashMap<String, List<DescriptifsFormationsMetiers.Link>>();
         onisepData.metiersIdeo().forEach(metier -> {
             addUrl(
-                    metier.idMps(),
+                    metier.ideo(),
                     Constants.NEW_ONISEP_METIERS_SLUG_PREFIX + metier.ideo().replace('_', '.'),
                     metier.lib(), urls
             );
             if (metier.urlRome() != null && !metier.urlRome().isEmpty()) {
                 addUrl(metier.ideo(), metier.urlRome(), metier.libRome(), urls);
             }
-            metier.urls().forEach(url -> addUrl(metier.idMps(), url.valeur(), url.commentaire(), urls));
+            metier.urls().forEach(url -> addUrl(metier.ideo(), url.valeur(), url.commentaire(), urls));
         });
 
         for (val entry : links.entrySet()) {

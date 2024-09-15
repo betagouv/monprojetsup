@@ -395,7 +395,7 @@ class MpsDataFiles(
     }
 
     override fun getMetiersMpsIds(): List<String> {
-        return onisepData.metiersIdeo.asSequence().map { it.idMps() }.toList().sorted()
+        return onisepData.metiersIdeo.asSequence().map { it.ideo() }.toList().sorted()
             .toList()
     }
 
@@ -633,7 +633,10 @@ class MpsDataFiles(
 
     override fun getEdges(): List<Triple<String, String, Int>> {
         val result = ArrayList<Triple<String, String, Int>>()
-        val psupKeyToMpsKey = getPsupIdToMpsId()
+
+        val psupToMps = HashMap(getPsupIdToMpsId())
+        psupToMps.values.retainAll(getFormationsMpsIds().toSet())
+
         val lasToGeneric = getLasToGenericIdMapping()
         val lasToPass = getLasToPasIdMapping()
 
@@ -644,7 +647,7 @@ class MpsDataFiles(
         result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
         result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
         result.addAll(getEdges(onisepData.edgesMetiersAssocies, TYPE_EDGE_METIERS_ASSOCIES))
-        result.addAll(getEdges(psupKeyToMpsKey, TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS))
+        result.addAll(getEdges(psupToMps, TYPE_EDGE_FORMATION_PSUP_TO_FORMATION_MPS))
         result.addAll(getEdges(lasToGeneric, TYPE_EDGE_LAS_TO_GENERIC))
         result.addAll(getEdges(lasToPass, TYPE_EDGE_LAS_TO_PASS))
 

@@ -49,6 +49,16 @@ public record Taxonomie(
         return categories.stream()
                 .flatMap(g -> g.elements().stream())
                 .map(TaxonomieCategorie.TaxonomieElement::id)
+                .distinct()
+                .toList();
+    }
+
+    @NotNull
+    public Collection<@NotNull String> getAtomesIds() {
+        return categories.stream()
+                .flatMap(g -> g.elements().stream())
+                .flatMap(item -> item.atomes().keySet().stream())
+                .distinct()
                 .toList();
     }
 
