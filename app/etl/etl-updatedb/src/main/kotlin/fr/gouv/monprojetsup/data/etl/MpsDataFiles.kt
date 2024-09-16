@@ -1,11 +1,31 @@
 package fr.gouv.monprojetsup.data.etl
 
 import fr.gouv.monprojetsup.data.Constants
-import fr.gouv.monprojetsup.data.Constants.*
+import fr.gouv.monprojetsup.data.Constants.CARTE_PARCOURSUP_PREFIX_URI
+import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
+import fr.gouv.monprojetsup.data.Constants.FORMATION_PSUP_EXCLUES
+import fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS
+import fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT
+import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
+import fr.gouv.monprojetsup.data.Constants.PASS_MOT_CLE
+import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
+import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
+import fr.gouv.monprojetsup.data.Constants.isFiliere
+import fr.gouv.monprojetsup.data.Constants.isMetier
+import fr.gouv.monprojetsup.data.Constants.mpsIdToGFlCod
 import fr.gouv.monprojetsup.data.etl.labels.Labels
-import fr.gouv.monprojetsup.data.etl.loaders.*
+import fr.gouv.monprojetsup.data.etl.loaders.CsvTools
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources
+import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
+import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
+import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
-import fr.gouv.monprojetsup.data.model.*
+import fr.gouv.monprojetsup.data.model.Candidat
+import fr.gouv.monprojetsup.data.model.LatLng
+import fr.gouv.monprojetsup.data.model.Matiere
+import fr.gouv.monprojetsup.data.model.StatsFormation
+import fr.gouv.monprojetsup.data.model.Ville
+import fr.gouv.monprojetsup.data.model.Voeu
 import fr.gouv.monprojetsup.data.model.attendus.Attendus
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.model.bacs.Bac
@@ -34,7 +54,6 @@ import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.logging.Logger
 
 
@@ -368,7 +387,7 @@ class MpsDataFiles(
             if (label.contains("L1")) {
                 motsCles.add("licence", formation)
             }
-            if (label.lowercase(Locale.getDefault()).contains("infirmier")) {
+            if (label.lowercase().contains("infirmier")) {
                 motsCles.add("IFSI", formation)
             }
             if(mpsToIdeo.containsKey(formation)) {
