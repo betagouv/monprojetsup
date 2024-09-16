@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public record FormationIdeoSimple(
         /*
@@ -60,11 +59,10 @@ public record FormationIdeoSimple(
         return urlEtIdOnisep.substring(pos + 1);
     }
 
-    private static final Set<String> niveauxCertif = Set.of("5", "6", "7", "8");
-
+    
     public boolean estFormationDuSup() {
         return (libelleNiveauDeCertification != null && libelleNiveauDeCertification.toLowerCase().contains("bac +")
-                || niveauDeCertification != null && niveauxCertif.contains(niveauDeCertification)
+                //|| niveauDeCertification != null && niveauxCertif.contains(niveauDeCertification)
                 || niveauDeSortieIndicatif != null && niveauDeSortieIndicatif.toLowerCase().contains("bac +")
         );
     }
