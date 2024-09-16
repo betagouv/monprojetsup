@@ -13,10 +13,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-open class SecurityConfig {
+class SecurityConfig {
 
     @Bean
-    open fun securityFilterChain(
+    fun securityFilterChain(
         http: HttpSecurity,
         @Value("\${allowed.origins}") allowedOrigins: List<String>
     ): SecurityFilterChain {
@@ -31,7 +31,7 @@ open class SecurityConfig {
     }
 
     @Bean
-    open fun corsConfigurationSource(
+    fun corsConfigurationSource(
         allowedOrigins: List<String>
     ): CorsConfigurationSource {
         val configuration = CorsConfiguration()
