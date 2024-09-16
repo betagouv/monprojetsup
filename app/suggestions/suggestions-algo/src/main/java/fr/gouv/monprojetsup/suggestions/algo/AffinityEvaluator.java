@@ -43,7 +43,7 @@ public class AffinityEvaluator {
     private static final double ADMISSIBILITY_50 = 0.9;//at the 25 and 75 quartile
     private static final double ADMISSIBILITY_75 = 1.0;//at the 25 and 75 quartile
     private static final double ADMISSIBILITY_90 = 1.0;//above the last decile
-    public static final boolean USE_BIN = false;
+    public static final boolean USE_BIN = true;
 
     /* le profil contient t'il une marque d'intérêt pour le domaine de la santé. Utilisé pour filtrer les LAS.  */
     private final boolean isInterestedinHealth;
@@ -51,6 +51,7 @@ public class AffinityEvaluator {
     private final SuggestionsData data;
     private final AlgoSuggestions algo;
     private final @NotNull String bac;
+    private Double moyGenEstimee;
 
     public AffinityEvaluator(ProfileDTO pf, Config cfg, SuggestionsData data, AlgoSuggestions algo) {
         this.cfg = cfg;
@@ -62,6 +63,16 @@ public class AffinityEvaluator {
         if(pfBac == null) pfBac = TOUS_BACS_CODE_MPS;
         if(pfBac.equals(TOUS_BACS_CODE_LEGACY)) pfBac = TOUS_BACS_CODE_MPS;
         this.bac = pfBac;
+
+        try {
+            this.moyGenEstimee
+                    = (pf.moygen() == null || pf.moygen().isBlank())
+                    ? null
+                    : Double.parseDouble(pf.moygen())
+            ;
+        } catch (NumberFormatException ignored) {
+            this.moyGenEstimee = null;
+        }
 
         //computing filieres we do not want to give advice about
         //because they are already in the profile
@@ -89,9 +100,8 @@ public class AffinityEvaluator {
 
         //centres d'intérêts
         Set<String> nonZeroScores = new HashSet<>();
-        if(pf.interests() != null) {
-            nonZeroScores.addAll(pf.interests());
-        }
+
+        if(pf.interests() != null) nonZeroScores.addAll(pf.interests());
 
         //autres formations
         nonZeroScores.addAll(approved.stream().map(SuggestionDTO::fl).toList());
@@ -317,10 +327,9 @@ public class AffinityEvaluator {
 
 
     private double getBonusMoyGen2(String fl, List<Pair<Double, Explanation>> expl, double weight) {
-        if (pf.moygen() == null || pf.moygen().isEmpty()) return Config.NO_MATCH_SCORE;
+        if (moyGenEstimee == null) return 1.0 - MULTIPLIER_FOR_UNFITTED_NOTES;
         val stats = data.getStatsBac(fl, this.bac);
-        String moyBacEstimee = pf.moygen();
-        return getBonusNotes(expl, weight, stats, moyBacEstimee);
+        return getBonusNotes(expl, weight, stats, moyGenEstimee);
     }
 
     /**
@@ -334,14 +343,7 @@ public class AffinityEvaluator {
             @Nullable List<Pair<Double, Explanation>> expl,
             double weight,
             @Nullable Pair<String, Middle50> stats,
-            @Nullable String moy) {
-        if (moy == null) return Config.NO_MATCH_SCORE;
-        final double autoEval;
-        try {
-            autoEval = Double.parseDouble(moy);
-        } catch (NumberFormatException ignored) {
-            return 1.0 - MULTIPLIER_FOR_UNFITTED_NOTES;
-        }
+            double autoEval) {
         //on va chercher les stats pour ce type de bac et cette filiere
         if (stats == null || stats.getRight() == null) {
             if (expl != null && cfg.isVerboseMode())

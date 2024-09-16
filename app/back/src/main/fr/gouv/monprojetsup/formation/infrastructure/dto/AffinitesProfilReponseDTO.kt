@@ -24,6 +24,7 @@ data class AffinitesProfilReponseDTO(
         )
 }
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class AffinitesDTO(
     @JsonProperty(value = "key")
     val key: String,
