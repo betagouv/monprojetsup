@@ -367,8 +367,8 @@ class SuggestionApiHttpClientTest {
                 suggestionApiHttpClient.recupererLesSuggestions(unProfil)
             }.isEqualTo(
                 MonProjetSupInternalErrorException(
-                    code = "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    msg = "Erreur lors de la connexion à l'API de suggestions à l'url http://localhost:8080/suggestions",
+                    code = "ERREUR_APPEL_API",
+                    msg = "Erreur lors de la connexion à l'API à l'url http://localhost:8080/suggestions",
                     origine = exception,
                 ),
             )
@@ -379,7 +379,7 @@ class SuggestionApiHttpClientTest {
             // Given
             val url = "http://localhost:8080/suggestions"
             val mediaType = "application/json; charset=utf-8".toMediaType()
-            val reponseBody =
+            val stringBody =
                 """
                 {
                   "header": {
@@ -428,7 +428,8 @@ class SuggestionApiHttpClientTest {
                     }
                   ]
                 }
-                """.trimIndent().toResponseBody(mediaType)
+                """.trimIndent()
+            val reponseBody = stringBody.toResponseBody(mediaType)
             val callMock = mock(Call::class.java)
             given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callMock)
             val reponse =
@@ -442,8 +443,8 @@ class SuggestionApiHttpClientTest {
                 suggestionApiHttpClient.recupererLesSuggestions(unProfil)
             }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
                 .hasMessage(
-                    "Erreur lors de la désérialisation de la réponse de l'API de suggestions pour la classe " +
-                        "fr.gouv.monprojetsup.formation.infrastructure.dto.AffinitesProfilReponseDTO",
+                    "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
+                        "http://localhost:8080/suggestions pour le body suivant : $stringBody",
                 )
         }
     }
@@ -1075,8 +1076,8 @@ class SuggestionApiHttpClientTest {
                 suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl1"))
             }.isEqualTo(
                 MonProjetSupInternalErrorException(
-                    code = "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    msg = "Erreur lors de la connexion à l'API de suggestions à l'url http://localhost:8080/explanations",
+                    code = "ERREUR_APPEL_API",
+                    msg = "Erreur lors de la connexion à l'API à l'url http://localhost:8080/explanations",
                     origine = exception,
                 ),
             )
@@ -1108,8 +1109,12 @@ class SuggestionApiHttpClientTest {
                 suggestionApiHttpClient.recupererLesExplications(unProfil, listOf("fl1"))
             }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
                 .hasMessage(
-                    "Erreur lors de la désérialisation de la réponse de l'API de suggestions pour la classe " +
-                        "fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilReponseDTO",
+                    "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
+                        "http://localhost:8080/explanations pour le body suivant : {\n" +
+                        "  \"header\": {\n" +
+                        "    \"status\": 0\n" +
+                        "  }\n" +
+                        "}",
                 )
         }
     }

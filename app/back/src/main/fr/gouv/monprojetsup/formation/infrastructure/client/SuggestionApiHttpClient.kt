@@ -2,42 +2,36 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionReponseDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffinitesProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilRequeteDTO
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import kotlin.reflect.KClass
 
 @Component
 class SuggestionApiHttpClient(
     @Value("\${suggestions.api.url}")
-    private val baseUrl: String,
-    private val objectMapper: ObjectMapper,
-    private val httpClient: OkHttpClient,
-    private val logger: Logger,
-) : SuggestionHttpClient {
+    override val baseUrl: String,
+    override val objectMapper: ObjectMapper,
+    override val httpClient: OkHttpClient,
+    override val logger: Logger,
+) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesSuggestions(profilEleve: ProfilEleve.Identifie): SuggestionsPourUnProfil {
         val reponseDTO =
-            appelerAPISuggestion(
+            post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
                 requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve)),
-                classDeserialise = AffinitesProfilReponseDTO::class,
             )
         return reponseDTO.toAffinitesPourProfil()
     }
@@ -48,14 +42,13 @@ class SuggestionApiHttpClient(
         idsFormations: List<String>,
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
         val reponseDTO =
-            appelerAPISuggestion(
+            post<ExplicationFormationPourUnProfilReponseDTO>(
                 url = "$baseUrl/explanations",
                 requeteDTO =
                     ExplicationFormationPourUnProfilRequeteDTO(
                         profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         formations = idsFormations,
                     ),
-                classDeserialise = ExplicationFormationPourUnProfilReponseDTO::class,
             ).resultats
         val explications =
             idsFormations.associateWith { idFormation ->
@@ -69,37 +62,5 @@ class SuggestionApiHttpClient(
             )
         }
         return explications
-    }
-
-    private fun <T : APISuggestionReponseDTO> appelerAPISuggestion(
-        url: String,
-        requeteDTO: APISuggestionRequeteDTO,
-        classDeserialise: KClass<T>,
-    ): T {
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val jsonRequete = objectMapper.writeValueAsString(requeteDTO).toRequestBody(mediaType)
-        val requete = Request.Builder().post(jsonRequete).url(url).build()
-        val reponse =
-            try {
-                httpClient.newCall(requete).execute()
-            } catch (e: Exception) {
-                throw MonProjetSupInternalErrorException(
-                    "ERREUR_API_SUGGESTIONS_CONNEXION",
-                    "Erreur lors de la connexion à l'API de suggestions à l'url $url",
-                    e,
-                )
-            }
-        val reponseDTO =
-            try {
-                objectMapper.readValue(reponse.body?.string(), classDeserialise.java)
-            } catch (e: Exception) {
-                throw MonProjetSupInternalErrorException(
-                    "ERREUR_API_SUGGESTIONS_REPONSE",
-                    "Erreur lors de la désérialisation de la réponse de l'API de suggestions pour la " +
-                        "classe ${classDeserialise.qualifiedName}",
-                    e,
-                )
-            }
-        return reponseDTO
     }
 }

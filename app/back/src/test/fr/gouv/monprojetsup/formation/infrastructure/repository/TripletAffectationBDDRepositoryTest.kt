@@ -26,6 +26,33 @@ class TripletAffectationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
+    inner class RecupererTripletsAffectation {
+        @Test
+        @Sql("classpath:formation_triplet.sql")
+        fun `Doit retourner les triplets affectation grouper pâr formation en ignorant les inconnus`() {
+            // Given
+            val idsFormations = listOf("ta0001", "ta0002", "tainconnu")
+
+            // When
+            val result = tripletAffectationBDDRepository.recupererTripletsAffectation(idsFormations)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(
+                mapOf(
+                    "fl0001" to
+                        listOf(
+                            TripletAffectation(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                        ),
+                    "fl0003" to
+                        listOf(
+                            TripletAffectation(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
+                        ),
+                ),
+            )
+        }
+    }
+
+    @Nested
     inner class RecupererLesTripletsAffectationDeFormations {
         @Test
         @Sql("classpath:formation_triplet.sql")
