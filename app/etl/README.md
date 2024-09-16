@@ -36,7 +36,7 @@ La dernière valeur doit pointer sur un dossier contenant les fichiers de réfé
 ### Efectuer la mise à jour de la bdd MPS
 - Assurez-vous de disposer de java en version >= 19
 - Placez-vous dans le dossier `app/etl/`
-- Installez les librairies dans le repo local avec ```mvn clean compile install -DskipTests=true```
+- Installez les librairies dans le repo local avec ``````
 - Lancez la tâche de mise à jour avec ```mvn clean compile -fetl-updatedb/pom.xml exec:java -DskipTests=true -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdateMpsDbKt```
 
 ## Mettre à jour les données de référence Ideo Onisep
