@@ -6,6 +6,7 @@ export type ChampDeRechercheFormulaireProps = {
   auChangement?: ChampDeSaisieSqueletteProps["auChangement"];
   status?: ChampDeSaisieSqueletteProps["status"];
   placeholder?: ChampDeSaisieSqueletteProps["placeholder"];
+  valeurParDéfaut?: string;
   obligatoire?: ChampDeSaisieSqueletteProps["obligatoire"];
   registerHookForm?: {};
 };

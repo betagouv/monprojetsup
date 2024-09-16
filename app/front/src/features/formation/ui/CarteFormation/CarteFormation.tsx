@@ -34,7 +34,7 @@ const CarteFormation = ({
 
   return (
     <button
-      className={`grid max-w-[550px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
+      className={`grid w-full max-w-[500px] gap-4 border-2 border-solid bg-[--background-default-grey] p-6 text-left shadow-md ${classEnFonctionDeLaSélection()}`}
       onClick={() => changerFormationAffichéeId(id)}
       type="button"
     >

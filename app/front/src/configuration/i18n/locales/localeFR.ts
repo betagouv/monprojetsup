@@ -44,9 +44,11 @@ export const localeFR = {
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
   },
   PAGE_FORMATION: {
+    AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
+    RETOUR_AUX_SUGGESTIONS: "Retour aux suggestions",
     CHAMP_RECHERCHE_LABEL: "Recherche une formation",
     CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
-    SUGGESTIONS_TRIÉES_AFFINITÉ: "Suggestions triées par affinité d’après",
+    SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour à l'exploration des formations",
     BOUTON_AFFICHER_FICHE_FORMATION: "Retour à la fiche formation",

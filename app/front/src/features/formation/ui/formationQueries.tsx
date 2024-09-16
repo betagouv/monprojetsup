@@ -2,10 +2,14 @@ import { dépendances } from "@/configuration/dépendances/dépendances";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import { queryOptions } from "@tanstack/react-query";
 
-export const récupérerFormationQueryOptions = (formationId: Formation["id"]) =>
+export const récupérerFormationQueryOptions = (formationId: Formation["id"] | null) =>
   queryOptions({
     queryKey: ["formations", formationId],
     queryFn: async () => {
+      if (formationId === null) {
+        return null;
+      }
+
       return (await dépendances.récupérerFormationUseCase.run(formationId)) ?? null;
     },
   });

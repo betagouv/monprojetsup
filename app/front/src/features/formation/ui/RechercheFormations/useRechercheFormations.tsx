@@ -6,7 +6,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 
 export default function useRechercheFormations() {
-  const NB_CARACTÈRES_MINIMUM_RECHERCHE = 3;
+  const NB_CARACTÈRES_MINIMUM_RECHERCHE = 2;
   const router = useRouter();
   const { changerFormationAffichéeId } = actionsFicheFormationStore();
 

@@ -11,6 +11,7 @@ const ChampDeRechercheFormulaire = ({
   status,
   placeholder,
   obligatoire,
+  valeurParDéfaut,
   registerHookForm,
 }: ChampDeRechercheFormulaireProps) => {
   const id = useId();
@@ -42,6 +43,7 @@ const ChampDeRechercheFormulaire = ({
           role="search"
         >
           <input
+            defaultValue={valeurParDéfaut}
             type="search"
             {...propsInput}
             {...registerHookForm}

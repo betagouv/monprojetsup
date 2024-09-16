@@ -11,6 +11,6 @@ export const Route = createFileRoute("/_auth/formations/")({
   validateSearch: (searchParamètres) => ficheFormationSearchSchema.parse(searchParamètres),
   loader: async ({ context: { queryClient } }) => {
     queryClient.removeQueries({ queryKey: ["formationsSuggestions"] });
-    queryClient.removeQueries({ queryKey: ["formations", "rechercher"] });
+    queryClient.removeQueries({ queryKey: ["formations"] });
   },
 });
