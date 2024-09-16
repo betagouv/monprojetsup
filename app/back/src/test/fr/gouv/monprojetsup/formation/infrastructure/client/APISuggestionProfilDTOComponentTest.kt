@@ -5,12 +5,7 @@ import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
-import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.referentiel.domain.entity.Interet
-import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
+import fr.gouv.monprojetsup.referentiel.domain.entity.*
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -37,7 +32,7 @@ class APISuggestionProfilDTOComponentTest {
     @BeforeEach
     fun before() {
         MockitoAnnotations.openMocks(this)
-        apiSuggestionProfilDTOComponent = APISuggestionProfilDTOComponent(specialitesRepository, interetRepository)
+        apiSuggestionProfilDTOComponent = APISuggestionProfilDTOComponent()
     }
 
     @ParameterizedTest
