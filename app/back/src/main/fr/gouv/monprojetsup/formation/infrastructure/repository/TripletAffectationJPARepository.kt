@@ -4,6 +4,8 @@ import fr.gouv.monprojetsup.formation.infrastructure.entity.TripletAffectationEn
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TripletAffectationJPARepository : JpaRepository<TripletAffectationEntity, String> {
+    fun findAllByIdIn(ids: List<String>): List<TripletAffectationEntity>
+
     fun findAllByIdFormationIn(idsFormations: List<String>): List<TripletAffectationEntity>
 
     fun findAllByIdFormation(idFormation: String): List<TripletAffectationEntity>

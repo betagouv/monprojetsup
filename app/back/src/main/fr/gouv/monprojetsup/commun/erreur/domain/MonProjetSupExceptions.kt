@@ -40,7 +40,7 @@ open class MonProjetSupForbiddenException(
 data class MonProjetSupInternalErrorException(
     override val code: String,
     val msg: String,
-    val origine: Throwable?,
+    val origine: Throwable? = null,
 ) : MonProjetSup5xxExceptions(code, msg, origine)
 
 data class MonProjetIllegalStateErrorException(

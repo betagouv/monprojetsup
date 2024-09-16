@@ -9,6 +9,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
+import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -36,6 +37,9 @@ class ProfilEleveControllerTest(
 ) : ControllerTest() {
     @MockBean
     lateinit var miseAJourEleveService: MiseAJourEleveService
+
+    @MockBean
+    lateinit var miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService
 
     @Nested
     inner class `Quand on appelle la route POST profil` {
@@ -269,6 +273,9 @@ class ProfilEleveControllerTest(
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si l'élève existe, doit retourner le profil de l'élève`() {
+            // Given
+            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfil)).willReturn(unProfil)
+
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
                 .andExpect(status().isOk)
@@ -324,6 +331,110 @@ class ProfilEleveControllerTest(
                                 "ta2"
                               ],
                               "priseDeNote": "Mon voeu préféré"
+                            }
+                          ],
+                          "corbeilleFormations": [
+                            "fl0010",
+                            "fl0012"
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si les favoris de l'élève sont mis à jours, doit retourner le profil de l'élève avec ses favoris mis à jours`() {
+            // Given
+            val nouvellesFormationsFavortites =
+                listOf(
+                    VoeuFormation(
+                        idFormation = "fl5678",
+                        niveauAmbition = 3,
+                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        priseDeNote = "Mon voeu préféré",
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl1234",
+                        niveauAmbition = 1,
+                        tripletsAffectationsChoisis = emptyList(),
+                        priseDeNote = null,
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl2341",
+                        niveauAmbition = 0,
+                        tripletsAffectationsChoisis = listOf("ta6", "ta22"),
+                        priseDeNote = null,
+                    ),
+                )
+            val nouveauProfil = unProfil.copy(formationsFavorites = nouvellesFormationsFavortites)
+            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfil)).willReturn(nouveauProfil)
+
+            // When & Then
+            mvc.perform(get("/api/v1/profil")).andDo(print())
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "situation": "aucune_idee",
+                          "classe": "terminale",
+                          "baccalaureat": "Générale",
+                          "specialites": [
+                            "1056",
+                            "1054"
+                          ],
+                          "domaines": [
+                            "T_ITM_1054",
+                            "T_ITM_1534",
+                            "T_ITM_1248",
+                            "T_ITM_1351"
+                          ],
+                          "centresInterets": [
+                            "T_ROME_2092381917",
+                            "T_IDEO2_4812"
+                          ],
+                          "metiersFavoris": [
+                            "MET_123",
+                            "MET_456"
+                          ],
+                          "dureeEtudesPrevue": "indifferent",
+                          "alternance": "pas_interesse",
+                          "communesFavorites": [
+                            {
+                              "codeInsee": "75015",
+                              "nom": "Paris",
+                              "latitude": 48.851227,
+                              "longitude": 2.2885659
+                            }
+                          ],
+                          "moyenneGenerale": 14.0,
+                          "formationsFavorites": [
+                            {
+                              "idFormation": "fl5678",
+                              "niveauAmbition": 3,
+                              "tripletsAffectationsChoisis": [
+                                "ta1",
+                                "ta2"
+                              ],
+                              "priseDeNote": "Mon voeu préféré"
+                            },
+                            {
+                              "idFormation": "fl1234",
+                              "niveauAmbition": 1,
+                              "tripletsAffectationsChoisis": [],
+                              "priseDeNote": null
+                            },
+                            {
+                              "idFormation": "fl2341",
+                              "niveauAmbition": 0,
+                              "tripletsAffectationsChoisis": [
+                                "ta6",
+                                "ta22"
+                              ],
+                              "priseDeNote": null
                             }
                           ],
                           "corbeilleFormations": [
