@@ -4,17 +4,18 @@ import fr.gouv.monprojetsup.data.commun.entity.LienEntity;
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity;
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity;
 import fr.gouv.monprojetsup.data.referentiel.entity.DomaineEntity;
-import fr.gouv.monprojetsup.data.referentiel.entity.InteretEntity;
+import fr.gouv.monprojetsup.data.referentiel.entity.InteretSousCategorieEntity;
 import fr.gouv.monprojetsup.data.tools.CsvTools;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.export.DomainesDb;
-import fr.gouv.monprojetsup.suggestions.export.InteretsDb;
+import fr.gouv.monprojetsup.suggestions.export.InteretsSousCategorieDb;
 import fr.gouv.monprojetsup.suggestions.export.MetiersDb;
 import fr.gouv.monprojetsup.suggestions.infrastructure.FormationDb;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class AuditSuggestionsData {
             AlgoSuggestions algo,
             DomainesDb domainesDb,
             MetiersDb metiersDb,
-            InteretsDb interetsDb,
+            InteretsSousCategorieDb interetsDb,
             FormationDb formationDb
     ) {
         this.labels = data.getLabels();
@@ -54,7 +55,7 @@ public class AuditSuggestionsData {
         this.edges = algo.getEdgesKeys();
         this.domaines = domainesDb.findAll().stream().map(DomaineEntity::getId).collect(Collectors.toSet());
         this.metiers = metiersDb.findAll().stream().map(MetierEntity::getId).collect(Collectors.toSet());
-        this.interets = interetsDb.findAll().stream().map(InteretEntity::getId).collect(Collectors.toSet());
+        this.interets = interetsDb.findAll().stream().map(InteretSousCategorieEntity::getId).collect(Collectors.toSet());
         this.formations = formationDb.findAll().stream()
                 .collect(Collectors.toMap(
                         FormationEntity::getId,
@@ -107,8 +108,13 @@ public class AuditSuggestionsData {
                 .sorted(Comparator.comparing(Triple::getMiddle))
                 .toList();
 
+        val metiersbackedges = edges.edges().entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(v -> Pair.of(e.getKey(),v)))
+                .filter(p -> isMetier(p.getRight()))
+                .collect(Collectors.groupingBy(Pair::getRight));
+
         outputMetierDiagnostic(
-                metiersedges.stream().filter(e -> e.getRight().stream().noneMatch(this::isInteret)).map(Triple::getMiddle).toList(),
+                metiersbackedges.entrySet().stream().filter(e -> e.getValue().stream().noneMatch(p -> isInteret(p.getLeft()))).map(Map.Entry::getKey).distinct().toList(),
                 DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_centres_interets.csv"
                 );
 
