@@ -2,5 +2,5 @@ import { type Formation } from "@/features/formation/domain/formation.interface"
 
 export type ListeFormationsProps = {
   formations: Formation[];
-  formationIdAffichée: Formation["id"] | null;
+  affichéSurLaPage: "ficheFormation" | "favoris";
 };

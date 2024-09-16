@@ -1,0 +1,73 @@
+import { type FicheMétierProps } from "./FicheMétier.interface";
+import Badge from "@/components/_dsfr/Badge/Badge";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import Titre from "@/components/Titre/Titre";
+import { i18n } from "@/configuration/i18n/i18n";
+import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
+import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
+import { useQuery } from "@tanstack/react-query";
+
+const FicheMétier = ({ id }: FicheMétierProps) => {
+  const NOMBRE_FORMATIONS_À_AFFICHER = 5;
+
+  const { data: métier, isFetching: chargementEnCours } = useQuery(récupérerMétierQueryOptions(id));
+
+  if (métier === null) return null;
+
+  if (!métier || chargementEnCours) return <AnimationChargement />;
+
+  return (
+    <>
+      <div className="mb-6 lg:mt-6">
+        <Badge
+          titre={i18n.COMMUN.MÉTIER}
+          type="nouveauté"
+        />
+      </div>
+      <div className="*:mb-6">
+        <Titre niveauDeTitre="h1">{métier.nom}</Titre>
+      </div>
+      <div className="mt-9">
+        <BoutonsActionsMétier
+          métier={métier}
+          taille="grand"
+        />
+      </div>
+      <hr className="mb-9 mt-5" />
+      <p className="grid gap-12">{métier.descriptif}</p>
+      {métier.formations.length > 0 && (
+        <div className="mt-12">
+          <div className="*:mb-4">
+            <Titre
+              niveauDeTitre="h2"
+              styleDeTitre="text--lead"
+            >
+              {i18n.PAGE_FAVORIS.FORMATIONS_POUR_UN_MÉTIER}
+            </Titre>
+          </div>
+          <ul className="grid list-none justify-start gap-4 p-0">
+            {métier.formations.slice(0, NOMBRE_FORMATIONS_À_AFFICHER).map((formation) => (
+              <li key={formation.id}>
+                <LienInterne
+                  ariaLabel={formation.nom}
+                  href="/formations"
+                  paramètresSearch={{ formation: formation.id }}
+                  variante="simple"
+                >
+                  {formation.nom}{" "}
+                  <span
+                    aria-hidden="true"
+                    className="fr-icon-arrow-right-line fr-icon--sm"
+                  />
+                </LienInterne>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default FicheMétier;

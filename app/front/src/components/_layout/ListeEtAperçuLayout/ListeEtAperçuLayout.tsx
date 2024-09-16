@@ -1,0 +1,38 @@
+import { type ListeEtAperçuLayoutProps } from "./ListeEtAperçuLayout.interface";
+import {
+  actionsListeEtAperçuStore,
+  afficherBarreLatéraleEnMobileListeEtAperçuStore,
+} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { useEffect } from "react";
+
+const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps) => {
+  const { réinitialiserÉlémentAffiché } = actionsListeEtAperçuStore();
+  const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
+
+  const classBackgroundEnFonctionDeAfficherLaBarreLatérale = () => {
+    if (afficherBarreLatéraleEnMobile && variante === "formations") {
+      return "bg-[--background-contrast-beige-gris-galet]";
+    }
+
+    if (afficherBarreLatéraleEnMobile && variante === "favoris") {
+      return "bg-[--background-open-blue-france]";
+    }
+
+    if (variante === "formations")
+      return "bg-white lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-50% lg:to-white lg:to-50%";
+
+    return "bg-white lg:bg-gradient-to-r lg:from-[--background-open-blue-france] lg:from-50% lg:to-white lg:to-50%";
+  };
+
+  useEffect(() => {
+    réinitialiserÉlémentAffiché();
+  }, [réinitialiserÉlémentAffiché]);
+
+  return (
+    <div className={`h-full ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>
+      <div className="fr-container h-full lg:grid lg:grid-cols-[450px_1fr] xl:grid-cols-[490px_1fr]">{children}</div>
+    </div>
+  );
+};
+
+export default ListeEtAperçuLayout;

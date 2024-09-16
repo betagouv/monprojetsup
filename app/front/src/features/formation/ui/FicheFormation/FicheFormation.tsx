@@ -4,26 +4,24 @@ import { type FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
 import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation";
 import Badge from "@/components/_dsfr/Badge/Badge";
-import Bouton from "@/components/Bouton/Bouton";
+import Head from "@/components/_layout/Head/Head";
+import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
+import { useQuery } from "@tanstack/react-query";
 
-const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheFormationProps) => {
+const FicheFormation = ({ id }: FicheFormationProps) => {
+  const { data: formation, isFetching: chargementEnCours } = useQuery(récupérerFormationQueryOptions(id));
+
+  if (formation === null) return null;
+
+  if (!formation || chargementEnCours) return <AnimationChargement />;
+
   return (
-    <div
-      aria-live="assertive"
-      className="pb-12 pt-6 lg:pl-14"
-    >
-      <div className="ml-[-1rem] pb-6 lg:hidden">
-        <Bouton
-          auClic={afficherBarreLatéraleCallback}
-          icône={{ classe: "fr-icon-arrow-left-line", position: "gauche" }}
-          label={i18n.PAGE_FORMATION.BOUTON_AFFICHER_BARRE_LATÉRALE}
-          type="button"
-          variante="quaternaire"
-        />
-      </div>
+    <>
+      <Head title={formation.nom} />
       <div className="mb-6 lg:mt-6">
         <Badge
           titre={i18n.COMMUN.FORMATION}
@@ -86,7 +84,7 @@ const FicheFormation = ({ formation, afficherBarreLatéraleCallback }: FicheForm
         <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
         <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />
       </div>
-    </div>
+    </>
   );
 };
 

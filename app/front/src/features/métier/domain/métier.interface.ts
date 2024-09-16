@@ -6,4 +6,8 @@ export type Métier = {
     intitulé: string;
     url: string;
   }>;
+  formations: Array<{
+    id: string;
+    nom: string;
+  }>;
 };

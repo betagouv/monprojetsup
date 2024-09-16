@@ -11,6 +11,12 @@ export class métierHttpRepository implements MétierRepository {
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}
 
+  public async récupérer(métierId: string): Promise<Métier | undefined> {
+    const métiers = await this.récupérerPlusieurs([métierId]);
+
+    return métiers?.[0];
+  }
+
   public async récupérerPlusieurs(métierIds: string[]): Promise<Métier[] | undefined> {
     const paramètresDeRequête = new URLSearchParams();
 
@@ -54,6 +60,7 @@ export class métierHttpRepository implements MétierRepository {
         intitulé: lien.nom,
         url: lien.url,
       })),
+      formations: métierHttp.formations,
     };
   }
 }

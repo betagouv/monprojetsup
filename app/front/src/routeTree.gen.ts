@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthFormationsIndexImport } from './routes/_auth/formations/index'
+import { Route as AuthFavorisIndexImport } from './routes/_auth/favoris/index'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
 
 // Create Virtual Routes
@@ -71,6 +72,11 @@ const AuthProfilIndexLazyRoute = AuthProfilIndexLazyImport.update({
 
 const AuthFormationsIndexRoute = AuthFormationsIndexImport.update({
   path: '/formations/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthFavorisIndexRoute = AuthFavorisIndexImport.update({
+  path: '/favoris/',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -191,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthEleveInscriptionImport
       parentRoute: typeof AuthEleveRoute
     }
+    '/_auth/favoris/': {
+      id: '/_auth/favoris/'
+      path: '/favoris'
+      fullPath: '/favoris'
+      preLoaderRoute: typeof AuthFavorisIndexImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/formations/': {
       id: '/_auth/formations/'
       path: '/formations'
@@ -266,25 +279,184 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  AuthRoute: AuthRoute.addChildren({
-    AuthIndexLazyRoute,
-    AuthEleveRoute: AuthEleveRoute.addChildren({
-      AuthEleveInscriptionRoute: AuthEleveInscriptionRoute.addChildren({
-        AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute,
-        AuthEleveInscriptionInscriptionDomainesIndexLazyRoute,
-        AuthEleveInscriptionInscriptionEtudeIndexLazyRoute,
-        AuthEleveInscriptionInscriptionFormationsIndexLazyRoute,
-        AuthEleveInscriptionInscriptionInteretsIndexLazyRoute,
-        AuthEleveInscriptionInscriptionMetiersIndexLazyRoute,
-        AuthEleveInscriptionInscriptionProjetIndexLazyRoute,
-        AuthEleveInscriptionInscriptionScolariteIndexLazyRoute,
-      }),
-    }),
-    AuthFormationsIndexRoute,
-    AuthProfilIndexLazyRoute,
-  }),
-})
+interface AuthEleveInscriptionRouteChildren {
+  AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute: typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  AuthEleveInscriptionInscriptionDomainesIndexLazyRoute: typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
+  AuthEleveInscriptionInscriptionEtudeIndexLazyRoute: typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
+  AuthEleveInscriptionInscriptionFormationsIndexLazyRoute: typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
+  AuthEleveInscriptionInscriptionInteretsIndexLazyRoute: typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
+  AuthEleveInscriptionInscriptionMetiersIndexLazyRoute: typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
+  AuthEleveInscriptionInscriptionProjetIndexLazyRoute: typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
+  AuthEleveInscriptionInscriptionScolariteIndexLazyRoute: typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+}
+
+const AuthEleveInscriptionRouteChildren: AuthEleveInscriptionRouteChildren = {
+  AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute:
+    AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute,
+  AuthEleveInscriptionInscriptionDomainesIndexLazyRoute:
+    AuthEleveInscriptionInscriptionDomainesIndexLazyRoute,
+  AuthEleveInscriptionInscriptionEtudeIndexLazyRoute:
+    AuthEleveInscriptionInscriptionEtudeIndexLazyRoute,
+  AuthEleveInscriptionInscriptionFormationsIndexLazyRoute:
+    AuthEleveInscriptionInscriptionFormationsIndexLazyRoute,
+  AuthEleveInscriptionInscriptionInteretsIndexLazyRoute:
+    AuthEleveInscriptionInscriptionInteretsIndexLazyRoute,
+  AuthEleveInscriptionInscriptionMetiersIndexLazyRoute:
+    AuthEleveInscriptionInscriptionMetiersIndexLazyRoute,
+  AuthEleveInscriptionInscriptionProjetIndexLazyRoute:
+    AuthEleveInscriptionInscriptionProjetIndexLazyRoute,
+  AuthEleveInscriptionInscriptionScolariteIndexLazyRoute:
+    AuthEleveInscriptionInscriptionScolariteIndexLazyRoute,
+}
+
+const AuthEleveInscriptionRouteWithChildren =
+  AuthEleveInscriptionRoute._addFileChildren(AuthEleveInscriptionRouteChildren)
+
+interface AuthEleveRouteChildren {
+  AuthEleveInscriptionRoute: typeof AuthEleveInscriptionRouteWithChildren
+}
+
+const AuthEleveRouteChildren: AuthEleveRouteChildren = {
+  AuthEleveInscriptionRoute: AuthEleveInscriptionRouteWithChildren,
+}
+
+const AuthEleveRouteWithChildren = AuthEleveRoute._addFileChildren(
+  AuthEleveRouteChildren,
+)
+
+interface AuthRouteChildren {
+  AuthIndexLazyRoute: typeof AuthIndexLazyRoute
+  AuthEleveRoute: typeof AuthEleveRouteWithChildren
+  AuthFavorisIndexRoute: typeof AuthFavorisIndexRoute
+  AuthFormationsIndexRoute: typeof AuthFormationsIndexRoute
+  AuthProfilIndexLazyRoute: typeof AuthProfilIndexLazyRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthIndexLazyRoute: AuthIndexLazyRoute,
+  AuthEleveRoute: AuthEleveRouteWithChildren,
+  AuthFavorisIndexRoute: AuthFavorisIndexRoute,
+  AuthFormationsIndexRoute: AuthFormationsIndexRoute,
+  AuthProfilIndexLazyRoute: AuthProfilIndexLazyRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '': typeof AuthRouteWithChildren
+  '/': typeof AuthIndexLazyRoute
+  '/eleve': typeof AuthEleveInscriptionRouteWithChildren
+  '/favoris': typeof AuthFavorisIndexRoute
+  '/formations': typeof AuthFormationsIndexRoute
+  '/profil': typeof AuthProfilIndexLazyRoute
+  '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/eleve/inscription/domaines': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/eleve/inscription/etude': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/eleve/inscription/formations': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/eleve/inscription/interets': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/eleve/inscription/metiers': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/eleve/inscription/projet': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/eleve/inscription/scolarite': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof AuthIndexLazyRoute
+  '/eleve': typeof AuthEleveInscriptionRouteWithChildren
+  '/favoris': typeof AuthFavorisIndexRoute
+  '/formations': typeof AuthFormationsIndexRoute
+  '/profil': typeof AuthProfilIndexLazyRoute
+  '/eleve/inscription/confirmation': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/eleve/inscription/domaines': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/eleve/inscription/etude': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/eleve/inscription/formations': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/eleve/inscription/interets': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/eleve/inscription/metiers': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/eleve/inscription/projet': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/eleve/inscription/scolarite': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/_auth/': typeof AuthIndexLazyRoute
+  '/_auth/eleve': typeof AuthEleveRouteWithChildren
+  '/_auth/eleve/_inscription': typeof AuthEleveInscriptionRouteWithChildren
+  '/_auth/favoris/': typeof AuthFavorisIndexRoute
+  '/_auth/formations/': typeof AuthFormationsIndexRoute
+  '/_auth/profil/': typeof AuthProfilIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/confirmation/': typeof AuthEleveInscriptionInscriptionConfirmationIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/domaines/': typeof AuthEleveInscriptionInscriptionDomainesIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/etude/': typeof AuthEleveInscriptionInscriptionEtudeIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/formations/': typeof AuthEleveInscriptionInscriptionFormationsIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/interets/': typeof AuthEleveInscriptionInscriptionInteretsIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/metiers/': typeof AuthEleveInscriptionInscriptionMetiersIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/projet/': typeof AuthEleveInscriptionInscriptionProjetIndexLazyRoute
+  '/_auth/eleve/_inscription/inscription/scolarite/': typeof AuthEleveInscriptionInscriptionScolariteIndexLazyRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | ''
+    | '/'
+    | '/eleve'
+    | '/favoris'
+    | '/formations'
+    | '/profil'
+    | '/eleve/inscription/confirmation'
+    | '/eleve/inscription/domaines'
+    | '/eleve/inscription/etude'
+    | '/eleve/inscription/formations'
+    | '/eleve/inscription/interets'
+    | '/eleve/inscription/metiers'
+    | '/eleve/inscription/projet'
+    | '/eleve/inscription/scolarite'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/eleve'
+    | '/favoris'
+    | '/formations'
+    | '/profil'
+    | '/eleve/inscription/confirmation'
+    | '/eleve/inscription/domaines'
+    | '/eleve/inscription/etude'
+    | '/eleve/inscription/formations'
+    | '/eleve/inscription/interets'
+    | '/eleve/inscription/metiers'
+    | '/eleve/inscription/projet'
+    | '/eleve/inscription/scolarite'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_auth/'
+    | '/_auth/eleve'
+    | '/_auth/eleve/_inscription'
+    | '/_auth/favoris/'
+    | '/_auth/formations/'
+    | '/_auth/profil/'
+    | '/_auth/eleve/_inscription/inscription/confirmation/'
+    | '/_auth/eleve/_inscription/inscription/domaines/'
+    | '/_auth/eleve/_inscription/inscription/etude/'
+    | '/_auth/eleve/_inscription/inscription/formations/'
+    | '/_auth/eleve/_inscription/inscription/interets/'
+    | '/_auth/eleve/_inscription/inscription/metiers/'
+    | '/_auth/eleve/_inscription/inscription/projet/'
+    | '/_auth/eleve/_inscription/inscription/scolarite/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  AuthRoute: typeof AuthRouteWithChildren
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthRoute: AuthRouteWithChildren,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
@@ -302,6 +474,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_auth/",
         "/_auth/eleve",
+        "/_auth/favoris/",
         "/_auth/formations/",
         "/_auth/profil/"
       ]
@@ -330,6 +503,10 @@ export const routeTree = rootRoute.addChildren({
         "/_auth/eleve/_inscription/inscription/projet/",
         "/_auth/eleve/_inscription/inscription/scolarite/"
       ]
+    },
+    "/_auth/favoris/": {
+      "filePath": "_auth/favoris/index.tsx",
+      "parent": "/_auth"
     },
     "/_auth/formations/": {
       "filePath": "_auth/formations/index.tsx",

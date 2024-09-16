@@ -1,14 +1,14 @@
+import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
-import { actionsFicheFormationStore } from "@/features/formation/ui/store/useFicheFormation/useFicheFormation";
 import { useRouter } from "@tanstack/react-router";
 
 const BoutonRetourAuxSuggestions = () => {
   const router = useRouter();
-  const { changerFormationAffichéeId } = actionsFicheFormationStore();
+  const { réinitialiserÉlémentAffiché } = actionsListeEtAperçuStore();
 
   const retournerAuxSuggestions = async () => {
-    changerFormationAffichéeId(undefined);
+    réinitialiserÉlémentAffiché();
     await router.navigate({ to: "/formations" });
   };
 

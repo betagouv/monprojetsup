@@ -1,5 +1,6 @@
 const pages = {
   TABLEAU_DE_BORD: "Tableau de bord",
+  FAVORIS: "Ma sélection",
   PROFIL: "Mon profil",
   PLAN_DU_SITE: "Plan du site",
   ACCESSIBILITÉ: "Accessibilité: non conforme",
@@ -35,13 +36,27 @@ export const localeFR = {
   NAVIGATION: {
     TABLEAU_DE_BORD: pages.TABLEAU_DE_BORD,
     FORMATIONS: "Explorer les formations",
-    SÉLECTION: "Consulter ma sélection",
+    FAVORIS: "Consulter ma sélection",
+  },
+  CARTE_MÉTIER: {
+    FORMATIONS: "formation(s) pour apprendre le métier",
   },
   CARTE_FORMATION: {
     POINTS_AFFINITÉ: "point(s) d'affinité avec ton profil",
     FORMATION_DISPONIBLES: "Formation disponible dans",
     FORMATION_DISPONIBLES_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
+  },
+  PAGE_FAVORIS: {
+    TITRE_PAGE: pages.FAVORIS,
+    CATÉGORIE: "Catégorie",
+    AUCUN_FAVORI: {
+      EMOJI: "😅",
+      OUPS: "Oups...",
+      TEXTE: "Aucune sélection ne figure dans ton projet.",
+      BOUTON: "Explorer les formations",
+    },
+    FORMATIONS_POUR_UN_MÉTIER: "Exemples de formations post-bac pour faire ce métier",
   },
   PAGE_FORMATION: {
     AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
@@ -50,8 +65,6 @@ export const localeFR = {
     CHAMP_RECHERCHE_PLACEHOLDER: "Formation, métier, mots clés ...",
     SUGGESTIONS_TRIÉES_AFFINITÉ: "Résultats triés par affinité d’après",
     SUGGESTIONS_TRIÉES_AFFINITÉ_SUITE: "tes préférences ›",
-    BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour à l'exploration des formations",
-    BOUTON_AFFICHER_FICHE_FORMATION: "Retour à la fiche formation",
     ONGLET_FORMATION: "La formation",
     ONGLET_DÉTAILS: "Plus de détails",
     ONGLET_CRITÈRES: "Critères d'admission",
@@ -329,6 +342,8 @@ export const localeFR = {
     SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
     NE_PLUS_VOIR: "Ne plus voir",
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
+    BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",
+    BOUTON_AFFICHER_CONTENU_PRINCIPAL: "Retour à la fiche",
   },
   ACCESSIBILITÉ: {
     FAVORIS: "Favoris",

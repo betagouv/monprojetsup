@@ -4,14 +4,15 @@ import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSo
 import Modale from "@/components/Modale/Modale";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import { type Métier } from "@/features/métier/domain/métier.interface";
 import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
 import { useState } from "react";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
   const NOMBRE_MÉTIERS_À_AFFICHER = 10;
 
-  const [métierSélectionné, setMétierSélectionné] = useState<Métier>(métiers[0]);
+  const [métierSélectionné, setMétierSélectionné] = useState<MétiersAccessiblesFicheFormationProps["métiers"][number]>(
+    métiers[0],
+  );
 
   if (métiers.length === 0) return null;
 
@@ -46,7 +47,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
         <Modale
           boutons={
             <BoutonsActionsMétier
-              métier={métierSélectionné}
+              métier={{ ...métierSélectionné, formations: [] }}
               taille="grand"
             />
           }

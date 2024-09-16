@@ -4,6 +4,7 @@ import { z } from "zod";
 
 const ficheFormationSearchSchema = z.object({
   recherche: z.string().optional(),
+  formation: z.string().optional(),
 });
 
 export const Route = createFileRoute("/_auth/formations/")({

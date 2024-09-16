@@ -12,6 +12,10 @@ const Navigation = () => {
       titre: i18n.NAVIGATION.FORMATIONS,
       href: "/formations",
     },
+    {
+      titre: i18n.NAVIGATION.FAVORIS,
+      href: "/favoris",
+    },
   ];
 
   return (
