@@ -144,13 +144,13 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015"),
                 specialites =
                     listOf(
-                        "Sciences de la vie et de la Terre",
-                        "Mathématiques",
+                        "1001",
+                        "1049",
                     ),
                 interets =
                     listOf(
-                        "T_ROME_2092381917",
-                        "T_IDEO2_4812",
+                        "chiffres_jongler",
+                        "aider_autres",
                         "T_ITM_1054",
                         "T_ITM_1534",
                         "T_ITM_1248",
@@ -207,13 +207,13 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
-                        "Sciences de la vie et de la Terre",
-                        "Mathématiques",
+                        "1001",
+                        "1049",
                     ),
                 interets =
                     listOf(
-                        "T_ROME_2092381917",
-                        "T_IDEO2_4812",
+                        "chiffres_jongler",
+                        "aider_autres",
                         "T_ITM_1054",
                         "T_ITM_1534",
                         "T_ITM_1248",
@@ -255,8 +255,8 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("69380", "14118"),
                 specialites =
                     listOf(
-                        "Sciences de la gestion et numérique (SGN)",
-                        "Ingénierie et développement durable (IDD)",
+                        "1053",
+                        "1055",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 moyenneGenerale = "19.5",
@@ -305,7 +305,7 @@ class APISuggestionProfilDTOComponentTest {
                 alternance = "B",
                 preferencesGeographiques = emptyList(),
                 specialites = null,
-                interets = listOf("T_IDEO2_4813", "T_IDEO2_4816"),
+                interets = listOf("rechercher_experiences", "chiffres_jongler"),
                 moyenneGenerale = null,
                 choix =
                     listOf(
@@ -337,7 +337,7 @@ class APISuggestionProfilDTOComponentTest {
                 duree = "",
                 alternance = "A",
                 preferencesGeographiques = listOf("69380", "75015"),
-                specialites = listOf("Culture et sciences théâtrale (CST)"),
+                specialites = listOf("1045"),
                 interets = emptyList(),
                 moyenneGenerale = "4.9",
                 choix = emptyList(),
@@ -383,8 +383,8 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
-                        "Sciences de la vie et de la Terre",
-                        "Mathématiques",
+                        "1001",
+                        "1049",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 moyenneGenerale = "10.5",
