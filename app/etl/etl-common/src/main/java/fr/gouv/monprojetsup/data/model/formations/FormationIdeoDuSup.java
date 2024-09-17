@@ -19,7 +19,7 @@ public record FormationIdeoDuSup(
         String attendus,
         //FormationAvecMetier.PoursuitesEtudes poursuitesEtudes,
         List<String> sourcesNumeriques,
-        @NotNull Set<String> metiers,//preserved in ideo style MET.xxxx
+        @NotNull HashSet<String> metiers,//preserved in ideo style MET.xxxx
         @NotNull Set<String> motsCles,
         @NotNull Set<String> libellesOuClesSousdomainesWeb,
         boolean estIEP,
