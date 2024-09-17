@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
 import static java.util.stream.Collectors.toCollection;
 
 public record FilieresPsupVersIdeoData(
@@ -178,6 +179,27 @@ public record FilieresPsupVersIdeoData(
 
         return result;
 
+    }
+
+    public static void injectLiensFormationsPsupMetiers(
+            List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
+            Map<String,List<String>> psupToMetiersIdeo
+    ) {
+        filieresPsupToFormationsMetiersIdeo.forEach(
+                fil -> {
+                    val gFlCod = fil.gFlCod();
+                    val metiersFiliere = psupToMetiersIdeo.get(gFlCodToMpsId(gFlCod));
+                    if(metiersFiliere != null) {
+                        fil.ideoMetiersIds().addAll(metiersFiliere);
+                    }
+                    val gFrCod = fil.gFrCod();
+                    val metiersTypeformation = psupToMetiersIdeo.get(gFrCodToMpsId(gFrCod));
+                    if(metiersTypeformation != null) {
+                        fil.ideoMetiersIds().addAll(metiersTypeformation);
+                    }
+
+                }
+        );
     }
 
 

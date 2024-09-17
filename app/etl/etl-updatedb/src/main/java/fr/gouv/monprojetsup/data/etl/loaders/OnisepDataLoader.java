@@ -326,6 +326,10 @@ public class OnisepDataLoader {
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
         val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup);
 
+        LOGGER.info("chargement de " + DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH);
+        val psupToMetiersIdeo = loadLiensFormationsPsupMetiers(sources);
+        FilieresPsupVersIdeoData.injectLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
+
         LOGGER.info("Chargement des héritages psup --> psup");
         val formationsPsup = filieresPsupToFormationsMetiersIdeo.stream()
                 .flatMap(l -> Stream.of(
@@ -339,6 +343,22 @@ public class OnisepDataLoader {
         injectInFormationsPsup(filieresPsupToFormationsMetiersIdeo, heritages);
 
         return filieresPsupToFormationsMetiersIdeo;
+    }
+
+    protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsPsupMetiers(DataSources sources) {
+        Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
+        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
+        for (Map<String,String> line : lines) {
+            if(line.isEmpty()) continue;
+            String psupId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER);
+            if(psupId == null)
+                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER + " in line " + line);
+            String ideoId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_IDEO_HEADER);
+            if(ideoId == null)
+                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_IDEO_HEADER + " in line " + line);
+            result.computeIfAbsent(psupId, k -> new ArrayList<>()).add(ideoId);
+        }
+        return result;
     }
 
 
