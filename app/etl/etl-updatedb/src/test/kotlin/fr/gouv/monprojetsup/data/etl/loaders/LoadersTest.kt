@@ -1,5 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
+import fr.gouv.monprojetsup.data.Constants.isFiliere
+import fr.gouv.monprojetsup.data.Constants.isMetier
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,6 +87,13 @@ class LoadersTest {
         Assertions.assertThat(domaines.categories.flatMap { it.elements }).allMatch { it.atomes.isNotEmpty() }
     }
 
+    @Test
+    fun `Doit réussir à charger les liens formations métiers`() {
+        val liens = OnisepDataLoader.loadLiensFormationsPsupMetiers(dataSources)
+        Assertions.assertThat(liens).isNotEmpty
+        Assertions.assertThat(liens.keys).allMatch { id -> isFiliere(id) }
+        Assertions.assertThat(liens.values.stream().flatMap { it.stream() }.toList().toSet()).allMatch { id -> isMetier(id) }
+    }
 
 
 }
