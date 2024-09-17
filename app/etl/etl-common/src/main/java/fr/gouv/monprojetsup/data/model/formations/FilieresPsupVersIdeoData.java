@@ -202,6 +202,23 @@ public record FilieresPsupVersIdeoData(
         );
     }
 
+    public static void injectLiensFormationsIdeoMetiers(
+            List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
+            Map<String, List<String>> formationsIdeoToMetiersIdeo) {
+        filieresPsupToFormationsMetiersIdeo.forEach(
+                fil -> {
+                    fil.ideoFormationsIds.forEach(
+                            ideoId -> {
+                                val metiers = formationsIdeoToMetiersIdeo.get(ideoId);
+                                if (metiers != null) {
+                                    fil.ideoMetiersIds.addAll(metiers);
+                                }
+                            }
+                    );
+                }
+        );
+    }
+
 
     public void inheritMetiersAndDomainesFrom(FilieresPsupVersIdeoData rich) {
         this.ideoMetiersIds().addAll(rich.ideoMetiersIds());

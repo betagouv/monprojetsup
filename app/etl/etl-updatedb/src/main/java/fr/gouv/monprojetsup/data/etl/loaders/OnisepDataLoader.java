@@ -153,6 +153,19 @@ public class OnisepDataLoader {
         });
     }
 
+    private static void injectMetiersInFormationsIdeo(
+            Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
+            Map<String, List<String>> formationsIdeoToMetiersIdeo) {
+        formationsIdeoToMetiersIdeo.forEach((formationId, metiersId) -> {
+            val formation = formationsIdeoDuSup.get(formationId);
+            if (formation == null) {
+                LOGGER.warning(FORMATION_INCONNUE + formationId);
+            } else {
+                formation.metiers().addAll(metiersId);
+            }
+        });
+    }
+
     private static void injectInFormationsPsup(
             List<FilieresPsupVersIdeoData> formations,
             Map<String, Set<String>> richPsupToPoorPsup
@@ -350,13 +363,35 @@ public class OnisepDataLoader {
         val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;
-            String psupId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER);
-            if(psupId == null)
+            String psupIds = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER);
+            if(psupIds == null)
                 throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER + " in line " + line);
-            String ideoId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_IDEO_HEADER);
+            val psupIdList = Arrays.stream(psupIds.split(";")).map(String::trim).toList();
+            String ideoId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER);
             if(ideoId == null)
-                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_IDEO_HEADER + " in line " + line);
-            result.computeIfAbsent(psupId, k -> new ArrayList<>()).add(ideoId);
+                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER + " in line " + line);
+            for(String psupId : psupIdList) {
+                result.computeIfAbsent(psupId, k -> new ArrayList<>()).add(ideoId);
+            }
+        }
+        return result;
+    }
+
+    protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsIdeoMetiers(DataSources sources) {
+        Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
+        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
+        for (Map<String,String> line : lines) {
+            if(line.isEmpty()) continue;
+            String ideoIds = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER);
+            if(ideoIds == null)
+                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER + " in line " + line);
+            val ideosList = Arrays.stream(ideoIds.split(";")).map(String::trim).toList();
+            String ideoMetierId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER);
+            if(ideoMetierId == null)
+                throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER + " in line " + line);
+            for(String ideoId : ideosList) {
+                result.computeIfAbsent(ideoId, k -> new ArrayList<>()).add(ideoMetierId);
+            }
         }
         return result;
     }
@@ -521,7 +556,11 @@ public class OnisepDataLoader {
         injectInFormationsIdeo(formationsIdeoDuSup, licencesIdeoToCPGEIdeo);
         val mastersIdeoToLicencesIdeo  = loadIdeoHeritagesMastersLicences(sources, formationsIdeoDuSup.keySet());
         injectInFormationsIdeo(formationsIdeoDuSup, mastersIdeoToLicencesIdeo);
+        val formationsIdeoToMetiersIdeo = loadLiensFormationsIdeoMetiers(sources);
+        injectMetiersInFormationsIdeo(formationsIdeoDuSup, formationsIdeoToMetiersIdeo);
+
         return formationsIdeoDuSup;
     }
+
 
 }

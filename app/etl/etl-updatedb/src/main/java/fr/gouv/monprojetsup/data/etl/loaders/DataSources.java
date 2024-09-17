@@ -45,7 +45,8 @@ public class DataSources {
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.csv";
     public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/liensPSUP_ONISEP_2024_09_06_V1_HG.csv";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER = "MPS_ID";
-    public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_IDEO_HEADER = "MET_ID";
+    public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER = "FOR_ID";
+    public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER = "MET_ID";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH = "onisep_ideo_hotline/liens_formations_mps_metiers_ideo.csv";
     public static final String PSUP_HERITAGES_PATH = "mps/MPS_heritages.csv";
     public static final String PSUP_HERITAGES_HERITIER_HEADER = "mps_heritier";
