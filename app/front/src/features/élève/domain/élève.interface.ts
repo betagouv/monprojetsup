@@ -24,7 +24,7 @@ export type Élève = {
   formationsMasquées: string[] | null;
 };
 
-type FormationFavorite = {
+export type FormationFavorite = {
   id: string;
   niveauAmbition: 1 | 2 | 3 | null;
   tripletsAffectationsChoisis: string[];

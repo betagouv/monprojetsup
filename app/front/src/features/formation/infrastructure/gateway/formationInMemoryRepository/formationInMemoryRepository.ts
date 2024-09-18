@@ -11,6 +11,7 @@ export class formationInMemoryRepository implements FormationRepository {
 
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -34,6 +35,7 @@ export class formationInMemoryRepository implements FormationRepository {
 
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -57,6 +59,7 @@ export class formationInMemoryRepository implements FormationRepository {
 
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -80,6 +83,7 @@ export class formationInMemoryRepository implements FormationRepository {
 
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -103,6 +107,7 @@ export class formationInMemoryRepository implements FormationRepository {
 
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -125,6 +130,7 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
       liens: [],
       communes: [],
+      tripletsAffectations: [],
       admis: {
         moyenneGénérale: {
           idBac: null,

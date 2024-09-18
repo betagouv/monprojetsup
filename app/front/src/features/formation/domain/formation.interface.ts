@@ -33,6 +33,14 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
+  tripletsAffectations: Array<{
+    id: string;
+    nom: string;
+    commune: {
+      nom: string;
+      code: string;
+    };
+  }>;
   communes: string[];
   métiersAccessibles: Array<{
     id: string;
