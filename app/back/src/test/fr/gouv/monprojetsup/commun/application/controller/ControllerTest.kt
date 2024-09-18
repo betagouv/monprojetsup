@@ -15,6 +15,7 @@ import org.mockito.BDDMockito.given
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
+import java.util.UUID
 
 @ContextConfiguration(classes = [MonProjetSupTestConfiguration::class])
 @Import(value = [SecuriteConfiguration::class])
@@ -24,12 +25,13 @@ abstract class ControllerTest {
 
     @BeforeEach
     fun setup() {
-        given(eleveRepository.recupererUnEleve(id = "adcf627c-36dd-4df5-897b-159443a6d49c")).willReturn(unProfil)
+        given(eleveRepository.recupererUnEleve(id = uuid)).willReturn(unProfil)
     }
 
+    private val uuid = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c")
     val unProfil =
         ProfilEleve.Identifie(
-            id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+            id = uuid,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.TERMINALE,
             baccalaureat = "Générale",

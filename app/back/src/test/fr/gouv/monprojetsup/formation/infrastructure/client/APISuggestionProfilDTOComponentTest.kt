@@ -22,6 +22,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import java.util.UUID
 import java.util.stream.Stream
 
 class APISuggestionProfilDTOComponentTest {
@@ -106,7 +107,7 @@ class APISuggestionProfilDTOComponentTest {
     companion object {
         private val unProfil =
             ProfilEleve.Identifie(
-                id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+                id = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c"),
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 baccalaureat = "Générale",
@@ -169,7 +170,7 @@ class APISuggestionProfilDTOComponentTest {
 
         private val profilEleveSeconde =
             ProfilEleve.Identifie(
-                id = "a08266d7-7eca-4198-a753-9e6b168c277f",
+                id = UUID.fromString("a08266d7-7eca-4198-a753-9e6b168c277f"),
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
                 baccalaureat = "Générale",
@@ -231,7 +232,7 @@ class APISuggestionProfilDTOComponentTest {
             )
         private val profilEleveSecondeSTHR =
             ProfilEleve.Identifie(
-                id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
+                id = UUID.fromString("915a5cf7-cf93-43f5-98db-39d6b4b0b8b7"),
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
                 baccalaureat = "STHR",
@@ -268,7 +269,7 @@ class APISuggestionProfilDTOComponentTest {
             )
         private val profilEleveSecondeTMD =
             ProfilEleve.Identifie(
-                id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
+                id = UUID.fromString("6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a"),
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
                 baccalaureat = "S2TMD",
@@ -315,7 +316,7 @@ class APISuggestionProfilDTOComponentTest {
             )
         private val profilElevePremiere =
             ProfilEleve.Identifie(
-                id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
+                id = UUID.fromString("93de7b80-d43e-4357-90ea-28a44beed8f7"),
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
                 baccalaureat = "PA",
@@ -345,7 +346,7 @@ class APISuggestionProfilDTOComponentTest {
 
         private val profilEleveTerminal =
             ProfilEleve.Identifie(
-                id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
+                id = UUID.fromString("de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c"),
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
                 baccalaureat = "NC",
@@ -397,7 +398,7 @@ class APISuggestionProfilDTOComponentTest {
             )
         private val profilEleveNull =
             ProfilEleve.Identifie(
-                id = "unknown",
+                id = UUID.fromString("3e72892b-b6bb-4d5e-b349-81c2adfd292b"),
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = null,
                 baccalaureat = null,

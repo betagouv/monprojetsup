@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.UUID
 
 @WebMvcTest(controllers = [ProfilEleveController::class])
 class ProfilEleveControllerTest(
@@ -97,12 +98,13 @@ class ProfilEleveControllerTest(
             )
         }
 
-        @ConnecteAvecUnEleve(idEleve = "efgf627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEleve(idEleve = "61a3b1a9-03dd-4fc6-9549-c0e5d1403214")
         @Test
         fun `si élève n'existe pas et que le service réussi, doit retourner 204`() {
             // Given
-            val profilInconnu = ProfilEleve.Inconnu(id = "efgf627c-36dd-4df5-897b-159443a6d49c")
-            given(eleveRepository.recupererUnEleve(id = "efgf627c-36dd-4df5-897b-159443a6d49c")).willReturn(profilInconnu)
+            val uuidProfilInconnu = UUID.fromString("61a3b1a9-03dd-4fc6-9549-c0e5d1403214")
+            val profilInconnu = ProfilEleve.Inconnu(id = uuidProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilInconnu)
 
             // When & Then
             mvc.perform(
@@ -183,7 +185,7 @@ class ProfilEleveControllerTest(
             ).andExpect(status().isBadRequest)
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si enseignant, doit retourner 403`() {
             // When & Then
@@ -338,8 +340,9 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève n'existe pas, doit renvoyer 403`() {
             // Given
-            val profilInconnu = ProfilEleve.Inconnu(id = "123f627c-36dd-4df5-897b-159443a6d49c")
-            given(eleveRepository.recupererUnEleve(id = "123f627c-36dd-4df5-897b-159443a6d49c")).willReturn(profilInconnu)
+            val uuidProfilInconnu = UUID.fromString("123f627c-36dd-4df5-897b-159443a6d49c")
+            val profilInconnu = ProfilEleve.Inconnu(id = uuidProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilInconnu)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
@@ -360,7 +363,7 @@ class ProfilEleveControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si enseignant, doit retourner 403`() {
             // When & Then

@@ -910,7 +910,7 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si connecté en tant qu'enseignant, doit retourner 403`() {
             // When & Then
@@ -2569,7 +2569,7 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si enseignant, doit retourner 403`() {
             // When & Then

@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -26,9 +25,6 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var eleveJPARepository: EleveJPARepository
 
-    @Autowired
-    lateinit var entityManager: EntityManager
-
     @Mock
     lateinit var logger: Logger
 
@@ -36,12 +32,12 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        eleveBDDRepository = EleveBDDRepository(entityManager, eleveJPARepository, logger)
+        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, logger)
     }
 
     val profil0f88 =
         ProfilEleve.Identifie(
-            id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
+            id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
             baccalaureat = "Général",
@@ -76,8 +72,11 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Test
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit retourner son profil`() {
+            // Given
+            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+
             // When
-            val result = eleveBDDRepository.recupererUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+            val result = eleveBDDRepository.recupererUnEleve(id = uuid)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(profil0f88)
@@ -86,11 +85,14 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Test
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève n'existe pas, doit retourner un profil inconnu`() {
-            // When & Then
-            val result = eleveBDDRepository.recupererUnEleve(id = "45fdce8e-0717-4848-9a0c-505dea093b8c")
+            // Given
+            val uuid = UUID.fromString("45fdce8e-0717-4848-9a0c-505dea093b8c")
+
+            // When
+            val result = eleveBDDRepository.recupererUnEleve(id = uuid)
 
             // Then
-            assertThat(result).isEqualTo(ProfilEleve.Inconnu("45fdce8e-0717-4848-9a0c-505dea093b8c"))
+            assertThat(result).isEqualTo(ProfilEleve.Inconnu(uuid))
         }
     }
 
@@ -99,26 +101,30 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Test
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève n'existe pas, doit retourner son profil`() {
+            // Given
+            val uuid = UUID.fromString("45fdce8e-0717-4848-9a0c-505dea093b8c")
+
             // When
-            val result = eleveBDDRepository.creerUnEleve(id = "45fdce8e-0717-4848-9a0c-505dea093b8c")
+            val result = eleveBDDRepository.creerUnEleve(id = uuid)
 
             // Then
-            val attendu =
-                ProfilEleve.Identifie(
-                    id = "45fdce8e-0717-4848-9a0c-505dea093b8c",
-                )
+            val attendu = ProfilEleve.Identifie(id = uuid)
             assertThat(result).isEqualTo(attendu)
         }
 
         @Test
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit le retourner et logguer un warning`() {
+            // Given
+            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+
             // When
-            val result = eleveBDDRepository.creerUnEleve(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+            val result = eleveBDDRepository.creerUnEleve(id = uuid)
 
             // Then
             assertThat(result).isEqualTo(profil0f88)
-            then(logger).should().warn("L'élève 0f88ddd1-62ef-436e-ad3f-cf56d5d14c15 a voulu être crée alors qu'il existe déjà en base")
+            then(logger).should()
+                .warn("L'élève 0f88ddd1-62ef-436e-ad3f-cf56d5d14c15 a voulu être crée alors qu'il existe déjà en base")
         }
     }
 
@@ -127,16 +133,15 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Test
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
+            // Given
+            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+            val nouveauProfil = ProfilEleve.Identifie(id = uuid)
+
             // When
-            val nouveauProfil =
-                ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
             eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = nouveauProfil)
 
             // Then
-            val resultat =
-                eleveJPARepository.findById(
-                    UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
-                ).orElseThrow().toProfilEleve()
+            val resultat = eleveJPARepository.findById(uuid).orElseThrow().toProfilEleve()
             assertThat(resultat).usingRecursiveAssertion().isEqualTo(nouveauProfil)
         }
 
@@ -144,12 +149,43 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève n'existe pas, doit throw une erreur`() {
             // Given
-            val profilInconnu = profil0f88.copy(id = "2012")
+            val profilInconnu =
+                ProfilEleve.Identifie(
+                    id = UUID.fromString("871a33a9-fd55-4d9d-9211-22edf3c3d1e5"),
+                    situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
+                    classe = ChoixNiveau.SECONDE,
+                    baccalaureat = "Général",
+                    specialites = listOf("4", "1006"),
+                    domainesInterets = listOf("animaux", "agroequipement"),
+                    centresInterets = listOf("linguistique", "voyage"),
+                    metiersFavoris = listOf("MET001"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
+                    alternance = ChoixAlternance.INDIFFERENT,
+                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    formationsFavorites =
+                        listOf(
+                            VoeuFormation(
+                                idFormation = "fl0010",
+                                niveauAmbition = 1,
+                                tripletsAffectationsChoisis = emptyList(),
+                                priseDeNote = null,
+                            ),
+                            VoeuFormation(
+                                idFormation = "fl0012",
+                                niveauAmbition = 3,
+                                tripletsAffectationsChoisis = listOf("ta15974", "ta17831"),
+                                priseDeNote = "Mon voeu préféré",
+                            ),
+                        ),
+                    moyenneGenerale = 10.5f,
+                    corbeilleFormations = listOf("fl0001", "fl0002"),
+                )
 
             // When & Then
             assertThatThrownBy {
                 eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = profilInconnu)
-            }.isInstanceOf(MonProjetSupNotFoundException::class.java).hasMessage("L'élève 2012 n'a pas été crée en base")
+            }.isInstanceOf(MonProjetSupNotFoundException::class.java)
+                .hasMessage("L'élève 871a33a9-fd55-4d9d-9211-22edf3c3d1e5 n'a pas été crée en base")
         }
     }
 }
