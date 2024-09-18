@@ -43,6 +43,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
 import java.net.ConnectException
+import java.util.UUID
 
 class SuggestionApiHttpClientTest {
     @Mock
@@ -63,7 +64,7 @@ class SuggestionApiHttpClientTest {
 
     private val unProfil =
         ProfilEleve.Identifie(
-            id = "adcf627c-36dd-4df5-897b-159443a6d49c",
+            id = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c"),
             situation = SituationAvanceeProjetSup.PROJET_PRECIS,
             classe = ChoixNiveau.TERMINALE,
             baccalaureat = "Générale",

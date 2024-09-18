@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class RecupererTripletAffectationDUneFormationService(
@@ -74,7 +75,7 @@ class RecupererTripletAffectationDUneFormationService(
     }
 
     private fun estDansUnDepartementFavoris(
-        idEleve: String,
+        idEleve: UUID,
         communes: List<Commune>,
         tripletAffectation: TripletAffectation,
         messagesDeWarning: MutableList<String>,

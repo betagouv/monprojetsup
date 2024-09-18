@@ -74,7 +74,7 @@ class ProfilEleveEntity() {
     var corbeilleFormations: List<String> = emptyList()
 
     constructor(profilEleve: ProfilEleve.Identifie) : this() {
-        id = UUID.fromString(profilEleve.id)
+        id = profilEleve.id
         situation = profilEleve.situation
         classe = profilEleve.classe
         dureeEtudesPrevue = profilEleve.dureeEtudesPrevue
@@ -92,7 +92,7 @@ class ProfilEleveEntity() {
 
     fun toProfilEleve() =
         ProfilEleve.Identifie(
-            id.toString(),
+            id,
             situation,
             classe,
             idBaccalaureat,

@@ -26,6 +26,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
+import java.util.UUID
 
 class RecupererTripletAffectationDUneFormationServiceTest {
     @Mock
@@ -40,10 +41,12 @@ class RecupererTripletAffectationDUneFormationServiceTest {
     @Mock
     private lateinit var profilEleve: ProfilEleve.Identifie
 
+    private val uuid = UUID.fromString("f859056f-1f3b-49d4-96c8-2a93b925fbaa")
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        given(profilEleve.id).willReturn("idEleve")
+        given(profilEleve.id).willReturn(uuid)
     }
 
     @Nested
@@ -91,7 +94,7 @@ class RecupererTripletAffectationDUneFormationServiceTest {
         @BeforeEach
         fun setUp() {
             given(tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(idsFormation)).willReturn(tripletsAffectation)
-            given(profilEleve.id).willReturn("idEleve")
+            given(profilEleve.id).willReturn(uuid)
         }
 
         @Test
@@ -191,7 +194,10 @@ class RecupererTripletAffectationDUneFormationServiceTest {
 
             // Then
             then(logger).should(times(1))
-                .warn("La commune Paris présente dans le profil de l'élève idEleve a un code commune non standard : Paris")
+                .warn(
+                    "La commune Paris présente dans le profil de l'élève f859056f-1f3b-49d4-96c8-2a93b925fbaa " +
+                        "a un code commune non standard : Paris",
+                )
         }
 
         @Test

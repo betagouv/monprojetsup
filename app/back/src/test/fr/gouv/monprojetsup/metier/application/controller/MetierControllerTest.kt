@@ -211,7 +211,7 @@ class MetierControllerTest(
                 .andExpect(content().json(resultatMetiers))
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si connecté en enseignant, doit retourner 200 avec la liste des métiers`() {
             // Given
@@ -373,7 +373,7 @@ class MetierControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "egff627c-36dd-4df5-897b-159443a6d49c")
+        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
         fun `si connecté en enseignant, doit retourner 200 avec la liste des métiers`() {
             // Given
