@@ -105,6 +105,11 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
+      tripletsAffectations: formationHttp.formation.tripletAffectationAssocies.map((tripletAffectation) => ({
+        id: tripletAffectation.id,
+        nom: tripletAffectation.nom,
+        commune: { nom: tripletAffectation.nomCommune, code: tripletAffectation.codeCommune },
+      })),
       communes: this._extraireCommunesDesTripletsAffectation(formationHttp.formation.tripletAffectationAssocies),
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
