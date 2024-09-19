@@ -1,8 +1,26 @@
+import logoAvenirs from "@/assets/logo/logo-avenirs.svg";
+import logoBetaGouv from "@/assets/logo/logo-beta-gouv.svg";
+import logoCNRS from "@/assets/logo/logo-cnrs.svg";
 import logoMPS from "@/assets/logo/logo-mps.svg";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Link } from "@tanstack/react-router";
 
 const PiedDePage = () => {
+  const partenaires = [
+    {
+      logo: logoCNRS,
+      alt: "CNRS",
+    },
+    {
+      logo: logoBetaGouv,
+      alt: "Beta.gouv.fr",
+    },
+    {
+      logo: logoAvenirs,
+      alt: "Onisep Avenir(s)",
+    },
+  ];
+
   const liensOfficielsExternes = [
     {
       url: "https://legifrance.gouv.fr",
@@ -95,6 +113,27 @@ const PiedDePage = () => {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+        <div className="fr-footer__partners">
+          <p className="fr-footer__partners-title">Nos partenaires</p>
+          <div className="fr-footer__partners-logos">
+            <div className="fr-footer__partners-main">
+              <ul className="grid grid-flow-row place-content-center gap-8 sm:grid-flow-col">
+                {partenaires.map((partenaire) => (
+                  <li
+                    className="place-self-center"
+                    key={partenaire.alt}
+                  >
+                    <img
+                      alt={partenaire.alt}
+                      className="h-16"
+                      src={partenaire.logo}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
         <div className="fr-footer__bottom">
