@@ -1,10 +1,18 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { type ÉlémentAffichéListeEtAperçuStore, type ListeEtAperçuStore } from "./useListeEtAperçu.interface";
+import {
+  type ÉlémentAffichéListeEtAperçuStore,
+  type ListeEtAperçuStore,
+  type ListeEtAperçuStoreState,
+} from "./useListeEtAperçu.interface";
 import { create } from "zustand";
 
-const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
+const étatInitial: ListeEtAperçuStoreState = {
   élémentAffiché: undefined,
-  afficherBarreLatéraleEnMobile: false,
+  afficherBarreLatéraleEnMobile: true,
+};
+
+const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
+  ...étatInitial,
   actions: {
     changerÉlémentAffiché: (élément: ÉlémentAffichéListeEtAperçuStore) => {
       set({
@@ -20,6 +28,9 @@ const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
       set({
         afficherBarreLatéraleEnMobile: afficher,
       });
+    },
+    réinitialiserStore: () => {
+      set(étatInitial);
     },
   },
 }));

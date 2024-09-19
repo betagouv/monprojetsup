@@ -21,7 +21,7 @@ const DétailFormationPage = () => {
   const { recherche, formation } = route.useSearch();
 
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
-  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
+  const { changerÉlémentAffiché, changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
 
   const { data: suggestions } = useQuery({
     ...suggérerFormationsQueryOptions,
@@ -39,8 +39,9 @@ const DétailFormationPage = () => {
         type: "formation",
         id: formation,
       });
+      changerAfficherBarreLatéraleEnMobile(false);
     }
-  }, [changerÉlémentAffiché, formation, élémentAffiché]);
+  }, [changerAfficherBarreLatéraleEnMobile, changerÉlémentAffiché, formation, élémentAffiché]);
 
   if (!résultatsDeRecherche && !suggestions) {
     return <AnimationChargement />;

@@ -6,16 +6,16 @@ import {
 import { useEffect } from "react";
 
 const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps) => {
-  const { réinitialiserÉlémentAffiché } = actionsListeEtAperçuStore();
+  const { réinitialiserStore } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 
   const classBackgroundEnFonctionDeAfficherLaBarreLatérale = () => {
     if (afficherBarreLatéraleEnMobile && variante === "formations") {
-      return "bg-[--background-contrast-beige-gris-galet]";
+      return "bg-[--background-contrast-beige-gris-galet] lg:bg-gradient-to-r lg:from-[--background-contrast-beige-gris-galet] lg:from-50% lg:to-white lg:to-50%";
     }
 
     if (afficherBarreLatéraleEnMobile && variante === "favoris") {
-      return "bg-[--background-open-blue-france]";
+      return "bg-[--background-open-blue-france] lg:bg-gradient-to-r lg:from-[--background-open-blue-france] lg:from-50% lg:to-white lg:to-50%";
     }
 
     if (variante === "formations")
@@ -25,8 +25,8 @@ const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps)
   };
 
   useEffect(() => {
-    réinitialiserÉlémentAffiché();
-  }, [réinitialiserÉlémentAffiché]);
+    réinitialiserStore();
+  }, [réinitialiserStore]);
 
   return (
     <div className={`h-full ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>

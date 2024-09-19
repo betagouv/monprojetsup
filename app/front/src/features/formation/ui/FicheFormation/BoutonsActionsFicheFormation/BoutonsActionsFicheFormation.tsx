@@ -34,7 +34,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
               aria-hidden="true"
               className="fr-icon-heart-fill"
             />
-            {i18n.COMMUN.AJOUTÉE_À_MA_SÉLECTION}
+            {i18n.COMMUN.AJOUTÉ_À_MA_SÉLECTION}
           </div>
           <Bouton
             auClic={supprimerDesFavoris}

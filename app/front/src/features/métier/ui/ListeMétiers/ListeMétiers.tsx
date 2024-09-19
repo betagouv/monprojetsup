@@ -7,7 +7,7 @@ import CarteMétier from "@/features/métier/ui/CarteMétier/CarteMétier";
 
 const ListeMétiers = ({ métiers }: ListeMétiersProps) => {
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
-  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
+  const { changerÉlémentAffiché, changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
 
   const estSélectionnée = (positionDansLaListe: number, métierId: string) => {
     if (positionDansLaListe === 0 && élémentAffiché === undefined) {
@@ -24,7 +24,11 @@ const ListeMétiers = ({ métiers }: ListeMétiersProps) => {
         {métiers.map((métier, index) => (
           <li key={métier.id}>
             <CarteMétier
-              auClic={() => changerÉlémentAffiché({ type: "métier", id: métier.id })}
+              auClic={() => {
+                changerÉlémentAffiché({ type: "métier", id: métier.id });
+                changerAfficherBarreLatéraleEnMobile(false);
+                scrollTo({ top: 0 });
+              }}
               formations={métier.formations}
               id={métier.id}
               key={métier.id}
