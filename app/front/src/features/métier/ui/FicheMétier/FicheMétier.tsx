@@ -1,17 +1,19 @@
 import { type FicheMétierProps } from "./FicheMétier.interface";
 import Badge from "@/components/_dsfr/Badge/Badge";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
 import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const FicheMétier = ({ id }: FicheMétierProps) => {
   const NOMBRE_FORMATIONS_À_AFFICHER = 5;
-
   const { data: métier, isFetching: chargementEnCours } = useQuery(récupérerMétierQueryOptions(id));
+  const [afficherToutesLesFormations, setAfficherToutesLesFormations] = useState(false);
 
   if (métier === null) return null;
 
@@ -46,23 +48,42 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
               {i18n.PAGE_FAVORIS.FORMATIONS_POUR_UN_MÉTIER}
             </Titre>
           </div>
-          <ul className="grid list-none justify-start gap-4 p-0">
-            {métier.formations.slice(0, NOMBRE_FORMATIONS_À_AFFICHER).map((formation) => (
-              <li key={formation.id}>
-                <LienInterne
-                  ariaLabel={formation.nom}
-                  href="/formations"
-                  paramètresSearch={{ formation: formation.id }}
-                  variante="simple"
-                >
-                  {formation.nom}{" "}
-                  <span
-                    aria-hidden="true"
-                    className="fr-icon-arrow-right-line fr-icon--sm"
-                  />
-                </LienInterne>
+          <ul
+            aria-live="polite"
+            className="grid list-none justify-start gap-4 p-0"
+          >
+            {métier.formations
+              .slice(0, afficherToutesLesFormations ? métier.formations.length : NOMBRE_FORMATIONS_À_AFFICHER)
+              .map((formation) => (
+                <li key={formation.id}>
+                  <LienInterne
+                    ariaLabel={formation.nom}
+                    href="/formations"
+                    paramètresSearch={{ formation: formation.id }}
+                    variante="simple"
+                  >
+                    {formation.nom}{" "}
+                    <span
+                      aria-hidden="true"
+                      className="fr-icon-arrow-right-line fr-icon--sm"
+                    />
+                  </LienInterne>
+                </li>
+              ))}
+            {métier.formations.length > NOMBRE_FORMATIONS_À_AFFICHER && !afficherToutesLesFormations && (
+              <li
+                className="*:p-0"
+                key="bouton-voir-plus"
+              >
+                <Bouton
+                  auClic={() => setAfficherToutesLesFormations(true)}
+                  label={i18n.PAGE_FAVORIS.AFFICHER_FORMATIONS_SUPPLÉMENTAIRES}
+                  taille="petit"
+                  type="button"
+                  variante="secondaire"
+                />
               </li>
-            ))}
+            )}
           </ul>
         </div>
       )}

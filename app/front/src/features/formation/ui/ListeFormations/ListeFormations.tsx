@@ -10,7 +10,7 @@ import CarteFormation from "@/features/formation/ui/CarteFormation/CarteFormatio
 
 const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps) => {
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
-  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
+  const { changerÉlémentAffiché, changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
 
   const estSélectionnée = (positionDansLaListe: number, formationId: string) => {
     if (positionDansLaListe === 0 && élémentAffiché === undefined) {
@@ -47,7 +47,11 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
               <li key={formation.id}>
                 <CarteFormation
                   affinité={formation.affinité}
-                  auClic={() => changerÉlémentAffiché({ type: "formation", id: formation.id })}
+                  auClic={() => {
+                    changerÉlémentAffiché({ type: "formation", id: formation.id });
+                    changerAfficherBarreLatéraleEnMobile(false);
+                    scrollTo({ top: 0 });
+                  }}
                   communes={formation.communes}
                   id={formation.id}
                   key={formation.id}

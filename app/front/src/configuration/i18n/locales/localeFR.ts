@@ -57,6 +57,7 @@ export const localeFR = {
       BOUTON: "Explorer les formations",
     },
     FORMATIONS_POUR_UN_MÉTIER: "Exemples de formations post-bac pour faire ce métier",
+    AFFICHER_FORMATIONS_SUPPLÉMENTAIRES: "Afficher les autres formations",
   },
   PAGE_FORMATION: {
     AUCUN_RÉSULTAT: "Aucun résultat trouvé pour cette recherche",
@@ -338,7 +339,7 @@ export const localeFR = {
     LIRE_SUITE: "Lire la suite",
     MASQUER_SUITE: "Masquer la suite",
     AJOUTER_À_MA_SÉLECTION: "Ajouter à ma sélection",
-    AJOUTÉE_À_MA_SÉLECTION: "Ajoutée à ma sélection",
+    AJOUTÉ_À_MA_SÉLECTION: "Ajouté à ma sélection",
     SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
     NE_PLUS_VOIR: "Ne plus voir",
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
