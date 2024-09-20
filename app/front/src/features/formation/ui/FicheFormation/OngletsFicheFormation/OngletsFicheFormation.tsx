@@ -1,7 +1,7 @@
 import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
 import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
 import { type OngletsFicheFormationProps } from "./OngletsFicheFormation.interface";
-import Onglets from "@/components/_dsfr/Onglets/Onglets";
+import Onglets from "@/components/Onglets/Onglets";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import { i18n } from "@/configuration/i18n/i18n";
 

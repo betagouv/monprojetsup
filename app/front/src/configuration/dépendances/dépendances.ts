@@ -21,8 +21,8 @@ import { type MétierRepository } from "@/features/métier/infrastructure/métie
 import { RechercherMétiersUseCase } from "@/features/métier/usecase/RechercherMétiers";
 import { RécupérerMétierUseCase } from "@/features/métier/usecase/RécupérerMétier";
 import { RécupérerMétiersUseCase } from "@/features/métier/usecase/RécupérerMétiers";
-import { référentielDonnéesHttpRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesHttpRepository/référentielDonnéesHttpRepository";
-import { référentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
+import { RéférentielDonnéesHttpRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesHttpRepository/référentielDonnéesHttpRepository";
+import { RéférentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { RécupérerRéférentielDonnéesUseCase } from "@/features/référentielDonnées/usecase/RécupérerRéférentielDonnées";
 import { HttpClient } from "@/services/httpClient/httpClient";
@@ -77,8 +77,8 @@ export class Dépendances {
 
     // Repositories
     this._référentielDonnéesRepository = env.VITE_TEST_MODE
-      ? new référentielDonnéesInMemoryRepository()
-      : new référentielDonnéesHttpRepository(this._mpsApiHttpClient);
+      ? new RéférentielDonnéesInMemoryRepository()
+      : new RéférentielDonnéesHttpRepository(this._mpsApiHttpClient);
     this._élèveRepository = env.VITE_TEST_MODE
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);

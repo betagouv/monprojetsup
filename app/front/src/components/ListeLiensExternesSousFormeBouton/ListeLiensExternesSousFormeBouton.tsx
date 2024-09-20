@@ -1,5 +1,5 @@
 import { type ListeLiensExternesSousFormeBoutonProps } from "./ListeLiensExternesSousFormeBouton.interface";
-import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
+import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 
 const ListeLiensExternesSousFormeBouton = ({ liens }: ListeLiensExternesSousFormeBoutonProps) => {

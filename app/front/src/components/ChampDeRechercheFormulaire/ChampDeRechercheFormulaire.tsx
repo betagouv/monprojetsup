@@ -1,6 +1,6 @@
 import { type ChampDeRechercheFormulaireProps } from "./ChampDeRechercheFormulaire.interface";
-import ChampDeSaisieSquelette from "@/components/_dsfr/ChampDeSaisieSquelette/ChampDeSaisieSquelette";
-import useChampDeSaisieSquelette from "@/components/_dsfr/ChampDeSaisieSquelette/useChampDeSaisieSquelette";
+import ChampDeSaisieSquelette from "@/components/ChampDeSaisieSquelette/ChampDeSaisieSquelette";
+import useChampDeSaisieSquelette from "@/components/ChampDeSaisieSquelette/useChampDeSaisieSquelette";
 import { i18n } from "@/configuration/i18n/i18n";
 import { useId } from "react";
 

@@ -1,7 +1,7 @@
 import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 
-export class référentielDonnéesInMemoryRepository implements RéférentielDonnéesRepository {
+export class RéférentielDonnéesInMemoryRepository implements RéférentielDonnéesRepository {
   private RÉFÉRENTIEL_DONNÉES: RéférentielDonnées = {
     élève: {
       situations: ["aucune_idee", "quelques_pistes", "projet_precis"],

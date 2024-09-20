@@ -1,5 +1,5 @@
 import { type OngletCritèresFicheFormationProps } from "./OngletCritèresFicheFormation.interface";
-import Badge from "@/components/_dsfr/Badge/Badge";
+import Badge from "@/components/Badge/Badge";
 import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoyenne/GraphiqueRépartitionMoyenne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";

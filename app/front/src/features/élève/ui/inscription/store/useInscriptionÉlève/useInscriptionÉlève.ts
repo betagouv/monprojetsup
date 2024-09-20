@@ -1,8 +1,9 @@
-import { type ÉtapesInscriptionÉlèveStore } from "./useÉtapesInscriptionÉlève.interface";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { type InscriptionÉlèveStore } from "./useInscriptionÉlève.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { create } from "zustand";
 
-const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>((set, get) => ({
+const useInscriptionÉlèveStore = create<InscriptionÉlèveStore>((set, get) => ({
   étapes: [
     {
       titreÉtape: i18n.ÉLÈVE.PROJET.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
@@ -64,15 +65,13 @@ const useÉtapesInscriptionÉlèveStore = create<ÉtapesInscriptionÉlèveStore>
   },
 }));
 
-export const actionsÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.actions);
-export const étapesÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.étapes);
-export const indexÉtapeActuelleÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.indexÉtapeActuelle);
-export const étapeActuelleÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.étapeActuelle);
-export const étapeSuivanteÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.étapeSuivante);
-export const étapePrécédenteÉtapesInscriptionÉlèveStore = () =>
-  useÉtapesInscriptionÉlèveStore((étatActuel) => étatActuel.étapePrécédente);
+export const actionsInscriptionÉlèveStore = () => useInscriptionÉlèveStore((étatActuel) => étatActuel.actions);
+export const étapesInscriptionÉlèveStore = () => useInscriptionÉlèveStore((étatActuel) => étatActuel.étapes);
+export const indexÉtapeActuelleInscriptionÉlèveStore = () =>
+  useInscriptionÉlèveStore((étatActuel) => étatActuel.indexÉtapeActuelle);
+export const étapeActuelleInscriptionÉlèveStore = () =>
+  useInscriptionÉlèveStore((étatActuel) => étatActuel.étapeActuelle);
+export const étapeSuivanteInscriptionÉlèveStore = () =>
+  useInscriptionÉlèveStore((étatActuel) => étatActuel.étapeSuivante);
+export const étapePrécédenteInscriptionÉlèveStore = () =>
+  useInscriptionÉlèveStore((étatActuel) => étatActuel.étapePrécédente);

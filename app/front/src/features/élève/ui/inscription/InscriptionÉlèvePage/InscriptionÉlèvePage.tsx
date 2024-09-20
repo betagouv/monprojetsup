@@ -1,8 +1,8 @@
-import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
-import IndicateurÉtapes from "@/components/_dsfr/IndicateurÉtapes/IndicateurÉtapes";
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
+import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
+import IndicateurÉtapes from "@/components/IndicateurÉtapes/IndicateurÉtapes";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -15,25 +15,25 @@ import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/Métier
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import {
-  étapeActuelleÉtapesInscriptionÉlèveStore,
-  étapePrécédenteÉtapesInscriptionÉlèveStore,
-  étapesÉtapesInscriptionÉlèveStore,
-  étapeSuivanteÉtapesInscriptionÉlèveStore,
-  indexÉtapeActuelleÉtapesInscriptionÉlèveStore,
-} from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
+  étapeActuelleInscriptionÉlèveStore,
+  étapePrécédenteInscriptionÉlèveStore,
+  étapesInscriptionÉlèveStore,
+  étapeSuivanteInscriptionÉlèveStore,
+  indexÉtapeActuelleInscriptionÉlèveStore,
+} from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Suspense } from "react";
 
-const ÉlèveInscriptionPage = () => {
+const InscriptionÉlèvePage = () => {
   useSuspenseQuery(élèveQueryOptions);
 
   const navigate = useNavigate();
-  const étapeSuivante = étapeSuivanteÉtapesInscriptionÉlèveStore();
-  const étapeActuelle = étapeActuelleÉtapesInscriptionÉlèveStore();
-  const étapePrécédente = étapePrécédenteÉtapesInscriptionÉlèveStore();
-  const indexÉtapeActuelle = indexÉtapeActuelleÉtapesInscriptionÉlèveStore();
-  const étapes = étapesÉtapesInscriptionÉlèveStore();
+  const étapeSuivante = étapeSuivanteInscriptionÉlèveStore();
+  const étapeActuelle = étapeActuelleInscriptionÉlèveStore();
+  const étapePrécédente = étapePrécédenteInscriptionÉlèveStore();
+  const indexÉtapeActuelle = indexÉtapeActuelleInscriptionÉlèveStore();
+  const étapes = étapesInscriptionÉlèveStore();
 
   const àLaSoumissionDuFormulaireAvecSuccès = () => {
     navigate({ to: étapeSuivante?.url });
@@ -142,4 +142,4 @@ const ÉlèveInscriptionPage = () => {
   );
 };
 
-export default ÉlèveInscriptionPage;
+export default InscriptionÉlèvePage;

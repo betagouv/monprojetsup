@@ -1,9 +1,9 @@
-import { actionsÉtapesInscriptionÉlèveStore } from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
+import { actionsInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import { Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-const LayoutInscription = () => {
-  const { définirÉtapeActuelle } = actionsÉtapesInscriptionÉlèveStore();
+const LayoutInscriptionÉlève = () => {
+  const { définirÉtapeActuelle } = actionsInscriptionÉlèveStore();
 
   const router = useRouterState();
 
@@ -26,4 +26,4 @@ const LayoutInscription = () => {
   );
 };
 
-export default LayoutInscription;
+export default LayoutInscriptionÉlève;

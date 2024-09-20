@@ -1,6 +1,6 @@
 import { type SituationFormationsÉlève, type useFormationsFormArgs } from "./FormationsForm.interface";
 import { formationsValidationSchema } from "./FormationsForm.validation";
-import { type BoutonRadioRicheProps } from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche.interface";
+import { type BoutonRadioRicheProps } from "@/components/BoutonRadioRiche/BoutonRadioRiche.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";

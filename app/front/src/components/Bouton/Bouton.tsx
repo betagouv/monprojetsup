@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import { type BoutonProps } from "./Bouton.interface";
-import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
+import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 
 const Bouton = ({
   label,

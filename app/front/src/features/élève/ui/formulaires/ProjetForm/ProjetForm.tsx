@@ -1,6 +1,6 @@
 import { type ProjetFormProps } from "./ProjetForm.interface";
 import useProjetForm from "./useProjetForm";
-import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
+import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ProjetForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ProjetFormProps) => {

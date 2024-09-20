@@ -3,7 +3,7 @@ import { type RéférentielDonnées } from "@/features/référentielDonnées/dom
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
-export class référentielDonnéesHttpRepository implements RéférentielDonnéesRepository {
+export class RéférentielDonnéesHttpRepository implements RéférentielDonnéesRepository {
   private _ENDPOINT = "/api/v1/referentiel" as const;
 
   public constructor(private _mpsApiHttpClient: IMpsApiHttpClient) {}

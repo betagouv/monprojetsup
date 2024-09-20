@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/pluginRules-of-hooks */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { étapesÉtapesInscriptionÉlèveStore } from "@/features/élève/ui/store/useÉtapesInscriptionÉlève/useÉtapesInscriptionÉlève";
+import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useRouterState } from "@tanstack/react-router";
@@ -14,7 +14,7 @@ export default function useÉlèveRedirection() {
   const routerState = useRouterState();
   const utilisateur = useUtilisateur();
   const { data: élève } = useQuery(élèveQueryOptions);
-  const étapesInscription = étapesÉtapesInscriptionÉlèveStore();
+  const étapesInscription = étapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
     if (utilisateur.type === undefined || (utilisateur.type === "élève" && !élève)) return;

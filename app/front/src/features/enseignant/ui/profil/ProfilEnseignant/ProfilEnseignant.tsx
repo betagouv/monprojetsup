@@ -1,7 +1,7 @@
 import profilSVG from "@/assets/profil.svg";
-import FilAriane from "@/components/_dsfr/FilAriane/FilAriane";
 import Head from "@/components/_layout/Head/Head";
 import Bouton from "@/components/Bouton/Bouton";
+import FilAriane from "@/components/FilAriane/FilAriane";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";

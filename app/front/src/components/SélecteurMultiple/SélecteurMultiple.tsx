@@ -1,7 +1,7 @@
 import { type SélecteurMultipleOption, type SélecteurMultipleProps } from "./SélecteurMultiple.interface";
-import ChampDeRecherche from "@/components/_dsfr/ChampDeRecherche/ChampDeRecherche";
-import TagCliquable from "@/components/_dsfr/TagCliquable/TagCliquable";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import ChampDeRecherche from "@/components/ChampDeRecherche/ChampDeRecherche";
+import TagCliquable from "@/components/TagCliquable/TagCliquable";
 import { i18n } from "@/configuration/i18n/i18n";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";

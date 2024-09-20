@@ -3,9 +3,9 @@ import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondan
 import { type FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
 import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation";
-import Badge from "@/components/_dsfr/Badge/Badge";
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import Badge from "@/components/Badge/Badge";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
