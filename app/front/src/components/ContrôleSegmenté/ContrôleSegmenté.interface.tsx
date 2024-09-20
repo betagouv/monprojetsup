@@ -1,6 +1,11 @@
+type CatégorieContrôleSegmenté = {
+  valeur: "première" | "seconde";
+  label: string;
+};
+
 export type ContrôleSegmentéProps = {
   légende: string;
-  éléments: Array<{ valeur: string; label: string }>;
-  auClic: (catégorieSélectionnée: string) => void;
-  valeurSélectionnéeParDéfaut: string;
+  éléments: CatégorieContrôleSegmenté[];
+  auClic: (catégorieSélectionnée: CatégorieContrôleSegmenté["valeur"]) => void;
+  valeurSélectionnéeParDéfaut: CatégorieContrôleSegmenté["valeur"];
 };
