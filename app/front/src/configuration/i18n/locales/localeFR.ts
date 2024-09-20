@@ -348,6 +348,7 @@ export const localeFR = {
     BOUTON_AFFICHER_CONTENU_PRINCIPAL: "Retour à la fiche",
   },
   ACCESSIBILITÉ: {
+    CHARGEMENT: "Chargement",
     FAVORIS: "Favoris",
     MASQUÉ: "Masqué",
     LIEN_EXTERNE: "ouvre un lien externe",

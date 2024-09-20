@@ -12,4 +12,11 @@ export default defineConfig({
     port: 5_001, // Si changement, modifier le .env du repo pour faire correspondre le port
   },
   plugins: [react(), TanStackRouterVite()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler",
+      },
+    },
+  },
 });
