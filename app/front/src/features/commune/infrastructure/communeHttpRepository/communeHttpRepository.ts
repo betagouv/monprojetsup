@@ -20,6 +20,7 @@ export class communeHttpRepository implements CommuneRepository {
   private _mapperVersDomaine(commune: CommuneHttp): Commune {
     return {
       codeInsee: commune.properties.citycode,
+      codePostal: commune.properties.postcode,
       nom: commune.properties.name,
       latitude: commune.geometry.coordinates[1],
       longitude: commune.geometry.coordinates[0],

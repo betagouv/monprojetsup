@@ -10,7 +10,7 @@ import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/Sco
 import { Suspense, useState } from "react";
 
 const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèveFormProps) => {
-  const [statusMessage, setStatusMessage] = useState<string>();
+  const [statusMessage, setStatusMessage] = useState<string | undefined>();
 
   const àLaSoumissionDuFormulaireAvecSuccès = () => {
     setStatusMessage(i18n.COMMUN.MODIFICATIONS_ENREGISTRÉES);
@@ -78,6 +78,7 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
       <hr className="mt-12" />
       <div className="fr-grid-row justify-end">
         <Bouton
+          auClic={() => setStatusMessage(undefined)}
           formId={formulaireId}
           label={i18n.COMMUN.ENREGISTRER}
           type="submit"

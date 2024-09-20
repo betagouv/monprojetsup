@@ -19,10 +19,12 @@ export type Élève = {
   métiersFavoris: string[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
-  communesFavorites: Commune[] | null;
+  communesFavorites: CommuneFavorite[] | null;
   formationsFavorites: FormationFavorite[] | null;
   formationsMasquées: string[] | null;
 };
+
+export type CommuneFavorite = Omit<Commune, "codePostal">;
 
 export type FormationFavorite = {
   id: string;
