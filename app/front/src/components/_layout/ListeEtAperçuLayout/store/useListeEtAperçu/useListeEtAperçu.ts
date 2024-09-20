@@ -9,6 +9,7 @@ import { create } from "zustand";
 const étatInitial: ListeEtAperçuStoreState = {
   élémentAffiché: undefined,
   afficherBarreLatéraleEnMobile: true,
+  catégorieAffichée: "première",
 };
 
 const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
@@ -29,6 +30,11 @@ const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
         afficherBarreLatéraleEnMobile: afficher,
       });
     },
+    changerCatégorieAffichée: (catégorie: ListeEtAperçuStoreState["catégorieAffichée"]) => {
+      set({
+        catégorieAffichée: catégorie,
+      });
+    },
     réinitialiserStore: () => {
       set(étatInitial);
     },
@@ -39,3 +45,5 @@ export const actionsListeEtAperçuStore = () => useListeEtAperçuStore((étatAct
 export const élémentAffichéListeEtAperçuStore = () => useListeEtAperçuStore((étatActuel) => étatActuel.élémentAffiché);
 export const afficherBarreLatéraleEnMobileListeEtAperçuStore = () =>
   useListeEtAperçuStore((étatActuel) => étatActuel.afficherBarreLatéraleEnMobile);
+export const catégorieAffichéeListeEtAperçuStore = () =>
+  useListeEtAperçuStore((étatActuel) => étatActuel.catégorieAffichée);

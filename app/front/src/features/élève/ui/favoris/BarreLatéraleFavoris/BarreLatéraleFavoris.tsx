@@ -1,18 +1,21 @@
 import { type BarreLatéraleFavorisProps } from "./BarreLatéraleFavoris.interface";
-import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import {
+  actionsListeEtAperçuStore,
+  catégorieAffichéeListeEtAperçuStore,
+} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { type ListeEtAperçuStoreState } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu.interface";
 import ContrôleSegmenté from "@/components/ContrôleSegmenté/ContrôleSegmenté";
 import { i18n } from "@/configuration/i18n/i18n";
 import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormations";
 import ListeMétiers from "@/features/métier/ui/ListeMétiers/ListeMétiers";
-import { useState } from "react";
 
 const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisProps) => {
-  const [catégorieAffichée, setCatégorieAffichée] = useState("formation");
-  const { réinitialiserÉlémentAffiché } = actionsListeEtAperçuStore();
+  const catégorieAffichée = catégorieAffichéeListeEtAperçuStore();
+  const { réinitialiserÉlémentAffiché, changerCatégorieAffichée } = actionsListeEtAperçuStore();
 
-  const auChangementDeCatégorie = (catégorieSélectionnée: string) => {
+  const auChangementDeCatégorie = (catégorieSélectionnée: ListeEtAperçuStoreState["catégorieAffichée"]) => {
     réinitialiserÉlémentAffiché();
-    setCatégorieAffichée(catégorieSélectionnée);
+    changerCatégorieAffichée(catégorieSélectionnée);
   };
 
   return (
@@ -21,14 +24,14 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
         <ContrôleSegmenté
           auClic={auChangementDeCatégorie}
           légende={i18n.PAGE_FAVORIS.CATÉGORIE}
-          valeurSélectionnéeParDéfaut="formation"
+          valeurSélectionnéeParDéfaut="première"
           éléments={[
-            { valeur: "formation", label: i18n.COMMUN.FORMATION },
-            { valeur: "métier", label: i18n.COMMUN.MÉTIER },
+            { valeur: "première", label: i18n.COMMUN.FORMATION },
+            { valeur: "seconde", label: i18n.COMMUN.MÉTIER },
           ]}
         />
       </div>
-      {catégorieAffichée === "formation" ? (
+      {catégorieAffichée === "première" ? (
         <ListeFormations
           affichéSurLaPage="favoris"
           formations={formations ?? []}

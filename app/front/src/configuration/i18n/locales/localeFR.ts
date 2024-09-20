@@ -53,7 +53,8 @@ export const localeFR = {
     AUCUN_FAVORI: {
       EMOJI: "😅",
       OUPS: "Oups...",
-      TEXTE: "Aucune sélection ne figure dans ton projet.",
+      TEXTE_FORMATIONS: "Aucune formation dans ta sélection.",
+      TEXTE_MÉTIERS: "Aucun métier dans ta sélection.",
       BOUTON: "Explorer les formations",
     },
     FORMATIONS_POUR_UN_MÉTIER: "Exemples de formations post-bac pour faire ce métier",
@@ -286,7 +287,7 @@ export const localeFR = {
       CARTES: {
         SUGGESTIONS: {
           TITRE: "Explore les suggestions de formations post-bac",
-          SOUS_TITRE: "d'après tes préférences et découvres-en d'autres",
+          SOUS_TITRE: "d'après tes préférences",
         },
         FAVORIS: {
           TITRE: "Consulte les formations post-bac que tu as sélectionnées",

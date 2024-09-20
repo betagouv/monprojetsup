@@ -14,6 +14,7 @@ export type ÉlémentAffichéListeEtAperçuStore =
 export type ListeEtAperçuStoreState = {
   élémentAffiché?: ÉlémentAffichéListeEtAperçuStore;
   afficherBarreLatéraleEnMobile: boolean;
+  catégorieAffichée: "première" | "seconde";
 };
 
 export type ListeEtAperçuStoreActions = {
@@ -21,6 +22,7 @@ export type ListeEtAperçuStoreActions = {
     réinitialiserÉlémentAffiché: () => void;
     changerÉlémentAffiché: (élément: ÉlémentAffichéListeEtAperçuStore) => void;
     changerAfficherBarreLatéraleEnMobile: (afficher: boolean) => void;
+    changerCatégorieAffichée: (catégorie: ListeEtAperçuStoreState["catégorieAffichée"]) => void;
     réinitialiserStore: () => void;
   };
 };

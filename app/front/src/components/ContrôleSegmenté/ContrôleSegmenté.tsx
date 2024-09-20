@@ -17,7 +17,7 @@ const ContrôleSegmenté = ({ légende, éléments, auClic, valeurSélectionnée
               defaultChecked={valeurSélectionnéeParDéfaut === élément.valeur}
               id={`${élément.valeur}-${id}`}
               name={id}
-              onClick={(event) => auClic(event.currentTarget.value)}
+              onClick={() => auClic(élément.valeur)}
               type="radio"
               value={élément.valeur}
             />

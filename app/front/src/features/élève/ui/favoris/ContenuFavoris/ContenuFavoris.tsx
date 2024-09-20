@@ -1,5 +1,8 @@
 import BoutonSquelette from "@/components/_dsfr/BoutonSquelette/BoutonSquelette";
-import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import {
+  catégorieAffichéeListeEtAperçuStore,
+  élémentAffichéListeEtAperçuStore,
+} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
@@ -10,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 const ContenuFavoris = () => {
   const { data: élève } = useQuery(élèveQueryOptions);
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
+  const catégorieAffichée = catégorieAffichéeListeEtAperçuStore();
 
   if (élémentAffiché?.type === "métier")
     return <FicheMétier id={élémentAffiché?.id ?? élève?.métiersFavoris?.[0] ?? ""} />;
@@ -26,7 +30,11 @@ const ContenuFavoris = () => {
         {i18n.PAGE_FAVORIS.AUCUN_FAVORI.EMOJI}
       </div>
       <p className="fr-display--xs mb-0">{i18n.PAGE_FAVORIS.AUCUN_FAVORI.OUPS}</p>
-      <p className="fr-h3 mb-0">{i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE}</p>
+      <p className="fr-h3 mb-0">
+        {catégorieAffichée === "première"
+          ? i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_FORMATIONS
+          : i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_MÉTIERS}
+      </p>
       <div className="mt-5">
         <LienInterne
           ariaLabel={i18n.PAGE_FAVORIS.AUCUN_FAVORI.BOUTON}
