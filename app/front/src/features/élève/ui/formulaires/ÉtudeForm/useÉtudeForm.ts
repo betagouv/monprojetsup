@@ -6,6 +6,7 @@ import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/S
 import { i18n } from "@/configuration/i18n/i18n";
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import { rechercheCommunesQueryOptions } from "@/features/commune/ui/communeQueries";
+import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +17,7 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
 
   const [rechercheCommune, setRechercheCommune] = useState<string>();
 
-  const communeVersOptionCommune = useCallback((commune: Commune) => {
+  const communeVersOptionCommune = useCallback((commune: Commune | CommuneFavorite) => {
     return {
       valeur: JSON.stringify(commune),
       label: commune.nom,
