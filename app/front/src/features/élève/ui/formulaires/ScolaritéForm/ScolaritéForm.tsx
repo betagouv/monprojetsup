@@ -1,6 +1,6 @@
 import { type ScolaritéFormProps } from "./ScolaritéForm.interface";
 import useScolaritéForm from "./useScolaritéForm";
-import ListeDéroulante from "@/components/_dsfr/ListeDéroulante/ListeDéroulante";
+import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
 

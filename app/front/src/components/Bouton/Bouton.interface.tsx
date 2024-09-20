@@ -1,4 +1,4 @@
-import { type BoutonSqueletteProps } from "@/components/_dsfr/BoutonSquelette/BoutonSquelette.interface";
+import { type BoutonSqueletteProps } from "@/components/BoutonSquelette/BoutonSquelette.interface";
 
 export type BoutonProps = {
   label: BoutonSqueletteProps["label"];

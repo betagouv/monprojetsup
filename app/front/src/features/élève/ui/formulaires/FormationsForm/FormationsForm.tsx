@@ -1,6 +1,6 @@
 import { type FormationsFormProps, type SituationFormationsÉlève } from "./FormationsForm.interface";
 import useFormationsForm from "./useFormationsForm";
-import BoutonRadioRiche from "@/components/_dsfr/BoutonRadioRiche/BoutonRadioRiche";
+import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
 

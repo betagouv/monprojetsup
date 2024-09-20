@@ -1,5 +1,5 @@
 import { type FiltresGroupésParCatégorieProps } from "./FiltresGroupésParCatégorie.interface";
-import TagFiltre from "@/components/_dsfr/TagFiltre/TagFiltre";
+import TagFiltre from "@/components/TagFiltre/TagFiltre";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import * as Accordion from "@radix-ui/react-accordion";

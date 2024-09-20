@@ -1,22 +1,12 @@
 import { type BarreLatéraleFavorisProps } from "./BarreLatéraleFavoris.interface";
-import {
-  actionsListeEtAperçuStore,
-  catégorieAffichéeListeEtAperçuStore,
-} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
-import { type ListeEtAperçuStoreState } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu.interface";
+import useBarreLatéraleFavoris from "./useBarreLatéraleFavoris";
 import ContrôleSegmenté from "@/components/ContrôleSegmenté/ContrôleSegmenté";
 import { i18n } from "@/configuration/i18n/i18n";
 import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormations";
 import ListeMétiers from "@/features/métier/ui/ListeMétiers/ListeMétiers";
 
 const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisProps) => {
-  const catégorieAffichée = catégorieAffichéeListeEtAperçuStore();
-  const { réinitialiserÉlémentAffiché, changerCatégorieAffichée } = actionsListeEtAperçuStore();
-
-  const auChangementDeCatégorie = (catégorieSélectionnée: ListeEtAperçuStoreState["catégorieAffichée"]) => {
-    réinitialiserÉlémentAffiché();
-    changerCatégorieAffichée(catégorieSélectionnée);
-  };
+  const { auChangementDeCatégorie, catégorieAffichée } = useBarreLatéraleFavoris();
 
   return (
     <>

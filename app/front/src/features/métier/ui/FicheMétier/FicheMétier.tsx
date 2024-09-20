@@ -1,6 +1,6 @@
 import { type FicheMétierProps } from "./FicheMétier.interface";
-import Badge from "@/components/_dsfr/Badge/Badge";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
+import Badge from "@/components/Badge/Badge";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";

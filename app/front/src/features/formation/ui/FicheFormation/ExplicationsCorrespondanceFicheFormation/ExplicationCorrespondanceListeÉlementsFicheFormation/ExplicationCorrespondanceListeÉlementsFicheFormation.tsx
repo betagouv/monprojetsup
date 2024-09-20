@@ -1,5 +1,5 @@
 import { type ExplicationCorrespondanceListeÉlementsFicheFormationProps } from "./ExplicationCorrespondanceListeÉlementsFicheFormation.interface";
-import Tag from "@/components/_dsfr/Tag/Tag";
+import Tag from "@/components/Tag/Tag";
 
 const ExplicationCorrespondanceListeÉlementsFicheFormation = ({
   texteIntroductif,

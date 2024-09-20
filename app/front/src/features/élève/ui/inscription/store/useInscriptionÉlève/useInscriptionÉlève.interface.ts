@@ -1,6 +1,6 @@
 import { type router } from "@/configuration/lib/tanstack-router";
 
-export type ÉtapesInscriptionÉlèveStore = {
+export type InscriptionÉlèveStore = {
   étapes: Étape[];
   indexÉtapeActuelle: number | undefined;
   étapeActuelle: Étape | undefined;

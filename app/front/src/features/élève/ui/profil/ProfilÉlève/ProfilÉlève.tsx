@@ -1,8 +1,8 @@
 import profilSVG from "@/assets/profil.svg";
-import FilAriane from "@/components/_dsfr/FilAriane/FilAriane";
-import Onglets from "@/components/_dsfr/Onglets/Onglets";
 import Head from "@/components/_layout/Head/Head";
 import Bouton from "@/components/Bouton/Bouton";
+import FilAriane from "@/components/FilAriane/FilAriane";
+import Onglets from "@/components/Onglets/Onglets";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";

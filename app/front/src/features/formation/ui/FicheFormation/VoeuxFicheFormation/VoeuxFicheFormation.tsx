@@ -1,5 +1,5 @@
 import { type VoeuxFicheFormationProps } from "./VoeuxFicheFormation.interface";
-import TagFiltre from "@/components/_dsfr/TagFiltre/TagFiltre";
+import TagFiltre from "@/components/TagFiltre/TagFiltre";
 import Titre from "@/components/Titre/Titre";
 import { type Élève, type FormationFavorite } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";

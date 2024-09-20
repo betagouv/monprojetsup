@@ -1,6 +1,6 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
-import Tag from "@/components/_dsfr/Tag/Tag";
 import Carte from "@/components/Carte/Carte";
+import Tag from "@/components/Tag/Tag";
 import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
