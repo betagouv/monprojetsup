@@ -2550,7 +2550,7 @@ INSERT INTO "public"."redirect_uris" ("client_id", "value") VALUES
 ('3d1829e6-92da-4617-bb14-77c94e568f64', '/admin/avenirs/console/*'),
 ('4d6bdae3-98a6-4ebf-a902-7d6ef0fcab96', '/realms/master/account/*'),
 ('560456cc-571b-4bf0-b1f4-d40e9dbbf9bc', '/realms/avenirs/account/*'),
-('99b97c1a-5f00-4304-9a17-9f8c9fa3974d', 'http://localhost:5001'),
+('99b97c1a-5f00-4304-9a17-9f8c9fa3974d', 'http://localhost:5001/*'),
 ('99b97c1a-5f00-4304-9a17-9f8c9fa3974d', 'http://localhost:5002/swagger-ui/oauth2-redirect.html'),
 ('c7207b89-d86c-425d-a252-510cb2bc7e39', '/realms/avenirs/account/*');
 
