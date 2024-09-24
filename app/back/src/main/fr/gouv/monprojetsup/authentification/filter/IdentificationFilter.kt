@@ -14,7 +14,8 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.UUID
+import java.util.*
+
 @Component
 class IdentificationFilter(
     val eleveRepository: EleveRepository,
@@ -62,10 +63,9 @@ class IdentificationFilter(
 
     private fun getIdIndividu(token: Jwt): UUID? = token.getClaim<String>("sub")?.let { UUID.fromString(it) }
 
-    private fun getProfile(token: Jwt) : Profil {
+    private fun getProfile(token: Jwt): Profil {
         val isMpsDemoFront = token.getClaim<String>("azp") == "mps-front"
-        if(isMpsDemoFront) return Profil.ELEVE
+        if (isMpsDemoFront) return Profil.ELEVE
         return Profil.deserialise(token.getClaim("profile"))
     }
-
 }
