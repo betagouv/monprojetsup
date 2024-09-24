@@ -12,7 +12,7 @@ export default function useUtilisateur() {
   const récupérerProfil = () => {
     if (auth.user?.profile.profile === "APP-SEC") return "élève" as const;
     if (auth.user?.profile.profile === "EDU-SEC") return "enseignant" as const;
-    return undefined;
+    return "élève" as const;
   };
 
   const seDéconnecter = async () => {
