@@ -297,6 +297,11 @@ export const localeFR = {
           TITRE: "Enrichis ton profil pour améliorer les suggestions",
           SOUS_TITRE: "Plus tu précises tes préférences, plus les formations proposées seront pertinentes.",
         },
+        AVIS: {
+          TITRE: "Que penses-tu de MPS ?",
+          SOUS_TITRE: "Donne ton avis sur ton expérience en quelques clics",
+          BOUTON: "Je donne mon avis",
+        },
       },
       TÉMOIGNAGE: {
         AUTEUR: "Charlotte",
