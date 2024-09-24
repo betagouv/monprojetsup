@@ -2,6 +2,7 @@ import useTableauDeBordÉlève from "./useTableauDeBordÉlève";
 import Head from "@/components/_layout/Head/Head";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import CarteAvisÉlève from "@/features/élève/ui/tableauDeBord/CarteAvisÉlève/CarteAvisÉlève";
 import CarteTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève";
 import TémoignageTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/TémoignageTableauDeBordÉlève/TémoignageTableauDeBordÉlève";
 import { Fragment } from "react/jsx-runtime";
@@ -46,6 +47,8 @@ const TableauDeBordÉlève = () => {
               </Fragment>
             ))}
           </ul>
+          <hr className="mb-4 mt-10" />
+          <CarteAvisÉlève />
         </div>
       </div>
     </>
