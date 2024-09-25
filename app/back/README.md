@@ -3,6 +3,12 @@ Ce dossier contient le code nécessaire à toute l'api de l'application MonProje
 Elle utilise les technologies Kotlin/Spring Boot.
 
 ## Les migrations de BDD
+Le linter installé est [Ktlint](https://pinterest.github.io/ktlint/0.49.1/install/integrations/)
+Pour le lancer, il faut se placer dans le dossier `app/back` et lancer la commande  
+
+```mvn clean && mvn ktlint:format && mvn ktlint:check```
+
+## Les migrations de BDD
 
 On utilise l'outil [Flyway](https://documentation.red-gate.com/flyway) pour migrer nos bases de données.
 
