@@ -206,7 +206,7 @@ class FormationControllerTest(
                 StatistiquesDesAdmis(
                     moyenneGeneraleDesAdmis =
                         MoyenneGeneraleDesAdmis(
-                            baccalaureat = Baccalaureat("Générale", "Général", "Série Générale"),
+                            baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
                             centiles =
                                 listOf(
                                     Centile(centile = 5, note = 13f),

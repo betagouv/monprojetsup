@@ -17,7 +17,294 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
 
     @BeforeEach
     fun setup() {
-        moyenneGeneraleAdmisBDDRepository = FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(moyenneGeneraleAdmisJPARepository)
+        moyenneGeneraleAdmisBDDRepository =
+            FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(moyenneGeneraleAdmisJPARepository)
+    }
+
+    @Nested
+    inner class RecupererFrequencesCumuleesParBacs {
+        @Test
+        @Sql("classpath:moyenne_generale_admis.sql")
+        fun `Doit retourner les fréquences cumulées pour tous les baccalaureats`() {
+            // When
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs("2024")
+
+            // Then
+            val attendu =
+                mapOf(
+                    baccalaureatGeneral to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            4,
+                            8,
+                            11,
+                            26,
+                            45,
+                            75,
+                            135,
+                            219,
+                            328,
+                            436,
+                            539,
+                            620,
+                            668,
+                            707,
+                            733,
+                            744,
+                            752,
+                            754,
+                            754,
+                            754,
+                            754,
+                        ),
+                    baccalaureatNC to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            2,
+                            2,
+                            3,
+                            9,
+                            14,
+                            23,
+                            41,
+                            65,
+                            98,
+                            164,
+                            252,
+                            366,
+                            478,
+                            587,
+                            670,
+                            718,
+                            758,
+                            785,
+                            796,
+                            805,
+                            807,
+                            807,
+                            807,
+                            807,
+                        ),
+                    baccalaureatPro to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            2,
+                            3,
+                            5,
+                            5,
+                            6,
+                            6,
+                            9,
+                            11,
+                            11,
+                            11,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                            12,
+                        ),
+                    baccalaureatST2S to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            1,
+                            1,
+                            3,
+                            3,
+                            6,
+                            7,
+                            9,
+                            10,
+                            10,
+                            11,
+                            15,
+                            18,
+                            21,
+                            23,
+                            23,
+                            23,
+                            23,
+                            23,
+                            24,
+                            24,
+                            24,
+                            24,
+                            24,
+                        ),
+                    baccalaureatSTAV to fl0001STAV2024,
+                    baccalaureatSTI2D to fl0003STI2D2024,
+                    baccalaureatSTL to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            2,
+                            2,
+                            2,
+                            2,
+                            2,
+                            3,
+                            4,
+                            4,
+                            4,
+                            4,
+                            5,
+                            5,
+                            5,
+                            5,
+                            5,
+                            5,
+                            5,
+                            5,
+                        ),
+                    baccalaureatSTMG to
+                        listOf(
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            3,
+                            5,
+                            6,
+                            7,
+                            7,
+                            7,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                            9,
+                        ),
+                )
+            assertThat(result).isEqualTo(attendu)
+        }
+
+        @Test
+        @Sql("classpath:moyenne_generale_admis.sql")
+        fun `si aucune donnée n'est trouvée pour l'année donnée, doit retourner map vide`() {
+            // When
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs("2022")
+
+            // Then
+            assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
+        }
     }
 
     @Nested
@@ -29,105 +316,18 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val idFormation = "fl0001"
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2024")
 
             // Then
             val attendu =
                 mapOf(
-                    Baccalaureat(
-                        id = "Général",
-                        nom = "Série Générale",
-                        idExterne = "Générale",
-                    ) to
-                        listOf(
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            6,
-                            24,
-                            49,
-                            77,
-                            174,
-                            292,
-                            500,
-                            685,
-                            1206,
-                            1700,
-                            2375,
-                            2845,
-                            3924,
-                            4755,
-                            5479,
-                            5893,
-                            6401,
-                            6612,
-                            6670,
-                            6677,
-                        ),
-                    Baccalaureat(
-                        id = "Professionnel",
-                        nom = "Série Pro",
-                        idExterne = "P",
-                    ) to
-                        listOf(
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            2,
-                            2,
-                            4,
-                            4,
-                            8,
-                            8,
-                            11,
-                            12,
-                            13,
-                            14,
-                            15,
-                            15,
-                            15,
-                            15,
-                            15,
-                            15,
-                            15,
-                            15,
-                            15,
-                        ),
+                    baccalaureatGeneral to fl0001Generale2024,
+                    baccalaureatNC to fl0001NC2024,
+                    baccalaureatPro to fl0001P2024,
+                    baccalaureatST2S to fl0001ST2S2024,
+                    baccalaureatSTAV to fl0001STAV2024,
+                    baccalaureatSTL to fl0001STL2024,
+                    baccalaureatSTMG to fl0001STMG2024,
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -136,10 +336,10 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
         @Sql("classpath:moyenne_generale_admis.sql")
         fun `si la formation n'est pas trouvée, doit retourner map vide`() {
             // Given
-            val idFormation = "fl0003"
+            val idFormation = "fl0004"
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2023")
 
             // Then
             assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
@@ -152,7 +352,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val idFormation = "fl0002"
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
+            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation, "2024")
 
             // Then
             assertThat(result).isEqualTo(emptyMap<Baccalaureat, List<Int>>())
@@ -168,112 +368,187 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val idFormation = listOf("fl0001", "fl0003", "fl0002")
 
             // When
-            val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation)
+            val result =
+                moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesDeTousLesBacs(
+                    idsFormations = idFormation,
+                    annee = "2023",
+                )
 
             // Then
             val attendu =
                 mapOf(
-                    "fl0001" to
-                        mapOf(
-                            Baccalaureat(
-                                id = "Général",
-                                nom = "Série Générale",
-                                idExterne = "Générale",
-                            ) to
-                                listOf(
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    6,
-                                    24,
-                                    49,
-                                    77,
-                                    174,
-                                    292,
-                                    500,
-                                    685,
-                                    1206,
-                                    1700,
-                                    2375,
-                                    2845,
-                                    3924,
-                                    4755,
-                                    5479,
-                                    5893,
-                                    6401,
-                                    6612,
-                                    6670,
-                                    6677,
-                                ),
-                            Baccalaureat(
-                                id = "Professionnel",
-                                nom = "Série Pro",
-                                idExterne = "P",
-                            ) to
-                                listOf(
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    1,
-                                    1,
-                                    1,
-                                    1,
-                                    1,
-                                    2,
-                                    2,
-                                    4,
-                                    4,
-                                    8,
-                                    8,
-                                    11,
-                                    12,
-                                    13,
-                                    14,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                    15,
-                                ),
-                        ),
+                    "fl0001" to emptyMap(),
                     "fl0003" to emptyMap(),
-                    "fl0002" to emptyMap(),
+                    "fl0002" to
+                        mapOf(
+                            baccalaureatNC to fl0002NC2023,
+                            baccalaureatGeneral to fl0002General2023,
+                            baccalaureatSTMG to fl0002STMG2023,
+                            baccalaureatPro to fl0002P2023,
+                        ),
                 )
             assertThat(result).isEqualTo(attendu)
         }
+    }
+
+    companion object {
+        private val baccalaureatGeneral = Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale")
+        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC")
+        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P")
+        private val baccalaureatST2S = Baccalaureat(id = "ST2S", nom = "Bac ST2S", idExterne = "ST2S")
+        private val baccalaureatSTAV = Baccalaureat(id = "STAV", nom = "Bac STAV", idExterne = "STAV")
+        private val baccalaureatSTI2D = Baccalaureat(id = "STI2D", nom = "Bac STI2D", idExterne = "STI2D")
+        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL")
+        private val baccalaureatSTMG = Baccalaureat(id = "STMG", nom = "Bac STMG", idExterne = "STMG")
+
+        private val fl0002NC2023 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 5, 6, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9)
+        private val fl0002General2023 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6)
+        private val fl0002STMG2023 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+        private val fl0002P2023 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+
+        private val fl0001ST2S2024 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3, 3, 5, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8)
+        private val fl0001STAV2024 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+        private val fl0001NC2024 =
+            listOf(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                2,
+                6,
+                7,
+                14,
+                17,
+                21,
+                24,
+                29,
+                32,
+                32,
+                34,
+                35,
+                36,
+                36,
+                36,
+                36,
+                36,
+                36,
+                36,
+                36,
+                36,
+                36,
+            )
+        private val fl0001STMG2024 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+        private val fl0001P2024 =
+            listOf(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                2,
+                3,
+                5,
+                5,
+                6,
+                6,
+                8,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+            )
+        private val fl0001Generale2024 =
+            listOf(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                3,
+                3,
+                3,
+                5,
+                6,
+                6,
+                6,
+                8,
+                9,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+            )
+        private val fl0001STL2024 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+
+        private val fl0003STI2D2024 =
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
     }
 }

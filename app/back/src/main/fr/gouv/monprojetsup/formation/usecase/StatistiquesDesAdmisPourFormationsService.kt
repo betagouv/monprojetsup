@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
@@ -18,7 +19,11 @@ class StatistiquesDesAdmisPourFormationsService(
         idsFormations: List<String>,
         classe: ChoixNiveau?,
     ): Map<String, StatistiquesDesAdmis?> {
-        val frequencesCumulees = frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(idsFormations)
+        val frequencesCumulees =
+            frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
+                idsFormations,
+                ANNEE_DONNEES_PARCOURSUP,
+            )
         val statistiques =
             idsFormations.associateWith {
                 frequencesCumulees[it]?.let { frequencesCumulees ->
@@ -36,7 +41,8 @@ class StatistiquesDesAdmisPourFormationsService(
     ): StatistiquesDesAdmis {
         val frequencesCumulees: Map<Baccalaureat, List<Int>> =
             frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
-                idFormation,
+                idFormation = idFormation,
+                annee = ANNEE_DONNEES_PARCOURSUP,
             )
         return statistiquesDesAdmisBuilder.creerStatistiquesDesAdmis(frequencesCumulees, idBaccalaureat, classe)
     }
