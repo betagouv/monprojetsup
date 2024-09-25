@@ -36,6 +36,11 @@ data class ExplicationsSuggestionEtExemplesMetiers(
         val rangEch10: Int,
         val rangEch90: Int,
     )
+
+    data class AffiniteSpecialite(
+        val idSpecialite: String,
+        val pourcentage: Int,
+    )
 }
 
 data class ExplicationsSuggestionDetaillees(
@@ -48,12 +53,13 @@ data class ExplicationsSuggestionDetaillees(
     val domaines: List<Domaine> = emptyList(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
-)
-
-data class AffiniteSpecialite(
-    val nomSpecialite: String,
-    val pourcentage: Int,
-)
+) {
+    data class AffiniteSpecialite(
+        val idSpecialite: String,
+        val nomSpecialite: String,
+        val pourcentage: Int,
+    )
+}
 
 data class ExplicationGeographique(
     val ville: String,

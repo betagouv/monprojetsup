@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.commun.utilitaires.recupererUniqueValeur
-import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -52,8 +51,8 @@ data class ExplicationEtExemplesDTO(
                     },
                 specialitesChoisies =
                     explications.flatMap { it.specialite?.statistiques ?: emptyList() }.map {
-                        AffiniteSpecialite(
-                            nomSpecialite = it.nomSpecialite,
+                        ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                            idSpecialite = it.idSpecialite,
                             pourcentage = it.pourcentage,
                         )
                     },
@@ -124,7 +123,7 @@ data class APISuggestionExplicationSpecialitesDTO(
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class AffiniteSpecialiteDTO(
         @JsonProperty(value = "spe")
-        val nomSpecialite: String,
+        val idSpecialite: String,
         @JsonProperty(value = "pct")
         val pourcentage: Int,
     )

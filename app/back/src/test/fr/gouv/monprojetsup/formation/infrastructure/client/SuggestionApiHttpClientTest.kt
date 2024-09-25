@@ -6,16 +6,14 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.entity.Communes
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
-import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -50,9 +48,6 @@ class SuggestionApiHttpClientTest {
     lateinit var httpClient: OkHttpClient
 
     @Mock
-    lateinit var apiSuggestionProfilDTOComponent: APISuggestionProfilDTOComponent
-
-    @Mock
     lateinit var logger: Logger
 
     @Captor
@@ -71,7 +66,7 @@ class SuggestionApiHttpClientTest {
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
             alternance = ChoixAlternance.PAS_INTERESSE,
             communesFavorites = listOf(Communes.PARIS15EME),
-            specialites = listOf("1001", "1049"),
+            specialites = listOf("mat1001", "mat1049"),
             centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
             moyenneGenerale = 14f,
             metiersFavoris = listOf("MET_123", "MET_456"),
@@ -94,38 +89,6 @@ class SuggestionApiHttpClientTest {
             corbeilleFormations = listOf("fl0001"),
         )
 
-    private val dto =
-        APISuggestionProfilDTO(
-            classe = "term",
-            baccalaureat = "Générale",
-            duree = "indiff",
-            alternance = "D",
-            preferencesGeographiques = listOf("75015"),
-            specialites =
-                listOf(
-                    "Sciences de la vie et de la Terre",
-                    "Mathématiques",
-                ),
-            interets =
-                listOf(
-                    "T_ROME_2092381917",
-                    "T_IDEO2_4812",
-                    "T_ITM_1054",
-                    "T_ITM_1534",
-                    "T_ITM_1248",
-                    "T_ITM_1351",
-                ),
-            moyenneGenerale = "14.0",
-            choix =
-                listOf(
-                    SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
-                    SuggestionDTO.FavorisSuggestionDTO(id = "MET_456"),
-                    SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
-                    SuggestionDTO.FavorisSuggestionDTO(id = "fl5678"),
-                    SuggestionDTO.CorbeilleSuggestionDTO(id = "fl0001"),
-                ),
-        )
-
     @BeforeEach
     fun before() {
         MockitoAnnotations.openMocks(this)
@@ -134,10 +97,8 @@ class SuggestionApiHttpClientTest {
                 baseUrl = "http://localhost:8080",
                 objectMapper = objectMapper,
                 httpClient = httpClient,
-                apiSuggestionProfilDTOComponent = apiSuggestionProfilDTOComponent,
                 logger = logger,
             )
-        given(apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(unProfil)).willReturn(dto)
     }
 
     @Nested
@@ -386,8 +347,8 @@ class SuggestionApiHttpClientTest {
                           "75015"
                         ],
                         "spe_classes": [
-                          "Sciences de la vie et de la Terre",
-                          "Mathématiques"
+                          "mat1001",
+                          "mat1049"
                         ],
                         "interests": [
                           "T_ROME_2092381917",
@@ -589,15 +550,15 @@ class SuggestionApiHttpClientTest {
                           "spec": {
                             "stats": [
                               {
-                                "spe": "specialiteA",
+                                "spe": "mat001",
                                 "pct": 12
                               },
                               {
-                                "spe": "specialiteB",
+                                "spe": "mat002",
                                 "pct": 10
                               },
                               {
-                                "spe": "specialiteC",
+                                "spe": "mat003",
                                 "pct": 89
                               }
                             ]
@@ -693,9 +654,9 @@ class SuggestionApiHttpClientTest {
                             alternance = ChoixAlternance.TRES_INTERESSE,
                             specialitesChoisies =
                                 listOf(
-                                    AffiniteSpecialite("specialiteA", 12),
-                                    AffiniteSpecialite("specialiteB", 10),
-                                    AffiniteSpecialite("specialiteC", 89),
+                                    AffiniteSpecialite(idSpecialite = "mat001", pourcentage = 12),
+                                    AffiniteSpecialite(idSpecialite = "mat002", pourcentage = 10),
+                                    AffiniteSpecialite(idSpecialite = "mat003", pourcentage = 89),
                                 ),
                             typeBaccalaureat =
                                 TypeBaccalaureat(
@@ -842,7 +803,12 @@ class SuggestionApiHttpClientTest {
                                     ),
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_IDEO2_4812", "T_ROME_803089798"),
+                            interetsEtDomainesChoisis =
+                                listOf(
+                                    "T_ROME_731379930",
+                                    "T_IDEO2_4812",
+                                    "T_ROME_803089798",
+                                ),
                             exemplesDeMetiers =
                                 listOf(
                                     "MET_361",
@@ -984,8 +950,8 @@ class SuggestionApiHttpClientTest {
                           "75015"
                         ],
                         "spe_classes": [
-                          "Sciences de la vie et de la Terre",
-                          "Mathématiques"
+                          "mat1001",
+                          "mat1049"
                         ],
                         "interests": [
                           "T_ROME_2092381917",

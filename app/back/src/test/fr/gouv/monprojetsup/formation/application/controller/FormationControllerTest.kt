@@ -11,10 +11,10 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
-import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
+import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
@@ -93,9 +93,9 @@ class FormationControllerTest(
             alternance = ChoixAlternance.TRES_INTERESSE,
             specialitesChoisies =
                 listOf(
-                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                    AffiniteSpecialite(idSpecialite = "mat001", nomSpecialite = "specialiteA", pourcentage = 12),
+                    AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
+                    AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
                 ),
             domaines =
                 listOf(

@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
@@ -23,9 +22,11 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
+import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -55,6 +56,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
 
     @Mock
     lateinit var metierRepository: MetierRepository
+
+    @Mock
+    lateinit var specialitesRepository: SpecialitesRepository
 
     @InjectMocks
     lateinit var recupererExplicationsEtExemplesDeMetiersFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService
@@ -103,7 +107,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
     @Nested
     inner class RecupererExplicationsPourUneFormation {
         @Test
-        fun `doit retourner les explications duréeEtudesPrévue, alternance, spécialitésChoisies et moyenneGeneraleDesAdmis`() {
+        fun `doit retourner les explications duréeEtudesPrévue, alternance et moyenneGeneraleDesAdmis`() {
             // Given
             val explications =
                 mapOf(
@@ -111,12 +115,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ExplicationsSuggestionEtExemplesMetiers(
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                             alternance = ChoixAlternance.TRES_INTERESSE,
-                            specialitesChoisies =
-                                listOf(
-                                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                                ),
                         ),
                 )
             given(
@@ -138,12 +136,6 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                 ExplicationsSuggestionDetaillees(
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                     alternance = ChoixAlternance.TRES_INTERESSE,
-                    specialitesChoisies =
-                        listOf(
-                            AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                            AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                            AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
-                        ),
                 )
             assertThat(resultat.first).usingRecursiveComparison().isEqualTo(attendu)
         }
@@ -237,7 +229,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
         @Test
         fun `si le baccalaureatRepository réussi, doit retourner l'explication de l'auto évaluation et du type de bac`() {
             // Given
-            given(baccalaureatRepository.recupererUnBaccalaureatParIdExterne(idExterneBaccalaureat = "Général")).willReturn(bacGeneral)
+            given(baccalaureatRepository.recupererUnBaccalaureatParIdExterne(idExterneBaccalaureat = "Général")).willReturn(
+                bacGeneral,
+            )
             val explications =
                 mapOf(
                     "fl0001" to
@@ -296,7 +290,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
         @Test
         fun `si le baccalaureatRepository échoue, doit retourner l'explication de l'auto évaluation avec le nom renvoyer`() {
             // Given
-            given(baccalaureatRepository.recupererUnBaccalaureatParIdExterne(idExterneBaccalaureat = "Général")).willReturn(null)
+            given(baccalaureatRepository.recupererUnBaccalaureatParIdExterne(idExterneBaccalaureat = "Général")).willReturn(
+                null,
+            )
             val explications =
                 mapOf(
                     "fl0001" to
@@ -379,7 +375,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             nom = "Créer quelque chose de mes mains",
                             emoji = "\uD83E\uDE9B",
                         ),
-                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
+                    "T_ROME_731379930" to
+                        InteretSousCategorie(
+                            id = "aider_autres",
+                            nom = "Aider les autres",
+                            emoji = "\uD83E\uDEC2",
+                        ),
                     "T_ROME_1959553899" to
                         InteretSousCategorie(
                             id = "travail_manuel_creer",
@@ -414,7 +415,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
         @Test
         fun `doit retourner les formations similaires`() {
             // Given
-            val explications = mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(formationsSimilaires = listOf("fl1", "fl7")))
+            val explications =
+                mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(formationsSimilaires = listOf("fl1", "fl7")))
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -423,7 +425,10 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             ).willReturn(explications)
             val formationCourtes =
                 listOf(
-                    FormationCourte(id = "fl1", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
+                    FormationCourte(
+                        id = "fl1",
+                        nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel",
+                    ),
                     FormationCourte(id = "fl7", nom = "Classe préparatoire aux études supérieures - Littéraire"),
                 )
             given(formationRepository.recupererLesNomsDesFormations(listOf("fl1", "fl7"))).willReturn(formationCourtes)
@@ -443,7 +448,15 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             // Given
             val explications =
                 mapOf(
-                    "fl0001" to ExplicationsSuggestionEtExemplesMetiers(exemplesDeMetiers = listOf("MET_12", "MET_534", "MET_96")),
+                    "fl0001" to
+                        ExplicationsSuggestionEtExemplesMetiers(
+                            exemplesDeMetiers =
+                                listOf(
+                                    "MET_12",
+                                    "MET_534",
+                                    "MET_96",
+                                ),
+                        ),
                 )
             given(
                 suggestionHttpClient.recupererLesExplications(
@@ -455,7 +468,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val metier534 = mock(Metier::class.java)
             val metier96 = mock(Metier::class.java)
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
-            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
+            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
+                exemplesDeMetiers,
+            )
 
             // When
             val resultat =
@@ -466,6 +481,89 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
 
             // Then
             assertThat(resultat.second).usingRecursiveComparison().isEqualTo(exemplesDeMetiers)
+        }
+
+        @Test
+        fun `doit retourner les spécialités en ignorant les inconnues`() {
+            // Given
+            val explications =
+                mapOf(
+                    "fl0001" to
+                        ExplicationsSuggestionEtExemplesMetiers(
+                            specialitesChoisies =
+                                listOf(
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat001",
+                                        pourcentage = 12,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat002",
+                                        pourcentage = 1,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat003",
+                                        pourcentage = 89,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "matInconnue",
+                                        pourcentage = -100,
+                                    ),
+                                ),
+                        ),
+                )
+            given(
+                suggestionHttpClient.recupererLesExplications(
+                    profilEleve = profil,
+                    idsFormations = listOf("fl0001"),
+                ),
+            ).willReturn(explications)
+
+            val specialites =
+                listOf(
+                    Specialite(id = "mat001", label = "specialiteA"),
+                    Specialite(id = "mat002", label = "specialiteB"),
+                    Specialite(id = "mat003", label = "specialiteC"),
+                )
+            given(
+                specialitesRepository.recupererLesSpecialites(
+                    listOf(
+                        "mat001",
+                        "mat002",
+                        "mat003",
+                        "matInconnue",
+                    ),
+                ),
+            ).willReturn(
+                specialites,
+            )
+
+            // When
+            val resultat =
+                recupererExplicationsEtExemplesDeMetiersFormationService.recupererExplicationsEtExemplesDeMetiers(
+                    profilEleve = profil,
+                    idFormation = "fl0001",
+                )
+
+            // Then
+            val attendu =
+                listOf(
+                    ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                        idSpecialite = "mat001",
+                        nomSpecialite = "specialiteA",
+                        pourcentage = 12,
+                    ),
+                    ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                        idSpecialite = "mat002",
+                        nomSpecialite = "specialiteB",
+                        pourcentage = 1,
+                    ),
+                    ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                        idSpecialite = "mat003",
+                        nomSpecialite = "specialiteC",
+                        pourcentage = 89,
+                    ),
+                )
+            assertThat(resultat.first.specialitesChoisies).usingRecursiveComparison().isEqualTo(attendu)
         }
     }
 
@@ -511,13 +609,33 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             alternance = ChoixAlternance.TRES_INTERESSE,
                             specialitesChoisies =
                                 listOf(
-                                    AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                    AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat001",
+                                        pourcentage = 12,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat002",
+                                        pourcentage = 1,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat003",
+                                        pourcentage = 89,
+                                    ),
                                 ),
                         ),
                     "fl0002" to
                         ExplicationsSuggestionEtExemplesMetiers(
+                            specialitesChoisies =
+                                listOf(
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "mat001",
+                                        pourcentage = 12,
+                                    ),
+                                    ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite(
+                                        idSpecialite = "matInconnue",
+                                        pourcentage = 89,
+                                    ),
+                                ),
                             geographique =
                                 listOf(
                                     ExplicationGeographique(
@@ -583,7 +701,13 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ),
                     "fl0004" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsEtDomainesChoisis = listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812"),
+                            interetsEtDomainesChoisis =
+                                listOf(
+                                    "T_ROME_731379930",
+                                    "T_ITM_1169",
+                                    "T_ROME_1959553899",
+                                    "T_IDEO2_4812",
+                                ),
                             formationsSimilaires = listOf("fl12", "fl79"),
                         ),
                     "fl0005" to
@@ -591,12 +715,29 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             interetsEtDomainesChoisis = listOf("T_ITM_723", "T_ROME_1959553899"),
                             formationsSimilaires = listOf("fl1", "fl7", "fl12"),
                         ),
-                    "fl0006" to ExplicationsSuggestionEtExemplesMetiers(exemplesDeMetiers = listOf("MET_12", "MET_534", "MET_96")),
+                    "fl0006" to
+                        ExplicationsSuggestionEtExemplesMetiers(
+                            exemplesDeMetiers =
+                                listOf(
+                                    "MET_12",
+                                    "MET_534",
+                                    "MET_96",
+                                ),
+                        ),
                 )
-            given(baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(listOf("Général", "STMG", "P"))).willReturn(
+            given(
+                baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(
+                    listOf(
+                        "Général",
+                        "STMG",
+                        "P",
+                    ),
+                ),
+            ).willReturn(
                 listOf(bacGeneral, bacPro, bacSTMG),
             )
-            val domainesEtInteretsDistincts = listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812", "T_ITM_723")
+            val domainesEtInteretsDistincts =
+                listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812", "T_ITM_723")
             given(domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)).willReturn(
                 listOf(
                     Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"),
@@ -605,9 +746,24 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             )
             given(interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)).willReturn(
                 mapOf(
-                    "T_ROME_731379930" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
-                    "T_ROME_1959553899" to InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
-                    "T_IDEO2_4812" to InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
+                    "T_ROME_731379930" to
+                        InteretSousCategorie(
+                            id = "aider_autres",
+                            nom = "Aider les autres",
+                            emoji = "\uD83E\uDEC2",
+                        ),
+                    "T_ROME_1959553899" to
+                        InteretSousCategorie(
+                            id = "travail_manuel_bricoler",
+                            nom = "Bricoler",
+                            emoji = "\uD83D\uDE4C",
+                        ),
+                    "T_IDEO2_4812" to
+                        InteretSousCategorie(
+                            id = "aider_autres",
+                            nom = "Aider les autres",
+                            emoji = "\uD83E\uDEC2",
+                        ),
                 ),
             )
             val formationsDistinctes = listOf("fl12", "fl79", "fl1", "fl7")
@@ -627,7 +783,25 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val metier96 = mock(Metier::class.java)
             given(metier96.id).willReturn("MET_96")
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
-            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(exemplesDeMetiers)
+            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
+                exemplesDeMetiers,
+            )
+            given(
+                specialitesRepository.recupererLesSpecialites(
+                    listOf(
+                        "mat001",
+                        "mat002",
+                        "mat003",
+                        "matInconnue",
+                    ),
+                ),
+            ).willReturn(
+                listOf(
+                    Specialite(id = "mat001", label = "specialiteA"),
+                    Specialite(id = "mat002", label = "specialiteB"),
+                    Specialite(id = "mat003", label = "specialiteC"),
+                ),
+            )
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -652,9 +826,21 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                 alternance = ChoixAlternance.TRES_INTERESSE,
                                 specialitesChoisies =
                                     listOf(
-                                        AffiniteSpecialite(nomSpecialite = "specialiteA", pourcentage = 12),
-                                        AffiniteSpecialite(nomSpecialite = "specialiteB", pourcentage = 1),
-                                        AffiniteSpecialite(nomSpecialite = "specialiteC", pourcentage = 89),
+                                        ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                                            idSpecialite = "mat001",
+                                            nomSpecialite = "specialiteA",
+                                            pourcentage = 12,
+                                        ),
+                                        ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                                            idSpecialite = "mat002",
+                                            nomSpecialite = "specialiteB",
+                                            pourcentage = 1,
+                                        ),
+                                        ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                                            idSpecialite = "mat003",
+                                            nomSpecialite = "specialiteC",
+                                            pourcentage = 89,
+                                        ),
                                     ),
                             ),
                             emptyList(),
@@ -662,6 +848,14 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     "fl0002" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
+                                specialitesChoisies =
+                                    listOf(
+                                        ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                                            idSpecialite = "mat001",
+                                            nomSpecialite = "specialiteA",
+                                            pourcentage = 12,
+                                        ),
+                                    ),
                                 geographique =
                                     listOf(
                                         ExplicationGeographique(
@@ -700,7 +894,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                         moyenneAutoEvalue = 14.5f,
                                         hautIntervalleNotes = 8f,
                                         basIntervalleNotes = 6f,
-                                        baccalaureatUtilise = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                                        baccalaureatUtilise =
+                                            Baccalaureat(
+                                                id = "STMG",
+                                                idExterne = "STMG",
+                                                nom = "Série STMG",
+                                            ),
                                     ),
                                 explicationTypeBaccalaureat =
                                     ExplicationTypeBaccalaureat(
@@ -715,8 +914,16 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             ExplicationsSuggestionDetaillees(
                                 interets =
                                     listOf(
-                                        InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
-                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
+                                        InteretSousCategorie(
+                                            id = "aider_autres",
+                                            nom = "Aider les autres",
+                                            emoji = "\uD83E\uDEC2",
+                                        ),
+                                        InteretSousCategorie(
+                                            id = "travail_manuel_bricoler",
+                                            nom = "Bricoler",
+                                            emoji = "\uD83D\uDE4C",
+                                        ),
                                     ),
                                 domaines =
                                     listOf(
@@ -735,7 +942,11 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             ExplicationsSuggestionDetaillees(
                                 interets =
                                     listOf(
-                                        InteretSousCategorie(id = "travail_manuel_bricoler", nom = "Bricoler", emoji = "\uD83D\uDE4C"),
+                                        InteretSousCategorie(
+                                            id = "travail_manuel_bricoler",
+                                            nom = "Bricoler",
+                                            emoji = "\uD83D\uDE4C",
+                                        ),
                                     ),
                                 domaines =
                                     listOf(

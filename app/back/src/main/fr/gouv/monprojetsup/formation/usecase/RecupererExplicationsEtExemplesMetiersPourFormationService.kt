@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
+import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,6 +26,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
     val baccalaureatRepository: BaccalaureatRepository,
+    val specialitesRepository: SpecialitesRepository,
     val interetRepository: InteretRepository,
     val domaineRepository: DomaineRepository,
     val metierRepository: MetierRepository,
@@ -33,41 +35,40 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         profilEleve: ProfilEleve.Identifie,
         idsFormations: List<String>,
     ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
-        val explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?> =
-            suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
+        val explicationsParFormation = suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
         val (domaines: List<Domaine>?, interets: Map<String, InteretSousCategorie>?) =
-            explicationsParFormation.flatMap { it.value?.interetsEtDomainesChoisis ?: emptyList() }.takeUnless {
-                it.isEmpty()
-            }?.let {
-                val domainesEtInteretsDistincts = it.distinct()
-                val domaines = domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)
-                val interets = interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)
-                Pair(domaines, interets)
-            } ?: Pair(emptyList(), emptyMap())
-        val formationsSimilaires =
-            explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() }.takeUnless {
-                it.isEmpty()
-            }?.let {
-                formationRepository.recupererLesNomsDesFormations(it.distinct())
-            } ?: emptyList()
-        val idsExternesBaccalaureats =
-            (
-                explicationsParFormation.mapNotNull { it.value?.autoEvaluationMoyenne?.baccalaureatUtilise } +
-                    explicationsParFormation.mapNotNull { it.value?.typeBaccalaureat?.nomBaccalaureat }
-            ).distinct()
-        val baccalaureats = baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats)
-        val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }.distinct()
-        val metiers = metierRepository.recupererLesMetiersDetailles(idsDesMetiers)
-        return idsFormations.associateWith {
-            val explications: ExplicationsSuggestionEtExemplesMetiers? = explicationsParFormation[it]
+            recupererDomainesEtInterets(
+                explicationsParFormation,
+            )
+        val formationsSimilaires = recupererFormationsSimilaires(explicationsParFormation)
+        val baccalaureats = recupererBaccalaureats(explicationsParFormation)
+        val metiers = recupererMetiers(explicationsParFormation)
+        val specialites =
+            explicationsParFormation.flatMap { it.value?.specialitesChoisies ?: emptyList() }.map { it.idSpecialite }
+                .distinct().takeUnless {
+                    it.isEmpty()
+                }?.let {
+                    specialitesRepository.recupererLesSpecialites(it)
+                } ?: emptyList()
+        return idsFormations.associateWith { idFormation ->
+            val explications: ExplicationsSuggestionEtExemplesMetiers? = explicationsParFormation[idFormation]
             ExplicationsSuggestionDetaillees(
                 geographique = filtrerEtTrier(explicationsGeographique = explications?.geographique ?: emptyList()),
                 dureeEtudesPrevue = explications?.dureeEtudesPrevue,
                 alternance = explications?.alternance,
-                specialitesChoisies = explications?.specialitesChoisies ?: emptyList(),
+                specialitesChoisies =
+                    explications?.specialitesChoisies?.mapNotNull { affiniteSpecialite ->
+                        specialites.firstOrNull { it.id == affiniteSpecialite.idSpecialite }?.label?.let { label ->
+                            ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                                idSpecialite = affiniteSpecialite.idSpecialite,
+                                nomSpecialite = label,
+                                pourcentage = affiniteSpecialite.pourcentage,
+                            )
+                        }
+                    } ?: emptyList(),
                 formationsSimilaires =
-                    explications?.formationsSimilaires?.mapNotNull { formationId ->
-                        formationsSimilaires.firstOrNull { formation -> formation.id == formationId }
+                    explications?.formationsSimilaires?.mapNotNull {
+                        formationsSimilaires.firstOrNull { formation -> formation.id == it }
                     } ?: emptyList(),
                 interets =
                     explications?.interetsEtDomainesChoisis?.mapNotNull { interetOuDomaineId ->
@@ -107,13 +108,15 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         profilEleve: ProfilEleve.Identifie,
         idFormation: String,
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
-        val explications = suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
+        val explications =
+            suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
         val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
             explications.interetsEtDomainesChoisis.takeUnless {
                 it.isEmpty()
             }?.let {
                 val domaines = domaineRepository.recupererLesDomaines(it)
-                val interets = interetRepository.recupererLesSousCategoriesDInterets(it).map { entry -> entry.value }.distinct()
+                val interets =
+                    interetRepository.recupererLesSousCategoriesDInterets(it).map { entry -> entry.value }.distinct()
                 Pair(domaines, interets)
             } ?: Pair(emptyList(), emptyList())
         val formationsSimilaires =
@@ -122,11 +125,25 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             } else {
                 emptyList()
             }
+        val specialites =
+            explications.specialitesChoisies.takeUnless { it.isEmpty() }
+                ?.map { it.idSpecialite }?.let { idsSpecialites ->
+                    specialitesRepository.recupererLesSpecialites(idsSpecialites)
+                } ?: emptyList()
         return ExplicationsSuggestionDetaillees(
             geographique = filtrerEtTrier(explications.geographique),
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
-            specialitesChoisies = explications.specialitesChoisies,
+            specialitesChoisies =
+                explications.specialitesChoisies.mapNotNull { affiniteSpecialite ->
+                    specialites.firstOrNull { it.id == affiniteSpecialite.idSpecialite }?.label?.let { label ->
+                        ExplicationsSuggestionDetaillees.AffiniteSpecialite(
+                            idSpecialite = affiniteSpecialite.idSpecialite,
+                            nomSpecialite = label,
+                            pourcentage = affiniteSpecialite.pourcentage,
+                        )
+                    }
+                },
             formationsSimilaires = formationsSimilaires,
             interets = interets,
             domaines = domaines,
@@ -138,8 +155,47 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             }
     }
 
+    private fun recupererDomainesEtInterets(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>) =
+        explicationsParFormation.flatMap { it.value?.interetsEtDomainesChoisis ?: emptyList() }.takeUnless {
+            it.isEmpty()
+        }?.let {
+            val domainesEtInteretsDistincts = it.distinct()
+            val domaines = domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)
+            val interets = interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)
+            Pair(domaines, interets)
+        } ?: Pair(emptyList(), emptyMap())
+
+    private fun recupererMetiers(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): List<Metier> {
+        val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }.distinct()
+        val metiers = metierRepository.recupererLesMetiersDetailles(idsDesMetiers)
+        return metiers
+    }
+
+    private fun recupererFormationsSimilaires(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>) =
+        explicationsParFormation.flatMap { it.value?.formationsSimilaires ?: emptyList() }.takeUnless {
+            it.isEmpty()
+        }?.let {
+            formationRepository.recupererLesNomsDesFormations(it.distinct())
+        } ?: emptyList()
+
+    private fun recupererBaccalaureats(
+        explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>,
+    ): List<Baccalaureat> {
+        val idsExternesBaccalaureats =
+            (
+                explicationsParFormation.mapNotNull { it.value?.autoEvaluationMoyenne?.baccalaureatUtilise } +
+                    explicationsParFormation.mapNotNull { it.value?.typeBaccalaureat?.nomBaccalaureat }
+            ).distinct()
+        val baccalaureats =
+            idsExternesBaccalaureats.takeUnless { it.isEmpty() }?.let {
+                baccalaureatRepository.recupererDesBaccalaureatsParIdsExternes(idsExternesBaccalaureats)
+            } ?: emptyList()
+        return baccalaureats
+    }
+
     private fun filtrerEtTrier(explicationsGeographique: List<ExplicationGeographique>): List<ExplicationGeographique> {
-        val explicationsGeographiquesFiltrees = explicationsGeographique.sortedBy { it.distanceKm }.distinctBy { it.ville }
+        val explicationsGeographiquesFiltrees =
+            explicationsGeographique.sortedBy { it.distanceKm }.distinctBy { it.ville }
         return explicationsGeographiquesFiltrees
     }
 
