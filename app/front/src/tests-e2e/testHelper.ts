@@ -16,6 +16,7 @@ export class TestHelper {
         métiersFavoris: null,
         duréeÉtudesPrévue: null,
         alternance: null,
+        moyenneGénérale: null,
         communesFavorites: null,
         formationsFavorites: null,
         formationsMasquées: null,
@@ -29,7 +30,7 @@ export class TestHelper {
   public seConnecterCommeÉlèveAvecParcoursInscriptionTerminé = async () => {
     const profilÉlève: Élève = {
       situation: "quelques_pistes",
-      classe: "premiere",
+      classe: "terminale",
       bac: "Générale",
       spécialités: [],
       domaines: ["T_ITM_1534"],
@@ -37,6 +38,7 @@ export class TestHelper {
       métiersFavoris: [],
       alternance: "indifferent",
       communesFavorites: [],
+      moyenneGénérale: 15,
       duréeÉtudesPrévue: "courte",
       formationsFavorites: [],
       formationsMasquées: [],

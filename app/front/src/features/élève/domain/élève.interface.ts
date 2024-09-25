@@ -19,6 +19,7 @@ export type Élève = {
   métiersFavoris: string[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;
+  moyenneGénérale: number | null;
   communesFavorites: CommuneFavorite[] | null;
   formationsFavorites: FormationFavorite[] | null;
   formationsMasquées: string[] | null;
