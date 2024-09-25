@@ -18,6 +18,7 @@ export class RécupérerÉlèveUseCase {
         métiersFavoris: null,
         duréeÉtudesPrévue: null,
         alternance: null,
+        moyenneGénérale: null,
         communesFavorites: null,
         formationsFavorites: null,
         formationsMasquées: null,

@@ -152,6 +152,11 @@ export const localeFR = {
       BAC: {
         LABEL: "Type de bac choisi ou envisagé",
       },
+      MOYENNE: {
+        LABEL: "Estimation de ta moyenne actuelle",
+        DESCRIPTION:
+          "Ton auto-évaluation est utilisée pour te recommander en priorité les formations auxquelles tu as les meilleures chances d'accéder, sans pour autant en exclure aucune.",
+      },
       SPÉCIALITÉS: {
         LABEL: "Spécialités (EDS) choisies ou envisagées",
         DESCRIPTION: "Commence à taper puis sélectionne des spécialités",
@@ -339,6 +344,7 @@ export const localeFR = {
     ERREURS_FORMULAIRES: {
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
+      VALEUR_INVALIDE: "La valeur saisie est invalide",
       AU_MOINS_X_CARACTÈRES: "Saisissez au moins",
       AU_MOINS_X_CARACTÈRES_SUITE: "caractères",
     },
@@ -351,6 +357,7 @@ export const localeFR = {
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
     BOUTON_AFFICHER_BARRE_LATÉRALE: "Retour aux résultats",
     BOUTON_AFFICHER_CONTENU_PRINCIPAL: "Retour à la fiche",
+    NE_VEUT_PAS_RÉPONDRE: "Je n’en ai aucune idée / Je ne veux pas répondre",
   },
   ACCESSIBILITÉ: {
     CHARGEMENT: "Chargement",

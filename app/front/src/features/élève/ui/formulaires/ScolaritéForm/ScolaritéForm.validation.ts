@@ -16,6 +16,7 @@ export const scolaritéValidationSchema = (bacs: Bac[]) => {
       .refine((valeur) => !valeur || bacIdsAutorisés.includes(valeur), {
         message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE,
       }),
+    moyenneGénérale: z.number().gte(-1).lte(20).nullable(),
     spécialités: z.string().array(),
   });
 };

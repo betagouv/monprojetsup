@@ -1,5 +1,6 @@
 import { type BacOptions, type ClasseOptions, type useScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
+import useMoyenneForm from "./useMoyenneScolaritéForm";
 import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
@@ -35,6 +36,12 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     [référentielDonnées],
   );
 
+  const moyenneScolaritéForm = useMoyenneForm({
+    watch,
+    setValue,
+    getValues,
+  });
+
   const spécialitésScolaritéForm = useSpécialitésScolaritéForm({
     référentielDonnées,
     valeurBac,
@@ -49,6 +56,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     classeOptions,
     bacOptions,
     valeurBac,
+    ...moyenneScolaritéForm,
     ...spécialitésScolaritéForm,
   };
 }

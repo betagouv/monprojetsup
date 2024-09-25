@@ -4,7 +4,7 @@ import {
   type ClasseÉlève,
   type RéférentielDonnées,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
-import { type UseFormGetValues, type UseFormSetValue } from "react-hook-form";
+import { type UseFormGetValues, type UseFormSetValue, type UseFormWatch } from "react-hook-form";
 
 export type ScolaritéFormProps = {
   formId: string;
@@ -28,6 +28,12 @@ export type useScolaritéFormArgs = {
 export type UseSpécialitésFormArgs = {
   référentielDonnées?: RéférentielDonnées | null;
   valeurBac: Élève["bac"] | null;
+  setValue: UseFormSetValue<Élève>;
+  getValues: UseFormGetValues<Élève>;
+};
+
+export type UseMoyenneFormArgs = {
+  watch: UseFormWatch<Élève>;
   setValue: UseFormSetValue<Élève>;
   getValues: UseFormGetValues<Élève>;
 };
