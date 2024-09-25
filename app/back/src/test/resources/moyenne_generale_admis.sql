@@ -1,12 +1,11 @@
-INSERT INTO ref_baccalaureat
-VALUES ('Général',
-        'Série Générale',
-        'Générale');
-
-INSERT INTO ref_baccalaureat
-VALUES ('Professionnel',
-        'Série Pro',
-        'P');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('Générale', 'Bac Général', 'Générale');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STAV', 'Bac STAV', 'STAV');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('ST2S', 'Bac ST2S', 'ST2S');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STMG', 'Bac STMG', 'STMG');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STI2D', 'Bac STI2D', 'STI2D');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('STL', 'Bac STL', 'STL');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('P', 'Bac Professionnel', 'P');
+INSERT INTO ref_baccalaureat (id, nom, id_externe) VALUES ('NC', 'Non-communiqué', 'NC');
 
 INSERT INTO ref_formation
 VALUES ('fl0001',
@@ -42,188 +41,33 @@ VALUES ('fl0002',
           }
         ]'::jsonb);
 
-INSERT INTO ref_moyenne_generale_admis
-VALUES ('2023',
-        'fl0001',
-        'Général',
-        ARRAY [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            6,
-            24,
-            49,
-            77,
-            174,
-            292,
-            500,
-            685,
-            1206,
-            1700,
-            2375,
-            2845,
-            3924,
-            4755,
-            5479,
-            5893,
-            6401,
-            6612,
-            6670,
-            6677
-            ]);
+INSERT INTO ref_formation
+VALUES ('fl0003',
+        'ENSA',
+        null,
+        null,
+        '{architecture}',
+        null,
+        null,
+        null,
+        ARRAY [13, 50, 12, 5, 15],
+        null);
 
-INSERT INTO ref_moyenne_generale_admis
-VALUES ('2022',
-        'fl0001',
-        'Général',
-        ARRAY [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            6,
-            24,
-            49,
-            77,
-            174,
-            292,
-            500,
-            685,
-            1206,
-            1700,
-            2375,
-            2845,
-            3924,
-            4755,
-            5479,
-            5900,
-            6109,
-            6208,
-            6420,
-            6530
-            ]);
-INSERT INTO ref_moyenne_generale_admis
-VALUES ('2023',
-        'fl0001',
-        'Professionnel',
-        ARRAY [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            2,
-            2,
-            4,
-            4,
-            8,
-            8,
-            11,
-            12,
-            13,
-            14,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15
-            ]);
-
-VALUES ('2022',
-        'fl0002',
-        'Professionnel',
-        ARRAY [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            2,
-            2,
-            4,
-            4,
-            8,
-            8,
-            11,
-            12,
-            13,
-            14,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15,
-            15
-            ]);
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'ST2S', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,3,3,5,6,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'STAV', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'NC', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,6,7,14,17,21,24,29,32,32,34,35,36,36,36,36,36,36,36,36,36,36}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'STMG', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'P', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,5,5,6,6,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'Générale', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3,3,3,5,6,6,6,8,9,10,10,10,10,10,10,10,10,10,10}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0001', 'STL', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2023', 'fl0002', 'NC', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,4,5,6,8,8,9,9,9,9,9,9,9,9,9,9,9,9}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2023', 'fl0002', 'Générale', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,3,4,5,5,6,6,6,6,6,6,6,6,6,6,6,6}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2023', 'fl0002', 'STMG', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2023', 'fl0002', 'P', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'Générale', '{0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,3,7,8,23,42,70,129,213,322,428,530,610,658,697,723,734,742,744,744,744,744}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'STL', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,3,3,3,3,3,3,3,3}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'STMG', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,4,4,4,4,4,4,4,4,4,4,4}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'P', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'NC', '{0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,3,7,9,24,44,74,135,220,334,444,552,634,682,722,749,760,769,771,771,771,771}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'STI2D', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}');
+INSERT INTO ref_moyenne_generale_admis (annee, id_formation, id_bac, frequences_cumulees) VALUES ('2024', 'fl0003', 'ST2S', '{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2,2,3,7,10,13,15,15,15,15,15,16,16,16,16,16}');

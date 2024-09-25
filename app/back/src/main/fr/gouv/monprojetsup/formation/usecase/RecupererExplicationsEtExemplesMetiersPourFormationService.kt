@@ -236,9 +236,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
     ) = ExplicationTypeBaccalaureat(
         baccalaureat =
             baccalaureat ?: Baccalaureat(
-                it.nomBaccalaureat,
-                it.nomBaccalaureat,
-                it.nomBaccalaureat,
+                id = it.nomBaccalaureat,
+                idExterne = it.nomBaccalaureat,
+                nom = it.nomBaccalaureat,
             ),
         pourcentage = it.pourcentage,
     )

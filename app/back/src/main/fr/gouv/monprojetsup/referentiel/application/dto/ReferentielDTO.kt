@@ -1,5 +1,8 @@
 package fr.gouv.monprojetsup.referentiel.application.dto
 
+import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
+import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat
+import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat.PourcentagesMoyenne
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -12,8 +15,9 @@ data class ReferentielDTO(
     val choixAlternance: List<ChoixAlternance>,
     val choixDureeEtudesPrevue: List<ChoixDureeEtudesPrevue>,
     val baccalaureatsAvecLeurSpecialites: List<BaccalaureatAvecSesSpecialitesDTO>,
-    val categoriesDInteretsAvecLeursSousCategories: List<CategorieInteretAevcSousCategoriesDTO>,
+    val categoriesDInteretsAvecLeursSousCategories: List<CategorieInteretAvecSousCategoriesDTO>,
     val categoriesDomaineAvecLeursDomaines: List<CategorieDomaineAvecDomainesDTO>,
+    val admissionsParcoursup: AdmissionsParcoursupDTO,
 ) {
     constructor(referentiel: Referentiel) : this(
         situations = referentiel.situations,
@@ -29,7 +33,7 @@ data class ReferentielDTO(
             },
         categoriesDInteretsAvecLeursSousCategories =
             referentiel.categoriesDInteretsAvecLeursSousCategories.map {
-                CategorieInteretAevcSousCategoriesDTO(
+                CategorieInteretAvecSousCategoriesDTO(
                     categorieInteret = InteretCategorieDTO(it.key),
                     sousCategoriesInterets = it.value.map { interet -> InteretSousCategorieDTO(interet) },
                 )
@@ -41,6 +45,7 @@ data class ReferentielDTO(
                     domaines = it.value.map { domaine -> DomaineDTO(domaine) },
                 )
             },
+        admissionsParcoursup = AdmissionsParcoursupDTO(referentiel.admissionsParcoursup),
     )
 
     data class BaccalaureatAvecSesSpecialitesDTO(
@@ -53,8 +58,38 @@ data class ReferentielDTO(
         val domaines: List<DomaineDTO>,
     )
 
-    data class CategorieInteretAevcSousCategoriesDTO(
+    data class CategorieInteretAvecSousCategoriesDTO(
         val categorieInteret: InteretCategorieDTO,
         val sousCategoriesInterets: List<InteretSousCategorieDTO>,
     )
+
+    data class AdmissionsParcoursupDTO(
+        val annee: String,
+        val parBaccalaureat: List<PourcentagesPourChaqueMoyenneParBaccalaureatDTO>,
+    ) {
+        constructor(admissionsParcoursup: AdmissionsParcoursup) : this(
+            annee = admissionsParcoursup.annee,
+            parBaccalaureat = admissionsParcoursup.parBaccalaureat.map { PourcentagesPourChaqueMoyenneParBaccalaureatDTO(it) },
+        )
+
+        data class PourcentagesPourChaqueMoyenneParBaccalaureatDTO(
+            val baccalaureat: BaccalaureatDTO,
+            val pourcentages: List<PourcentagesMoyenneDTO>,
+        ) {
+            constructor(pourcentagesPourChaqueMoyenneParBaccalaureat: PourcentagesPourChaqueMoyenneParBaccalaureat) : this(
+                baccalaureat = BaccalaureatDTO(pourcentagesPourChaqueMoyenneParBaccalaureat.baccalaureat),
+                pourcentages = pourcentagesPourChaqueMoyenneParBaccalaureat.pourcentages.map { PourcentagesMoyenneDTO(it) },
+            )
+
+            data class PourcentagesMoyenneDTO(
+                val note: Float,
+                val pourcentageAdmisAyantCetteMoyenneOuMoins: Int,
+            ) {
+                constructor(pourcentagesMoyenne: PourcentagesMoyenne) : this(
+                    note = pourcentagesMoyenne.note,
+                    pourcentageAdmisAyantCetteMoyenneOuMoins = pourcentagesMoyenne.pourcentageAdmisAyantCetteMoyenneOuMoins,
+                )
+            }
+        }
+    }
 }

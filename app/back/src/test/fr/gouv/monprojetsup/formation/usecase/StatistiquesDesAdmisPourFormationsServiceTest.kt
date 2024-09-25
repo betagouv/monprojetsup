@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
@@ -172,7 +173,10 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
         @BeforeEach
         fun setup() {
             given(
-                frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(idFormation = "fl0001"),
+                frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
+                    idFormation = "fl0001",
+                    annee = ANNEE_DONNEES_PARCOURSUP,
+                ),
             ).willReturn(
                 frequencesCumulees,
             )
@@ -211,7 +215,10 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
         fun setup() {
             frequenceCumuleesMock = mapOf(mock(Baccalaureat::class.java) to listOf(0, 1, 2, 3, 4, 5))
             given(
-                frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(idsFormations = idsFormations),
+                frequencesCumuleesDesMoyenneDesAdmisRepository.recupererFrequencesCumuleesDeTousLesBacs(
+                    idsFormations = idsFormations,
+                    ANNEE_DONNEES_PARCOURSUP,
+                ),
             ).willReturn(
                 mapOf(
                     "fl0001" to frequencesCumulees,

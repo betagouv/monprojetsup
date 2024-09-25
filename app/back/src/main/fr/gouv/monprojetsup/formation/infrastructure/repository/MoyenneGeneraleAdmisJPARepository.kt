@@ -4,6 +4,8 @@ import fr.gouv.monprojetsup.formation.infrastructure.entity.MoyenneGeneraleAdmis
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MoyenneGeneraleAdmisJPARepository : JpaRepository<MoyenneGeneraleAdmisEntity, String> {
+    fun findAllByAnnee(annee: String): List<MoyenneGeneraleAdmisEntity>
+
     fun findAllByAnneeAndIdFormation(
         annee: String,
         idFormation: String,
