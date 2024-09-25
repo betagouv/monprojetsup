@@ -8,97 +8,23 @@ import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
-import fr.gouv.monprojetsup.referentiel.domain.entity.Interet
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
-import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
-import fr.gouv.monprojetsup.referentiel.domain.port.SpecialitesRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.BDDMockito.given
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 import java.util.UUID
 import java.util.stream.Stream
 
-class APISuggestionProfilDTOComponentTest {
-    @Mock
-    lateinit var specialitesRepository: SpecialitesRepository
-
-    @Mock
-    lateinit var interetRepository: InteretRepository
-
-    @InjectMocks
-    lateinit var apiSuggestionProfilDTOComponent: APISuggestionProfilDTOComponent
-
-    @BeforeEach
-    fun before() {
-        MockitoAnnotations.openMocks(this)
-        apiSuggestionProfilDTOComponent = APISuggestionProfilDTOComponent()
-    }
-
+class APISuggestionProfilDTOTest {
     @ParameterizedTest
     @MethodSource("testsProfileDTO")
     fun `doit créer le ProfilDTO attendu`(
         entree: ProfilEleve.Identifie,
         dtoAttendu: APISuggestionProfilDTO,
     ) {
-        // Given
-        val specialites =
-            listOf(
-                Specialite(
-                    id = "1001",
-                    label = "Sciences de la vie et de la Terre",
-                ),
-                Specialite(
-                    id = "1049",
-                    label = "Mathématiques",
-                ),
-            )
-        val specialites2 =
-            listOf(
-                Specialite(
-                    id = "1053",
-                    label = "Sciences de la gestion et numérique (SGN)",
-                ),
-                Specialite(
-                    id = "1055",
-                    label = "Ingénierie et développement durable (IDD)",
-                ),
-            )
-        given(specialitesRepository.recupererLesSpecialites(listOf("1001", "1049"))).willReturn(specialites)
-        given(specialitesRepository.recupererLesSpecialites(listOf("1053", "1055"))).willReturn(specialites2)
-        given(specialitesRepository.recupererLesSpecialites(listOf("1045"))).willReturn(
-            listOf(
-                Specialite(
-                    id = "1045",
-                    label = "Culture et sciences théâtrale (CST)",
-                ),
-            ),
-        )
-        val interets =
-            listOf(
-                Interet(id = "T_ROME_2092381917", nom = "J'aime manier les chiffres"),
-                Interet(id = "T_IDEO2_4812", nom = "être utile aux autres"),
-            )
-        val interets2 =
-            listOf(
-                Interet(id = "T_IDEO2_4813", nom = "j'aime faire des expériences"),
-                Interet(id = "T_IDEO2_4816", nom = "j'aime jongler avec les chiffres"),
-            )
-        given(interetRepository.recupererLesInteretsDeSousCategories(listOf("chiffres_jongler", "aider_autres"))).willReturn(
-            interets,
-        )
-        given(interetRepository.recupererLesInteretsDeSousCategories(listOf("rechercher_experiences", "chiffres_jongler"))).willReturn(
-            interets2,
-        )
-
         // When
-        val resultat = apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(profilEleve = entree)
+        val resultat = APISuggestionProfilDTO(profilEleve = entree)
 
         // Then
         assertThat(resultat).isEqualTo(dtoAttendu)
@@ -114,7 +40,7 @@ class APISuggestionProfilDTOComponentTest {
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesFavorites = listOf(Communes.PARIS15EME),
-                specialites = listOf("1001", "1049"),
+                specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
@@ -145,8 +71,8 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015"),
                 specialites =
                     listOf(
-                        "1001",
-                        "1049",
+                        "mat1001",
+                        "mat1049",
                     ),
                 interets =
                     listOf(
@@ -177,7 +103,7 @@ class APISuggestionProfilDTOComponentTest {
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
-                specialites = listOf("1001", "1049"),
+                specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 10.5f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
@@ -208,8 +134,8 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
-                        "1001",
-                        "1049",
+                        "mat1001",
+                        "mat1049",
                     ),
                 interets =
                     listOf(
@@ -305,7 +231,7 @@ class APISuggestionProfilDTOComponentTest {
                 duree = "long",
                 alternance = "B",
                 preferencesGeographiques = emptyList(),
-                specialites = null,
+                specialites = emptyList(),
                 interets = listOf("rechercher_experiences", "chiffres_jongler"),
                 moyenneGenerale = null,
                 choix =
@@ -353,7 +279,7 @@ class APISuggestionProfilDTOComponentTest {
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
                 communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
-                specialites = listOf("1001", "1049"),
+                specialites = listOf("mat1001", "mat1049"),
                 centresInterets = null,
                 moyenneGenerale = 10.5f,
                 metiersFavoris = null,
@@ -384,8 +310,8 @@ class APISuggestionProfilDTOComponentTest {
                 preferencesGeographiques = listOf("75015", "13200"),
                 specialites =
                     listOf(
-                        "1001",
-                        "1049",
+                        "mat1001",
+                        "mat1049",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 moyenneGenerale = "10.5",

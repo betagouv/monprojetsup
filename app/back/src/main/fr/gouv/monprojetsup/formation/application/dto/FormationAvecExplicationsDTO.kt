@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.InteretsEtDomainesDTO.InteretDTO
-import fr.gouv.monprojetsup.formation.domain.entity.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -208,7 +207,7 @@ data class FormationAvecExplicationsDTO(
         val nomSpecialite: String,
         val pourcentage: Int,
     ) {
-        constructor(affiniteSpecialite: AffiniteSpecialite) : this(
+        constructor(affiniteSpecialite: ExplicationsSuggestionDetaillees.AffiniteSpecialite) : this(
             nomSpecialite = affiniteSpecialite.nomSpecialite,
             pourcentage = affiniteSpecialite.pourcentage,
         )

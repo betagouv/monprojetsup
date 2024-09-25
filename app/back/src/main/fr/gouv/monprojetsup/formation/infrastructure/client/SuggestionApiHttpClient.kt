@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorExcept
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
+import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDTO
@@ -28,7 +29,6 @@ class SuggestionApiHttpClient(
     private val baseUrl: String,
     private val objectMapper: ObjectMapper,
     private val httpClient: OkHttpClient,
-    private val apiSuggestionProfilDTOComponent: APISuggestionProfilDTOComponent,
     private val logger: Logger,
 ) : SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
@@ -36,7 +36,7 @@ class SuggestionApiHttpClient(
         val reponseDTO =
             appelerAPISuggestion(
                 url = "$baseUrl/suggestions",
-                requeteDTO = AffiniteProfilRequeteDTO(profil = apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(profilEleve)),
+                requeteDTO = AffiniteProfilRequeteDTO(profil = APISuggestionProfilDTO(profilEleve = profilEleve)),
                 classDeserialise = AffinitesProfilReponseDTO::class,
             )
         return reponseDTO.toAffinitesPourProfil()
@@ -52,7 +52,7 @@ class SuggestionApiHttpClient(
                 url = "$baseUrl/explanations",
                 requeteDTO =
                     ExplicationFormationPourUnProfilRequeteDTO(
-                        profil = apiSuggestionProfilDTOComponent.creerAPISuggestionProfilDTO(profilEleve),
+                        profil = APISuggestionProfilDTO(profilEleve = profilEleve),
                         formations = idsFormations,
                     ),
                 classDeserialise = ExplicationFormationPourUnProfilReponseDTO::class,
