@@ -1,6 +1,9 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMALE
+import fr.gouv.monprojetsup.commun.Constantes.NOTE_MINIMALE
+import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.utilitaires.aUneValeurCommune
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
@@ -40,11 +43,7 @@ class MiseAJourEleveService(
         verifierDomaines(miseAJourDuProfil.domainesInterets)
         verifierCentresInterets(miseAJourDuProfil.centresInterets)
         verifierMetiers(miseAJourDuProfil.metiersFavoris)
-        verifierFormations(
-            miseAJourDuProfil.formationsFavorites,
-            miseAJourDuProfil.corbeilleFormations,
-            profilInitial,
-        )
+        verifierFormations(miseAJourDuProfil.formationsFavorites, miseAJourDuProfil.corbeilleFormations, profilInitial)
         verifierVoeuxFormations(miseAJourDuProfil.formationsFavorites)
         verifierLaMoyenneGenerale(miseAJourDuProfil.moyenneGenerale)
         val profilEleveAMettreAJour =
@@ -54,31 +53,15 @@ class MiseAJourEleveService(
                 classe = miseAJourDuProfil.classe ?: profilInitial.classe,
                 baccalaureat = miseAJourDuProfil.baccalaureat ?: profilInitial.baccalaureat,
                 specialites = miseAJourDuProfil.specialites ?: profilInitial.specialites,
-                domainesInterets =
-                    miseAJourDuProfil.domainesInterets
-                        ?: profilInitial.domainesInterets,
-                centresInterets =
-                    miseAJourDuProfil.centresInterets
-                        ?: profilInitial.centresInterets,
-                metiersFavoris =
-                    miseAJourDuProfil.metiersFavoris
-                        ?: profilInitial.metiersFavoris,
-                dureeEtudesPrevue =
-                    miseAJourDuProfil.dureeEtudesPrevue
-                        ?: profilInitial.dureeEtudesPrevue,
+                domainesInterets = miseAJourDuProfil.domainesInterets ?: profilInitial.domainesInterets,
+                centresInterets = miseAJourDuProfil.centresInterets ?: profilInitial.centresInterets,
+                metiersFavoris = miseAJourDuProfil.metiersFavoris ?: profilInitial.metiersFavoris,
+                dureeEtudesPrevue = miseAJourDuProfil.dureeEtudesPrevue ?: profilInitial.dureeEtudesPrevue,
                 alternance = miseAJourDuProfil.alternance ?: profilInitial.alternance,
-                communesFavorites =
-                    miseAJourDuProfil.communesFavorites
-                        ?: profilInitial.communesFavorites,
-                formationsFavorites =
-                    miseAJourDuProfil.formationsFavorites
-                        ?: profilInitial.formationsFavorites,
-                moyenneGenerale =
-                    miseAJourDuProfil.moyenneGenerale
-                        ?: profilInitial.moyenneGenerale,
-                corbeilleFormations =
-                    miseAJourDuProfil.corbeilleFormations
-                        ?: profilInitial.corbeilleFormations,
+                communesFavorites = miseAJourDuProfil.communesFavorites ?: profilInitial.communesFavorites,
+                formationsFavorites = miseAJourDuProfil.formationsFavorites ?: profilInitial.formationsFavorites,
+                moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
+                corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
             )
         if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)
@@ -106,95 +89,62 @@ class MiseAJourEleveService(
             if (formationsFavorites.aUneValeurCommune(corbeilleFormations)) {
                 throw MonProjetSupBadRequestException(
                     code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg =
-                        "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
+                    msg = "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
                 )
-            } else if (!formationRepository.verifierFormationsExistent(
-                    ids = formationsFavorites + corbeilleFormations,
-                )
-            ) {
-                throw MonProjetSupBadRequestException(
-                    "FORMATIONS_NON_RECONNUES",
-                    "Une ou plusieurs des formations envoyées n'existent pas",
-                )
+            } else if (!formationRepository.verifierFormationsExistent(ids = formationsFavorites + corbeilleFormations)) {
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
             }
         } else if (!formationsFavorites.isNullOrEmpty()) {
             if (formationsFavorites.aUneValeurCommune(profilInitial.corbeilleFormations)) {
                 throw MonProjetSupBadRequestException(
                     code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg =
-                        "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
+                    msg = "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
                 )
             } else if (!formationRepository.verifierFormationsExistent(ids = formationsFavorites)) {
-                throw MonProjetSupBadRequestException(
-                    "FORMATIONS_NON_RECONNUES",
-                    "Une ou plusieurs des formations envoyées n'existent pas",
-                )
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
             }
         } else if (!corbeilleFormations.isNullOrEmpty()) {
-            if (corbeilleFormations.aUneValeurCommune(
-                    profilInitial.formationsFavorites?.map { it.idFormation },
-                )
-            ) {
+            if (corbeilleFormations.aUneValeurCommune(profilInitial.formationsFavorites?.map { it.idFormation })) {
                 throw MonProjetSupBadRequestException(
                     code = "CONFLIT_FORMATION_FAVORITE_A_LA_CORBEILLE",
-                    msg =
-                        "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
+                    msg = "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
                 )
             } else if (!formationRepository.verifierFormationsExistent(ids = corbeilleFormations)) {
-                throw MonProjetSupBadRequestException(
-                    "FORMATIONS_NON_RECONNUES",
-                    "Une ou plusieurs des formations envoyées n'existent pas",
-                )
+                throw MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations envoyées n'existent pas")
             }
         }
     }
 
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierVoeuxFormations(voeuxDeFormations: List<VoeuFormation>?) {
-        voeuxDeFormations
-            ?.mapNotNull {
-                if (it.tripletsAffectationsChoisis.isNotEmpty()) it.idFormation else null
-            }
-            ?.takeUnless { it.isEmpty() }
-            ?.let { idsFormations ->
-                val voeux =
-                    tripletAffectationBDDRepository
-                        .recupererLesTripletsAffectationDeFormations(idsFormations)
-                voeuxDeFormations.forEach { voeu ->
-                    if (voeu.tripletsAffectationsChoisis.isNotEmpty()) {
-                        val tripletAffectationDuVoeu = voeux[voeu.idFormation]?.map { it.id }
-                        if (tripletAffectationDuVoeu?.containsAll(
-                                voeu.tripletsAffectationsChoisis,
-                            ) != true
-                        ) {
-                            throw MonProjetSupBadRequestException(
-                                code =
-                                    "TRIPLET_AFFECTATION_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
-                                msg =
-                                    "Pour la formation ${voeu.idFormation} présente dans les formations favorites " +
+        voeuxDeFormations?.mapNotNull {
+            if (it.tripletsAffectationsChoisis.isNotEmpty()) it.idFormation else null
+        }?.takeUnless { it.isEmpty() }?.let { idsFormations ->
+            val voeux = tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(idsFormations)
+            voeuxDeFormations.forEach { voeu ->
+                if (voeu.tripletsAffectationsChoisis.isNotEmpty()) {
+                    val tripletAffectationDuVoeu = voeux[voeu.idFormation]?.map { it.id }
+                    if (tripletAffectationDuVoeu?.containsAll(voeu.tripletsAffectationsChoisis) != true) {
+                        throw MonProjetSupBadRequestException(
+                            code = "TRIPLET_AFFECTATION_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
+                            msg =
+                                "Pour la formation ${voeu.idFormation} présente dans les formations favorites " +
                                         "comporte un ou plusieurs triplet d'affectation ne correspondant pas " +
                                         "à une de ses possibilités : $tripletAffectationDuVoeu",
-                            )
-                        }
+                        )
                     }
                 }
             }
+        }
     }
 
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierMetiers(metiersFavoris: List<String>?) {
         metiersFavoris?.takeUnless { it.isEmpty() }?.let {
             if (it.distinct().size != it.size) {
-                throw MonProjetSupBadRequestException(
-                    "METIERS_FAVORITES_EN_DOUBLE",
-                    "Un ou plusieurs des métiers est en double",
-                )
+                throw MonProjetSupBadRequestException("METIERS_FAVORITES_EN_DOUBLE", "Un ou plusieurs des métiers est en double")
             } else if (!metierRepository.verifierMetiersExistent(ids = it)) {
-                throw MonProjetSupBadRequestException(
-                    "METIERS_NON_RECONNUS",
-                    "Un ou plusieurs des métiers n'existent pas",
-                )
+                throw MonProjetSupBadRequestException("METIERS_NON_RECONNUS", "Un ou plusieurs des métiers n'existent pas")
             }
         }
     }
@@ -215,10 +165,7 @@ class MiseAJourEleveService(
     private fun verifierDomaines(domainesInterets: List<String>?) {
         domainesInterets?.takeUnless { it.isEmpty() }?.let {
             if (!domaineRepository.verifierDomainesExistent(ids = it)) {
-                throw MonProjetSupBadRequestException(
-                    "DOMAINES_NON_RECONNUS",
-                    "Un ou plusieurs des domaines n'existent pas",
-                )
+                throw MonProjetSupBadRequestException("DOMAINES_NON_RECONNUS", "Un ou plusieurs des domaines n'existent pas")
             }
         }
     }
@@ -236,28 +183,19 @@ class MiseAJourEleveService(
                         "Veuillez mettre à jour le baccalaureat avant de mettre à jour ses spécialités",
                     )
                 } else {
-                    verifierSpecialitesEnAccordAvecBaccalaureat(
-                        ancienProfil.baccalaureat,
-                        miseAJourDuProfil.specialites,
-                    )
+                    verifierSpecialitesEnAccordAvecBaccalaureat(ancienProfil.baccalaureat, miseAJourDuProfil.specialites)
                 }
             }
         } else {
             if (!miseAJourDuProfil.specialites.isNullOrEmpty()) {
-                verifierSpecialitesEnAccordAvecBaccalaureat(
-                    miseAJourDuProfil.baccalaureat,
-                    miseAJourDuProfil.specialites,
-                )
+                verifierSpecialitesEnAccordAvecBaccalaureat(miseAJourDuProfil.baccalaureat, miseAJourDuProfil.specialites)
             } else if (miseAJourDuProfil.specialites?.isEmpty() == true) {
                 verifierBaccalaureatExiste(miseAJourDuProfil.baccalaureat)
             } else {
                 if (ancienProfil.specialites.isNullOrEmpty()) {
                     verifierBaccalaureatExiste(miseAJourDuProfil.baccalaureat)
                 } else {
-                    verifierSpecialitesEnAccordAvecBaccalaureat(
-                        miseAJourDuProfil.baccalaureat,
-                        ancienProfil.specialites,
-                    )
+                    verifierSpecialitesEnAccordAvecBaccalaureat(miseAJourDuProfil.baccalaureat, ancienProfil.specialites)
                 }
             }
         }
@@ -269,9 +207,7 @@ class MiseAJourEleveService(
         nouvellesSpecialites: List<String>,
     ) {
         val specialitesDuBaccalaureat =
-            baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                idBaccalaureat,
-            )
+            baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat)
         if (!specialitesDuBaccalaureat.containsAll(nouvellesSpecialites)) {
             throw MonProjetSupBadRequestException(
                 "BACCALAUREAT_ET_SPECIALITES_NON_EN_ACCORD",
@@ -295,17 +231,13 @@ class MiseAJourEleveService(
     private fun verifierLaMoyenneGenerale(moyenneGenerale: Float?) {
         moyenneGenerale?.let {
             if (it > NOTE_MAXIMALE || it < NOTE_MINIMALE) {
-                throw MonProjetSupBadRequestException(
-                    code = "ERREUR_MOYENNE_GENERALE",
-                    msg =
-                        "La moyenne générale $it n'est pas dans l'intervalle $NOTE_MINIMALE et $NOTE_MAXIMALE",
-                )
+                if (it != NOTE_NON_REPONSE) {
+                    throw MonProjetSupBadRequestException(
+                        code = "ERREUR_MOYENNE_GENERALE",
+                        msg = "La moyenne générale $it n'est pas dans l'intervalle $NOTE_MINIMALE et $NOTE_MAXIMALE",
+                    )
+                }
             }
         }
-    }
-
-    companion object {
-        private const val NOTE_MINIMALE = -1
-        private const val NOTE_MAXIMALE = 20
     }
 }

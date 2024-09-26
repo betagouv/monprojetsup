@@ -31,23 +31,32 @@ import org.mockito.MockitoAnnotations
 import java.util.UUID
 
 class MiseAJourEleveServiceTest {
-    @Mock private lateinit var baccalaureatRepository: BaccalaureatRepository
+    @Mock
+    private lateinit var baccalaureatRepository: BaccalaureatRepository
 
-    @Mock private lateinit var baccalaureatSpecialiteRepository: BaccalaureatSpecialiteRepository
+    @Mock
+    private lateinit var baccalaureatSpecialiteRepository: BaccalaureatSpecialiteRepository
 
-    @Mock private lateinit var tripletAffectationBDDRepository: TripletAffectationRepository
+    @Mock
+    private lateinit var tripletAffectationBDDRepository: TripletAffectationRepository
 
-    @Mock private lateinit var domaineRepository: DomaineRepository
+    @Mock
+    private lateinit var domaineRepository: DomaineRepository
 
-    @Mock private lateinit var interetRepository: InteretRepository
+    @Mock
+    private lateinit var interetRepository: InteretRepository
 
-    @Mock private lateinit var metierRepository: MetierRepository
+    @Mock
+    private lateinit var metierRepository: MetierRepository
 
-    @Mock private lateinit var formationRepository: FormationRepository
+    @Mock
+    private lateinit var formationRepository: FormationRepository
 
-    @Mock private lateinit var eleveRepository: EleveRepository
+    @Mock
+    private lateinit var eleveRepository: EleveRepository
 
-    @InjectMocks private lateinit var miseAJourEleveService: MiseAJourEleveService
+    @InjectMocks
+    private lateinit var miseAJourEleveService: MiseAJourEleveService
 
     @BeforeEach
     fun setup() {
@@ -86,8 +95,7 @@ class MiseAJourEleveServiceTest {
             corbeilleFormations = listOf("fl1234", "fl5678"),
         )
 
-    private val profilVide =
-        ProfilEleve.Identifie(id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"))
+    private val profilVide = ProfilEleve.Identifie(id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"))
     private val modificationProfilEleveVide = ModificationProfilEleve()
 
     @Nested
@@ -110,22 +118,13 @@ class MiseAJourEleveServiceTest {
                     formationsFavorites = null,
                     moyenneGenerale = null,
                 )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Général",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Général"))
                 .willReturn(listOf("5", "7", "1008", "2003"))
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilEleve,
-                )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Général. " +
                         "Spécialités possibles [5, 7, 1008, 2003]",
@@ -139,15 +138,9 @@ class MiseAJourEleveServiceTest {
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Veuillez mettre à jour le baccalaureat avant de mettre à jour ses spécialités",
-                )
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Veuillez mettre à jour le baccalaureat avant de mettre à jour ses spécialités")
         }
 
         @Test
@@ -158,18 +151,12 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = emptyList(),
                 )
-            given(baccalaureatRepository.verifierBaccalaureatExiste(id = "Baccalaureat inconnu"))
-                .willReturn(false)
+            given(baccalaureatRepository.verifierBaccalaureatExiste(id = "Baccalaureat inconnu")).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -180,18 +167,12 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
-            given(baccalaureatRepository.verifierBaccalaureatExiste("Baccalaureat inconnu"))
-                .willReturn(false)
+            given(baccalaureatRepository.verifierBaccalaureatExiste("Baccalaureat inconnu")).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
-                miseAJourEleveService.mettreAJourUnProfilEleve(
-                    miseAJourDuProfil = nouveauProfil,
-                    profilActuel = profilVide,
-                )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilVide)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -202,8 +183,7 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
-            given(baccalaureatRepository.verifierBaccalaureatExiste("Baccalaureat inconnu"))
-                .willReturn(false)
+            given(baccalaureatRepository.verifierBaccalaureatExiste("Baccalaureat inconnu")).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
@@ -211,9 +191,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide.copy(specialites = emptyList()),
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Aucun baccalaureat avec l'id Baccalaureat inconnu")
         }
 
         @Test
@@ -224,12 +202,7 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = null,
                 )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Baccalaureat inconnu",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Baccalaureat inconnu"))
                 .willReturn(emptyList())
 
             // When & Then
@@ -238,8 +211,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide.copy(specialites = listOf("4", "1006")),
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Baccalaureat inconnu. " +
                         "Spécialités possibles []",
@@ -254,26 +226,16 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Pro",
                     specialites = null,
                 )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Pro",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Pro"))
                 .willReturn(listOf("5", "1006", "2003", "120"))
 
             // When & Then
             assertThatThrownBy {
                 miseAJourEleveService.mettreAJourUnProfilEleve(
                     miseAJourDuProfil = nouveauProfil,
-                    profilActuel =
-                        profilVide.copy(
-                            baccalaureat = "Général",
-                            specialites = listOf("4", "1006"),
-                        ),
+                    profilActuel = profilVide.copy(baccalaureat = "Général", specialites = listOf("4", "1006")),
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Pro. " +
                         "Spécialités possibles [5, 1006, 2003, 120]",
@@ -288,12 +250,7 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Baccalaureat inconnu",
                     specialites = listOf("5", "2003"),
                 )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Baccalaureat inconnu",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Baccalaureat inconnu"))
                 .willReturn(emptyList())
 
             // When & Then
@@ -302,8 +259,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Baccalaureat inconnu. " +
                         "Spécialités possibles []",
@@ -318,12 +274,7 @@ class MiseAJourEleveServiceTest {
                     baccalaureat = "Pro",
                     specialites = listOf("5", "2006"),
                 )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Pro",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Pro"))
                 .willReturn(listOf("5", "1006", "2003", "120"))
 
             // When & Then
@@ -332,8 +283,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Une ou plus spécialité renvoyées ne font pas parties des spécialités du baccalaureat Pro. " +
                         "Spécialités possibles [5, 1006, 2003, 120]",
@@ -356,9 +306,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Un ou plusieurs des métiers n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des métiers n'existent pas")
         }
 
         @Test
@@ -373,9 +321,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Un ou plusieurs des métiers est en double")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des métiers est en double")
             then(metierRepository).shouldHaveNoInteractions()
         }
 
@@ -392,9 +338,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Un ou plusieurs des domaines n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des domaines n'existent pas")
         }
 
         @Test
@@ -410,9 +354,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("Un ou plusieurs des centres d'intérêt n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des centres d'intérêt n'existent pas")
         }
     }
 
@@ -443,11 +385,8 @@ class MiseAJourEleveServiceTest {
                     corbeilleFormations = corbeilleFormations,
                 )
             given(
-                formationRepository.verifierFormationsExistent(
-                    ids = listOf("flInconnue", "fl0001") + corbeilleFormations,
-                ),
-            )
-                .willReturn(false)
+                formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+            ).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
@@ -455,11 +394,9 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(
-                    MonProjetSupBadRequestException::class.java,
-                )
-                .hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
         }
 
         @Test
@@ -480,14 +417,8 @@ class MiseAJourEleveServiceTest {
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
-            given(
-                formationRepository.verifierFormationsExistent(
-                    ids = listOf("flInconnue", "fl0001"),
-                ),
-            )
-                .willReturn(false)
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
+            given(formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001"))).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
@@ -495,21 +426,17 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(
-                    MonProjetSupBadRequestException::class.java,
-                )
-                .hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
         }
 
         @Test
         fun `si une des formations à la corbeille n'existe pas, doit throw BadRequestException`() {
             // Given
             val corbeilleFormations = listOf("flInconnue", "fl1234", "fl5678")
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
-            given(formationRepository.verifierFormationsExistent(corbeilleFormations))
-                .willReturn(false)
+            val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
+            given(formationRepository.verifierFormationsExistent(corbeilleFormations)).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
@@ -517,11 +444,9 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(
-                    MonProjetSupBadRequestException::class.java,
-                )
-                .hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            }.isInstanceOf(
+                MonProjetSupBadRequestException::class.java,
+            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
         }
 
         @Test
@@ -549,11 +474,8 @@ class MiseAJourEleveServiceTest {
                     corbeilleFormations = corbeilleFormations,
                 )
             given(
-                formationRepository.verifierFormationsExistent(
-                    ids = listOf("flInconnue", "fl0001") + corbeilleFormations,
-                ),
-            )
-                .willReturn(false)
+                formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+            ).willReturn(false)
 
             // When & Then
             assertThatThrownBy {
@@ -561,11 +483,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris",
-                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Une ou plusieurs des formations se trouvent à la fois à la corbeille et dans les favoris")
         }
 
         @Test
@@ -586,8 +505,7 @@ class MiseAJourEleveServiceTest {
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
 
             // When & Then
             assertThatThrownBy {
@@ -595,11 +513,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille",
-                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Vous essayez d'ajouter une formation en favoris alors qu'elle se trouve actuellement à la corbeille")
             then(formationRepository).shouldHaveNoInteractions()
         }
 
@@ -607,8 +522,7 @@ class MiseAJourEleveServiceTest {
         fun `si une des formations à la corbeille se trouve déjà dans les favoris, doit throw BadRequestException`() {
             // Given
             val corbeilleFormations = listOf("fl0010", "fl1234", "fl5678")
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
+            val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
 
             // When & Then
             assertThatThrownBy {
@@ -616,11 +530,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage(
-                    "Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris",
-                )
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("Vous essayez d'ajouter une formation à la corbeille alors qu'elle se trouve actuellement en favoris")
             then(formationRepository).shouldHaveNoInteractions()
         }
 
@@ -642,8 +553,7 @@ class MiseAJourEleveServiceTest {
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
+            val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
 
             // When & Then
             assertThatThrownBy {
@@ -651,8 +561,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage("Une des formations favorites est présentes plusieurs fois")
             then(formationRepository).shouldHaveNoInteractions()
         }
@@ -661,8 +570,7 @@ class MiseAJourEleveServiceTest {
         fun `si essaye d'inserer 2 fois ou plus la même formation dans la corbeille, doit throw BadRequestException`() {
             // Given
             val corbeilleFormations = listOf("fl1", "fl1", "fl2")
-            val nouveauProfil =
-                modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
+            val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
 
             // When & Then
             assertThatThrownBy {
@@ -670,8 +578,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilEleve,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage("Une des formations à la corbeille est présentes plusieurs fois")
             then(formationRepository).shouldHaveNoInteractions()
         }
@@ -682,8 +589,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si le repository renvoie une map vide, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3")))
-                .willReturn(true)
+            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -702,13 +608,7 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                 )
-            given(
-                tripletAffectationBDDRepository
-                    .recupererLesTripletsAffectationDeFormations(
-                        listOf("fl1", "fl3"),
-                    ),
-            )
-                .willReturn(emptyMap())
+            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(emptyMap())
 
             // When & Then
             assertThatThrownBy {
@@ -716,8 +616,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl1 présente dans les formations favorites comporte un ou plusieurs " +
                         "triplet d'affectation ne correspondant pas à une de ses possibilités : null",
@@ -727,8 +626,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si le repository renvoie des listes vides, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3")))
-                .willReturn(true)
+            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -764,13 +662,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     "fl3" to emptyList(),
                 )
-            given(
-                tripletAffectationBDDRepository
-                    .recupererLesTripletsAffectationDeFormations(
-                        listOf("fl1", "fl3"),
-                    ),
-            )
-                .willReturn(mapResultat)
+            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -778,8 +670,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
                         "triplet d'affectation ne correspondant pas à une de ses possibilités : []",
@@ -789,8 +680,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si un des triplet d'affectation n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3")))
-                .willReturn(true)
+            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -804,8 +694,7 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl3",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis =
-                                    listOf("ta129", "ta128"),
+                                tripletsAffectationsChoisis = listOf("ta129", "ta128"),
                                 priseDeNote = "Ma prise de note",
                             ),
                         ),
@@ -839,13 +728,7 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                 )
-            given(
-                tripletAffectationBDDRepository
-                    .recupererLesTripletsAffectationDeFormations(
-                        listOf("fl1", "fl3"),
-                    ),
-            )
-                .willReturn(mapResultat)
+            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -853,8 +736,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
                         "triplet d'affectation ne correspondant pas à une de ses possibilités : [ta1, ta129]",
@@ -865,9 +747,9 @@ class MiseAJourEleveServiceTest {
     @Nested
     inner class ErreurMoyenneGenerale {
         @Test
-        fun `si la moyenne envoyée est strictement inferieure à -1, doit throw BadRequestException`() {
+        fun `si la moyenne envoyée est strictement inferieure à 0, doit throw BadRequestException`() {
             // Given
-            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = -1.5f)
+            val nouveauProfil = modificationProfilEleveVide.copy(moyenneGenerale = -0.5f)
 
             // When & Then
             assertThatThrownBy {
@@ -875,9 +757,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("La moyenne générale -1.5 n'est pas dans l'intervalle -1 et 20")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("La moyenne générale -0.5 n'est pas dans l'intervalle 0 et 20")
         }
 
         @Test
@@ -891,9 +772,8 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }
-                .isInstanceOf(MonProjetSupBadRequestException::class.java)
-                .hasMessage("La moyenne générale 20.5 n'est pas dans l'intervalle -1 et 20")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java)
+                .hasMessage("La moyenne générale 20.5 n'est pas dans l'intervalle 0 et 20")
         }
     }
 
@@ -902,14 +782,12 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `quand toutes les valeurs sont à null, ne doit rien faire`() {
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleveVide,
-                profilActuel = profilEleve,
-            )
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleveVide, profilActuel = profilEleve)
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
+            then(tripletAffectationBDDRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
@@ -937,10 +815,7 @@ class MiseAJourEleveServiceTest {
                 )
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = nouveauProfil,
-                profilActuel = profilEleve,
-            )
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
 
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
@@ -982,8 +857,7 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis =
-                                    listOf("ta12", "ta20"),
+                                tripletsAffectationsChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
@@ -996,60 +870,37 @@ class MiseAJourEleveServiceTest {
                     moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
                 )
-            given(domaineRepository.verifierDomainesExistent(ids = listOf("agroequipement")))
-                .willReturn(true)
-            given(
-                interetRepository.verifierCentresInteretsExistent(
-                    ids = listOf("linguistique", "etude"),
-                ),
-            )
-                .willReturn(true)
+            given(domaineRepository.verifierDomainesExistent(ids = listOf("agroequipement"))).willReturn(true)
+            given(interetRepository.verifierCentresInteretsExistent(ids = listOf("linguistique", "etude"))).willReturn(true)
             given(metierRepository.verifierMetiersExistent(ids = listOf("MET004"))).willReturn(true)
-            given(
-                formationRepository.verifierFormationsExistent(
-                    ids = listOf("fl0011", "fl0015", "fl0013"),
+            given(formationRepository.verifierFormationsExistent(ids = listOf("fl0011", "fl0015", "fl0013"))).willReturn(true)
+            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl0011"))).willReturn(
+                mapOf(
+                    "fl0011" to
+                        listOf(
+                            TripletAffectation(
+                                id = "ta12",
+                                nom = "Nom ta12",
+                                commune = Communes.MARSEILLE,
+                            ),
+                            TripletAffectation(
+                                id = "ta13",
+                                nom = "Nom ta13",
+                                commune = Communes.PARIS15EME,
+                            ),
+                            TripletAffectation(
+                                id = "ta20",
+                                nom = "Nom ta20",
+                                commune = Communes.CAEN,
+                            ),
+                        ),
                 ),
             )
-                .willReturn(true)
-            given(
-                tripletAffectationBDDRepository
-                    .recupererLesTripletsAffectationDeFormations(listOf("fl0011")),
-            )
-                .willReturn(
-                    mapOf(
-                        "fl0011" to
-                            listOf(
-                                TripletAffectation(
-                                    id = "ta12",
-                                    nom = "Nom ta12",
-                                    commune = Communes.MARSEILLE,
-                                ),
-                                TripletAffectation(
-                                    id = "ta13",
-                                    nom = "Nom ta13",
-                                    commune = Communes.PARIS15EME,
-                                ),
-                                TripletAffectation(
-                                    id = "ta20",
-                                    nom = "Nom ta20",
-                                    commune = Communes.CAEN,
-                                ),
-                            ),
-                    ),
-                )
-            given(
-                baccalaureatSpecialiteRepository
-                    .recupererLesIdsDesSpecialitesDUnBaccalaureat(
-                        idBaccalaureat = "Pro",
-                    ),
-            )
+            given(baccalaureatSpecialiteRepository.recupererLesIdsDesSpecialitesDUnBaccalaureat(idBaccalaureat = "Pro"))
                 .willReturn(listOf("5", "7", "1008", "2003"))
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = modificationProfilEleve,
-                profilActuel = profilEleve,
-            )
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = profilEleve)
 
             // Then
             val nouveauProfil =
@@ -1070,8 +921,7 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis =
-                                    listOf("ta12", "ta20"),
+                                tripletsAffectationsChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
@@ -1089,6 +939,56 @@ class MiseAJourEleveServiceTest {
         }
 
         @Test
+        fun `quand la moyenne est à -1, doit la mettre à jour`() {
+            // Given
+            val modificationProfilEleve = ModificationProfilEleve(moyenneGenerale = -1.0f)
+
+            // When
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = profilEleve)
+
+            // Then
+            val nouveauProfil =
+                ProfilEleve.Identifie(
+                    id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+                    situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
+                    classe = ChoixNiveau.SECONDE,
+                    baccalaureat = "Général",
+                    specialites = listOf("4", "1006"),
+                    domainesInterets = listOf("animaux", "agroequipement"),
+                    centresInterets = listOf("linguistique", "voyage"),
+                    metiersFavoris = listOf("MET001"),
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
+                    alternance = ChoixAlternance.INDIFFERENT,
+                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    formationsFavorites =
+                        listOf(
+                            VoeuFormation(
+                                idFormation = "fl0010",
+                                niveauAmbition = 1,
+                                tripletsAffectationsChoisis = emptyList(),
+                                priseDeNote = null,
+                            ),
+                            VoeuFormation(
+                                idFormation = "fl0012",
+                                niveauAmbition = 3,
+                                tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                                priseDeNote = "Mon voeu préféré",
+                            ),
+                        ),
+                    moyenneGenerale = -1.0f,
+                    corbeilleFormations = listOf("fl1234", "fl5678"),
+                )
+            then(baccalaureatRepository).shouldHaveNoInteractions()
+            then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
+            then(tripletAffectationBDDRepository).shouldHaveNoInteractions()
+            then(domaineRepository).shouldHaveNoInteractions()
+            then(interetRepository).shouldHaveNoInteractions()
+            then(metierRepository).shouldHaveNoInteractions()
+            then(formationRepository).shouldHaveNoInteractions()
+            then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
+        }
+
+        @Test
         fun `quand le baccalaureat existe, doit le mettre à jour`() {
             // Given
             val nouveauProfil =
@@ -1099,14 +999,10 @@ class MiseAJourEleveServiceTest {
             given(baccalaureatRepository.verifierBaccalaureatExiste(id = "Pro")).willReturn(true)
 
             // When
-            miseAJourEleveService.mettreAJourUnProfilEleve(
-                miseAJourDuProfil = nouveauProfil,
-                profilActuel = profilEleve,
-            )
+            miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = nouveauProfil, profilActuel = profilEleve)
 
             // Then
-            val profilAMettreAJour =
-                profilEleve.copy(baccalaureat = "Pro", specialites = emptyList())
+            val profilAMettreAJour = profilEleve.copy(baccalaureat = "Pro", specialites = emptyList())
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(profilAMettreAJour)
         }
     }

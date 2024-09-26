@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.Constantes.NOTE_NON_REPONSE
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.CorbeilleSuggestionDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO.FavorisSuggestionDTO
 
@@ -39,7 +40,7 @@ data class APISuggestionProfilDTO(
         preferencesGeographiques = profilEleve.communesFavorites?.map { it.codeInsee },
         specialites = profilEleve.specialites,
         interets = (profilEleve.centresInterets ?: emptyList()) + (profilEleve.domainesInterets ?: emptyList()),
-        moyenneGenerale = profilEleve.moyenneGenerale?.toString(),
+        moyenneGenerale = profilEleve.moyenneGenerale?.let { if (it == NOTE_NON_REPONSE) null else it.toString() },
         choix =
             (
                 profilEleve.metiersFavoris?.map { FavorisSuggestionDTO(it) }
