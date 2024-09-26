@@ -15,7 +15,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     valeurBac,
     afficherChampMoyenne,
     neVeutPasRépondreMoyenne,
-    valeurMoyenneGénérale,
+    moyenneGénérale,
     auClicSurNeVeutPasRépondreMoyenne,
     bacADesSpécialités,
     spécialitésSuggérées,
@@ -59,7 +59,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           status={erreurs.moyenneGénérale ? { type: "erreur", message: erreurs.moyenneGénérale.message } : undefined}
           valeurMax={20}
           valeurMin={0}
-          valeurParDéfaut={valeurMoyenneGénérale}
+          valeurParDéfaut={moyenneGénérale}
         />
       )}
       {bacADesSpécialités && spécialitésSélectionnéesParDéfaut && (
