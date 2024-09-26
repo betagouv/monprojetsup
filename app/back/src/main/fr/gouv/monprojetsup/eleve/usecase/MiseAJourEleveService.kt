@@ -172,8 +172,9 @@ class MiseAJourEleveService(
                                 code =
                                     "TRIPLET_AFFECTATION_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
                                 msg =
-                                    "Pour la formation ${voeu.idFormation} présente dans les formations favorites comporte un ou plusieurs " +
-                                        "triplet d'affectation ne correspondant pas à une de ses possibilités : $tripletAffectationDuVoeu",
+                                    "Pour la formation ${voeu.idFormation} présente dans les formations favorites " +
+                                        "comporte un ou plusieurs triplet d'affectation ne correspondant pas " +
+                                        "à une de ses possibilités : $tripletAffectationDuVoeu",
                             )
                         }
                     }
