@@ -26,41 +26,55 @@ const CurseurCranté = ({
   };
 
   return (
-    <div
-      className={`fr-range-group ${classEnFonctionDuStatus().rangeGroup}`}
-      id={`range-${id}-group`}
-    >
-      <label className="fr-label">
-        {label}
-        {description && <span className="fr-hint-text">{description}</span>}
-      </label>
-      <div className="fr-range fr-range--step">
-        <span className="fr-range__output">{neVeutPasRépondre ? valeurMin : valeurParDéfaut}</span>
-        <input
-          aria-describedby={`range-${id}-messages`}
-          aria-labelledby={`range-${id}-label`}
-          defaultValue={neVeutPasRépondre ? valeurMin : valeurParDéfaut}
-          disabled={neVeutPasRépondre}
-          id={id}
-          max={valeurMax}
-          min={valeurMin}
-          name={id}
-          step={pas}
-          type="range"
-          {...registerHookForm}
-        />
-        <span
-          aria-hidden="true"
-          className="fr-range__min"
+    <div>
+      <div
+        className={`fr-range-group ${classEnFonctionDuStatus().rangeGroup}`}
+        id={`range-${id}-group`}
+      >
+        <label
+          className="fr-label"
+          htmlFor={id}
         >
-          {valeurMin}
-        </span>
-        <span
-          aria-hidden="true"
-          className="fr-range__max"
+          {label}
+          {description && <span className="fr-hint-text">{description}</span>}
+        </label>
+        <div className="fr-range fr-range--step">
+          <span className="fr-range__output">{neVeutPasRépondre ? valeurMin : valeurParDéfaut}</span>
+          <input
+            aria-describedby={`range-${id}-messages`}
+            defaultValue={neVeutPasRépondre ? valeurMin : valeurParDéfaut}
+            disabled={neVeutPasRépondre}
+            id={id}
+            max={valeurMax}
+            min={valeurMin}
+            name={id}
+            step={pas}
+            type="range"
+            {...registerHookForm}
+          />
+          <span
+            aria-hidden="true"
+            className="fr-range__min"
+          >
+            {valeurMin}
+          </span>
+          <span
+            aria-hidden="true"
+            className="fr-range__max"
+          >
+            {valeurMax}
+          </span>
+        </div>
+
+        <div
+          aria-live="polite"
+          className="fr-messages-group"
+          id={`range-${id}-messages`}
         >
-          {valeurMax}
-        </span>
+          {status && ["erreur", "succès"].includes(status.type) && (
+            <p className={`fr-message ${classEnFonctionDuStatus().message}`}>{status.message}</p>
+          )}
+        </div>
       </div>
       <div className="fr-checkbox-group fr-checkbox-group--sm mt-4">
         <input
@@ -78,15 +92,6 @@ const CurseurCranté = ({
         >
           {i18n.COMMUN.NE_VEUT_PAS_RÉPONDRE}
         </label>
-      </div>
-      <div
-        aria-live="polite"
-        className="fr-messages-group"
-        id={`range-${id}-messages`}
-      >
-        {status && ["erreur", "succès"].includes(status.type) && (
-          <p className={`fr-message ${classEnFonctionDuStatus().message}`}>{status.message}</p>
-        )}
       </div>
     </div>
   );

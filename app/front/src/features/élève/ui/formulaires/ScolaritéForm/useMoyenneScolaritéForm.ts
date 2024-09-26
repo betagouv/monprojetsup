@@ -3,34 +3,29 @@ import { useEffect, useMemo } from "react";
 
 export default function useMoyenneForm({ watch, setValue, getValues }: UseMoyenneFormArgs) {
   const MOYENNE_PAR_DÉFAUT = 14;
-  const NE_VEUT_PAS_RÉPONDRE_VALEUR = -1;
+  const NE_VEUT_PAS_RÉPONDRE = -1;
 
-  const valeurClasse = watch("classe");
-  const valeurMoyenneGénérale = watch("moyenneGénérale");
+  const classe = watch("classe");
+  const moyenneGénérale = watch("moyenneGénérale");
 
-  const valeurParDéfautMoyenne = useMemo(() => getValues("moyenneGénérale") ?? MOYENNE_PAR_DÉFAUT, [getValues]);
-  const afficherChampMoyenne = useMemo(() => valeurClasse === "terminale", [valeurClasse]);
-  const neVeutPasRépondreMoyenne = useMemo(
-    () => valeurMoyenneGénérale === NE_VEUT_PAS_RÉPONDRE_VALEUR,
-    [NE_VEUT_PAS_RÉPONDRE_VALEUR, valeurMoyenneGénérale],
+  const moyenneInitiale = useMemo(() => getValues("moyenneGénérale") ?? MOYENNE_PAR_DÉFAUT, [getValues]);
+  const afficherChampMoyenne = useMemo(() => classe === "terminale", [classe]);
+  const neVeutPasRépondre = useMemo(
+    () => moyenneGénérale === NE_VEUT_PAS_RÉPONDRE,
+    [NE_VEUT_PAS_RÉPONDRE, moyenneGénérale],
   );
 
-  const auClicSurNeVeutPasRépondreMoyenne = (neVeutPasRépondre: boolean) =>
-    setValue("moyenneGénérale", neVeutPasRépondre ? NE_VEUT_PAS_RÉPONDRE_VALEUR : MOYENNE_PAR_DÉFAUT);
+  const auClicSurNeVeutPasRépondre = (état: boolean) =>
+    setValue("moyenneGénérale", état ? NE_VEUT_PAS_RÉPONDRE : MOYENNE_PAR_DÉFAUT);
 
   useEffect(() => {
-    if (afficherChampMoyenne) {
-      setValue("moyenneGénérale", valeurParDéfautMoyenne ?? MOYENNE_PAR_DÉFAUT);
-    } else {
-      setValue("moyenneGénérale", NE_VEUT_PAS_RÉPONDRE_VALEUR);
-    }
-  }, [NE_VEUT_PAS_RÉPONDRE_VALEUR, afficherChampMoyenne, setValue, valeurParDéfautMoyenne]);
+    setValue("moyenneGénérale", afficherChampMoyenne ? moyenneInitiale : null);
+  }, [afficherChampMoyenne, moyenneInitiale, setValue]);
 
   return {
-    valeurParDéfautMoyenne,
-    neVeutPasRépondreMoyenne,
+    neVeutPasRépondreMoyenne: neVeutPasRépondre,
     afficherChampMoyenne,
-    valeurMoyenneGénérale: valeurMoyenneGénérale ?? MOYENNE_PAR_DÉFAUT,
-    auClicSurNeVeutPasRépondreMoyenne,
+    moyenneGénérale: moyenneGénérale ?? MOYENNE_PAR_DÉFAUT,
+    auClicSurNeVeutPasRépondreMoyenne: auClicSurNeVeutPasRépondre,
   };
 }
