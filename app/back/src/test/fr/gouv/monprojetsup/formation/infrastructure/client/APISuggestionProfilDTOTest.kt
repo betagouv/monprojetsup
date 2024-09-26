@@ -251,7 +251,7 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(Communes.LYON, Communes.PARIS15EME),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
-                moyenneGenerale = 4.9f,
+                moyenneGenerale = -1.0f,
                 metiersFavoris = emptyList(),
                 formationsFavorites = emptyList(),
                 domainesInterets = emptyList(),
@@ -266,7 +266,7 @@ class APISuggestionProfilDTOTest {
                 preferencesGeographiques = listOf("69380", "75015"),
                 specialites = listOf("1045"),
                 interets = emptyList(),
-                moyenneGenerale = "4.9",
+                moyenneGenerale = null,
                 choix = emptyList(),
             )
 

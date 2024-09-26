@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMAL
+import fr.gouv.monprojetsup.commun.Constantes.NOTE_MAXIMALE
 import fr.gouv.monprojetsup.commun.Constantes.TAILLE_ECHELLON_NOTES
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
@@ -93,7 +93,7 @@ class StatistiquesDesAdmisBuilder {
     private fun calculerLesFrequencesCumuleesDeTousLesBaccalaureatsConfondus(
         listeDesFrequencesCumulees: Map<Baccalaureat, List<Int>>,
     ): List<Int> {
-        val tailleTableauNotes = (NOTE_MAXIMAL / TAILLE_ECHELLON_NOTES).toInt()
+        val tailleTableauNotes = (NOTE_MAXIMALE / TAILLE_ECHELLON_NOTES).toInt()
         var frequencesCumulees = List(tailleTableauNotes) { 0 }
         listeDesFrequencesCumulees.forEach {
             frequencesCumulees =
