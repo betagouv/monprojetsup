@@ -5,9 +5,9 @@ import { expect, type Page, test } from "@playwright/test";
 class Test extends InscriptionTestHelper {
   public DOMAINE_AUDIOVISUEL = "Audiovisuel";
 
-  public DOMAINE_SCIENCES_EDUCATION = "Sciences de l'éducation";
+  public DOMAINE_COMMERCE_VENTE = "Commerce - vente";
 
-  public CATÉGORIE_EDUCATION_FORMATION = "Education et Formation";
+  public CATÉGORIE_COMMERCE = "Commerce";
 
   public CATÉGORIE_ARTS_CULTURE = "Arts et Culture";
 
@@ -110,19 +110,19 @@ test.describe("Inscription élève - Mes domaines", () => {
       // WHEN
       await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_ARTS_CULTURE);
       await testhelper.cliquerSurUnDomaine(testhelper.DOMAINE_AUDIOVISUEL);
-      await testhelper.cliquerSurUneCatégorie("Education et Formation");
-      await testhelper.cliquerSurUnDomaine(testhelper.DOMAINE_SCIENCES_EDUCATION);
+      await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_COMMERCE);
+      await testhelper.cliquerSurUnDomaine(testhelper.DOMAINE_COMMERCE_VENTE);
       await testhelper.soumettreLeFormulaire();
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
       expect(testhelper.boutonDomaine(testhelper.DOMAINE_AUDIOVISUEL)).toBeVisible();
-      expect(testhelper.boutonDomaine(testhelper.DOMAINE_SCIENCES_EDUCATION)).toBeVisible();
+      expect(testhelper.boutonDomaine(testhelper.DOMAINE_COMMERCE_VENTE)).toBeVisible();
       expect(
         await testhelper.boutonDomaine(testhelper.DOMAINE_AUDIOVISUEL).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");
       expect(
-        await testhelper.boutonDomaine(testhelper.DOMAINE_SCIENCES_EDUCATION).getAttribute(testhelper.BOUTON_APPUYÉ),
+        await testhelper.boutonDomaine(testhelper.DOMAINE_COMMERCE_VENTE).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");
     });
   });

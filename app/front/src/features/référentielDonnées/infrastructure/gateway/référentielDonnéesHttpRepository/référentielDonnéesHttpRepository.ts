@@ -24,11 +24,24 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         duréesÉtudesPrévue: référentielDonnéesHttp.choixDureeEtudesPrevue,
         alternances: référentielDonnéesHttp.choixAlternance,
       },
-      bacs: référentielDonnéesHttp.baccalaureatsAvecLeurSpecialites.map((bac) => ({
-        id: bac.baccalaureat.id,
-        nom: bac.baccalaureat.nom,
-        spécialités: bac.specialites,
-      })),
+      bacs: référentielDonnéesHttp.baccalaureatsAvecLeurSpecialites.map((bac) => {
+        const statiquesAdmission = référentielDonnéesHttp.admissionsParcoursup.parBaccalaureat.find(
+          (baccalauréat) => baccalauréat.baccalaureat.id === bac.baccalaureat.id,
+        );
+
+        return {
+          id: bac.baccalaureat.id,
+          nom: bac.baccalaureat.nom,
+          spécialités: bac.specialites,
+          statistiquesAdmission: {
+            parMoyenneGénérale:
+              statiquesAdmission?.pourcentages.map((répartition) => ({
+                moyenne: répartition.note,
+                pourcentageAdmisAyantCetteMoyenneOuMoins: répartition.pourcentageAdmisAyantCetteMoyenneOuMoins,
+              })) ?? [],
+          },
+        };
+      }),
       centresIntêrets: référentielDonnéesHttp.categoriesDInteretsAvecLeursSousCategories.map((centreIntêret) => ({
         id: centreIntêret.categorieInteret.id,
         nom: centreIntêret.categorieInteret.nom,

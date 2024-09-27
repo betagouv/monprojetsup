@@ -3,9 +3,11 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {
-  public SÉRIE_GÉNÉRALE = "Série Générale";
+  public BAC_GÉNÉRAL = "Bac Général";
 
-  public ARTS_PLASTIQUES = "Arts Plastiques";
+  public BAC_STAV = "Bac STAV";
+
+  public ARTS_PLASTIQUES = "Arts Plastiques (AP)";
 
   public HISTOIRE_DES_ARTS = "Histoire des arts";
 
@@ -93,7 +95,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
 
       // THEN
       await expect(testhelper.champSpécialités()).toBeVisible();
@@ -105,7 +107,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("arts");
 
       // THEN
@@ -118,7 +120,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("arts");
       await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
       await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
@@ -134,7 +136,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("arts");
       await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
       await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
@@ -151,7 +153,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("blablablabla");
 
       // THEN
@@ -166,11 +168,11 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.naviguerVersLaPage();
 
       // WHEN
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("arts");
       await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
       await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();
-      await testhelper.renseignerChampBac("Bac Pro Agricole");
+      await testhelper.renseignerChampBac(testhelper.BAC_STAV);
 
       // THEN
       await expect(testhelper.champSpécialités()).toHaveText("");
@@ -190,7 +192,7 @@ test.describe("Inscription élève - Ma scolarité", () => {
       await testhelper.renseignerCorrectementLeFormulaire({
         classeActuelle: classeActuelleÀSélectionner,
       });
-      await testhelper.renseignerChampBac(testhelper.SÉRIE_GÉNÉRALE);
+      await testhelper.renseignerChampBac(testhelper.BAC_GÉNÉRAL);
       await testhelper.renseignerChampSpécialités("arts");
       await testhelper.boutonSuggestionSpécialité(testhelper.ARTS_PLASTIQUES).click();
       await testhelper.boutonSuggestionSpécialité(testhelper.HISTOIRE_DES_ARTS).click();

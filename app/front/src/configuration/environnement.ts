@@ -13,6 +13,11 @@ export const env = createEnv({
       .string()
       .refine((variable) => variable === "true" || variable === "false")
       .transform((variable) => variable === "true"),
+    VITE_FF_MOYENNE_GENERALE: z
+      .string()
+      .optional()
+      .refine((variable) => variable === "true" || variable === "false" || variable === undefined)
+      .transform((variable) => variable === "true"),
   },
   clientPrefix: "VITE_",
   runtimeEnv: import.meta.env,

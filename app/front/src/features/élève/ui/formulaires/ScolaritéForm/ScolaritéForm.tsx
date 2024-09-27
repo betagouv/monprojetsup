@@ -3,6 +3,7 @@ import useScolaritéForm from "./useScolaritéForm";
 import CurseurCranté from "@/components/CurseurCranté/CurseurCranté";
 import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { env } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ScolaritéFormProps) => {
@@ -17,6 +18,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
     neVeutPasRépondreMoyenne,
     moyenneGénérale,
     auClicSurNeVeutPasRépondreMoyenne,
+    pourcentageAdmisAyantCetteMoyenneOuMoins,
     bacADesSpécialités,
     spécialitésSuggérées,
     spécialitésSélectionnéesParDéfaut,
@@ -46,21 +48,34 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
         />
       </div>
-      {afficherChampMoyenne && (
-        <CurseurCranté
-          auClicSurNeVeutPasRépondre={auClicSurNeVeutPasRépondreMoyenne}
-          description={i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.DESCRIPTION}
-          key={neVeutPasRépondreMoyenne.toString()}
-          label={i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.LABEL}
-          neVeutPasRépondre={neVeutPasRépondreMoyenne}
-          registerHookForm={register("moyenneGénérale", {
-            valueAsNumber: true,
-          })}
-          status={erreurs.moyenneGénérale ? { type: "erreur", message: erreurs.moyenneGénérale.message } : undefined}
-          valeurMax={20}
-          valeurMin={0}
-          valeurParDéfaut={moyenneGénérale}
-        />
+      {env.VITE_FF_MOYENNE_GENERALE && afficherChampMoyenne && (
+        <div>
+          <CurseurCranté
+            auClicSurNeVeutPasRépondre={auClicSurNeVeutPasRépondreMoyenne}
+            description={i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.DESCRIPTION}
+            key={neVeutPasRépondreMoyenne.toString()}
+            label={i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.LABEL}
+            neVeutPasRépondre={neVeutPasRépondreMoyenne}
+            registerHookForm={register("moyenneGénérale", {
+              valueAsNumber: true,
+            })}
+            status={erreurs.moyenneGénérale ? { type: "erreur", message: erreurs.moyenneGénérale.message } : undefined}
+            valeurMax={20}
+            valeurMin={0}
+            valeurParDéfaut={moyenneGénérale}
+          />
+          {pourcentageAdmisAyantCetteMoyenneOuMoins !== undefined && pourcentageAdmisAyantCetteMoyenneOuMoins > 0 && (
+            <div className="fr-alert fr-alert--info fr-alert--sm mt-6">
+              <p>
+                {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE} {pourcentageAdmisAyantCetteMoyenneOuMoins}{" "}
+                {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_SUITE}{" "}
+                {bacOptions.find((bacOption) => valeurBac === bacOption.valeur)?.label}{" "}
+                {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_SUITE_2} {moyenneGénérale}{" "}
+                {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_FIN}
+              </p>
+            </div>
+          )}
+        </div>
       )}
       {bacADesSpécialités && spécialitésSélectionnéesParDéfaut && (
         <div>
