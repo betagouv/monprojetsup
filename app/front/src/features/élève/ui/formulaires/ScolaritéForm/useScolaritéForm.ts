@@ -29,10 +29,12 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
 
   const bacOptions: BacOptions = useMemo(
     () =>
-      référentielDonnées?.bacs.map((bac) => ({
-        valeur: bac.id,
-        label: bac.nom,
-      })) ?? [],
+      référentielDonnées?.bacs
+        .filter((bac) => bac.id !== "NC")
+        .map((bac) => ({
+          valeur: bac.id,
+          label: bac.nom,
+        })) ?? [],
     [référentielDonnées],
   );
 
