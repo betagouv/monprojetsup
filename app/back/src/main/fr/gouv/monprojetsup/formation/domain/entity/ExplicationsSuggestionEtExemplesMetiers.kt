@@ -19,7 +19,7 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     val exemplesDeMetiers: List<String> = emptyList(),
 ) {
     data class AutoEvaluationMoyenne(
-        val moyenneAutoEvalue: Float,
+        val echellonDeLaMoyenneAutoEvalue: Int,
         val rangs: RangsEchellons,
         val baccalaureatUtilise: String,
     )

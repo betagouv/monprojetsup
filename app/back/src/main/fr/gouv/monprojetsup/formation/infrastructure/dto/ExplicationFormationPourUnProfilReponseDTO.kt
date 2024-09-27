@@ -140,7 +140,7 @@ data class APISuggestionExplicationNotesDTO(
 ) {
     fun toAutoEvaluationMoyenne() =
         ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne(
-            moyenneAutoEvalue = moyenneAutoEvalue.toFloat(),
+            echellonDeLaMoyenneAutoEvalue = moyenneAutoEvalue.toInt(),
             rangs = mediane.toRangsEchellons(),
             baccalaureatUtilise = bacUtilise,
         )

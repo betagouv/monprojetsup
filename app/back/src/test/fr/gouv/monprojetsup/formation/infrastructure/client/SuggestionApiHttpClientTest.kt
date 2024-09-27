@@ -358,7 +358,7 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "14.0",
+                        "moygen": "28",
                         "choices": [
                           {
                             "fl": "MET_123",
@@ -535,13 +535,13 @@ class SuggestionApiHttpClientTest {
                         },
                         {
                           "moygen": {
-                            "moy": 14.5,
+                            "moy": 29,
                             "middle50": {
-                              "rangEch10": 10,
-                              "rangEch25": 12,
-                              "rangEch50": 14,
-                              "rangEch75": 16,
-                              "rangEch90": 17
+                              "rangEch10": 20,
+                              "rangEch25": 27,
+                              "rangEch50": 31,
+                              "rangEch75": 33,
+                              "rangEch90": 35
                             },
                             "bacUtilise": "Général"
                           }
@@ -665,14 +665,14 @@ class SuggestionApiHttpClientTest {
                                 ),
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
+                                    echellonDeLaMoyenneAutoEvalue = 29,
                                     rangs =
                                         ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
-                                            rangEch25 = 12,
-                                            rangEch50 = 14,
-                                            rangEch75 = 16,
-                                            rangEch10 = 10,
-                                            rangEch90 = 17,
+                                            rangEch10 = 20,
+                                            rangEch25 = 27,
+                                            rangEch50 = 31,
+                                            rangEch75 = 33,
+                                            rangEch90 = 35,
                                         ),
                                     baccalaureatUtilise = "Général",
                                 ),
@@ -961,7 +961,7 @@ class SuggestionApiHttpClientTest {
                           "T_ITM_1248",
                           "T_ITM_1351"
                         ],
-                        "moygen": "14.0",
+                        "moygen": "28",
                         "choices": [
                           {
                             "fl": "MET_123",
