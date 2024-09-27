@@ -17,6 +17,10 @@ export default function useMoyenneForm({ référentielDonnées, watch, setValue,
   );
 
   const pourcentageAdmisAyantCetteMoyenneOuMoins = useMemo(() => {
+    if (moyenneGénérale === 20) {
+      return 100;
+    }
+
     const statistiquesAdmissionParMoyenneGénérale =
       référentielDonnées?.bacs.find((bac) => bac.id === bacId)?.statistiquesAdmission.parMoyenneGénérale ?? null;
 

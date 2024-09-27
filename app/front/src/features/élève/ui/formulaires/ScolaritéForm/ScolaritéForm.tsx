@@ -64,7 +64,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
             valeurMin={0}
             valeurParDéfaut={moyenneGénérale}
           />
-          {pourcentageAdmisAyantCetteMoyenneOuMoins !== undefined && pourcentageAdmisAyantCetteMoyenneOuMoins > 0 && (
+          {pourcentageAdmisAyantCetteMoyenneOuMoins !== undefined && pourcentageAdmisAyantCetteMoyenneOuMoins >= 0 && (
             <div className="fr-alert fr-alert--info fr-alert--sm mt-6">
               <p>
                 {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE} {pourcentageAdmisAyantCetteMoyenneOuMoins}{" "}
