@@ -37,6 +37,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
   );
 
   const moyenneScolaritéForm = useMoyenneForm({
+    référentielDonnées,
     watch,
     setValue,
     getValues,

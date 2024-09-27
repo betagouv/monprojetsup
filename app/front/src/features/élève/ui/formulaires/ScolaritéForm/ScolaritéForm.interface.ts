@@ -33,6 +33,7 @@ export type UseSpécialitésFormArgs = {
 };
 
 export type UseMoyenneFormArgs = {
+  référentielDonnées?: RéférentielDonnées | null;
   watch: UseFormWatch<Élève>;
   setValue: UseFormSetValue<Élève>;
   getValues: UseFormGetValues<Élève>;

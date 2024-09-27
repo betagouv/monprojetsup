@@ -156,6 +156,10 @@ export const localeFR = {
         LABEL: "Estimation de ta moyenne actuelle",
         DESCRIPTION:
           "Ton auto-évaluation est utilisée pour te recommander en priorité les formations auxquelles tu as les meilleures chances d'accéder, sans pour autant en exclure aucune.",
+        AUTO_CENSURE: "L'année dernière,",
+        AUTO_CENSURE_SUITE: "% des élèves de terminale de série",
+        AUTO_CENSURE_SUITE_2: "admis dans un cursus sur Parcoursup avaient une moyenne de",
+        AUTO_CENSURE_FIN: "ou moins.",
       },
       SPÉCIALITÉS: {
         LABEL: "Spécialités (EDS) choisies ou envisagées",

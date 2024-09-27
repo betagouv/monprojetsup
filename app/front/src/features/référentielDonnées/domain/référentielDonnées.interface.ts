@@ -26,6 +26,12 @@ export type Bac = {
   id: string;
   nom: string;
   spécialités: SpécialitéBac[];
+  statistiquesAdmission: {
+    parMoyenneGénérale: Array<{
+      moyenne: number;
+      pourcentageAdmisAyantCetteMoyenneOuMoins: number;
+    }> | null;
+  };
 };
 
 export type SousCatégorieCentreIntêret = {

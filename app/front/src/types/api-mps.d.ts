@@ -341,6 +341,10 @@ export interface components {
             priseDeNote?: string;
         };
         Unit: Record<string, never>;
+        AdmissionsParcoursupDTO: {
+            annee: string;
+            parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
+        };
         BaccalaureatAvecSesSpecialitesDTO: {
             baccalaureat: components["schemas"]["BaccalaureatDTO"];
             specialites: components["schemas"]["SpecialitesDTO"][];
@@ -358,7 +362,7 @@ export interface components {
             nom: string;
             emoji: string;
         };
-        CategorieInteretAevcSousCategoriesDTO: {
+        CategorieInteretAvecSousCategoriesDTO: {
             categorieInteret: components["schemas"]["InteretCategorieDTO"];
             sousCategoriesInterets: components["schemas"]["InteretSousCategorieDTO"][];
         };
@@ -377,14 +381,25 @@ export interface components {
             nom: string;
             emoji: string;
         };
+        PourcentagesMoyenneDTO: {
+            /** Format: float */
+            note: number;
+            /** Format: int32 */
+            pourcentageAdmisAyantCetteMoyenneOuMoins: number;
+        };
+        PourcentagesPourChaqueMoyenneParBaccalaureatDTO: {
+            baccalaureat: components["schemas"]["BaccalaureatDTO"];
+            pourcentages: components["schemas"]["PourcentagesMoyenneDTO"][];
+        };
         ReferentielDTO: {
             situations: ("aucune_idee" | "quelques_pistes" | "projet_precis")[];
             choixNiveau: ("seconde" | "premiere" | "terminale")[];
             choixAlternance: ("pas_interesse" | "indifferent" | "interesse" | "tres_interesse")[];
             choixDureeEtudesPrevue: ("indifferent" | "courte" | "longue" | "aucune_idee")[];
             baccalaureatsAvecLeurSpecialites: components["schemas"]["BaccalaureatAvecSesSpecialitesDTO"][];
-            categoriesDInteretsAvecLeursSousCategories: components["schemas"]["CategorieInteretAevcSousCategoriesDTO"][];
+            categoriesDInteretsAvecLeursSousCategories: components["schemas"]["CategorieInteretAvecSousCategoriesDTO"][];
             categoriesDomaineAvecLeursDomaines: components["schemas"]["CategorieDomaineAvecDomainesDTO"][];
+            admissionsParcoursup: components["schemas"]["AdmissionsParcoursupDTO"];
         };
         SpecialitesDTO: {
             id: string;
