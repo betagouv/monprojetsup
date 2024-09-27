@@ -238,7 +238,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
+                                    echellonDeLaMoyenneAutoEvalue = 29,
                                     rangs =
                                         ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
@@ -299,7 +299,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
+                                    echellonDeLaMoyenneAutoEvalue = 29,
                                     rangs =
                                         ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,
@@ -661,7 +661,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                 ),
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
+                                    echellonDeLaMoyenneAutoEvalue = 29,
                                     rangs =
                                         ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 10,
@@ -682,7 +682,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ExplicationsSuggestionEtExemplesMetiers(
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
-                                    moyenneAutoEvalue = 14.5f,
+                                    echellonDeLaMoyenneAutoEvalue = 29,
                                     rangs =
                                         ExplicationsSuggestionEtExemplesMetiers.RangsEchellons(
                                             rangEch25 = 12,

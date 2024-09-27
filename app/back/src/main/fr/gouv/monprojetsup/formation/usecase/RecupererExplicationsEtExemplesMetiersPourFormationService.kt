@@ -218,7 +218,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                 idExterne = autoEvaluationMoyenne.baccalaureatUtilise,
                 nom = autoEvaluationMoyenne.baccalaureatUtilise,
             ),
-        moyenneAutoEvalue = autoEvaluationMoyenne.moyenneAutoEvalue,
+        moyenneAutoEvalue = autoEvaluationMoyenne.echellonDeLaMoyenneAutoEvalue * TAILLE_ECHELLON_NOTES,
         basIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
         hautIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
     )

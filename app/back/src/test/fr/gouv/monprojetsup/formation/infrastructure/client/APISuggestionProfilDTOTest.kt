@@ -83,7 +83,7 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "14.0",
+                moyenneGenerale = "28",
                 choix =
                     listOf(
                         SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
@@ -146,7 +146,7 @@ class APISuggestionProfilDTOTest {
                         "T_ITM_1248",
                         "T_ITM_1351",
                     ),
-                moyenneGenerale = "10.5",
+                moyenneGenerale = "21",
                 choix =
                     listOf(
                         SuggestionDTO.FavorisSuggestionDTO(id = "MET_123"),
@@ -186,7 +186,7 @@ class APISuggestionProfilDTOTest {
                         "1055",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "19.5",
+                moyenneGenerale = "39",
                 choix =
                     listOf(
                         SuggestionDTO.FavorisSuggestionDTO(id = "MET_001"),
@@ -281,7 +281,7 @@ class APISuggestionProfilDTOTest {
                 communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = null,
-                moyenneGenerale = 10.5f,
+                moyenneGenerale = 4.9f,
                 metiersFavoris = null,
                 formationsFavorites =
                     listOf(
@@ -314,7 +314,7 @@ class APISuggestionProfilDTOTest {
                         "mat1049",
                     ),
                 interets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-                moyenneGenerale = "10.5",
+                moyenneGenerale = "9",
                 choix =
                     listOf(
                         SuggestionDTO.FavorisSuggestionDTO(id = "fl1234"),
