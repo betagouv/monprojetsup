@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static fr.gouv.monprojetsup.suggestions.data.distances.GeodeticDistance.geodeticDistance;
+import static fr.gouv.monprojetsup.data.tools.GeodeticDistance.geodeticDistance;
 
 public record ExplanationGeo(
         @Schema(description = "distance en km entre la formation d'accueil et la ville d'intérêt", example = "1")

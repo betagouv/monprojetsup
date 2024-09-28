@@ -43,6 +43,16 @@ class LoadersTest {
     }
 
     @Test
+    fun `Doit réussir à charger la correspondance old to new`() {
+        // Given
+        val oldToNew = OnisepDataLoader.loadOldToNewIdeo(dataSources)
+        // When
+        // Then
+        Assertions.assertThat(oldToNew).isNotEmpty()
+    }
+
+    //
+    @Test
     fun `Doit réussir à récupérer les fiches métiers ideo  `() {
         // Given
         val metiers = OnisepDataLoader.loadFichesMetiersIdeo(dataSources)

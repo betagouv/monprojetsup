@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
+import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.Voeu
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
@@ -11,7 +12,7 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "ref_triplet_affectation")
+@Table(name = "ref_voeux")
 class VoeuEntity {
     constructor()
     constructor(voeu: Voeu) {
@@ -67,7 +68,6 @@ class VoeuEntity {
             codeCommune
         )
     }
-
 
 
 

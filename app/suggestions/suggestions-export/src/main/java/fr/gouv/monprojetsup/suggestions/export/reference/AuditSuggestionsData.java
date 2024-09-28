@@ -170,6 +170,7 @@ public class AuditSuggestionsData {
         try (val csvTools = CsvTools.getWriter(filename)) {
             csvTools.appendHeaders(List.of(
                     "remarque",
+                    "nb métiers",
                     "clé MPS",
                     "intitulé",
                     "formations ideos",
@@ -189,11 +190,11 @@ public class AuditSuggestionsData {
                         .map(this::getDebugLabel)
                         .sorted()
                         .collect(Collectors.joining("\n"));
-                val metierss = keyLabelEdgesFormation.getRight().stream()
+                val listeMetiers = keyLabelEdgesFormation.getRight().stream()
                         .filter(this::isMetier)
                         .map(this::getDebugLabel)
-                        .sorted()
-                        .collect(Collectors.joining("\n"));
+                        .sorted().toList();
+                val metierss = String.join("\n", listeMetiers);
                 val formation = this.formations.get(keyLabelEdgesFormation.getLeft());
                 Objects.requireNonNull(formation, "formation not found");
                 List<String> liens = formation
@@ -209,6 +210,7 @@ public class AuditSuggestionsData {
                 csvTools.append(
                         List.of(
                                 String.join(" - ", remarque),
+                                "" + listeMetiers.size(),
                                 key,
                                 labels.get(key),
                                 String.join("\n", Objects.requireNonNull(formation.getFormationsIdeo()).stream().map(this::getDebugLabel).toList()),

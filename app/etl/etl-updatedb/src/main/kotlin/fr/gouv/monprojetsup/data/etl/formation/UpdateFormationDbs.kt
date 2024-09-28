@@ -5,13 +5,17 @@ import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
+import fr.gouv.monprojetsup.data.formation.entity.VilleVoeuxEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
+import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
+import fr.gouv.monprojetsup.data.tools.GeodeticDistance
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import java.util.logging.Logger
+import kotlin.math.roundToInt
 
 @Repository
 interface CriteresDb :
@@ -31,6 +35,9 @@ interface FormationDb : JpaRepository<FormationEntity, String>
 @Repository
 interface JoinFormationMetierDb : JpaRepository<FormationMetierEntity, String>
 
+@Repository
+interface VillesVoeuxDb : JpaRepository<VilleVoeuxEntity, String>
+
 @Component
 class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
@@ -38,6 +45,7 @@ class UpdateFormationDbs(
     private val joinFormationsMetiersdb: JoinFormationMetierDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val voeuxDb: VoeuxDb,
+    private val villesVoeuxDb: VillesVoeuxDb,
     private val mpsDataPort: MpsDataPort
 ) {
 
@@ -46,11 +54,14 @@ class UpdateFormationDbs(
     internal fun update() {
         logger.info("Mise à jour de la table des formations et de la table des voeux")
         updateFormationsAndVoeuxDb()
+        logger.info("Mise à jour de la table de correspondance ville formations")
+        updateVillesAndFormationsDb()
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
     }
+
 
     private fun updateMoyennesGeneralesAdmisDb() {
         val data = mpsDataPort.getMoyennesGeneralesAdmis()
@@ -147,14 +158,60 @@ class UpdateFormationDbs(
                 logger.info("formation $id n'a pas de duree")
                 entity.duree = 3
             }
-
             entities.add(entity)
-
         }
         joinFormationsMetiersdb.deleteAll()
 
         formationsdb.deleteAll()
         formationsdb.saveAll(entities)
+    }
+
+    private fun updateVillesAndFormationsDb() {
+        val cities = mpsDataPort.getCities().sortedBy { it.nom }
+
+        val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
+
+        val entities = ArrayList<VilleVoeuxEntity>()
+        var letter = 'A'
+        cities.forEach { city ->
+            val newLetter = city.nom.first()
+            if(newLetter != letter) {
+                logger.info("traitement des villes commençant par ${newLetter}")
+                letter = newLetter
+            }
+            val distances = voeux.map { voeu ->
+                Pair(voeu.id, geodeticDistance(voeu.coords(), city.coords))
+            }
+            val voeuxVille10km = distances.filter {  it.second <= 10 }.map { it.first }.toList()
+            val voeuxVille30km = distances.filter { it.second <= 30 }.map { it.first }.toList()
+            entities.add(VilleVoeuxEntity().apply {
+                idVille = city.nom
+                voeuxMoinsDe10km = voeuxVille10km
+                voeuxMoinsDe30km = voeuxVille30km
+            })
+            entities.add(VilleVoeuxEntity().apply {
+                idVille = city.codeInsee
+                voeuxMoinsDe10km = voeuxVille10km
+                voeuxMoinsDe30km = voeuxVille30km
+            })
+        }
+        villesVoeuxDb.saveAll(entities)
+    }
+
+    /**
+     * @return distance en km
+     */
+    private fun geodeticDistance(coord: LatLng?, coords: List<LatLng>): Int {
+        if(coord == null) {
+            return Int.MAX_VALUE
+        }
+        return coords.map { coord2 ->
+            (GeodeticDistance.geodeticDistance(
+            coord.lat,
+            coord.lng,
+            coord2.lat,
+            coord2.lng) / 1000.0).roundToInt()
+        }.minOrNull() ?: Int.MAX_VALUE
     }
 
 
