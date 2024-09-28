@@ -172,7 +172,7 @@ class UpdateFormationDbs(
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
         val entities = ArrayList<VilleVoeuxEntity>()
-        var letter = 'A'
+        var letter = '_'
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
