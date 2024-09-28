@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "ref_voeux")
+@Table(name = "ref_voeu")
 class TripletAffectationEntity {
     @Id
     lateinit var id: String
