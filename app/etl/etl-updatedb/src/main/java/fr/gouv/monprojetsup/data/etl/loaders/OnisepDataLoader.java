@@ -135,18 +135,18 @@ public class OnisepDataLoader {
 
     private static void injectInFormationsIdeo(
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
-            Map<String, Set<String>> richIdeoToPoorIdeo) {
-        richIdeoToPoorIdeo.forEach((richId, poorsId) -> {
-            val rich = formationsIdeoDuSup.get(richId);
-            if (rich == null) {
-                LOGGER.warning(FORMATION_INCONNUE + " légataire " + richId);
+            Map<String, Set<String>> legataireToHeritier) {
+        legataireToHeritier.forEach((legataireId, heritiersIds) -> {
+            val legataire = formationsIdeoDuSup.get(legataireId);
+            if (legataire == null) {
+                LOGGER.warning(FORMATION_INCONNUE + " légataire " + legataireId);
             } else {
-                poorsId.forEach(poorId -> {
-                    val poor = formationsIdeoDuSup.get(poorId);
+                heritiersIds.forEach(heritierId -> {
+                    val poor = formationsIdeoDuSup.get(heritierId);
                     if (poor == null) {
-                        LOGGER.warning(FORMATION_INCONNUE + " héritier " +  poorId);
+                        LOGGER.warning(FORMATION_INCONNUE + " héritier " +  heritierId);
                     } else {
-                        poor.inheritFrom(rich);
+                        poor.inheritFrom(legataire);
                     }
                 });
             }
@@ -155,7 +155,7 @@ public class OnisepDataLoader {
 
     private static void injectMetiersInFormationsIdeo(
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
-            Map<String, List<String>> formationsIdeoToMetiersIdeo) {
+            Map<String, Set<String>> formationsIdeoToMetiersIdeo) {
         formationsIdeoToMetiersIdeo.forEach((formationId, metiersId) -> {
             val formation = formationsIdeoDuSup.get(formationId);
             if (formation == null) {
@@ -196,10 +196,22 @@ public class OnisepDataLoader {
             Set<String> formations
     ) {
         //mps_heritier,libelle_pauvre,mps_legataire,libelle_riche
-        return loadHeritageCsv(sources.getSourceDataFilePath(PSUP_HERITAGES_PATH), PSUP_HERITAGES_HERITIER_HEADER, PSUP_HERITAGES_LEGATAIRES_HEADER, formations);
+        return loadHeritageCsv(
+                sources.getSourceDataFilePath(PSUP_HERITAGES_PATH),
+                PSUP_HERITAGES_HERITIER_HEADER,
+                PSUP_HERITAGES_LEGATAIRES_HEADER,
+                formations,
+                Map.of()
+        );
     }
 
-    private static Map<String, Set<String>> loadHeritageCsv(String filename, String heritierHeader, String legataireHeader, Set<String> formations) {
+    private static Map<String, Set<String>> loadHeritageCsv(
+            String filename,
+            String heritierHeader,
+            String legataireHeader,
+            Set<String> formations,
+            Map<String, Set<String>> oldIdeoToNewIdeo
+    ) {
         val requiredHeaders = List.of(
                 heritierHeader,
                 legataireHeader
@@ -209,23 +221,40 @@ public class OnisepDataLoader {
                 , ',',
                 requiredHeaders
         );
-        val ligneAvecCodeInconnu = lines.stream().flatMap
-                        (l -> Stream.of(l.get(heritierHeader),
-                                l.get(legataireHeader)
-                        )).filter(id ->
-                        !formations.contains(id))
-                .findAny();
-        ligneAvecCodeInconnu.ifPresent(s -> LOGGER.warning("Code inconnu " + s));
 
-        //l'existence des headers est garantie
-        return lines.stream().collect(Collectors.groupingBy(
-                        line -> line.get(legataireHeader),//rich
-                        Collectors.mapping(
-                                line -> line.get(heritierHeader),//poor,
-                                Collectors.toSet()
-                        )
-                )
-        );
+        Map<String, Set<String>> result = new HashMap<>();
+        lines.forEach(line -> {
+            //l'existence des headers est garantie
+            @NotNull String oldLegataire = line.get(legataireHeader);
+            final List<String> legataires;
+            if(oldIdeoToNewIdeo.containsKey(oldLegataire)) {
+                legataires = oldIdeoToNewIdeo.get(oldLegataire).stream().toList();
+            } else {
+                legataires = List.of(oldLegataire);
+            }
+            legataires.forEach(legataire -> {
+                if (formations.contains(legataire)) {
+                    //l'existence des headers est garantie
+                    @NotNull String oldHeritier = line.get(heritierHeader);
+                    final List<String> heritiers;
+                    if (oldIdeoToNewIdeo.containsKey(oldHeritier)) {
+                        heritiers = oldIdeoToNewIdeo.get(oldHeritier).stream().toList();
+                    } else {
+                        heritiers = List.of(oldHeritier);
+                    }
+                    heritiers.forEach(heritier -> {
+                        if(formations.contains(heritier)) {
+                            result.computeIfAbsent(legataire, k -> new HashSet<>()).add(heritier);
+                        } else {
+                            LOGGER.warning("loadHeritageCsv: héritier inconnu " + heritier);
+                        }
+                    });
+                } else {
+                    LOGGER.warning("loadHeritageCsv: légataire inconnu " + legataire);
+                }
+            });
+        });
+        return result;
 
 
     }
@@ -233,19 +262,31 @@ public class OnisepDataLoader {
     //legataire vers heritier
     protected static Map<String, Set<String>> loadIdeoHeritagesLicencesCpge(
             DataSources sources,
-            Set<String> formationsIdeoDuSup) {
+            Set<String> formationsIdeoDuSup, Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
         //IDEO2_PREPA,LIBELLE_PREPA,IDEO2_LICENCE,LIBELLE_LICENCE,
         //FOR.1473,Classe préparatoire à l'école nationale des Chartes (1re année),FOR.4666,licence mention philosophie,
-        return loadHeritageCsv(sources.getSourceDataFilePath(IDEO_HERITAGES_LICENCES_CPGE_PATH), IDEO_HERITAGES_LICENCES_CPGE_HERITIER_HEADER, IDEO_HERITAGES_LICENCES_CPGE_LEGATAIRES_HEADER, formationsIdeoDuSup);
+        return loadHeritageCsv(
+                sources.getSourceDataFilePath(IDEO_HERITAGES_LICENCES_CPGE_PATH),
+                IDEO_HERITAGES_LICENCES_CPGE_HERITIER_HEADER,
+                IDEO_HERITAGES_LICENCES_CPGE_LEGATAIRES_HEADER,
+                formationsIdeoDuSup,
+                oldIdeoToNewIdeo
+        );
     }
 
     private static Map<String, Set<String>> loadIdeoHeritagesMastersLicences(
             DataSources sources,
-            Set<String> formationsIdeoDuSup
-    ) {
+            Set<String> formationsIdeoDuSup,
+            Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
         //IDEO_HERITAGES_LICENCES_MASTERS_PATH
         //Mention_Licence_MM;Mention_Master_MM;Mention_Licence_ONISEP;ID_Licence_ONISEP;Mention_Master_ONISEP;ID_Master_ONISEP;Score;Remarques
-        return loadHeritageCsv(sources.getSourceDataFilePath(IDEO_HERITAGES_LICENCES_MASTERS_PATH), IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER, IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER, formationsIdeoDuSup);
+        return loadHeritageCsv(
+                sources.getSourceDataFilePath(IDEO_HERITAGES_LICENCES_MASTERS_PATH),
+                IDEO_HERITAGES_MASTERS_LICENCES_HERITIER_HEADER,
+                IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER,
+                formationsIdeoDuSup,
+                oldIdeoToNewIdeo
+        );
     }
 
 
@@ -377,8 +418,8 @@ public class OnisepDataLoader {
         return result;
     }
 
-    protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsIdeoMetiers(DataSources sources) {
-        Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
+    protected static @NotNull Map<String,@NotNull Set<@NotNull String>> loadLiensFormationsIdeoMetiers(DataSources sources) {
+        Map<String,@NotNull Set<@NotNull String>> result = new HashMap<>();
         val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;
@@ -390,7 +431,7 @@ public class OnisepDataLoader {
             if(ideoMetierId == null)
                 throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER + " in line " + line);
             for(String ideoId : ideosList) {
-                result.computeIfAbsent(ideoId, k -> new ArrayList<>()).add(ideoMetierId);
+                result.computeIfAbsent(ideoId, k -> new HashSet<>()).add(ideoMetierId);
             }
         }
         return result;
@@ -517,6 +558,19 @@ public class OnisepDataLoader {
         return Serialisation.fromLocalJson(sources.getSourceDataFilePath(IDEO_OD_METIERS_SIMPLE_PATH), typeToken);
     }
 
+    public static @NotNull Map<String,@NotNull Set<String>> loadOldToNewIdeo(DataSources sources) {
+        val csv = CsvTools.readCSV(sources.getSourceDataFilePath(IDEO_OLD_TO_NEW_PATH));
+        Map<String,@NotNull Set<String>> result = new HashMap<>();
+        csv.forEach(line -> {
+            if(line.size() != 2) {
+                throw new RuntimeException("Invalid line " + line);
+            }
+            result.computeIfAbsent(line.get(OLD_TO_NEW_IDEO_OLD_IDEO_HEADER), k -> new HashSet<>()).add(line.get(OLD_TO_NEW_IDEO_NEW_IDEO_HEADER));
+        });
+        return result;
+    }
+
+
 
     public static List<FicheFormationIdeo> loadFichesFormationsIdeo(DataSources sources) throws Exception {
         JavaType listType = new ObjectMapper().getTypeFactory().constructCollectionType(
@@ -551,15 +605,55 @@ public class OnisepDataLoader {
                 formationsIdeoSansfiche,
                 formationsIdeoAvecFiche
         );
+        val metiersIdeoDudup = OnisepDataLoader.loadMetiersSimplesIdeo(sources);
 
-        val licencesIdeoToCPGEIdeo  = loadIdeoHeritagesLicencesCpge(sources, formationsIdeoDuSup.keySet());
-        injectInFormationsIdeo(formationsIdeoDuSup, licencesIdeoToCPGEIdeo);
-        val mastersIdeoToLicencesIdeo  = loadIdeoHeritagesMastersLicences(sources, formationsIdeoDuSup.keySet());
+        val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
+        val mastersIdeoToLicencesIdeo = loadIdeoHeritagesMastersLicences(sources, formationsIdeoDuSup.keySet(), oldIdeoToNewIdeo);
         injectInFormationsIdeo(formationsIdeoDuSup, mastersIdeoToLicencesIdeo);
+
+        val licencesIdeoToCPGEIdeo  = loadIdeoHeritagesLicencesCpge(sources, formationsIdeoDuSup.keySet(), oldIdeoToNewIdeo);
+        injectInFormationsIdeo(formationsIdeoDuSup, licencesIdeoToCPGEIdeo);
+
         val formationsIdeoToMetiersIdeo = loadLiensFormationsIdeoMetiers(sources);
         injectMetiersInFormationsIdeo(formationsIdeoDuSup, formationsIdeoToMetiersIdeo);
 
+        val known = new HashSet<>(formationsIdeoDuSup.keySet());
+        known.addAll(metiersIdeoDudup.stream().map(MetierIdeoSimple::idIdeo).collect(Collectors.toSet()));
+        //known.addAll(oldIdeoToNewIdeo.keySet());
+        //known.addAll(oldIdeoToNewIdeo.values().stream().flatMap(Set::stream).collect(Collectors.toSet()));
+        outputMissingcodesdiagnostics(mastersIdeoToLicencesIdeo, "heritagesMastersLicencesCodesInconnus.csv", "master", "licence", formationsIdeoDuSup.keySet());
+        outputMissingcodesdiagnostics(licencesIdeoToCPGEIdeo, "heritagesCPGELicencesCodesInconnus.csv", "licence", "cpge", formationsIdeoDuSup.keySet());
+        outputMissingcodesdiagnostics(formationsIdeoToMetiersIdeo, "heritagesFormationsMetiersCodesInconnus.csv", "formation", "metier", known);
+
         return formationsIdeoDuSup;
+    }
+
+
+    private static void outputMissingcodesdiagnostics(
+            Map<String, Set<String>> correspondance,
+            String filename,
+            String legataire,
+            String heritier,
+            Set<String> formationsIdeoDuSup
+    ) throws IOException {
+        try (val csv = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + filename)) {
+            val headers = List.of(
+                    "code " + legataire,
+                    "code " + heritier,
+                    "code inconnu"
+            );
+            csv.appendHeaders(headers);
+            correspondance.forEach((master, licences) -> {
+                if (!formationsIdeoDuSup.contains(master)) {
+                    csv.append(List.of(master, String.join(";", licences), master));
+                }
+                licences.forEach(licence -> {
+                    if (!formationsIdeoDuSup.contains(licence)) {
+                        csv.append(List.of(master, licence, licence));
+                    }
+                });
+            });
+        }
     }
 
 
