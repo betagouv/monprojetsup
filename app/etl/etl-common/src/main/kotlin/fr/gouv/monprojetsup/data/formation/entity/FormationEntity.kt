@@ -5,7 +5,14 @@ import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.stats.Statistique
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.jetbrains.annotations.Nullable
@@ -34,7 +41,7 @@ class FormationEntity {
     var descriptifAttendus: String? = null
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "formations_associees", nullable = true, columnDefinition = "varchar[]")
+    @Column(name = "formations_psup", nullable = true, columnDefinition = "varchar[]")
     var formationsAssociees: List<String>? = null
 
     @JdbcTypeCode(SqlTypes.ARRAY)

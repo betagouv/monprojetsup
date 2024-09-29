@@ -51,7 +51,7 @@ class FormationDetailleeEntity {
     var descriptifAttendus: String? = null
 
     @Type(ListArrayType::class)
-    @Column(name = "formations_associees", nullable = true, columnDefinition = "varchar[]")
+    @Column(name = "formations_psup", nullable = true, columnDefinition = "varchar[]")
     var formationsAssociees: List<String>? = null
 
     @Type(ListArrayType::class)
