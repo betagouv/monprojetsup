@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.server;
 
-import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
@@ -16,25 +15,17 @@ public class SuggestionServer extends Server {
     @Getter
     private static SuggestionsServerConfig config;
 
-    private final AlgoSuggestions algo;
 
-    public static boolean isReady() {
-        return true;
-    }
+    //spring property mps.suggestions.use_auto_eval_moygen from application.properties
+    @Value("${mps.suggestions.use_auto_eval_moygen}")
+    private boolean useAutoEvalMoyGen = false;
 
-    public static void loadConfig() {
-        throw new RuntimeException("Unimplemented");
-    }
-
-    @Autowired
-    public SuggestionServer(AlgoSuggestions algo) {
-        this.algo = algo;
-    }
     @PostConstruct
     private void init() throws Exception {
 
         LOGGER.info("Loading config...");
         config = SuggestionsServerConfig.load();
+        config.getSuggFilConfig().setUseAutoEvalMoyGen(useAutoEvalMoyGen);
 
         LOGGER.info("Suggestion Server Initialized ");
 

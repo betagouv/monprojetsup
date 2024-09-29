@@ -258,6 +258,7 @@ public class AffinityEvaluator {
         //on fait la somme pondérée des interests additifs
         for(Map.Entry<String, Double> e : scores.entrySet()) {
             String key = e.getKey();
+            if(key.equals(Config.BONUS_MOY_GEN) && !cfg.isUseAutoEvalMoyGen()) continue;
             Double value = e.getValue();
             double weight = cfg.weights().getOrDefault(key, 0.0);
             if(weight != SPECIAL_WEIGHT_MULTIPLIER) {
@@ -268,6 +269,7 @@ public class AffinityEvaluator {
         //on applique les multiplicateurs
         for(Map.Entry<String, Double> e : scores.entrySet()) {
             String key = e.getKey();
+            if(key.equals(Config.BONUS_MOY_GEN) && !cfg.isUseAutoEvalMoyGen()) continue;
             Double value = e.getValue();
             double weight = cfg.weights().getOrDefault(key, 0.0);
             if(weight == SPECIAL_WEIGHT_MULTIPLIER) {
