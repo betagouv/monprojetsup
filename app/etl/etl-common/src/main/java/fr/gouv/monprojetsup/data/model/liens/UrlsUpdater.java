@@ -15,18 +15,23 @@ public class UrlsUpdater {
 
     private static void addUrl(String key, String uri, String label, Map<String, List<DescriptifsFormationsMetiers.Link>> urls) {
         if (uri != null && !uri.isEmpty()) {
-            if(uri.contains("francetravail") && !label.startsWith("France Travail")) {
-                label = "France Travail - " + capitalizeFirstLetter(label);
-            }
-            else if((uri.contains("onisep") || uri.contains("avenirs")) && !label.startsWith("Onisep")) {
-                label = "Onisep - " + capitalizeFirstLetter(label);
-            } else {
-                label = capitalizeFirstLetter(label).replace("."," ").trim();
-            }
-            val url = DescriptifsFormationsMetiers.toAvenirs(uri, label);
+
             val liste = urls.computeIfAbsent(Constants.cleanup(key), z -> new ArrayList<>());
-            val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(url.uri())).findFirst();
-            //"Fiche métier France Travail:" +
+            val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(uri)).findFirst();
+
+            label = capitalizeFirstLetter(label).replace(".", " ").trim();
+            if(firstWithSameUri.isEmpty()) {
+                if (uri.contains("francetravail") && !label.startsWith("France Travail")) {
+                    label = "France Travail - " + label;
+                } else if ((uri.contains("onisep") || uri.contains("avenirs"))
+                        && !label.contains("Onisep")
+                ) {
+                    //label = "Onisep - " + label;
+                }
+            }
+
+            val url = DescriptifsFormationsMetiers.toAvenirs(uri, label);
+
             if(firstWithSameUri.isEmpty()) {
                 liste.add(url);
             } else if(!firstWithSameUri.get().label().contains(url.label())){
@@ -102,7 +107,11 @@ public class UrlsUpdater {
             urls.getOrDefault(keyGeneric, List.of()).forEach(s -> addUrl(keyLas, s.uri(), s.label(), urls));
         });
 
-        val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
+        val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(
+                Collectors.groupingBy(Map.Entry::getValue,
+                        Collectors.mapping(Map.Entry::getKey,
+                                Collectors.toList()))
+        );
         mpsIds.forEach(mpsId -> {
             val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
             addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "L'offre de formation", urls);
