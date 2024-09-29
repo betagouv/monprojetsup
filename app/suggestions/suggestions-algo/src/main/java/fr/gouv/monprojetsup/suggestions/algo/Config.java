@@ -11,7 +11,6 @@ public final class Config {
     public static final double SEUIL_TYPE_BAC_NO_MATCH = 0.001;
     public static final double SEUIL_TYPE_BAC_FULL_MATCH = 0.2;
     public static final double SEUIL_TYPE_BAC_FITTED = 0.5;
-    public static final int MAX_NG_SUGGESTIONS = 20;
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
@@ -24,6 +23,10 @@ public final class Config {
     @Getter
     @Setter
     private boolean verboseMode = false;
+
+    @Getter
+    @Setter
+    private boolean useAutoEvalMoyGen = false;
 
     public Config() {
     }
@@ -72,10 +75,6 @@ public final class Config {
             List.of(BONUS_TAGS, BONUS_SIM)
     );
 
-
-    public int maxNbSuggestions() {
-        return MAX_NG_SUGGESTIONS;//we force the value
-    }
 
     public Map<String, Double> weights() {
         return weights;
