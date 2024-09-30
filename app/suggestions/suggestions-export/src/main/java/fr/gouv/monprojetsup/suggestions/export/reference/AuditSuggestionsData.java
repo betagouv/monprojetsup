@@ -128,6 +128,13 @@ public class AuditSuggestionsData {
                 DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_domaines.csv"
         );
 
+
+        outputMetierDiagnostic(
+                metiersedges.stream().filter(e -> e.getRight().stream().noneMatch(this::isFormation)).map(Triple::getMiddle).toList(),
+                DIAGNOSTICS_OUTPUT_DIR + "metiers_sans_formation_mps.csv"
+        );
+
+
     }
 
     private void outputMetierDiagnostic(List<String> list, String fileName) throws IOException {
@@ -161,6 +168,60 @@ public class AuditSuggestionsData {
                 .filter(e -> e.getRight().stream().noneMatch(this::isMetier))
                 .toList();
         exportDiagnostic(sansMetiers, DIAGNOSTICS_OUTPUT_DIR + "formations_sans_metiers.csv");
+
+        try(CsvTools tools = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "diagnostic_global_formations.csv")) {
+            tools.append(List.of(
+                    "critère qualité données de référence MPS",
+                    "nb actuel de formations satisfaisant le critère",
+                    "% objectif atteint",
+                    "définition objectif"
+            ));
+            Map<String, Set<String>> domainesParFormations = formationsEdges.stream()
+                    .collect(Collectors.toMap(
+                            Triple::getLeft,
+                            e -> e.getRight().stream().filter(this::isDomaine).collect(Collectors.toSet())
+                    ));
+            Map<String, Set<String>> metiersParFormations = formationsEdges.stream()
+                    .collect(Collectors.toMap(
+                            Triple::getLeft,
+                            e -> e.getRight().stream().filter(this::isMetier).collect(Collectors.toSet())
+                    ));
+            val nbMax = 4L;
+            val nbFormations = formationsEdges.stream().map(Triple::getLeft).distinct().count();
+            val objectifs = Map.of(1L,100,2L, 75, 3L, 50, 4L, 30);
+            for(long i = 1; i <= nbMax; i++) {
+                val objectifPct = objectifs.get(i);
+                long finalI = i;
+                val nbFormationOk = domainesParFormations.entrySet().stream()
+                        .filter(e -> e.getValue().size() >= finalI)
+                        .count();
+                val objectifNb = objectifPct * nbFormations / 100;
+                val pctObjectif = Math.min(100, (100 * nbFormationOk) / objectifNb);
+
+                tools.append(List.of(
+                        "formations avec >= " + i + " domaine(s) associé(s)",
+                        "" + nbFormationOk,
+                                "" + pctObjectif + "%",
+                                "" + objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                )
+                );
+            }
+            for(long i = 1; i <= nbMax; i++) {
+                val objectifPct = objectifs.get(i);
+                long finalI = i;
+                val nbFormationOk = metiersParFormations.entrySet().stream()
+                        .filter(e -> e.getValue().size() >= finalI)
+                        .count();
+                val objectifNb = objectifPct * nbFormations / 100;
+                val pctObjectif = Math.min(100, (100 * nbFormationOk) / objectifNb);
+                tools.append(List.of(
+                        "formations avec >= " + i + " métier(s) associé(s)",
+                        "" + nbFormationOk,
+                        "" + pctObjectif + "%",
+                        "" + objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                ));
+            }
+        }
 
     }
 
