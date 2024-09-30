@@ -30,7 +30,7 @@ public record ProfileDTO(
         Set<String> spe_classes,
         @ArraySchema(arraySchema = @Schema(name = "interests", description = "domaines et intérêts", example = "[\"ci1\",\"ci2\",\"ci3\",\"dom1\", \"dom2\", \"dom3\"]"))
         List<String> interests,
-        @Schema(description = "moyenne générale scolaire estimée en terminale", example = "14")
+        @Schema(description = "moyenne générale scolaire estimée en terminale, sur 40", example = "28")
         String moygen,
         @ArraySchema(arraySchema =  @Schema(name = "choices", description = "sélection de formations, métiers et secteurs d'activité"))
         List<SuggestionDTO> choices,
