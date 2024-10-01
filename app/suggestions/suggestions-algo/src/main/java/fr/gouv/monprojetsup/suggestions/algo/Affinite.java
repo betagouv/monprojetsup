@@ -37,25 +37,24 @@ public record Affinite(
 
     public Map<String, Double> toMap() {
         HashMap<String,Double> result = new HashMap<>(scoresAdequationProfil);
+        quotas.forEach((suggestionDiversityQuota, aDouble)
+                -> result.put(suggestionDiversityQuota.name(), scoresDiversiteResultats.get(suggestionDiversityQuota))
+        );
         result.put(CHAMP_SCORE_AGGREGE, affinite);
         return result;
     }
 
     public enum SuggestionDiversityQuota {
-        NOT_SMALL,
-        NOT_BIG,
-        BAC,
-        MOYGEN
+        OFFRE_FORMATION,
+        PEU_CONNUE
     }
 
     public static final EnumMap<SuggestionDiversityQuota, Double> quotas;
 
     static {
         quotas = new EnumMap<>(SuggestionDiversityQuota.class);
-        quotas.put(SuggestionDiversityQuota.BAC, 0.9);
-        quotas.put(SuggestionDiversityQuota.NOT_SMALL, 0.75);
-        quotas.put(SuggestionDiversityQuota.NOT_BIG, 0.5);
-        quotas.put(SuggestionDiversityQuota.MOYGEN, 0.5);
+        quotas.put(SuggestionDiversityQuota.OFFRE_FORMATION, 0.75);
+        quotas.put(SuggestionDiversityQuota.PEU_CONNUE, 0.5);
     }
 
     public static Affinite getNoMatch() {

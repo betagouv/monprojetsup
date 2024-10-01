@@ -54,7 +54,7 @@ data class ExplicationsSuggestionDetaillees(
     val domaines: List<Domaine> = emptyList(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
-    val autres: List<String> = emptyList(),
+    val detailsCalculScore: List<String> = emptyList(),
 ) {
     data class AffiniteSpecialite(
         val idSpecialite: String,

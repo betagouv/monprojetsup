@@ -94,7 +94,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                             typeBaccalaureat,
                         )
                     },
-                autres =
+                detailsCalculScore =
                     explications?.autres.takeUnless { it.isNullOrEmpty() } ?: emptyList(),
             ) to (
                 explications?.exemplesDeMetiers?.let { idsMetiers ->
@@ -154,7 +154,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             domaines = domaines,
             explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
-            autres = autres,
+            detailsCalculScore = autres,
         ) to
             explications.exemplesDeMetiers.let { metiers ->
                 metierRepository.recupererLesMetiersDetailles(metiers)

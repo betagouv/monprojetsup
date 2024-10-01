@@ -156,7 +156,7 @@ data class FormationAvecExplicationsDTO(
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
         val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
-        val autres: AutresDTO?,
+        val detailsCalculScore: DetailsCalculScoreDTO?,
     ) {
         constructor(explications: ExplicationsSuggestionDetaillees) : this(
             geographique = explications.geographique.map { ExplicationGeographiqueDTO(it) },
@@ -182,9 +182,9 @@ data class FormationAvecExplicationsDTO(
                 explications.explicationAutoEvaluationMoyenne?.let {
                     AutoEvaluationMoyenneDTO(it)
                 },
-            autres =
-                AutresDTO(
-                    explications = explications.autres,
+            detailsCalculScore =
+                DetailsCalculScoreDTO(
+                    details = explications.detailsCalculScore,
                 ),
         )
     }
@@ -266,7 +266,7 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class AutresDTO(
-        val explications: List<String>,
+    data class DetailsCalculScoreDTO(
+        val details: List<String>,
     )
 }

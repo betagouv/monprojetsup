@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -133,11 +134,21 @@ public class AlgoSuggestions {
             }
         }));
 
-        edgesKeys.putAll(data.edgesFormationsPsupDomaines());
-        edgesKeys.putAll(data.edgesMetiersFormationsPsup());
-        edgesKeys.putAll(data.edgesDomainesMetiers());
+        data.edgesFormationsPsupDomaines().forEach(edge -> {
+            val formation = edge.src();
+            val domaine = edge.dst();
+            edgesKeys.put(formation, domaine, false, Config.EDGES_FORMATIONS_DOMAINES_WEIGHT);
+            edgesKeys.put(domaine, formation, false, Config.EDGES_DOMAINES_FORMATIONS_WEIGHT);
+        });
+        data.edgesMetiersFormationsPsup().forEach(edge -> {
+            val metier = edge.src();
+            val formation = edge.dst();
+            edgesKeys.put(metier, formation, false, Config.EDGES_METIERS_FORMATIONS_WEIGHT);
+            edgesKeys.put(formation, metier, false, Config.EDGES_FORMATIONS_METIERS_WEIGHT);
+        });
+        edgesKeys.putAll(data.edgesDomainesMetiers(), true, Config.EDGES_DOMAINES_METIERS_WEIGHT);
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
-        edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
+        //edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
 
 
@@ -237,7 +248,7 @@ public class AlgoSuggestions {
      * @param cfg the config
      * @return the suggestions, each indexed with a score
      */
-    public @NotNull Map<String, @NotNull Map<String,@NotNull Double>> getFormationsSuggestions(
+    public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
             @NotNull Config cfg,
             boolean inclureScores) {
@@ -250,12 +261,12 @@ public class AlgoSuggestions {
 
         Map<Affinite.SuggestionDiversityQuota, Double> totals = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
 
-        Map<String, @NotNull Map<String,@NotNull Double>> result = new HashMap<>();
+        @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> result = new ArrayList<>();
 
         while(!affinities.isEmpty()) {
             int nb = result.size() + 1;
             EnumMap<Affinite.SuggestionDiversityQuota, Double> minScoreForQuota = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
-            Affinite.quotas.forEach((k,v) -> minScoreForQuota.put(k,
+            Affinite.quotas.forEach((k, v) -> minScoreForQuota.put(k,
                     v * nb - totals.getOrDefault(k, 0.0))
             );
 
@@ -263,27 +274,29 @@ public class AlgoSuggestions {
 
             val candidates = affinities.stream().filter(c -> c.getRight().affinite() > 0).toList();
 
-            Map<String, Integer> scores =
+            Map<String, Integer> nbQuotasSatisfied =
                     candidates.stream()
                             .collect(Collectors.toMap(
-                    Pair::getLeft,
-                    p -> p.getRight().getNbQuotasSatisfied(minScoreForQuota)
-            ));
+                                    Pair::getLeft,
+                                    p -> p.getRight().getNbQuotasSatisfied(minScoreForQuota)
+                            ));
 
-            int maxScore = scores.values().stream().max(Integer::compareTo).orElse(0);
+            int maxNbQuotasSatisfied = nbQuotasSatisfied.values().stream().max(Integer::compareTo).orElse(0);
 
             choice = candidates.stream()
-                    .filter(a -> scores.getOrDefault(a.getLeft(), 0) >= maxScore)
+                    .filter(a -> nbQuotasSatisfied.getOrDefault(a.getLeft(), 0) >= maxNbQuotasSatisfied)
                     .findFirst().orElse(null);
 
-            if(choice == null) {
+            if (choice == null) {
                 //can happen when all scoresDiversiteResultats are zer
                 choice = affinities.getFirst();
             }
 
-            result.put(
-                    choice.getLeft(),
-                    choice.getRight().toMap()
+            result.add(
+                    Pair.of(
+                            choice.getLeft(),
+                            choice.getRight().toMap()
+                    )
             );
             affinities.remove(choice);
 

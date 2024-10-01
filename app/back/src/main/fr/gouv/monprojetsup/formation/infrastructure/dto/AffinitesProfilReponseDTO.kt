@@ -14,7 +14,7 @@ data class AffinitesProfilReponseDTO(
     fun toAffinitesPourProfil() =
         SuggestionsPourUnProfil(
             formations =
-                affinites.sortedByDescending { it.affinite }.map {
+                affinites.map {
                     SuggestionsPourUnProfil.FormationAvecSonAffinite(
                         idFormation = it.key,
                         tauxAffinite = it.affinite,

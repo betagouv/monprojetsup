@@ -174,7 +174,11 @@ export class formationHttpRepository implements FormationRepository {
             nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
           }
         : null,
-      autres: explications.autres ? explications.autres : []
+      detailsCalculScore: explications.detailsCalculScore 
+        ? {
+            details: explications.detailsCalculScore.details
+          }
+        : null,
     };
   };
 

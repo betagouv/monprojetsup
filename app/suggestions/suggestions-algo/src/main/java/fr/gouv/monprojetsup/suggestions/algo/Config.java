@@ -27,6 +27,12 @@ public final class Config {
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
+    static final double EDGES_FORMATIONS_DOMAINES_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse un peu au domaine
+    static final double EDGES_DOMAINES_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au domaine, je m'intéresse à la formation
+    static final double EDGES_METIERS_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au métier, je m'intéresse à la formation
+    static final double EDGES_FORMATIONS_METIERS_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse peut-être au métier
+    static final double EDGES_DOMAINES_METIERS_WEIGHT = 0.01;
+
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
     static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
@@ -65,7 +71,7 @@ public final class Config {
     public static final double FULL_MATCH_MULTIPLIER = 1.0;
 
     public static final Map<String,String> BONUS_LABELS = Map.of(
-            BONUS_TAGS,"mots-clés",
+            BONUS_TAGS,"proximité intérêts et favoris",
             BONUS_SPECIALITE,"EDS",
             BONUS_DURATION,"durée",
             BONUS_SIM,"similarité avec autres favoris",
@@ -76,13 +82,13 @@ public final class Config {
             );
 
     static final double MULTIPLIER_FOR_NOSTATS_BAC = 0.01;
-    static final double MULTIPLIER_FOR_UNFITTED_BAC = 1.0E-06;
-    static final double MULTIPLIER_FOR_UNFITTED_TAGS = 1.0E-06;
+    static final double MULTIPLIER_FOR_UNFITTED_BAC = 1.0E-08;
+    static final double MULTIPLIER_FOR_UNFITTED_TAGS = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_APP = 1.0E-05;
     static final double MULTIPLIER_FOR_UNFITTED_GEO = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_DURATION = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_SIM = 1.0E-03;
-    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-02;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-01;
     static final double MULTIPLIER_FOR_UNFITTED_NOTES = 1.0E-01;
 
     @JsonIgnore

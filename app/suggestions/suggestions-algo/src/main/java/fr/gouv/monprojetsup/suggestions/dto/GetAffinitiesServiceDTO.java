@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.suggestions.dto;
 
 import fr.gouv.monprojetsup.suggestions.algo.Affinite;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +15,7 @@ public class GetAffinitiesServiceDTO {
             @Schema(name = "profile", description = "Profil utilisé pour évaluer l'affinité.")
             @NotNull ProfileDTO profile,
 
-            @Schema(name = "inclureScores", description = "Inclure les scoresDiversiteResultats aux différents critères dans la réponse.", example = "true")
+            @Schema(name = "inclureScores", description = "Inclure les scores aux différents critères dans la réponse.", example = "true")
             @Nullable Boolean inclureScores
 
     ) {
@@ -44,16 +45,16 @@ public class GetAffinitiesServiceDTO {
     ) {
 
         public Response(
-                @NotNull Map<String, @NotNull Map<String, @NotNull Double>> affinities,
+                @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> affinities,
                 @NotNull List<String> metiers
                 ) {
             this(
                     new ResponseHeader(),
-                    affinities.entrySet().stream()
+                    affinities.stream()
                             .map(e -> new Affinity(
-                                    e.getKey(),
-                                    e.getValue().get(Affinite.CHAMP_SCORE_AGGREGE),
-                                    e.getValue())
+                                    e.getLeft(),
+                                    e.getRight().get(Affinite.CHAMP_SCORE_AGGREGE),
+                                    e.getRight())
                             )
                             .toList(),
                     metiers

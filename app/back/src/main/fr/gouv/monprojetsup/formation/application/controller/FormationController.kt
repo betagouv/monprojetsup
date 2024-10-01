@@ -49,7 +49,7 @@ class FormationController(
         val suggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(
-                liste = suggestions.formations.sortedByDescending { it.tauxAffinite },
+                liste = suggestions.formations,
                 numeroDePageActuelle = numeroDePage,
                 tailleLot = TAILLE_LOT_SUGGESTIONS_FORMATIONS,
             )
