@@ -4,7 +4,6 @@ import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
 import fr.gouv.monprojetsup.suggestions.Constants;
-import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
 import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.dto.ProfileDTO;
@@ -41,6 +40,7 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_75;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_90;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_LOWEST_GRADE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_MOY_GEN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_MULTIPLIER;
@@ -60,15 +60,13 @@ public class AffinityEvaluator {
     /* le profil contient t'il une marque d'intérêt pour le domaine de la santé. Utilisé pour filtrer les LAS.  */
     private final boolean isInterestedinHealth;
     private final Set<String> rejected =  new HashSet<>();
-    private final SuggestionsData data;
     private final AlgoSuggestions algo;
     private final @NotNull String bac;
     private Double moyGenEstimee;
 
-    public AffinityEvaluator(ProfileDTO pf, Config cfg, SuggestionsData data, AlgoSuggestions algo) {
+    public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo) {
         this.cfg = cfg;
         this.pf = pf;
-        this.data = data;
         this.algo = algo;
 
         String pfBac = pf.bac();
@@ -136,8 +134,8 @@ public class AffinityEvaluator {
 
     public double getBigCapacityScore(String fl) {
 
-        int nbFormations = data.getNbVoeux(fl);
-        int capacity = data.getCapacity(fl);
+        int nbFormations = algo.getNbVoeux(fl);
+        int capacity = algo.getCapacity(fl);
 
         double capacityScore = (capacity >= algo.p75Capacity) ? 1.0 : (double) capacity / algo.p75Capacity;
         double nbFormationsScore = (nbFormations >= algo.p50NbFormations) ? 1.0 : (double) nbFormations / algo.p50NbFormations;
@@ -184,16 +182,19 @@ public class AffinityEvaluator {
             List<Map.Entry<String, Double>> entries = new ArrayList<>(nonZeroScores.entrySet());
             entries.sort(Comparator.comparing(e -> -e.getValue()));
             entries.forEach(e -> {
-                double weight = cfg.minMultipliers().get(e.getKey());
-                val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
-                expl2.add(Explanation.getDebugExplanation(
-                        label
-                                + " " + df.format(weight) + " " + df.format(e.getValue())
-                ));
-                st.append(" * ");
-                st.append(label);
-                st.append(" ");
-                st.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+                val key = e.getKey();
+                if(!key.equals(BONUS_MOY_GEN) || cfg.isUseAutoEvalMoyGen()) {
+                    double weight = cfg.minMultipliers().get(key);
+                    val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
+                    expl2.add(Explanation.getDebugExplanation(
+                            label
+                                    + " " + df.format(weight) + " " + df.format(e.getValue())
+                    ));
+                    st.append(" * ");
+                    st.append(label);
+                    st.append(" ");
+                    st.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+                }
             });
             expl2.add(Explanation.getDebugExplanation(st.toString()));
 
@@ -308,8 +309,8 @@ public class AffinityEvaluator {
 
     private double getBonusTypeBac(String grp, List<Pair<Double, Explanation>> expl) {
         if (bac.equals(TOUS_BACS_CODE_MPS)) return MULTIPLIER_FOR_NOSTATS_BAC;
-        Integer nbAdmisTousBac = data.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
-        Integer nbAdmisBac = data.getNbAdmis(grp, bac);
+        Integer nbAdmisTousBac = algo.getNbAdmis(grp, TOUS_BACS_CODE_MPS);
+        Integer nbAdmisBac = algo.getNbAdmis(grp, bac);
         if(nbAdmisTousBac != null && nbAdmisBac == null) return NO_MATCH_SCORE;
         if (nbAdmisBac == null || nbAdmisTousBac == null) return MULTIPLIER_FOR_NOSTATS_BAC;
         double percentage = FULL_MATCH_MULTIPLIER * nbAdmisBac / nbAdmisTousBac;
@@ -330,7 +331,7 @@ public class AffinityEvaluator {
 
     private double getBonusMoyGen2(String fl, List<Pair<Double, Explanation>> expl) {
         if (moyGenEstimee == null) return FULL_MATCH_MULTIPLIER;
-        val stats = data.getStatsBac(fl, this.bac);
+        val stats = algo.getStatsBac(fl, this.bac);
         return getBonusNotes(expl, stats, moyGenEstimee);
     }
 
@@ -346,14 +347,14 @@ public class AffinityEvaluator {
             double autoEval) {
         //on va chercher les stats pour ce type de bac et cette filiere
         if (stats == null || stats.getRight() == null) {
-            if (expl != null && cfg.isVerboseMode())
+            if (expl != null && cfg.isUseAutoEvalMoyGen() &&cfg.isVerboseMode())
                 expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats pour cette filiere")));
             return FULL_MATCH_MULTIPLIER;
         }
         String bacUtilise = stats.getLeft();
         Middle50 middle50 = stats.getRight();
         if (middle50 == null) {
-            if (expl != null && cfg.isVerboseMode())
+            if (expl != null && cfg.isUseAutoEvalMoyGen() && cfg.isVerboseMode())
                 expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de middle50 pour cette filiere")));
             return FULL_MATCH_MULTIPLIER;
         }
@@ -447,13 +448,13 @@ public class AffinityEvaluator {
         if(ville == null) return List.of();
         return ExplanationGeo.getGeoExplanations(
                 ville,
-                data.getVoeuxCoords(fl)
+                algo.getVoeuxCoords(fl)
         );
     }
 
     private double getBonusDuree(String fl, List<Pair<Double, Explanation>> expl) {
         if (pf.duree() == null) return Config.NO_MATCH_SCORE;
-        int duree = data.getDuree(fl);
+        int duree = algo.getDuree(fl);
         duree = Math.min(Config.DUREE_MAX, duree);
         duree = Math.max(DUREE_COURTE, duree);
 
@@ -501,7 +502,7 @@ public class AffinityEvaluator {
     ) {
         if (!okCodes.contains(fl)) return Config.NO_MATCH_SCORE;
 
-        Map<String, Integer> sim = data.getFormationsSimilaires(fl, bacIndex);
+        Map<String, Integer> sim = algo.getFormationsSimilaires(fl, bacIndex);
         if (sim.isEmpty()) return Config.NO_MATCH_SCORE;
 
         double bonus = Config.NO_MATCH_SCORE;
@@ -564,11 +565,11 @@ public class AffinityEvaluator {
 
     private String getTagSubScoreExplanation(double score, Map<String, Double> subscores) {
 
-        return "Mots-clés total: " + score + " = somme de ( "
+        return "Mots-clés total: " + score + " = somme plafonnée à 1.0 de 1/" + Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT + " ( "
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
                 .map(e -> e.getValue() + "\t    : "
-                        + data.getDebugLabel(e.getKey()))
+                        + algo.getDebugLabel(e.getKey()))
                 .collect(Collectors.joining(
                         "\n\t", "\n\t", "\n"
                 )) + ").";
@@ -598,7 +599,7 @@ public class AffinityEvaluator {
             //Décodage soit par nom spécialité soit par code
             Integer iMtCod = algo.codesSpecialites.get(s);
             if (iMtCod != null) {
-                Double stat = data.getStatsSpecialite(fl, iMtCod);
+                Double stat = algo.getStatsSpecialite(fl, iMtCod);
                 if (stat != null) {
                     stats.put(s, stat);
                 }
@@ -641,7 +642,7 @@ public class AffinityEvaluator {
 
 
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
-        final Set<String> candidates = new HashSet<>(data.getAllCandidatesMetiers(key));
+        final Set<String> candidates = new HashSet<>(algo.getAllCandidatesMetiers(key));
 
         List<String> examples = getCandidatesOrderedByPertinence(candidates);
 

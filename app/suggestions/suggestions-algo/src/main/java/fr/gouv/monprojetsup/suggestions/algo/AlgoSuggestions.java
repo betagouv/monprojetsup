@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import fr.gouv.monprojetsup.data.Constants;
+import fr.gouv.monprojetsup.data.model.LatLng;
 import fr.gouv.monprojetsup.data.model.Ville;
+import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.suggestions.data.SuggestionsData;
 import fr.gouv.monprojetsup.suggestions.data.model.Edges;
 import fr.gouv.monprojetsup.suggestions.data.model.Path;
@@ -190,7 +192,7 @@ public class AlgoSuggestions {
             return List.of();
         }
         //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, data, this);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this);
 
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
@@ -318,7 +320,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, cfg, data, this).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, cfg, this).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -341,7 +343,7 @@ public class AlgoSuggestions {
         if(profile == null) {
             return List.of();
         }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg, data, this);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg, this);
 
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
@@ -414,5 +416,50 @@ public class AlgoSuggestions {
     private ConcurrentHashMap<Pair<String,Integer>, Map<String, Integer>> formationsSimilaires = new ConcurrentHashMap<>();
     public Map<String, Integer> getFormationsSimilaires(String fl, int i) {
         return formationsSimilaires.computeIfAbsent(Pair.of(fl, i), z -> data.getFormationsSimilaires(fl, i));
+    }
+
+    private ConcurrentHashMap<String, Integer> nbVoeux = new ConcurrentHashMap<>();
+    public int getNbVoeux(String fl) {
+        return nbVoeux.computeIfAbsent(fl, data::getNbVoeux);
+    }
+
+    private ConcurrentHashMap<String, Integer> capacitoes = new ConcurrentHashMap<>();
+    public int getCapacity(String fl) {
+        return capacitoes.computeIfAbsent(fl, data::getCapacity);
+    }
+
+    private ConcurrentHashMap<Pair<String,String>, Integer> nbAdmis = new ConcurrentHashMap<>();
+    public Integer getNbAdmis(String grp, String tousBacsCodeMps) {
+        return nbAdmis.computeIfAbsent(Pair.of(grp, tousBacsCodeMps), z -> data.getNbAdmis(grp, tousBacsCodeMps));
+    }
+
+    private ConcurrentHashMap<Pair<String,String>, Pair<String, Middle50>> statsBac = new ConcurrentHashMap<>();
+    public @Nullable Pair<String, Middle50> getStatsBac(String fl, String bac) {
+        return statsBac.computeIfAbsent(Pair.of(fl, bac), z -> data.getStatsBac(fl, bac));
+    }
+
+    private ConcurrentHashMap<String, @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>>> voeuxCoords = new ConcurrentHashMap<>();
+    public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String fl) {
+        return voeuxCoords.computeIfAbsent(fl, z -> data.getVoeuxCoords(fl));
+    }
+
+    private ConcurrentHashMap<String, @NotNull Integer> durees = new ConcurrentHashMap<>();
+    public int getDuree(String fl) {
+        return durees.computeIfAbsent(fl, z -> data.getDuree(fl));
+    }
+
+    private ConcurrentHashMap<String, @NotNull String> debugLabels = new ConcurrentHashMap<>();
+    public String getDebugLabel(String key) {
+        return debugLabels.computeIfAbsent(key, z -> data.getDebugLabel(key));
+    }
+
+    private ConcurrentHashMap<Pair<String,Integer>, Double> statsSpecialites = new ConcurrentHashMap<>();
+    public Double getStatsSpecialite(String fl, Integer iMtCod) {
+        return statsSpecialites.computeIfAbsent(Pair.of(fl, iMtCod), z -> data.getStatsSpecialite(fl, iMtCod));
+    }
+
+    private ConcurrentHashMap<String, Collection<String>> candidatsMetiers = new ConcurrentHashMap<>();
+    public Collection<String> getAllCandidatesMetiers(String key) {
+        return candidatsMetiers.computeIfAbsent(key, z -> data.getAllCandidatesMetiers(key));
     }
 }
