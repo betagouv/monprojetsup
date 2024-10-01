@@ -14,7 +14,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
     explications.spécialitésChoisies.length === 0 &&
     explications.intêretsEtDomainesChoisis.domaines.length === 0 &&
     explications.intêretsEtDomainesChoisis.intêrets.length === 0 &&
-    explications.detailsCalculScore.details === 0 &&
+    !explications.detailsCalculScore &&
     !explications.duréeÉtudesPrévue &&
     !explications.alternance &&
     !explications.duréeÉtudesPrévue &&
@@ -88,7 +88,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
             éléments={explications.formationsSimilaires.map((formation) => formation.nom)}
           />
         )}
-        {explications.detailsCalculScore.details.length > 0 && (
+        {explications.detailsCalculScore && explications.detailsCalculScore.details.length > 0 && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.AUTRES}
             éléments={explications.detailsCalculScore.details.map((explication) => explication)}
