@@ -41,7 +41,7 @@ data class ExplicationEtExemplesDTO(
                 formationsSimilaires =
                     explications.filter { it.similaires != null }
                         .mapNotNull { it.similaires?.formation },
-                autres =
+                detailsCalculScore =
                     explications.filter { it.autres != null }
                         .mapNotNull { it.autres?.expl },
                 dureeEtudesPrevue =

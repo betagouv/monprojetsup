@@ -95,7 +95,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                         )
                     },
                 detailsCalculScore =
-                    explications?.autres.takeUnless { it.isNullOrEmpty() } ?: emptyList(),
+                    explications?.detailsCalculScore.takeUnless { it.isNullOrEmpty() } ?: emptyList(),
             ) to (
                 explications?.exemplesDeMetiers?.let { idsMetiers ->
                     idsMetiers.mapNotNull { idMetier ->
@@ -133,7 +133,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                     specialitesRepository.recupererLesSpecialites(idsSpecialites)
                 } ?: emptyList()
         val autres =
-            explications.autres.takeUnless { it.isEmpty() }
+            explications.detailsCalculScore.takeUnless { it.isEmpty() }
                 ?: emptyList()
         return ExplicationsSuggestionDetaillees(
             geographique = filtrerEtTrier(explications.geographique),
