@@ -119,7 +119,7 @@ class FormationControllerTest(
                     baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
                     pourcentage = 18,
                 ),
-            autres = emptyList(),
+            detailsCalculScore = emptyList(),
         )
     val ficheFormation =
         FicheFormation.FicheFormationPourProfil(

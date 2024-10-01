@@ -41,6 +41,7 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_90;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_LOWEST_GRADE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_LABELS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_MOY_GEN;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.BONUS_TAGS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_COURTE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.DUREE_LONGUE_PROFILE_VALUE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_MULTIPLIER;
@@ -132,7 +133,7 @@ public class AffinityEvaluator {
                                 ));
     }
 
-    public double getBigCapacityScore(String fl) {
+    public double getNotSmallDiversityScore(String fl) {
 
         int nbFormations = algo.getNbVoeux(fl);
         int capacity = algo.getCapacity(fl);
@@ -149,37 +150,38 @@ public class AffinityEvaluator {
         return getScoreAndExplanation(fl, null, null, inclureScores);
     }
 
+    private static final DecimalFormat df = new DecimalFormat("#.#####");
+    private static final DecimalFormat df2 = new DecimalFormat("#.#E0");
+
     /**
      * get explanations, including debug explanations if needed
      * @param fl key
      * @return list of explanations
      */
-    private static DecimalFormat df = new DecimalFormat("#.##E0");
-
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
         //en verbose mode, on récupère également les interests
-        TreeMap<String, Double> nonZeroScores = cfg.isVerboseMode() ? new TreeMap<>() : null;
+        TreeMap<String, Double> subScores = cfg.isVerboseMode() ? new TreeMap<>() : null;
 
         List<Pair<Double, Explanation>> unsortedExpl = new ArrayList<>();
 
         //the computation
-        Affinite affinite = getScoreAndExplanation(fl, unsortedExpl, nonZeroScores, true);
+        Affinite affinite = getScoreAndExplanation(fl, unsortedExpl, subScores, true);
 
         unsortedExpl.sort(Comparator.comparing(e -> -e.getLeft()));
 
         List<Explanation> sortedExpl = unsortedExpl.stream().map(Pair::getRight).toList();
-        if (cfg.isVerboseMode() && nonZeroScores != null) {
+        if (cfg.isVerboseMode() && subScores != null) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl);
 
-            expl2.add(Explanation.getDebugExplanation("Score Total: " + df.format(affinite.affinite())));
+            //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
 
-            StringBuilder st = new StringBuilder();
-            st.append("Détails score ");
-            st.append(df.format(affinite.affinite()));
-            st.append(" = ");
+            StringBuilder calculScoreDetails = new StringBuilder();
+            calculScoreDetails.append("Score Total pour " + fl + " :");
+            calculScoreDetails.append(df2.format(affinite.affinite()));
+            calculScoreDetails.append(" obtenu comme le produit de [ ");
 
-            List<Map.Entry<String, Double>> entries = new ArrayList<>(nonZeroScores.entrySet());
+            List<Map.Entry<String, Double>> entries = new ArrayList<>(subScores.entrySet());
             entries.sort(Comparator.comparing(e -> -e.getValue()));
             entries.forEach(e -> {
                 val key = e.getKey();
@@ -188,15 +190,19 @@ public class AffinityEvaluator {
                     val label = BONUS_LABELS.getOrDefault(e.getKey(), e.getKey());
                     expl2.add(Explanation.getDebugExplanation(
                             label
-                                    + " " + df.format(weight) + " " + df.format(e.getValue())
+                                    + " " + df.format(e.getValue()) + " * (1 - " + df2.format(weight) + ") + " + df2.format(weight)
                     ));
-                    st.append(" * ");
-                    st.append(label);
-                    st.append(" ");
-                    st.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+                    calculScoreDetails.append(" ");
+                    calculScoreDetails.append(df.format(getMultiplier(e.getKey(), e.getValue())));
+                    calculScoreDetails.append(" (");
+                    calculScoreDetails.append(label);
+                    calculScoreDetails.append(") , ");
                 }
             });
-            expl2.add(Explanation.getDebugExplanation(st.toString()));
+            calculScoreDetails.append(" ]");
+
+            expl2.add(Explanation.getDebugExplanation("Scores de diversité: " + affinite.scoresDiversiteResultats()));
+            expl2.add(Explanation.getDebugExplanation(calculScoreDetails.toString()));
 
             sortedExpl = expl2;
         }
@@ -219,13 +225,13 @@ public class AffinityEvaluator {
      *
      * @param fl      la filière considérée
      * @param expl    les explications, à compléter si expl != null
-     * @param matches used to get debug info about what matched and how
+     * @param subScores used to get debug info about what matched and how
      * @return the score
      */
     private Affinite getScoreAndExplanation(
             String fl,
             @Nullable List<Pair<Double, Explanation>> expl,
-            @Nullable Map<String, Double> matches,
+            @Nullable Map<String, Double> subScores,
             boolean includeScores
             ) {
 
@@ -239,11 +245,10 @@ public class AffinityEvaluator {
         /*
          * map des critères vers des doubles
          */
-
         Map<String, Double> scores = new HashMap<>(
                 Map.ofEntries(
                         entry(Config.BONUS_SIM, getBonusSimilaires(fl, pf.bacIndex(), expl)),
-                        entry(Config.BONUS_TAGS, getBonusTags(fl, expl))
+                        entry(BONUS_TAGS, getBonusTags(fl, expl))
                 )
         );
 
@@ -269,15 +274,14 @@ public class AffinityEvaluator {
         double score = aggregateScores(scores);
 
         //put interests in expl, if required
-        if (matches != null && cfg.isVerboseMode()) {
-            matches.putAll(scores.entrySet().stream().filter(
-                    e -> e.getValue() > Config.NO_MATCH_SCORE
-                    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        if (subScores != null && cfg.isVerboseMode()) {
+            subScores.putAll(scores.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
-        double bigCapacityScore = getBigCapacityScore(fl);
+        double notSmallDiversity = getNotSmallDiversityScore(fl);
         EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
-        quotas.put(Affinite.SuggestionDiversityQuota.NOT_SMALL, bigCapacityScore);
+        quotas.put(Affinite.SuggestionDiversityQuota.OFFRE_FORMATION, notSmallDiversity);
 
         return new Affinite(score, includeScores ? scores : Map.of(), quotas);
     }
@@ -301,6 +305,7 @@ public class AffinityEvaluator {
         if(minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
         return getMultiplier(value, minMultiplier);
     }
+
     private double getMultiplier(double value, double minMultiplier) {
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;
@@ -557,6 +562,7 @@ public class AffinityEvaluator {
             if(cfg.isVerboseMode()) {
                 String msg = getTagSubScoreExplanation(score, subscores);
                 expl.add(Pair.of(score, Explanation.getDebugExplanation(msg)));
+                expl.add(Pair.of(score, Explanation.getDebugExplanation(pathes.stream().map(p -> p.toString()).collect(Collectors.joining(" , ")))));
             }
             expl.add(Pair.of(score, Explanation.getTagExplanationShort(pathes)));
         }
@@ -565,14 +571,14 @@ public class AffinityEvaluator {
 
     private String getTagSubScoreExplanation(double score, Map<String, Double> subscores) {
 
-        return "Mots-clés total: " + score + " = somme plafonnée à 1.0 de 1/" + Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT + " ( "
+        return BONUS_LABELS.get(BONUS_TAGS) + ": " + score + " = plafonnement à 1.0 de 1 / " + Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT
+        + " de la somme de "
                 + subscores.entrySet().stream()
                 .sorted(Comparator.comparing(e -> -e.getValue()))
-                .map(e -> e.getValue() + "\t    : "
-                        + algo.getDebugLabel(e.getKey()))
+                .map(e -> df.format( e.getValue()) + " " + algo.getDebugLabel(e.getKey()))
                 .collect(Collectors.joining(
-                        "\n\t", "\n\t", "\n"
-                )) + ").";
+                        " , ", "[ ", " ]"
+                )) + " .";
     }
 
     private double getBonusApprentissage(String grp, List<Pair<Double, Explanation>> expl) {

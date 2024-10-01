@@ -96,7 +96,7 @@ export const localeFR = {
       ALTERNANCE: "Formation réalisable",
       ALTERNANCE_SUITE: "en alternance",
       FORMATIONS_SIMILAIRES: "Cette formation est similaire à",
-      AUTRES: "Détails du calcul du score",
+      AUTRES: "Détails du calcul du score (mode expert)",
       INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
       ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
       ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
