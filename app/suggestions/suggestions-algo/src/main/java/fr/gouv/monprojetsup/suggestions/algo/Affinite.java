@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
+import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_MULTIPLIER;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @SuppressWarnings("unused")
@@ -67,7 +67,7 @@ public record Affinite(
         Map<String,Double> newScoresAdequationProfil = aff.scoresAdequationProfil.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> roundScore(e.getValue(), FULL_MATCH_SCORE)
+                        e -> roundScore(e.getValue(), FULL_MATCH_MULTIPLIER)
                 ));
         return new Affinite(newAffinite, newScoresAdequationProfil, aff.scoresDiversiteResultats);
     }

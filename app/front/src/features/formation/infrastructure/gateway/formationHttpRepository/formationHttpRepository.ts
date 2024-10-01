@@ -174,6 +174,7 @@ export class formationHttpRepository implements FormationRepository {
             nomBacUtilisé: explications.autoEvaluationMoyenne.baccalaureatUtilise.nom,
           }
         : null,
+      autres: explications.autres
     };
   };
 

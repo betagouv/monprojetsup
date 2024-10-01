@@ -41,6 +41,9 @@ data class ExplicationEtExemplesDTO(
                 formationsSimilaires =
                     explications.filter { it.similaires != null }
                         .mapNotNull { it.similaires?.formation },
+                autres =
+                    explications.filter { it.autres != null }
+                        .mapNotNull { it.autres?.expl },
                 dureeEtudesPrevue =
                     explications.recupererUniqueValeur { it.dureeEtude != null }?.dureeEtude?.choix?.let {
                         ChoixDureeEtudesPrevue.deserialiseAPISuggestion(valeur = it)
@@ -85,6 +88,8 @@ data class APISuggestionExplicationDTO(
     val dureeEtude: APISuggestionExplicationDurationDTO?,
     @JsonProperty(value = "simi")
     val similaires: APISuggestionExplicationSimilariteDTO?,
+    @JsonProperty(value = "debug")
+    val autres: APISuggestionExplicationsAutresDTO?,
     @JsonProperty(value = "tbac")
     val typeBaccalaureat: APISuggestionExplicationTypeBacDTO?,
     @JsonProperty(value = "moygen")
@@ -113,6 +118,12 @@ data class APISuggestionExplicationSimilariteDTO(
     val formation: String?,
     @JsonProperty(value = "p")
     val pourcentageSimilitude: Double?,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class APISuggestionExplicationsAutresDTO(
+    @JsonProperty(value = "expl")
+    val expl: String?,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

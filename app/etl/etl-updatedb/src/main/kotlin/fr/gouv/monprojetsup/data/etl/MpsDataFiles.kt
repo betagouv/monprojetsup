@@ -79,6 +79,7 @@ class MpsDataFiles(
             dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
             PsupData::class.java
         )
+        psupData.initDurees();
         statistiques = psupData.buildStats()
 
         logger.info("Chargement des données Onisep et Rome")

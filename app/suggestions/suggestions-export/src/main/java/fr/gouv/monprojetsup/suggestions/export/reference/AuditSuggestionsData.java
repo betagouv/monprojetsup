@@ -201,8 +201,8 @@ public class AuditSuggestionsData {
                 tools.append(List.of(
                         "formations avec >= " + i + " domaine(s) associé(s)",
                         "" + nbFormationOk,
-                                "" + pctObjectif + "%",
-                                "" + objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                                pctObjectif + "%",
+                                objectifNb + " (i.e. " + objectifPct + "% des formations)"
                 )
                 );
             }
@@ -217,8 +217,8 @@ public class AuditSuggestionsData {
                 tools.append(List.of(
                         "formations avec >= " + i + " métier(s) associé(s)",
                         "" + nbFormationOk,
-                        "" + pctObjectif + "%",
-                        "" + objectifNb + " (i.e. " + objectifPct + "% des formations)"
+                        pctObjectif + "%",
+                        objectifNb + " (i.e. " + objectifPct + "% des formations)"
                 ));
             }
         }

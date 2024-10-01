@@ -69,8 +69,8 @@ class MpsDataPortTest : DataPortTest(){
     @Test
     fun `Le label d'un lien contient au plus une occurrence de Onisep`() {
         val liens = mpsDataPort.getLiens().flatMap { it.value }
-        val liensAvecDeuxOccurenceSOnisep = liens.filter { Regex(Regex.escape("Onisep")).findAll(it.label).count() >= 2 }
-        assertThat(liensAvecDeuxOccurenceSOnisep).isEmpty()
+        val liensAvecDeuxOccurencesOnisep = liens.filter { Regex(Regex.escape("Onisep")).findAll(it.label).count() >= 2 }
+        assertThat(liensAvecDeuxOccurencesOnisep).isEmpty()
     }
 
     @Test

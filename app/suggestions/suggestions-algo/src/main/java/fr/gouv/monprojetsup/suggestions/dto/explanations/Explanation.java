@@ -29,9 +29,8 @@ record ExplanationTagShort(List<String> ns) {
         } else {
             return new ExplanationTagShort(
                     pathes.stream()
-                            .map(Path::nodes)
-                            .filter(l -> l != null && !l.isEmpty())
-                            .map(l -> l.get(0))
+                            .filter(p -> !p.isEmpty() && p.size() <= 2)
+                            .map(Path::first)
                             .distinct()
                             .toList()
             );

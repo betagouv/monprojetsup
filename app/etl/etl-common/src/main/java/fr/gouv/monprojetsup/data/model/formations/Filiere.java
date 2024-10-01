@@ -88,4 +88,15 @@ public class Filiere implements Serializable {
         return Objects.hash(gFlCod, gFrCod);
     }
 
+    public boolean isL1() {
+        return libelle.contains("L1") || libelle.contains("Licence");
+    }
+
+    public boolean isCUPGE() {
+        return libelle.contains("CUPGE");
+    }
+
+    public boolean isLouvre() {
+        return gFlCod == 250001;
+    }
 }

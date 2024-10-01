@@ -94,6 +94,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                             typeBaccalaureat,
                         )
                     },
+                autres =
+                    explications?.autres.takeUnless { it.isNullOrEmpty() } ?: emptyList(),
             ) to (
                 explications?.exemplesDeMetiers?.let { idsMetiers ->
                     idsMetiers.mapNotNull { idMetier ->
@@ -130,6 +132,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                 ?.map { it.idSpecialite }?.let { idsSpecialites ->
                     specialitesRepository.recupererLesSpecialites(idsSpecialites)
                 } ?: emptyList()
+        val autres =
+            explications.autres.takeUnless { it.isEmpty() }
+                ?: emptyList()
         return ExplicationsSuggestionDetaillees(
             geographique = filtrerEtTrier(explications.geographique),
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
@@ -149,6 +154,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             domaines = domaines,
             explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
+            autres = autres,
         ) to
             explications.exemplesDeMetiers.let { metiers ->
                 metierRepository.recupererLesMetiersDetailles(metiers)
