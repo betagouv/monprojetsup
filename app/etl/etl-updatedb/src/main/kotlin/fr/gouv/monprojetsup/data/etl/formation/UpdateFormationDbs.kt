@@ -195,6 +195,7 @@ class UpdateFormationDbs(
                 voeuxMoinsDe30km = voeuxVille30km
             })
         }
+        villesVoeuxDb.deleteAll()
         villesVoeuxDb.saveAll(entities)
     }
 
