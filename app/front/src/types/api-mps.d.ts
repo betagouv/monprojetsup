@@ -461,6 +461,9 @@ export interface components {
             /** Format: int32 */
             pourcentage: number;
         };
+        DetailsCalculScoreDTO: {
+            details: string[];
+        };
         ExplicationGeographiqueDTO: {
             nomVille: string;
             /** Format: int32 */
@@ -477,6 +480,7 @@ export interface components {
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
             autoEvaluationMoyenne?: components["schemas"]["AutoEvaluationMoyenneDTO"];
+            detailsCalculScore?: components["schemas"]["DetailsCalculScoreDTO"];
         };
         FicheFormationDTO: {
             id: string;
