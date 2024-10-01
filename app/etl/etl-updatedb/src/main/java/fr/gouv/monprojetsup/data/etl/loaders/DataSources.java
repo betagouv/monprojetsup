@@ -27,7 +27,7 @@ public class DataSources {
     /* Onisep data */
     public static final String IDEO_HERITAGES_LICENCES_CPGE_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
     public static final String IDEO_HERITAGES_LICENCES_MASTERS_PATH = "onisep_ideo_hotline/MPS_LiensLicencesMasters_valideOnisep.csv";
-    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees_V3.csv";
+    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees_V4.csv";
 
     public static final String OLD_TO_NEW_IDEO_OLD_IDEO_HEADER = "OLD_ID_IDEO";
     public static final String OLD_TO_NEW_IDEO_NEW_IDEO_HEADER = "NEW_ID_IDEO";
@@ -53,6 +53,10 @@ public class DataSources {
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER = "FOR_ID";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER = "MET_ID";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH = "onisep_ideo_hotline/liens_formations_mps_metiers_ideo.csv";
+    public static final String MPS_FORMATIONS_TO_MPS_DOMAINE = "onisep_ideo_hotline/formations_domaines_ajout.csv";
+    public static final String MPS_FORMATIONS_TO_MPS_DOMAINE_FORMATION_HEADER = "cleMPS";
+    public static final String MPS_FORMATIONS_TO_MPS_DOMAINE_DOMAINE_HEADER = "domMPS";
+
     public static final String PSUP_HERITAGES_PATH = "mps/MPS_heritages.csv";
     public static final String PSUP_HERITAGES_HERITIER_HEADER = "mps_heritier";
     public static final String PSUP_HERITAGES_LEGATAIRES_HEADER = "mps_legataire";

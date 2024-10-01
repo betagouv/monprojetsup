@@ -94,12 +94,12 @@ public final class Config {
     @JsonIgnore
     private final transient Map<String, Double> minMultipliers = new HashMap<>(Map.ofEntries(
             entry(BONUS_TYPE_BAC, MULTIPLIER_FOR_UNFITTED_BAC),
-            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),//additif 1000.0
-            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),//additif 500.0
-            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),//additif 500.0
-            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),//additif 50.0
-            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),//additif 25.0
-            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),//additif 20.0
+            entry(BONUS_TAGS, MULTIPLIER_FOR_UNFITTED_TAGS),
+            entry(BONUS_APPRENTISSAGE, MULTIPLIER_FOR_UNFITTED_APP),
+            entry(BONUS_DURATION, MULTIPLIER_FOR_UNFITTED_DURATION),
+            entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
+            entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
+            entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES)
     ));
     @JsonIgnore

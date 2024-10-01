@@ -18,6 +18,7 @@ import fr.gouv.monprojetsup.data.etl.loaders.CsvTools
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources
 import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
+import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader.loadLiensFormationsMpsDomainesMps
 import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.model.Candidat
@@ -662,6 +663,15 @@ class MpsDataFiles(
         result.addAll(getEdges(onisepData.edgesAtomeToElement, TYPE_EDGE_ATOME_ELEMENT))
         result.addAll(getEdges(onisepData.edgesInteretsMetiers, TYPE_EDGE_INTERET_METIER))
         result.addAll(getEdges(onisepData.edgesFormationsDomaines, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
+
+        //injection patch JMB
+        val mpsFormationsMpsDomaines = loadLiensFormationsMpsDomainesMps(dataSources)
+        mpsFormationsMpsDomaines.forEach{ (src, dsts) ->
+            dsts.forEach{
+                result.add(Triple(src, it, TYPE_EDGE_FORMATIONS_PSUP_DOMAINES))
+            }
+        }
+
         result.addAll(getEdges(onisepData.edgesMetiersFormations, TYPE_EDGE_METIERS_FORMATIONS_PSUP))
         result.addAll(getEdges(onisepData.edgesDomainesMetiers, TYPE_EDGE_DOMAINES_METIERS))
         result.addAll(getEdges(onisepData.edgesSecteursMetiers, TYPE_EDGE_SECTEURS_METIERS))
