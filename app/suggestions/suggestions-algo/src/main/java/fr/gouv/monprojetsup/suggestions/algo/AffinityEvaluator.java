@@ -161,7 +161,7 @@ public class AffinityEvaluator {
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
         //en verbose mode, on récupère également les interests
-        TreeMap<String, Double> subScores = cfg.isVerboseMode() ? new TreeMap<>() : null;
+        TreeMap<String, Double> subScores = cfg.isVerbose() ? new TreeMap<>() : null;
 
         List<Pair<Double, Explanation>> unsortedExpl = new ArrayList<>();
 
@@ -171,7 +171,7 @@ public class AffinityEvaluator {
         unsortedExpl.sort(Comparator.comparing(e -> -e.getLeft()));
 
         List<Explanation> sortedExpl = unsortedExpl.stream().map(Pair::getRight).toList();
-        if (cfg.isVerboseMode() && subScores != null) {
+        if (cfg.isVerbose() && subScores != null) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl);
 
             //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
@@ -274,7 +274,7 @@ public class AffinityEvaluator {
         double score = aggregateScores(scores);
 
         //put interests in expl, if required
-        if (subScores != null && cfg.isVerboseMode()) {
+        if (subScores != null && cfg.isVerbose()) {
             subScores.putAll(scores.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
@@ -352,14 +352,14 @@ public class AffinityEvaluator {
             double autoEval) {
         //on va chercher les stats pour ce type de bac et cette filiere
         if (stats == null || stats.getRight() == null) {
-            if (expl != null && cfg.isUseAutoEvalMoyGen() &&cfg.isVerboseMode())
+            if (expl != null && cfg.isUseAutoEvalMoyGen() &&cfg.isVerbose())
                 expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats pour cette filiere")));
             return FULL_MATCH_MULTIPLIER;
         }
         String bacUtilise = stats.getLeft();
         Middle50 middle50 = stats.getRight();
         if (middle50 == null) {
-            if (expl != null && cfg.isUseAutoEvalMoyGen() && cfg.isVerboseMode())
+            if (expl != null && cfg.isUseAutoEvalMoyGen() && cfg.isVerbose())
                 expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de middle50 pour cette filiere")));
             return FULL_MATCH_MULTIPLIER;
         }
@@ -559,10 +559,13 @@ public class AffinityEvaluator {
             /* on regroupe les chemins en gardant juste la première node
             qui est l'élément d'accroche du profil
              */
-            if(cfg.isVerboseMode()) {
+            if(cfg.isVerbose()) {
                 String msg = getTagSubScoreExplanation(score, subscores);
                 expl.add(Pair.of(score, Explanation.getDebugExplanation(msg)));
-                expl.add(Pair.of(score, Explanation.getDebugExplanation(pathes.stream().map(p -> p.toString()).collect(Collectors.joining(" , ")))));
+                if(cfg.isVeryVerbose()) {
+                    //on inclut tous les chemins
+                    expl.add(Pair.of(score, Explanation.getDebugExplanation(pathes.stream().map(Path::toString).collect(Collectors.joining(" , ")))));
+                }
             }
             expl.add(Pair.of(score, Explanation.getTagExplanationShort(pathes)));
         }
@@ -612,7 +615,7 @@ public class AffinityEvaluator {
             }
         });
         if (stats.isEmpty()) {
-            if (expl != null && cfg.isVerboseMode())
+            if (expl != null && cfg.isVerbose())
                 expl.add(Pair.of(Config.NO_MATCH_SCORE, Explanation.getDebugExplanation("Pas de stats spécialités pour cette filiere")));
             return (FULL_MATCH_MULTIPLIER + NO_MATCH_SCORE) / 2;
         }

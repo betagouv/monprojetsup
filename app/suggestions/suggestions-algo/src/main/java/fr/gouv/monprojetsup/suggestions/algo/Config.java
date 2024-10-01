@@ -49,7 +49,7 @@ public final class Config {
 
     @Getter
     @Setter
-    private boolean verboseMode = false;
+    private int verbosityLevel = 0;
 
     @Getter
     @Setter
@@ -118,4 +118,10 @@ public final class Config {
         return personalCriteria;
     }
 
+    public boolean isVerbose() {
+        return verbosityLevel >= 1;
+    }
+    public boolean isVeryVerbose() {
+        return verbosityLevel >= 2;
+    }
 }
