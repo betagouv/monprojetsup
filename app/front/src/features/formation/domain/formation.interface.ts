@@ -89,6 +89,6 @@ export type Formation = {
       idBacUtilisé: string;
       nomBacUtilisé: string;
     } | null;
-    autres: Array<string>;
+    autres: string[];
   } | null;
 };
