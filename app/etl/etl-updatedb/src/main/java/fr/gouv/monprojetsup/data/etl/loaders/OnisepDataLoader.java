@@ -99,9 +99,6 @@ public class OnisepDataLoader {
         after = interets.size();
         LOGGER.info("Intérêts: " + before + " -> " + after);
 
-        LOGGER.info("Injection des secteursActivite webs onisep dans les secteursActivite MPS");
-
-
         return new OnisepData(
                 domaines,
                 interets,
@@ -399,9 +396,10 @@ public class OnisepDataLoader {
         return filieresPsupToFormationsMetiersIdeo;
     }
 
+
     protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsPsupMetiers(DataSources sources) {
         Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
-        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
+        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ',');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;
             String psupIds = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER);
@@ -418,9 +416,26 @@ public class OnisepDataLoader {
         return result;
     }
 
+    public static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsMpsDomainesMps(DataSources sources) {
+        Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
+        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.MPS_FORMATIONS_TO_MPS_DOMAINE), ',');
+        for (Map<String,String> line : lines) {
+            if(line.isEmpty()) continue;
+            String mpsFormationId = line.get(MPS_FORMATIONS_TO_MPS_DOMAINE_FORMATION_HEADER);
+            if(mpsFormationId == null)
+                throw new RuntimeException("Missing header " + MPS_FORMATIONS_TO_MPS_DOMAINE_FORMATION_HEADER + " in line " + line);
+            String domaineMpsId = line.get(MPS_FORMATIONS_TO_MPS_DOMAINE_DOMAINE_HEADER);
+            if(domaineMpsId == null)
+                throw new RuntimeException("Missing header " + MPS_FORMATIONS_TO_MPS_DOMAINE_DOMAINE_HEADER + " in line " + line);
+            result.computeIfAbsent(mpsFormationId, k -> new ArrayList<>()).add(domaineMpsId);
+        }
+        return result;
+    }
+
+
     protected static @NotNull Map<String,@NotNull Set<@NotNull String>> loadLiensFormationsIdeoMetiers(DataSources sources) {
         Map<String,@NotNull Set<@NotNull String>> result = new HashMap<>();
-        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ';');
+        val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ',');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;
             String ideoIds = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_FORMATION_IDEO_HEADER);

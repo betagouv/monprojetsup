@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
+import fr.gouv.monprojetsup.data.Constants.isDomaineMps
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.data.Constants.isMetier
 import org.assertj.core.api.Assertions
@@ -103,6 +104,14 @@ class LoadersTest {
         Assertions.assertThat(liens).isNotEmpty
         Assertions.assertThat(liens.keys).allMatch { id -> isFiliere(id) }
         Assertions.assertThat(liens.values.stream().flatMap { it.stream() }.toList().toSet()).allMatch { id -> isMetier(id) }
+    }
+
+    @Test
+    fun `Doit réussir à charger les liens formations domaines`() {
+        val liens = OnisepDataLoader.loadLiensFormationsMpsDomainesMps(dataSources)
+        Assertions.assertThat(liens).isNotEmpty
+        Assertions.assertThat(liens.keys).allMatch { id -> isFiliere(id) }
+        Assertions.assertThat(liens.values.stream().flatMap { it.stream() }.toList().toSet()).allMatch { id -> isDomaineMps(id) }
     }
 
 

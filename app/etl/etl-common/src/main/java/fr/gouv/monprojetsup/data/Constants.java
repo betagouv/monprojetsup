@@ -91,10 +91,14 @@ public class Constants {
 
     private static final String METIER_PREFIX = "MET";//like g_ta_cod
 
+    private static final String DOMAINE_MPS_PREFIX = "dom";//like g_ta_cod
     public static boolean isMetier(@NotNull String key) {
         return key.startsWith(METIER_PREFIX);
     }
 
+    public static boolean isDomaineMps(@NotNull String key) {
+        return key.startsWith(DOMAINE_MPS_PREFIX);
+    }
 
     public static int mpsIdToGFlCod(@NotNull String id) {
         return Integer.parseInt(id.substring(FILIERE_PREFIX.length()));
