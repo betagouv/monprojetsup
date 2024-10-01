@@ -179,7 +179,7 @@ class UpdateFormationDbs(
                 logger.info("traitement des villes commençant par ${newLetter}")
                 letter = newLetter
             }
-            val distances = voeux.parallelStream().map { voeu ->
+            val distances = voeux.map { voeu ->
                 Pair(voeu.id, geodeticDistance(voeu.coords(), city.coords))
             }
             val voeuxVille10km = distances.filter {  it.second <= 10 }.map { it.first }.toList()
