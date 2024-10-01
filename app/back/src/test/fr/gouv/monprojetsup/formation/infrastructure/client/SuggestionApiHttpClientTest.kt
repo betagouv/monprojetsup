@@ -39,7 +39,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
 import java.net.ConnectException
-import java.util.*
+import java.util.UUID
 
 class SuggestionApiHttpClientTest {
     @Mock
@@ -195,7 +195,7 @@ class SuggestionApiHttpClientTest {
             assertThat(result.formations).isNotEmpty
             assertThat(result.metiersTriesParAffinites).isNotEmpty
             assertThat(result.metiersTriesParAffinites).contains("MET_611")
-            assertThat(result.formations.map { f -> f.idFormation}).contains("fr22")
+            assertThat(result.formations.map { f -> f.idFormation }).contains("fr22")
         }
 
         @Test
