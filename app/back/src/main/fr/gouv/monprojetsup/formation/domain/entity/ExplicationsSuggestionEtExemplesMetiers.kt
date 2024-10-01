@@ -17,6 +17,7 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
     val interetsEtDomainesChoisis: List<String> = emptyList(),
     val exemplesDeMetiers: List<String> = emptyList(),
+    val autres: List<String> = emptyList(),
 ) {
     data class AutoEvaluationMoyenne(
         val echellonDeLaMoyenneAutoEvalue: Int,
@@ -53,6 +54,7 @@ data class ExplicationsSuggestionDetaillees(
     val domaines: List<Domaine> = emptyList(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
+    val autres: List<String> = emptyList(),
 ) {
     data class AffiniteSpecialite(
         val idSpecialite: String,

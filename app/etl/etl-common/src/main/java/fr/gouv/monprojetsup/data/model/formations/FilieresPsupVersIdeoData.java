@@ -135,14 +135,13 @@ public record FilieresPsupVersIdeoData(
                     if(line.isEcoleconservationRestauration()) ideoFormationsIds.addAll(ideoKeysConservationRestauration);
                     if(line.isDMA()) ideoFormationsIds.addAll(ideoKeysDMA);
 
-                    val libellesOuClesSousdomainesWeb = ideoFormationsIds.stream()
+                    val libellesOuClesSousdomainesWeb = majorityItems(ideoFormationsIds.stream()
                             .map(formationsIdeo::get)
                             .filter(Objects::nonNull)
                             .map(FormationIdeoDuSup::libellesOuClesSousdomainesWeb)
                             .flatMap(Collection::stream)
-                            .distinct()
-                            .sorted()
-                            .toList();
+                            .toList()
+                    );
 
                     val  ideoMetiersIds = ideoFormationsIds.stream()
                             .map(formationsIdeo::get)
@@ -179,6 +178,20 @@ public record FilieresPsupVersIdeoData(
 
         return result;
 
+    }
+
+    /* returns the sorte dlist of items that appear often in the list */
+    private static List<String> majorityItems(List<String> list) {
+        val counts = new HashMap<String, Integer>();
+        list.forEach(
+                item -> counts.put(item, counts.getOrDefault(item, 0) + 1)
+        );
+        val maxCount = counts.values().stream().max(Integer::compareTo).orElse(0);
+        return counts.entrySet().stream()
+                .filter(e -> e.getValue() >= maxCount / 2)
+                .map(Map.Entry::getKey)
+                .sorted()
+                .toList();
     }
 
     public static void injectLiensFormationsPsupMetiers(

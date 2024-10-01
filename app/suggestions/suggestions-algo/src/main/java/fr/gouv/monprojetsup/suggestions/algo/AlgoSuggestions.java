@@ -18,7 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -27,7 +36,6 @@ import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
 import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
-import static fr.gouv.monprojetsup.suggestions.algo.Config.FULL_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -163,11 +171,6 @@ public class AlgoSuggestions {
         LOGGER.info("Total nb of edges+ " + edgesKeys.size());
 
 
-    }
-
-
-    public static double getSmallCapacityScore() {
-        return FULL_MATCH_SCORE;
     }
 
 
@@ -371,11 +374,16 @@ public class AlgoSuggestions {
      * @param maxDistance the max distance
      * @return a map of pathes indexed by last node
      */
-    public Map<String,List<Path>> computePathesFrom(String n, int maxDistance) {
-        return edgesKeys
+    private ConcurrentHashMap< Pair<String,Integer>, List<Path> > pathes = new ConcurrentHashMap<>();
+    public List<Path> computePathesFrom(String n, int maxDistance) {
+        return pathes.computeIfAbsent(
+                Pair.of(n,maxDistance),
+                z -> edgesKeys
                 .computePathesFrom(n, maxDistance)
-                .stream()
-                .collect(Collectors.groupingBy(p -> Objects.requireNonNull(p.last())));
+                        .stream()
+                        .filter(p -> p.size() > 1)
+                        .toList()
+        );
     }
 
     public boolean isRelatedToHealth(Set<String> nonZeroScores) {
@@ -397,7 +405,14 @@ public class AlgoSuggestions {
     }
 
 
+    private ConcurrentHashMap<String,Ville> villes = new ConcurrentHashMap<>();
     public Ville getVille(String nomVille) {
-        return data.getVille(nomVille);
+        return villes.computeIfAbsent(nomVille, z -> data.getVille(nomVille));
+    }
+
+
+    private ConcurrentHashMap<Pair<String,Integer>, Map<String, Integer>> formationsSimilaires = new ConcurrentHashMap<>();
+    public Map<String, Integer> getFormationsSimilaires(String fl, int i) {
+        return formationsSimilaires.computeIfAbsent(Pair.of(fl, i), z -> data.getFormationsSimilaires(fl, i));
     }
 }

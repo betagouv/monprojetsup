@@ -169,7 +169,7 @@ public record PsupData(
         val result = psupKeys.stream()
                 .map(k -> duree.durees().get(k)).filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
-                .min()
+                .max()
                 .orElse(0);
         return result > 0 ? result : null;
     }
@@ -177,7 +177,6 @@ public record PsupData(
     @Nullable
     public Integer getDuree(@NotNull Filiere filiere) {
         return DureesEtudes.getDuree(
-                Constants.gFlCodToMpsId(filiere.cle),
                 filiere.cle,
                 filiere.libelle,
                 filiere.libelle,
@@ -637,4 +636,16 @@ public record PsupData(
         this.bacs.addAll(bacs);
     }
 
+    @Override
+    public String toString() {
+        return "PsupData";
+    }
+
+    public void initDurees() {
+        formations.filieres.values().forEach(f -> {
+            if (f.isL1() || f.isCUPGE() || f.isLouvre()) {
+                duree.durees().put(gFlCodToMpsId(f.gFlCod), 5);
+            }
+        });
+    }
 }

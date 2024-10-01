@@ -16,12 +16,6 @@ public class SuggestionsServerConfig {
     @Getter
     private final Config suggFilConfig = new Config();
 
-    @Getter
-    private final String referenceCasesFilename = "referenceCasesFilename.json";
-
-    @Getter
-    private final String dataRootDirectory = "../../../";
-
 
     public static SuggestionsServerConfig load() throws IOException {
         SuggestionsServerConfig result;
@@ -37,7 +31,7 @@ public class SuggestionsServerConfig {
         }
 
         //only default weight are used
-        result.getSuggFilConfig().weights().putAll(new Config().weights());
+        result.getSuggFilConfig().minMultipliers().putAll(new Config().minMultipliers());
         return result;
     }
 

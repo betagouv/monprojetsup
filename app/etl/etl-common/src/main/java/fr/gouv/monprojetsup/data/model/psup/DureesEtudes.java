@@ -12,14 +12,14 @@ record DureesEtudes(
     }
 
     public void add(String fl, int gFrCod, String gFlLib, String gFrLib, String gFrSig) {
-        Integer duree = getDuree(fl, gFrCod, gFlLib, gFrLib, gFrSig);
+        Integer duree = getDuree(gFrCod, gFlLib, gFrLib, gFrSig);
         if(duree == null) {
             throw new RuntimeException("Unknown formation duree for g_fr_cod=" + gFrCod);
         }
         durees.put(fl, duree);
     }
 
-    public static Integer getDuree(String fl, int gFrCod, String gFlLib, String gFrLib, String gFrSig) {
+    public static Integer getDuree(int gFrCod, String gFlLib, String gFrLib, String gFrSig) {
         Integer duree = null;
         if (gFlLib.contains("4") || gFrLib.contains("4")) {
             duree = 4;
