@@ -35,8 +35,7 @@ open class Runner(
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
 	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs,
-	private val mpsDataPort: MpsDataPort,
-	private val batchUpdate: BatchUpdate
+	private val mpsDataPort: MpsDataPort
 
 
 ) : CommandLineRunner {
@@ -49,7 +48,7 @@ open class Runner(
 		mpsDataPort.exportDiagnostics()
 
 		//clearAll in this order to avoid foreign key constraint errors
-		logger.info("Vidage des tables metiers, formations, suggestions et référentiels")
+		logger.info("Vidage des tables métiers, formations, suggestions et référentiels")
 		updateFormationsMetiersDbs.clearAll()
 		updateFormationDbs.clearAll()
 		updateMetierDbs.clearAll()

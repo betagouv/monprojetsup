@@ -150,77 +150,110 @@ class MpsDataFiles(
     private fun exportResumesManquants() {
         val lines = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.RESUMES_MPS_PATH), ',')
 
-        val outputFile = DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv"
-        CsvTools.getWriter(outputFile).use { csv ->
-            {
-
-                val headers = listOf(
-                    "code filiere",
-                    "intitulé web",
-                    "code type formation",
-                    "intitule type formation,",
-                    "url onisep",
-                    "URL corrections",
-                    "url psup",
-                    "resume type formation",
-                    "resume filiere",
-                    "Liens supplémentaires",
-                    "Retours à Onisep"
-                )
-                csv.appendHeaders(headers)
-                val codesFilieres = mutableSetOf<String>()
-                for (line in lines) {
-                    val nextLine = mutableListOf<String>()
-                    codesFilieres.add(line["code filiere"].orEmpty())
-                    for (header in headers) {
-                        nextLine.add(line[header].orEmpty())
-                    }
-                    csv.append(nextLine)
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumes.csv").use { csv ->
+            val headers = listOf(
+                "code filiere",
+                "intitulé web",
+                "code type formation",
+                "intitule type formation,",
+                "url onisep",
+                "URL corrections",
+                "url psup",
+                "resume type formation",
+                "resume filiere",
+                "Liens supplémentaires",
+                "Retours à Onisep"
+            )
+            csv.appendHeaders(headers)
+            val codesFilieres = mutableSetOf<String>()
+            for (line in lines) {
+                val nextLine = mutableListOf<String>()
+                codesFilieres.add(line["code filiere"].orEmpty())
+                for (header in headers) {
+                    nextLine.add(line[header].orEmpty())
                 }
-                val las = getLasToGenericIdMapping().keys
-                val missingCodesExceptLas = getFormationsMpsIds().filter { it !in codesFilieres && it !in las }
+                csv.append(nextLine)
+            }
+            val las = getLasToGenericIdMapping().keys
+            val missingCodesExceptLas = getFormationsMpsIds().filter { it !in codesFilieres && it !in las }
 
-                val labels = getLabels()
-                val liens = getLiens()
-                for (code in missingCodesExceptLas) {
-                    val liensOnisep =
-                        liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
-                            .joinToString("\n")
-                    val liensPsup =
-                        liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
-                            .joinToString("\n")
-                    val autresLiens =
-                        liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
-                            .distinct().joinToString("\n")
-                    val nextLine = listOf(
-                        code,
-                        labels[code].orEmpty(),
-                        "",
-                        "",
-                        liensOnisep,
-                        "",//url corrections
-                        liensPsup,//url psup
-                        "",//resume type formation
-                        "",//resume filiere
-                        autresLiens,
-                        ""
-                    )
-                    csv.append(nextLine)
-                }
-                val nextLineLas = listOf(
-                    gFlCodToMpsId(LAS_CONSTANT),
-                    LABEL_ARTICLE_PAS_LAS,
+            val labels = getLabels()
+            val liens = getLiens()
+            for (code in missingCodesExceptLas) {
+                val liensOnisep =
+                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
+                        .joinToString("\n")
+                val liensPsup =
+                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
+                        .joinToString("\n")
+                val autresLiens =
+                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
+                        .distinct().joinToString("\n")
+                val nextLine = listOf(
+                    code,
+                    labels[code].orEmpty(),
                     "",
                     "",
-                    URL_ARTICLE_PAS_LAS,
+                    liensOnisep,
                     "",//url corrections
-                    CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
+                    liensPsup,//url psup
                     "",//resume type formation
                     "",//resume filiere
-                    "",
+                    autresLiens,
                     ""
                 )
-                csv.append(nextLineLas)
+                csv.append(nextLine)
+            }
+            val nextLineLas = listOf(
+                gFlCodToMpsId(LAS_CONSTANT),
+                LABEL_ARTICLE_PAS_LAS,
+                "",
+                "",
+                URL_ARTICLE_PAS_LAS,
+                "",//url corrections
+                CARTE_PARCOURSUP_PREFIX_URI + listOf("las", "accès", "santé").joinToString("%20"),
+                "",//resume type formation
+                "",//resume filiere
+                "",
+                ""
+            )
+            csv.append(nextLineLas)
+        }
+
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "resumesManquants.csv").use { csv ->
+            val headers = listOf("code filiere")
+            csv.appendHeaders(headers)
+            val codesFilieres = mutableSetOf<String>()
+            codesFilieres.addAll(lines.map { it["code filiere"].orEmpty() })
+            val las = getLasToGenericIdMapping().keys
+            val missingCodesExceptLas = getFormationsMpsIds().filter { it !in codesFilieres && it !in las }
+
+            val labels = getLabels()
+            val liens = getLiens()
+            for (code in missingCodesExceptLas) {
+                val liensOnisep =
+                    liens[code].orEmpty().filter { it.uri.contains("avenirs") }.map { it.uri }.distinct()
+                        .joinToString("\n")
+                val liensPsup =
+                    liens[code].orEmpty().filter { it.uri.contains("parcoursup") }.map { it.uri }.distinct()
+                        .joinToString("\n")
+                val autresLiens =
+                    liens[code].orEmpty().filter { !it.uri.contains("avenirs") && !it.uri.contains("parcoursup") }
+                        .distinct().joinToString("\n")
+                val nextLine = listOf(
+                    code,
+                    labels[code].orEmpty(),
+                    "",
+                    "",
+                    liensOnisep,
+                    "",//url corrections
+                    liensPsup,//url psup
+                    "",//resume type formation
+                    "",//resume filiere
+                    autresLiens,
+                    ""
+                )
+                csv.append(nextLine)
             }
         }
     }
