@@ -16,12 +16,8 @@ class VilleVoeuxEntity {
     @Column(name = "id_ville", nullable = false)
     lateinit var idVille: String
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "voeux_10km", nullable = true, columnDefinition = "varchar[]")
-    var voeuxMoinsDe10km: List<String>? = null
-
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "voeux_30km", nullable = true, columnDefinition = "varchar[]")
-    var voeuxMoinsDe30km: List<String>? = null
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "distances_voeux_km", nullable = false, columnDefinition = "jsonb")
+    var distancesVoeuxKm: Map<String,Int> = HashMap()
 
 }

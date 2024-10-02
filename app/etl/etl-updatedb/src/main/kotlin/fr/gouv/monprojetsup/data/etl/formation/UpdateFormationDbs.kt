@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.formation
 
+import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
@@ -180,19 +181,14 @@ class UpdateFormationDbs(
                 letter = newLetter
             }
             val distances = voeux.map { voeu ->
-                Pair(voeu.id, geodeticDistance(voeu.coords(), city.coords))
+                voeu.id to geodeticDistance(voeu.coords(), city.coords)
             }
-            val voeuxVille10km = distances.filter {  it.second <= 10 }.map { it.first }.toList()
-            val voeuxVille30km = distances.filter { it.second <= 30 }.map { it.first }.toList()
-            entities.add(VilleVoeuxEntity().apply {
-                idVille = city.nom
-                voeuxMoinsDe10km = voeuxVille10km
-                voeuxMoinsDe30km = voeuxVille30km
-            })
+                .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
+                .toMap()
+
             entities.add(VilleVoeuxEntity().apply {
                 idVille = city.codeInsee
-                voeuxMoinsDe10km = voeuxVille10km
-                voeuxMoinsDe30km = voeuxVille30km
+                distancesVoeuxKm = distances
             })
         }
         villesVoeuxDb.deleteAll()
