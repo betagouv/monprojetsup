@@ -12,11 +12,15 @@ import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.tools.GeodeticDistance
+import org.hibernate.SessionFactory
+import org.hibernate.StatelessSession
+import org.hibernate.Transaction
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import java.util.logging.Logger
 import kotlin.math.roundToInt
+
 
 @Repository
 interface CriteresDb :
@@ -47,7 +51,8 @@ class UpdateFormationDbs(
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val voeuxDb: VoeuxDb,
     private val villesVoeuxDb: VillesVoeuxDb,
-    private val mpsDataPort: MpsDataPort
+    private val mpsDataPort: MpsDataPort,
+    private val sessionFactory : SessionFactory
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
@@ -168,19 +173,26 @@ class UpdateFormationDbs(
     }
 
     private fun updateVillesAndFormationsDb() {
-        val cities = mpsDataPort.getCities().sortedBy { it.nom }
+        val cities = mpsDataPort.getCities()
+            .sortedBy { it.nom }
+            .filter { c -> c.nom == c.codeInsee }
 
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
-        val entities = ArrayList<VilleVoeuxEntity>()
         var letter = '_'
+
         villesVoeuxDb.deleteAll()
+
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+        val hql = "DELETE FROM ${VilleVoeuxEntity::class.simpleName}"
+        val query = statelessSession.createMutationQuery(hql)
+        query.executeUpdate()
+
+
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
-                logger.info("Enregistrement des ${entities.size} villes commençant par ${letter}")
-                villesVoeuxDb.saveAll(entities)
-                entities.clear()
                 logger.info("Calcul des distances pour les villes commençant par ${newLetter}")
                 letter = newLetter
             }
@@ -190,14 +202,15 @@ class UpdateFormationDbs(
                 .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
                 .toMap()
 
-            entities.add(VilleVoeuxEntity().apply {
-                idVille = city.codeInsee
+            val entity = VilleVoeuxEntity().apply {
+                idVille = city.nom
                 distancesVoeuxKm = distances
-            })
+            }
+            statelessSession.insert(entity)
         }
-        logger.info("Enregistrement des ${entities.size} villes commençant par ${letter}")
-        villesVoeuxDb.saveAll(entities)
-        entities.clear()
+
+        transaction.commit()
+        statelessSession.close()
 
     }
 

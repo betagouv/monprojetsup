@@ -1,7 +1,13 @@
 package fr.gouv.monprojetsup.data.etl.suggestions
 
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.suggestions.entity.*
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
+import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
+import org.hibernate.StatelessSession
+import org.hibernate.Transaction
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -35,7 +41,8 @@ class UpdateSuggestionsDbs(
     private val matieresPort: SuggestionsMatieresDb,
     private val labelsPort: SuggestionsLabelsDb,
     private val edgesPort: SuggestionsEdgesDb,
-    private val mpsDataPort: MpsDataPort
+    private val mpsDataPort: MpsDataPort,
+    private val sessionFactory: org.hibernate.SessionFactory
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateSuggestionsDbs::class.java.simpleName)
@@ -79,22 +86,44 @@ class UpdateSuggestionsDbs(
     }
 
     internal fun updateCandidatsDb() {
-        val candidats = mpsDataPort.getVoeuxParCandidat();
+        val candidats = mpsDataPort.getVoeuxParCandidat()
         candidatsPort.deleteAll()
         candidatsPort.saveAll(candidats.map { SuggestionsCandidatEntity(it) })
     }
 
 
     internal fun updateVillesDb() {
-        val cities = mpsDataPort.getCities()
-        villesPort.deleteAll()
-        villesPort.saveAll(cities.flatMap {  SuggestionsVilleEntity.getEntities(it) }.toList())
+
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+        val hql = "DELETE FROM ${SuggestionsVilleEntity::class.simpleName}"
+        val query = statelessSession.createMutationQuery(hql)
+        query.executeUpdate()
+
+        mpsDataPort.getCities()
+            .flatMap {  SuggestionsVilleEntity.getEntities(it) }
+            .forEach(statelessSession::insert)
+
+        transaction.commit()
+        statelessSession.close()
+
     }
 
     internal fun updateEdgesDb() {
-        val edges = mpsDataPort.getEdges()
-        edgesPort.deleteAll()
-        edgesPort.saveAll(edges.map { SuggestionsEdgeEntity(it.first, it.second, it.third) })
+
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+        val hql = "DELETE FROM ${SuggestionsEdgeEntity::class.simpleName}"
+        val query = statelessSession.createMutationQuery(hql)
+        query.executeUpdate()
+
+        mpsDataPort.getEdges()
+            .map { SuggestionsEdgeEntity(it.first, it.second, it.third) }
+            .forEach(statelessSession::insert)
+
+        transaction.commit()
+        statelessSession.close()
+
     }
 
 
