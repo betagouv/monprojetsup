@@ -25,7 +25,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
     inner class RecupererFrequencesCumuleesParBacs {
         @Test
         @Sql("classpath:moyenne_generale_admis.sql")
-        fun `Doit retourner les fréquences cumulées pour tous les baccalaureats`() {
+        fun `Doit retourner les fréquences cumulées pour tous les baccalaureats sauf NC`() {
             // When
             val result = moyenneGeneraleAdmisBDDRepository.recupererFrequencesCumuleesParBacs("2024")
 
@@ -74,49 +74,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
                             754,
                             754,
                             754,
-                        ),
-                    baccalaureatNC to
-                        listOf(
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            2,
-                            2,
-                            3,
-                            9,
-                            14,
-                            23,
-                            41,
-                            65,
-                            98,
-                            164,
-                            252,
-                            366,
-                            478,
-                            587,
-                            670,
-                            718,
-                            758,
-                            785,
-                            796,
-                            805,
-                            807,
-                            807,
-                            807,
-                            807,
                         ),
                     baccalaureatPro to
                         listOf(
@@ -311,7 +268,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
     inner class RecupererFrequencesCumuleesDeTousLesBacsParIdFormation {
         @Test
         @Sql("classpath:moyenne_generale_admis.sql")
-        fun `Doit retourner les fréquences cumulées pour tous les baccalaureats`() {
+        fun `Doit retourner les fréquences cumulées pour tous les baccalaureats sauf NC`() {
             // Given
             val idFormation = "fl0001"
 
@@ -322,7 +279,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
             val attendu =
                 mapOf(
                     baccalaureatGeneral to fl0001Generale2024,
-                    baccalaureatNC to fl0001NC2024,
                     baccalaureatPro to fl0001P2024,
                     baccalaureatST2S to fl0001ST2S2024,
                     baccalaureatSTAV to fl0001STAV2024,
@@ -363,7 +319,7 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
     inner class RecupererFrequencesCumuleesDeToutLesBacsPourPlusieursFormations {
         @Test
         @Sql("classpath:moyenne_generale_admis.sql")
-        fun `Doit retourner les fréquences cumulées de tous les baccalaureats pour toutes les formations reconnues`() {
+        fun `Doit retourner les fréquences cumulées de tous les baccalaureats sauf NC pour toutes les formations reconnues`() {
             // Given
             val idFormation = listOf("fl0001", "fl0003", "fl0002")
 
@@ -381,7 +337,6 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
                     "fl0003" to emptyMap(),
                     "fl0002" to
                         mapOf(
-                            baccalaureatNC to fl0002NC2023,
                             baccalaureatGeneral to fl0002General2023,
                             baccalaureatSTMG to fl0002STMG2023,
                             baccalaureatPro to fl0002P2023,
