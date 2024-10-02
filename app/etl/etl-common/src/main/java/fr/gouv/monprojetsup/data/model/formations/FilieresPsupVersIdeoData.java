@@ -43,8 +43,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysIEP.isEmpty()) {
             throw new IllegalStateException("Pas d'IEP dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour science Po: " + String.join(" ; ", ideoKeysIEP));
         }
 
 
@@ -55,8 +53,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysEcoleIngenieur.isEmpty()) {
             throw new IllegalStateException("Pas d'école d'ingénieur dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour écoles d'ingénieur: " + String.join(" ; ", ideoKeysEcoleIngenieur));
         }
 
 
@@ -67,8 +63,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysEcoleCommerce.isEmpty()) {
             throw new IllegalStateException("Pas d'école de commerce dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour écoles de commerce: " + String.join(" ; ", ideoKeysEcoleCommerce));
         }
 
         val ideoKeysEcoleArchi = formationsIdeo.values().stream()
@@ -78,8 +72,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysEcoleArchi.isEmpty()) {
             throw new IllegalStateException("Pas d'école d'architecture dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour écoles de architecture: " + String.join(" ; ", ideoKeysEcoleArchi));
         }
 
         val ideoKeysEcoleArt = formationsIdeo.values().stream()
@@ -89,8 +81,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysEcoleArt.isEmpty()) {
             throw new IllegalStateException("Pas d'école d'art dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour écoles d'art: " + String.join(" ; ", ideoKeysEcoleArt));
         }
 
         val ideoKeysConservationRestauration = formationsIdeo.values().stream()
@@ -100,8 +90,6 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysConservationRestauration.isEmpty()) {
             throw new IllegalStateException("Pas de formations de conservation ou restauration dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour formations de conservation ou restauration: " + String.join(" ; ", ideoKeysConservationRestauration));
         }
 
         val ideoKeysDMA = formationsIdeo.values().stream()
@@ -111,13 +99,11 @@ public record FilieresPsupVersIdeoData(
                 .toList();
         if(ideoKeysDMA.isEmpty()) {
             throw new IllegalStateException("Pas de DMA dans les formations Ideo du Sup");
-        } else {
-            logger.info("Codes IDEO pour les DMA: " + String.join(" ; ", ideoKeysDMA));
         }
-
-        val result =  new ArrayList<>( lines.psupToIdeo2().stream().map(line ->
+        
+        return new ArrayList<>( lines.psupToIdeo2().stream().map(line ->
                 {
-                    ArrayList<String> ideoFormationsIds =
+                    ArrayList<String> ideoFormationsIds1 =
                             new ArrayList<>(
                                     Arrays.stream(line.IDS_IDEO2()
                                                     .split(";"))
@@ -127,15 +113,15 @@ public record FilieresPsupVersIdeoData(
                                             .sorted()
                                             .toList());
 
-                    if(line.isIEP()) ideoFormationsIds.addAll(ideoKeysIEP);
-                    if(line.isEcoleIngenieur()) ideoFormationsIds.addAll(ideoKeysEcoleIngenieur);
-                    if(line.isEcoleCommerce()) ideoFormationsIds.addAll(ideoKeysEcoleCommerce);
-                    if(line.isEcoleArchitecture()) ideoFormationsIds.addAll(ideoKeysEcoleArchi);
-                    if(line.isEcoleArt()) ideoFormationsIds.addAll(ideoKeysEcoleArt);
-                    if(line.isEcoleconservationRestauration()) ideoFormationsIds.addAll(ideoKeysConservationRestauration);
-                    if(line.isDMA()) ideoFormationsIds.addAll(ideoKeysDMA);
+                    if(line.isIEP()) ideoFormationsIds1.addAll(ideoKeysIEP);
+                    if(line.isEcoleIngenieur()) ideoFormationsIds1.addAll(ideoKeysEcoleIngenieur);
+                    if(line.isEcoleCommerce()) ideoFormationsIds1.addAll(ideoKeysEcoleCommerce);
+                    if(line.isEcoleArchitecture()) ideoFormationsIds1.addAll(ideoKeysEcoleArchi);
+                    if(line.isEcoleArt()) ideoFormationsIds1.addAll(ideoKeysEcoleArt);
+                    if(line.isEcoleconservationRestauration()) ideoFormationsIds1.addAll(ideoKeysConservationRestauration);
+                    if(line.isDMA()) ideoFormationsIds1.addAll(ideoKeysDMA);
 
-                    val libellesOuClesSousdomainesWeb = majorityItems(ideoFormationsIds.stream()
+                    val libellesOuClesSousdomainesWeb1 = majorityItems(ideoFormationsIds1.stream()
                             .map(formationsIdeo::get)
                             .filter(Objects::nonNull)
                             .map(FormationIdeoDuSup::libellesOuClesSousdomainesWeb)
@@ -143,7 +129,7 @@ public record FilieresPsupVersIdeoData(
                             .toList()
                     );
 
-                    val  ideoMetiersIds = ideoFormationsIds.stream()
+                    val ideoMetiersIds1 = ideoFormationsIds1.stream()
                             .map(formationsIdeo::get)
                             .filter(Objects::nonNull)
                             .map(FormationIdeoDuSup::metiers)
@@ -157,26 +143,12 @@ public record FilieresPsupVersIdeoData(
                             line.G_FR_COD(),
                             line.G_FR_LIB(),
                             line.G_FL_LIB(),
-                            ideoFormationsIds.stream().sorted().collect(toCollection(ArrayList::new)),
-                            new ArrayList<>(ideoMetiersIds),
-                            new ArrayList<>(libellesOuClesSousdomainesWeb)
+                            ideoFormationsIds1.stream().sorted().collect(toCollection(ArrayList::new)),
+                            new ArrayList<>(ideoMetiersIds1),
+                            new ArrayList<>(libellesOuClesSousdomainesWeb1)
                     );
                 }
         ).toList());
-
-        /*
-        //just to be sure
-        result.forEach(
-                fil -> fil.ideoFormationsIds().stream()
-                        .map(formationsIdeo::get)
-                        .filter(Objects::nonNull)
-                        .forEach( f -> {
-                            fil.ideoMetiersIds().addAll(f.metiers());
-                            fil.domainesWeb().addAll(f.domainesWeb());
-                        })
-        );*/
-
-        return result;
 
     }
 

@@ -34,7 +34,7 @@ public record DescriptifsFormationsMetiers(
                 .map(fl -> fl + "x").collect(Collectors.joining("%20"));
     }
 
-    
+
     public void injectLas(Map<String, String> lasCorrespondance) {
         lasCorrespondance.forEach((lasKey,genKey) -> keyToDescriptifs.computeIfAbsent(
                 lasKey,
