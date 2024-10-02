@@ -45,7 +45,6 @@ interface VillesVoeuxDb : JpaRepository<VilleVoeuxEntity, String>
 class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
     private val formationsdb: FormationDb,
-    private val joinFormationsMetiersdb: JoinFormationMetierDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val voeuxDb: VoeuxDb,
     private val mpsDataPort: MpsDataPort,
