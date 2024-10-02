@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.metier
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -14,9 +15,8 @@ interface MetiersDb :
 
 @Component
 class UpdateMetierDbs(
-    private val metiersDb: MetiersDb,
-    private val mpsDataPort : MpsDataPort,
-    private val batchUpdate : BatchUpdate
+    private val mpsDataPort: MpsDataPort,
+    private val batchUpdate: BatchUpdate
 ) {
 
     fun update() {
@@ -54,6 +54,9 @@ class UpdateMetierDbs(
                     }
                     entity
                 }
+        batchUpdate.clearEntities(
+            FormationMetierEntity::class.simpleName!!
+        )
         batchUpdate.setEntities(
             MetierEntity::class.simpleName!!,
             entities
@@ -62,7 +65,7 @@ class UpdateMetierDbs(
 
 
     fun clearAll() {
-        metiersDb.deleteAll()
+        batchUpdate.clearEntities(MetierEntity::class.simpleName!!)
     }
 
 }
