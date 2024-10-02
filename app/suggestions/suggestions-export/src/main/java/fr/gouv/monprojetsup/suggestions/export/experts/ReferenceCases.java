@@ -304,11 +304,13 @@ public record ReferenceCases(
 
 
     public ReferenceCases getSuggestionsAndExplanations(Integer restrictToIndex, Map<String, String> labels) {
-        AtomicInteger i = new AtomicInteger(1);
+        AtomicInteger i = new AtomicInteger(0);
 
         val results = new ReferenceCases();
+        val now = System.currentTimeMillis();
         val list = cases
                 .stream()
+                .parallel()
                 .map(refCase -> {
                     try {
                         String name = refCase.name();
@@ -316,8 +318,8 @@ public record ReferenceCases(
                             i.incrementAndGet();
                             return null;
                         }
-                        String nameCase = "case " + (i.getAndIncrement());
-                        name  = (name == null) ? nameCase : nameCase + name.substring(0, min(20,name.length()));
+                        String nameCase = "case " + (i.incrementAndGet());
+                        name = (name == null) ? nameCase : nameCase + name.substring(0, min(20, name.length()));
                         LOGGER.info("getting suggestion and explanations for " + name);
                         return getSuggestionsAndExplanations(refCase, labels);
                     } catch (IOException | InterruptedException e) {
@@ -329,9 +331,13 @@ public record ReferenceCases(
         results.cases.addAll(
                 list
         );
+        val elapsedtimeSeconds = (System.currentTimeMillis() - now) / 1000.0;
+        val timePerProfile = elapsedtimeSeconds / i.get();
+        LOGGER.info("time per profile: " + timePerProfile + " s");
         return results;
     }
 
+    private static final HttpClient client = HttpClient.newHttpClient();
 
     private static synchronized String post(String url, Object obj) throws IOException, InterruptedException {
         String requestBody = new Gson().toJson(obj);
@@ -340,9 +346,8 @@ public record ReferenceCases(
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
                 .build();
-        HttpResponse<String> response =
-                HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != 200) {
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
             throw new RuntimeException("Error: " + response.statusCode() + " " + response.body());
         }
         return response.body();

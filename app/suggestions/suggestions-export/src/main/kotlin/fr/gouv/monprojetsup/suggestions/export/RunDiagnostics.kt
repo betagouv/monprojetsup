@@ -37,6 +37,7 @@ class RunDiagnostics
 class JpaConfig
 
 @Component
+@Profile("default")
 class DefaultExportRunner(
     val diagnoseSuggestionsData: AuditSuggestionsData
 ) : CommandLineRunner {
@@ -60,11 +61,7 @@ class Evaluate(val eval : SuggestionsEvaluator) : CommandLineRunner
 class GenerateSuggestions(val gen : SuggestionsGenerator) : CommandLineRunner
 {
     override fun run(vararg args: String?) {
-        var filename = SuggestionsGenerator.PROFILS_EXPERTS_MPS_PATH;
-        if(args.isNotEmpty() && args[0] != null) {
-            filename = args[0]!!
-        }
-        gen.generate(filename)
+        gen.generate()
     }
 
 }
