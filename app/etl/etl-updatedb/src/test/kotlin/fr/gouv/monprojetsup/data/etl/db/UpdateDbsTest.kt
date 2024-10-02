@@ -117,10 +117,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Test
         fun `Doit réussir à mettre à jour les liens formations métiers`() {
             assertDoesNotThrow { update() }
-
         }
-
-
     }
 
     @Nested
