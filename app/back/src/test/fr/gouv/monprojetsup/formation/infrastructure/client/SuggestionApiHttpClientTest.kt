@@ -11,6 +11,8 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AffiniteSpecialite
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers.TypeBaccalaureat
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
+import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -102,7 +104,7 @@ class SuggestionApiHttpClientTest {
     @Nested
     inner class RecupererLesSuggestions {
         @Test
-        fun `doit retourner les AffinitesPourProfil avec les formations triées par affinitées`() {
+        fun `doit retourner les AffinitesPourProfil avec les formations sans les trier par affinitées`() {
             // Given
             val url = "http://localhost:8080/suggestions"
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -192,6 +194,48 @@ class SuggestionApiHttpClientTest {
             val result = suggestionApiHttpClient.recupererLesSuggestions(unProfil)
 
             // Then
+            val attendu =
+                SuggestionsPourUnProfil(
+                    formations =
+                        listOf(
+                            FormationAvecSonAffinite(idFormation = "fl2009", tauxAffinite = 0.7486587f),
+                            FormationAvecSonAffinite(idFormation = "fr22", tauxAffinite = 0.7782054f),
+                            FormationAvecSonAffinite(idFormation = "fl830", tauxAffinite = 0.3785463f),
+                            FormationAvecSonAffinite(idFormation = "fl2016", tauxAffinite = 0.7217561f),
+                            FormationAvecSonAffinite(idFormation = "fl2096", tauxAffinite = 0.49477f),
+                            FormationAvecSonAffinite(idFormation = "fl877", tauxAffinite = 0.0f),
+                            FormationAvecSonAffinite(idFormation = "fl2051", tauxAffinite = 0.4817011f),
+                            FormationAvecSonAffinite(idFormation = "fl2089", tauxAffinite = 0.4567504f),
+                            FormationAvecSonAffinite(idFormation = "fl2060", tauxAffinite = 0.3869467f),
+                            FormationAvecSonAffinite(idFormation = "fl680002", tauxAffinite = 0.9f),
+                        ),
+                    metiersTriesParAffinites =
+                        listOf(
+                            "MET_611",
+                            "MET_610",
+                            "MET_613",
+                            "MET_628",
+                            "MET_192",
+                            "MET_104",
+                            "MET_984",
+                            "MET_7772",
+                            "MET_409",
+                            "MET_1164",
+                            "MET_1166",
+                            "MET_1165",
+                            "MET_1168",
+                            "MET_1167",
+                            "MET_1169",
+                            "MET_262",
+                            "MET_194",
+                            "MET_178",
+                            "MET_655",
+                            "MET_654",
+                            "MET_420",
+                            "MET_630",
+                        ),
+                )
+            assertThat(result).isEqualTo(attendu)
             assertThat(result.formations).isNotEmpty
             assertThat(result.metiersTriesParAffinites).isNotEmpty
             assertThat(result.metiersTriesParAffinites).contains("MET_611")
