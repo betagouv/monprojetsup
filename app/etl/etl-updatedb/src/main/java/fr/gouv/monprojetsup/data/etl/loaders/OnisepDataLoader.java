@@ -206,7 +206,7 @@ public class OnisepDataLoader {
             String filename,
             String heritierHeader,
             String legataireHeader,
-            Set<String> formations,
+            Set<String> knownIds,
             Map<String, Set<String>> oldIdeoToNewIdeo
     ) {
         val requiredHeaders = List.of(
@@ -220,6 +220,10 @@ public class OnisepDataLoader {
         );
 
         Map<String, Set<String>> result = new HashMap<>();
+
+        Set<String> allIds = new HashSet<>(knownIds);
+        allIds.addAll(oldIdeoToNewIdeo.values().stream().flatMap(Set::stream).collect(Collectors.toSet()));
+
         lines.forEach(line -> {
             //l'existence des headers est garantie
             @NotNull String oldLegataire = line.get(legataireHeader);
@@ -230,7 +234,7 @@ public class OnisepDataLoader {
                 legataires = List.of(oldLegataire);
             }
             legataires.forEach(legataire -> {
-                if (formations.contains(legataire)) {
+                if (allIds.contains(legataire)) {
                     //l'existence des headers est garantie
                     @NotNull String oldHeritier = line.get(heritierHeader);
                     final List<String> heritiers;
@@ -240,7 +244,7 @@ public class OnisepDataLoader {
                         heritiers = List.of(oldHeritier);
                     }
                     heritiers.forEach(heritier -> {
-                        if(formations.contains(heritier)) {
+                        if(knownIds.contains(heritier)) {
                             result.computeIfAbsent(legataire, k -> new HashSet<>()).add(heritier);
                         } else {
                             LOGGER.warning("loadHeritageCsv: héritier inconnu " + heritier);
@@ -579,6 +583,9 @@ public class OnisepDataLoader {
         csv.forEach(line -> {
             if(line.size() != 2) {
                 throw new RuntimeException("Invalid line " + line);
+            }
+            if(!line.containsKey(OLD_TO_NEW_IDEO_OLD_IDEO_HEADER) || !line.containsKey(OLD_TO_NEW_IDEO_NEW_IDEO_HEADER)) {
+                throw new RuntimeException("Missing header " + OLD_TO_NEW_IDEO_OLD_IDEO_HEADER + " or " + OLD_TO_NEW_IDEO_NEW_IDEO_HEADER);
             }
             result.computeIfAbsent(line.get(OLD_TO_NEW_IDEO_OLD_IDEO_HEADER), k -> new HashSet<>()).add(line.get(OLD_TO_NEW_IDEO_NEW_IDEO_HEADER));
         });
