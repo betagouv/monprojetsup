@@ -17,7 +17,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -54,6 +53,7 @@ public class AlgoSuggestions {
         p75Capacity = data.p75Capacity();
     }
 
+    /** all accesses to data after init are cached for perf reasons */
     private final SuggestionsData data;
 
     /**
@@ -167,6 +167,7 @@ public class AlgoSuggestions {
 
         //suppression des formations hors référentiel MPS
         Set<String> mpsFormationsIds = new HashSet<>(getFormationIds());
+
         Set<String> toErase = edgesKeys.keys().stream().filter(
                 s -> isFiliere(s) && !mpsFormationsIds.contains(s)
         ).collect(Collectors.toSet());
@@ -175,7 +176,7 @@ public class AlgoSuggestions {
 
         LOGGER.info("Restricting graph to the prestar of recos");
         Set<String> before = new HashSet<>(edgesKeys.nodes());
-        Set<String> recoNodes = edgesKeys.nodes().stream().filter(Constants::isFiliere).collect(Collectors.toSet());
+        Set<String> recoNodes = edgesKeys.nodes().stream().filter(mpsFormationsIds::contains).collect(Collectors.toSet());
         Set<String> useful = edgesKeys.preStar(recoNodes);
         edgesKeys.retainAll(useful);
         Set<String> after = new HashSet<>(edgesKeys.nodes());
@@ -235,10 +236,6 @@ public class AlgoSuggestions {
                 .toList();
     }
 
-    @Cacheable("formations")
-    private List<String> getFormationIds() {
-        return data.getFormationIds();
-    }
 
 
     /**
@@ -475,4 +472,11 @@ public class AlgoSuggestions {
     public Collection<String> getAllCandidatesMetiers(String key) {
         return candidatsMetiers.computeIfAbsent(key, z -> data.getAllCandidatesMetiers(key));
     }
+
+
+    private ConcurrentHashMap<String, List<String>> formationIds = new ConcurrentHashMap<>();
+    private List<String> getFormationIds() {
+        return formationIds.computeIfAbsent( "", z->data.getFormationIds());
+    }
+
 }

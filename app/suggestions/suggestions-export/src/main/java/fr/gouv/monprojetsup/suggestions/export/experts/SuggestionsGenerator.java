@@ -9,6 +9,7 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -34,9 +35,12 @@ public class SuggestionsGenerator {
 
     private static final boolean ONLY_FORMATIONS = true;
 
-    public static final String PROFILS_EXPERTS_MPS_PATH = "profilsExperts.json";
+    @Value("${profils.experts.mps.path}")
+    private String profilsExpertPath = "profilsExperts.json";
 
-    public void generate(String filename) throws IOException {
+
+
+    public void generate() throws IOException {
 
         //we want the server in debug mode, with full explanations
         useRemoteUrl(false);
@@ -45,14 +49,13 @@ public class SuggestionsGenerator {
         List<Pair<String, ProfileDTO>> profiles;
         try {
             profiles = Serialisation.fromJsonFile(
-                    filename,
+                    profilsExpertPath,
                     new TypeToken<List<ImmutablePair<String, ProfileDTO>>>(){}.getType()
             );
         } catch (IOException e) {
-            throw new RuntimeException("Impossible d'accéder au fichier '" + filename + "', veuillez fournir l'emplacement du fichier comme premier argument.");
+            throw new RuntimeException("Impossible d'accéder au fichier '" + profilsExpertPath + "'.");
         }
         ReferenceCases cases = from(profiles);
-
 
         LOGGER.info("Retrieving details and explanations...");
         ReferenceCases results = cases.getSuggestionsAndExplanations(RESTRICT_TO_INDEX, data.getDebugLabels());
