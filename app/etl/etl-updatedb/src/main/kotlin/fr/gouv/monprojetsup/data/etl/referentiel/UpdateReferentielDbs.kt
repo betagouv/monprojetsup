@@ -1,7 +1,16 @@
 package fr.gouv.monprojetsup.data.etl.referentiel
 
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.referentiel.entity.*
+import fr.gouv.monprojetsup.data.referentiel.entity.BaccalaureatEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.BaccalaureatSpecialiteEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.BaccalaureatSpecialiteId
+import fr.gouv.monprojetsup.data.referentiel.entity.DomaineEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.DomaineIdeoEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.DomainesCategorieEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.InteretCategorieEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.InteretEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.InteretSousCategorieEntity
+import fr.gouv.monprojetsup.data.referentiel.entity.SpecialiteEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -183,8 +192,8 @@ class UpdateReferentielDbs(
     }
 
     fun clearAll() {
-
-        //in this order to avoid foreign key constraint errors
+        //delete tables in reverse order of creation
+        //to avoid foreign key constraint errors
 
         specialitesBacDb.deleteAll()
         specialitesDb.deleteAll()
