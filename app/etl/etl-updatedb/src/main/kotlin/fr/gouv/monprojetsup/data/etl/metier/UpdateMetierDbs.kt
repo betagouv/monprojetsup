@@ -65,7 +65,12 @@ class UpdateMetierDbs(
 
 
     fun clearAll() {
-        batchUpdate.clearEntities(MetierEntity::class.simpleName!!)
+        batchUpdate.clearEntities(
+            FormationMetierEntity::class.simpleName!!
+        )
+        batchUpdate.clearEntities(
+            MetierEntity::class.simpleName!!
+        )
     }
 
 }
