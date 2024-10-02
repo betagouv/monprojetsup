@@ -89,8 +89,6 @@ export type Formation = {
       idBacUtilisé: string;
       nomBacUtilisé: string;
     } | null;
-    detailsCalculScore: {
-      details: string[];
-    } | null;
+    explicationsCalcul: string[] | null;
   } | null;
 };

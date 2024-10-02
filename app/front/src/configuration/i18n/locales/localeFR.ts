@@ -96,12 +96,12 @@ export const localeFR = {
       ALTERNANCE: "Formation réalisable",
       ALTERNANCE_SUITE: "en alternance",
       FORMATIONS_SIMILAIRES: "Cette formation est similaire à",
-      AUTRES: "Détails du calcul du score (mode expert)",
       INTÊRETS_ET_DOMAINES: "Tu as demandé à voir des formations correspondants à",
       ADMISSION_BAC: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière,",
       ADMISSION_BAC_SUITE: "étaient des bacheliers de série",
       MOYENNE: "Parmi les lycéennes et lycéens admis dans cette formation l'année dernière, de série",
       MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l'intervalle",
+      EXPLICATION_CALCUL: "Détails du calcul du score (mode expert)",
     },
   },
   ÉLÈVE: {
