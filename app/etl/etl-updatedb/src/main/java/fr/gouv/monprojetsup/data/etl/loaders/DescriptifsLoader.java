@@ -54,7 +54,7 @@ public class DescriptifsLoader {
 
         addMpsdescriptifs(descriptifs, sources);
 
-        descriptifs.injectGroups(psupKeyToMpsKey);
+        //descriptifs.injectGroups(psupKeyToMpsKey);
         descriptifs.injectLas(lasToGeneric);//in this order after groups
         descriptifs.keyToDescriptifs().entrySet().forEach(e -> {
             if(lasToGeneric.containsKey(e.getKey())) {

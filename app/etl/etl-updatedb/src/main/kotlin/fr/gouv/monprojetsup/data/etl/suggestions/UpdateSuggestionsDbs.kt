@@ -118,11 +118,11 @@ class UpdateSuggestionsDbs(
 
 
     fun clearAll() {
-        candidatsPort.deleteAll()
-        villesPort.deleteAll()
-        matieresPort.deleteAll()
-        labelsPort.deleteAll()
-        edgesPort.deleteAll()
+        batchUpdate.clearEntities(SuggestionsCandidatEntity::class.simpleName!!)
+        batchUpdate.clearEntities(SuggestionsVilleEntity::class.simpleName!!)
+        batchUpdate.clearEntities(SuggestionsMatiereEntity::class.simpleName!!)
+        batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
+        batchUpdate.clearEntities(SuggestionsEdgeEntity::class.simpleName!!)
     }
 
 

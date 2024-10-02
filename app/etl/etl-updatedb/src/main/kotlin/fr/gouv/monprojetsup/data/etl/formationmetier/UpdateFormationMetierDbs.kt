@@ -2,8 +2,10 @@ package fr.gouv.monprojetsup.data.etl.formationmetier
 
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntityId
+import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
@@ -49,7 +51,7 @@ class UpdateFormationMetierDbs(
     }
 
     fun clearAll() {
-        joinFormationMetiersDb.deleteAll()
+        batchUpdate.clearEntities(FormationMetierEntity::class.simpleName!!)
     }
 
 }

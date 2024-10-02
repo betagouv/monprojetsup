@@ -246,10 +246,10 @@ class UpdateFormationDbs(
     }
 
     fun clearAll() {
-        moyennesGeneralesAdmisDb.deleteAll()
-        voeuxDb.deleteAll()//nécessaire sinon violation de contrainte non null de VoeuEntity.idFormation
-        formationsdb.deleteAll()
-        criteresDb.deleteAll()
+        batchUpdate.clearEntities(MoyenneGeneraleAdmisEntity::class.simpleName!!)
+        batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
+        batchUpdate.clearEntities(FormationEntity::class.simpleName!!)
+        batchUpdate.clearEntities(CritereAnalyseCandidatureEntity::class.simpleName!!)
     }
 
 

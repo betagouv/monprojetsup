@@ -35,7 +35,8 @@ open class Runner(
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
 	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs,
-	private val mpsDataPort: MpsDataPort
+	private val mpsDataPort: MpsDataPort,
+	private val batchUpdate: BatchUpdate
 
 
 ) : CommandLineRunner {
