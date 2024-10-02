@@ -86,9 +86,19 @@ class UpdateSuggestionsDbs(
     }
 
     internal fun updateCandidatsDb() {
-        val candidats = mpsDataPort.getVoeuxParCandidat()
-        candidatsPort.deleteAll()
-        candidatsPort.saveAll(candidats.map { SuggestionsCandidatEntity(it) })
+
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+        val hql = "DELETE FROM ${SuggestionsCandidatEntity::class.simpleName}"
+        val query = statelessSession.createMutationQuery(hql)
+        query.executeUpdate()
+
+        mpsDataPort.getVoeuxParCandidat()
+            .map { SuggestionsCandidatEntity(it) }
+            .forEach(statelessSession::insert)
+
+        transaction.commit()
+        statelessSession.close()
     }
 
 
@@ -102,6 +112,8 @@ class UpdateSuggestionsDbs(
 
         mpsDataPort.getCities()
             .flatMap {  SuggestionsVilleEntity.getEntities(it) }
+            .associateBy { it.id }
+            .values
             .forEach(statelessSession::insert)
 
         transaction.commit()
