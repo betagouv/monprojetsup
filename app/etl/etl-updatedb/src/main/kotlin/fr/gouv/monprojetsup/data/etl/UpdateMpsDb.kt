@@ -30,7 +30,7 @@ open class UpdateMpsDbRunner
 @Component
 @Profile("!test")
 open class Runner(
-	private val updateFormationRepositories: UpdateFormationDbs,
+	private val updateFormationDbs: UpdateFormationDbs,
 	private val updateReferentielDbs: UpdateReferentielDbs,
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
@@ -50,7 +50,7 @@ open class Runner(
 		//clearAll in this order to avoid foreign key constraint errors
 		logger.info("Vidage des tables metiers, formations, suggestions et référentiels")
 		updateFormationsMetiersDbs.clearAll()
-		updateFormationRepositories.clearAll()
+		updateFormationDbs.clearAll()
 		updateMetierDbs.clearAll()
 		updateSuggestionsDbs.clearAll()
 		updateReferentielDbs.clearAll()
@@ -59,7 +59,7 @@ open class Runner(
 		updateReferentielDbs.updateReferentielDbs()
 
 		logger.info("Mise à jour des formations")
-		updateFormationRepositories.update()
+		updateFormationDbs.update()
 
 		logger.info("Mise à jour des métiers")
 		updateMetierDbs.update()
