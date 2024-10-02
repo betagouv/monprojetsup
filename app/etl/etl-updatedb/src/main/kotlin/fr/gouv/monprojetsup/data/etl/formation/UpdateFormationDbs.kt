@@ -178,10 +178,10 @@ class UpdateFormationDbs(
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
-                logger.info("enregistrement des villes commençant par ${letter}")
+                logger.info("Enregistrement des ${entities.size} villes commençant par ${letter}")
                 villesVoeuxDb.saveAll(entities)
                 entities.clear()
-                logger.info("traitement des villes commençant par ${newLetter}")
+                logger.info("Calcul des distances pour les villes commençant par ${newLetter}")
                 letter = newLetter
             }
             val distances = voeux.map { voeu ->
@@ -195,7 +195,7 @@ class UpdateFormationDbs(
                 distancesVoeuxKm = distances
             })
         }
-        logger.info("enregistrement des villes commençant par ${letter}")
+        logger.info("Enregistrement des ${entities.size} villes commençant par ${letter}")
         villesVoeuxDb.saveAll(entities)
         entities.clear()
 
