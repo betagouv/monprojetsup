@@ -271,31 +271,6 @@ class FormationControllerTest(
             FormationAvecSonAffinite(idFormation = "fl41", tauxAffinite = 0.9f),
             FormationAvecSonAffinite(idFormation = "fl2051", tauxAffinite = 0.4817011f),
         )
-    val formationsTriesParAffinites =
-        listOf(
-            FormationAvecSonAffinite(idFormation = "fl52", tauxAffinite = 0.983774f),
-            FormationAvecSonAffinite(idFormation = "fl41", tauxAffinite = 0.9f),
-            FormationAvecSonAffinite(idFormation = "fr83", tauxAffinite = 0.8900792f),
-            FormationAvecSonAffinite(idFormation = "fl2073", tauxAffinite = 0.8769478f),
-            FormationAvecSonAffinite(idFormation = "fl252", tauxAffinite = 0.8125898f),
-            FormationAvecSonAffinite(idFormation = "fr22", tauxAffinite = 0.7782054f),
-            FormationAvecSonAffinite(idFormation = "fl2016", tauxAffinite = 0.7217561f),
-            FormationAvecSonAffinite(idFormation = "fl2118", tauxAffinite = 0.7103791f),
-            FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
-            FormationAvecSonAffinite(idFormation = "fl2022", tauxAffinite = 0.6206682f),
-            FormationAvecSonAffinite(idFormation = "fl2010", tauxAffinite = 0.6200685f),
-            FormationAvecSonAffinite(idFormation = "fl2018", tauxAffinite = 0.5652516f),
-            FormationAvecSonAffinite(idFormation = "fl840010", tauxAffinite = 0.5644857f),
-            FormationAvecSonAffinite(idFormation = "fl240", tauxAffinite = 0.5448393f),
-            FormationAvecSonAffinite(idFormation = "fl2034", tauxAffinite = 0.538966f),
-            FormationAvecSonAffinite(idFormation = "fl2019", tauxAffinite = 0.5145695f),
-            FormationAvecSonAffinite(idFormation = "fl2051", tauxAffinite = 0.4817011f),
-            FormationAvecSonAffinite(idFormation = "fl2110", tauxAffinite = 0.3333385f),
-            FormationAvecSonAffinite(idFormation = "fl2044", tauxAffinite = 0.2842652f),
-            FormationAvecSonAffinite(idFormation = "fl2009", tauxAffinite = 0.2486587f),
-            FormationAvecSonAffinite(idFormation = "fl2090", tauxAffinite = 0.1719057f),
-            FormationAvecSonAffinite(idFormation = "fl2046", tauxAffinite = 0.1638471f),
-        )
 
     private val affinitesFormationEtMetier =
         SuggestionsPourUnProfil(
@@ -316,35 +291,35 @@ class FormationControllerTest(
                     pageSuivante = null,
                     premierePage = 1,
                     dernierePage = 1,
-                    listeCoupee = formationsTriesParAffinites,
+                    listeCoupee = formations,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = formationsTriesParAffinites, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
                 hateoas,
             )
             val idsFormations =
                 listOf(
-                    "fl52",
-                    "fl41",
-                    "fr83",
-                    "fl2073",
-                    "fl252",
+                    "fl240",
                     "fr22",
+                    "fl2110",
                     "fl2016",
+                    "fl252",
                     "fl2118",
                     "fl680003",
-                    "fl2022",
-                    "fl2010",
-                    "fl2018",
-                    "fl840010",
-                    "fl240",
-                    "fl2034",
-                    "fl2019",
-                    "fl2051",
-                    "fl2110",
-                    "fl2044",
                     "fl2009",
-                    "fl2090",
                     "fl2046",
+                    "fl2022",
+                    "fr83",
+                    "fl2044",
+                    "fl2090",
+                    "fl840010",
+                    "fl2034",
+                    "fl2073",
+                    "fl2018",
+                    "fl2010",
+                    "fl2019",
+                    "fl52",
+                    "fl41",
+                    "fl2051",
                 )
             `when`(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfil, affinitesFormationEtMetier, idsFormations),
@@ -651,7 +626,7 @@ class FormationControllerTest(
                     FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
                 )
             val hateoas = Hateoas(pageActuelle = 2, pageSuivante = 3, premierePage = 1, dernierePage = 4, listeCoupee = listeCoupee)
-            `when`(hateoasBuilder.creerHateoas(liste = formationsTriesParAffinites, numeroDePageActuelle = 2, tailleLot = 30)).thenReturn(
+            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).thenReturn(
                 hateoas,
             )
             val idsFormations = listOf("fl2016", "fl2118", "fl680003")
@@ -976,7 +951,7 @@ class FormationControllerTest(
                 )
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(affinitesFormationEtMetier)
             `when`(
-                hateoasBuilder.creerHateoas(liste = formationsTriesParAffinites, numeroDePageActuelle = 100, tailleLot = 30),
+                hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 100, tailleLot = 30),
             ).thenThrow(uneException)
 
             // When & Then
