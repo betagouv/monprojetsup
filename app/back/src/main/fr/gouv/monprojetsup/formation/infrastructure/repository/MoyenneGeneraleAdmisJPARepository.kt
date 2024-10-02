@@ -4,15 +4,20 @@ import fr.gouv.monprojetsup.formation.infrastructure.entity.MoyenneGeneraleAdmis
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MoyenneGeneraleAdmisJPARepository : JpaRepository<MoyenneGeneraleAdmisEntity, String> {
-    fun findAllByAnnee(annee: String): List<MoyenneGeneraleAdmisEntity>
-
-    fun findAllByAnneeAndIdFormation(
+    fun findAllByAnneeAndBaccalaureatIdNotIn(
         annee: String,
-        idFormation: String,
+        idsBaccalaureatsExclus: List<String>,
     ): List<MoyenneGeneraleAdmisEntity>
 
-    fun findAllByAnneeAndIdFormationIn(
+    fun findAllByAnneeAndIdFormationAndBaccalaureatIdNotIn(
+        annee: String,
+        idFormation: String,
+        idsBaccalaureatsExclus: List<String>,
+    ): List<MoyenneGeneraleAdmisEntity>
+
+    fun findAllByAnneeAndIdFormationInAndBaccalaureatIdNotIn(
         annee: String,
         idsFormations: List<String>,
+        idsBaccalaureatsExclus: List<String>,
     ): List<MoyenneGeneraleAdmisEntity>
 }

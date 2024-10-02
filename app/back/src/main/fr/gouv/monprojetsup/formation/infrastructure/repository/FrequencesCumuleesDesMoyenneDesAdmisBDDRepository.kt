@@ -10,7 +10,10 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
     val moyenneGeneraleAdmisJPARepository: MoyenneGeneraleAdmisJPARepository,
 ) : FrequencesCumuleesDesMoyenneDesAdmisRepository {
     override fun recupererFrequencesCumuleesParBacs(annee: String): Map<Baccalaureat, List<Int>> {
-        return moyenneGeneraleAdmisJPARepository.findAllByAnnee(annee = annee)
+        return moyenneGeneraleAdmisJPARepository.findAllByAnneeAndBaccalaureatIdNotIn(
+            annee = annee,
+            idsBaccalaureatsExclus = idsBaccalaureatsExclus,
+        )
             .groupBy { it.baccalaureat }.map { entry ->
                 val listeDesFrequencesCumulesPourUnBac = entry.value.map { it.frequencesCumulees }
                 val sommeDesFrequencesCumulees =
@@ -26,9 +29,10 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         idFormation: String,
         annee: String,
     ): Map<Baccalaureat, List<Int>> {
-        return moyenneGeneraleAdmisJPARepository.findAllByAnneeAndIdFormation(
+        return moyenneGeneraleAdmisJPARepository.findAllByAnneeAndIdFormationAndBaccalaureatIdNotIn(
             annee = annee,
             idFormation = idFormation,
+            idsBaccalaureatsExclus = idsBaccalaureatsExclus,
         ).associate { it.baccalaureat.toBaccalaureat() to it.frequencesCumulees }
     }
 
@@ -38,14 +42,19 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
         annee: String,
     ): Map<String, Map<Baccalaureat, List<Int>>> {
         val groupementParIdFormation =
-            moyenneGeneraleAdmisJPARepository.findAllByAnneeAndIdFormationIn(
+            moyenneGeneraleAdmisJPARepository.findAllByAnneeAndIdFormationInAndBaccalaureatIdNotIn(
                 annee = annee,
                 idsFormations = idsFormations,
+                idsBaccalaureatsExclus = idsBaccalaureatsExclus,
             ).groupBy { it.idFormation }
         return idsFormations.associateWith { idFormation ->
             groupementParIdFormation[idFormation]?.associate { entity ->
                 entity.baccalaureat.toBaccalaureat() to entity.frequencesCumulees
             } ?: emptyMap()
         }
+    }
+
+    companion object {
+        private val idsBaccalaureatsExclus = listOf("NC")
     }
 }
