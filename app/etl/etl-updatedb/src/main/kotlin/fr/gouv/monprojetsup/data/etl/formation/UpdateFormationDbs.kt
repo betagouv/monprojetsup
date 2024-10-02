@@ -174,11 +174,14 @@ class UpdateFormationDbs(
 
         val entities = ArrayList<VilleVoeuxEntity>()
         var letter = '_'
+        villesVoeuxDb.deleteAll()
         cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
                 logger.info("traitement des villes commençant par ${newLetter}")
                 letter = newLetter
+                villesVoeuxDb.saveAll(entities)
+                entities.clear()
             }
             val distances = voeux.map { voeu ->
                 voeu.id to geodeticDistance(voeu.coords(), city.coords)
@@ -191,8 +194,9 @@ class UpdateFormationDbs(
                 distancesVoeuxKm = distances
             })
         }
-        villesVoeuxDb.deleteAll()
         villesVoeuxDb.saveAll(entities)
+        entities.clear()
+
     }
 
     /**
