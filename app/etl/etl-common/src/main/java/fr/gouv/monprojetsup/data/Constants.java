@@ -51,6 +51,8 @@ public class Constants {
     private static final String FILIERE_PREFIX = "fl";//like g_fl_cod
     private static final String FORMATION_PREFIX = "ta";//like g_ta_cod
 
+    public static final int MAX_DISTANCE_VILLE_VOEU_KM = 100;
+
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
     }
