@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 class FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(
     val moyenneGeneraleAdmisJPARepository: MoyenneGeneraleAdmisJPARepository,
 ) : FrequencesCumuleesDesMoyenneDesAdmisRepository {
+    @Transactional(readOnly = true)
     override fun recupererFrequencesCumuleesParBacs(annee: String): Map<Baccalaureat, List<Int>> {
         return moyenneGeneraleAdmisJPARepository.findAllByAnneeAndBaccalaureatIdNotIn(
             annee = annee,

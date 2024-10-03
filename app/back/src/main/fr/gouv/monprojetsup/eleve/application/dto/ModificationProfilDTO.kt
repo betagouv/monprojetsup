@@ -154,7 +154,7 @@ data class ModificationProfilDTO(
         )
 
     data class CommuneDTO(
-        @Schema(description = "Code Insee de la ville", example = "75015", required = true)
+        @Schema(description = "Code Insee de la ville", example = "75115", required = true)
         @JsonProperty("codeInsee")
         val codeInsee: String,
         @Schema(description = "Dénomination de la ville", example = "Paris", required = true)

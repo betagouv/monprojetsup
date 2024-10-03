@@ -3,6 +3,8 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
@@ -15,10 +17,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
 import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -46,6 +50,9 @@ class RecupererFormationServiceTest {
 
     @Mock
     lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
+
+    @Mock
+    lateinit var recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -255,8 +262,8 @@ class RecupererFormationServiceTest {
                     TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
                     TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
                     TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
                 )
             given(
                 recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
@@ -352,6 +359,29 @@ class RecupererFormationServiceTest {
                     ),
                 ),
             )
+            val tripletsAffectationParCommunesFavorites =
+                listOf(
+                    CommuneAvecVoeuxAuxAlentours(
+                        commune = CAEN,
+                        distances =
+                            listOf(
+                                VoeuAvecDistance(
+                                    voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                    km = 0,
+                                ),
+                                VoeuAvecDistance(
+                                    voeu = TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                    km = 120,
+                                ),
+                            ),
+                    ),
+                )
+            given(
+                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                    communes = listOf(Communes.CAEN),
+                    tripletsAffectationDeLaFormation = tripletFormationFL0001,
+                ),
+            ).willReturn(tripletsAffectationParCommunesFavorites)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -402,6 +432,7 @@ class RecupererFormationServiceTest {
                             ),
                         ),
                     tripletsAffectation = tripletFormationFL0001,
+                    tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavorites,
                     tauxAffinite = 70,
                     explications = explicationsEtExemplesMetiers.first,
                     criteresAnalyseCandidature =

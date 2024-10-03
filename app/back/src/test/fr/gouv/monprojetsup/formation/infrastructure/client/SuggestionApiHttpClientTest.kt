@@ -348,7 +348,7 @@ class SuggestionApiHttpClientTest {
                         "duree": "indiff",
                         "apprentissage": "D",
                         "geo_pref": [
-                          "75015"
+                          "75115"
                         ],
                         "spe_classes": [
                           "mat1001",
@@ -605,6 +605,66 @@ class SuggestionApiHttpClientTest {
                               "T_ROME_803089798"
                             ]
                           }
+                        },
+                        {
+                          "debug": {
+                            "expl": "Pas de stats spécialités pour cette filiere"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "Pas de stats pour cette filiere"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "preférences apprentissage 1 * (1 - 1E-5) + 1E-5"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "moyenne générale 1 * (1 - 1E-1) + 1E-1"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "EDS 0.5 * (1 - 1E-1) + 1E-1"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "type de bac 0.01 * (1 - 1E-8) + 1E-8"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "durée 0 * (1 - 1E-4) + 1E-4"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "préférences géographiques 0 * (1 - 1E-4) + 1E-4"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "similarité avec autres favoris 0 * (1 - 1E-3) + 1E-3"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "proximité intérêts et favoris 0 * (1 - 1E-8) + 1E-8"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "Scores de diversité: {OFFRE_FORMATION=0.0}"
+                          }
+                        },
+                        {
+                          "debug": {
+                            "expl": "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  0 (proximité intérêts et favoris) ,  ]"
+                          }
                         }
                       ],
                       "examples": [
@@ -667,6 +727,24 @@ class SuggestionApiHttpClientTest {
                                 TypeBaccalaureat(
                                     nomBaccalaureat = "Général",
                                     pourcentage = 18,
+                                ),
+                            detailsCalculScore =
+                                listOf(
+                                    "Pas de stats spécialités pour cette filiere",
+                                    "Pas de stats pour cette filiere",
+                                    "preférences apprentissage 1 * (1 - 1E-5) + 1E-5",
+                                    "moyenne générale 1 * (1 - 1E-1) + 1E-1",
+                                    "EDS 0.5 * (1 - 1E-1) + 1E-1",
+                                    "type de bac 0.01 * (1 - 1E-8) + 1E-8",
+                                    "durée 0 * (1 - 1E-4) + 1E-4",
+                                    "préférences géographiques 0 * (1 - 1E-4) + 1E-4",
+                                    "similarité avec autres favoris 0 * (1 - 1E-3) + 1E-3",
+                                    "proximité intérêts et favoris 0 * (1 - 1E-8) + 1E-8",
+                                    "Scores de diversité: {OFFRE_FORMATION=0.0}",
+                                    "Score Total pour fl210 :5.5E-22 obtenu comme le produit de [  1 (preférences apprentissage) ,  " +
+                                        "1 (moyenne générale) ,  0.55 (EDS) ,  0.01 (type de bac) ,  0.0001 (durée) ,  " +
+                                        "0.0001 (préférences géographiques) ,  0.001 (similarité avec autres favoris) ,  " +
+                                        "0 (proximité intérêts et favoris) ,  ]",
                                 ),
                             autoEvaluationMoyenne =
                                 AutoEvaluationMoyenne(
@@ -952,7 +1030,7 @@ class SuggestionApiHttpClientTest {
                         "duree": "indiff",
                         "apprentissage": "D",
                         "geo_pref": [
-                          "75015"
+                          "75115"
                         ],
                         "spe_classes": [
                           "mat1001",

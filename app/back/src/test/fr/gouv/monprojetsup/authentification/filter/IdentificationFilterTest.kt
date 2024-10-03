@@ -87,7 +87,7 @@ class IdentificationFilterTest(
                         "alternance": "pas_interesse",
                         "communesFavorites": [
                           {
-                            "codeInsee": "75015",
+                            "codeInsee": "75115",
                             "nom": "Paris",
                             "latitude": 48.851227,
                             "longitude": 2.2885659

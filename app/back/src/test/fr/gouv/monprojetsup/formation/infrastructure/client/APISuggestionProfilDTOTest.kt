@@ -68,7 +68,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "Générale",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("75015"),
+                preferencesGeographiques = listOf("75115"),
                 specialites =
                     listOf(
                         "mat1001",
@@ -131,7 +131,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "Générale",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("75015", "13200"),
+                preferencesGeographiques = listOf("75115", "13055"),
                 specialites =
                     listOf(
                         "mat1001",
@@ -179,7 +179,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "STHR",
                 duree = "court",
                 alternance = "C",
-                preferencesGeographiques = listOf("69380", "14118"),
+                preferencesGeographiques = listOf("69123", "14118"),
                 specialites =
                     listOf(
                         "1053",
@@ -263,7 +263,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "PA",
                 duree = "",
                 alternance = "A",
-                preferencesGeographiques = listOf("69380", "75015"),
+                preferencesGeographiques = listOf("69123", "75115"),
                 specialites = listOf("1045"),
                 interets = emptyList(),
                 moyenneGenerale = null,
@@ -307,7 +307,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "",
                 duree = "indiff",
                 alternance = "D",
-                preferencesGeographiques = listOf("75015", "13200"),
+                preferencesGeographiques = listOf("75115", "13055"),
                 specialites =
                     listOf(
                         "mat1001",

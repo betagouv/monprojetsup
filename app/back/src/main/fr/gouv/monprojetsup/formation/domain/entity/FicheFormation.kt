@@ -58,6 +58,7 @@ sealed class FicheFormation(
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         override val tripletsAffectation: List<TripletAffectation>,
+        val tripletsAffectationParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
         val explications: ExplicationsSuggestionDetaillees?,

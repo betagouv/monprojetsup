@@ -11,6 +11,8 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -160,6 +162,23 @@ class FormationControllerTest(
                     TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
                     TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
                     TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                ),
+            tripletsAffectationParCommunesFavorites =
+                listOf(
+                    CommuneAvecVoeuxAuxAlentours(
+                        commune = PARIS15EME,
+                        distances =
+                            listOf(
+                                VoeuAvecDistance(
+                                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                                    km = 3,
+                                ),
+                                VoeuAvecDistance(
+                                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                                    km = 1,
+                                ),
+                            ),
+                    ),
                 ),
             metiersTriesParAffinites =
                 listOf(
@@ -447,38 +466,84 @@ class FormationControllerTest(
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta3",
                                     "nom": "Nom du ta3",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75005"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
                                   },
                                   {
                                     "id": "ta11",
                                     "nom": "Nom du ta11",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta32",
                                     "nom": "Nom du ta32",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75015"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
                                   },
                                   {
                                     "id": "ta17",
                                     "nom": "Nom du ta17",
-                                    "nomCommune": "Strasbourg",
-                                    "codeCommune": "80688"
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
                                   },
                                   {
                                     "id": "ta7",
                                     "nom": "Nom du ta7",
-                                    "nomCommune": "Marseille",
-                                    "codeCommune": "13200"
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
                                   }
                                 ],
                                 "metiers": [
@@ -491,13 +556,24 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
+                                    ],
+                                    "formations": [
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": []
+                                    "liens": [],
+                                    "formations": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -569,6 +645,9 @@ class FormationControllerTest(
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
                               }
                             },
@@ -588,6 +667,40 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "tripletAffectationAssocies": [],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [],
                                 "tauxAffinite": 17
                               },
@@ -736,38 +849,84 @@ class FormationControllerTest(
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta3",
                                     "nom": "Nom du ta3",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75005"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
                                   },
                                   {
                                     "id": "ta11",
                                     "nom": "Nom du ta11",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta32",
                                     "nom": "Nom du ta32",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75015"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
                                   },
                                   {
                                     "id": "ta17",
                                     "nom": "Nom du ta17",
-                                    "nomCommune": "Strasbourg",
-                                    "codeCommune": "80688"
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
                                   },
                                   {
                                     "id": "ta7",
                                     "nom": "Nom du ta7",
-                                    "nomCommune": "Marseille",
-                                    "codeCommune": "13200"
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
                                   }
                                 ],
                                 "metiers": [
@@ -780,13 +939,24 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
+                                    ],
+                                    "formations": [
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": []
+                                    "liens": [],
+                                    "formations": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -858,6 +1028,9 @@ class FormationControllerTest(
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
                               }
                             }
@@ -1115,38 +1288,84 @@ class FormationControllerTest(
                               {
                                 "id": "ta10",
                                 "nom": "Nom du ta10",
-                                "nomCommune": "Lyon",
-                                "codeCommune": "69380"
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
                               },
                               {
                                 "id": "ta3",
                                 "nom": "Nom du ta3",
-                                "nomCommune": "Paris",
-                                "codeCommune": "75005"
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75105"
+                                }
                               },
                               {
                                 "id": "ta11",
                                 "nom": "Nom du ta11",
-                                "nomCommune": "Lyon",
-                                "codeCommune": "69380"
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
                               },
                               {
                                 "id": "ta32",
                                 "nom": "Nom du ta32",
-                                "nomCommune": "Paris",
-                                "codeCommune": "75015"
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75115"
+                                }
                               },
                               {
                                 "id": "ta17",
                                 "nom": "Nom du ta17",
-                                "nomCommune": "Strasbourg",
-                                "codeCommune": "80688"
+                                "commune": {
+                                  "nom": "Strasbourg",
+                                  "codeInsee": "67482"
+                                }
                               },
                               {
                                 "id": "ta7",
                                 "nom": "Nom du ta7",
-                                "nomCommune": "Marseille",
-                                "codeCommune": "13200"
+                                "commune": {
+                                  "nom": "Marseille",
+                                  "codeInsee": "13055"
+                                }
+                              }
+                            ],
+                            "tripletsAffectationParCommunesFavorites": [
+                              {
+                                "commune": {
+                                  "codeInsee": "75115",
+                                  "nom": "Paris",
+                                  "latitude": 48.851227,
+                                  "longitude": 2.2885659
+                                },
+                                "voeuxAvecDistance": [
+                                  {
+                                    "tripletAffectation": {
+                                      "id": "ta3",
+                                      "nom": "Nom du ta3",
+                                      "commune": {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      }
+                                    },
+                                    "distanceKm": 3
+                                  },
+                                  {
+                                    "tripletAffectation": {
+                                      "id": "ta32",
+                                      "nom": "Nom du ta32",
+                                      "commune": {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      }
+                                    },
+                                    "distanceKm": 1
+                                  }
+                                ]
                               }
                             ],
                             "metiers": [
@@ -1159,13 +1378,24 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                   }
+                                ],
+                                "formations": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
                                 ]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": []
+                                "liens": [],
+                                "formations": []
                               }
                             ],
                             "tauxAffinite": 90
@@ -1203,7 +1433,8 @@ class FormationControllerTest(
                               "domaines": [
                                 {
                                   "id": "T_ITM_1356",
-                                  "nom": "soin aux animaux"
+                                  "nom": "soin aux animaux",
+                                  "emoji": "\uD83D\uDC2E"
                                 }
                               ]
                             },
@@ -1236,6 +1467,9 @@ class FormationControllerTest(
                                 "id": "Générale",
                                 "nom": "Série Générale"
                               }
+                            },
+                            "detailsCalculScore": {
+                              "details": []
                             }
                           }
                         }
@@ -1395,40 +1629,53 @@ class FormationControllerTest(
                               {
                                 "id": "ta10",
                                 "nom": "Nom du ta10",
-                                "nomCommune": "Lyon",
-                                "codeCommune": "69380"
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
                               },
                               {
                                 "id": "ta3",
                                 "nom": "Nom du ta3",
-                                "nomCommune": "Paris",
-                                "codeCommune": "75005"
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75105"
+                                }
                               },
                               {
                                 "id": "ta11",
                                 "nom": "Nom du ta11",
-                                "nomCommune": "Lyon",
-                                "codeCommune": "69380"
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
                               },
                               {
                                 "id": "ta32",
                                 "nom": "Nom du ta32",
-                                "nomCommune": "Paris",
-                                "codeCommune": "75015"
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75115"
+                                }
                               },
                               {
                                 "id": "ta17",
                                 "nom": "Nom du ta17",
-                                "nomCommune": "Strasbourg",
-                                "codeCommune": "80688"
+                                "commune": {
+                                  "nom": "Strasbourg",
+                                  "codeInsee": "67482"
+                                }
                               },
                               {
                                 "id": "ta7",
                                 "nom": "Nom du ta7",
-                                "nomCommune": "Marseille",
-                                "codeCommune": "13200"
+                                "commune": {
+                                  "nom": "Marseille",
+                                  "codeInsee": "13055"
+                                }
                               }
                             ],
+                            "tripletsAffectationParCommunesFavorites": [],
                             "metiers": [
                               {
                                 "id": "MET001",
@@ -1439,13 +1686,24 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                   }
+                                ],
+                                "formations": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
                                 ]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": []
+                                "liens": [],
+                                "formations": []
                               }
                             ],
                             "tauxAffinite": null
@@ -1949,38 +2207,84 @@ class FormationControllerTest(
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta3",
                                     "nom": "Nom du ta3",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75005"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
                                   },
                                   {
                                     "id": "ta11",
                                     "nom": "Nom du ta11",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta32",
                                     "nom": "Nom du ta32",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75015"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
                                   },
                                   {
                                     "id": "ta17",
                                     "nom": "Nom du ta17",
-                                    "nomCommune": "Strasbourg",
-                                    "codeCommune": "80688"
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
                                   },
                                   {
                                     "id": "ta7",
                                     "nom": "Nom du ta7",
-                                    "nomCommune": "Marseille",
-                                    "codeCommune": "13200"
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
                                   }
                                 ],
                                 "metiers": [
@@ -1993,13 +2297,24 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
+                                    ],
+                                    "formations": [
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": []
+                                    "liens": [],
+                                    "formations": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -2071,6 +2386,9 @@ class FormationControllerTest(
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
                               }
                             },
@@ -2093,38 +2411,84 @@ class FormationControllerTest(
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta3",
                                     "nom": "Nom du ta3",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75005"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
                                   },
                                   {
                                     "id": "ta11",
                                     "nom": "Nom du ta11",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta32",
                                     "nom": "Nom du ta32",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75015"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
                                   },
                                   {
                                     "id": "ta17",
                                     "nom": "Nom du ta17",
-                                    "nomCommune": "Strasbourg",
-                                    "codeCommune": "80688"
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
                                   },
                                   {
                                     "id": "ta7",
                                     "nom": "Nom du ta7",
-                                    "nomCommune": "Marseille",
-                                    "codeCommune": "13200"
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
                                   }
                                 ],
                                 "metiers": [],
@@ -2378,38 +2742,84 @@ class FormationControllerTest(
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta3",
                                     "nom": "Nom du ta3",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75005"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
                                   },
                                   {
                                     "id": "ta11",
                                     "nom": "Nom du ta11",
-                                    "nomCommune": "Lyon",
-                                    "codeCommune": "69380"
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
                                   },
                                   {
                                     "id": "ta32",
                                     "nom": "Nom du ta32",
-                                    "nomCommune": "Paris",
-                                    "codeCommune": "75015"
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
                                   },
                                   {
                                     "id": "ta17",
                                     "nom": "Nom du ta17",
-                                    "nomCommune": "Strasbourg",
-                                    "codeCommune": "80688"
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
                                   },
                                   {
                                     "id": "ta7",
                                     "nom": "Nom du ta7",
-                                    "nomCommune": "Marseille",
-                                    "codeCommune": "13200"
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
                                   }
                                 ],
                                 "metiers": [
@@ -2422,13 +2832,24 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
+                                    ],
+                                    "formations": [
+                                      {
+                                        "id": "fl1",
+                                        "nom": "CPGE MPSI"
+                                      },
+                                      {
+                                        "id": "fl7",
+                                        "nom": "BUT Informatique"
+                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": []
+                                    "liens": [],
+                                    "formations": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -2500,6 +2921,9 @@ class FormationControllerTest(
                                     "id": "Générale",
                                     "nom": "Série Générale"
                                   }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
                                 }
                               }
                             },
@@ -2519,6 +2943,40 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "tripletAffectationAssocies": [],
+                                "tripletsAffectationParCommunesFavorites": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "tripletAffectation": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [],
                                 "tauxAffinite": 17
                               },

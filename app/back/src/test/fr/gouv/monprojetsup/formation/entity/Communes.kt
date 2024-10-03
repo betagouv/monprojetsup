@@ -13,7 +13,7 @@ object Communes {
 
     val STRASBOURG =
         Commune(
-            codeInsee = "80688",
+            codeInsee = "67482",
             nom = "Strasbourg",
             longitude = 1.666667,
             latitude = 50.266666,
@@ -21,7 +21,7 @@ object Communes {
 
     val PARIS15EME =
         Commune(
-            codeInsee = "75015",
+            codeInsee = "75115",
             nom = "Paris",
             longitude = 2.2885659,
             latitude = 48.851227,
@@ -29,7 +29,7 @@ object Communes {
 
     val PARIS19EME =
         Commune(
-            codeInsee = "75019",
+            codeInsee = "75119",
             nom = "Paris",
             longitude = 2.393,
             latitude = 48.889,
@@ -37,7 +37,7 @@ object Communes {
 
     val PARIS5EME =
         Commune(
-            codeInsee = "75005",
+            codeInsee = "75105",
             nom = "Paris",
             longitude = 2.344,
             latitude = 48.846,
@@ -45,7 +45,7 @@ object Communes {
 
     val MARSEILLE =
         Commune(
-            codeInsee = "13200",
+            codeInsee = "13055",
             nom = "Marseille",
             latitude = 43.300000,
             longitude = 5.400000,
@@ -53,7 +53,7 @@ object Communes {
 
     val LYON =
         Commune(
-            codeInsee = "69380",
+            codeInsee = "69123",
             nom = "Lyon",
             latitude = 45.75,
             longitude = 4.85,
@@ -69,7 +69,7 @@ object Communes {
 
     val MONTREUIL =
         Commune(
-            codeInsee = "93100",
+            codeInsee = "93048",
             nom = "Montreuil",
             latitude = 48.861,
             longitude = 2.443,
@@ -77,7 +77,7 @@ object Communes {
 
     val NANCY =
         Commune(
-            codeInsee = "54000",
+            codeInsee = "54395",
             nom = "Nancy",
             latitude = 48.692,
             longitude = 6.184,
@@ -85,7 +85,7 @@ object Communes {
 
     val RENNES =
         Commune(
-            codeInsee = "35000",
+            codeInsee = "35238",
             nom = "Rennes",
             latitude = 48.117,
             longitude = 1.677,
