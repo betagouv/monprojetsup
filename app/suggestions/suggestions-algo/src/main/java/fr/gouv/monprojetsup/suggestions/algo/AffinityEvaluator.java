@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -539,7 +540,7 @@ public class AffinityEvaluator {
                         .filter(p -> p.size() > 1 && p.size() <= MAX_DISTANCE)
                         .toList()
                 ;
-        if (pathes.isEmpty()) return Config.NO_MATCH_SCORE;
+        if (pathes.isEmpty()) return NO_MATCH_SCORE;
 
         //noinspection DataFlowIssue non empty path cannot have first equal to null
         Map<String, Double> subscores = pathes
@@ -568,6 +569,12 @@ public class AffinityEvaluator {
                 }
             }
             expl.add(Pair.of(score, Explanation.getTagExplanationShort(pathes)));
+            pathes.stream()
+                    .filter(p -> p.size() <= 2)
+                    .map(Path::first)
+                    .filter(Objects::nonNull)
+                    .filter(fr.gouv.monprojetsup.data.Constants::isFiliere)
+                    .distinct().forEach(fl -> expl.add(Pair.of(1.0, Explanation.getSimilarityExplanation(fl, 50))));
         }
         return score;
     }
