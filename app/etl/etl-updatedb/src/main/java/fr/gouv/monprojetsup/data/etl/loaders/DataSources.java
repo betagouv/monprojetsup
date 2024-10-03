@@ -46,7 +46,7 @@ public class DataSources {
 
     /* MPS data */
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
-    public static final String DOMAINES_MPS_PATH = "mps/Domaines MPS Onisep - 2024-08-30(Liste sans doublon).csv";
+    public static final String DOMAINES_MPS_PATH = "mps/Domaines MPS Onisep.csv";
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.csv";
     public static final String PSUP_TO_IDEO_CORRESPONDANCE_PATH = "onisep_ideo_hotline/liensPSUP_ONISEP_2024_09_06_V1_HG.csv";
     public static final String PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER = "MPS_ID";
