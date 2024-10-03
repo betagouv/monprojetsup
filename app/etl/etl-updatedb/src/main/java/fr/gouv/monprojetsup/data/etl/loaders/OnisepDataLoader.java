@@ -130,7 +130,7 @@ public class OnisepDataLoader {
             });
     }
 
-    private static void injectInFormationsIdeo(
+    public static void injectInFormationsIdeo(
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
             Map<String, Set<String>> legataireToHeritier) {
         legataireToHeritier.forEach((legataireId, heritiersIds) -> {
@@ -275,7 +275,7 @@ public class OnisepDataLoader {
         );
     }
 
-    private static Map<String, Set<String>> loadIdeoHeritagesMastersLicences(
+    public static Map<String, Set<String>> loadIdeoHeritagesMastersLicences(
             DataSources sources,
             Set<String> formationsIdeoDuSup,
             Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {

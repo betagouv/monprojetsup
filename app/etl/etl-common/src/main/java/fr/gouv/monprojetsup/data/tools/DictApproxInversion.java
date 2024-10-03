@@ -35,7 +35,7 @@ public class DictApproxInversion {
                 bestLib = lib;
             }
         }
-        if(bestMatch == null || bestScore > 1 + label.length() / 5 || bestScore > 1 + bestLib.length() / 5) {
+        if(bestMatch == null || bestScore >= 4 || bestScore > 1 + label.length() / 5 || bestScore > 1 + bestLib.length() / 5) {
             return null;
         } else {
             return bestMatch;
