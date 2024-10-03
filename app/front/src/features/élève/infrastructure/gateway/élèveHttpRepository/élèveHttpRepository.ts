@@ -49,7 +49,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
         élève.formationsFavorites?.map((formationFavorite) => ({
           idFormation: formationFavorite.id,
           niveauAmbition: formationFavorite.niveauAmbition ?? 0,
-          tripletsAffectationsChoisis: formationFavorite.tripletsAffectationsChoisis ?? [],
+          voeuxChoisis: formationFavorite.voeux ?? [],
           priseDeNote: formationFavorite.commentaire ?? undefined,
         })) ?? undefined,
     };
@@ -75,7 +75,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
           niveauAmbition: [1, 2, 3].includes(formationFavorite.niveauAmbition)
             ? (formationFavorite.niveauAmbition as 1 | 2 | 3)
             : null,
-          tripletsAffectationsChoisis: formationFavorite.tripletsAffectationsChoisis,
+          voeux: formationFavorite.voeuxChoisis,
           commentaire: formationFavorite.priseDeNote ?? null,
         })) ?? null,
     };

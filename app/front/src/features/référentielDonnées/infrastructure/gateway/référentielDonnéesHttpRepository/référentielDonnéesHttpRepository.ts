@@ -2,6 +2,7 @@ import { type RécupérerRéférentielDonnéesRéponseHTTP } from "./référenti
 import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
+import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 
 export class RéférentielDonnéesHttpRepository implements RéférentielDonnéesRepository {
   private _ENDPOINT = "/api/v1/referentiel" as const;
@@ -46,7 +47,7 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         id: centreIntêret.categorieInteret.id,
         nom: centreIntêret.categorieInteret.nom,
         emoji: centreIntêret.categorieInteret.emoji,
-        sousCatégoriesCentreIntêret: this._trierTableauDObjetsParOrdreAlphabétique(
+        sousCatégoriesCentreIntêret: trierTableauDObjetsParOrdreAlphabétique(
           centreIntêret.sousCategoriesInterets,
           "nom",
         ),
@@ -55,7 +56,7 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         id: domaineProfessionnel.categorieDomaine.id,
         nom: domaineProfessionnel.categorieDomaine.nom,
         emoji: domaineProfessionnel.categorieDomaine.emoji,
-        sousCatégoriesdomainesProfessionnels: this._trierTableauDObjetsParOrdreAlphabétique(
+        sousCatégoriesdomainesProfessionnels: trierTableauDObjetsParOrdreAlphabétique(
           domaineProfessionnel.domaines,
           "nom",
         ),
@@ -64,25 +65,8 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
 
     return {
       ...référentielDonnées,
-      centresIntêrets: this._trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.centresIntêrets, "nom"),
-      domainesProfessionnels: this._trierTableauDObjetsParOrdreAlphabétique(
-        référentielDonnées.domainesProfessionnels,
-        "nom",
-      ),
+      centresIntêrets: trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.centresIntêrets, "nom"),
+      domainesProfessionnels: trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.domainesProfessionnels, "nom"),
     };
-  }
-
-  private _trierTableauDObjetsParOrdreAlphabétique<O>(tableau: O[], propriété: keyof O): O[] {
-    return [...tableau].sort((a, b) => {
-      if (a[propriété] < b[propriété]) {
-        return -1;
-      }
-
-      if (a[propriété] > b[propriété]) {
-        return 1;
-      }
-
-      return 0;
-    });
   }
 }

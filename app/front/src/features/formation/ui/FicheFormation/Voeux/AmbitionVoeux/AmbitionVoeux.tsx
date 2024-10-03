@@ -7,8 +7,8 @@ const AmbitionVoeux = ({ ambitionActuelle, formationId }: AmbitionVoeuxProps) =>
   const { ambitions, mettreAJourAmbition, key } = useAmbitionVoeux({ formationId });
 
   return (
-    <>
-      <p className="mb-0 font-medium text-[--text-label-grey]">{i18n.PAGE_FORMATION.VOEUX.AMBITIONS.LÉGENDE}</p>
+    <div>
+      <p className="mb-4 font-medium text-[--text-label-grey]">{i18n.PAGE_FORMATION.VOEUX.AMBITIONS.LÉGENDE}</p>
       <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
         {ambitions.map((ambition) => (
           <li key={ambition.niveau}>
@@ -22,7 +22,7 @@ const AmbitionVoeux = ({ ambitionActuelle, formationId }: AmbitionVoeuxProps) =>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 

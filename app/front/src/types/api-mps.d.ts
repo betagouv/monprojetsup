@@ -207,7 +207,7 @@ export interface components {
         CommuneDTO: {
             /**
              * @description Code Insee de la ville
-             * @example 75015
+             * @example 75115
              */
             codeInsee: string;
             /**
@@ -327,13 +327,13 @@ export interface components {
              */
             niveauAmbition: number;
             /**
-             * @description Les triplets d'affectation souhaités
+             * @description Les voeux (triplets d'affectation) souhaités
              * @example [
              *       "ta15974",
              *       "ta17831"
              *     ]
              */
-            tripletsAffectationsChoisis: string[];
+            voeuxChoisis: string[];
             /**
              * @description Prise de note additionnel sur le voeu
              * @example Ma note personnalisée
@@ -456,6 +456,14 @@ export interface components {
             /** Format: float */
             note: number;
         };
+        CommuneAvecSesVoeuxDTO: {
+            commune: components["schemas"]["CommuneDTO"];
+            voeuxAvecDistance: components["schemas"]["VoeuAvecDistanceDTO"][];
+        };
+        CommuneCourteDTO: {
+            nom: string;
+            codeInsee: string;
+        };
         CriteresAnalyseCandidatureDTO: {
             nom: string;
             /** Format: int32 */
@@ -494,7 +502,8 @@ export interface components {
             criteresAnalyseCandidature: components["schemas"]["CriteresAnalyseCandidatureDTO"][];
             repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
             liens: components["schemas"]["LienDTO"][];
-            tripletAffectationAssocies: components["schemas"]["TripletAffectationDTO"][];
+            voeux: components["schemas"]["VoeuAvecCommuneDTO"][];
+            communesFavoritesAvecLeursVoeux: components["schemas"]["CommuneAvecSesVoeuxDTO"][];
             metiers: components["schemas"]["MetierDTO"][];
             /** Format: int32 */
             tauxAffinite?: number;
@@ -533,16 +542,20 @@ export interface components {
             /** Format: int32 */
             nombreAdmis: number;
         };
-        TripletAffectationDTO: {
-            id: string;
-            nom: string;
-            nomCommune: string;
-            codeCommune: string;
-        };
         TypeBaccalaureatDTO: {
             baccalaureat: components["schemas"]["BaccalaureatDTO"];
             /** Format: int32 */
             pourcentage: number;
+        };
+        VoeuAvecCommuneDTO: {
+            id: string;
+            nom: string;
+            commune: components["schemas"]["CommuneCourteDTO"];
+        };
+        VoeuAvecDistanceDTO: {
+            voeu: components["schemas"]["VoeuAvecCommuneDTO"];
+            /** Format: int32 */
+            distanceKm: number;
         };
         FormationsCourtesDTO: {
             formations: components["schemas"]["FormationCourteDTO"][];

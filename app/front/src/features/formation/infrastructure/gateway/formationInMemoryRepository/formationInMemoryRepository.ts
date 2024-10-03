@@ -10,8 +10,9 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
 
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -34,8 +35,9 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
 
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -58,8 +60,9 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
 
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -82,8 +85,9 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
 
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -106,8 +110,9 @@ export class formationInMemoryRepository implements FormationRepository {
       lienParcoursSup: null,
 
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -129,8 +134,9 @@ export class formationInMemoryRepository implements FormationRepository {
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
       liens: [],
-      communes: [],
-      tripletsAffectations: [],
+      communesProposantLaFormation: [],
+      établissements: [],
+      établissementsParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,

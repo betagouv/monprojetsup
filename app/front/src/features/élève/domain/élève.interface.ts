@@ -30,7 +30,7 @@ export type CommuneFavorite = Omit<Commune, "codePostal">;
 export type FormationFavorite = {
   id: string;
   niveauAmbition: 1 | 2 | 3 | null;
-  tripletsAffectationsChoisis: string[];
+  voeux: string[];
   commentaire: string | null;
 };
 

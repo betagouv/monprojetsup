@@ -33,7 +33,7 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  tripletsAffectations: Array<{
+  établissements: Array<{
     id: string;
     nom: string;
     commune: {
@@ -41,7 +41,18 @@ export type Formation = {
       code: string;
     };
   }>;
-  communes: string[];
+  établissementsParCommuneFavorites: Array<{
+    commune: {
+      nom: string;
+      code: string;
+    };
+    établissements: Array<{
+      id: string;
+      nom: string;
+      distanceEnKm: number;
+    }>;
+  }>;
+  communesProposantLaFormation: string[];
   métiersAccessibles: Array<{
     id: string;
     nom: string;

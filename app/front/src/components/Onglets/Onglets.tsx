@@ -1,8 +1,10 @@
 import { type OngletsProps } from "./Onglets.interface";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 const Onglets = ({ onglets, ongletAffichéParDéfaut = 0, nomAccessible }: OngletsProps) => {
   const [numéroOngletAffiché, setNuméroOngletAffiché] = useState(ongletAffichéParDéfaut);
+
+  const id = useId();
 
   useEffect(() => {
     setNuméroOngletAffiché(ongletAffichéParDéfaut);
@@ -30,10 +32,10 @@ const Onglets = ({ onglets, ongletAffichéParDéfaut = 0, nomAccessible }: Ongle
               role="presentation"
             >
               <button
-                aria-controls={`tabpanel-${index}-panel`}
+                aria-controls={`tabpanel-${index}-panel-${id}`}
                 aria-selected={estSélectionné}
                 className="fr-tabs__tab"
-                id={`tabpanel-${index}`}
+                id={`tabpanel-${index}-${id}`}
                 onClick={() => {
                   handleTabChange(index);
                 }}
@@ -52,9 +54,9 @@ const Onglets = ({ onglets, ongletAffichéParDéfaut = 0, nomAccessible }: Ongle
 
         return (
           <div
-            aria-labelledby={`tabpanel-${index}`}
+            aria-labelledby={`tabpanel-${index}-${id}`}
             className={`fr-tabs__panel border border-solid border-[--border-default-grey] bg-white transition-none lg:px-12 lg:py-14 ${estSélectionné ? "fr-tabs__panel--selected" : ""}`}
-            id={`tabpanel-${index}-panel`}
+            id={`tabpanel-${index}-panel-${id}`}
             key={`tabpanel-${onglet.titre}`}
             role="tabpanel"
             tabIndex={estSélectionné ? 0 : -1}

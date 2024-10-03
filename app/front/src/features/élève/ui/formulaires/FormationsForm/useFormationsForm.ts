@@ -70,7 +70,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
       formationsSélectionnées.map((formation) => ({
         id: formation.valeur,
         niveauAmbition: null,
-        tripletsAffectationsChoisis: [],
+        voeux: [],
         commentaire: null,
       })),
     );

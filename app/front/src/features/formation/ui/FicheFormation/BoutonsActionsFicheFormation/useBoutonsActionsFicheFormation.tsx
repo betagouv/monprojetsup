@@ -37,7 +37,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
         id: formation.id,
         commentaire: null,
         niveauAmbition: null,
-        tripletsAffectationsChoisis: [],
+        voeux: [],
       },
       ...(élève?.formationsFavorites ?? []),
     ];
