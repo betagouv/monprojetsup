@@ -409,10 +409,12 @@ public class OnisepDataLoader {
             String psupIds = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER);
             if(psupIds == null)
                 throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_PSUP_HEADER + " in line " + line);
-            val psupIdList = Arrays.stream(psupIds.split(";")).map(String::trim).toList();
+            val psupIdList = Arrays.stream(psupIds.split(";")).map(String::trim).filter(s -> !s.isBlank()).toList();
             String ideoId = line.get(PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER);
             if(ideoId == null)
                 throw new RuntimeException("Missing header " + PSUP_TO_METIERS_CORRESPONDANCE_PATH_METIER_IDEO_HEADER + " in line " + line);
+            if(ideoId.isBlank())
+                continue;
             for(String psupId : psupIdList) {
                 result.computeIfAbsent(psupId, k -> new ArrayList<>()).add(ideoId);
             }
