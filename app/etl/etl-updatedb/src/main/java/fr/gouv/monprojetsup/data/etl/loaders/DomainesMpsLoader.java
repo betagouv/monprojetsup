@@ -20,11 +20,11 @@ public class DomainesMpsLoader {
         Taxonomie.TaxonomieCategorie categorie = null;
 
         for (Map<String, String> g : lignesCsv) {
-            String labelCategorie = g.getOrDefault("regroupement", "");
-            String idElement = g.getOrDefault("id MPS", "");
+            String labelCategorie = g.getOrDefault("regroupements MPS", "");
+            String idElement = g.getOrDefault("cle domaine MPS", "");
             String labelElement = g.getOrDefault("domaines MPS", "");
-            String emojiCategorie = g.getOrDefault("emoji regroupement", "");
-            String emojiElement = g.getOrDefault("emoji", "");
+            String emojiCategorie = g.getOrDefault("emoji regroupements MPS", "");
+            String emojiElement = g.getOrDefault("emoji domaines MPS", "");
             String atomesList = g.getOrDefault("clés ideo2 des sousdomaines web", "");
 
             if(!labelCategorie.isBlank()) {

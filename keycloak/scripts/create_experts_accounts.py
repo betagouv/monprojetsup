@@ -59,9 +59,34 @@ for expert in experts:
     prenom = expert[2]
 
     for idx in range(1, 11):
-        print(f"Processing {email}_{idx}")
+
+        username = f"{email}_{idx}"
+        # Check if the user exists
+        user_search_url = f"{keycloak_url}/admin/realms/{realm_name}/users"
+        search_params = {"username": username}
+        search_headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        }
+
+        # Send GET request to search for the user
+        search_response = requests.get(user_search_url, headers=search_headers, params=search_params)
+        if search_response.status_code == 200:
+            users = search_response.json()
+            if users:
+                print(f"User '{username}' already exists.")
+                continue
+
+        print(f"Creating {username}")
+
+        # Ajouter le token dans les headers pour l'authentification
+        create_user_headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        }
+
         user_data = {
-            "username": f"{email}_{idx}",  # Nom d'utilisateur
+            "username": f"{username}",  # Nom d'utilisateur
             "email": f"{email}",  # Email de l'utilisateur
             "firstName": f"{prenom}",
             "lastName": f"{nom}",
@@ -77,17 +102,9 @@ for expert in experts:
             ],
         }
 
-        # Ajouter le token dans les headers pour l'authentification
-        create_user_headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
-        }
-
         # Envoyer la requête pour créer l'utilisateur
         create_user_response = requests.post(
             create_user_url, json=user_data, headers=create_user_headers
         )
-        if create_user_response.status_code == 201:
-            print(f"User {email}_{idx} created successfully!")
-        else:
+        if create_user_response.status_code != 201:
             print(f"Failed to create user: {create_user_response.text}")
