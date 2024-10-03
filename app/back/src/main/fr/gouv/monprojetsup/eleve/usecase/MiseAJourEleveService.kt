@@ -10,7 +10,7 @@ import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service
 class MiseAJourEleveService(
     private val baccalaureatRepository: BaccalaureatRepository,
     private val baccalaureatSpecialiteRepository: BaccalaureatSpecialiteRepository,
-    private val tripletAffectationBDDRepository: TripletAffectationRepository,
+    private val voeuRepository: VoeuRepository,
     private val domaineRepository: DomaineRepository,
     private val interetRepository: InteretRepository,
     private val metierRepository: MetierRepository,
@@ -118,19 +118,18 @@ class MiseAJourEleveService(
     @Throws(MonProjetSupBadRequestException::class)
     private fun verifierVoeuxFormations(voeuxDeFormations: List<VoeuFormation>?) {
         voeuxDeFormations?.mapNotNull {
-            if (it.tripletsAffectationsChoisis.isNotEmpty()) it.idFormation else null
+            if (it.voeuxChoisis.isNotEmpty()) it.idFormation else null
         }?.takeUnless { it.isEmpty() }?.let { idsFormations ->
-            val voeux = tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(idsFormations)
+            val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
             voeuxDeFormations.forEach { voeu ->
-                if (voeu.tripletsAffectationsChoisis.isNotEmpty()) {
-                    val tripletAffectationDuVoeu = voeux[voeu.idFormation]?.map { it.id }
-                    if (tripletAffectationDuVoeu?.containsAll(voeu.tripletsAffectationsChoisis) != true) {
+                if (voeu.voeuxChoisis.isNotEmpty()) {
+                    val voeuDuVoeu = voeux[voeu.idFormation]?.map { it.id }
+                    if (voeuDuVoeu?.containsAll(voeu.voeuxChoisis) != true) {
                         throw MonProjetSupBadRequestException(
-                            code = "TRIPLET_AFFECTATION_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
+                            code = "VOEU_IMPOSSIBLE_POUR_FORMATION_FAVORITE",
                             msg =
                                 "Pour la formation ${voeu.idFormation} présente dans les formations favorites " +
-                                    "comporte un ou plusieurs triplet d'affectation ne correspondant pas " +
-                                    "à une de ses possibilités : $tripletAffectationDuVoeu",
+                                    "comporte un ou plusieurs voeux ne correspondant pas à une de ses possibilités : $voeuDuVoeu",
                         )
                     }
                 }

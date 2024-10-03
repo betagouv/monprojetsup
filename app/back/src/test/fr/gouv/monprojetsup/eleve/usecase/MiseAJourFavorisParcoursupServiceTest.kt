@@ -3,8 +3,8 @@ package fr.gouv.monprojetsup.eleve.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
@@ -30,7 +30,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
 
     @Mock
-    lateinit var tripletAffectationRepository: TripletAffectationRepository
+    lateinit var voeuRepository: VoeuRepository
 
     @InjectMocks
     lateinit var miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService
@@ -41,7 +41,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     }
 
     @Test
-    fun `quand l'élève n'a pas connecté son compte parcoursup, ne pas appeler le repo de triplets d'affectation ni l'api parcoursup`() {
+    fun `quand l'élève n'a pas connecté son compte parcoursup, ne pas appeler le repo de voeux ni l'api parcoursup`() {
         // Given
         val profil =
             creerProfilIdentifie(
@@ -50,13 +50,13 @@ class MiseAJourFavorisParcoursupServiceTest {
                         VoeuFormation(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
@@ -69,11 +69,11 @@ class MiseAJourFavorisParcoursupServiceTest {
         // Then
         assertThat(resultat).isEqualTo(profil)
         then(parcoursupApiHttpClient).shouldHaveNoInteractions()
-        then(tripletAffectationRepository).shouldHaveNoInteractions()
+        then(voeuRepository).shouldHaveNoInteractions()
     }
 
     @Test
-    fun `quand pas de formations favorites sur parcoursup, doit renvoyer le profil et ne pas appeler le repo de triplets d'affectation`() {
+    fun `quand pas de formations favorites sur parcoursup, doit renvoyer le profil et ne pas appeler le repo de voeux`() {
         // Given
         val profil =
             creerProfilIdentifie(
@@ -82,19 +82,19 @@ class MiseAJourFavorisParcoursupServiceTest {
                         VoeuFormation(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
             )
         given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
-        given(parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(510)).willReturn(emptyList())
+        given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(emptyList())
 
         // When
         val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
@@ -104,7 +104,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     }
 
     @Test
-    fun `quand déjà à jour, alors doit renvoyer le profil d'entrée et ne pas appeler le repo de triplets d'affectation`() {
+    fun `quand déjà à jour, alors doit renvoyer le profil d'entrée et ne pas appeler le repo de voeux`() {
         // Given
         val profil =
             creerProfilIdentifie(
@@ -113,27 +113,27 @@ class MiseAJourFavorisParcoursupServiceTest {
                         VoeuFormation(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
             )
         given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
         val voeuxParcoursup = listOf(FavorisParcoursup("ta2", null, 0))
-        given(parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
-        given(tripletAffectationRepository.recupererTripletsAffectation(listOf("ta2"))).willReturn(
+        given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
+        given(voeuRepository.recupererVoeux(listOf("ta2"))).willReturn(
             mapOf(
                 "fl0012" to
                     listOf(
-                        TripletAffectation(
+                        Voeu(
                             id = "ta2",
-                            nom = "Mon affecation 2",
+                            nom = "Mon voeu 2",
                             commune = Communes.PARIS15EME,
                         ),
                     ),
@@ -148,7 +148,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     }
 
     @Test
-    fun `alors doit mettre à jour les triplets d'affectation des formations non présnete et ne pas toucher les existantes`() {
+    fun `alors doit mettre à jour les voeux des formations non présnete et ne pas toucher les existantes`() {
         // Given
         val profil =
             creerProfilIdentifie(
@@ -157,13 +157,13 @@ class MiseAJourFavorisParcoursupServiceTest {
                         VoeuFormation(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
@@ -171,40 +171,40 @@ class MiseAJourFavorisParcoursupServiceTest {
         given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
         val voeuxParcoursup =
             listOf(
-                FavorisParcoursup(idTripletAffectation = "ta1", commentaire = null, notation = 0),
-                FavorisParcoursup(idTripletAffectation = "ta7", commentaire = null, notation = 0),
-                FavorisParcoursup(idTripletAffectation = "ta18", commentaire = null, notation = 0),
-                FavorisParcoursup(idTripletAffectation = "ta19", commentaire = null, notation = 0),
+                FavorisParcoursup(idVoeu = "ta1", commentaire = null, notation = 0),
+                FavorisParcoursup(idVoeu = "ta7", commentaire = null, notation = 0),
+                FavorisParcoursup(idVoeu = "ta18", commentaire = null, notation = 0),
+                FavorisParcoursup(idVoeu = "ta19", commentaire = null, notation = 0),
             )
-        given(parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
-        given(tripletAffectationRepository.recupererTripletsAffectation(listOf("ta1", "ta7", "ta18", "ta19"))).willReturn(
+        given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
+        given(voeuRepository.recupererVoeux(listOf("ta1", "ta7", "ta18", "ta19"))).willReturn(
             mapOf(
                 "fl0012" to
                     listOf(
-                        TripletAffectation(
+                        Voeu(
                             id = "ta1",
-                            nom = "Mon affecation 1",
+                            nom = "Mon voeu 1",
                             commune = Communes.MARSEILLE,
                         ),
-                        TripletAffectation(
+                        Voeu(
                             id = "ta18",
-                            nom = "Mon affecation 18",
+                            nom = "Mon voeu 18",
                             commune = Communes.SAINT_MALO,
                         ),
                     ),
                 "fl0010" to
                     listOf(
-                        TripletAffectation(
+                        Voeu(
                             id = "ta7",
-                            nom = "Mon affecation 7",
+                            nom = "Mon voeu 7",
                             commune = Communes.PARIS15EME,
                         ),
                     ),
                 "fl0753" to
                     listOf(
-                        TripletAffectation(
+                        Voeu(
                             id = "ta19",
-                            nom = "Mon affecation 19",
+                            nom = "Mon voeu 19",
                             commune = Communes.PARIS5EME,
                         ),
                     ),
@@ -222,19 +222,19 @@ class MiseAJourFavorisParcoursupServiceTest {
                         VoeuFormation(
                             idFormation = "fl0010",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = listOf("ta7"),
+                            voeuxChoisis = listOf("ta7"),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl0012",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2", "ta18"),
+                            voeuxChoisis = listOf("ta1", "ta2", "ta18"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                         VoeuFormation(
                             idFormation = "fl0753",
                             niveauAmbition = 0,
-                            tripletsAffectationsChoisis = listOf("ta19"),
+                            voeuxChoisis = listOf("ta19"),
                             priseDeNote = null,
                         ),
                     ),

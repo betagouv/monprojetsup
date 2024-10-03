@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 @Service
 class RecupererFormationsService(
     private val formationRepository: FormationRepository,
-    private val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
-    private val recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService,
+    private val recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService,
+    private val recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService,
     private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     private val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     private val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
@@ -36,14 +36,14 @@ class RecupererFormationsService(
                 profilEleve,
                 idsDesFormationsRetournees,
             )
-        val tripletsAffectations =
-            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+        val voeux =
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                 idsDesFormationsRetournees,
                 profilEleve,
             )
-        val tripletsAffectationParCommunesFavorites =
+        val voeuxAutoursDesCommunesFavorites =
             profilEleve.communesFavorites?.let {
-                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, tripletsAffectations)
+                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, voeux)
             } ?: emptyMap()
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
@@ -66,8 +66,8 @@ class RecupererFormationsService(
                         metiers = exemplesDeMetiersDeLaFormation,
                         idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
-                tripletsAffectation = tripletsAffectations[formation.id] ?: emptyList(),
-                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavorites[formation.id] ?: emptyList(),
+                voeux = voeux[formation.id] ?: emptyList(),
+                voeuxParCommunesFavorites = voeuxAutoursDesCommunesFavorites[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],

@@ -5,9 +5,9 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -38,7 +38,7 @@ class MiseAJourEleveServiceTest {
     private lateinit var baccalaureatSpecialiteRepository: BaccalaureatSpecialiteRepository
 
     @Mock
-    private lateinit var tripletAffectationBDDRepository: TripletAffectationRepository
+    private lateinit var voeuRepository: VoeuRepository
 
     @Mock
     private lateinit var domaineRepository: DomaineRepository
@@ -81,13 +81,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 ),
@@ -368,13 +368,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
@@ -407,13 +407,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
@@ -457,13 +457,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "flInconnue",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
@@ -495,13 +495,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0001",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
@@ -543,13 +543,13 @@ class MiseAJourEleveServiceTest {
                     VoeuFormation(
                         idFormation = "fl1",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl1",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 )
@@ -585,7 +585,7 @@ class MiseAJourEleveServiceTest {
     }
 
     @Nested
-    inner class ErreurTripletAffectation {
+    inner class ErreurVoeu {
         @Test
         fun `si le repository renvoie une map vide, doit throw BadRequestException`() {
             // Given
@@ -597,18 +597,18 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl1",
                                 niveauAmbition = 3,
-                                tripletsAffectationsChoisis = listOf("ta129"),
+                                voeuxChoisis = listOf("ta129"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl3",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis = listOf("ta1"),
+                                voeuxChoisis = listOf("ta1"),
                                 priseDeNote = "Ma prise de note",
                             ),
                         ),
                 )
-            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(emptyMap())
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(emptyMap())
 
             // When & Then
             assertThatThrownBy {
@@ -619,7 +619,7 @@ class MiseAJourEleveServiceTest {
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl1 présente dans les formations favorites comporte un ou plusieurs " +
-                        "triplet d'affectation ne correspondant pas à une de ses possibilités : null",
+                        "voeux ne correspondant pas à une de ses possibilités : null",
                 )
         }
 
@@ -634,13 +634,13 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl1",
                                 niveauAmbition = 3,
-                                tripletsAffectationsChoisis = listOf("ta129"),
+                                voeuxChoisis = listOf("ta129"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl3",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis = listOf("ta1"),
+                                voeuxChoisis = listOf("ta1"),
                                 priseDeNote = "Ma prise de note",
                             ),
                         ),
@@ -649,12 +649,12 @@ class MiseAJourEleveServiceTest {
                 mapOf(
                     "fl1" to
                         listOf(
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
                                 commune = Communes.CAEN,
                             ),
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta129",
                                 nom = "Nom ta129",
                                 commune = Communes.GRENOBLE,
@@ -662,7 +662,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     "fl3" to emptyList(),
                 )
-            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -673,12 +673,12 @@ class MiseAJourEleveServiceTest {
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
-                        "triplet d'affectation ne correspondant pas à une de ses possibilités : []",
+                        "voeux ne correspondant pas à une de ses possibilités : []",
                 )
         }
 
         @Test
-        fun `si un des triplet d'affectation n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
+        fun `si un des voeux n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
             // Given
             given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
             val nouveauProfil =
@@ -688,13 +688,13 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl1",
                                 niveauAmbition = 3,
-                                tripletsAffectationsChoisis = listOf("ta1"),
+                                voeuxChoisis = listOf("ta1"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl3",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis = listOf("ta129", "ta128"),
+                                voeuxChoisis = listOf("ta129", "ta128"),
                                 priseDeNote = "Ma prise de note",
                             ),
                         ),
@@ -703,12 +703,12 @@ class MiseAJourEleveServiceTest {
                 mapOf(
                     "fl1" to
                         listOf(
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
                                 commune = Communes.CAEN,
                             ),
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta2",
                                 nom = "Nom ta2",
                                 commune = Communes.PARIS15EME,
@@ -716,19 +716,19 @@ class MiseAJourEleveServiceTest {
                         ),
                     "fl3" to
                         listOf(
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
                                 commune = Communes.CAEN,
                             ),
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta129",
                                 nom = "Nom ta129",
                                 commune = Communes.GRENOBLE,
                             ),
                         ),
                 )
-            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -739,7 +739,7 @@ class MiseAJourEleveServiceTest {
             }.isInstanceOf(MonProjetSupBadRequestException::class.java)
                 .hasMessage(
                     "Pour la formation fl3 présente dans les formations favorites comporte un ou plusieurs " +
-                        "triplet d'affectation ne correspondant pas à une de ses possibilités : [ta1, ta129]",
+                        "voeux ne correspondant pas à une de ses possibilités : [ta1, ta129]",
                 )
         }
     }
@@ -787,7 +787,7 @@ class MiseAJourEleveServiceTest {
             // Then
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
-            then(tripletAffectationBDDRepository).shouldHaveNoInteractions()
+            then(voeuRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
@@ -824,7 +824,7 @@ class MiseAJourEleveServiceTest {
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()
             then(formationRepository).shouldHaveNoInteractions()
-            then(tripletAffectationBDDRepository).shouldHaveNoInteractions()
+            then(voeuRepository).shouldHaveNoInteractions()
             val profilAMettreAJour =
                 profilEleve.copy(
                     specialites = emptyList(),
@@ -857,13 +857,13 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis = listOf("ta12", "ta20"),
+                                voeuxChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl0015",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis = listOf(),
+                                voeuxChoisis = listOf(),
                                 priseDeNote = null,
                             ),
                         ),
@@ -874,21 +874,21 @@ class MiseAJourEleveServiceTest {
             given(interetRepository.verifierCentresInteretsExistent(ids = listOf("linguistique", "etude"))).willReturn(true)
             given(metierRepository.verifierMetiersExistent(ids = listOf("MET004"))).willReturn(true)
             given(formationRepository.verifierFormationsExistent(ids = listOf("fl0011", "fl0015", "fl0013"))).willReturn(true)
-            given(tripletAffectationBDDRepository.recupererLesTripletsAffectationDeFormations(listOf("fl0011"))).willReturn(
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl0011"))).willReturn(
                 mapOf(
                     "fl0011" to
                         listOf(
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta12",
                                 nom = "Nom ta12",
                                 commune = Communes.MARSEILLE,
                             ),
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta13",
                                 nom = "Nom ta13",
                                 commune = Communes.PARIS15EME,
                             ),
-                            TripletAffectation(
+                            Voeu(
                                 id = "ta20",
                                 nom = "Nom ta20",
                                 commune = Communes.CAEN,
@@ -921,13 +921,13 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl0011",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis = listOf("ta12", "ta20"),
+                                voeuxChoisis = listOf("ta12", "ta20"),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl0015",
                                 niveauAmbition = 2,
-                                tripletsAffectationsChoisis = listOf(),
+                                voeuxChoisis = listOf(),
                                 priseDeNote = null,
                             ),
                         ),
@@ -965,13 +965,13 @@ class MiseAJourEleveServiceTest {
                             VoeuFormation(
                                 idFormation = "fl0010",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis = emptyList(),
+                                voeuxChoisis = emptyList(),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl0012",
                                 niveauAmbition = 3,
-                                tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                                voeuxChoisis = listOf("ta1", "ta2"),
                                 priseDeNote = "Mon voeu préféré",
                             ),
                         ),
@@ -980,7 +980,7 @@ class MiseAJourEleveServiceTest {
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()
-            then(tripletAffectationBDDRepository).shouldHaveNoInteractions()
+            then(voeuRepository).shouldHaveNoInteractions()
             then(domaineRepository).shouldHaveNoInteractions()
             then(interetRepository).shouldHaveNoInteractions()
             then(metierRepository).shouldHaveNoInteractions()

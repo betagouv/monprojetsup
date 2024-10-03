@@ -5,5 +5,5 @@ import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 
 interface ParcoursupHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    fun recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup>
+    fun recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup>
 }

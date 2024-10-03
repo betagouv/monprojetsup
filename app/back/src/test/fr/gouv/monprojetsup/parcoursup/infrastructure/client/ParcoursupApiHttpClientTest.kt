@@ -78,7 +78,7 @@ class ParcoursupApiHttpClientTest {
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la connexion à l'API à l'url https://monauthentification.fr/Authentification/oauth2/token, " +
@@ -106,7 +106,7 @@ class ParcoursupApiHttpClientTest {
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
@@ -140,7 +140,7 @@ class ParcoursupApiHttpClientTest {
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la connexion à l'API à l'url " +
@@ -188,7 +188,7 @@ class ParcoursupApiHttpClientTest {
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
@@ -228,7 +228,7 @@ class ParcoursupApiHttpClientTest {
         given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
 
         // When
-        val resultat = parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+        val resultat = parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
 
         // Then
         assertThat(resultat).isEqualTo(emptyList<FavorisParcoursup>())
@@ -283,23 +283,23 @@ class ParcoursupApiHttpClientTest {
         given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
 
         // When
-        val resultat = parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup = 753)
+        val resultat = parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
 
         // Then
         val attendu =
             listOf(
                 FavorisParcoursup(
-                    idTripletAffectation = "ta123",
+                    idVoeu = "ta123",
                     commentaire = null,
                     notation = 0,
                 ),
                 FavorisParcoursup(
-                    idTripletAffectation = "ta9583",
+                    idVoeu = "ta9583",
                     commentaire = null,
                     notation = 0,
                 ),
                 FavorisParcoursup(
-                    idTripletAffectation = "ta5729",
+                    idVoeu = "ta5729",
                     commentaire = null,
                     notation = 0,
                 ),

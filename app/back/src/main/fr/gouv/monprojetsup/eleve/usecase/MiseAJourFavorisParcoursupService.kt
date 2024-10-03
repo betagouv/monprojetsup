@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.eleve.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
 import org.springframework.stereotype.Service
@@ -13,23 +13,20 @@ import java.util.UUID
 class MiseAJourFavorisParcoursupService(
     private val compteParcoursupRepository: CompteParcoursupRepository,
     private val parcoursupApiHttpClient: ParcoursupApiHttpClient,
-    private val tripletAffectationRepository: TripletAffectationRepository,
+    private val voeuRepository: VoeuRepository,
 ) {
     fun mettreAJourFavorisParcoursup(profil: ProfilEleve.Identifie): ProfilEleve.Identifie {
         val formationsFavorites = profil.formationsFavorites ?: emptyList()
-        val idsTripletsAffectationParcoursup = recupererFavorisParcoursup(profil.id).map { it.idTripletAffectation }
+        val idsVoeuxParcoursup = recupererFavorisParcoursup(profil.id).map { it.idVoeu }
 
-        return if (lesTripletsAffectationsSurParcoursupSontDejaTousDansLeProfil(
-                formationsFavorites,
-                idsTripletsAffectationParcoursup,
-            )
+        return if (lesVoeuxSurParcoursupSontDejaTousDansLeProfil(formationsFavorites, idsVoeuxParcoursup)
         ) {
             profil
         } else {
             val nouveauxFavoris =
                 recupererFavorisParcoursupMisAJour(
                     formationsFavorites,
-                    idsTripletsAffectationParcoursup,
+                    idsVoeuxParcoursup,
                 )
             profil.copy(formationsFavorites = nouveauxFavoris)
         }
@@ -37,51 +34,51 @@ class MiseAJourFavorisParcoursupService(
 
     private fun recupererFavorisParcoursupMisAJour(
         formationsFavorites: List<VoeuFormation>,
-        idsTripletsAffectationParcoursup: List<String>,
+        idsVoeuxParcoursup: List<String>,
     ): List<VoeuFormation> {
-        val tripletsAffectationParcoursup = creerVoeuxFormationParcoursup(idsTripletsAffectationParcoursup)
+        val voeuxParcoursup = creerVoeuxFormationParcoursup(idsVoeuxParcoursup)
         return if (formationsFavorites.isNotEmpty()) {
-            fusionnerFavorisParcoursupEtFavorisMonProjetSup(formationsFavorites, tripletsAffectationParcoursup)
+            fusionnerFavorisParcoursupEtFavorisMonProjetSup(formationsFavorites, voeuxParcoursup)
         } else {
-            tripletsAffectationParcoursup
+            voeuxParcoursup
         }
     }
 
-    private fun creerVoeuxFormationParcoursup(idsTripletsAffectationParcoursup: List<String>) =
-        tripletAffectationRepository.recupererTripletsAffectation(idsTripletsAffectationParcoursup).map {
+    private fun creerVoeuxFormationParcoursup(idsVoeuxParcoursup: List<String>) =
+        voeuRepository.recupererVoeux(idsVoeuxParcoursup).map {
             VoeuFormation(
                 idFormation = it.key,
                 niveauAmbition = 0,
-                tripletsAffectationsChoisis = it.value.map { tripletAffectation -> tripletAffectation.id },
+                voeuxChoisis = it.value.map { voeu -> voeu.id },
                 priseDeNote = null,
             )
         }
 
     private fun fusionnerFavorisParcoursupEtFavorisMonProjetSup(
         formationsFavorites: List<VoeuFormation>,
-        tripletsAffectationParcoursup: List<VoeuFormation>,
-    ) = (formationsFavorites + tripletsAffectationParcoursup).groupBy { it.idFormation }.map { entry ->
+        voeuxParcoursup: List<VoeuFormation>,
+    ) = (formationsFavorites + voeuxParcoursup).groupBy { it.idFormation }.map { entry ->
         VoeuFormation(
             idFormation = entry.key,
             niveauAmbition = entry.value.first().niveauAmbition,
-            tripletsAffectationsChoisis = entry.value.flatMap { it.tripletsAffectationsChoisis }.distinct(),
+            voeuxChoisis = entry.value.flatMap { it.voeuxChoisis }.distinct(),
             priseDeNote = entry.value.first().priseDeNote,
         )
     }
 
-    private fun lesTripletsAffectationsSurParcoursupSontDejaTousDansLeProfil(
+    private fun lesVoeuxSurParcoursupSontDejaTousDansLeProfil(
         formationsFavorites: List<VoeuFormation>,
-        idsTripletsAffectationParcoursup: List<String>,
+        idsVoeuxParcoursup: List<String>,
     ): Boolean {
-        val idsTripletsAffectationMonProjetSup = formationsFavorites.flatMap { it.tripletsAffectationsChoisis }
-        val idsTripletsAffectationParcoursupEtMonProjetSupDistincts =
-            (idsTripletsAffectationParcoursup + idsTripletsAffectationMonProjetSup).distinct()
-        return idsTripletsAffectationParcoursupEtMonProjetSupDistincts.size == idsTripletsAffectationMonProjetSup.size
+        val idsVoeuxMonProjetSup = formationsFavorites.flatMap { it.voeuxChoisis }
+        val idsVoeuxParcoursupEtMonProjetSupDistincts =
+            (idsVoeuxParcoursup + idsVoeuxMonProjetSup).distinct()
+        return idsVoeuxParcoursupEtMonProjetSupDistincts.size == idsVoeuxMonProjetSup.size
     }
 
     private fun recupererFavorisParcoursup(idEleve: UUID): List<FavorisParcoursup> {
         return compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)?.let { compteParcoursup ->
-            parcoursupApiHttpClient.recupererLesTripletsAffectationSelectionnesSurParcoursup(compteParcoursup)
+            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
         } ?: emptyList()
     }
 }

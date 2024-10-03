@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.CommunesAvecVoeuxAuxAlentoursRepository
 import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
 import fr.gouv.monprojetsup.formation.entity.Communes.MONTREUIL
@@ -19,12 +19,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
+class RecupererVoeuxDesCommunesFavoritesServiceTest {
     @Mock
     private lateinit var voeuxParVilleRepository: CommunesAvecVoeuxAuxAlentoursRepository
 
     @InjectMocks
-    private lateinit var recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService
+    private lateinit var recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService
 
     @BeforeEach
     fun setup() {
@@ -37,11 +37,11 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
         fun `doit filtrer sur les voeux de la formation`() {
             // Given
             val communes = listOf(SAINT_MALO, MONTREUIL, CAEN, PARIS5EME)
-            val tripletsAffectationDeLaFormation =
+            val voeuxDeLaFormation =
                 listOf(
-                    TripletAffectation(id = "ta256", nom = "Nom du ta256", commune = RENNES),
-                    TripletAffectation(id = "ta33", nom = "Nom du ta33", commune = RENNES),
-                    TripletAffectation(id = "ta77", nom = "Nom du ta77", commune = RENNES),
+                    Voeu(id = "ta256", nom = "Nom du ta256", commune = RENNES),
+                    Voeu(id = "ta33", nom = "Nom du ta33", commune = RENNES),
+                    Voeu(id = "ta77", nom = "Nom du ta77", commune = RENNES),
                 )
 
             val communeAvecIdsVoeuxAuxAlentours =
@@ -70,9 +70,9 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
 
             // When
             val resultat =
-                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
                     communes = communes,
-                    tripletsAffectationDeLaFormation = tripletsAffectationDeLaFormation,
+                    voeuxDeLaFormation = voeuxDeLaFormation,
                 )
 
             // Then
@@ -83,7 +83,7 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                         distances =
                             listOf(
                                 CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                    voeu = TripletAffectation(id = "ta77", nom = "Nom du ta77", commune = RENNES),
+                                    voeu = Voeu(id = "ta77", nom = "Nom du ta77", commune = RENNES),
                                     km = 66,
                                 ),
                             ),
@@ -94,11 +94,11 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                         distances =
                             listOf(
                                 CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                    voeu = TripletAffectation(id = "ta33", nom = "Nom du ta33", commune = RENNES),
+                                    voeu = Voeu(id = "ta33", nom = "Nom du ta33", commune = RENNES),
                                     km = 52,
                                 ),
                                 CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                    voeu = TripletAffectation(id = "ta256", nom = "Nom du ta256", commune = RENNES),
+                                    voeu = Voeu(id = "ta256", nom = "Nom du ta256", commune = RENNES),
                                     km = 52,
                                 ),
                             ),
@@ -115,19 +115,19 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
         fun `doit filtrer sur les voeux des formations`() {
             // Given
             val communes = listOf(SAINT_MALO, MONTREUIL, CAEN, PARIS5EME)
-            val tripletsAffectationDeLaFormation =
+            val voeuxDeLaFormation =
                 mapOf(
                     "fl0001" to
                         listOf(
-                            TripletAffectation(id = "ta256", nom = "Nom du ta256", commune = RENNES),
-                            TripletAffectation(id = "ta33", nom = "Nom du ta33", commune = RENNES),
-                            TripletAffectation(id = "ta77", nom = "Nom du ta77", commune = RENNES),
+                            Voeu(id = "ta256", nom = "Nom du ta256", commune = RENNES),
+                            Voeu(id = "ta33", nom = "Nom du ta33", commune = RENNES),
+                            Voeu(id = "ta77", nom = "Nom du ta77", commune = RENNES),
                         ),
                     "fl0003" to emptyList(),
                     "fl0004" to
                         listOf(
-                            TripletAffectation(id = "ta480", nom = "Nom du ta480", commune = PARIS5EME),
-                            TripletAffectation(id = "ta256", nom = "Nom du ta256", commune = RENNES),
+                            Voeu(id = "ta480", nom = "Nom du ta480", commune = PARIS5EME),
+                            Voeu(id = "ta256", nom = "Nom du ta256", commune = RENNES),
                         ),
                 )
 
@@ -158,9 +158,9 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
 
             // When
             val resultat =
-                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
                     communes = communes,
-                    tripletsAffectationDeLaFormation = tripletsAffectationDeLaFormation,
+                    voeuxDeLaFormation = voeuxDeLaFormation,
                 )
 
             // Then
@@ -173,7 +173,7 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                                 distances =
                                     listOf(
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                            voeu = TripletAffectation(id = "ta77", nom = "Nom du ta77", commune = RENNES),
+                                            voeu = Voeu(id = "ta77", nom = "Nom du ta77", commune = RENNES),
                                             km = 66,
                                         ),
                                     ),
@@ -184,11 +184,11 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                                 distances =
                                     listOf(
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                            voeu = TripletAffectation(id = "ta33", nom = "Nom du ta33", commune = RENNES),
+                                            voeu = Voeu(id = "ta33", nom = "Nom du ta33", commune = RENNES),
                                             km = 52,
                                         ),
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
-                                            voeu = TripletAffectation(id = "ta256", nom = "Nom du ta256", commune = RENNES),
+                                            voeu = Voeu(id = "ta256", nom = "Nom du ta256", commune = RENNES),
                                             km = 52,
                                         ),
                                     ),
@@ -222,7 +222,7 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                                     listOf(
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
                                             voeu =
-                                                TripletAffectation(
+                                                Voeu(
                                                     id = "ta480",
                                                     nom = "Nom du ta480",
                                                     commune = PARIS5EME,
@@ -238,7 +238,7 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                                     listOf(
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
                                             voeu =
-                                                TripletAffectation(
+                                                Voeu(
                                                     id = "ta256",
                                                     nom = "Nom du ta256",
                                                     commune = RENNES,
@@ -247,7 +247,7 @@ class RecupererTripletAffectationDesCommunesFavoritesServiceTest {
                                         ),
                                         CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance(
                                             voeu =
-                                                TripletAffectation(
+                                                Voeu(
                                                     id = "ta480",
                                                     nom = "Nom du ta480",
                                                     commune = PARIS5EME,

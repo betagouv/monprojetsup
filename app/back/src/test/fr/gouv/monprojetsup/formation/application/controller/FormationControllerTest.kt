@@ -28,7 +28,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
@@ -154,27 +154,27 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            tripletsAffectation =
+            voeux =
                 listOf(
-                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 ),
-            tripletsAffectationParCommunesFavorites =
+            voeuxParCommunesFavorites =
                 listOf(
                     CommuneAvecVoeuxAuxAlentours(
                         commune = PARIS15EME,
                         distances =
                             listOf(
                                 VoeuAvecDistance(
-                                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
                                     km = 3,
                                 ),
                                 VoeuAvecDistance(
-                                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
                                     km = 1,
                                 ),
                             ),
@@ -358,7 +358,7 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        tripletsAffectation = emptyList(),
+                        voeux = emptyList(),
                         explications = null,
                     ),
                 ),
@@ -462,7 +462,7 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
-                                "tripletAffectationAssocies": [
+                                "voeux": [
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
@@ -512,7 +512,7 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -522,7 +522,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -533,7 +533,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -666,8 +666,8 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "tripletAffectationAssocies": [],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -677,7 +677,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -688,7 +688,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -845,7 +845,7 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
-                                "tripletAffectationAssocies": [
+                                "voeux": [
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
@@ -895,7 +895,7 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -905,7 +905,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -916,7 +916,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -1284,7 +1284,7 @@ class FormationControllerTest(
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                               }
                             ],
-                            "tripletAffectationAssocies": [
+                            "voeux": [
                               {
                                 "id": "ta10",
                                 "nom": "Nom du ta10",
@@ -1334,7 +1334,7 @@ class FormationControllerTest(
                                 }
                               }
                             ],
-                            "tripletsAffectationParCommunesFavorites": [
+                            "communesFavoritesAvecLeursVoeux": [
                               {
                                 "commune": {
                                   "codeInsee": "75115",
@@ -1344,7 +1344,7 @@ class FormationControllerTest(
                                 },
                                 "voeuxAvecDistance": [
                                   {
-                                    "tripletAffectation": {
+                                    "voeu": {
                                       "id": "ta3",
                                       "nom": "Nom du ta3",
                                       "commune": {
@@ -1355,7 +1355,7 @@ class FormationControllerTest(
                                     "distanceKm": 3
                                   },
                                   {
-                                    "tripletAffectation": {
+                                    "voeu": {
                                       "id": "ta32",
                                       "nom": "Nom du ta32",
                                       "commune": {
@@ -1542,14 +1542,14 @@ class FormationControllerTest(
                                         "cycle-pluridisciplinaire-d-etudes-superieures",
                             ),
                         ),
-                    tripletsAffectation =
+                    voeux =
                         listOf(
-                            TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                            TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                            TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                            TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                            TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                            TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                            Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                            Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                            Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                            Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                         ),
                     criteresAnalyseCandidature =
                         listOf(
@@ -1625,7 +1625,7 @@ class FormationControllerTest(
                                 "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                               }
                             ],
-                            "tripletAffectationAssocies": [
+                            "voeux": [
                               {
                                 "id": "ta10",
                                 "nom": "Nom du ta10",
@@ -1675,7 +1675,7 @@ class FormationControllerTest(
                                 }
                               }
                             ],
-                            "tripletsAffectationParCommunesFavorites": [],
+                            "communesFavoritesAvecLeursVoeux": [],
                             "metiers": [
                               {
                                 "id": "MET001",
@@ -2203,7 +2203,7 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
-                                "tripletAffectationAssocies": [
+                                "voeux": [
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
@@ -2253,7 +2253,7 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -2263,7 +2263,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -2274,7 +2274,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -2407,7 +2407,7 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "tripletAffectationAssocies": [
+                                "voeux": [
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
@@ -2457,7 +2457,7 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -2467,7 +2467,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -2478,7 +2478,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -2621,7 +2621,7 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        tripletsAffectation = emptyList(),
+                        voeux = emptyList(),
                         explications = null,
                     ),
                 )
@@ -2738,7 +2738,7 @@ class FormationControllerTest(
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
                                   }
                                 ],
-                                "tripletAffectationAssocies": [
+                                "voeux": [
                                   {
                                     "id": "ta10",
                                     "nom": "Nom du ta10",
@@ -2788,7 +2788,7 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -2798,7 +2798,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -2809,7 +2809,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {
@@ -2942,8 +2942,8 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
-                                "tripletAffectationAssocies": [],
-                                "tripletsAffectationParCommunesFavorites": [
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
                                   {
                                     "commune": {
                                       "codeInsee": "75115",
@@ -2953,7 +2953,7 @@ class FormationControllerTest(
                                     },
                                     "voeuxAvecDistance": [
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta3",
                                           "nom": "Nom du ta3",
                                           "commune": {
@@ -2964,7 +2964,7 @@ class FormationControllerTest(
                                         "distanceKm": 3
                                       },
                                       {
-                                        "tripletAffectation": {
+                                        "voeu": {
                                           "id": "ta32",
                                           "nom": "Nom du ta32",
                                           "commune": {

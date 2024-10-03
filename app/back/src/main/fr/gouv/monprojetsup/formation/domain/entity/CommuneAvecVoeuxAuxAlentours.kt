@@ -7,7 +7,7 @@ data class CommuneAvecVoeuxAuxAlentours(
     val distances: List<VoeuAvecDistance>,
 ) {
     data class VoeuAvecDistance(
-        val voeu: TripletAffectation,
+        val voeu: Voeu,
         val km: Int,
     )
 }

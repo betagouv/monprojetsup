@@ -17,7 +17,7 @@ data class ParcoursupFavorisReponseDTO(
 ) {
     fun toFavorisParcoursup(): FavorisParcoursup {
         return FavorisParcoursup(
-            idTripletAffectation = "ta$idFormation",
+            idVoeu = "ta$idFormation",
             commentaire = null,
             notation = 0,
         )

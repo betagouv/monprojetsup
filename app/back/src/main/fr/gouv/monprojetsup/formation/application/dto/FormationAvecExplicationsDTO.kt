@@ -15,7 +15,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis.Centile
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
@@ -48,8 +48,8 @@ data class FormationAvecExplicationsDTO(
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
-        val tripletAffectationAssocies: List<TripletAffectationAvecCommuneDTO>,
-        val tripletsAffectationParCommunesFavorites: List<CommuneAvecSesTripletAffectationDTO>,
+        val voeux: List<VoeuAvecCommuneDTO>,
+        val communesFavoritesAvecLeursVoeux: List<CommuneAvecSesVoeuxDTO>,
         val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
     ) {
@@ -71,12 +71,12 @@ data class FormationAvecExplicationsDTO(
                 },
             descriptifConseils = ficheFormation.descriptifConseils,
             liens = ficheFormation.liens.map { LienDTO(it) },
-            tripletAffectationAssocies = ficheFormation.tripletsAffectation.map { TripletAffectationAvecCommuneDTO(it) },
-            tripletsAffectationParCommunesFavorites =
+            voeux = ficheFormation.voeux.map { VoeuAvecCommuneDTO(it) },
+            communesFavoritesAvecLeursVoeux =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        ficheFormation.tripletsAffectationParCommunesFavorites.map {
-                            CommuneAvecSesTripletAffectationDTO(it)
+                        ficheFormation.voeuxParCommunesFavorites.map {
+                            CommuneAvecSesVoeuxDTO(it)
                         }
 
                     is FicheFormation.FicheFormationSansProfil -> emptyList()
@@ -264,7 +264,7 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class CommuneAvecSesTripletAffectationDTO(
+    data class CommuneAvecSesVoeuxDTO(
         val commune: ModificationProfilDTO.CommuneDTO,
         val voeuxAvecDistance: List<VoeuAvecDistanceDTO>,
     ) {
@@ -276,28 +276,28 @@ data class FormationAvecExplicationsDTO(
         )
 
         data class VoeuAvecDistanceDTO(
-            val tripletAffectation: TripletAffectationAvecCommuneDTO,
+            val voeu: VoeuAvecCommuneDTO,
             val distanceKm: Int,
         ) {
             constructor(voeuAvecDistance: CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance) : this(
-                tripletAffectation = TripletAffectationAvecCommuneDTO(voeuAvecDistance.voeu),
+                voeu = VoeuAvecCommuneDTO(voeuAvecDistance.voeu),
                 distanceKm = voeuAvecDistance.km,
             )
         }
     }
 
-    data class TripletAffectationAvecCommuneDTO(
+    data class VoeuAvecCommuneDTO(
         val id: String,
         val nom: String,
         val commune: CommuneCourteDTO,
     ) {
-        constructor(tripletAffectation: TripletAffectation) : this(
-            id = tripletAffectation.id,
-            nom = tripletAffectation.nom,
+        constructor(voeu: Voeu) : this(
+            id = voeu.id,
+            nom = voeu.nom,
             commune =
                 CommuneCourteDTO(
-                    nom = tripletAffectation.commune.nom,
-                    codeInsee = tripletAffectation.commune.codeInsee,
+                    nom = voeu.commune.nom,
+                    codeInsee = voeu.commune.codeInsee,
                 ),
         )
     }
