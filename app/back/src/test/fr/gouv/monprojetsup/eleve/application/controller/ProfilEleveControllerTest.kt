@@ -60,13 +60,13 @@ class ProfilEleveControllerTest(
                         VoeuFormation(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
@@ -247,13 +247,13 @@ class ProfilEleveControllerTest(
                 {
                   "idFormation": "fl1234",
                   "niveauAmbition": 1,
-                  "tripletsAffectationsChoisis": [],
+                  "voeuxChoisis": [],
                   "priseDeNote": null
                 },
                 {
                   "idFormation": "fl5678",
                   "niveauAmbition": 3,
-                  "tripletsAffectationsChoisis": [
+                  "voeuxChoisis": [
                     "ta1",
                     "ta2"
                   ],
@@ -320,13 +320,13 @@ class ProfilEleveControllerTest(
                             {
                               "idFormation": "fl1234",
                               "niveauAmbition": 1,
-                              "tripletsAffectationsChoisis": [],
+                              "voeuxChoisis": [],
                               "priseDeNote": null
                             },
                             {
                               "idFormation": "fl5678",
                               "niveauAmbition": 3,
-                              "tripletsAffectationsChoisis": [
+                              "voeuxChoisis": [
                                 "ta1",
                                 "ta2"
                               ],
@@ -352,19 +352,19 @@ class ProfilEleveControllerTest(
                     VoeuFormation(
                         idFormation = "fl5678",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                     VoeuFormation(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl2341",
                         niveauAmbition = 0,
-                        tripletsAffectationsChoisis = listOf("ta6", "ta22"),
+                        voeuxChoisis = listOf("ta6", "ta22"),
                         priseDeNote = null,
                     ),
                 )
@@ -415,7 +415,7 @@ class ProfilEleveControllerTest(
                             {
                               "idFormation": "fl5678",
                               "niveauAmbition": 3,
-                              "tripletsAffectationsChoisis": [
+                              "voeuxChoisis": [
                                 "ta1",
                                 "ta2"
                               ],
@@ -424,13 +424,13 @@ class ProfilEleveControllerTest(
                             {
                               "idFormation": "fl1234",
                               "niveauAmbition": 1,
-                              "tripletsAffectationsChoisis": [],
+                              "voeuxChoisis": [],
                               "priseDeNote": null
                             },
                             {
                               "idFormation": "fl2341",
                               "niveauAmbition": 0,
-                              "tripletsAffectationsChoisis": [
+                              "voeuxChoisis": [
                                 "ta6",
                                 "ta22"
                               ],

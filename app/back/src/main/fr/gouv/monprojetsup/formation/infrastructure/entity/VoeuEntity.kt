@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "ref_voeu")
-class TripletAffectationEntity {
+class VoeuEntity {
     @Id
     lateinit var id: String
 
@@ -31,8 +31,8 @@ class TripletAffectationEntity {
     @Column(name = "id_formation", nullable = false)
     lateinit var idFormation: String
 
-    fun toTripletAffectation() =
-        TripletAffectation(
+    fun toVoeu() =
+        Voeu(
             id = id,
             nom = nom,
             commune =

@@ -53,13 +53,13 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                     VoeuFormation(
                         idFormation = "fl0010",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl0012",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta15974", "ta17831"),
+                        voeuxChoisis = listOf("ta15974", "ta17831"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 ),
@@ -167,13 +167,13 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                             VoeuFormation(
                                 idFormation = "fl0010",
                                 niveauAmbition = 1,
-                                tripletsAffectationsChoisis = emptyList(),
+                                voeuxChoisis = emptyList(),
                                 priseDeNote = null,
                             ),
                             VoeuFormation(
                                 idFormation = "fl0012",
                                 niveauAmbition = 3,
-                                tripletsAffectationsChoisis = listOf("ta15974", "ta17831"),
+                                voeuxChoisis = listOf("ta15974", "ta17831"),
                                 priseDeNote = "Mon voeu préféré",
                             ),
                         ),

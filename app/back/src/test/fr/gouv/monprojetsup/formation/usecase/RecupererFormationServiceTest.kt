@@ -13,7 +13,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.entity.Communes
@@ -49,10 +49,10 @@ class RecupererFormationServiceTest {
     lateinit var formationRepository: FormationRepository
 
     @Mock
-    lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
+    lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
 
     @Mock
-    lateinit var recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService
+    lateinit var recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -111,17 +111,17 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            val tripletFormationFL0001 =
+            val voeuxPossiblesPourLaFormationFL0001 =
                 listOf(
-                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(idFormation = "fl0001")).willReturn(
-                tripletFormationFL0001,
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001")).willReturn(
+                voeuxPossiblesPourLaFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
             given(
@@ -154,7 +154,7 @@ class RecupererFormationServiceTest {
                             Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                         ),
                     metiers = emptyList(),
-                    tripletsAffectation = tripletFormationFL0001,
+                    voeux = voeuxPossiblesPourLaFormationFL0001,
                     criteresAnalyseCandidature =
                         listOf(
                             CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
@@ -174,17 +174,17 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            val tripletFormationFL0001 =
+            val voeuxFormationFL0001 =
                 listOf(
-                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(idFormation = "fl0001")).willReturn(
-                tripletFormationFL0001,
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001")).willReturn(
+                voeuxFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
             given(
@@ -223,13 +223,13 @@ class RecupererFormationServiceTest {
                         VoeuFormation(
                             idFormation = "fl1234",
                             niveauAmbition = 1,
-                            tripletsAffectationsChoisis = emptyList(),
+                            voeuxChoisis = emptyList(),
                             priseDeNote = null,
                         ),
                         VoeuFormation(
                             idFormation = "fl5678",
                             niveauAmbition = 3,
-                            tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                            voeuxChoisis = listOf("ta1", "ta2"),
                             priseDeNote = "Mon voeu préféré",
                         ),
                     ),
@@ -256,21 +256,21 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
-            val tripletFormationFL0001 =
+            val voeuxFormationFL0001 =
                 listOf(
-                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
                 )
             given(
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl0001",
                     profilEleve = profil,
                 ),
-            ).willReturn(tripletFormationFL0001)
+            ).willReturn(voeuxFormationFL0001)
             given(
                 calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                     formationAvecLeurAffinite =
@@ -359,29 +359,29 @@ class RecupererFormationServiceTest {
                     ),
                 ),
             )
-            val tripletsAffectationParCommunesFavorites =
+            val voeuxParCommunesFavorites =
                 listOf(
                     CommuneAvecVoeuxAuxAlentours(
                         commune = CAEN,
                         distances =
                             listOf(
                                 VoeuAvecDistance(
-                                    voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                    voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
                                     km = 0,
                                 ),
                                 VoeuAvecDistance(
-                                    voeu = TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                    voeu = Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
                                     km = 120,
                                 ),
                             ),
                     ),
                 )
             given(
-                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
                     communes = listOf(Communes.CAEN),
-                    tripletsAffectationDeLaFormation = tripletFormationFL0001,
+                    voeuxDeLaFormation = voeuxFormationFL0001,
                 ),
-            ).willReturn(tripletsAffectationParCommunesFavorites)
+            ).willReturn(voeuxParCommunesFavorites)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -431,8 +431,8 @@ class RecupererFormationServiceTest {
                                 formations = emptyList(),
                             ),
                         ),
-                    tripletsAffectation = tripletFormationFL0001,
-                    tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavorites,
+                    voeux = voeuxFormationFL0001,
+                    voeuxParCommunesFavorites = voeuxParCommunesFavorites,
                     tauxAffinite = 70,
                     explications = explicationsEtExemplesMetiers.first,
                     criteresAnalyseCandidature =

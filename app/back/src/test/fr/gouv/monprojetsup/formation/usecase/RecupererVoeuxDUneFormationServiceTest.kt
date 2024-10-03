@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
-import fr.gouv.monprojetsup.formation.domain.port.TripletAffectationRepository
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
+import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.Communes.GRENOBLE
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
@@ -28,15 +28,15 @@ import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
 import java.util.UUID
 
-class RecupererTripletAffectationDUneFormationServiceTest {
+class RecupererVoeuxDUneFormationServiceTest {
     @Mock
-    lateinit var tripletAffectationRepository: TripletAffectationRepository
+    lateinit var voeuRepository: VoeuRepository
 
     @Mock
     lateinit var logger: Logger
 
     @InjectMocks
-    lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
+    lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
 
     @Mock
     private lateinit var profilEleve: ProfilEleve.Identifie
@@ -60,40 +60,40 @@ class RecupererTripletAffectationDUneFormationServiceTest {
                 "fl252",
             )
 
-        private val tripletsAffectation =
+        private val voeux =
             mapOf(
                 "fl680002" to
                     listOf(
-                        TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
-                        TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
-                        TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                        Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
+                        Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                        Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
                     ),
                 "fr22" to
                     listOf(
-                        TripletAffectation(id = "ta2", nom = "Nom du ta2", commune = LYON),
+                        Voeu(id = "ta2", nom = "Nom du ta2", commune = LYON),
                     ),
                 "fl2009" to
                     listOf(
-                        TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                        TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                        TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
-                        TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                        Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                        Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                        Voeu(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
+                        Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
                     ),
                 "fl2016" to
                     listOf(
-                        TripletAffectation(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
+                        Voeu(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
                     ),
                 "fl252" to
                     listOf(
-                        TripletAffectation(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
-                        TripletAffectation(id = "ta5", nom = "Nom du ta5", commune = RENNES),
-                        TripletAffectation(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
+                        Voeu(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
+                        Voeu(id = "ta5", nom = "Nom du ta5", commune = RENNES),
+                        Voeu(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
                     ),
             )
 
         @BeforeEach
         fun setUp() {
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(idsFormation)).willReturn(tripletsAffectation)
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation)).willReturn(voeux)
             given(profilEleve.id).willReturn(uuid)
         }
 
@@ -104,7 +104,7 @@ class RecupererTripletAffectationDUneFormationServiceTest {
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
                 )
@@ -114,30 +114,30 @@ class RecupererTripletAffectationDUneFormationServiceTest {
                 mapOf(
                     "fl680002" to
                         listOf(
-                            TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
-                            TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                            TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
+                            Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                            Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                            Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
                         ),
                     "fr22" to
                         listOf(
-                            TripletAffectation(id = "ta2", nom = "Nom du ta2", commune = LYON),
+                            Voeu(id = "ta2", nom = "Nom du ta2", commune = LYON),
                         ),
                     "fl2009" to
                         listOf(
-                            TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                            TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                            TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
-                            TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                            Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                            Voeu(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
+                            Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
                         ),
                     "fl2016" to
                         listOf(
-                            TripletAffectation(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
+                            Voeu(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
                         ),
                     "fl252" to
                         listOf(
-                            TripletAffectation(id = "ta5", nom = "Nom du ta5", commune = RENNES),
-                            TripletAffectation(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
-                            TripletAffectation(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
+                            Voeu(id = "ta5", nom = "Nom du ta5", commune = RENNES),
+                            Voeu(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
+                            Voeu(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
                         ),
                 ),
             )
@@ -158,13 +158,13 @@ class RecupererTripletAffectationDUneFormationServiceTest {
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
                 )
 
             // Then
-            assertThat(result).isEqualTo(tripletsAffectation)
+            assertThat(result).isEqualTo(voeux)
         }
 
         @Test
@@ -174,13 +174,13 @@ class RecupererTripletAffectationDUneFormationServiceTest {
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
                 )
 
             // Then
-            assertThat(result).isEqualTo(tripletsAffectation)
+            assertThat(result).isEqualTo(voeux)
         }
 
         @Test
@@ -190,7 +190,7 @@ class RecupererTripletAffectationDUneFormationServiceTest {
             given(profilEleve.communesFavorites).willReturn(listOf(communeInconnue, RENNES))
 
             // When
-            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(idsFormation, profilEleve)
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve)
 
             // Then
             then(logger).should(times(1))
@@ -201,52 +201,52 @@ class RecupererTripletAffectationDUneFormationServiceTest {
         }
 
         @Test
-        fun `si une des communes d'un triplet d'affectation a un code commune non valable, doit logguer un warning`() {
+        fun `si une des communes d'un voeu a un code commune non valable, doit logguer un warning`() {
             // Given
             val communeInconnue = Commune(codeInsee = "1", nom = "Paris", latitude = 0.0, longitude = 0.0)
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDeFormations(idsFormation)).willReturn(
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation)).willReturn(
                 mapOf(
                     "fl0001" to
                         listOf(
-                            TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
-                            TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = communeInconnue),
-                            TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                            Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
+                            Voeu(id = "ta1", nom = "Nom du ta1", commune = communeInconnue),
+                            Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
                         ),
                 ),
             )
             given(profilEleve.communesFavorites).willReturn(listOf(PARIS15EME, RENNES))
 
             // When
-            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(idsFormation, profilEleve)
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve)
 
             // Then
-            then(logger).should(times(1)).warn("La commune du triplet d'affectation ta1 a un code commune non standard : 1")
+            then(logger).should(times(1)).warn("La commune du voeu ta1 a un code commune non standard : 1")
         }
     }
 
     @Nested
     inner class RecupererNomCommunesTriesParAffinitesPourFormation {
-        private val tripletsAffectation =
+        private val voeux =
             listOf(
-                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
             )
 
         @Test
         fun `les communes doivent être ordonnées par affinités en mettant en premiers les villes exactes, puis les départements`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(listOf(LYON, GRENOBLE, PARIS5EME))
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
-                tripletsAffectation,
+            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016")).willReturn(
+                voeux,
             )
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
                 )
@@ -254,12 +254,12 @@ class RecupererTripletAffectationDUneFormationServiceTest {
             // Then
             assertThat(result).isEqualTo(
                 listOf(
-                    TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 ),
             )
         }
@@ -268,38 +268,38 @@ class RecupererTripletAffectationDUneFormationServiceTest {
         fun `si la liste des communes favorites est vide, doit retourner la liste telle quelle`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(emptyList())
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
-                tripletsAffectation,
+            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016")).willReturn(
+                voeux,
             )
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
                 )
 
             // Then
-            assertThat(result).isEqualTo(tripletsAffectation)
+            assertThat(result).isEqualTo(voeux)
         }
 
         @Test
         fun `si la liste des communes favorites est nulle, doit retourner la liste telle quelle`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(null)
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
-                tripletsAffectation,
+            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016")).willReturn(
+                voeux,
             )
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
                 )
 
             // Then
-            assertThat(result).isEqualTo(tripletsAffectation)
+            assertThat(result).isEqualTo(voeux)
         }
     }
 
@@ -308,16 +308,16 @@ class RecupererTripletAffectationDUneFormationServiceTest {
         @Test
         fun `les communes doivent être retournées telles quelles`() {
             // Given
-            val ta1 = mock(TripletAffectation::class.java)
-            val ta2 = mock(TripletAffectation::class.java)
-            val ta3 = mock(TripletAffectation::class.java)
-            given(tripletAffectationRepository.recupererLesTripletsAffectationDUneFormation(idFormation = "fl2016")).willReturn(
+            val ta1 = mock(Voeu::class.java)
+            val ta2 = mock(Voeu::class.java)
+            val ta3 = mock(Voeu::class.java)
+            given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016")).willReturn(
                 listOf(ta2, ta1, ta3),
             )
 
             // When
             val result =
-                recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(
+                recupererVoeuxDUneFormationService.recupererVoeux(
                     idFormation = "fl2016",
                 )
 

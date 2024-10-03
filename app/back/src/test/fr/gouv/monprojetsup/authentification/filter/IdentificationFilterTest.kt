@@ -97,13 +97,13 @@ class IdentificationFilterTest(
                           {
                             "idFormation": "fl1234",
                             "niveauAmbition": 1,
-                            "tripletsAffectationsChoisis": [],
+                            "voeuxChoisis": [],
                             "priseDeNote": null
                           },
                           {
                             "idFormation": "fl5678",
                             "niveauAmbition": 3,
-                            "tripletsAffectationsChoisis": [
+                            "voeuxChoisis": [
                               "ta1",
                               "ta2"
                             ],

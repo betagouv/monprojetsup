@@ -197,13 +197,13 @@ data class ModificationProfilDTO(
         @ArraySchema(
             arraySchema =
                 Schema(
-                    description = "Les triplets d'affectation souhaités",
+                    description = "Les voeux (triplets d'affectation) souhaités",
                     example = "[\"ta15974\", \"ta17831\"]",
                     required = true,
                 ),
         )
-        @JsonProperty("tripletsAffectationsChoisis")
-        val tripletsAffectationsChoisis: List<String>,
+        @JsonProperty("voeuxChoisis")
+        val voeuxChoisis: List<String>,
         @Schema(description = "Prise de note additionnel sur le voeu", example = "Ma note personnalisée", required = false)
         @JsonProperty("priseDeNote")
         val priseDeNote: String?,
@@ -211,7 +211,7 @@ data class ModificationProfilDTO(
         constructor(voeuDeFormation: VoeuFormation) : this(
             idFormation = voeuDeFormation.idFormation,
             niveauAmbition = voeuDeFormation.niveauAmbition,
-            tripletsAffectationsChoisis = voeuDeFormation.tripletsAffectationsChoisis,
+            voeuxChoisis = voeuDeFormation.voeuxChoisis,
             priseDeNote = voeuDeFormation.priseDeNote,
         )
 
@@ -219,7 +219,7 @@ data class ModificationProfilDTO(
             VoeuFormation(
                 idFormation = idFormation,
                 niveauAmbition = niveauAmbition,
-                tripletsAffectationsChoisis = tripletsAffectationsChoisis,
+                voeuxChoisis = voeuxChoisis,
                 priseDeNote = priseDeNote,
             )
     }

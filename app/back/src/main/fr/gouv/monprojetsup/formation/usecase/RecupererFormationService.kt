@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service
 class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
-    val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
+    val recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
-    val recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService,
+    val recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -40,14 +40,14 @@ class RecupererFormationService(
                     profilEleve,
                     formation.id,
                 )
-            val tripletsAffectation =
-                recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+            val voeuxDeLaFormation =
+                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = formation.id,
                     profilEleve = profilEleve,
                 )
-            val tripletsAffectationDesCommunesFavorites =
+            val voeuxParCommunesFavorites =
                 profilEleve.communesFavorites?.let {
-                    recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, tripletsAffectation)
+                    recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, voeuxDeLaFormation)
                 } ?: emptyList()
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
@@ -68,14 +68,14 @@ class RecupererFormationService(
                         metiers = exemplesDeMetiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
-                tripletsAffectation = tripletsAffectation,
-                tripletsAffectationParCommunesFavorites = tripletsAffectationDesCommunesFavorites,
+                voeux = voeuxDeLaFormation,
+                voeuxParCommunesFavorites = voeuxParCommunesFavorites,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,
             )
         } else {
-            val tripletsAffectation = recupererTripletAffectationDUneFormationService.recupererTripletsAffectations(formation.id)
+            val voeux = recupererVoeuxDUneFormationService.recupererVoeux(formation.id)
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -85,7 +85,7 @@ class RecupererFormationService(
                 descriptifConseils = formation.descriptifConseils,
                 formationsAssociees = formation.formationsAssociees,
                 liens = formation.liens,
-                tripletsAffectation = tripletsAffectation,
+                voeux = voeux,
                 metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,

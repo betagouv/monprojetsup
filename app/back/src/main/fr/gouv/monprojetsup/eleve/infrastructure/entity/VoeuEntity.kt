@@ -6,13 +6,13 @@ import java.io.Serializable
 data class VoeuEntity(
     val idFormation: String,
     val niveauAmbition: Int,
-    val tripletsAffectationsChoisis: List<String>,
+    val voeuxChoisis: List<String>,
     val priseDeNote: String?,
 ) : Serializable {
     constructor(voeu: VoeuFormation) : this(
         idFormation = voeu.idFormation,
         niveauAmbition = voeu.niveauAmbition,
-        tripletsAffectationsChoisis = voeu.tripletsAffectationsChoisis,
+        voeuxChoisis = voeu.voeuxChoisis,
         priseDeNote = voeu.priseDeNote,
     )
 
@@ -20,7 +20,7 @@ data class VoeuEntity(
         VoeuFormation(
             idFormation = idFormation,
             niveauAmbition = niveauAmbition,
-            tripletsAffectationsChoisis = tripletsAffectationsChoisis,
+            voeuxChoisis = voeuxChoisis,
             priseDeNote = priseDeNote,
         )
 }

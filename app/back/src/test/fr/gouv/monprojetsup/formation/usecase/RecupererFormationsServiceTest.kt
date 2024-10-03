@@ -11,7 +11,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
-import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
+import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
@@ -35,10 +35,10 @@ class RecupererFormationsServiceTest {
     lateinit var formationRepository: FormationRepository
 
     @Mock
-    lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
+    lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
 
     @Mock
-    lateinit var recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService
+    lateinit var recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -148,62 +148,62 @@ class RecupererFormationsServiceTest {
                 listOf("fl0001", "fl0003"),
             ),
         ).willReturn(explications)
-        val tripletFormationFL0001 =
+        val voeuxPossiblesPourLaFormationFL0001 =
             listOf(
-                TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
-                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
+                Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
             )
-        val tripletFormationFL0003 =
+        val voeuxPossiblesPourLaFormationFL0003 =
             listOf(
-                TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = CAEN),
-                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                Voeu(id = "ta32", nom = "Nom du ta32", commune = CAEN),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
             )
-        val tripletsAffectationsDesFormations = mapOf("fl0001" to tripletFormationFL0001, "fl0003" to tripletFormationFL0003)
+        val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
         given(
-            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                 idsFormations = listOf("fl0001", "fl0003"),
                 profilEleve = profilEleve,
             ),
-        ).willReturn(tripletsAffectationsDesFormations)
+        ).willReturn(voeuxDesFormations)
 
-        val tripletsAffectationParCommunesFavoritesFL0001 =
+        val voeuxParCommunesFavoritesFL0001 =
             listOf(
                 CommuneAvecVoeuxAuxAlentours(
                     commune = SAINT_MALO,
                     distances =
                         listOf(
-                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
+                            VoeuAvecDistance(voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
                         ),
                 ),
             )
-        val tripletsAffectationParCommunesFavoritesFL0003 =
+        val voeuxParCommunesFavoritesFL0003 =
             listOf(
                 CommuneAvecVoeuxAuxAlentours(
                     commune = SAINT_MALO,
                     distances =
                         listOf(
-                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
-                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = CAEN), km = 120),
+                            VoeuAvecDistance(voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
+                            VoeuAvecDistance(voeu = Voeu(id = "ta32", nom = "Nom du ta32", commune = CAEN), km = 120),
                         ),
                 ),
             )
-        val tripletsAffectationParCommunesFavorites =
+        val voeuxParCommunesFavorites =
             mapOf(
-                "fl0001" to tripletsAffectationParCommunesFavoritesFL0001,
-                "fl0003" to tripletsAffectationParCommunesFavoritesFL0003,
+                "fl0001" to voeuxParCommunesFavoritesFL0001,
+                "fl0003" to voeuxParCommunesFavoritesFL0003,
             )
         given(
-            recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+            recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
                 listOf(SAINT_MALO),
-                tripletsAffectationsDesFormations,
+                voeuxDesFormations,
             ),
         ).willReturn(
-            tripletsAffectationParCommunesFavorites,
+            voeuxParCommunesFavorites,
         )
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
@@ -248,8 +248,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier123, metier534),
-                tripletsAffectation = tripletFormationFL0001,
-                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0001,
+                voeux = voeuxPossiblesPourLaFormationFL0001,
+                voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -266,8 +266,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                 tauxAffinite = 87,
                 metiersTriesParAffinites = listOf(metier234, metier534),
-                tripletsAffectation = tripletFormationFL0003,
-                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0003,
+                voeux = voeuxPossiblesPourLaFormationFL0003,
+                voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0003,
                 explications = explicationsFL0003,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
@@ -348,43 +348,43 @@ class RecupererFormationsServiceTest {
                 listOf("fl0001", "fl0003"),
             ),
         ).willReturn(explications)
-        val tripletFormationFL0001 =
+        val voeuxFL0001 =
             listOf(
-                TripletAffectation(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
-                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                TripletAffectation(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
+                Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
             )
-        val tripletsAffectationsDesFormations = mapOf("fl0001" to tripletFormationFL0001)
+        val voeuxDesFormations = mapOf("fl0001" to voeuxFL0001)
         given(
-            recupererTripletAffectationDUneFormationService.recupererTripletAffectationTriesParAffinites(
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                 idsFormations = listOf("fl0001", "fl0003"),
                 profilEleve = profilEleve,
             ),
-        ).willReturn(tripletsAffectationsDesFormations)
-        val tripletsAffectationParCommunesFavoritesFL0001 =
+        ).willReturn(voeuxDesFormations)
+        val voeuxParCommunesFavoritesFL0001 =
             listOf(
                 CommuneAvecVoeuxAuxAlentours(
                     commune = CAEN,
                     distances =
                         listOf(
                             VoeuAvecDistance(
-                                voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
                                 km = 0,
                             ),
                             VoeuAvecDistance(
-                                voeu = TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                voeu = Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
                                 km = 120,
                             ),
                         ),
                 ),
             )
         given(
-            recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+            recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
                 listOf(CAEN),
-                tripletsAffectationsDesFormations,
+                voeuxDesFormations,
             ),
         ).willReturn(
-            mapOf("fl0001" to tripletsAffectationParCommunesFavoritesFL0001),
+            mapOf("fl0001" to voeuxParCommunesFavoritesFL0001),
         )
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
@@ -429,8 +429,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier534),
-                tripletsAffectation = tripletFormationFL0001,
-                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0001,
+                voeux = voeuxFL0001,
+                voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -447,8 +447,8 @@ class RecupererFormationsServiceTest {
                 statistiquesDesAdmis = null,
                 tauxAffinite = 0,
                 metiersTriesParAffinites = emptyList(),
-                tripletsAffectation = emptyList(),
-                tripletsAffectationParCommunesFavorites = emptyList(),
+                voeux = emptyList(),
+                voeuxParCommunesFavorites = emptyList(),
                 explications = null,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))

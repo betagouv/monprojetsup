@@ -47,13 +47,13 @@ abstract class ControllerTest {
                     VoeuFormation(
                         idFormation = "fl1234",
                         niveauAmbition = 1,
-                        tripletsAffectationsChoisis = emptyList(),
+                        voeuxChoisis = emptyList(),
                         priseDeNote = null,
                     ),
                     VoeuFormation(
                         idFormation = "fl5678",
                         niveauAmbition = 3,
-                        tripletsAffectationsChoisis = listOf("ta1", "ta2"),
+                        voeuxChoisis = listOf("ta1", "ta2"),
                         priseDeNote = "Mon voeu préféré",
                     ),
                 ),

@@ -32,7 +32,7 @@ class ParcoursupApiHttpClient(
     ),
     ParcoursupHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesTripletsAffectationSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup> {
+    override fun recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup> {
         val accessToken = recupererAccessToken(clientId = clientId, clientSecret = clientSecret, urlToken = urlToken)
         val getFavoris =
             get<List<ParcoursupFavorisReponseDTO>>(

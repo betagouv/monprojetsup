@@ -14,7 +14,7 @@ sealed class FicheFormation(
     open val formationsAssociees: List<String>,
     open val liens: List<Lien>,
     open val metiers: List<Metier>,
-    open val tripletsAffectation: List<TripletAffectation>,
+    open val voeux: List<Voeu>,
     open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
     open val statistiquesDesAdmis: StatistiquesDesAdmis?,
 ) {
@@ -28,7 +28,7 @@ sealed class FicheFormation(
         override val formationsAssociees: List<String>,
         override val liens: List<Lien>,
         override val metiers: List<Metier>,
-        override val tripletsAffectation: List<TripletAffectation>,
+        override val voeux: List<Voeu>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis,
     ) : FicheFormation(
@@ -41,7 +41,7 @@ sealed class FicheFormation(
             formationsAssociees = formationsAssociees,
             liens = liens,
             metiers = metiers,
-            tripletsAffectation = tripletsAffectation,
+            voeux = voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
         )
@@ -57,8 +57,8 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
-        override val tripletsAffectation: List<TripletAffectation>,
-        val tripletsAffectationParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
+        override val voeux: List<Voeu>,
+        val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
         val explications: ExplicationsSuggestionDetaillees?,
@@ -72,7 +72,7 @@ sealed class FicheFormation(
             formationsAssociees = formationsAssociees,
             liens = liens,
             metiers = metiersTriesParAffinites,
-            tripletsAffectation = tripletsAffectation,
+            voeux = voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
         ) {

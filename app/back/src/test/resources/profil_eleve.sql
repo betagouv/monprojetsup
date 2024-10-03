@@ -40,13 +40,13 @@ VALUES ('0f88ddd1-62ef-436e-ad3f-cf56d5d14c15'::uuid,
             "idFormation": "fl0010",
             "priseDeNote": null,
             "niveauAmbition": 1,
-            "tripletsAffectationsChoisis": []
+            "voeuxChoisis": []
           },
           {
             "idFormation": "fl0012",
             "priseDeNote": "Mon voeu préféré",
             "niveauAmbition": 3,
-            "tripletsAffectationsChoisis": [
+            "voeuxChoisis": [
               "ta15974",
               "ta17831"
             ]
