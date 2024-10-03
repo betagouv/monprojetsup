@@ -19,6 +19,12 @@ Elle utilise les technologies Typescript/React/ViteJS.
 - Tests End-to-End: `npx playwright test`
 
 
+## Mettre à jour les types suite à des changements dans l'api back
+- Assurez-vous d'avoir lancé le serveur back
+- Mettez-vous à la racine du projet front (app/front)
+- Executez la commande `npx openapi-typescript http://localhost:5002/v3/api-docs -o ./src/types/api-mps.d.ts`
+
+
 ## Comment ajouter une variables d'env
 - En local, vous devez définir la variable à plusieurs endroits `.env.example`, `.env.local`, `.env.ci`
 - Pour le déploiement vous devez demander à l'équipe en charge du gitlab Avenir(s) de vous rajouter la variable à leur script de CD pour tous les environnements (cf README.md à la racine de ce repo)

@@ -105,12 +105,23 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
-      tripletsAffectations: formationHttp.formation.tripletAffectationAssocies.map((tripletAffectation) => ({
-        id: tripletAffectation.id,
-        nom: tripletAffectation.nom,
-        commune: { nom: tripletAffectation.nomCommune, code: tripletAffectation.codeCommune },
+      établissements: formationHttp.formation.voeux.map((établissement) => ({
+        id: établissement.id,
+        nom: établissement.nom,
+        commune: { nom: établissement.commune.nom, code: établissement.commune.codeInsee },
       })),
-      communes: this._extraireCommunesDesTripletsAffectation(formationHttp.formation.tripletAffectationAssocies),
+      établissementsParCommuneFavorites: formationHttp.formation.communesFavoritesAvecLeursVoeux.map((commune) => ({
+        commune: {
+          code: commune.commune.codeInsee,
+          nom: commune.commune.nom,
+        },
+        établissements: commune.voeuxAvecDistance.map((établissement) => ({
+          id: établissement.voeu.id,
+          nom: établissement.voeu.nom,
+          distanceEnKm: établissement.distanceKm,
+        })),
+      })),
+      communesProposantLaFormation: this._extraireCommunesDesÉtablissements(formationHttp.formation.voeux),
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
         nom: `${métier.nom[0].toUpperCase()}${métier.nom.slice(1)}`,
@@ -209,10 +220,10 @@ export class formationHttpRepository implements FormationRepository {
     return points;
   };
 
-  private _extraireCommunesDesTripletsAffectation(
-    tripletAffectationAssociés: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["tripletAffectationAssocies"],
+  private _extraireCommunesDesÉtablissements(
+    établissements: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["voeux"],
   ): string[] {
-    const nomsCommunes = tripletAffectationAssociés.map((tripletAffectation) => tripletAffectation.nomCommune);
+    const nomsCommunes = établissements.map((établissement) => établissement.commune.nom);
     return [...new Set(nomsCommunes)];
   }
 }

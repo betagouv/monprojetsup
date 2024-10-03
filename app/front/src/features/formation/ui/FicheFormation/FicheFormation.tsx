@@ -43,7 +43,7 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
             </p>
           </div>
         )}
-        {formation.communes.length > 0 && (
+        {formation.communesProposantLaFormation.length > 0 && (
           <div className="grid grid-flow-col items-start justify-start gap-2">
             <span
               aria-hidden="true"
@@ -51,7 +51,7 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
             />
             <div>
               <p className="mb-2 text-sm">
-                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES} {formation.communes.length}{" "}
+                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES} {formation.communesProposantLaFormation.length}{" "}
                 {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES_SUITE}
                 {formation.explications?.communes && formation.explications.communes.length > 0 && (
                   <>

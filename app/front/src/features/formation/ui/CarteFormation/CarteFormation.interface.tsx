@@ -4,7 +4,7 @@ export type CarteFormationProps = {
   id: Formation["id"];
   titre: Formation["nom"];
   métiersAccessibles: Formation["métiersAccessibles"];
-  communes: Formation["communes"];
+  communes: Formation["communesProposantLaFormation"];
   affinité?: Formation["affinité"];
   sélectionnée?: boolean;
   auClic: () => void;

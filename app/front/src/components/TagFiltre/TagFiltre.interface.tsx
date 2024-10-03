@@ -1,7 +1,7 @@
 export type TagFiltreProps = {
   libellé: string;
-  emoji: string;
   auClic: (estAppuyé: boolean) => void;
   taille?: "petit";
+  emoji?: string;
   appuyéParDéfaut?: boolean;
 };

@@ -52,7 +52,7 @@ const ListeFormations = ({ formations, affichéSurLaPage }: ListeFormationsProps
                     changerAfficherBarreLatéraleEnMobile(false);
                     scrollTo({ top: 0 });
                   }}
-                  communes={formation.communes}
+                  communes={formation.communesProposantLaFormation}
                   id={formation.id}
                   key={formation.id}
                   métiersAccessibles={formation.métiersAccessibles}

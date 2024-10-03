@@ -5,7 +5,7 @@ export const formationsValidationSchema = z.object({
     .object({
       id: z.string(),
       niveauAmbition: z.null(),
-      tripletsAffectationsChoisis: z.string().array(),
+      voeux: z.string().array(),
       commentaire: z.null(),
     })
     .array(),

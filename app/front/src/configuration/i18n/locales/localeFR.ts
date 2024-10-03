@@ -126,7 +126,9 @@ export const localeFR = {
           PARCOURSUP: "Carte Parcoursup",
           PRÉFÉRENCES: "Préférences de villes",
         },
-        TOUTES_LES_VILLES: {
+        AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ:
+          "Il n'existe pas d'offres dans au rayon de 50km autour de cette ville, consulte la carte des formations Parcoursup ou l'onglet \"Toutes les villes\"",
+        TOUTES_LES_COMMUNES: {
           TITRE_ONGLET: "Toutes les villes",
           RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",

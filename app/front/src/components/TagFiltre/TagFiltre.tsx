@@ -20,12 +20,16 @@ const TagFiltre = ({ libellé, emoji, auClic, taille, appuyéParDéfaut = false 
       }}
       type="button"
     >
-      <span
-        aria-hidden
-        className="pr-2"
-      >
-        {emoji}
-      </span>{" "}
+      {emoji && (
+        <>
+          <span
+            aria-hidden
+            className="pr-2"
+          >
+            {emoji}
+          </span>{" "}
+        </>
+      )}
       <span className="capitalize">{libellé}</span>
     </button>
   );
