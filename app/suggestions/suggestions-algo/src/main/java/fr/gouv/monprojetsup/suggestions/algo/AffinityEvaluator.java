@@ -591,7 +591,7 @@ public class AffinityEvaluator {
             case "A" -> isApp ? FULL_MATCH_MULTIPLIER : 0.5 * FULL_MATCH_MULTIPLIER;//très intéressé
             case "B" -> isApp ? FULL_MATCH_MULTIPLIER : 0.8 * FULL_MATCH_MULTIPLIER;//intéressé
             case "C" -> FULL_MATCH_MULTIPLIER;//indifférent
-            case "D" -> isApp ? 0.5 * FULL_MATCH_MULTIPLIER : FULL_MATCH_MULTIPLIER;//pas du tout intéressé, malus aux formations qui existent en app
+            case "D" -> FULL_MATCH_MULTIPLIER;//pas du tout intéressé
             default -> FULL_MATCH_MULTIPLIER;
         };
         if (expl != null && resultat > 0.5 && isApp) {
