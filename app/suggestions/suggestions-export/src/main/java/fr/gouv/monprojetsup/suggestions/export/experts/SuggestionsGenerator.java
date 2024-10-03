@@ -43,7 +43,7 @@ public class SuggestionsGenerator {
     public void generate() throws IOException {
 
         //we want the server in debug mode, with full explanations
-        useRemoteUrl(false);
+        useRemoteUrl(true);
 
         LOGGER.info("Loading experts profiles...");
         List<Pair<String, ProfileDTO>> profiles;

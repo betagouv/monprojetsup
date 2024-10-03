@@ -39,11 +39,11 @@ public record ReferenceCases(
 
     public static final String STAR_SEP = "********************************************************************\n";
 
-    public static boolean USE_LOCAL_URL = true;
+    public static boolean USE_LOCAL_URL = false;
 
 
     public static final String LOCAL_URL = "http://localhost:8004/api/1.2/";
-    public static final String REMOTE_URL = "https://monprojetsup.fr/";
+    public static final String REMOTE_URL = "https://beta.monprojetsup.fr/api/1.2/";
 
     public static void useRemoteUrl(boolean useRemote) {
         USE_LOCAL_URL = !useRemote;
