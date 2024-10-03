@@ -34,6 +34,11 @@ class TestData {
         private const val PASS_FL_COD_PSUP: Int = 2047
         private const val PASS_IDEO_COD: String = "FOR.3884"
 
+        const val MET_DIR_HOTEL_IDEO = "MET.2"
+        const val MET_TECH_FORGE_IDEO = "MET.550"
+        const val MASTER_TOURISME = "FOR.10361"
+
+
         val psupToIdeoReference = mapOf(
             Constants.gFlCodToMpsId(BTS_AERONAUTIQUE_FL_COD_PSUP) to BTS_AERONAUTIQUE_IDEO_COD,
             Constants.gFlCodToMpsId(CMI_SVT_FL_COD_PSUP) to CMI_SVT_IDEO_COD,
