@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 class RecupererFormationsService(
     private val formationRepository: FormationRepository,
     private val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
+    private val recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService,
     private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     private val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     private val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
@@ -40,6 +41,10 @@ class RecupererFormationsService(
                 idsDesFormationsRetournees,
                 profilEleve,
             )
+        val tripletsAffectationParCommunesFavorites =
+            profilEleve.communesFavorites?.let {
+                recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, tripletsAffectations)
+            } ?: emptyMap()
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
             FicheFormation.FicheFormationPourProfil(
@@ -62,6 +67,7 @@ class RecupererFormationsService(
                         idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
                 tripletsAffectation = tripletsAffectations[formation.id] ?: emptyList(),
+                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavorites[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],

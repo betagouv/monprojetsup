@@ -2,6 +2,8 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
@@ -11,12 +13,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.TripletAffectation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
-import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
@@ -34,6 +36,9 @@ class RecupererFormationsServiceTest {
 
     @Mock
     lateinit var recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService
+
+    @Mock
+    lateinit var recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -64,6 +69,7 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
+        given(profilEleve.communesFavorites).willReturn(listOf(SAINT_MALO))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -153,8 +159,8 @@ class RecupererFormationsServiceTest {
                 TripletAffectation(id = "ta10", nom = "Nom du ta10", commune = LYON),
                 TripletAffectation(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
                 TripletAffectation(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = CAEN),
+                TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
                 TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
             )
         val tripletsAffectationsDesFormations = mapOf("fl0001" to tripletFormationFL0001, "fl0003" to tripletFormationFL0003)
@@ -164,6 +170,41 @@ class RecupererFormationsServiceTest {
                 profilEleve = profilEleve,
             ),
         ).willReturn(tripletsAffectationsDesFormations)
+
+        val tripletsAffectationParCommunesFavoritesFL0001 =
+            listOf(
+                CommuneAvecVoeuxAuxAlentours(
+                    commune = SAINT_MALO,
+                    distances =
+                        listOf(
+                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
+                        ),
+                ),
+            )
+        val tripletsAffectationParCommunesFavoritesFL0003 =
+            listOf(
+                CommuneAvecVoeuxAuxAlentours(
+                    commune = SAINT_MALO,
+                    distances =
+                        listOf(
+                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO), km = 0),
+                            VoeuAvecDistance(voeu = TripletAffectation(id = "ta32", nom = "Nom du ta32", commune = CAEN), km = 120),
+                        ),
+                ),
+            )
+        val tripletsAffectationParCommunesFavorites =
+            mapOf(
+                "fl0001" to tripletsAffectationParCommunesFavoritesFL0001,
+                "fl0003" to tripletsAffectationParCommunesFavoritesFL0003,
+            )
+        given(
+            recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                listOf(SAINT_MALO),
+                tripletsAffectationsDesFormations,
+            ),
+        ).willReturn(
+            tripletsAffectationParCommunesFavorites,
+        )
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                 formationAvecLeurAffinite = formationsAvecAffinites,
@@ -208,6 +249,7 @@ class RecupererFormationsServiceTest {
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier123, metier534),
                 tripletsAffectation = tripletFormationFL0001,
+                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -225,6 +267,7 @@ class RecupererFormationsServiceTest {
                 tauxAffinite = 87,
                 metiersTriesParAffinites = listOf(metier234, metier534),
                 tripletsAffectation = tripletFormationFL0003,
+                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0003,
                 explications = explicationsFL0003,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
@@ -236,6 +279,7 @@ class RecupererFormationsServiceTest {
         val profilEleve = mock(ProfilEleve.Identifie::class.java)
         given(profilEleve.baccalaureat).willReturn("Général")
         given(profilEleve.classe).willReturn(ChoixNiveau.TERMINALE)
+        given(profilEleve.communesFavorites).willReturn(listOf(CAEN))
         val formationAvecSonAffinite1 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite2 = mock(FormationAvecSonAffinite::class.java)
         val formationAvecSonAffinite3 = mock(FormationAvecSonAffinite::class.java)
@@ -317,6 +361,31 @@ class RecupererFormationsServiceTest {
                 profilEleve = profilEleve,
             ),
         ).willReturn(tripletsAffectationsDesFormations)
+        val tripletsAffectationParCommunesFavoritesFL0001 =
+            listOf(
+                CommuneAvecVoeuxAuxAlentours(
+                    commune = CAEN,
+                    distances =
+                        listOf(
+                            VoeuAvecDistance(
+                                voeu = TripletAffectation(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                km = 0,
+                            ),
+                            VoeuAvecDistance(
+                                voeu = TripletAffectation(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                km = 120,
+                            ),
+                        ),
+                ),
+            )
+        given(
+            recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
+                listOf(CAEN),
+                tripletsAffectationsDesFormations,
+            ),
+        ).willReturn(
+            mapOf("fl0001" to tripletsAffectationParCommunesFavoritesFL0001),
+        )
         given(
             calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                 formationAvecLeurAffinite = formationsAvecAffinites,
@@ -361,6 +430,7 @@ class RecupererFormationsServiceTest {
                 tauxAffinite = 17,
                 metiersTriesParAffinites = listOf(metier534),
                 tripletsAffectation = tripletFormationFL0001,
+                tripletsAffectationParCommunesFavorites = tripletsAffectationParCommunesFavoritesFL0001,
                 explications = explicationsFL0001,
             )
         val ficheFormationFl0003 =
@@ -378,6 +448,7 @@ class RecupererFormationsServiceTest {
                 tauxAffinite = 0,
                 metiersTriesParAffinites = emptyList(),
                 tripletsAffectation = emptyList(),
+                tripletsAffectationParCommunesFavorites = emptyList(),
                 explications = null,
             )
         assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))

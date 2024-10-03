@@ -21,13 +21,13 @@ VALUES ('0f88ddd1-62ef-436e-ad3f-cf56d5d14c15'::uuid,
         'INDIFFERENT',
         '[
           {
-            "codeInsee": "75015",
+            "codeInsee": "75115",
             "nom": "Paris",
             "latitude": 48.851227,
             "longitude": 2.2885659
           },
           {
-            "codeInsee": "13200",
+            "codeInsee": "13055",
             "nom": "Marseille",
             "latitude": 43.300000,
             "longitude": 5.400000
@@ -66,13 +66,13 @@ VALUES ('129f6d9c-0f6f-4fa4-8107-75b7cb129889'::uuid,
         'TRES_INTERESSE',
         '[
           {
-            "codeInsee": "75015",
+            "codeInsee": "75115",
             "nom": "Paris",
             "latitude": 48.851227,
             "longitude": 2.2885659
           },
           {
-            "codeInsee": "13200",
+            "codeInsee": "13055",
             "nom": "Marseille",
             "latitude": 43.300000,
             "longitude": 5.400000

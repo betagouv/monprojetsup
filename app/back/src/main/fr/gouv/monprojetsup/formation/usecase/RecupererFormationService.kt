@@ -15,6 +15,7 @@ class RecupererFormationService(
     val recupererTripletAffectationDUneFormationService: RecupererTripletAffectationDUneFormationService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
+    val recupererTripletAffectationDesCommunesFavoritesService: RecupererTripletAffectationDesCommunesFavoritesService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -44,6 +45,10 @@ class RecupererFormationService(
                     idFormation = formation.id,
                     profilEleve = profilEleve,
                 )
+            val tripletsAffectationDesCommunesFavorites =
+                profilEleve.communesFavorites?.let {
+                    recupererTripletAffectationDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, tripletsAffectation)
+                } ?: emptyList()
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -64,6 +69,7 @@ class RecupererFormationService(
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
                 tripletsAffectation = tripletsAffectation,
+                tripletsAffectationParCommunesFavorites = tripletsAffectationDesCommunesFavorites,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,

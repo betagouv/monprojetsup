@@ -1,7 +1,9 @@
 package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.InteretsEtDomainesDTO.InteretDTO
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -46,7 +48,8 @@ data class FormationAvecExplicationsDTO(
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
-        val tripletAffectationAssocies: List<TripletAffectationDTO>,
+        val tripletAffectationAssocies: List<TripletAffectationAvecCommuneDTO>,
+        val tripletsAffectationParCommunesFavorites: List<CommuneAvecSesTripletAffectationDTO>,
         val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
     ) {
@@ -68,7 +71,16 @@ data class FormationAvecExplicationsDTO(
                 },
             descriptifConseils = ficheFormation.descriptifConseils,
             liens = ficheFormation.liens.map { LienDTO(it) },
-            tripletAffectationAssocies = ficheFormation.tripletsAffectation.map { TripletAffectationDTO(it) },
+            tripletAffectationAssocies = ficheFormation.tripletsAffectation.map { TripletAffectationAvecCommuneDTO(it) },
+            tripletsAffectationParCommunesFavorites =
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil ->
+                        ficheFormation.tripletsAffectationParCommunesFavorites.map {
+                            CommuneAvecSesTripletAffectationDTO(it)
+                        }
+
+                    is FicheFormation.FicheFormationSansProfil -> emptyList()
+                },
             metiers =
                 ficheFormation.metiers.map { metier ->
                     MetierDTO(metier)
@@ -252,21 +264,50 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class TripletAffectationDTO(
+    data class CommuneAvecSesTripletAffectationDTO(
+        val commune: ModificationProfilDTO.CommuneDTO,
+        val voeuxAvecDistance: List<VoeuAvecDistanceDTO>,
+    ) {
+        constructor(
+            communeAvecVoeuxAuxAlentours: CommuneAvecVoeuxAuxAlentours,
+        ) : this(
+            commune = ModificationProfilDTO.CommuneDTO(communeAvecVoeuxAuxAlentours.commune),
+            voeuxAvecDistance = communeAvecVoeuxAuxAlentours.distances.map { VoeuAvecDistanceDTO(it) },
+        )
+
+        data class VoeuAvecDistanceDTO(
+            val tripletAffectation: TripletAffectationAvecCommuneDTO,
+            val distanceKm: Int,
+        ) {
+            constructor(voeuAvecDistance: CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance) : this(
+                tripletAffectation = TripletAffectationAvecCommuneDTO(voeuAvecDistance.voeu),
+                distanceKm = voeuAvecDistance.km,
+            )
+        }
+    }
+
+    data class TripletAffectationAvecCommuneDTO(
         val id: String,
         val nom: String,
-        val nomCommune: String,
-        val codeCommune: String,
+        val commune: CommuneCourteDTO,
     ) {
         constructor(tripletAffectation: TripletAffectation) : this(
-            tripletAffectation.id,
-            tripletAffectation.nom,
-            tripletAffectation.commune.nom,
-            tripletAffectation.commune.codeInsee,
+            id = tripletAffectation.id,
+            nom = tripletAffectation.nom,
+            commune =
+                CommuneCourteDTO(
+                    nom = tripletAffectation.commune.nom,
+                    codeInsee = tripletAffectation.commune.codeInsee,
+                ),
         )
     }
 
     data class DetailsCalculScoreDTO(
         val details: List<String>,
+    )
+
+    data class CommuneCourteDTO(
+        val nom: String,
+        val codeInsee: String,
     )
 }
