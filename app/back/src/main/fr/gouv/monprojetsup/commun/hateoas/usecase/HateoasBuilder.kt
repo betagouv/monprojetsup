@@ -5,8 +5,8 @@ import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PRE
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import org.springframework.stereotype.Component
 import kotlin.jvm.Throws
+import kotlin.math.ceil
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 @Component
 class HateoasBuilder {
@@ -16,7 +16,11 @@ class HateoasBuilder {
         numeroDePageActuelle: Int,
         tailleLot: Int,
     ): Hateoas<T> {
-        val dernierePage = (liste.size / tailleLot.toFloat()).roundToInt() + NUMERO_PREMIERE_PAGE
+        val dernierePage =
+            when (val page = ceil(liste.size / tailleLot.toFloat()).toInt()) {
+                0 -> NUMERO_PREMIERE_PAGE
+                else -> page
+            }
         if (numeroDePageActuelle > dernierePage) {
             throw MonProjetSupBadRequestException(
                 code = "PAGE_DEMANDEE_INXISTANTE",
