@@ -1805,7 +1805,8 @@ INSERT INTO "public"."composite_role" ("composite", "child_role") VALUES
 INSERT INTO "public"."credential" ("id", "salt", "type", "user_id", "created_date", "user_label", "secret_data", "credential_data", "priority") VALUES
 ('4cb44bf3-0612-48f6-a0dc-db2275a74e35', NULL, 'password', '32a56da2-08b8-4f5d-9b24-02727ceebde0', 1721292220721, 'My password', '{"value":"FXmx9fTOTVI3UGrSKo+kc1NHi1AG6JoxOCc/S3Y+3STQEvW29rEaMuD2IBhBnhFXzIYuq0/j2gBKeNQR5JSNEA==","salt":"gCLoZcDRNaDN0RAJRR+NFA==","additionalParameters":{}}', '{"hashIterations":210000,"algorithm":"pbkdf2-sha512","additionalParameters":{}}', 10),
 ('5b34ed3c-9562-45dd-bbca-c58e936932f3', NULL, 'password', '32fa1821-1eb3-4df9-98a5-24f307bec772', 1721292063500, NULL, '{"value":"8/oGAlUjQn3KmTxdojgugmMYWDGpZ9vzcThL7qenVeacXo+yxeReJLyWEXuZ6kjJOdJAigPDxUc8L9fiV99zgw==","salt":"ByUEsXvnC0rY1AtDsSVEQQ==","additionalParameters":{}}', '{"hashIterations":210000,"algorithm":"pbkdf2-sha512","additionalParameters":{}}', 10),
-('b0ed58c3-43dd-4b9a-b5c1-f97a29f9c5c7', NULL, 'password', '44b414b4-223e-4782-ab2b-1819161405e7', 1721292180374, 'My password', '{"value":"td5L/AGnQ5fmmPQcpzvdxCpPjr11Ebf0iLJKf0TWJQZ9wOymMUP+97jYCdxFC/ySF+gSazYe3iLG0odQ7AqXvw==","salt":"xaag5ytqtlbrpn1LoZI34Q==","additionalParameters":{}}', '{"hashIterations":210000,"algorithm":"pbkdf2-sha512","additionalParameters":{}}', 10);
+('b0ed58c3-43dd-4b9a-b5c1-f97a29f9c5c7', NULL, 'password', '44b414b4-223e-4782-ab2b-1819161405e7', 1721292180374, 'My password', '{"value":"td5L/AGnQ5fmmPQcpzvdxCpPjr11Ebf0iLJKf0TWJQZ9wOymMUP+97jYCdxFC/ySF+gSazYe3iLG0odQ7AqXvw==","salt":"xaag5ytqtlbrpn1LoZI34Q==","additionalParameters":{}}', '{"hashIterations":210000,"algorithm":"pbkdf2-sha512","additionalParameters":{}}', 10),
+('b0ed58c3-43dd-4b9a-b5c1-f97a29f9c5c8', NULL, 'password', '44b414b4-223e-4782-ab2b-1819161405e8', 1721292180374, 'My password', '{"value":"td5L/AGnQ5fmmPQcpzvdxCpPjr11Ebf0iLJKf0TWJQZ9wOymMUP+97jYCdxFC/ySF+gSazYe3iLG0odQ7AqXvw==","salt":"xaag5ytqtlbrpn1LoZI34Q==","additionalParameters":{}}', '{"hashIterations":210000,"algorithm":"pbkdf2-sha512","additionalParameters":{}}', 10);
 
 INSERT INTO "public"."databasechangelog" ("id", "author", "filename", "dateexecuted", "orderexecuted", "exectype", "md5sum", "description", "comments", "tag", "liquibase", "contexts", "labels", "deployment_id") VALUES
 ('1.0.0.Final-KEYCLOAK-5461', 'sthorger@redhat.com', 'META-INF/jpa-changelog-1.0.0.Final.xml', '2024-07-18 08:41:00.999671', 1, 'EXECUTED', '9:6f1016664e21e16d26517a4418f5e3df', 'createTable tableName=APPLICATION_DEFAULT_ROLES; createTable tableName=CLIENT; createTable tableName=CLIENT_SESSION; createTable tableName=CLIENT_SESSION_ROLE; createTable tableName=COMPOSITE_ROLE; createTable tableName=CREDENTIAL; createTable tab...', '', NULL, '4.25.1', NULL, NULL, '1292060726'),
@@ -2584,17 +2585,21 @@ INSERT INTO "public"."scope_mapping" ("client_id", "role_id") VALUES
 
 INSERT INTO "public"."user_attribute" ("name", "value", "user_id", "id", "long_value_hash", "long_value_hash_lower_case", "long_value") VALUES
 ('profile', 'APP-SEC', '44b414b4-223e-4782-ab2b-1819161405e7', '2b7afb02-cfb7-4037-9f5b-229983463221', NULL, NULL, NULL),
+('profile', 'expert', '44b414b4-223e-4782-ab2b-1819161405e8', '2b7afb02-cfb7-4037-9f5b-229983463222', NULL, NULL, NULL),
 ('profile', 'EDU-SEC', '32a56da2-08b8-4f5d-9b24-02727ceebde0', 'ddc36d47-0346-4279-879e-326d34cfc3b8', NULL, NULL, NULL);
 
 INSERT INTO "public"."user_entity" ("id", "email", "email_constraint", "email_verified", "enabled", "federation_link", "first_name", "last_name", "realm_id", "username", "created_timestamp", "service_account_client_link", "not_before") VALUES
 ('32a56da2-08b8-4f5d-9b24-02727ceebde0', 'enseignant@example.com', 'enseignant@example.com', 't', 't', NULL, 'Marie', 'Durant', '5f22ffdd-e26c-45a8-80c1-382f149facab', 'enseignant', 1721292207899, NULL, 0),
 ('32fa1821-1eb3-4df9-98a5-24f307bec772', NULL, '1df83997-efb9-4860-9ffe-905b808b3f1a', 'f', 't', NULL, NULL, NULL, 'b8300271-af6f-4da4-9541-bc4ee4f0779f', 'admin', 1721292063226, NULL, 0),
-('44b414b4-223e-4782-ab2b-1819161405e7', 'eleve@example.com', 'eleve@example.com', 't', 't', NULL, 'Kévin', 'Dupont', '5f22ffdd-e26c-45a8-80c1-382f149facab', 'eleve', 1721292169623, NULL, 0);
+('44b414b4-223e-4782-ab2b-1819161405e7', 'eleve@example.com', 'eleve@example.com', 't', 't', NULL, 'Kévin', 'Dupont', '5f22ffdd-e26c-45a8-80c1-382f149facab', 'eleve', 1721292169623, NULL, 0),
+('44b414b4-223e-4782-ab2b-1819161405e8', 'expert@example.com', 'expert@example.com', 't', 't', NULL, 'Jeanne', 'Experte', '5f22ffdd-e26c-45a8-80c1-382f149facab', 'expert', 1721292169624, NULL, 0);
+
 
 INSERT INTO "public"."user_role_mapping" ("role_id", "user_id") VALUES
 ('0b879c2f-ded7-45df-bf59-adcecef77cd0', '32fa1821-1eb3-4df9-98a5-24f307bec772'),
 ('3e45aa61-4df0-4eab-b2b4-498eea4a2999', '32a56da2-08b8-4f5d-9b24-02727ceebde0'),
 ('3e45aa61-4df0-4eab-b2b4-498eea4a2999', '44b414b4-223e-4782-ab2b-1819161405e7'),
+('3e45aa61-4df0-4eab-b2b4-498eea4a2999', '44b414b4-223e-4782-ab2b-1819161405e8'),
 ('4741d45f-6128-41d3-abf0-534d847074b2', '32fa1821-1eb3-4df9-98a5-24f307bec772'),
 ('4c176de3-3d7c-40f3-92b5-a1ccf21610fa', '32fa1821-1eb3-4df9-98a5-24f307bec772'),
 ('4d316a8f-f9ca-4c26-a78a-4d0ff5a2548e', '32fa1821-1eb3-4df9-98a5-24f307bec772'),

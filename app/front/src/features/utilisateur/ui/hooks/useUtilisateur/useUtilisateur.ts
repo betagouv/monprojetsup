@@ -1,19 +1,14 @@
 import { env } from "@/configuration/environnement";
 import { queryClient } from "@/configuration/lib/tanstack-query";
 import { useSearch } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { useAuth } from "react-oidc-context";
 
 export default function useUtilisateur() {
   const auth = useAuth();
-  const paramètresURL: { simulerCompte: "élève" | "enseignant" } = useSearch({
+  const paramètresURL: { simulerCompte: "élève" | "expert" } = useSearch({
     strict: false,
   });
-
-  const récupérerProfil = () => {
-    if (auth.user?.profile.profile === "APP-SEC") return "élève" as const;
-    if (auth.user?.profile.profile === "EDU-SEC") return "enseignant" as const;
-    return "élève" as const;
-  };
 
   const seDéconnecter = async () => {
     localStorage.clear();
@@ -21,35 +16,35 @@ export default function useUtilisateur() {
     await auth.signoutRedirect({ id_token_hint: auth.user?.id_token });
   };
 
-  const récupérerInformationsUtilisateur = () => {
-    if (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "enseignant") {
+  const récupérerInformationsUtilisateur = useMemo(() => {
+    if (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "expert") {
       return {
-        type: "enseignant" as const,
         prénom: "hugo",
-        nom: "durant",
-        email: "hugo@example.com",
+        nom: "expert",
+        email: "expert@example.com",
+        estExpert: true,
       };
     }
 
-    if (env.VITE_TEST_MODE || (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "élève")) {
+    if (env.VITE_TEST_MODE) {
       return {
-        type: "élève" as const,
         prénom: "nina",
-        nom: "dupont",
-        email: "nina@example.com",
+        nom: "élève",
+        email: "eleve@example.com",
+        estExpert: false,
       };
     }
 
     return {
-      type: récupérerProfil(),
       prénom: auth.user?.profile.given_name,
       nom: auth.user?.profile.family_name,
       email: auth.user?.profile.email,
+      estExpert: auth.user?.profile.profile === "expert",
     };
-  };
+  }, [auth.user, paramètresURL?.simulerCompte]);
 
   return {
-    ...récupérerInformationsUtilisateur(),
+    ...récupérerInformationsUtilisateur,
     seDéconnecter,
   };
 }
