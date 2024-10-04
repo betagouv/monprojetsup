@@ -25,7 +25,7 @@ const BoutonSquelette = ({ label, taille, variante, icône }: BoutonSquelettePro
 
   return (
     <div
-      className={`fr-btn ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
+      className={`fr-btn break-all ${classEnFonctionDeLaTaille()} ${classEnFonctionDeLaVariante()} ${classEnFonctionDeLIcône()}`}
     >
       {label}
     </div>

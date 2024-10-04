@@ -14,7 +14,7 @@ const Voeux = ({ formation }: VoeuxProps) => {
   const détailFavori = élève.formationsFavorites?.find((formationFavorite) => formation.id === formationFavorite.id);
 
   return (
-    <div className="my-10 grid gap-6 border border-solid border-[--border-default-grey] px-10 py-8 shadow-md">
+    <div className="my-10 grid gap-6 border border-solid border-[--border-default-grey] px-4 py-8 shadow-md sm:px-10">
       <div className="*:mb-0 *:text-[--text-label-grey]">
         <Titre
           niveauDeTitre="h2"

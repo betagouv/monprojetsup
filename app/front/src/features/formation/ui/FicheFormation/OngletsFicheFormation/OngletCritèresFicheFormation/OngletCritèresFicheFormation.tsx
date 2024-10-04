@@ -4,6 +4,8 @@ import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoye
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react/jsx-runtime";
 
 const trierTableauParPourcentage = <T extends { pourcentage: number }>(tableau: T[]): T[] => {
@@ -16,6 +18,10 @@ const OngletCritèresFicheFormation = ({
   répartitionParBac,
   descriptifAttendus,
 }: OngletCritèresFicheFormationProps) => {
+  const POURCENTAGE_MIN_POUR_AFFICHER = 15;
+
+  const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
+
   return (
     <div>
       {répartitionParBac.length > 0 && (
@@ -33,7 +39,9 @@ const OngletCritèresFicheFormation = ({
               <Fragment key={bac.idBac}>
                 {bac.pourcentage !== 0 && (
                   <li>
-                    <Badge titre={`${bac.idBac} ${bac.pourcentage}%`} />
+                    <Badge
+                      titre={`${référentielDonnées?.bacs.find((élément) => élément.id === bac.idBac)?.nom} ${bac.pourcentage}%`}
+                    />
                   </li>
                 )}
               </Fragment>
@@ -55,7 +63,7 @@ const OngletCritèresFicheFormation = ({
           <ul className="m-0 grid list-none justify-start gap-4 p-0">
             {trierTableauParPourcentage(critèresAnalyse).map((critère) => (
               <Fragment key={critère.nom}>
-                {critère.pourcentage !== 0 && (
+                {critère.pourcentage >= POURCENTAGE_MIN_POUR_AFFICHER && (
                   <li className="grid grid-flow-col justify-start gap-2 font-medium">
                     <span
                       aria-hidden="true"
