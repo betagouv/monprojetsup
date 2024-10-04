@@ -188,29 +188,32 @@ class UpdateFormationDbs(
 
         var letter = '_'
 
-        val entities = cities.map { city ->
+        val className = VilleVoeuxEntity::class.simpleName!!
+        batchUpdate.clearEntities(className)
+
+        val entities = ArrayList<VilleVoeuxEntity>()
+        cities.forEach { city ->
             val newLetter = city.nom.first()
             if(newLetter != letter) {
                 logger.info("Calcul des distances pour les villes commençant par $newLetter")
                 letter = newLetter
+                logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
+                batchUpdate.addEntities(className, entities)
+                entities.clear()
             }
             val distances = voeux.map { voeu ->
                 voeu.id to geodeticDistance(voeu.coords(), city.coords)
             }
                 .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
                 .toMap()
-            VilleVoeuxEntity().apply {
+            entities.add(VilleVoeuxEntity().apply {
                 idVille = city.codeInsee
                 distancesVoeuxKm = distances
-            }
+            })
         }
-
-        logger.info("Sauvegarde des correspondances villes-voeux en base")
-
-        batchUpdate.setEntities(
-            VilleVoeuxEntity::class.simpleName!!,
-            entities
-        )
+        logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
+        batchUpdate.addEntities(className, entities)
+        entities.clear()
     }
 
     /**
