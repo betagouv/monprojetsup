@@ -17,12 +17,7 @@ export default function useÉlèveRedirection() {
   const étapesInscription = étapesInscriptionÉlèveStore();
 
   useLayoutEffect(() => {
-    if (utilisateur.type === undefined || (utilisateur.type === "élève" && !élève)) return;
-
-    if (utilisateur.type !== "élève") {
-      setEstInitialisé(true);
-      return;
-    }
+    if (utilisateur.email === undefined || !élève) return;
 
     const critèresRemplissagePourÉtapesInscription = [
       Boolean(élève?.situation),
@@ -46,7 +41,7 @@ export default function useÉlèveRedirection() {
     }
 
     setEstInitialisé(true);
-  }, [router, routerState.location.pathname, utilisateur.type, élève, étapesInscription]);
+  }, [router, routerState.location.pathname, utilisateur, élève, étapesInscription]);
 
   return { estInitialisé };
 }
