@@ -4,8 +4,10 @@ import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import ExplicationCorrespondanceÉlementFicheFormation from "@/features/formation/ui/FicheFormation/ExplicationsCorrespondanceFicheFormation/ExplicationCorrespondanceÉlementFicheFormation/ExplicationCorrespondanceÉlementFicheFormation";
 import ExplicationCorrespondanceListeÉlementsFicheFormation from "@/features/formation/ui/FicheFormation/ExplicationsCorrespondanceFicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation/ExplicationCorrespondanceListeÉlementsFicheFormation";
+import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
 
 const ExplicationsCorrespondanceFicheFormation = ({ explications }: ExplicationsCorrespondanceFicheFormationProps) => {
+  const utilisateur = useUtilisateur();
   if (!explications) return null;
 
   if (
@@ -14,7 +16,6 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
     explications.spécialitésChoisies.length === 0 &&
     explications.intêretsEtDomainesChoisis.domaines.length === 0 &&
     explications.intêretsEtDomainesChoisis.intêrets.length === 0 &&
-    !explications.explicationsCalcul &&
     !explications.duréeÉtudesPrévue &&
     !explications.alternance &&
     !explications.duréeÉtudesPrévue &&
@@ -88,7 +89,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
             éléments={explications.formationsSimilaires.map((formation) => formation.nom)}
           />
         )}
-        {explications.explicationsCalcul && explications.explicationsCalcul.length > 0 && (
+        {explications.explicationsCalcul && explications.explicationsCalcul.length > 0 && utilisateur.estExpert && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.EXPLICATION_CALCUL}
             éléments={explications.explicationsCalcul.map((explication) => explication)}
