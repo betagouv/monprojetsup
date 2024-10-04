@@ -103,6 +103,36 @@ export const localeFR = {
       MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l'intervalle",
       EXPLICATION_CALCUL: "Détails du calcul du score (mode expert)",
     },
+    VOEUX: {
+      TITRE: "Dis-nous en plus sur ce choix",
+      AMBITIONS: {
+        LÉGENDE: "Je dirais que c’est un choix ...",
+        PLAN_B: {
+          LABEL: "Plan B",
+          EMOJI: "🛟",
+        },
+        RÉALISTE: {
+          LABEL: "Réaliste",
+          EMOJI: "🎯",
+        },
+        AMBITIEUX: {
+          LABEL: "Ambitieux",
+          EMOJI: "🙏",
+        },
+      },
+      ÉTABLISSEMENTS: {
+        LÉGENDE: "Etablissements pour lesquels je souhaite candidater",
+        LIENS: {
+          PARCOURSUP: "Carte Parcoursup",
+          PRÉFÉRENCES: "Préférences de villes",
+        },
+        TOUTES_LES_VILLES: {
+          TITRE_ONGLET: "Toutes les villes",
+          RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
+          LIEN_PRÉFÉRENCES: "Préférences de villes ›",
+        },
+      },
+    },
   },
   ÉLÈVE: {
     PROJET: {
@@ -376,6 +406,7 @@ export const localeFR = {
     VOUS_ÊTES_ICI: "Vous êtes ici :",
     MENU_PRINCIPAL: "Menu principal",
     ONGLETS_FORMATION: "Détails sur la formation",
+    ONGLETS_VOEUX_ÉTABLISSEMENTS: "Établissements par ville",
     VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
     FERMER_MODALE: "Fermer la fenêtre modale",
     CONTENU: "Contenu",
