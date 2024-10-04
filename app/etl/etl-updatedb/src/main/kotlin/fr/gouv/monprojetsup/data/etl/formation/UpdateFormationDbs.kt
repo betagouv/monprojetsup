@@ -44,9 +44,7 @@ interface VillesVoeuxDb : JpaRepository<VilleVoeuxEntity, String>
 @Component
 class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
-    private val formationsdb: FormationDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
-    private val voeuxDb: VoeuxDb,
     private val mpsDataPort: MpsDataPort,
     private val batchUpdate: BatchUpdate
 ) {
@@ -56,8 +54,8 @@ class UpdateFormationDbs(
     internal fun update() {
         logger.info("Mise à jour de la table des formations et de la table des voeux")
         updateFormationsAndVoeuxDb()
-        logger.info("Mise à jour de la table de correspondance ville formations")
-        updateVillesAndFormationsDb()
+        logger.info("Mise à jour de la table de correspondance ville voeux")
+        updateVillesVoeuxDb()
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
@@ -180,10 +178,11 @@ class UpdateFormationDbs(
          )
      }
 
-    private fun updateVillesAndFormationsDb() {
+    fun updateVillesVoeuxDb() {
         val cities = mpsDataPort.getCities()
             .sortedBy { it.nom }
-            .filter { c -> c.nom == c.codeInsee }
+            .associateBy { it.codeInsee }
+            .values
 
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
@@ -201,10 +200,12 @@ class UpdateFormationDbs(
                 .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
                 .toMap()
             VilleVoeuxEntity().apply {
-                idVille = city.nom
+                idVille = city.codeInsee
                 distancesVoeuxKm = distances
             }
         }
+
+        logger.info("Sauvegarde des correspondances villes-voeux en base")
 
         batchUpdate.setEntities(
             VilleVoeuxEntity::class.simpleName!!,

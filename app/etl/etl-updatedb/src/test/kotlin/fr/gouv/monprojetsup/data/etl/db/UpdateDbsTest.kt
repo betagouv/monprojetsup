@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.db
 import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
+import fr.gouv.monprojetsup.data.etl.formation.VillesVoeuxDb
 import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
 import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
@@ -36,6 +37,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateReferentielsDbs: UpdateReferentielDbs
 
         @Autowired
+        lateinit var villesVoeuxDb: VillesVoeuxDb
+
+        @Autowired
         lateinit var updateFormationDbs: UpdateFormationDbs
 
         @BeforeEach
@@ -44,12 +48,19 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
-        fun `La plupart des formations en base doivent réussir le test d'intégrité`() {
+        fun `Les tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsAndVoeuxDb() }
             val formations = formationsdb.findAll()
             assertThat(formations).isNotEmpty
             val nbFormations = formations.size
             assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE * nbFormations / 100)
+        }
+
+        @Test
+        fun `La table ville voeux est correctement remplie`() {
+            assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
+            val villesVoeux = villesVoeuxDb.findAll()
+            assertThat(villesVoeux).isNotEmpty
         }
 
         @Test
