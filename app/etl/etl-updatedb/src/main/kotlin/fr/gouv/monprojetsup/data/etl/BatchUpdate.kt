@@ -11,17 +11,17 @@ class BatchUpdate(
 
     fun <T> setEntities(entityName: String, entities: Collection<T> ) {
 
+        clearEntities(entityName)
+        addEntities(entityName, entities)
+
+    }
+
+    fun <T> addEntities(entityName: String, entities: Collection<T> ) {
         val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
         val transaction: Transaction = statelessSession.beginTransaction()
-        val hql = "DELETE FROM $entityName"
-        val query = statelessSession.createMutationQuery(hql)
-        query.executeUpdate()
-
         entities.forEach{ statelessSession.insert(it)}
-
         transaction.commit()
         statelessSession.close()
-
     }
 
     fun clearEntities(entityName: String) {
