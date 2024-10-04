@@ -1,4 +1,5 @@
 import { type UseMoyenneFormArgs } from "./ScolaritéForm.interface";
+import { env } from "@/configuration/environnement";
 import { useEffect, useMemo } from "react";
 
 export default function useMoyenneForm({ référentielDonnées, watch, setValue, getValues }: UseMoyenneFormArgs) {
@@ -9,7 +10,10 @@ export default function useMoyenneForm({ référentielDonnées, watch, setValue,
   const moyenneGénérale = watch("moyenneGénérale");
   const bacId = watch("bac");
 
-  const moyenneInitiale = useMemo(() => getValues("moyenneGénérale") ?? MOYENNE_PAR_DÉFAUT, [getValues]);
+  const moyenneInitiale = useMemo(
+    () => (env.VITE_FF_MOYENNE_GENERALE ? (getValues("moyenneGénérale") ?? MOYENNE_PAR_DÉFAUT) : NE_VEUT_PAS_RÉPONDRE),
+    [NE_VEUT_PAS_RÉPONDRE, getValues],
+  );
   const afficherChampMoyenne = useMemo(() => classe === "terminale", [classe]);
   const neVeutPasRépondre = useMemo(
     () => moyenneGénérale === NE_VEUT_PAS_RÉPONDRE,
