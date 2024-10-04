@@ -11,11 +11,11 @@ public class SpecialitesLoader {
 
     public static Specialites load(PsupStatistiques statistiques, DataSources sources) throws IOException {
 
-        Specialites specsWithoutBacInfo =
+        Specialites specsFromFiles =
             fromJsonFile(sources.getSourceDataFilePath(DataSources.SPECIALITES_FILENAME), Specialites.class);
 
         return Specialites.build(
-                specsWithoutBacInfo,
+                specsFromFiles,
                 statistiques.getAdmisMatiereBacAnneeStats()
         );
     }

@@ -25,9 +25,10 @@ public record Specialites(
         this("", new HashMap<>(), new HashMap<>());
     }
 
-    public static Specialites build(Specialites specsWithoutBacInfo, List<AdmisMatiereBacAnnee> stats) {
+    public static Specialites build(Specialites specsFromFile, List<AdmisMatiereBacAnnee> stats) {
         val result = new Specialites();
-        result.specialites().putAll(specsWithoutBacInfo.specialites());
+        result.specialites().putAll(specsFromFile.specialites());
+        result.specialitesParBac.putAll(specsFromFile.specialitesParBac());
         result.injectPairesSpecialiteBac(stats);
         return result;
     }
@@ -44,24 +45,40 @@ public record Specialites(
     }
 
     private void injectPairesSpecialiteBac(@NotNull List<AdmisMatiereBacAnnee> paires) {
-        specialitesParBac.clear();
-        paires.forEach(pair -> {
-            val specPsupId = pair.iMtCod();
-            if (
-                    specialites.containsKey(specPsupId)
-                    && pair.annLycee() == ANNEE_LYCEE_TERMINALE || pair.annLycee() == ANNEE_LYCEE_PREMIERE
-                    && pair.nb() > 50
-            ) {
-                val set = specialitesParBac.computeIfAbsent(pair.bac(), k -> new HashSet<>());
-                if(specPsupId == SPEC_ANGLAIS_CODE_PSUP) {
-                    set.add(SPEC_LLCER_MPS_KEY);
-                    set.add(SPEC_AMC_MPS_KEY);
-                } else {
-                    val specMpsId = Matiere.idPsupToIdMps(specPsupId);
-                    set.add(specMpsId);
+        if(specialitesParBac.isEmpty()) {
+            paires.forEach(pair -> {
+                val specPsupId = pair.iMtCod();
+                if (
+                        specialites.containsKey(specPsupId)
+                                && pair.annLycee() == ANNEE_LYCEE_TERMINALE || pair.annLycee() == ANNEE_LYCEE_PREMIERE
+                                && pair.nb() > 50
+                ) {
+                    val set = specialitesParBac.computeIfAbsent(pair.bac(), k -> new HashSet<>());
+                    if (specPsupId == SPEC_ANGLAIS_CODE_PSUP) {
+                        set.add(SPEC_LLCER_MPS_KEY);
+                        set.add(SPEC_AMC_MPS_KEY);
+                    } else {
+                        val specMpsId = Matiere.idPsupToIdMps(specPsupId);
+                        set.add(specMpsId);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            specialitesParBac.forEach((s, set) -> {
+                val stringsPs = new HashSet<>(set);
+                set.clear();
+                stringsPs.forEach(specPsupIdStr -> {
+                    int specPsupId = Integer.parseInt(specPsupIdStr);
+                    if (specPsupId ==  SPEC_ANGLAIS_CODE_PSUP) {
+                        set.add(SPEC_LLCER_MPS_KEY);
+                        set.add(SPEC_AMC_MPS_KEY);
+                    } else {
+                        val specMpsId = Matiere.idPsupToIdMps(specPsupId);
+                        set.add(specMpsId);
+                    }
+                });
+            });
+        }
 
         specialitesParBac()
                 .computeIfAbsent(TOUS_BACS_CODE_MPS, k -> new HashSet<>())
