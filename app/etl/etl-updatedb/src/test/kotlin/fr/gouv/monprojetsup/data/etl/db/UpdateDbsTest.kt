@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -57,6 +58,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @IfProfileValue(name = "spring.profiles.active", value = "with-resource-intensive-tests")
         fun `La table ville voeux est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
             val villesVoeux = villesVoeuxDb.findAll()

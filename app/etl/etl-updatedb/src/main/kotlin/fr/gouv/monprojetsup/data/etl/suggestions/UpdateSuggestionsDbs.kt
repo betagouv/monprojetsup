@@ -35,13 +35,9 @@ interface SuggestionsEdgesDb :
 
 @Component
 class UpdateSuggestionsDbs(
-    private val candidatsPort: SuggestionsCandidatsDb,
-    private val villesPort: SuggestionsVillesDb,
     private val matieresPort: SuggestionsMatieresDb,
-    private val labelsPort: SuggestionsLabelsDb,
-    private val edgesPort: SuggestionsEdgesDb,
     private val mpsDataPort: MpsDataPort,
-    private val batchUpdate : BatchUpdate
+    private val batchUpdate: BatchUpdate
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateSuggestionsDbs::class.java.simpleName)
