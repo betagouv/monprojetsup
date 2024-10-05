@@ -15,10 +15,10 @@ import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -49,6 +49,14 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
+        fun `La table ville voeux est correctement remplie`() {
+            assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
+            val villesVoeux = villesVoeuxDb.findAll()
+            assertThat(villesVoeux).isNotEmpty
+        }
+
+        @Test
         fun `Les tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsAndVoeuxDb() }
             val formations = formationsdb.findAll()
@@ -57,13 +65,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
             assertThat(formations.filter { !it.integrityCheck() }.map { it.id }).hasSizeLessThanOrEqualTo(TestData.MAX_PCT_FORMATIONS_ECHOUANT_AU_TEST_INTEGRITE * nbFormations / 100)
         }
 
-        @Test
-        @IfProfileValue(name = "spring.profiles.active", value = "with-resource-intensive-tests")
-        fun `La table ville voeux est correctement remplie`() {
-            assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
-            val villesVoeux = villesVoeuxDb.findAll()
-            assertThat(villesVoeux).isNotEmpty
-        }
 
         @Test
         fun `Les stats incluent l'indice tous bacs`() {
@@ -123,7 +124,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         private fun update() {
             updateFormationsMetiersDbs.clearAll()
-            updateFormationDbs.update()
+            updateFormationDbs.updateFormationsAndVoeuxDb()
             updateMetierDbs.update()
             updateFormationsMetiersDbs.update()
         }

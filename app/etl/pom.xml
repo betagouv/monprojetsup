@@ -27,6 +27,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kotlin.version>1.9.23</kotlin.version>
 		<kotlin.code.style>official</kotlin.code.style>
+		<test.excluded.groups></test.excluded.groups>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -184,8 +185,31 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludedGroups>${test.excluded.groups}</excludedGroups>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<excludedGroups>${test.excluded.groups}</excludedGroups>
+				</configuration>
+			</plugin>
 		</plugins>
     </build>
 
+	<!-- on ci we skip resource intensive tests to prevent OutOfMemory errors -->
+	<profiles>
+		<profile>
+			<id>ci</id>
+			<properties>
+				<test.excluded.groups>resource-intensive-test</test.excluded.groups>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>
