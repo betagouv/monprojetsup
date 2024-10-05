@@ -63,3 +63,8 @@ Assurez-vous de disposer de java en version >= 19
 - La machine doit disposer d'une connexion directe à la BDD de parcoursup 
 - Placez-vous dans le dossier `app/etl/`
 - Lancez la tâche de mise à jour avec ```mvn clean compile -fetl-psup/pom.xml exec:java -Dexec.mainClass=fr.gouv.monprojetsup.data.etl.UpdatePsupDataKt```
+
+### Tests gourmands en mémoire
+Certains tests sont trop gourmands en ressources mémoire pour être exécuté sur une CI standard.
+Dans le code les tests sont annotés avec `@Tag("resource-intensive-test")`.
+Ces tests sont désactivés dans le profile maven "ci".
