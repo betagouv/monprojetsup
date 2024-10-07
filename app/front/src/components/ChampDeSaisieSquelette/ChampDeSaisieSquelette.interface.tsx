@@ -17,7 +17,7 @@ export type ChampDeSaisieSqueletteProps = {
   };
   placeholder?: string;
   obligatoire?: boolean;
-  auChangement?: React.ChangeEventHandler<HTMLInputElement>;
+  auChangement?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   children: ReactNode;
 };
 

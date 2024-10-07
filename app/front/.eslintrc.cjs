@@ -82,6 +82,7 @@ module.exports = {
           {
             "propName": "className",
             "allowedFor": [
+              "TextareaAutosize",
               "Link",
               "Accordion.Root",
               "Accordion.Item",
