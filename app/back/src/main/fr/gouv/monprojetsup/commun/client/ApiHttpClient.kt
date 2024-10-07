@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.commun.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
 import okhttp3.Credentials
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
@@ -34,7 +33,7 @@ abstract class ApiHttpClient(
     @Throws(MonProjetSupInternalErrorException::class)
     protected inline fun <reified T> post(
         url: String,
-        requeteDTO: APISuggestionRequeteDTO,
+        requeteDTO: Any,
         token: String? = null,
     ): T {
         val requete = creerLaRequetePost(requeteDTO, url, token)
@@ -45,7 +44,7 @@ abstract class ApiHttpClient(
     }
 
     protected fun creerLaRequetePost(
-        requeteDTO: APISuggestionRequeteDTO,
+        requeteDTO: Any,
         url: String,
         token: String?,
     ): Request.Builder {

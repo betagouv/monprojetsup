@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.parcoursup.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.client.ApiHttpClient
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupHttpClient
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Component
 @Component
 class ParcoursupApiHttpClient(
     @Value("\${parcoursup.api.client.id}")
-    val clientId: String,
+    private val clientId: String,
     @Value("\${parcoursup.api.client.password}")
-    val clientSecret: String,
-    @Value("\${parcoursup.api.url.token}")
-    val urlToken: String,
+    private val clientSecret: String,
+    @Value("\${parcoursup.api.url.authent}")
+    private val urlAuthent: String,
     @Value("\${parcoursup.api.url}")
     override val baseUrl: String,
     override val objectMapper: ObjectMapper,
@@ -33,7 +34,7 @@ class ParcoursupApiHttpClient(
     ParcoursupHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup> {
-        val accessToken = recupererAccessToken(clientId = clientId, clientSecret = clientSecret, urlToken = urlToken)
+        val accessToken = recupererAccessToken(clientId = clientId, clientSecret = clientSecret, urlToken = urlAuthent + URL_TOKEN)
         val getFavoris =
             get<List<ParcoursupFavorisReponseDTO>>(
                 url = baseUrl + URL_FAVORIS + idParcoursup,
@@ -42,7 +43,21 @@ class ParcoursupApiHttpClient(
         return getFavoris.map { it.toFavorisParcoursup() }
     }
 
+    @Throws(MonProjetSupBadRequestException::class)
+    override fun recupererIdParcoursupEleve(jwt: String): Int {
+        val accessToken = recupererAccessToken(clientId = clientId, clientSecret = clientSecret, urlToken = urlAuthent + URL_TOKEN)
+        val getUserInfo =
+            post<String>(
+                urlAuthent + URL_USER_INFO,
+                "token=$jwt",
+                accessToken,
+            )
+        return 0
+    }
+
     companion object {
+        private const val URL_TOKEN = "/oauth2/token"
+        private const val URL_USER_INFO = "/userinfo"
         private const val URL_FAVORIS = "/ApiFavoris/favoris/"
     }
 }

@@ -1,9 +1,11 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
+import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
+import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProfilEleveController(
     private val miseAJourEleveService: MiseAJourEleveService,
     private val miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService,
+    private val miseAJourIdParcoursupService: MiseAJourIdParcoursupService,
 ) : AuthentifieController() {
     @PostMapping
     fun postProfilEleve(
@@ -35,5 +38,14 @@ class ProfilEleveController(
         val profil = recupererEleveIdentifie()
         val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
         return ModificationProfilDTO(profilMisAJour)
+    }
+
+    @PostMapping("/parcoursup")
+    fun postCompteParcoursup(
+        @RequestBody ajoutCompteParcoursup: AjoutCompteParcoursupDTO,
+    ): ResponseEntity<Unit> {
+        val profil = recupererEleveIdentifie()
+        miseAJourIdParcoursupService.mettreAJourIdParcoursup(profil, ajoutCompteParcoursup.jwtParcoursup)
+        return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 }

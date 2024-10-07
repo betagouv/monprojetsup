@@ -6,10 +6,12 @@ import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
+import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -39,6 +41,9 @@ class ProfilEleveControllerTest(
 
     @MockBean
     lateinit var miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService
+
+    @MockBean
+    lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService
 
     @Nested
     inner class `Quand on appelle la route POST profil` {
@@ -616,6 +621,153 @@ class ProfilEleveControllerTest(
         fun `si token, doit retourner 403`() {
             // When & Then
             mvc.perform(get("/api/v1/profil")).andExpect(status().isForbidden)
+        }
+    }
+
+    @Nested
+    inner class `Quand on appelle la route POST profil parcoursup` {
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si l'élève existe et le service réussi, doit retourner 204`() {
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isNoContent)
+        }
+
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si l'enseignant existe et le service réussi, doit retourner 204`() {
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isNoContent)
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si l'élève existe mais que le service renvoie MonProjetSupNotFoundException, doit retourner 404`() {
+            // Given
+            val exception =
+                MonProjetSupNotFoundException(
+                    code = "ELEVE_NOT_FOUND",
+                    msg =
+                        "L'élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c tente de sauvegarder son id parcoursup " +
+                            "mais il n'est pas encore sauvegardé en BDD",
+                )
+            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, "eyzefkgzejkfezlnkj")).willThrow(exception)
+
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isNotFound)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "ELEVE_NOT_FOUND",
+                          "status": 404,
+                          "detail": "L'élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c tente de sauvegarder son id parcoursup mais il n'est pas encore sauvegardé en BDD",
+                          "instance": "/api/v1/profil/parcoursup"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
+        @Test
+        fun `si l'élève existe mais que le service renvoie MonProjetSupBadRequestException, doit retourner 400`() {
+            // Given
+            val exception = MonProjetSupBadRequestException(code = "JWT_NON_VALIDE", msg = "JWT envoyé invalide")
+            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, "eyzefkgzejkfezlnkj")).willThrow(exception)
+
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "JWT_NON_VALIDE",
+                          "status": 400,
+                          "detail": "JWT envoyé invalide",
+                          "instance": "/api/v1/profil/parcoursup"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteAvecUnEleve(idEleve = "d26da5c2-c38d-4c07-9ef3-9da2443846df")
+        @Test
+        fun `si l'élève n'a pas encore crée de profil, doit retourner 403`() {
+            // Given
+            val id = "d26da5c2-c38d-4c07-9ef3-9da2443846df"
+            given(eleveRepository.recupererUnEleve(id)).willReturn(ProfilEleve.SansCompte(id))
+
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isForbidden)
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "type": "about:blank",
+                          "title": "ELEVE_SANS_COMPTE",
+                          "status": 403,
+                          "detail": "L'élève connecté n'a pas encore crée son compte",
+                          "instance": "/api/v1/profil/parcoursup"
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @ConnecteSansId
+        @Test
+        fun `si utilisateur sans id, doit retourner 404`() {
+            // When & Then
+            val bodyEntree =
+                """
+                {
+                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                }
+                """.trimIndent()
+            mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
+                .andExpect(status().isForbidden)
         }
     }
 }

@@ -40,7 +40,7 @@ class ParcoursupApiHttpClientTest {
             ParcoursupApiHttpClient(
                 clientId = "clientId",
                 clientSecret = "clientSecret",
-                urlToken = "https://monauthentification.fr/Authentification/oauth2/token",
+                urlAuthent = "https://monauthentification.fr/Authentification",
                 baseUrl = "https://parcoursup.fr",
                 objectMapper = objectMapper,
                 httpClient = httpClient,
