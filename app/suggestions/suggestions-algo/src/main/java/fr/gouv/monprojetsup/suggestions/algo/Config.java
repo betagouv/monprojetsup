@@ -24,6 +24,7 @@ public final class Config {
     public static final int ADMISSIBILITY_LOWEST_GRADE = 8;
     public static final int MAX_DISTANCE = 3;
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
+    public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
@@ -101,6 +102,17 @@ public final class Config {
             entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
             entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES)
+    ));
+    @JsonIgnore
+    private final transient Map<String, Integer> orderInExplanations = new HashMap<>(Map.ofEntries(
+            entry(BONUS_TAGS, 1),
+            entry(BONUS_TYPE_BAC, 2),
+            entry(BONUS_DURATION, 3),
+            entry(BONUS_APPRENTISSAGE, 4),
+            entry(BONUS_GEO, 5),
+            entry(BONUS_SIM, 6),
+            entry(BONUS_MOY_GEN, 7),
+            entry(BONUS_SPECIALITE, 8)
     ));
     @JsonIgnore
     private final transient List<String> personalCriteria = new ArrayList<>(
