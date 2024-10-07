@@ -1,7 +1,7 @@
 import { type TagFiltreProps } from "./TagFiltre.interface";
 import { useState } from "react";
 
-const TagFiltre = ({ libellé, emoji, auClic, taille, appuyéParDéfaut = false }: TagFiltreProps) => {
+const TagFiltre = ({ children, ariaLabel, emoji, auClic, taille, appuyéParDéfaut = false }: TagFiltreProps) => {
   const [estAppuyé, setEstAppuyé] = useState(appuyéParDéfaut);
   const classEnFonctionDeLaTaille = () => {
     if (taille === "petit") return "fr-tag--sm";
@@ -11,7 +11,7 @@ const TagFiltre = ({ libellé, emoji, auClic, taille, appuyéParDéfaut = false 
 
   return (
     <button
-      aria-label={libellé}
+      aria-label={ariaLabel}
       aria-pressed={estAppuyé}
       className={`fr-tag ${classEnFonctionDeLaTaille()}`}
       onClick={() => {
@@ -30,7 +30,7 @@ const TagFiltre = ({ libellé, emoji, auClic, taille, appuyéParDéfaut = false 
           </span>{" "}
         </>
       )}
-      <span className="capitalize">{libellé}</span>
+      <span className="capitalize">{children}</span>
     </button>
   );
 };

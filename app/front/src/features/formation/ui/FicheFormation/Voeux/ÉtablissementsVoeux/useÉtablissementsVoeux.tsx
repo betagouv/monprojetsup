@@ -22,7 +22,12 @@ export default function useÉtablissementsVoeux({ formation }: useÉtablissement
 
       return {
         titre: communeFavorite.nom,
-        contenu: <ÉtablissementsVoeuxOnglet établissements={établissements ?? []} />,
+        contenu: (
+          <ÉtablissementsVoeuxOnglet
+            formationId={formation.id}
+            établissements={établissements ?? []}
+          />
+        ),
       };
     }) ?? [];
 

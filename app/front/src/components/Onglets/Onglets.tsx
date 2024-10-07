@@ -55,7 +55,7 @@ const Onglets = ({ onglets, ongletAffichéParDéfaut = 0, nomAccessible }: Ongle
         return (
           <div
             aria-labelledby={`tabpanel-${index}-${id}`}
-            className={`fr-tabs__panel border border-solid border-[--border-default-grey] bg-white transition-none lg:px-12 lg:py-14 ${estSélectionné ? "fr-tabs__panel--selected" : ""}`}
+            className={`fr-tabs__panel border border-solid border-[--border-default-grey] bg-white transition-none lg:px-10 lg:py-10 ${estSélectionné ? "fr-tabs__panel--selected" : ""}`}
             id={`tabpanel-${index}-panel-${id}`}
             key={`tabpanel-${onglet.titre}`}
             role="tabpanel"
