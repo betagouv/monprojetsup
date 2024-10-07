@@ -25,14 +25,14 @@ class TestData {
         const val CUPGE_ECO_GESTION_PSUP_FL_COD2: Int = 985
         const val COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE: Int = 4445
 
-        private const val BTS_AERONAUTIQUE_FL_COD_PSUP: Int = 393
-        private const val BTS_AERONAUTIQUE_IDEO_COD: String = "FOR.9627"
+        const val BTS_AERONAUTIQUE_FL_COD_PSUP: Int = 393
+        const val BTS_AERONAUTIQUE_IDEO_COD: String = "FOR.9627"
 
-        private const val CMI_SVT_FL_COD_PSUP: Int = 4039
-        private const val CMI_SVT_IDEO_COD: String = "FOR.4980"
+        const val CMI_SVT_FL_COD_PSUP: Int = 4039
+        const val CMI_SVT_IDEO_COD: String = "FOR.4980"
 
-        private const val PASS_FL_COD_PSUP: Int = 2047
-        private const val PASS_IDEO_COD: String = "FOR.3884"
+        const val PASS_FL_COD_PSUP: Int = 2047
+        const val PASS_IDEO_COD: String = "FOR.3884"
 
         const val MET_DIR_HOTEL_IDEO = "MET.2"
         const val MET_TECH_FORGE_IDEO = "MET.550"
