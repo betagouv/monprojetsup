@@ -3,6 +3,7 @@ import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
 import Bouton from "@/components/Bouton/Bouton";
 import TagFiltre from "@/components/TagFiltre/TagFiltre";
 import { i18n } from "@/configuration/i18n/i18n";
+import { Fragment } from "react/jsx-runtime";
 
 const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: ÉtablissementsVoeuxOngletProps) => {
   const {
@@ -53,7 +54,12 @@ const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: Établisse
                   ariaLabel={établissement.nom}
                   auClic={() => mettreÀJourVoeux(établissement.id)}
                 >
-                  <strong>{établissement.nom.split(" - ")?.[0]}</strong> - {établissement.nom.split(" - ")?.[1]}
+                  {établissement.nom.split(" - ").map((it, index) => (
+                    <Fragment key={it}>
+                      {index === 0 ? <strong>{it}</strong> : it}
+                      {it !== établissement.nom.split(" - ").at(-1) && " - "}
+                    </Fragment>
+                  ))}
                 </TagFiltre>
               </li>
             ))}
