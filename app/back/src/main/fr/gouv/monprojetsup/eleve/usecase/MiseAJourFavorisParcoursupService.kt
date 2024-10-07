@@ -5,13 +5,13 @@ import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
-import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
+import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupApiFavorisClient
 import org.springframework.stereotype.Service
 
 @Service
 class MiseAJourFavorisParcoursupService(
     private val compteParcoursupRepository: CompteParcoursupRepository,
-    private val parcoursupApiHttpClient: ParcoursupApiHttpClient,
+    private val parcoursupApiFavorisClient: ParcoursupApiFavorisClient,
     private val voeuRepository: VoeuRepository,
 ) {
     fun mettreAJourFavorisParcoursup(profil: ProfilEleve.AvecProfilExistant): ProfilEleve.AvecProfilExistant {
@@ -77,7 +77,7 @@ class MiseAJourFavorisParcoursupService(
 
     private fun recupererFavorisParcoursup(idEleve: String): List<FavorisParcoursup> {
         return compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)?.let { compteParcoursup ->
-            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
+            parcoursupApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
         } ?: emptyList()
     }
 }

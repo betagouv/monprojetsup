@@ -101,6 +101,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                 ),
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             corbeilleFormations = listOf("fl0001"),
+            compteParcoursupLie = true,
         )
 
     @Nested

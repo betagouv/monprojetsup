@@ -12,12 +12,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
-import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "profil_eleve")
-class ProfilEleveEntity() {
+class ProfilEleveAvecCompteParcoursupEntity {
     @Id
     @Column(name = "id", nullable = false)
     lateinit var id: String
@@ -72,22 +70,8 @@ class ProfilEleveEntity() {
     @Column(name = "corbeille_formations", nullable = false)
     var corbeilleFormations: List<String> = emptyList()
 
-    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this() {
-        id = profilEleve.id
-        situation = profilEleve.situation
-        classe = profilEleve.classe
-        dureeEtudesPrevue = profilEleve.dureeEtudesPrevue
-        alternance = profilEleve.alternance
-        idBaccalaureat = profilEleve.baccalaureat
-        specialites = profilEleve.specialites
-        domaines = profilEleve.domainesInterets
-        centresInterets = profilEleve.centresInterets
-        metiersFavoris = profilEleve.metiersFavoris
-        communesFavorites = profilEleve.communesFavorites?.map { CommuneEntity(it) }
-        formationsFavorites = profilEleve.formationsFavorites?.map { VoeuEntity(it) }
-        moyenneGenerale = profilEleve.moyenneGenerale
-        corbeilleFormations = profilEleve.corbeilleFormations
-    }
+    @Column(name = "id_parcoursup", nullable = true)
+    var idCompteParcoursup: String? = null
 
     fun toProfilEleve() =
         ProfilEleve.AvecProfilExistant(
@@ -105,6 +89,6 @@ class ProfilEleveEntity() {
             formationsFavorites = formationsFavorites?.map { it.toVoeuFormation() },
             moyenneGenerale = moyenneGenerale,
             corbeilleFormations = corbeilleFormations,
-            compteParcoursupLie = false,
+            compteParcoursupLie = idCompteParcoursup != null,
         )
 }

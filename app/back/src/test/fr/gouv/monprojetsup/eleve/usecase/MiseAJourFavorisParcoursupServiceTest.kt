@@ -6,8 +6,9 @@ import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
-import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
+import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupFavorisApiFavorisClient
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -26,10 +27,13 @@ class MiseAJourFavorisParcoursupServiceTest {
     lateinit var compteParcoursupRepository: CompteParcoursupRepository
 
     @Mock
-    lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
+    lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiFavorisClient
 
     @Mock
     lateinit var voeuRepository: VoeuRepository
+
+    @Mock
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var miseAJourFavorisParcoursupService: MiseAJourFavorisParcoursupService
@@ -43,7 +47,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     fun `quand l'élève n'a pas connecté son compte parcoursup, ne pas appeler le repo de voeux ni l'api parcoursup`() {
         // Given
         val profil =
-            creerProfilIdentifie(
+            creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
                         VoeuFormation(
@@ -60,7 +64,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(null)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(null)
 
         // When
         val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
@@ -75,7 +79,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     fun `quand pas de formations favorites sur parcoursup, doit renvoyer le profil et ne pas appeler le repo de voeux`() {
         // Given
         val profil =
-            creerProfilIdentifie(
+            creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
                         VoeuFormation(
@@ -92,7 +96,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(emptyList())
 
         // When
@@ -106,7 +110,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     fun `quand déjà à jour, alors doit renvoyer le profil d'entrée et ne pas appeler le repo de voeux`() {
         // Given
         val profil =
-            creerProfilIdentifie(
+            creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
                         VoeuFormation(
@@ -123,7 +127,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         val voeuxParcoursup = listOf(FavorisParcoursup("ta2", null, 0))
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
         given(voeuRepository.recupererVoeux(listOf("ta2"))).willReturn(
@@ -150,7 +154,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     fun `alors doit mettre à jour les voeux des formations non présnete et ne pas toucher les existantes`() {
         // Given
         val profil =
-            creerProfilIdentifie(
+            creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
                         VoeuFormation(
@@ -167,7 +171,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         val voeuxParcoursup =
             listOf(
                 FavorisParcoursup(idVoeu = "ta1", commentaire = null, notation = 0),
@@ -215,7 +219,7 @@ class MiseAJourFavorisParcoursupServiceTest {
 
         // Then
         val attendu =
-            creerProfilIdentifie(
+            creerProfilAvecProfilExistant(
                 formationsFavorites =
                     listOf(
                         VoeuFormation(
@@ -241,9 +245,9 @@ class MiseAJourFavorisParcoursupServiceTest {
         assertThat(resultat).isEqualTo(attendu)
     }
 
-    private fun creerProfilIdentifie(formationsFavorites: List<VoeuFormation>) =
+    private fun creerProfilAvecProfilExistant(formationsFavorites: List<VoeuFormation>) =
         ProfilEleve.AvecProfilExistant(
-            id = idEleve,
+            id = ID_ELEVE,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
             baccalaureat = "Général",
@@ -257,9 +261,10 @@ class MiseAJourFavorisParcoursupServiceTest {
             formationsFavorites = formationsFavorites,
             moyenneGenerale = -1.0f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
+            compteParcoursupLie = true,
         )
 
     companion object {
-        private val idEleve = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
+        private const val ID_ELEVE = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
     }
 }

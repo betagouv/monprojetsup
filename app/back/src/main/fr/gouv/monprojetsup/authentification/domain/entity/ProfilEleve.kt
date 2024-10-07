@@ -23,6 +23,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
         val formationsFavorites: List<VoeuFormation>?,
         val moyenneGenerale: Float?,
         val corbeilleFormations: List<String>,
+        val compteParcoursupLie: Boolean,
     ) : ProfilEleve(id) {
         constructor(id: String) : this(
             id = id,
@@ -39,6 +40,7 @@ sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
             formationsFavorites = null,
             moyenneGenerale = null,
             corbeilleFormations = emptyList(),
+            compteParcoursupLie = false,
         )
     }
 

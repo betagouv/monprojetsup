@@ -5,21 +5,21 @@ import fr.gouv.monprojetsup.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
-import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupHttpClient
+import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupApiFavorisClient
+import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupAuthentClient
 import fr.gouv.monprojetsup.parcoursup.infrastructure.dto.ParcoursupFavorisReponseDTO
 import okhttp3.OkHttpClient
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class ParcoursupApiHttpClient(
-    @Value("\${parcoursup.api.client.id}")
-    val clientId: String,
-    @Value("\${parcoursup.api.client.password}")
-    val clientSecret: String,
-    @Value("\${parcoursup.api.url.token}")
-    val urlToken: String,
-    @Value("\${parcoursup.api.url}")
+class ParcoursupFavorisApiFavorisClient(
+    @Value("\${parcoursup.api.favoris.client.id}")
+    private val clientId: String,
+    @Value("\${parcoursup.api.favoris.client.password}")
+    private val clientSecret: String,
+    private val parcoursupAuthentClient: ParcoursupAuthentClient,
+    @Value("\${parcoursup.api.favoris.url}")
     override val baseUrl: String,
     override val objectMapper: ObjectMapper,
     override val httpClient: OkHttpClient,
@@ -30,10 +30,10 @@ class ParcoursupApiHttpClient(
         httpClient,
         logger,
     ),
-    ParcoursupHttpClient {
+    ParcoursupApiFavorisClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup> {
-        val accessToken = recupererAccessToken(clientId = clientId, clientSecret = clientSecret, urlToken = urlToken)
+        val accessToken = parcoursupAuthentClient.recupererClientAccessToken(clientId = clientId, clientSecret = clientSecret)
         val getFavoris =
             get<List<ParcoursupFavorisReponseDTO>>(
                 url = baseUrl + URL_FAVORIS + idParcoursup,

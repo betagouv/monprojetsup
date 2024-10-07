@@ -22,7 +22,7 @@ import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.springframework.http.HttpStatus
 
-class ParcoursupApiHttpClientTest {
+class ParcoursupFavorisApiFavorisClientTest {
     @Mock
     private lateinit var httpClient: OkHttpClient
 
@@ -31,20 +31,23 @@ class ParcoursupApiHttpClientTest {
 
     private val objectMapper = ObjectMapper()
 
-    private lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
+    @Mock
+    private lateinit var parcoursupAuthentClient: ParcoursupAuthentClient
+
+    private lateinit var parcoursupFavorisApiFavorisClient: ParcoursupFavorisApiFavorisClient
 
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        parcoursupApiHttpClient =
-            ParcoursupApiHttpClient(
+        parcoursupFavorisApiFavorisClient =
+            ParcoursupFavorisApiFavorisClient(
                 clientId = "clientId",
                 clientSecret = "clientSecret",
-                urlToken = "https://monauthentification.fr/Authentification/oauth2/token",
                 baseUrl = "https://parcoursup.fr",
                 objectMapper = objectMapper,
                 httpClient = httpClient,
                 logger = logger,
+                parcoursupAuthentClient = parcoursupAuthentClient,
             )
     }
 
@@ -67,68 +70,24 @@ class ParcoursupApiHttpClientTest {
     @Test
     fun `quand la récupération de l'access token échoue, alors doit throw MonProjetSupInternalErrorException`() {
         // Given
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = null,
-                status = HttpStatus.INTERNAL_SERVER_ERROR,
-            )
-
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock)
+        val errerur =
+            "Erreur lors de la connexion à l'API à l'url https://monauthentification.fr/Authentification/oauth2/token, " +
+                "un code 500 a été retourné avec le body null"
+        val exception = MonProjetSupInternalErrorException("ERREUR_APPEL_API", errerur)
+        given(parcoursupAuthentClient.recupererClientAccessToken(clientId = "clientId", clientSecret = "clientSecret")).willThrow(exception)
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
-        }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
-            .hasMessage(
-                "Erreur lors de la connexion à l'API à l'url https://monauthentification.fr/Authentification/oauth2/token, " +
-                    "un code 500 a été retourné avec le body null",
-            )
-    }
-
-    @Test
-    fun `quand la récupération du token ne contient pas access_token, alors doit throw MonProjetSupInternalErrorException`() {
-        // Given
-        val stringBody =
-            """
-            {
-              "token": "abc"
-            }
-            """.trimIndent()
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = stringBody,
-                status = HttpStatus.OK,
-            )
-
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock)
-
-        // When & Then
-        assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
-        }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
-            .hasMessage(
-                "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
-                    "https://monauthentification.fr/Authentification/oauth2/token pour le body suivant : $stringBody",
-            )
+            parcoursupFavorisApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
+        }.isInstanceOf(MonProjetSupInternalErrorException::class.java).hasMessage(errerur)
     }
 
     @Test
     fun `quand l'appel à l'API échoue, alors doit throw MonProjetSupInternalErrorException`() {
         // Given
-        val stringBodyAuthent =
-            """
-            {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
-            }
-            """.trimIndent()
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = stringBodyAuthent,
-                status = HttpStatus.OK,
-            )
+        given(
+            parcoursupAuthentClient.recupererClientAccessToken(clientId = "clientId", clientSecret = "clientSecret"),
+        ).willReturn("eyJjkezhjfgkyfbzhjzg")
         val callApiMock =
             mockCall(
                 url = "https://monauthentification.fr/ApiFavoris/favoris/753",
@@ -136,11 +95,11 @@ class ParcoursupApiHttpClientTest {
                 status = HttpStatus.INTERNAL_SERVER_ERROR,
             )
 
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
+        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callApiMock)
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupFavorisApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la connexion à l'API à l'url " +
@@ -151,19 +110,9 @@ class ParcoursupApiHttpClientTest {
     @Test
     fun `quand l'appel à l'API n'est pas correctement déserialisé', alors doit throw MonProjetSupInternalErrorException`() {
         // Given
-        val stringBodyAuthent =
-            """
-            {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
-            }
-            """.trimIndent()
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = stringBodyAuthent,
-                status = HttpStatus.OK,
-            )
-
+        given(
+            parcoursupAuthentClient.recupererClientAccessToken(clientId = "clientId", clientSecret = "clientSecret"),
+        ).willReturn("eyJjkezhjfgkyfbzhjzg")
         val stringBodyApi =
             """
             [
@@ -184,11 +133,11 @@ class ParcoursupApiHttpClientTest {
                 status = HttpStatus.OK,
             )
 
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
+        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callApiMock)
 
         // When & Then
         assertThatThrownBy {
-            parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
+            parcoursupFavorisApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
         }.isInstanceOf(MonProjetSupInternalErrorException::class.java)
             .hasMessage(
                 "Erreur lors de la désérialisation de la réponse de l'API à l'url " +
@@ -199,18 +148,9 @@ class ParcoursupApiHttpClientTest {
     @Test
     fun `quand parcoursup renvoie une liste de favoris vide, alors doit renvoyer vide`() {
         // Given
-        val stringBodyAuthent =
-            """
-            {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
-            }
-            """.trimIndent()
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = stringBodyAuthent,
-                status = HttpStatus.OK,
-            )
+        given(
+            parcoursupAuthentClient.recupererClientAccessToken(clientId = "clientId", clientSecret = "clientSecret"),
+        ).willReturn("eyJjkezhjfgkyfbzhjzg")
 
         val stringBodyApi =
             """
@@ -225,10 +165,10 @@ class ParcoursupApiHttpClientTest {
                 status = HttpStatus.OK,
             )
 
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
+        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callApiMock)
 
         // When
-        val resultat = parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
+        val resultat = parcoursupFavorisApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
 
         // Then
         assertThat(resultat).isEqualTo(emptyList<FavorisParcoursup>())
@@ -237,18 +177,9 @@ class ParcoursupApiHttpClientTest {
     @Test
     fun `quand parcoursup renvoie une liste de favoris, alors doit renvoyer la liste de voeux associée`() {
         // Given
-        val stringBodyAuthent =
-            """
-            {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
-            }
-            """.trimIndent()
-        val callAuthentMock =
-            mockCall(
-                url = "https://monauthentification.fr/Authentification/oauth2/token",
-                stringBody = stringBodyAuthent,
-                status = HttpStatus.OK,
-            )
+        given(
+            parcoursupAuthentClient.recupererClientAccessToken(clientId = "clientId", clientSecret = "clientSecret"),
+        ).willReturn("eyJjkezhjfgkyfbzhjzg")
 
         val stringBodyApi =
             """
@@ -280,10 +211,10 @@ class ParcoursupApiHttpClientTest {
                 status = HttpStatus.OK,
             )
 
-        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callAuthentMock, callApiMock)
+        given(httpClient.newCall(MockitoHelper.anyObject())).willReturn(callApiMock)
 
         // When
-        val resultat = parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
+        val resultat = parcoursupFavorisApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup = 753)
 
         // Then
         val attendu =

@@ -60,6 +60,7 @@ class APISuggestionProfilDTOTest {
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0002"),
+                compteParcoursupLie = false,
             )
         private val unProfilDTO =
             APISuggestionProfilDTO(
@@ -123,6 +124,7 @@ class APISuggestionProfilDTOTest {
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0001"),
+                compteParcoursupLie = true,
             )
         private val profilDTOSeconde =
             APISuggestionProfilDTO(
@@ -171,6 +173,7 @@ class APISuggestionProfilDTOTest {
                 formationsFavorites = emptyList(),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
             )
         private val profilDTOSecondeSTHR =
             APISuggestionProfilDTO(
@@ -222,6 +225,7 @@ class APISuggestionProfilDTOTest {
                     ),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = true,
             )
         private val profilDTOSecondeTMD =
             APISuggestionProfilDTO(
@@ -255,6 +259,7 @@ class APISuggestionProfilDTOTest {
                 formationsFavorites = emptyList(),
                 domainesInterets = emptyList(),
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
             )
         private val profilDTOPremiere =
             APISuggestionProfilDTO(
@@ -299,6 +304,7 @@ class APISuggestionProfilDTOTest {
                     ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0012"),
+                compteParcoursupLie = true,
             )
         private val profilDTOTerminal =
             APISuggestionProfilDTO(
@@ -337,6 +343,7 @@ class APISuggestionProfilDTOTest {
                 formationsFavorites = null,
                 domainesInterets = null,
                 corbeilleFormations = emptyList(),
+                compteParcoursupLie = false,
             )
         private val profilDTONull =
             APISuggestionProfilDTO(

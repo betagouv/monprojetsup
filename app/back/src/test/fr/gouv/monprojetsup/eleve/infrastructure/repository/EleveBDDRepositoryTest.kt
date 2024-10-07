@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -24,6 +25,9 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var eleveJPARepository: EleveJPARepository
 
+    @Autowired
+    lateinit var entityManager: EntityManager
+
     @Mock
     lateinit var logger: MonProjetSupLogger
 
@@ -31,10 +35,10 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, logger)
+        eleveBDDRepository = EleveBDDRepository(eleveJPARepository, entityManager, logger)
     }
 
-    val profil0f88 =
+    private val profil0f88 =
         ProfilEleve.AvecProfilExistant(
             id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
@@ -64,13 +68,47 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),
+            compteParcoursupLie = true,
+        )
+
+    private val profil129f =
+        ProfilEleve.AvecProfilExistant(
+            id = "129f6d9c-0f6f-4fa4-8107-75b7cb129889",
+            situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
+            classe = ChoixNiveau.TERMINALE,
+            baccalaureat = "Professionnel",
+            specialites = emptyList(),
+            domainesInterets = listOf("animaux", "agroequipement"),
+            centresInterets = listOf("linguistique", "voyage"),
+            metiersFavoris = listOf("MET002"),
+            dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
+            alternance = ChoixAlternance.TRES_INTERESSE,
+            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            formationsFavorites =
+                listOf(
+                    VoeuFormation(
+                        idFormation = "fl0010",
+                        niveauAmbition = 1,
+                        voeuxChoisis = emptyList(),
+                        priseDeNote = null,
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl0012",
+                        niveauAmbition = 3,
+                        voeuxChoisis = listOf("ta15974", "ta17831"),
+                        priseDeNote = "Mon voeu préféré",
+                    ),
+                ),
+            moyenneGenerale = 10.5f,
+            corbeilleFormations = listOf("fl0001", "fl0002"),
+            compteParcoursupLie = false,
         )
 
     @Nested
     inner class RecupererUnEleve {
         @Test
-        @Sql("classpath:profil_eleve.sql")
-        fun `Quand l'élève existe, doit retourner son profil`() {
+        @Sql("classpath:comptes_parcoursup.sql")
+        fun `Quand l'élève existe et qu'il a un compte parcoursup, doit retourner son profil`() {
             // Given
             val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
 
@@ -82,7 +120,20 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:profil_eleve.sql")
+        @Sql("classpath:comptes_parcoursup.sql")
+        fun `Quand l'élève existe mais n'a pas lié son compte parcoursup, doit retourner son profil avec compte lié à false`() {
+            // Given
+            val id = "129f6d9c-0f6f-4fa4-8107-75b7cb129889"
+
+            // When
+            val result = eleveBDDRepository.recupererUnEleve(id = id)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(profil129f)
+        }
+
+        @Test
+        @Sql("classpath:comptes_parcoursup.sql")
         fun `Quand l'élève n'existe pas, doit retourner un profil inconnu`() {
             // Given
             val id = "45fdce8e-0717-4848-9a0c-505dea093b8c"
@@ -98,7 +149,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Nested
     inner class CreerUnEleve {
         @Test
-        @Sql("classpath:profil_eleve.sql")
+        @Sql("classpath:comptes_parcoursup.sql")
         fun `Quand l'élève n'existe pas, doit retourner son profil`() {
             // Given
             val id = "45fdce8e-0717-4848-9a0c-505dea093b8c"
@@ -112,7 +163,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:profil_eleve.sql")
+        @Sql("classpath:comptes_parcoursup.sql")
         fun `Quand l'élève existe, doit le retourner et logguer un warning`() {
             // Given
             val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
@@ -133,7 +184,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Nested
     inner class MettreAJourUnProfilEleve {
         @Test
-        @Sql("classpath:profil_eleve.sql")
+        @Sql("classpath:comptes_parcoursup.sql")
         fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
             // Given
             val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
@@ -148,7 +199,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         }
 
         @Test
-        @Sql("classpath:profil_eleve.sql")
+        @Sql("classpath:comptes_parcoursup.sql")
         fun `Quand l'élève n'existe pas, doit throw une erreur`() {
             // Given
             val profilInconnu =
@@ -181,6 +232,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                         ),
                     moyenneGenerale = 10.5f,
                     corbeilleFormations = listOf("fl0001", "fl0002"),
+                    compteParcoursupLie = false,
                 )
 
             // When & Then
