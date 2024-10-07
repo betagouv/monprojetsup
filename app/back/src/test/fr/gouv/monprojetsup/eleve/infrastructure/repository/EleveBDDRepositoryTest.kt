@@ -92,7 +92,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             val result = eleveBDDRepository.recupererUnEleve(id = uuid)
 
             // Then
-            assertThat(result).isEqualTo(ProfilEleve.Inconnu(uuid))
+            assertThat(result).isEqualTo(ProfilEleve.SansCompte(uuid))
         }
     }
 

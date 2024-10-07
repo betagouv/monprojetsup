@@ -3,10 +3,10 @@ package fr.gouv.monprojetsup.metier.application.controller
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.PARAMETRE_NUMERO_PAGE
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
+import fr.gouv.monprojetsup.metier.application.dto.MetierAvecSesFormationsDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
-import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
+import fr.gouv.monprojetsup.metier.application.dto.MetiersAvecSesFormationsDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetiersCourtsDTO
-import fr.gouv.monprojetsup.metier.application.dto.MetiersDTO
 import fr.gouv.monprojetsup.metier.usecase.RechercherMetiersService
 import fr.gouv.monprojetsup.metier.usecase.RecupererMetiersService
 import io.swagger.v3.oas.annotations.Parameter
@@ -53,10 +53,10 @@ class MetierController(
     fun getMetiers(
         @RequestParam ids: List<String>,
         @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
-    ): MetiersDTO {
+    ): MetiersAvecSesFormationsDTO {
         val metiers = recupererMetiersService.recupererMetiers(ids)
         val hateoas = hateoasBuilder.creerHateoas(metiers, numeroDePage, TAILLE_LOT_ID)
-        val dto = MetiersDTO(metiers.map { MetierDTO(it) })
+        val dto = MetiersAvecSesFormationsDTO(metiers.map { MetierAvecSesFormationsDTO(it) })
         dto.ajouterHateoas(hateoas)
         return dto
     }

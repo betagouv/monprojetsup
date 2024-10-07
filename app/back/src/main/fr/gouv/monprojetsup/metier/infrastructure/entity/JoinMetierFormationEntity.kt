@@ -13,13 +13,24 @@ import java.io.Serializable
 
 @Entity
 @Table(name = "ref_join_formation_metier")
-class JoinFormationMetierEntity {
+class JoinMetierFormationEntity {
     @EmbeddedId
     lateinit var id: JoinFormationMetierId
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_formation", nullable = false, insertable = false, updatable = false)
     lateinit var formation: FormationCourteEntity
+}
+
+@Entity
+@Table(name = "ref_join_formation_metier")
+class JoinFormationMetierEntity {
+    @EmbeddedId
+    lateinit var id: JoinFormationMetierId
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_metier", nullable = false, insertable = false, updatable = false)
+    lateinit var metier: MetierEntity
 }
 
 @Embeddable

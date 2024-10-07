@@ -157,7 +157,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             detailsCalculScore = autres,
         ) to
             explications.exemplesDeMetiers.let { metiers ->
-                metierRepository.recupererLesMetiersDetailles(metiers)
+                metierRepository.recupererLesMetiers(metiers)
             }
     }
 
@@ -173,7 +173,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
 
     private fun recupererMetiers(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): List<Metier> {
         val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }.distinct()
-        val metiers = metierRepository.recupererLesMetiersDetailles(idsDesMetiers)
+        val metiers = metierRepository.recupererLesMetiers(idsDesMetiers)
         return metiers
     }
 

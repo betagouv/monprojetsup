@@ -43,5 +43,5 @@ sealed class ProfilEleve(open val id: UUID) : ProfilUtilisateur() {
         )
     }
 
-    data class Inconnu(override val id: UUID) : ProfilEleve(id)
+    data class SansCompte(override val id: UUID) : ProfilEleve(id)
 }

@@ -195,18 +195,12 @@ class FormationControllerTest(
                                     url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
                                 ),
                             ),
-                        formations =
-                            listOf(
-                                FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                                FormationCourte(id = "fl7", nom = "BUT Informatique"),
-                            ),
                     ),
                     Metier(
                         id = "MET002",
                         nom = "documentaliste",
                         descriptif = null,
                         liens = emptyList(),
-                        formations = emptyList(),
                     ),
                 ),
             tauxAffinite = 90,
@@ -254,6 +248,91 @@ class FormationControllerTest(
                                     ),
                                 ),
                         ),
+                ),
+        )
+
+    val ficheFormationSansProfil =
+        FicheFormation.FicheFormationSansProfil(
+            id = "fl680002",
+            nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
+            metiers =
+                listOf(
+                    Metier(
+                        id = "MET001",
+                        nom = "géomaticien/ne",
+                        descriptif =
+                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                                "exploite les données pour modéliser le territoire",
+                        liens =
+                            listOf(
+                                Lien(
+                                    nom = "Voir sur l'ONISEP",
+                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
+                                ),
+                            ),
+                    ),
+                    Metier(
+                        id = "MET002",
+                        nom = "documentaliste",
+                        descriptif = null,
+                        liens = emptyList(),
+                    ),
+                ),
+            formationsAssociees = listOf("fl0012"),
+            descriptifGeneral =
+                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+                    "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
+                    "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
+                    "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
+                    "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
+                    "établissement de l’enseignement supérieur, une université.",
+            descriptifDiplome =
+                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+                    "conférent le grade de licence.",
+            descriptifAttendus =
+                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+                    "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
+                    "des fleurs, ainsi que les soins et l'entretien des végétaux.",
+            descriptifConseils =
+                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+                    "actuelles en matière de design floral pour exceller dans ce domaine.",
+            liens =
+                listOf(
+                    Lien(
+                        nom = "Voir sur l'ONISEP",
+                        url =
+                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                                "cycle-pluridisciplinaire-d-etudes-superieures",
+                    ),
+                ),
+            voeux =
+                listOf(
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                ),
+            criteresAnalyseCandidature =
+                listOf(
+                    CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                    CritereAnalyseCandidature(
+                        nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                        pourcentage = 0,
+                    ),
+                    CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                    CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                    CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+                ),
+            statistiquesDesAdmis =
+                StatistiquesDesAdmis(
+                    repartitionAdmis =
+                        RepartitionAdmis(
+                            total = 12,
+                            parBaccalaureat = listOf(),
+                        ),
+                    moyenneGeneraleDesAdmis = null,
                 ),
         )
 
@@ -556,24 +635,13 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "formations": [
-                                      {
-                                        "id": "fl1",
-                                        "nom": "CPGE MPSI"
-                                      },
-                                      {
-                                        "id": "fl7",
-                                        "nom": "BUT Informatique"
-                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": [],
-                                    "formations": []
+                                    "liens": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -939,24 +1007,13 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "formations": [
-                                      {
-                                        "id": "fl1",
-                                        "nom": "CPGE MPSI"
-                                      },
-                                      {
-                                        "id": "fl7",
-                                        "nom": "BUT Informatique"
-                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": [],
-                                    "formations": []
+                                    "liens": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -1061,20 +1118,44 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
-        fun `si connecté en tant qu'enseignant, doit retourner 403`() {
+        fun `si connecté en tant qu'enseignant, doit retourner 200 avec une liste vide`() {
+            // Given
+            val formations = listOf<FicheFormation>()
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = formations,
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
             // When & Then
             mvc.perform(
                 get("/api/v1/formations/suggestions"),
-            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
                         """
                         {
-                          "type": "about:blank",
-                          "title": "UTILISATEUR_PAS_ELEVE",
-                          "status": 403,
-                          "detail": "L'utilisateur connecté n'est pas un élève",
-                          "instance": "/api/v1/formations/suggestions"
+                          "formations": [],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            }
+                          ]
                         }
                         """.trimIndent(),
                     ),
@@ -1083,11 +1164,54 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, , doit retourner 200 avec une liste vide`() {
+            // Given
+            val formations = listOf<FicheFormation>()
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = formations,
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
             // When & Then
             mvc.perform(
                 get("/api/v1/formations/suggestions"),
-            ).andDo(print()).andExpect(status().isForbidden)
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/formations/suggestions")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -1378,24 +1502,13 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                   }
-                                ],
-                                "formations": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
                                 ]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": [],
-                                "formations": []
+                                "liens": []
                               }
                             ],
                             "tauxAffinite": 90
@@ -1481,98 +1594,9 @@ class FormationControllerTest(
         @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
-            // Given
-            val ficheFormation =
-                FicheFormation.FicheFormationSansProfil(
-                    id = "fl680002",
-                    nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
-                    metiers =
-                        listOf(
-                            Metier(
-                                id = "MET001",
-                                nom = "géomaticien/ne",
-                                descriptif =
-                                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                        "exploite les données pour modéliser le territoire",
-                                liens =
-                                    listOf(
-                                        Lien(
-                                            nom = "Voir sur l'ONISEP",
-                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
-                                        ),
-                                    ),
-                                formations =
-                                    listOf(
-                                        FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                                        FormationCourte(id = "fl7", nom = "BUT Informatique"),
-                                    ),
-                            ),
-                            Metier(
-                                id = "MET002",
-                                nom = "documentaliste",
-                                descriptif = null,
-                                liens = emptyList(),
-                                formations = emptyList(),
-                            ),
-                        ),
-                    formationsAssociees = listOf("fl0012"),
-                    descriptifGeneral =
-                        "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
-                            "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
-                            "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
-                            "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
-                            "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
-                            "établissement de l’enseignement supérieur, une université.",
-                    descriptifDiplome =
-                        "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
-                            "conférent le grade de licence.",
-                    descriptifAttendus =
-                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
-                            "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
-                            "des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                    descriptifConseils =
-                        "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
-                            "actuelles en matière de design floral pour exceller dans ce domaine.",
-                    liens =
-                        listOf(
-                            Lien(
-                                nom = "Voir sur l'ONISEP",
-                                url =
-                                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                        "cycle-pluridisciplinaire-d-etudes-superieures",
-                            ),
-                        ),
-                    voeux =
-                        listOf(
-                            Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                            Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                            Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                            Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                        ),
-                    criteresAnalyseCandidature =
-                        listOf(
-                            CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
-                            CritereAnalyseCandidature(
-                                nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                                pourcentage = 0,
-                            ),
-                            CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
-                            CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
-                            CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
-                        ),
-                    statistiquesDesAdmis =
-                        StatistiquesDesAdmis(
-                            repartitionAdmis =
-                                RepartitionAdmis(
-                                    total = 12,
-                                    parBaccalaureat = listOf(),
-                                ),
-                            moyenneGeneraleDesAdmis = null,
-                        ),
-                )
-            `when`(recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002")).thenReturn(ficheFormation)
+            `when`(
+                recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+            ).thenReturn(ficheFormationSansProfil)
 
             // When & Then
             mvc.perform(
@@ -1686,24 +1710,13 @@ class FormationControllerTest(
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                   }
-                                ],
-                                "formations": [
-                                  {
-                                    "id": "fl1",
-                                    "nom": "CPGE MPSI"
-                                  },
-                                  {
-                                    "id": "fl7",
-                                    "nom": "BUT Informatique"
-                                  }
                                 ]
                               },
                               {
                                 "id": "MET002",
                                 "nom": "documentaliste",
                                 "descriptif": null,
-                                "liens": [],
-                                "formations": []
+                                "liens": []
                               }
                             ],
                             "tauxAffinite": null
@@ -1717,11 +1730,145 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec la liste de formations`() {
+            `when`(
+                recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
+            ).thenReturn(ficheFormationSansProfil)
+
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/fl68000"),
-            ).andDo(print()).andExpect(status().isForbidden)
+                get("/api/v1/formations/fl680002"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formation": {
+                            "id": "fl680002",
+                            "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                            "idsFormationsAssociees": [
+                              "fl0012"
+                            ],
+                            "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                            "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                            "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                            "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                            "moyenneGeneraleDesAdmis": null,
+                            "criteresAnalyseCandidature": [
+                              {
+                                "nom": "Compétences académiques",
+                                "pourcentage": 10
+                              },
+                              {
+                                "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                "pourcentage": 0
+                              },
+                              {
+                                "nom": "Résultats académiques",
+                                "pourcentage": 18
+                              },
+                              {
+                                "nom": "Savoir-être",
+                                "pourcentage": 42
+                              },
+                              {
+                                "nom": "Motivation, connaissance",
+                                "pourcentage": 30
+                              }
+                            ],
+                            "repartitionAdmisAnneePrecedente": {
+                              "total": 12,
+                              "parBaccalaureat": []
+                            },
+                            "liens": [
+                              {
+                                "nom": "Voir sur l'ONISEP",
+                                "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                              }
+                            ],
+                            "voeux": [
+                              {
+                                "id": "ta10",
+                                "nom": "Nom du ta10",
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
+                              },
+                              {
+                                "id": "ta3",
+                                "nom": "Nom du ta3",
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75105"
+                                }
+                              },
+                              {
+                                "id": "ta11",
+                                "nom": "Nom du ta11",
+                                "commune": {
+                                  "nom": "Lyon",
+                                  "codeInsee": "69123"
+                                }
+                              },
+                              {
+                                "id": "ta32",
+                                "nom": "Nom du ta32",
+                                "commune": {
+                                  "nom": "Paris",
+                                  "codeInsee": "75115"
+                                }
+                              },
+                              {
+                                "id": "ta17",
+                                "nom": "Nom du ta17",
+                                "commune": {
+                                  "nom": "Strasbourg",
+                                  "codeInsee": "67482"
+                                }
+                              },
+                              {
+                                "id": "ta7",
+                                "nom": "Nom du ta7",
+                                "commune": {
+                                  "nom": "Marseille",
+                                  "codeInsee": "13055"
+                                }
+                              }
+                            ],
+                            "communesFavoritesAvecLeursVoeux": [],
+                            "metiers": [
+                              {
+                                "id": "MET001",
+                                "nom": "géomaticien/ne",
+                                "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "MET002",
+                                "nom": "documentaliste",
+                                "descriptif": null,
+                                "liens": []
+                              }
+                            ],
+                            "tauxAffinite": null
+                          },
+                          "explications": null
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/formations/fl68000")).andDo(print()).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -2044,11 +2191,106 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec la liste des formations`() {
+            // Given
+            val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val rechercheLongue =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+                    FormationCourte(id = "fl1000", nom = "BPJEPS"),
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
+                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
+                )
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = rechercheDe50Caracteres,
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(rechercheLongue)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = rechercheLongue,
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/succincte?recherche=$rechercheDe50Caracteres"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "id": "fl1",
+                              "nom": "L1 - Psychologie"
+                            },
+                            {
+                              "id": "fl7",
+                              "nom": "L1 - Philosophie"
+                            },
+                            {
+                              "id": "fl3",
+                              "nom": "CAP Pâtisserie"
+                            },
+                            {
+                              "id": "fl1000",
+                              "nom": "BPJEPS"
+                            },
+                            {
+                              "id": "fl17",
+                              "nom": "L1 - Mathématique"
+                            },
+                            {
+                              "id": "fl20",
+                              "nom": "CAP Boulangerie"
+                            },
+                            {
+                              "id": "fl10",
+                              "nom": "DUT Informatique"
+                            },
+                            {
+                              "id": "fl18",
+                              "nom": "L1 - Littérature"
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=Lorem%20ipsum%20dolor%20sit%20amet,%20consectetur%20porta%20ante&numeroDePage=1"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
             // When & Then
             mvc.perform(
                 get("/api/v1/formations/recherche/succincte?recherche=test"),
-            ).andDo(print()).andExpect(status().isForbidden)
+            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -2297,24 +2539,13 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "formations": [
-                                      {
-                                        "id": "fl1",
-                                        "nom": "CPGE MPSI"
-                                      },
-                                      {
-                                        "id": "fl7",
-                                        "nom": "BUT Informatique"
-                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": [],
-                                    "formations": []
+                                    "liens": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -2519,23 +2750,262 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
         @Test
-        fun `pour un enseignant, doit retourner 401 avec le détail de la formation`() {
+        fun `pour un enseignant, doit retourner 200 avec le détail des formations associées à la recherche`() {
             // Given
-            val recherche = "Lorem ipsum"
+            val rechercheL1 =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                )
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(rechercheL1)
+            val fichesFormations =
+                listOf(
+                    ficheFormationSansProfil.copy(id = "fl1"),
+                    ficheFormationSansProfil.copy(
+                        id = "fl7",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        metiers = emptyList(),
+                    ),
+                )
+            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).thenReturn(fichesFormations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl7"),
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
 
             // When & Then
             mvc.perform(
-                get("/api/v1/formations/recherche/detaillee?recherche=$recherche"),
-            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
                         """
                         {
-                          "type": "about:blank",
-                          "title": "UTILISATEUR_PAS_ELEVE",
-                          "status": 403,
-                          "detail": "L'utilisateur connecté n'est pas un élève",
-                          "instance": "/api/v1/formations/recherche/detaillee"
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 12,
+                                  "parBaccalaureat": []
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            },
+                            {
+                              "formation": {
+                                "id": "fl7",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            }
+                          ]
                         }
                         """.trimIndent(),
                     ),
@@ -2589,11 +3059,274 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec la liste des formations`() {
+            // Given
+            val rechercheL1 =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                )
+            `when`(
+                rechercherFormation.rechercheLesFormationsCorrespondantes(
+                    recherche = "L1",
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(rechercheL1)
+            val fichesFormations =
+                listOf(
+                    ficheFormationSansProfil.copy(id = "fl1"),
+                    ficheFormationSansProfil.copy(
+                        id = "fl7",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        metiers = emptyList(),
+                    ),
+                )
+            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).thenReturn(fichesFormations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl7"),
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
+            // When & Then
+            mvc.perform(
+                get("/api/v1/formations/recherche/detaillee?recherche=L1"),
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 12,
+                                  "parBaccalaureat": []
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            },
+                            {
+                              "formation": {
+                                "id": "fl7",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations/recherche/detaillee?recherche=L1&numeroDePage=1"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
             // When & Then
             mvc.perform(
                 get("/api/v1/formations/recherche/detaillee?recherche=test"),
-            ).andDo(print()).andExpect(status().isForbidden)
+            ).andDo(print()).andExpect(status().isUnauthorized)
         }
     }
 
@@ -2601,7 +3334,7 @@ class FormationControllerTest(
     inner class `Quand on appelle la route de récupération de formations` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail des formations`() {
             // Given
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
@@ -2832,24 +3565,13 @@ class FormationControllerTest(
                                         "nom": "Voir sur l'ONISEP",
                                         "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
                                       }
-                                    ],
-                                    "formations": [
-                                      {
-                                        "id": "fl1",
-                                        "nom": "CPGE MPSI"
-                                      },
-                                      {
-                                        "id": "fl7",
-                                        "nom": "BUT Informatique"
-                                      }
                                     ]
                                   },
                                   {
                                     "id": "MET002",
                                     "nom": "documentaliste",
                                     "descriptif": null,
-                                    "liens": [],
-                                    "formations": []
+                                    "liens": []
                                   }
                                 ],
                                 "tauxAffinite": 90
@@ -3005,20 +3727,203 @@ class FormationControllerTest(
 
         @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
         @Test
-        fun `si enseignant, doit retourner 403`() {
+        fun `si enseignant, doit retourner 200 avec le detail des formations`() {
+            // Given
+            val fichesFormations =
+                listOf(
+                    ficheFormationSansProfil.copy(id = "fl1"),
+                    ficheFormationSansProfil.copy(
+                        id = "fl2",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        metiers = emptyList(),
+                        voeux = emptyList(),
+                    ),
+                )
+            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).thenReturn(fichesFormations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl2"),
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
             // When & Then
             mvc.perform(
                 get("/api/v1/formations?ids=fl1&ids=fl2"),
-            ).andDo(print()).andExpect(status().isForbidden).andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
                     content().json(
                         """
                         {
-                          "type": "about:blank",
-                          "title": "UTILISATEUR_PAS_ELEVE",
-                          "status": 403,
-                          "detail": "L'utilisateur connecté n'est pas un élève",
-                          "instance": "/api/v1/formations"
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 12,
+                                  "parBaccalaureat": []
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            }
+                          ]
                         }
                         """.trimIndent(),
                     ),
@@ -3027,11 +3932,213 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec le detail des formations`() {
+            // Given
+            val fichesFormations =
+                listOf(
+                    ficheFormationSansProfil.copy(id = "fl1"),
+                    ficheFormationSansProfil.copy(
+                        id = "fl2",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        metiers = emptyList(),
+                        voeux = emptyList(),
+                    ),
+                )
+            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).thenReturn(fichesFormations)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = listOf("fl1", "fl2"),
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+                hateoas,
+            )
+
             // When & Then
             mvc.perform(
                 get("/api/v1/formations?ids=fl1&ids=fl2"),
-            ).andDo(print()).andExpect(status().isForbidden)
+            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl1",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 12,
+                                  "parBaccalaureat": []
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [],
+                                "metiers": [],
+                                "tauxAffinite": null
+                              },
+                              "explications": null
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/formations?ids=fl1&ids=fl2&numeroDePage=1"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/formations?ids=fl1&ids=fl2")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")

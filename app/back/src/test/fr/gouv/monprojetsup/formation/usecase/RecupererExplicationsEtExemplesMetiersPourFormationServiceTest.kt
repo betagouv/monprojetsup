@@ -468,7 +468,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val metier534 = mock(Metier::class.java)
             val metier96 = mock(Metier::class.java)
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
-            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
+            given(metierRepository.recupererLesMetiers(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
                 exemplesDeMetiers,
             )
 
@@ -783,7 +783,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val metier96 = mock(Metier::class.java)
             given(metier96.id).willReturn("MET_96")
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
-            given(metierRepository.recupererLesMetiersDetailles(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
+            given(metierRepository.recupererLesMetiers(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
                 exemplesDeMetiers,
             )
             given(

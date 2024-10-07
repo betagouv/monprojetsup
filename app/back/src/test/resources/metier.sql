@@ -34,6 +34,9 @@ INSERT INTO ref_formation (id, label)
 VALUES ('fl660008', 'BTSA - Métiers du Végétal : Alimentation, Ornement, Environnement');
 
 INSERT INTO ref_formation (id, label)
+VALUES ('fl1', 'Classe préparatoire');
+
+INSERT INTO ref_formation (id, label)
 VALUES ('fl250', 'EA-BAC5 - Architecture');
 
 INSERT INTO ref_formation (id, label)

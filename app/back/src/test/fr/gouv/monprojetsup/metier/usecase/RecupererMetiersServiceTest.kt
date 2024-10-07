@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.metier.usecase
 
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
-import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +30,7 @@ class RecupererMetiersServiceTest {
         val idsMetier = listOf("MET_356", "MET_355", "MET_358")
         val metiers =
             listOf(
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_356",
                     nom = "ingénieur / ingénieure matériaux",
                     descriptif =
@@ -54,7 +54,7 @@ class RecupererMetiersServiceTest {
                             FormationCourte(id = "fl7", nom = "BUT Informatique"),
                         ),
                 ),
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_355",
                     nom = "responsable de laboratoire de contrôle en chimie",
                     descriptif =
@@ -64,7 +64,7 @@ class RecupererMetiersServiceTest {
                     liens = emptyList(),
                     formations = emptyList(),
                 ),
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_358",
                     nom = "pilote d'hélicoptère",
                     descriptif =
@@ -90,7 +90,7 @@ class RecupererMetiersServiceTest {
                         ),
                 ),
             )
-        given(metierRepository.recupererLesMetiersDetailles(idsMetier)).willReturn(metiers)
+        given(metierRepository.recupererLesMetiersAvecSesFormations(idsMetier)).willReturn(metiers)
 
         // When
         val resultat = recupererMetiersService.recupererMetiers(idsMetier)

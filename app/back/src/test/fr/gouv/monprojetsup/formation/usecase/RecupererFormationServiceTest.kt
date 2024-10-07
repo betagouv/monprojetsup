@@ -9,7 +9,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
-import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
@@ -291,7 +290,6 @@ class RecupererFormationServiceTest {
                         nom = "Fleuriste bis",
                         descriptif = "Descriptif MET_456",
                         liens = emptyList(),
-                        formations = emptyList(),
                     ),
                     Metier(
                         id = "MET_001",
@@ -303,11 +301,6 @@ class RecupererFormationServiceTest {
                                     nom = "Voir sur Onisep",
                                     url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
                                 ),
-                            ),
-                        formations =
-                            listOf(
-                                FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                                FormationCourte(id = "fl7", nom = "BUT Informatique"),
                             ),
                     ),
                 )
@@ -344,18 +337,12 @@ class RecupererFormationServiceTest {
                                     url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
                                 ),
                             ),
-                        formations =
-                            listOf(
-                                FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
-                                FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
-                            ),
                     ),
                     Metier(
                         id = "MET_456",
                         nom = "Fleuriste bis",
                         descriptif = "Descriptif MET_456",
                         liens = emptyList(),
-                        formations = emptyList(),
                     ),
                 ),
             )
@@ -417,18 +404,12 @@ class RecupererFormationServiceTest {
                                             url = "https://www.onisep.fr/ressources/univers-metier/metiers/fleuriste",
                                         ),
                                     ),
-                                formations =
-                                    listOf(
-                                        FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
-                                        FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
-                                    ),
                             ),
                             Metier(
                                 id = "MET_456",
                                 nom = "Fleuriste bis",
                                 descriptif = "Descriptif MET_456",
                                 liens = emptyList(),
-                                formations = emptyList(),
                             ),
                         ),
                     voeux = voeuxFormationFL0001,
