@@ -93,10 +93,12 @@ const FiltresGroupésParCatégorie = ({
                 <li key={filtre.id}>
                   <TagFiltre
                     appuyéParDéfaut={filtreIdsSélectionnés.includes(filtre.id)}
+                    ariaLabel={filtre.nom}
                     auClic={(estAppuyé) => auChangementAppuieDUnFiltre(estAppuyé, filtre.id)}
                     emoji={filtre.emoji}
-                    libellé={filtre.nom}
-                  />
+                  >
+                    {filtre.nom}
+                  </TagFiltre>
                 </li>
               ))}
             </ul>

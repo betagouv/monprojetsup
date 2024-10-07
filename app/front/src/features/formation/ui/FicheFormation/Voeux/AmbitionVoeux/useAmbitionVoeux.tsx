@@ -1,12 +1,10 @@
 import { type useAmbitionVoeuxArgs } from "./AmbitionVoeux.interface";
 import { i18n } from "@/configuration/i18n/i18n";
-import { type Élève, type FormationFavorite } from "@/features/élève/domain/élève.interface";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 
 export default function useAmbitionVoeux({ formationId }: useAmbitionVoeuxArgs) {
-  const { data: élève } = useQuery(élèveQueryOptions);
-  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: ["mettreÀJourÉlève"] });
+  const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
 
   const ambitions: Array<{ niveau: NonNullable<FormationFavorite["niveauAmbition"]>; emoji: string; libellé: string }> =
     [
@@ -30,21 +28,13 @@ export default function useAmbitionVoeux({ formationId }: useAmbitionVoeuxArgs) 
   const mettreAJourAmbition = (niveauAmbition: FormationFavorite["niveauAmbition"]) => {
     if (!élève) return;
 
-    const nouvellesFormationsFavorites =
-      élève.formationsFavorites?.map((formationFavorite) => {
-        if (formationFavorite.id === formationId) {
-          const nouveauNiveauAmbition = niveauAmbition === formationFavorite.niveauAmbition ? null : niveauAmbition;
+    const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formationId);
 
-          return { ...formationFavorite, niveauAmbition: nouveauNiveauAmbition };
-        }
-
-        return formationFavorite;
-      }) ?? [];
-
-    mutationÉlève.mutateAsync({
-      ...élève,
-      formationsFavorites: nouvellesFormationsFavorites,
-    });
+    if (formationFavorite && niveauAmbition === formationFavorite.niveauAmbition) {
+      mettreÀJourUneFormationFavorite(formationId, { niveauAmbition: null });
+    } else {
+      mettreÀJourUneFormationFavorite(formationId, { niveauAmbition });
+    }
   };
 
   return {

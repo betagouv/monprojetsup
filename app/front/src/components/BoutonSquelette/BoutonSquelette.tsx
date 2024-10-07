@@ -12,6 +12,7 @@ const BoutonSquelette = ({ label, taille, variante, icône }: BoutonSquelettePro
     if (variante === "secondaire") return "fr-btn--secondary";
     if (variante === "tertiaire") return "fr-btn--tertiary";
     if (variante === "quaternaire") return "fr-btn--tertiary-no-outline";
+    if (variante === "quinaire") return "fr-btn--tertiary-no-outline fr-text--xs underline p-0";
 
     return "";
   };

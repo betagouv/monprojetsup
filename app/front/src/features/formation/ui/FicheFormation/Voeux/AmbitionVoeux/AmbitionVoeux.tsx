@@ -14,11 +14,13 @@ const AmbitionVoeux = ({ ambitionActuelle, formationId }: AmbitionVoeuxProps) =>
           <li key={ambition.niveau}>
             <TagFiltre
               appuyéParDéfaut={ambitionActuelle === ambition.niveau}
+              ariaLabel={ambition.libellé}
               auClic={() => mettreAJourAmbition(ambition.niveau)}
               emoji={ambition.emoji}
               key={key}
-              libellé={ambition.libellé}
-            />
+            >
+              {ambition.libellé}
+            </TagFiltre>
           </li>
         ))}
       </ul>

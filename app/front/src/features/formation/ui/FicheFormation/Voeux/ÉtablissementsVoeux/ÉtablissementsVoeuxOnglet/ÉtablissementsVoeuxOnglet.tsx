@@ -1,22 +1,71 @@
 import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOnglet.interface";
+import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
+import Bouton from "@/components/Bouton/Bouton";
 import TagFiltre from "@/components/TagFiltre/TagFiltre";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ÉtablissementsVoeuxOnglet = ({ établissements }: ÉtablissementsVoeuxOngletProps) => {
-  if (établissements.length === 0) return i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ;
+const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: ÉtablissementsVoeuxOngletProps) => {
+  const {
+    établissementsÀAfficher,
+    rayonSélectionné,
+    changerRayonSélectionné,
+    rayons,
+    mettreÀJourVoeux,
+    voeuxSélectionnés,
+    key,
+  } = useÉtablissementsVoeuxOnglet({
+    établissements,
+    formationId,
+  });
 
   return (
-    <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
-      {établissements.map((établissement) => (
-        <li key={établissement.id}>
-          <TagFiltre
-            appuyéParDéfaut={false}
-            auClic={(_estAppuyé) => {}}
-            libellé={établissement.nom}
-          />
-        </li>
-      ))}
-    </ul>
+    <div key={key}>
+      <p className="fr-text--xs mb-3">
+        {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.RAYON}{" "}
+        <ul className="m-0 inline-flex list-none flex-wrap justify-start gap-1 p-0">
+          {rayons.map((rayon) => (
+            <li
+              className={`${rayonSélectionné === rayon ? "[&_.fr-btn]:font-bold" : "[&_.fr-btn]:font-normal"} [&_button]:p-0`}
+              key={rayon}
+            >
+              <Bouton
+                auClic={() => changerRayonSélectionné(rayon)}
+                label={`${rayon}km`}
+                taille="petit"
+                type="button"
+                variante="quinaire"
+              />
+              {rayon !== rayons.at(-1) && " • "}
+            </li>
+          ))}
+        </ul>
+      </p>
+      <div aria-live="polite">
+        {établissementsÀAfficher.length > 0 ? (
+          <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
+            {établissementsÀAfficher.map((établissement) => (
+              <li
+                className="*:text-left *:leading-6"
+                key={établissement.id}
+              >
+                <TagFiltre
+                  appuyéParDéfaut={voeuxSélectionnés?.includes(établissement.id)}
+                  ariaLabel={établissement.nom}
+                  auClic={() => mettreÀJourVoeux(établissement.id)}
+                >
+                  <strong>{établissement.nom.split(" - ")?.[0]}</strong> - {établissement.nom.split(" - ")?.[1]}
+                </TagFiltre>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="fr-text--sm">
+            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ} {rayonSélectionné}{" "}
+            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE}
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 
