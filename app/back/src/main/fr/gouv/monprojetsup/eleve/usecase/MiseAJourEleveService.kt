@@ -36,7 +36,7 @@ class MiseAJourEleveService(
     ) {
         val profilInitial =
             when (profilActuel) {
-                is ProfilEleve.Inconnu -> eleveRepository.creerUnEleve(profilActuel.id)
+                is ProfilEleve.SansCompte -> eleveRepository.creerUnEleve(profilActuel.id)
                 is ProfilEleve.Identifie -> profilActuel
             }
         verifierBaccalaureatEtSesSpecialites(miseAJourDuProfil, profilInitial)

@@ -133,7 +133,7 @@ class IdentificationFilterTest(
     fun `si connecté avec un élève mais ne le reconnait pas, doit retourner 200 avec le détail des infos de l'élève et son authorité`() {
         // Given
         val uuid = UUID.fromString("40422ae5-f535-4f9a-8a1f-9e24978c2b14")
-        given(eleveRepository.recupererUnEleve(uuid)).willReturn(ProfilEleve.Inconnu(uuid))
+        given(eleveRepository.recupererUnEleve(uuid)).willReturn(ProfilEleve.SansCompte(uuid))
 
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isOk)

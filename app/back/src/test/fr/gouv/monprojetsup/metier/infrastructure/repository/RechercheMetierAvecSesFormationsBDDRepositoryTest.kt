@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
-class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
+class RechercheMetierAvecSesFormationsBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var entityManager: EntityManager
 

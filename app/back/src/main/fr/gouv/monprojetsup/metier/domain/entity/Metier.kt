@@ -8,5 +8,12 @@ data class Metier(
     val nom: String,
     val descriptif: String?,
     val liens: List<Lien>,
+)
+
+data class MetierAvecSesFormations(
+    val id: String,
+    val nom: String,
+    val descriptif: String?,
+    val liens: List<Lien>,
     val formations: List<FormationCourte>,
 )

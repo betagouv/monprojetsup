@@ -4,11 +4,13 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.springframework.stereotype.Service
 
 @Service
 class RecupererFormationsService(
     private val formationRepository: FormationRepository,
+    private val metierRepository: MetierRepository,
     private val recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService,
     private val recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService,
     private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
@@ -70,6 +72,36 @@ class RecupererFormationsService(
                 voeuxParCommunesFavorites = voeuxAutoursDesCommunesFavorites[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
+                statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
+            )
+        }
+    }
+
+    fun recupererFichesFormation(idsFormations: List<String>): List<FicheFormation.FicheFormationSansProfil> {
+        val formations = formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
+        val metiers = metierRepository.recupererMetiersDeFormations(idsFormations)
+        val idsDesFormationsRetournees = formations.map { it.id }
+        val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formations)
+        val statistiquesDesAdmis =
+            statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDeFormations(
+                idBaccalaureat = null,
+                idsFormations = idsDesFormationsRetournees,
+                classe = null,
+            )
+        val voeux = recupererVoeuxDUneFormationService.recupererVoeux(idsDesFormationsRetournees)
+        return formations.map { formation ->
+            FicheFormation.FicheFormationSansProfil(
+                id = formation.id,
+                nom = formation.nom,
+                descriptifGeneral = formation.descriptifGeneral,
+                descriptifAttendus = formation.descriptifAttendus,
+                descriptifDiplome = formation.descriptifDiplome,
+                descriptifConseils = formation.descriptifConseils,
+                formationsAssociees = formation.formationsAssociees,
+                liens = formation.liens,
+                voeux = voeux[formation.id] ?: emptyList(),
+                metiers = metiers[formation.id] ?: emptyList(),
+                criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
             )
         }

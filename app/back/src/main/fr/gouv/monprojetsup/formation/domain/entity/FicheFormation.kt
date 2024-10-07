@@ -30,7 +30,7 @@ sealed class FicheFormation(
         override val metiers: List<Metier>,
         override val voeux: List<Voeu>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
-        override val statistiquesDesAdmis: StatistiquesDesAdmis,
+        override val statistiquesDesAdmis: StatistiquesDesAdmis?,
     ) : FicheFormation(
             id = id,
             nom = nom,

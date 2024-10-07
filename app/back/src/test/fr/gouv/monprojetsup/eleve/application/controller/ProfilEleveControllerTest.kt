@@ -107,8 +107,8 @@ class ProfilEleveControllerTest(
         fun `si élève n'existe pas et que le service réussi, doit retourner 204`() {
             // Given
             val uuidProfilInconnu = UUID.fromString("61a3b1a9-03dd-4fc6-9549-c0e5d1403214")
-            val profilInconnu = ProfilEleve.Inconnu(id = uuidProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilInconnu)
+            val profilSansCompte = ProfilEleve.SansCompte(id = uuidProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(
@@ -117,7 +117,7 @@ class ProfilEleveControllerTest(
             ).andExpect(status().isNoContent)
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
                 miseAJourDuProfil = modificationProfilEleve,
-                profilActuel = profilInconnu,
+                profilActuel = profilSansCompte,
             )
         }
 
@@ -452,8 +452,8 @@ class ProfilEleveControllerTest(
         fun `si l'élève n'existe pas, doit renvoyer 403`() {
             // Given
             val uuidProfilInconnu = UUID.fromString("123f627c-36dd-4df5-897b-159443a6d49c")
-            val profilInconnu = ProfilEleve.Inconnu(id = uuidProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilInconnu)
+            val profilSansCompte = ProfilEleve.SansCompte(id = uuidProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())

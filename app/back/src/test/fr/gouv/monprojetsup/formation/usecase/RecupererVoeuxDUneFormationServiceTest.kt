@@ -50,7 +50,7 @@ class RecupererVoeuxDUneFormationServiceTest {
     }
 
     @Nested
-    inner class RecupererNomCommunesTriesParAffinitesPourFormations {
+    inner class RecupererVoeuxTriesParAffinitesPourDesFormations {
         private val idsFormation =
             listOf(
                 "fl680002",
@@ -225,7 +225,7 @@ class RecupererVoeuxDUneFormationServiceTest {
     }
 
     @Nested
-    inner class RecupererNomCommunesTriesParAffinitesPourFormation {
+    inner class RecupererVoeuxTriesParAffinitesPourUneFormation {
         private val voeux =
             listOf(
                 Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
@@ -237,7 +237,7 @@ class RecupererVoeuxDUneFormationServiceTest {
             )
 
         @Test
-        fun `les communes doivent être ordonnées par affinités en mettant en premiers les villes exactes, puis les départements`() {
+        fun `les communes doivent être ordonnées par affinités en mettant en premiers les communes exactes, puis les départements`() {
             // Given
             given(profilEleve.communesFavorites).willReturn(listOf(LYON, GRENOBLE, PARIS5EME))
             given(voeuRepository.recupererLesVoeuxDUneFormation(idFormation = "fl2016")).willReturn(
@@ -304,9 +304,9 @@ class RecupererVoeuxDUneFormationServiceTest {
     }
 
     @Nested
-    inner class RecupererNomCommunes {
+    inner class RecupererVoeuxPourUneFormation {
         @Test
-        fun `les communes doivent être retournées telles quelles`() {
+        fun `les voeux doivent être retournés tels quels`() {
             // Given
             val ta1 = mock(Voeu::class.java)
             val ta2 = mock(Voeu::class.java)
@@ -323,6 +323,30 @@ class RecupererVoeuxDUneFormationServiceTest {
 
             // Then
             assertThat(result).isEqualTo(listOf(ta2, ta1, ta3))
+        }
+    }
+
+    @Nested
+    inner class RecupererVoeuxPourDesFormations {
+        @Test
+        fun `les voeux doivent être retournés tels quels`() {
+            // Given
+            val ta1 = mock(Voeu::class.java)
+            val ta2 = mock(Voeu::class.java)
+            val ta3 = mock(Voeu::class.java)
+            val voeux =
+                mapOf(
+                    "fl2016" to listOf(ta2, ta1, ta3),
+                    "fl2017" to emptyList(),
+                    "fl2018" to listOf(ta1, ta2),
+                )
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016", "fl2017", "fl2018"))).willReturn(voeux)
+
+            // When
+            val result = recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl2016", "fl2017", "fl2018"))
+
+            // Then
+            assertThat(result).isEqualTo(voeux)
         }
     }
 }

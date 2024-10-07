@@ -9,7 +9,7 @@ import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
-import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.usecase.RechercherMetiersService
 import fr.gouv.monprojetsup.metier.usecase.RecupererMetiersService
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [MetierController::class])
-class MetierControllerTest(
+class MetierAvecSesFormationsControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
     @MockBean
@@ -43,7 +43,7 @@ class MetierControllerTest(
     inner class `Quand on appelle la route de récupération de métiers` {
         val metiers =
             listOf(
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_356",
                     nom = "ingénieur / ingénieure matériaux",
                     descriptif =
@@ -67,7 +67,7 @@ class MetierControllerTest(
                             FormationCourte(id = "fl7", nom = "BUT Informatique"),
                         ),
                 ),
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_355",
                     nom = "responsable de laboratoire de contrôle en chimie",
                     descriptif =
@@ -77,7 +77,7 @@ class MetierControllerTest(
                     liens = emptyList(),
                     formations = emptyList(),
                 ),
-                Metier(
+                MetierAvecSesFormations(
                     id = "MET_358",
                     nom = "pilote d'hélicoptère",
                     descriptif =
@@ -236,9 +236,31 @@ class MetierControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec la liste des métiers`() {
+            // Given
+            val idsMetier = listOf("MET_356", "MET_355", "MET_358")
+            `when`(recupererMetiersService.recupererMetiers(idsMetier)).thenReturn(metiers)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = metiers,
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = metiers, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(hateoas)
+
             // When & Then
-            mvc.perform(get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358")).andExpect(status().isForbidden)
+            mvc.perform(
+                get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358"),
+            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(resultatMetiers))
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/metiers?ids=MET_356&ids=MET_355&ids=MET_358")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -463,9 +485,96 @@ class MetierControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 403`() {
+        fun `si connecté sans profil, doit retourner 200 avec la liste des métiers`() {
+            // Given
+            val metiers =
+                listOf(
+                    MetierCourt(id = "MET_454", nom = "garde à cheval"),
+                    MetierCourt(id = "MET_471", nom = "entraîneur / entraîneuse de chevaux"),
+                    MetierCourt(id = "MET_682", nom = "maréchal-ferrant / maréchale-ferrante"),
+                    MetierCourt(id = "MET_155", nom = "lad-jockey, lad-driver"),
+                    MetierCourt(id = "MET_345", nom = "moniteur/trice d'activités équestres"),
+                    MetierCourt(id = "MET_19", nom = "palefrenier / palefrenière"),
+                    MetierCourt(id = "MET_98", nom = "sellier/ère"),
+                )
+            `when`(
+                rechercherMetiersService.rechercherMetiers(
+                    recherche = "cheval",
+                    tailleMinimumRecherche = 2,
+                ),
+            ).thenReturn(metiers)
+            val hateoas =
+                Hateoas(
+                    pageActuelle = 1,
+                    pageSuivante = null,
+                    premierePage = 1,
+                    dernierePage = 1,
+                    listeCoupee = metiers,
+                )
+            `when`(hateoasBuilder.creerHateoas(liste = metiers, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(hateoas)
+
             // When & Then
-            mvc.perform(get("/api/v1/metiers/recherche/succincte?recherche=cheval")).andExpect(status().isForbidden)
+            mvc.perform(
+                get("/api/v1/metiers/recherche/succincte?recherche=cheval"),
+            ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "metiers": [
+                            {
+                              "id": "MET_454",
+                              "nom": "garde à cheval"
+                            },
+                            {
+                              "id": "MET_471",
+                              "nom": "entraîneur / entraîneuse de chevaux"
+                            },
+                            {
+                              "id": "MET_682",
+                              "nom": "maréchal-ferrant / maréchale-ferrante"
+                            },
+                            {
+                              "id": "MET_155",
+                              "nom": "lad-jockey, lad-driver"
+                            },
+                            {
+                              "id": "MET_345",
+                              "nom": "moniteur/trice d'activités équestres"
+                            },
+                            {
+                              "id": "MET_19",
+                              "nom": "palefrenier / palefrenière"
+                            },
+                            {
+                              "id": "MET_98",
+                              "nom": "sellier/ère"
+                            }
+                          ],
+                          "liens": [
+                            {
+                              "rel": "premier",
+                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                            },
+                            {
+                              "rel": "dernier",
+                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                            },
+                            {
+                              "rel": "actuel",
+                              "href": "http://localhost/api/v1/metiers/recherche/succincte?recherche=cheval&numeroDePage=1"
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
+        }
+
+        @Test
+        fun `si pas connecté, doit retourner 401`() {
+            // When & Then
+            mvc.perform(get("/api/v1/metiers/recherche/succincte?recherche=cheval")).andExpect(status().isUnauthorized)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")

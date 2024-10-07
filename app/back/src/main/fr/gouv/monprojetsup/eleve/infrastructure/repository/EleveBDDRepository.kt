@@ -17,7 +17,7 @@ class EleveBDDRepository(
 ) : EleveRepository {
     @Transactional(readOnly = true)
     override fun recupererUnEleve(id: UUID): ProfilEleve {
-        val eleve = eleveJPARepository.findById(id).getOrNull()?.toProfilEleve() ?: ProfilEleve.Inconnu(id)
+        val eleve = eleveJPARepository.findById(id).getOrNull()?.toProfilEleve() ?: ProfilEleve.SansCompte(id)
         return eleve
     }
 

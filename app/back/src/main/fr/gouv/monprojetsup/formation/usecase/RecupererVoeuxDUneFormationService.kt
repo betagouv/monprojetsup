@@ -52,6 +52,10 @@ class RecupererVoeuxDUneFormationService(
         return voeuRepository.recupererLesVoeuxDUneFormation(idFormation)
     }
 
+    fun recupererVoeux(idsFormations: List<String>): Map<String, List<Voeu>> {
+        return voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
+    }
+
     private fun triesParAffinitesVoeux(
         voeux: List<Voeu>,
         profilEleve: ProfilEleve.Identifie,
