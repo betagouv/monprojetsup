@@ -1,4 +1,5 @@
 import AmbitionVoeux from "./AmbitionVoeux/AmbitionVoeux";
+import CommentaireVoeux from "./CommentaireVoeux/CommentaireVoeux";
 import ÉtablissementsVoeux from "./ÉtablissementsVoeux/ÉtablissementsVoeux";
 import { type VoeuxProps } from "./Voeux.interface";
 import Titre from "@/components/Titre/Titre";
@@ -29,6 +30,8 @@ const Voeux = ({ formation }: VoeuxProps) => {
       />
       <hr className="pb-[1px]" />
       <ÉtablissementsVoeux formation={formation} />
+      <hr className="pb-[1px]" />
+      <CommentaireVoeux formationId={formation.id} />
     </div>
   );
 };

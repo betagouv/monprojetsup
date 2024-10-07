@@ -136,6 +136,10 @@ export const localeFR = {
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",
         },
       },
+      COMMENTAIRE: {
+        LABEL: "Note additionnelle",
+        BOUTON: "Enregistrer",
+      },
     },
   },
   ÉLÈVE: {
