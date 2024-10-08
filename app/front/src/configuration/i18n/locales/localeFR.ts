@@ -348,12 +348,8 @@ export const localeFR = {
       TÉMOIGNAGE: {
         AUTEUR: "Charlotte",
         RÔLE: "De l'équipe MPS",
-        SECONDE:
-          "Ton objectif d'ici la fin de l'année : avoir ajouté au moins une formation ou un métier dans ta sélection personnelle. Tu peux évidemment en ajouter plus (et dans différents domaines), si tu le souhaites !",
-        PREMIÈRE:
-          "Ton orientation se construit dans le temps : il est important que tu sélectionnes plusieurs formations post-bac possibles - et surtout, que tu te renseignes concernant les attendus pour pouvoir te préparer !",
-        TERMINALE:
-          "Il est temps de réaliser concrètement tes projets ! Pour chaque formation post-bac sur MPS dans laquelle tu te projettes, tu devrais avoir au moins 3 favoris sur Parcoursup.",
+        PHRASE:
+          "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup.",
       },
     },
   },
