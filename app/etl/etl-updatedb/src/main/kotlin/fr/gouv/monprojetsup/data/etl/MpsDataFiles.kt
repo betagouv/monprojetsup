@@ -35,7 +35,6 @@ import fr.gouv.monprojetsup.data.model.cities.Coords
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.model.formations.Formation
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
@@ -407,6 +406,17 @@ class MpsDataFiles(
 
         val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
 
+        val formationsMetiersFromDescriptifs = getFormationsVersMetiersFromDescriptifs()
+        val debugLabels = getDebugLabels()
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR +  "formations_metiers_extraits_des_descriptifs.csv").use { csv ->
+            csv.appendHeaders(listOf("formation", "metier"))
+            formationsMetiersFromDescriptifs.forEach { (formation, metiers) ->
+                metiers.forEach { metier ->
+                    csv.append(listOf(debugLabels.getOrDefault(formation, formation), debugLabels.getOrDefault(metier,metier)))
+                }
+            }
+        }
+
         val mpsToIdeo = getMpsIdToIdeoIds()
 
         val formationsIdeo = onisepData.formationsIdeo.associateBy { it.ideo }
@@ -506,20 +516,24 @@ class MpsDataFiles(
 
     }
 
-    override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
+    private fun getFormationsVersMetiersFromDescriptifs(): Map<String, Set<String>> {
         val descriptifs = DescriptifsLoader.loadDescriptifs(
             onisepData,
             psupData.psupKeyToMpsKey,
             psupData.lasToGeneric,
             dataSources
         )
+        return OnisepData.getFormationsVersMetiersFromDescriptifs(
+            descriptifs,
+            onisepData.metiersIdeo
+        )
+    }
 
-        val metiersVersFormations = getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+    override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
+        val metiersVersFormations = getMetiersVersFormationsExtendedWithGroupsAndLAS(
             onisepData.edgesMetiersFormations,
-            onisepData.metiersIdeo,
             psupData.psupKeyToMpsKey,
-            psupData.genericToLas,
-            descriptifs
+            psupData.genericToLas
         )
 
         val psupKeyToMpsKey = psupData.psupKeyToMpsKey
@@ -550,67 +564,19 @@ class MpsDataFiles(
         return  formationsVersMetiers
     }
 
-    //in mps id style flxxx and MET_xxx
-    /*
-    public static Map<String, Set<String>> getMetiersVersFormationsMps(
-            List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
-            List<FormationIdeoDuSup> formationsIdeoSuSup,
-            List<MetierIdeoDuSup> metiersIdeoduSup
-    ) {
-
-        Map<String, FormationIdeoDuSup> formationsIdeo = formationsIdeoSuSup.stream()
-                .collect(Collectors.toMap(FormationIdeoDuSup::ideo, z -> z));
-
-        Map<String, Set<String>> formationsVersMetiers = new HashMap<>();
-        filieresToFormationsOnisep.forEach(
-                fil -> formationsVersMetiers.put(
-                        gFlCodToMpsId(fil.gFlCod()),
-                        fil.ideoFormationsIds().stream()
-                                .map(formationsIdeo::get)
-                                .filter(Objects::nonNull)
-                                .map(FormationIdeoDuSup::metiers)
-                                .flatMap(Collection::stream)
-                                .map(Constants::cleanup)
-                                .collect(Collectors.toSet())));
-        formationsVersMetiers.values().removeIf(Set::isEmpty);
-        formationsVersMetiers.values().removeIf(Set::isEmpty);
-
-        Map<String, Set<String>> metiersVersFormations = new HashMap<>();
-        formationsVersMetiers.forEach(
-                (f, ms) -> ms.forEach(
-                        m -> metiersVersFormations.computeIfAbsent(m, z -> new HashSet<>()).add(f)
-                )
-        );
-        return metiersVersFormations;
-    }
-
-    */
     /**
      * metiers vers filieres
      * @return a map metiers -> filieres
      */
-    private fun getMetiersVersFormationsExtendedWithGroupsAndLASAndDescriptifs(
+    private fun getMetiersVersFormationsExtendedWithGroupsAndLAS(
         edgesMetiersFormations: List<Pair<String, String>>,
-        metiersIdeo: List<MetierIdeoDuSup>,
         psupKeyToMpsKey: Map<String?, String>,
-        genericToLas: Map<String?, String>,
-        descriptifs: DescriptifsFormationsMetiers
+        genericToLas: Map<String?, String>
     ): Map<String, Set<String>> {
         val metiersVersFormations: MutableMap<String, MutableSet<String>> = HashMap()
 
         edgesMetiersFormations.forEach { p ->
             metiersVersFormations.computeIfAbsent(p.left) { HashSet() }.add(p.right)
-        }
-
-        val edgesFormationsMetiers =  OnisepData.getFormationsVersMetiersFromDescriptifs(
-            descriptifs,
-            metiersIdeo
-        )
-
-        edgesFormationsMetiers.forEach { (f, ms) ->
-            ms.forEach { m ->
-                metiersVersFormations.computeIfAbsent(m) { HashSet() } .add(f)
-            }
         }
 
         metiersVersFormations.keys.removeIf { k -> !isMetier(k) }

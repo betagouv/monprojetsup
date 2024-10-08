@@ -159,6 +159,9 @@ public class AuditSuggestionsData {
 
         exportDiagnostic(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations.csv");
 
+        exportDiagnosticFormationsMetiers(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations_metiers.csv");
+
+
         val sansDomaines = formationsEdges.stream()
                 .filter(e -> e.getRight().stream().noneMatch(this::isDomaine))
                 .toList();
@@ -225,6 +228,7 @@ public class AuditSuggestionsData {
 
     }
 
+
     private void exportDiagnostic(List<Triple<String, String, Set<String>>> formationsEdges, String filename) throws IOException {
 
 
@@ -287,5 +291,67 @@ public class AuditSuggestionsData {
         }
     }
 
+    private void exportDiagnosticFormationsMetiers(List<Triple<String, String, Set<String>>> formationsEdges, String s) throws IOException {
+        try(CsvTools tools = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_metiers.csv")) {
+            tools.appendHeaders(List.of(
+                    "id formation MPS",
+                    "nom formation MPS",
+                    "id metier IDEO",
+                    "nom metier IDEO",
+                    "ids formations IDEO",
+                    "noms formations IDEO",
+                    "capacite accueil"
+            ));
+            val formationsEdgesSorted =
+                    formationsEdges.stream()
+                    .sorted(Comparator.comparing(t -> {
+                        val idFormationMps = t.getLeft();
+                        val formation = this.formations.get(idFormationMps);
+                        if(formation == null) return 0;
+                        return -formation.getCapacite();
+                    }))
+                    .toList();
+
+            for (val keyLabelEdgesFormation : formationsEdgesSorted) {
+                val idFormationMps = keyLabelEdgesFormation.getLeft();
+                val nomFormationMps = labels.get(idFormationMps);
+
+                val formation = this.formations.get(idFormationMps);
+
+                val idsFormationsIdeo = Objects.requireNonNull(formation.getFormationsIdeo());
+                val nomsFormationsIdeo =
+                        String.join("\n", idsFormationsIdeo.stream()
+                                .map(this::getDebugLabel)
+                                .toList());
+
+                val listeMetiers = keyLabelEdgesFormation.getRight().stream()
+                        .filter(this::isMetier)
+                        .sorted().toList();
+
+                boolean first = true;
+                for (String idMetier : listeMetiers) {
+                    tools.append(
+                            List.of(
+                                    first ? idFormationMps : "",
+                                    first ? nomFormationMps : "",
+                                    idMetier,
+                                    labels.get(idMetier),
+                                    first ? String.join(" ; ", idsFormationsIdeo) : "",
+                                    first ? nomsFormationsIdeo : "",
+                                    first ? ("" + formation.getCapacite()) : ""
+                            )
+                    );
+                    first = false;
+                }
+/*                        List.of(
+                                keyLabelEdgesFormation.getLeft(),
+                                keyLabelEdgesFormation.getMiddle(),
+                                "" + listeMetiers.size(),
+                                metierss
+                        ));*/
+            }
+        }
+
+    }
 
 }
