@@ -55,16 +55,49 @@ import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ZERO_ADMISSIBILITY;
 import static java.util.Map.entry;
 
+/**
+ * Evaluator of affinities between a profile and a formation
+ * The profile is fixed.
+ * Some data are precomputed to be reused for all formations.
+ */
 public class AffinityEvaluator {
 
-    public static final boolean USE_BIN = true;
-
-    /* le profil contient t'il une marque d'intérêt pour le domaine de la santé. Utilisé pour filtrer les LAS.  */
-    private final boolean isInterestedinHealth;
-    private final Set<String> rejected =  new HashSet<>();
+    /* entry point to the algo and its data sources */
     private final AlgoSuggestions algo;
+
+    /* configuration of recommandations */
+    private final Config cfg;
+
+    /* the profile */
+    private final ProfileDTO pf;
+
+    /***** data precomputed from the profile ***********/
+    /* true iff something in the profile is related to health. If not LAS are deprioritized.  */
+    private final boolean isInterestedinHealth;
+
+    /* bac of the profile.  */
     private final @NotNull String bac;
+
+    /* estimate of moygen.  */
     private Double moyGenEstimee;
+
+    /* list of formations selected.  */
+    private final List<String> flApproved;
+
+    /* list of formations in the bin.  */
+    private final Set<String> rejected =  new HashSet<>();
+
+    /* list of formations + metiers in the bin or in the selction.  */
+    public final Set<String> alreadyKnown = new HashSet<>();
+
+
+    /* precomputed candidates for  formations similar to selected formations */
+    private final Set<String> candidatsSimilaires;
+
+    /* precomputed pathes to interests */
+    private final Map<String, List<Path>> pathesFromTagsIndexedByTarget;
+
+
 
     public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo) {
         this.cfg = cfg;
@@ -134,31 +167,19 @@ public class AffinityEvaluator {
                                 ));
     }
 
-    public double getNotSmallDiversityScore(String fl) {
-
-        int nbFormations = algo.getNbVoeux(fl);
-        int capacity = algo.getCapacity(fl);
-
-        double capacityScore = (capacity >= algo.p75Capacity) ? 1.0 : (double) capacity / algo.p75Capacity;
-        double nbFormationsScore = (nbFormations >= algo.p50NbFormations) ? 1.0 : (double) nbFormations / algo.p50NbFormations;
-        return capacityScore * nbFormationsScore;
-
-    }
-
-    /* the public entry points */
-    public Affinite getAffinityEvaluation(String fl, boolean inclureScores) {
-        if (USE_BIN && rejected.contains(fl)) return Affinite.getNoMatch();
-        return getScoreAndExplanation(fl, null, null, inclureScores);
-    }
-
-    private static final DecimalFormat df = new DecimalFormat("#.#####");
-    private static final DecimalFormat df2 = new DecimalFormat("#.#E0");
 
     /**
-     * get explanations, including debug explanations if needed
+     * computes affinity
      * @param fl key
-     * @return list of explanations
+     * @param inclureDetailsScores include scores details in result
+     * @return
      */
+    public Affinite getAffinityEvaluation(String fl, boolean inclureDetailsScores) {
+        if (rejected.contains(fl)) return Affinite.getNoMatch();
+        return getScoreAndExplanation(fl, null, null, inclureDetailsScores);
+    }
+
+
     public record Explanations(
             List<Explanation> explanations
     ) {
@@ -170,11 +191,18 @@ public class AffinityEvaluator {
             explanations.add(expl);
         }
 
-        public void add(Pair<Double, Explanation> of) {
-            explanations.add(of.getRight());
-        }
     }
 
+
+
+    private static final DecimalFormat df = new DecimalFormat("#.#####");
+    private static final DecimalFormat df2 = new DecimalFormat("#.#E0");
+
+    /**
+     * get explanations, including debug explanations if needed
+     * @param fl key
+     * @return list of explanations
+     */
     public Pair<List<Explanation>, Double> getExplanations(String fl) {
 
         //en verbose mode, on récupère également les interests
@@ -224,15 +252,6 @@ public class AffinityEvaluator {
     }
 
 
-    private final Config cfg;
-    private final ProfileDTO pf;
-
-    private final Set<String> candidatsSimilaires;
-    public final Set<String> alreadyKnown = new HashSet<>();
-
-    private final Map<String, List<Path>> pathesFromTagsIndexedByTarget;
-
-    private final List<String> flApproved;
 
     /**
      * Calcule les interests affinités entre un profil et une filière
@@ -352,12 +371,6 @@ public class AffinityEvaluator {
         return getBonusNotes(expl, stats, moyGenEstimee);
     }
 
-    /**
-     * Computes the bonus.
-     *
-     * @param expl if null, no explanation is generated. If non-null, expl is populated with explanations and interests.
-     * @return the bonus
-     */
     private double getBonusNotes(
             @Nullable Explanations expl,
             @Nullable Pair<String, Middle50> stats,
@@ -661,6 +674,21 @@ public class AffinityEvaluator {
                 .toList();
     }
 
+    /**
+     * computes diversity score with respect to non small formations
+     * @param fl
+     * @return the score
+     */
+    public double getNotSmallDiversityScore(String fl) {
+
+        int nbFormations = algo.getNbVoeux(fl);
+        int capacity = algo.getCapacity(fl);
+
+        double capacityScore = (capacity >= algo.p75Capacity) ? 1.0 : (double) capacity / algo.p75Capacity;
+        double nbFormationsScore = (nbFormations >= algo.p50NbFormations) ? 1.0 : (double) nbFormations / algo.p50NbFormations;
+        return capacityScore * nbFormationsScore;
+
+    }
 
     public GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples getExplanationsAndExamples(String key) {
         final Set<String> candidates = new HashSet<>(algo.getAllCandidatesMetiers(key));

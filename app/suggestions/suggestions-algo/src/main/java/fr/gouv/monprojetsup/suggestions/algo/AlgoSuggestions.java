@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.Constants.gFlCodToFrontId;
-import static fr.gouv.monprojetsup.suggestions.algo.AffinityEvaluator.USE_BIN;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.NO_MATCH_SCORE;
 
 @Component
@@ -199,7 +198,7 @@ public class AlgoSuggestions {
     public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg, boolean inclureScores) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
-        if(containsNothingPersonal(pf)) {
+        if (containsNothingPersonal(pf)) {
             LOGGER.info(Config.NOTHING_PERSONAL);
             return List.of();
         }
@@ -208,24 +207,23 @@ public class AlgoSuggestions {
 
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
-                .collect(Collectors.toMap(
-                        fl -> fl,
-                        fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
-                ));
+                        .collect(Collectors.toMap(
+                                fl -> fl,
+                                fl -> affinityEvaluator.getAffinityEvaluation(fl, inclureScores)
+                        ));
 
         //computing maximal score for etalonnage
         double maxScore = affinites.values().stream().mapToDouble(Affinite::affinite).max().orElse(1.0) / Config.MAX_AFFINITY_PERCENT;
 
-        if(maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
+        if (maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
-        if(USE_BIN) {
-            pf.suggRejected().forEach(suggestionDTO -> {
-                String fl = suggestionDTO.fl();
-                if (affinites.containsKey(fl)) {
-                    affinites.put(fl, Affinite.getNoMatch());
-                }
-            });
-        }
+        pf.suggRejected().forEach(suggestionDTO -> {
+            String fl = suggestionDTO.fl();
+            if (affinites.containsKey(fl)) {
+                affinites.put(fl, Affinite.getNoMatch());
+            }
+        });
+
 
         //rounding to 6 digits
         double finalMaxScore = maxScore;
