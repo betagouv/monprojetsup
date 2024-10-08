@@ -151,6 +151,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var edgesDb: SuggestionsEdgesDb
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Doit réussir à mettre à jour les tables sugg_`() {
             assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
         }
@@ -166,10 +167,10 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `La table des candidats doit être non vide`() {
             updateSuggestionsDbs.updateCandidatsDb()
-            val items = candidatsDb.findAll()
-            assertThat(items).isNotEmpty
+            assertThat(candidatsDb.findAll()).isNotEmpty
         }
 
         @Test
