@@ -389,6 +389,7 @@ export const localeFR = {
     MASQUER_SUITE: "Masquer la suite",
     AJOUTER_À_MA_SÉLECTION: "Ajouter à ma sélection",
     AJOUTÉ_À_MA_SÉLECTION: "Ajouté à ma sélection",
+    SÉLECTIONNÉ: "Sélectionné",
     SUPPRIMER_DE_MA_SÉLECTION: "Plus intéressé",
     NE_PLUS_VOIR: "Ne plus voir",
     AFFICHER_À_NOUVEAU: "Ne plus masquer cette formation",
