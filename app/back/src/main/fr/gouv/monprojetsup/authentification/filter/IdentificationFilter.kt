@@ -1,8 +1,6 @@
 package fr.gouv.monprojetsup.authentification.filter
 
-import fr.gouv.monprojetsup.authentification.domain.entity.Profil
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -21,10 +19,8 @@ class IdentificationFilter(
     val eleveRepository: EleveRepository,
 ) : OncePerRequestFilter() {
     companion object {
-        const val AUTHORITY_ELEVE = "ELEVE_AUTHENTIFIE"
-        const val AUTHORITY_ENSEIGNANT = "ENSEIGNANT_AUTHENTIFIE"
-        val GRANTED_AUTHORITY_ELEVE = GrantedAuthority { AUTHORITY_ELEVE }
-        val GRANTED_AUTHORITY_ENSEIGNANT = GrantedAuthority { AUTHORITY_ENSEIGNANT }
+        private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
+        val GRANTED_AUTHORITY_UTILISATEUR = GrantedAuthority { AUTHORITY_UTILISATEUR }
     }
 
     override fun doFilterInternal(
@@ -33,19 +29,14 @@ class IdentificationFilter(
         filterChain: FilterChain,
     ) {
         val jwtToken = getToken()
-        if (jwtToken != null) {
-            val profil = getProfile(jwtToken)
+        jwtToken?.let {
             val idIndividu = getIdIndividu(jwtToken)
-            if (profil == Profil.ELEVE && idIndividu != null) {
+            if (idIndividu != null) {
                 val eleve = eleveRepository.recupererUnEleve(idIndividu)
-                val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_ELEVE))
+                val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
                 SecurityContextHolder.getContext().authentication = authenticationEleve
-            } else if (profil == Profil.ENSEIGNANT && idIndividu != null) {
-                val authenticationEnseignant =
-                    UsernamePasswordAuthenticationToken(ProfilEnseignant, null, mutableListOf(GRANTED_AUTHORITY_ENSEIGNANT))
-                SecurityContextHolder.getContext().authentication = authenticationEnseignant
             } else {
-                val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnecte, null, null)
+                val authenticationToken = UsernamePasswordAuthenticationToken(ProfilConnnecte, null, null)
                 SecurityContextHolder.getContext().authentication = authenticationToken
             }
         }
@@ -62,10 +53,4 @@ class IdentificationFilter(
     }
 
     private fun getIdIndividu(token: Jwt): UUID? = token.getClaim<String>("sub")?.let { UUID.fromString(it) }
-
-    private fun getProfile(token: Jwt): Profil {
-        val isMpsDemoFront = token.getClaim<String>("azp") == "mps-front"
-        if (isMpsDemoFront) return Profil.ELEVE
-        return Profil.deserialise(token.getClaim("profile"))
-    }
 }

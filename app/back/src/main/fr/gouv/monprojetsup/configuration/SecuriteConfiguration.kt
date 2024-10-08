@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.configuration
 
 import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter
-import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.AUTHORITY_ELEVE
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,7 +26,7 @@ class SecuriteConfiguration {
                 authorize("/actuator/**", permitAll)
                 authorize("/api/v1/formations/**", authenticated)
                 authorize("/api/v1/metiers/**", authenticated)
-                authorize("/api/v1/profil/**", hasAuthority(AUTHORITY_ELEVE))
+                authorize("/api/v1/profil/**", authenticated)
                 authorize("/api/v1/referentiel/**", authenticated)
                 authorize(anyRequest, authenticated)
             }
