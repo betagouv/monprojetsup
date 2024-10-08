@@ -159,7 +159,8 @@ public class AuditSuggestionsData {
 
         exportDiagnostic(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations.csv");
 
-        exportDiagnosticFormationsMetiers(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations_metiers.csv");
+        exportDiagnosticFormationsMetiers(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations_metiers.csv", false);
+        exportDiagnosticFormationsMetiers(formationsEdges, DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_petit.csv", true);
 
 
         val sansDomaines = formationsEdges.stream()
@@ -291,8 +292,8 @@ public class AuditSuggestionsData {
         }
     }
 
-    private void exportDiagnosticFormationsMetiers(List<Triple<String, String, Set<String>>> formationsEdges, String s) throws IOException {
-        try(CsvTools tools = CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_metiers.csv")) {
+    private void exportDiagnosticFormationsMetiers(List<Triple<String, String, Set<String>>> formationsEdges, String filename, boolean petit) throws IOException {
+        try(CsvTools tools = CsvTools.getWriter(filename)) {
             tools.appendHeaders(List.of(
                     "id formation MPS",
                     "nom formation MPS",
@@ -341,7 +342,7 @@ public class AuditSuggestionsData {
                                     first ? ("" + formation.getCapacite()) : ""
                             )
                     );
-                    first = false;
+                    first = !petit;
                 }
 /*                        List.of(
                                 keyLabelEdgesFormation.getLeft(),
