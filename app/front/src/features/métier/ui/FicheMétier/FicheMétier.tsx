@@ -5,7 +5,7 @@ import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
+import BoutonsActionsFicheMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsFicheMétier";
 import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -31,7 +31,7 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
         <Titre niveauDeTitre="h1">{métier.nom}</Titre>
       </div>
       <div className="mt-9">
-        <BoutonsActionsMétier
+        <BoutonsActionsFicheMétier
           métier={métier}
           taille="grand"
         />

@@ -4,7 +4,7 @@ import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSo
 import Modale from "@/components/Modale/Modale";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import BoutonsActionsMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsMétier";
+import BoutonsActionsModalMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsModalMétier";
 import { useState } from "react";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
@@ -46,7 +46,8 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
       {métierSélectionné && (
         <Modale
           boutons={
-            <BoutonsActionsMétier
+            <BoutonsActionsModalMétier
+              ariaControls={idModale}
               métier={{ ...métierSélectionné, formations: [] }}
               taille="grand"
             />

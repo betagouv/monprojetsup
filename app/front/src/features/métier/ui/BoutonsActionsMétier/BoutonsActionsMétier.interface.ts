@@ -5,7 +5,13 @@ export type useBoutonsActionsMétierArgs = {
   métier: Métier;
 };
 
-export type BoutonsActionsMétierProps = {
+export type BoutonsActionsModalMétierProps = {
+  métier: Métier;
+  taille: BoutonProps["taille"];
+  ariaControls?: string;
+};
+
+export type BoutonsActionsFicheMétierProps = {
   métier: Métier;
   taille: BoutonProps["taille"];
 };
