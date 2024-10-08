@@ -40,8 +40,6 @@ public class DataSources {
     public static final String IDEO_HERITAGES_MASTERS_LICENCES_LEGATAIRES_HEADER = "ID_Master_ONISEP";
 
     /* Onisep scrapping */
-    public static final String ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_PATH = "onisep_scrap/descriptifs.json";
-    public static final String ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_RESUMES_PATH = "onisep_scrap/summaries.json";
     public static final String ONISEP_SCRAPPED_DESCRIPTIFS_METIERS_PATH = "onisep_scrap/metiers.json";
 
     /* MPS data */

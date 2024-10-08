@@ -88,7 +88,7 @@ public class UrlsUpdater {
             }
             Collection<String> multiUrls = descriptif.multiUrls();
             if (multiUrls != null && !multiUrls.isEmpty()) {
-                multiUrls.forEach(url2 -> addUrl(cleanedupKey, url2, url2, urls));
+                multiUrls.forEach(url2 -> addUrl(cleanedupKey, url2, labels.getOrDefault(cleanedupKey, url2), urls));
             }
         });
 

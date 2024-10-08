@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.etl.loaders;
 
-import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifFormation;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
@@ -12,10 +11,16 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL;
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL1;
+import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL2;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
@@ -25,23 +30,7 @@ public class DescriptifsLoader {
             DataSources sources
     ) throws IOException {
 
-
-        DescriptifsFormationsMetiers descriptifs =
-                Serialisation.fromJsonFile(
-                        sources.getSourceDataFilePath(
-                                DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_PATH
-                        ),
-                        DescriptifsFormationsMetiers.class
-                );
-
-        Map<String, String> summaries = Serialisation.fromJsonFile(
-                sources.getSourceDataFilePath(
-                        DataSources.ONISEP_SCRAPPED_DESCRIPTIFS_FORMATIONS_RESUMES_PATH
-                ),
-                new TypeToken<>() {
-                }.getType()
-        );
-        descriptifs.inject(summaries);
+        DescriptifsFormationsMetiers descriptifs = new DescriptifsFormationsMetiers();
 
         MetiersScrapped metiersScrapped = Serialisation.fromJsonFile(
                 sources.getSourceDataFilePath(
