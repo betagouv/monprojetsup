@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator.LOGGER;
 import static fr.gouv.monprojetsup.suggestions.export.experts.SuggestionsGenerator.REF_CASES_WITH_SUGGESTIONS;
@@ -200,11 +199,6 @@ public class SuggestionsEvaluator {
         return suggestionsCodes.getOrDefault(expectation2, -1);
     }
 
-    private static String findFormationCodeFromLabel(String formationLabel) {
-        return null;
-    }
-
-
 
     static String toApprentissageExplanationString(String apprentissage) {
         if (apprentissage == null) return "Non-renseigné";
@@ -214,10 +208,6 @@ public class SuggestionsEvaluator {
         return apprentissage;
     }
 
-
-    private static boolean isIn(String expectation, Stream<String> suggested) {
-        return suggested.anyMatch(s -> levenAlgo.apply(expectation, s) < 5);
-    }
 
     public static @Nullable String getFlCodFromLabel(String expectation) {
         return

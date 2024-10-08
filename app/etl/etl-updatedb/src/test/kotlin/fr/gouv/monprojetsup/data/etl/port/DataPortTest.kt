@@ -14,4 +14,7 @@ open class DataPortTest {
     @Autowired
     lateinit var mpsDataPort: MpsDataPort
 
+    @Autowired
+    lateinit var mpsDataFiles: MpsDataFiles
+
 }
