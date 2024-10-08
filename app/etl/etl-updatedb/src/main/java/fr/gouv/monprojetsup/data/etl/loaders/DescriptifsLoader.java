@@ -100,7 +100,7 @@ public class DescriptifsLoader {
         for (val line : lines) {
             val frCod = line.get(keyTypeFor);
             val descFormation = line.getOrDefault(keyDescFormation, "");
-            if (!descFormation.isBlank()) {
+            if (!frCod.isBlank() && !descFormation.isBlank()) {
                 resumesTypesformations.put(frCod, descFormation);
             }
         }
