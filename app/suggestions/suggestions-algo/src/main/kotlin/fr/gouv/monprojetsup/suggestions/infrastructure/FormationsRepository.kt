@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.infrastructure
 
-import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -28,7 +27,6 @@ open class FormationDb(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable("retrieveFormation")
     override fun retrieveFormation(id: String): Optional<Formation> {
         return db.findById(id).map { it.toFormation() }
     }

@@ -11,10 +11,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class GetFormationsOfInterestService extends MySuggService<GetFormationsOfInterestService.Request, GetFormationsOfInterestService.Response> {
@@ -49,7 +52,6 @@ public class GetFormationsOfInterestService extends MySuggService<GetFormationsO
     }
 
 
-    @Cacheable("getGeoExplanations2")
     private List<ExplanationGeo> getGeoExplanations2(String key, String nomVille, int maxFormationsPerFiliere) {
         Ville ville = villesPort.getVille(nomVille);
         if(ville == null) return Collections.emptyList();

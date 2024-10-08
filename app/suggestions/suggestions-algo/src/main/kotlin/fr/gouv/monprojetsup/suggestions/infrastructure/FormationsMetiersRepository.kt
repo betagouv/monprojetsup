@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.suggestions.infrastructure
 
 import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -26,7 +25,6 @@ open class FormationsMetiersDb(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable("getMetiersOfFormation")
     override fun getMetiersOfFormation(formationID: String): List<String> {
         return db.getMetiersOfFormation(formationID)
     }
