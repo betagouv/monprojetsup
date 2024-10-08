@@ -1,7 +1,12 @@
 package fr.gouv.monprojetsup.suggestions.server.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO
@@ -19,7 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -37,7 +41,6 @@ class ImmutablePairDeserializer : JsonDeserializer<ImmutablePair<String, Profile
     }
 }
 
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -115,7 +118,7 @@ class SuggestionsControllersTest(
     @Nested
     inner class `Quand on appelle la route des explanations` {
         // TODO
-        // définir un contexte pour chaue type de suggestions dans la quelle l'explanation est attendue
+        // définir un contexte pour chaque type de suggestions dans la quelle l'explanation est attendue
     }
 
     @Nested

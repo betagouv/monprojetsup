@@ -77,7 +77,7 @@ open class Runner(
 @Profile("test")
 class TestRunner : CommandLineRunner {
 	override fun run(vararg args: String?) {
-		println("Test profile: skipping udpate of the database.")
+		println("Test profile: skipping update of the database.")
 	}
 }
 

@@ -275,7 +275,7 @@ public class AffinityEvaluator {
 
         if(isFiliere(fl)) {
             scores.putAll(Map.ofEntries(
-                    entry(Config.BONUS_GEO, getBonusCities(fl, expl)),
+                    entry(Config.BONUS_GEO, getBonusGeographicAffinity(fl, expl)),
                     entry(Config.BONUS_DURATION, getBonusDuree(fl, expl)),
                     entry(Config.BONUS_APPRENTISSAGE, getBonusApprentissage(fl, expl)),
                     entry(Config.BONUS_SPECIALITE, getBonusSpecialites(fl, expl)),
@@ -431,7 +431,7 @@ public class AffinityEvaluator {
         return Math.max(0.0, Math.min(1.0, result));
     }
 
-    private double getBonusCities(String fl, Explanations expl) {
+    protected double getBonusGeographicAffinity(String fl, Explanations expl) {
         //pour chaque filiere, on scanne toutes les details et on calcule la distance min ç chaque ville
         double bonus = Config.NO_MATCH_SCORE;
 

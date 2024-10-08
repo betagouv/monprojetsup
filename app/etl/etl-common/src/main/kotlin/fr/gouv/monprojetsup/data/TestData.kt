@@ -38,6 +38,7 @@ class TestData {
         const val MET_TECH_FORGE_IDEO = "MET.550"
         const val MASTER_TOURISME = "FOR.10361"
 
+        const val PARIS_CODE_COMMUNE_INSEE = "75056"
 
         val psupToIdeoReference = mapOf(
             Constants.gFlCodToMpsId(BTS_AERONAUTIQUE_FL_COD_PSUP) to BTS_AERONAUTIQUE_IDEO_COD,
