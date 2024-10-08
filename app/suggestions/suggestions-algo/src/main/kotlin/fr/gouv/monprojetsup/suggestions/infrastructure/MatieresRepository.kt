@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.infrastructure
 import fr.gouv.monprojetsup.data.model.Matiere
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
 import fr.gouv.monprojetsup.suggestions.port.MatieresPort
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -25,7 +24,6 @@ open class MatieresRepository(
     : MatieresPort
 {
     @Transactional(readOnly = true)
-    @Cacheable("retrieveSpecialites")
     override fun retrieveSpecialites(): List<Matiere> {
         return repo.findAll().filter { m -> m.estSpecialite }.map { it.toMatiere() }
     }

@@ -1,13 +1,19 @@
 package fr.gouv.monprojetsup.suggestions.data.model;
 
-import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.data.model.Edge;
+import fr.gouv.monprojetsup.suggestions.Constants;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.cache.annotation.Cacheable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class Edges {
@@ -44,7 +50,6 @@ public final class Edges {
     }
 
 
-    @Cacheable("pathes")
     public Set<Path> computePathesFrom(String node, int maxDistance) {
         Set<Path> resultat = new HashSet<>();
         Path pi = new Path(node, 1.0);

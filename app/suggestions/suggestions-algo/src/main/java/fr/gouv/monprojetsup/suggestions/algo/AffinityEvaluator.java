@@ -14,7 +14,6 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -466,7 +465,6 @@ public class AffinityEvaluator {
         return bonus;
     }
 
-    @Cacheable("getGeoExplanations")//naive costly implementation, needs to be cached
     private List<ExplanationGeo> getGeoExplanations(String fl, String nomVille) {
         Ville ville = algo.getVille(nomVille);
         if(ville == null) return List.of();

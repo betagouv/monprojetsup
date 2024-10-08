@@ -1,25 +1,38 @@
 package fr.gouv.monprojetsup.suggestions.data;
 
-import fr.gouv.monprojetsup.suggestions.Constants;
-import fr.gouv.monprojetsup.data.model.*;
+import fr.gouv.monprojetsup.data.model.Edge;
+import fr.gouv.monprojetsup.data.model.Formation;
+import fr.gouv.monprojetsup.data.model.LatLng;
+import fr.gouv.monprojetsup.data.model.Matiere;
+import fr.gouv.monprojetsup.data.model.StatsFormation;
+import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
-import fr.gouv.monprojetsup.suggestions.port.*;
+import fr.gouv.monprojetsup.suggestions.Constants;
+import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
+import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort;
+import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
+import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
+import fr.gouv.monprojetsup.suggestions.port.MatieresPort;
+import fr.gouv.monprojetsup.suggestions.port.VillesPort;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.data.model.stats.StatFront.getStatistique;
+import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
@@ -78,7 +91,6 @@ public class SuggestionsData {
         return f.stats().formationsSimilaires().getOrDefault(typeBac, Map.of());
     }
 
-    @Cacheable("getVoeuxCoords")
     public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String id) {
         return formationsPort.retrieveFormation(id).map(Formation::getVoeuxCoords).orElse(List.of());
     }
