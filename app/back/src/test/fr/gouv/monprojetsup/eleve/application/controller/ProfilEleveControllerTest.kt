@@ -82,7 +82,7 @@ class ProfilEleveControllerTest(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
             ).andExpect(status().isNoContent)
-            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(modificationProfilEleve, unProfil)
+            then(miseAJourEleveService).should().mettreAJourUnProfilEleve(modificationProfilEleve, unProfilEleve)
         }
 
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -98,7 +98,7 @@ class ProfilEleveControllerTest(
             ).andExpect(status().isNoContent)
             then(miseAJourEleveService).should().mettreAJourUnProfilEleve(
                 miseAJourDuProfil = modificationProfilEleveVide,
-                profilActuel = unProfil,
+                profilActuel = unProfilEleve,
             )
         }
 
@@ -127,7 +127,7 @@ class ProfilEleveControllerTest(
             // Given
             val exception = MonProjetSupBadRequestException("FORMATIONS_NON_RECONNUES", "Une ou plusieurs des formations n'existent pas")
             given(
-                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = unProfil),
+                miseAJourEleveService.mettreAJourUnProfilEleve(miseAJourDuProfil = modificationProfilEleve, profilActuel = unProfilEleve),
             ).willThrow(exception)
 
             // When & Then
@@ -189,14 +189,48 @@ class ProfilEleveControllerTest(
             ).andExpect(status().isBadRequest)
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
+        @ConnecteAvecUnEnseignant(idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b")
         @Test
-        fun `si enseignant, doit retourner 403`() {
+        fun `si enseignant existe, doit retourner 204`() {
+            // Given
+            val unProfilEnseignant =
+                ProfilEleve.Identifie(
+                    id = uuidEnseignant,
+                    situation = SituationAvanceeProjetSup.PROJET_PRECIS,
+                    classe = ChoixNiveau.TERMINALE,
+                    baccalaureat = "NC",
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    specialites = listOf("mat1001", "mat1049"),
+                    centresInterets = null,
+                    moyenneGenerale = 4.9f,
+                    metiersFavoris = null,
+                    formationsFavorites =
+                        listOf(
+                            VoeuFormation(
+                                idFormation = "fl1234",
+                                niveauAmbition = 1,
+                                voeuxChoisis = emptyList(),
+                                priseDeNote = null,
+                            ),
+                            VoeuFormation(
+                                idFormation = "fl5678",
+                                niveauAmbition = 3,
+                                voeuxChoisis = listOf("ta1", "ta2"),
+                                priseDeNote = "Mon voeu préféré",
+                            ),
+                        ),
+                    domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                    corbeilleFormations = listOf("fl0012"),
+                )
+            given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
+
             // When & Then
             mvc.perform(
                 post("/api/v1/profil").contentType(MediaType.APPLICATION_JSON).content(creerRequeteNouveauProfilJson())
                     .accept(MediaType.APPLICATION_JSON),
-            ).andExpect(status().isForbidden)
+            ).andExpect(status().isNoContent)
         }
 
         @ConnecteSansId
@@ -274,7 +308,7 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève existe, doit retourner le profil de l'élève`() {
             // Given
-            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfil)).willReturn(unProfil)
+            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEleve)).willReturn(unProfilEleve)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
@@ -368,8 +402,8 @@ class ProfilEleveControllerTest(
                         priseDeNote = null,
                     ),
                 )
-            val nouveauProfil = unProfil.copy(formationsFavorites = nouvellesFormationsFavortites)
-            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfil)).willReturn(nouveauProfil)
+            val nouveauProfil = unProfilEleve.copy(formationsFavorites = nouvellesFormationsFavortites)
+            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEleve)).willReturn(nouveauProfil)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
@@ -474,11 +508,108 @@ class ProfilEleveControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
+        @ConnecteAvecUnEnseignant(idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b")
         @Test
-        fun `si enseignant, doit retourner 403`() {
+        fun `si enseignant, doit retourner 200`() {
+            // Given
+            val unProfilEnseignant =
+                ProfilEleve.Identifie(
+                    id = uuidEnseignant,
+                    situation = SituationAvanceeProjetSup.PROJET_PRECIS,
+                    classe = ChoixNiveau.TERMINALE,
+                    baccalaureat = "NC",
+                    dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
+                    alternance = ChoixAlternance.PAS_INTERESSE,
+                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    specialites = listOf("mat1001", "mat1049"),
+                    centresInterets = null,
+                    moyenneGenerale = 4.9f,
+                    metiersFavoris = null,
+                    formationsFavorites =
+                        listOf(
+                            VoeuFormation(
+                                idFormation = "fl1234",
+                                niveauAmbition = 1,
+                                voeuxChoisis = emptyList(),
+                                priseDeNote = null,
+                            ),
+                            VoeuFormation(
+                                idFormation = "fl5678",
+                                niveauAmbition = 3,
+                                voeuxChoisis = listOf("ta1", "ta2"),
+                                priseDeNote = "Mon voeu préféré",
+                            ),
+                        ),
+                    domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                    corbeilleFormations = listOf("fl0012"),
+                )
+            given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
+            given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEnseignant)).willReturn(unProfilEnseignant)
+
             // When & Then
-            mvc.perform(get("/api/v1/profil")).andExpect(status().isForbidden)
+            mvc.perform(get("/api/v1/profil")).andDo(print())
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                    content().json(
+                        """
+                        {
+                          "situation": "projet_precis",
+                          "classe": "terminale",
+                          "baccalaureat": "NC",
+                          "specialites": [
+                            "mat1001",
+                            "mat1049"
+                          ],
+                          "domaines": [
+                            "T_ITM_1054",
+                            "T_ITM_1534",
+                            "T_ITM_1248",
+                            "T_ITM_1351"
+                          ],
+                          "centresInterets": null,
+                          "metiersFavoris": null,
+                          "dureeEtudesPrevue": "indifferent",
+                          "alternance": "pas_interesse",
+                          "communesFavorites": [
+                            {
+                              "codeInsee": "75115",
+                              "nom": "Paris",
+                              "latitude": 48.851227,
+                              "longitude": 2.2885659
+                            },
+                            {
+                              "codeInsee": "13055",
+                              "nom": "Marseille",
+                              "latitude": 43.3,
+                              "longitude": 5.4
+                            }
+                          ],
+                          "moyenneGenerale": 4.9,
+                          "formationsFavorites": [
+                            {
+                              "idFormation": "fl1234",
+                              "niveauAmbition": 1,
+                              "voeuxChoisis": [],
+                              "priseDeNote": null
+                            },
+                            {
+                              "idFormation": "fl5678",
+                              "niveauAmbition": 3,
+                              "voeuxChoisis": [
+                                "ta1",
+                                "ta2"
+                              ],
+                              "priseDeNote": "Mon voeu préféré"
+                            }
+                          ],
+                          "corbeilleFormations": [
+                            "fl0012"
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                )
         }
 
         @ConnecteSansId

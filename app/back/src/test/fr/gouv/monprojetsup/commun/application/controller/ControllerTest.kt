@@ -25,13 +25,16 @@ abstract class ControllerTest {
 
     @BeforeEach
     fun setup() {
-        given(eleveRepository.recupererUnEleve(id = uuid)).willReturn(unProfil)
+        given(eleveRepository.recupererUnEleve(id = uuidEleve)).willReturn(unProfilEleve)
+        given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
     }
 
-    private val uuid = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c")
-    val unProfil =
+    private val uuidEleve = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c")
+    val uuidEnseignant = UUID.fromString("49e8e8c2-5eec-4eae-a90d-992225bbea1b")
+
+    val unProfilEleve =
         ProfilEleve.Identifie(
-            id = uuid,
+            id = uuidEleve,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.TERMINALE,
             baccalaureat = "Générale",
@@ -60,4 +63,6 @@ abstract class ControllerTest {
             domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
             corbeilleFormations = listOf("fl0010", "fl0012"),
         )
+
+    val unProfilEnseignant = ProfilEleve.SansCompte(id = uuidEnseignant)
 }

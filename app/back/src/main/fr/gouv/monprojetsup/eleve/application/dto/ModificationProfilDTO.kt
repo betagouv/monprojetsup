@@ -51,7 +51,7 @@ data class ModificationProfilDTO(
         arraySchema =
             Schema(
                 description = "Domaines d'activité",
-                example = "[\"T_ITM_1054\",\"T_ITM_1534\",\"T_ITM_1248\",\"T_ITM_1351\"]",
+                example = "[\"dom41\",\"dom32\",\"dom26\"]",
                 required = false,
             ),
     )
@@ -62,8 +62,7 @@ data class ModificationProfilDTO(
             Schema(
                 description = "Centres d'intérêt",
                 example =
-                    "[\"T_ROME_609891024_T_IDEO2_4815\", \"T_IDEO2_4822_T_IDEO2_4806" +
-                        "\", \"T_ROME_731379930_T_IDEO2_4812_T_ROME_803089798\", \"T_ROME_2018646295_T_IDEO2_4814\"]",
+                    "[\"ci16\", \"ci27\", \"ci6\", \"ci11\"]",
                 required = false,
             ),
     )

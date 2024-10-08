@@ -382,7 +382,9 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi sans page indiquée, doit retourner 200 avec la premiere page des fiches formations suggérées`() {
             // Given
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(affinitesFormationEtMetier)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+                affinitesFormationEtMetier,
+            )
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -420,7 +422,7 @@ class FormationControllerTest(
                     "fl2051",
                 )
             `when`(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfil, affinitesFormationEtMetier, idsFormations),
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
             ).thenReturn(
                 listOf(
                     ficheFormation,
@@ -799,7 +801,9 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour la page 2, doit retourner 200 avec une liste des fiches formations suggérées`() {
             // Given
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(affinitesFormationEtMetier)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+                affinitesFormationEtMetier,
+            )
             val listeCoupee =
                 listOf(
                     FormationAvecSonAffinite(idFormation = "fl2016", tauxAffinite = 0.7217561f),
@@ -812,7 +816,7 @@ class FormationControllerTest(
             )
             val idsFormations = listOf("fl2016", "fl2118", "fl680003")
             `when`(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfil, affinitesFormationEtMetier, idsFormations),
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
             ).thenReturn(listOf(ficheFormation.copy(id = "fl2016")))
 
             // When & Then
@@ -1116,11 +1120,13 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si connecté en tant qu'enseignant, doit retourner 200 avec une liste vide`() {
+        fun `si connecté en tant qu'enseignant, doit retourner 200 avec les formations suggérées`() {
             // Given
-            val formations = listOf<FicheFormation>()
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+                affinitesFormationEtMetier,
+            )
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -1132,6 +1138,54 @@ class FormationControllerTest(
             `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
                 hateoas,
             )
+            val idsFormations =
+                listOf(
+                    "fl240",
+                    "fr22",
+                    "fl2110",
+                    "fl2016",
+                    "fl252",
+                    "fl2118",
+                    "fl680003",
+                    "fl2009",
+                    "fl2046",
+                    "fl2022",
+                    "fr83",
+                    "fl2044",
+                    "fl2090",
+                    "fl840010",
+                    "fl2034",
+                    "fl2073",
+                    "fl2018",
+                    "fl2010",
+                    "fl2019",
+                    "fl52",
+                    "fl41",
+                    "fl2051",
+                )
+            `when`(
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+            ).thenReturn(
+                listOf(
+                    ficheFormation,
+                    ficheFormation.copy(
+                        id = "fl2",
+                        nom = "2eme formation",
+                        descriptifGeneral = null,
+                        descriptifAttendus = null,
+                        descriptifDiplome = null,
+                        descriptifConseils = null,
+                        formationsAssociees = listOf("fl3"),
+                        liens = emptyList(),
+                        criteresAnalyseCandidature = emptyList(),
+                        statistiquesDesAdmis = null,
+                        tauxAffinite = 17,
+                        metiersTriesParAffinites = emptyList(),
+                        voeux = emptyList(),
+                        explications = null,
+                    ),
+                ),
+            )
 
             // When & Then
             mvc.perform(
@@ -1141,7 +1195,330 @@ class FormationControllerTest(
                     content().json(
                         """
                         {
-                          "formations": [],
+                          "formations": [
+                            {
+                              "formation": {
+                                "id": "fl680002",
+                                "nom": "Cycle pluridisciplinaire d'Études Supérieures - Science",
+                                "idsFormationsAssociees": [
+                                  "fl0012"
+                                ],
+                                "descriptifFormation": "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont organisées conjointement par un établissement d’enseignement secondaire lycée et un établissement de l’enseignement supérieur, une université.",
+                                "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
+                                "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
+                                "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
+                                "moyenneGeneraleDesAdmis": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13.0
+                                    },
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17.0
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18.0
+                                    }
+                                  ]
+                                },
+                                "criteresAnalyseCandidature": [
+                                  {
+                                    "nom": "Compétences académiques",
+                                    "pourcentage": 10
+                                  },
+                                  {
+                                    "nom": "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                                    "pourcentage": 0
+                                  },
+                                  {
+                                    "nom": "Résultats académiques",
+                                    "pourcentage": 18
+                                  },
+                                  {
+                                    "nom": "Savoir-être",
+                                    "pourcentage": 42
+                                  },
+                                  {
+                                    "nom": "Motivation, connaissance",
+                                    "pourcentage": 30
+                                  }
+                                ],
+                                "repartitionAdmisAnneePrecedente": {
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
+                                },
+                                "liens": [
+                                  {
+                                    "nom": "Voir sur l'ONISEP",
+                                    "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [
+                                  {
+                                    "id": "MET001",
+                                    "nom": "géomaticien/ne",
+                                    "descriptif": "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne exploite les données pour modéliser le territoire",
+                                    "liens": [
+                                      {
+                                        "nom": "Voir sur l'ONISEP",
+                                        "url": "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "MET002",
+                                    "nom": "documentaliste",
+                                    "descriptif": null,
+                                    "liens": []
+                                  }
+                                ],
+                                "tauxAffinite": 90
+                              },
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "formationsSimilaires": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "interetsEtDomainesChoisis": {
+                                  "interets": [
+                                    {
+                                      "id": "aider_autres",
+                                      "nom": "Aider les autres"
+                                    }
+                                  ],
+                                  "domaines": [
+                                    {
+                                      "id": "T_ITM_1356",
+                                      "nom": "soin aux animaux",
+                                      "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ]
+                                },
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "autoEvaluationMoyenne": {
+                                  "moyenne": 15.0,
+                                  "basIntervalleNotes": 14.0,
+                                  "hautIntervalleNotes": 16.0,
+                                  "baccalaureatUtilise": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
+                            },
+                            {
+                              "formation": {
+                                "id": "fl2",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [],
+                                "tauxAffinite": 17
+                              },
+                              "explications": null
+                            }
+                          ],
                           "liens": [
                             {
                               "rel": "premier",
@@ -1164,48 +1541,9 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, , doit retourner 200 avec une liste vide`() {
-            // Given
-            val formations = listOf<FicheFormation>()
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = formations,
-                )
-            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
-                hateoas,
-            )
-
+        fun `si connecté sans profil, doit retourner 403`() {
             // When & Then
-            mvc.perform(
-                get("/api/v1/formations/suggestions"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/suggestions?numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
-                    ),
-                )
+            mvc.perform(get("/api/v1/formations/suggestions")).andDo(print()).andExpect(status().isForbidden)
         }
 
         @Test
@@ -1246,7 +1584,9 @@ class FormationControllerTest(
                     code = "PAGE_DEMANDEE_INXISTANTE",
                     msg = "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(affinitesFormationEtMetier)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+                affinitesFormationEtMetier,
+            )
             `when`(
                 hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 100, tailleLot = 30),
             ).thenThrow(uneException)
@@ -1281,7 +1621,7 @@ class FormationControllerTest(
                     msg = "Erreur lors de la connexion à l'API de suggestions",
                     origine = ConnectException("Connection refused"),
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenThrow(uneException)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -1310,7 +1650,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
-            `when`(recupererFormationService.recupererFormation(unProfil, "fl680002")).thenReturn(ficheFormation)
+            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).thenReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -1591,12 +1931,11 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
-            `when`(
-                recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
-            ).thenReturn(ficheFormationSansProfil)
+            // Given
+            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).thenReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -1616,7 +1955,30 @@ class FormationControllerTest(
                             "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                             "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                             "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                            "moyenneGeneraleDesAdmis": null,
+                            "moyenneGeneraleDesAdmis": {
+                              "baccalaureat": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              },
+                              "centiles": [
+                                {
+                                  "centile": 5,
+                                  "note": 13.0
+                                },
+                                {
+                                  "centile": 25,
+                                  "note": 14.5
+                                },
+                                {
+                                  "centile": 75,
+                                  "note": 17.0
+                                },
+                                {
+                                  "centile": 95,
+                                  "note": 18.0
+                                }
+                              ]
+                            },
                             "criteresAnalyseCandidature": [
                               {
                                 "nom": "Compétences académiques",
@@ -1640,8 +2002,30 @@ class FormationControllerTest(
                               }
                             ],
                             "repartitionAdmisAnneePrecedente": {
-                              "total": 12,
-                              "parBaccalaureat": []
+                              "total": 6915,
+                              "parBaccalaureat": [
+                                {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "nombreAdmis": 6677
+                                },
+                                {
+                                  "baccalaureat": {
+                                    "id": "STMG",
+                                    "nom": "Série STMG"
+                                  },
+                                  "nombreAdmis": 15
+                                },
+                                {
+                                  "baccalaureat": {
+                                    "id": "STI2D",
+                                    "nom": "Série STI2D"
+                                  },
+                                  "nombreAdmis": 223
+                                }
+                              ]
                             },
                             "liens": [
                               {
@@ -1699,7 +2083,40 @@ class FormationControllerTest(
                                 }
                               }
                             ],
-                            "communesFavoritesAvecLeursVoeux": [],
+                            "communesFavoritesAvecLeursVoeux": [
+                              {
+                                "commune": {
+                                  "codeInsee": "75115",
+                                  "nom": "Paris",
+                                  "latitude": 48.851227,
+                                  "longitude": 2.2885659
+                                },
+                                "voeuxAvecDistance": [
+                                  {
+                                    "voeu": {
+                                      "id": "ta3",
+                                      "nom": "Nom du ta3",
+                                      "commune": {
+                                        "nom": "Paris",
+                                        "codeInsee": "75105"
+                                      }
+                                    },
+                                    "distanceKm": 3
+                                  },
+                                  {
+                                    "voeu": {
+                                      "id": "ta32",
+                                      "nom": "Nom du ta32",
+                                      "commune": {
+                                        "nom": "Paris",
+                                        "codeInsee": "75115"
+                                      }
+                                    },
+                                    "distanceKm": 1
+                                  }
+                                ]
+                              }
+                            ],
                             "metiers": [
                               {
                                 "id": "MET001",
@@ -1719,9 +2136,80 @@ class FormationControllerTest(
                                 "liens": []
                               }
                             ],
-                            "tauxAffinite": null
+                            "tauxAffinite": 90
                           },
-                          "explications": null
+                          "explications": {
+                            "geographique": [
+                              {
+                                "nomVille": "Nantes",
+                                "distanceKm": 1
+                              },
+                              {
+                                "nomVille": "Paris",
+                                "distanceKm": 3
+                              }
+                            ],
+                            "formationsSimilaires": [
+                              {
+                                "id": "fl1",
+                                "nom": "CPGE MPSI"
+                              },
+                              {
+                                "id": "fl7",
+                                "nom": "BUT Informatique"
+                              }
+                            ],
+                            "dureeEtudesPrevue": "longue",
+                            "alternance": "tres_interesse",
+                            "interetsEtDomainesChoisis": {
+                              "interets": [
+                                {
+                                  "id": "aider_autres",
+                                  "nom": "Aider les autres"
+                                }
+                              ],
+                              "domaines": [
+                                {
+                                  "id": "T_ITM_1356",
+                                  "nom": "soin aux animaux",
+                                  "emoji": "\uD83D\uDC2E"
+                                }
+                              ]
+                            },
+                            "specialitesChoisies": [
+                              {
+                                "nomSpecialite": "specialiteA",
+                                "pourcentage": 12
+                              },
+                              {
+                                "nomSpecialite": "specialiteB",
+                                "pourcentage": 1
+                              },
+                              {
+                                "nomSpecialite": "specialiteC",
+                                "pourcentage": 89
+                              }
+                            ],
+                            "typeBaccalaureat": {
+                              "baccalaureat": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              },
+                              "pourcentage": 18
+                            },
+                            "autoEvaluationMoyenne": {
+                              "moyenne": 15.0,
+                              "basIntervalleNotes": 14.0,
+                              "hautIntervalleNotes": 16.0,
+                              "baccalaureatUtilise": {
+                                "id": "Générale",
+                                "nom": "Série Générale"
+                              }
+                            },
+                            "detailsCalculScore": {
+                              "details": []
+                            }
+                          }
                         }
                         """.trimIndent(),
                     ),
@@ -1730,7 +2218,7 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 200 avec la liste de formations`() {
+        fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
             `when`(
                 recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
             ).thenReturn(ficheFormationSansProfil)
@@ -1880,7 +2368,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl00010 existe plusieurs fois entre id et dans les formations équivalentes",
                 )
-            `when`(recupererFormationService.recupererFormation(unProfil, "fl00010")).thenThrow(uneException)
+            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl00010")).thenThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -1898,7 +2386,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation inconnu n'existe pas",
                 )
-            `when`(recupererFormationService.recupererFormation(unProfil, "inconnu")).thenThrow(uneException)
+            `when`(recupererFormationService.recupererFormation(unProfilEleve, "inconnu")).thenThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -2048,7 +2536,7 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
@@ -2312,7 +2800,7 @@ class FormationControllerTest(
                 ),
             ).thenReturn(rechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
                     ficheFormation.copy(id = "fl1"),
@@ -2333,7 +2821,7 @@ class FormationControllerTest(
                     ),
                 )
             `when`(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfil, toutesLesSuggestions, listOf("fl1", "fl7")),
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
             ).thenReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -2748,7 +3236,7 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "bfef627c-36dd-4df5-897b-159443a6d49d")
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `pour un enseignant, doit retourner 200 avec le détail des formations associées à la recherche`() {
             // Given
@@ -2763,10 +3251,12 @@ class FormationControllerTest(
                     tailleMinimumRecherche = 2,
                 ),
             ).thenReturn(rechercheL1)
+            val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormation.copy(id = "fl1"),
+                    ficheFormation.copy(
                         id = "fl7",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -2777,10 +3267,14 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
+                        tauxAffinite = 17,
+                        metiersTriesParAffinites = emptyList(),
+                        explications = null,
                     ),
                 )
-            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).thenReturn(fichesFormations)
+            `when`(
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
+            ).thenReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2813,7 +3307,30 @@ class FormationControllerTest(
                                 "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                                 "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": null,
+                                "moyenneGeneraleDesAdmis": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13.0
+                                    },
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17.0
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18.0
+                                    }
+                                  ]
+                                },
                                 "criteresAnalyseCandidature": [
                                   {
                                     "nom": "Compétences académiques",
@@ -2837,8 +3354,30 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "repartitionAdmisAnneePrecedente": {
-                                  "total": 12,
-                                  "parBaccalaureat": []
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
                                 },
                                 "liens": [
                                   {
@@ -2896,7 +3435,40 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [
                                   {
                                     "id": "MET001",
@@ -2916,9 +3488,80 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null
+                                "tauxAffinite": 90
                               },
-                              "explications": null
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "formationsSimilaires": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "interetsEtDomainesChoisis": {
+                                  "interets": [
+                                    {
+                                      "id": "aider_autres",
+                                      "nom": "Aider les autres"
+                                    }
+                                  ],
+                                  "domaines": [
+                                    {
+                                      "id": "T_ITM_1356",
+                                      "nom": "soin aux animaux",
+                                      "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ]
+                                },
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "autoEvaluationMoyenne": {
+                                  "moyenne": 15.0,
+                                  "basIntervalleNotes": 14.0,
+                                  "hautIntervalleNotes": 16.0,
+                                  "baccalaureatUtilise": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             },
                             {
                               "formation": {
@@ -2985,9 +3628,42 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [],
-                                "tauxAffinite": null
+                                "tauxAffinite": 17
                               },
                               "explications": null
                             }
@@ -3059,7 +3735,7 @@ class FormationControllerTest(
 
         @ConnecteSansId
         @Test
-        fun `si connecté sans profil, doit retourner 200 avec la liste des formations`() {
+        fun `si connecté sans profil, doit retourner 200 avec les formations sans explications`() {
             // Given
             val rechercheL1 =
                 listOf(
@@ -3337,7 +4013,7 @@ class FormationControllerTest(
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail des formations`() {
             // Given
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenReturn(toutesLesSuggestions)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
                     ficheFormation.copy(id = "fl1"),
@@ -3359,7 +4035,7 @@ class FormationControllerTest(
                     ),
                 )
             `when`(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfil, toutesLesSuggestions, listOf("fl1", "fl2")),
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
             ).thenReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -3725,14 +4401,16 @@ class FormationControllerTest(
                 )
         }
 
-        @ConnecteAvecUnEnseignant(idEnseignant = "cb3d5ec2-8899-42e0-aa8c-e297b2bcb13f")
+        @ConnecteAvecUnEnseignant(idEnseignant = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
         fun `si enseignant, doit retourner 200 avec le detail des formations`() {
             // Given
+            val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
-                    ficheFormationSansProfil.copy(id = "fl1"),
-                    ficheFormationSansProfil.copy(
+                    ficheFormation.copy(id = "fl1"),
+                    ficheFormation.copy(
                         id = "fl2",
                         nom = "2eme formation",
                         descriptifGeneral = null,
@@ -3743,11 +4421,15 @@ class FormationControllerTest(
                         liens = emptyList(),
                         criteresAnalyseCandidature = emptyList(),
                         statistiquesDesAdmis = null,
-                        metiers = emptyList(),
+                        tauxAffinite = 17,
+                        metiersTriesParAffinites = emptyList(),
                         voeux = emptyList(),
+                        explications = null,
                     ),
                 )
-            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).thenReturn(fichesFormations)
+            `when`(
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
+            ).thenReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -3780,7 +4462,30 @@ class FormationControllerTest(
                                 "descriptifDiplome": "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui conférent le grade de licence.",
                                 "descriptifConseils": "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances actuelles en matière de design floral pour exceller dans ce domaine.",
                                 "descriptifAttendus": "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et l'entretien des végétaux.",
-                                "moyenneGeneraleDesAdmis": null,
+                                "moyenneGeneraleDesAdmis": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "centiles": [
+                                    {
+                                      "centile": 5,
+                                      "note": 13.0
+                                    },
+                                    {
+                                      "centile": 25,
+                                      "note": 14.5
+                                    },
+                                    {
+                                      "centile": 75,
+                                      "note": 17.0
+                                    },
+                                    {
+                                      "centile": 95,
+                                      "note": 18.0
+                                    }
+                                  ]
+                                },
                                 "criteresAnalyseCandidature": [
                                   {
                                     "nom": "Compétences académiques",
@@ -3804,8 +4509,30 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "repartitionAdmisAnneePrecedente": {
-                                  "total": 12,
-                                  "parBaccalaureat": []
+                                  "total": 6915,
+                                  "parBaccalaureat": [
+                                    {
+                                      "baccalaureat": {
+                                        "id": "Générale",
+                                        "nom": "Série Générale"
+                                      },
+                                      "nombreAdmis": 6677
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STMG",
+                                        "nom": "Série STMG"
+                                      },
+                                      "nombreAdmis": 15
+                                    },
+                                    {
+                                      "baccalaureat": {
+                                        "id": "STI2D",
+                                        "nom": "Série STI2D"
+                                      },
+                                      "nombreAdmis": 223
+                                    }
+                                  ]
                                 },
                                 "liens": [
                                   {
@@ -3863,7 +4590,40 @@ class FormationControllerTest(
                                     }
                                   }
                                 ],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [
                                   {
                                     "id": "MET001",
@@ -3883,9 +4643,80 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null
+                                "tauxAffinite": 90
                               },
-                              "explications": null
+                              "explications": {
+                                "geographique": [
+                                  {
+                                    "nomVille": "Nantes",
+                                    "distanceKm": 1
+                                  },
+                                  {
+                                    "nomVille": "Paris",
+                                    "distanceKm": 3
+                                  }
+                                ],
+                                "formationsSimilaires": [
+                                  {
+                                    "id": "fl1",
+                                    "nom": "CPGE MPSI"
+                                  },
+                                  {
+                                    "id": "fl7",
+                                    "nom": "BUT Informatique"
+                                  }
+                                ],
+                                "dureeEtudesPrevue": "longue",
+                                "alternance": "tres_interesse",
+                                "interetsEtDomainesChoisis": {
+                                  "interets": [
+                                    {
+                                      "id": "aider_autres",
+                                      "nom": "Aider les autres"
+                                    }
+                                  ],
+                                  "domaines": [
+                                    {
+                                      "id": "T_ITM_1356",
+                                      "nom": "soin aux animaux",
+                                      "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ]
+                                },
+                                "specialitesChoisies": [
+                                  {
+                                    "nomSpecialite": "specialiteA",
+                                    "pourcentage": 12
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteB",
+                                    "pourcentage": 1
+                                  },
+                                  {
+                                    "nomSpecialite": "specialiteC",
+                                    "pourcentage": 89
+                                  }
+                                ],
+                                "typeBaccalaureat": {
+                                  "baccalaureat": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  },
+                                  "pourcentage": 18
+                                },
+                                "autoEvaluationMoyenne": {
+                                  "moyenne": 15.0,
+                                  "basIntervalleNotes": 14.0,
+                                  "hautIntervalleNotes": 16.0,
+                                  "baccalaureatUtilise": {
+                                    "id": "Générale",
+                                    "nom": "Série Générale"
+                                  }
+                                },
+                                "detailsCalculScore": {
+                                  "details": []
+                                }
+                              }
                             },
                             {
                               "formation": {
@@ -3903,9 +4734,42 @@ class FormationControllerTest(
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
                                 "metiers": [],
-                                "tauxAffinite": null
+                                "tauxAffinite": 17
                               },
                               "explications": null
                             }
@@ -4151,7 +5015,7 @@ class FormationControllerTest(
                     "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/formations?ids=fl1&ids=fl2",
                     null,
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfil)).thenThrow(uneException)
+            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenThrow(uneException)
 
             // When & Then
             mvc.perform(

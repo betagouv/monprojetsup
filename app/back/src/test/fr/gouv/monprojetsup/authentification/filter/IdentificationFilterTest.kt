@@ -118,7 +118,7 @@ class IdentificationFilterTest(
                       },
                       "authorities": [
                         {
-                          "authority": "ELEVE_AUTHENTIFIE"
+                          "authority": "UTILISATEUR_AUTHENTIFIE"
                         }
                       ],
                       "isAuthenticated": true
@@ -147,7 +147,7 @@ class IdentificationFilterTest(
                       },
                       "authorities": [
                         {
-                          "authority": "ELEVE_AUTHENTIFIE"
+                          "authority": "UTILISATEUR_AUTHENTIFIE"
                         }
                       ],
                       "isAuthenticated": true
@@ -157,9 +157,9 @@ class IdentificationFilterTest(
             )
     }
 
-    @ConnecteAvecUnEnseignant(idEnseignant = "590a6ada-3134-49ce-88b2-f894fc485670")
+    @ConnecteAvecUnEnseignant(idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b")
     @Test
-    fun `si connecté avec un professeur, doit retourner 200 avec le détail de ses infos et ne pas appeler le repo eleve`() {
+    fun `si connecté avec un professeur, doit retourner 200 avec le détail de ses infos`() {
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -170,7 +170,7 @@ class IdentificationFilterTest(
                       "principal": {},
                       "authorities": [
                         {
-                          "authority": "ENSEIGNANT_AUTHENTIFIE"
+                          "authority": "UTILISATEUR_AUTHENTIFIE"
                         }
                       ],
                       "isAuthenticated": true
@@ -178,13 +178,11 @@ class IdentificationFilterTest(
                     """.trimIndent(),
                 ),
             )
-
-        then(eleveRepository).shouldHaveNoInteractions()
     }
 
     @ConnecteSansId
     @Test
-    fun `si connecté sans id dans le JWT, doit retourner 200 et ne pas appeler le repo eleve`() {
+    fun `si connecté sans id dans le JWT, doit retourner 403 et ne pas appeler le repo eleve`() {
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -206,5 +204,6 @@ class IdentificationFilterTest(
     fun `si pas connecté, doit retourner 401 avec body vide`() {
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isUnauthorized)
+        then(eleveRepository).shouldHaveNoInteractions()
     }
 }

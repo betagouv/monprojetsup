@@ -1,10 +1,9 @@
 package fr.gouv.monprojetsup.formation.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnecte
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Identifie
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.SansCompte
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEnseignant
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PREMIERE_PAGE
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.PARAMETRE_NUMERO_PAGE
@@ -13,7 +12,6 @@ import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsD
 import fr.gouv.monprojetsup.formation.application.dto.FormationCourteDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsAvecExplicationsDTO
 import fr.gouv.monprojetsup.formation.application.dto.FormationsCourtesDTO
-import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
@@ -46,37 +44,25 @@ class FormationController(
         if (numeroDePage < NUMERO_PREMIERE_PAGE) {
             throw MonProjetSupBadRequestException("PAGINATION_COMMENCE_A_1", "La pagination commence à 1")
         }
-        return when (val profilEleve = recupererUtilisateur()) {
-            is Identifie -> {
-                val suggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
-                val hateoas =
-                    hateoasBuilder.creerHateoas(
-                        liste = suggestions.formations,
-                        numeroDePageActuelle = numeroDePage,
-                        tailleLot = TAILLE_LOT_SUGGESTIONS_FORMATIONS,
-                    )
-                val formationsSuggerees =
-                    recupererFormationsService.recupererFichesFormationPourProfil(
-                        profilEleve = profilEleve,
-                        suggestionsPourUnProfil = suggestions,
-                        idsFormations = hateoas.listeCoupee.map { it.idFormation },
-                    )
-                val dto = FormationsAvecExplicationsDTO(formations = formationsSuggerees.map { FormationAvecExplicationsDTO(it) })
-                dto.ajouterHateoas(hateoas)
-                dto
-            }
-            else -> {
-                val hateoas =
-                    hateoasBuilder.creerHateoas(
-                        liste = emptyList<FicheFormation>(),
-                        numeroDePageActuelle = numeroDePage,
-                        tailleLot = TAILLE_LOT_SUGGESTIONS_FORMATIONS,
-                    )
-                val dto = FormationsAvecExplicationsDTO(formations = emptyList())
-                dto.ajouterHateoas(hateoas)
-                dto
-            }
-        }
+        val profilEleve = recupererEleveIdentifie()
+        val suggestions = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve)
+        val hateoas =
+            hateoasBuilder.creerHateoas(
+                liste = suggestions.formations,
+                numeroDePageActuelle = numeroDePage,
+                tailleLot = TAILLE_LOT_SUGGESTIONS_FORMATIONS,
+            )
+
+        val formationsSuggerees =
+            recupererFormationsService.recupererFichesFormationPourProfil(
+                profilEleve = profilEleve,
+                suggestionsPourUnProfil = suggestions,
+                idsFormations = hateoas.listeCoupee.map { it.idFormation },
+            )
+
+        val dto = FormationsAvecExplicationsDTO(formations = formationsSuggerees.map { FormationAvecExplicationsDTO(it) })
+        dto.ajouterHateoas(hateoas)
+        return dto
     }
 
     @GetMapping("/{idformation}")
@@ -86,7 +72,7 @@ class FormationController(
         val profil =
             when (val utilisateur = recupererUtilisateur()) {
                 is Identifie -> utilisateur
-                is SansCompte, ProfilEnseignant, ProfilConnecte -> null
+                is SansCompte, ProfilConnnecte, null -> null
             }
         val ficheFormation = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
         return FormationAvecExplicationsDTO(ficheFormation)
@@ -161,6 +147,7 @@ class FormationController(
                         suggestionsPourUnProfil = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(utilisateur),
                         idsFormations = hateoas.listeCoupee,
                     )
+
                 else -> recupererFormationsService.recupererFichesFormation(idsFormations = hateoas.listeCoupee)
             }
         val dto = FormationsAvecExplicationsDTO(formations = formations.map { FormationAvecExplicationsDTO(it) })
