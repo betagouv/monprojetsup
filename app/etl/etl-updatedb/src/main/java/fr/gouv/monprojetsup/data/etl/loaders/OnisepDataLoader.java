@@ -381,11 +381,10 @@ public class OnisepDataLoader {
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
         val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup);
 
-        LOGGER.info("chargement de " + DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH);
         val psupToMetiersIdeo = loadLiensFormationsPsupMetiers(sources);
-        FilieresPsupVersIdeoData.injectLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
+        FilieresPsupVersIdeoData.replaceLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
 
-        LOGGER.info("Chargement des héritages psup --> psup");
+        LOGGER.info("Application des héritages psup --> psup");
         val formationsPsup = filieresPsupToFormationsMetiersIdeo.stream()
                 .flatMap(l -> Stream.of(
                         Constants.gFlCodToMpsId(l.gFlCod()),
@@ -393,8 +392,6 @@ public class OnisepDataLoader {
                 ))
                 .collect(Collectors.toSet());
         val heritages = loadPsupHeritages(sources, formationsPsup);
-
-        LOGGER.info("Application des héritages psup --> psup");
         injectInFormationsPsup(filieresPsupToFormationsMetiersIdeo, heritages);
 
         return filieresPsupToFormationsMetiersIdeo;
@@ -403,6 +400,7 @@ public class OnisepDataLoader {
 
     protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsPsupMetiers(DataSources sources) {
         Map<String,@NotNull List<@NotNull String>> result = new HashMap<>();
+        LOGGER.info("chargement de " + DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH);
         val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ',');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;
@@ -441,6 +439,7 @@ public class OnisepDataLoader {
 
     protected static @NotNull Map<String,@NotNull Set<@NotNull String>> loadLiensFormationsIdeoMetiers(DataSources sources) {
         Map<String,@NotNull Set<@NotNull String>> result = new HashMap<>();
+        LOGGER.info("chargement de " + DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH);
         val lines = CsvTools.readCSV(sources.getSourceDataFilePath(DataSources.PSUP_TO_METIERS_CORRESPONDANCE_PATH), ',');
         for (Map<String,String> line : lines) {
             if(line.isEmpty()) continue;

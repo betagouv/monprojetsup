@@ -166,7 +166,7 @@ public record FilieresPsupVersIdeoData(
                 .toList();
     }
 
-    public static void injectLiensFormationsPsupMetiers(
+    public static void replaceLiensFormationsPsupMetiers(
             List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
             Map<String,List<String>> psupToMetiersIdeo
     ) {
@@ -174,15 +174,17 @@ public record FilieresPsupVersIdeoData(
                 fil -> {
                     val gFlCod = fil.gFlCod();
                     val metiersFiliere = psupToMetiersIdeo.get(gFlCodToMpsId(gFlCod));
-                    if(metiersFiliere != null) {
+                    if(metiersFiliere != null && !metiersFiliere.isEmpty()) {
+                        fil.ideoMetiersIds().clear();
                         fil.ideoMetiersIds().addAll(metiersFiliere);
+                    } else {
+                        val gFrCod = fil.gFrCod();
+                        val metiersTypeformation = psupToMetiersIdeo.get(gFrCodToMpsId(gFrCod));
+                        if (metiersTypeformation != null && !metiersTypeformation.isEmpty()) {
+                            fil.ideoMetiersIds().clear();
+                            fil.ideoMetiersIds().addAll(metiersTypeformation);
+                        }
                     }
-                    val gFrCod = fil.gFrCod();
-                    val metiersTypeformation = psupToMetiersIdeo.get(gFrCodToMpsId(gFrCod));
-                    if(metiersTypeformation != null) {
-                        fil.ideoMetiersIds().addAll(metiersTypeformation);
-                    }
-
                 }
         );
     }
