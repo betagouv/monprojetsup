@@ -1,5 +1,6 @@
 import logoMPS from "@/assets/logo/logo-mps.svg";
 import Navigation from "@/components/_layout/Navigation/Navigation";
+import Bouton from "@/components/Bouton/Bouton";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -65,42 +66,55 @@ const Entête = () => {
                 <p className="fr-header__service-tagline">{i18n.ENTÊTE.DESCRIPTION_SERVICE}</p>
               </div>
             </div>
-            {!router.location.pathname.includes(PARCOURS_INSCRIPTION_PATH) && (
-              <div className="fr-header__tools">
-                <div className="fr-header__tools-links">
-                  <ul className="fr-btns-group">
+            <div className="fr-header__tools">
+              <div className="fr-header__tools-links">
+                <ul className="fr-btns-group">
+                  {router.location.pathname.includes(PARCOURS_INSCRIPTION_PATH) ? (
                     <li>
-                      <LienExterne
-                        ariaLabel={i18n.ENTÊTE.PLATEFORME_AVENIRS}
-                        href="https://avenirs.onisep.fr/"
-                        icône={{ classe: "fr-icon-arrow-go-back-fill", position: "droite" }}
-                      >
-                        <span className="fr-btn fr-icon-arrow-go-back-fill">{i18n.ENTÊTE.PLATEFORME_AVENIRS}</span>
-                      </LienExterne>
+                      <Bouton
+                        auClic={async () => await utilisateur.seDéconnecter()}
+                        icône={{ position: "gauche", classe: "fr-icon-close-line" }}
+                        label={i18n.PAGE_PROFIL.SE_DÉCONNECTER}
+                        type="button"
+                        variante="quaternaire"
+                      />
                     </li>
-                    {utilisateur.email ? (
+                  ) : (
+                    <>
                       <li>
-                        <LienInterne
-                          ariaLabel={`${utilisateur.prénom} ${utilisateur.nom}`}
-                          href="/profil"
+                        <LienExterne
+                          ariaLabel={i18n.ENTÊTE.PLATEFORME_AVENIRS}
+                          href="https://avenirs.onisep.fr/"
+                          icône={{ classe: "fr-icon-arrow-go-back-fill", position: "droite" }}
                         >
-                          <span className="fr-btn fr-icon-user-fill">{`${utilisateur.prénom} ${utilisateur.nom}`}</span>
-                        </LienInterne>
+                          <span className="fr-btn fr-icon-arrow-go-back-fill">{i18n.ENTÊTE.PLATEFORME_AVENIRS}</span>
+                        </LienExterne>
                       </li>
-                    ) : (
-                      <li>
-                        <LienInterne
-                          ariaLabel={i18n.ENTÊTE.SE_CONNECTER}
-                          href="/"
-                        >
-                          <span className="fr-btn fr-icon-user-fill">{i18n.ENTÊTE.SE_CONNECTER}</span>
-                        </LienInterne>
-                      </li>
-                    )}
-                  </ul>
-                </div>
+                      {utilisateur.email ? (
+                        <li>
+                          <LienInterne
+                            ariaLabel={`${utilisateur.prénom} ${utilisateur.nom}`}
+                            href="/profil"
+                          >
+                            <span className="fr-btn fr-icon-user-fill">{`${utilisateur.prénom} ${utilisateur.nom}`}</span>
+                          </LienInterne>
+                        </li>
+                      ) : (
+                        <li>
+                          <LienInterne
+                            ariaLabel={i18n.ENTÊTE.SE_CONNECTER}
+                            href="/"
+                          >
+                            <span className="fr-btn fr-icon-user-fill">{i18n.ENTÊTE.SE_CONNECTER}</span>
+                          </LienInterne>
+                          w{" "}
+                        </li>
+                      )}
+                    </>
+                  )}
+                </ul>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
