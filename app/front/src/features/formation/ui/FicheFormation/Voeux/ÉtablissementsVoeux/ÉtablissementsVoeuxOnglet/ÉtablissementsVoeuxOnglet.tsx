@@ -65,7 +65,7 @@ const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: Établisse
             ))}
           </ul>
         ) : (
-          <p className="fr-text--sm">
+          <p className="fr-text--sm mb-0">
             {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ} {rayonSélectionné}{" "}
             {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE}
           </p>

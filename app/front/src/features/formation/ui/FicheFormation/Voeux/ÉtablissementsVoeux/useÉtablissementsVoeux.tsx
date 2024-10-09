@@ -1,4 +1,6 @@
+/* eslint-disable sonarjs/pluginRules-of-hooks */
 /* eslint-disable react-hooks/rules-of-hooks */
+import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
 import { type useÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
 import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -11,7 +13,12 @@ export default function useÉtablissementsVoeux({ formation }: useÉtablissement
 
   const ongletToutesLesCommunes = {
     titre: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
-    contenu: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.RAPPEL,
+    contenu: (
+      <ÉtablissemenentsVoeuxOngletToutesLesVilles
+        formationId={formation.id}
+        établissements={formation.établissements}
+      />
+    ),
   };
 
   const ongletsParCommuneFavorite =
