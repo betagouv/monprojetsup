@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/pluginRules-of-hooks */
 /* eslint-disable react-hooks/rules-of-hooks */
 import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
 import { type useÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";

@@ -6,7 +6,7 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({
   établissements,
   formationId,
 }: ÉtablissemenentsVoeuxOngletToutesLesVillesProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-console
+  // eslint-disable-next-line  no-console
   console.log(établissements, formationId);
 
   return (
