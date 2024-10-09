@@ -16,23 +16,42 @@ class RechercheMetierBDDRepository(
         val resulat =
             entityManager.createNativeQuery(
                 """
-                WITH metiers_similarites AS
+                WITH metiers_clean AS
                          (SELECT id,
                                  label,
                                  descriptif_general,
-                                 COALESCE(unaccent(label), '')              AS label_clean,
-                                 COALESCE(unaccent(descriptif_general), '') AS descriptif_clean,
-                                 similarity(COALESCE(unaccent(label), '') , unaccent(:mot_recherche)) * 1.2 AS similarite_label,
-                                 similarity(COALESCE(unaccent(descriptif_general), ''), unaccent(:mot_recherche)) AS similmarite_decriptif
-                          FROM ref_metier)
+                                 COALESCE(lower(unaccent(label)), '')              AS label_clean,
+                                 COALESCE(lower(unaccent(descriptif_general)), '') AS descriptif_clean
+                          FROM ref_metier),
+                     metiers_decoupes AS
+                         (SELECT id,
+                                 label,
+                                 to_tsvector('french', descriptif_clean) @@
+                                 plainto_tsquery('french', unaccent(lower(:mot_recherche)))    as ts_vector_descriptif,
+                                 unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus)) as label_like,
+                                 regexp_split_to_table(label, '[ ()-]|/[^ ]+')                       as label_decoupe
+                          FROM metiers_clean),
+                     metiers_similaire AS (SELECT id,
+                                                  label,
+                                                  label_like,
+                                                  ts_vector_descriptif,
+                                                  label_decoupe,
+                                                  similarity(COALESCE(unaccent(label_decoupe), ''), unaccent(:mot_recherche)) AS similarite_label_decoupe
+                                           FROM metiers_decoupes)
                 SELECT id,
-                       label
-                FROM metiers_similarites
-                WHERE ((to_tsvector('french', label_clean) @@ plainto_tsquery('french', unaccent(:mot_recherche))
-                   OR to_tsvector('french', descriptif_clean) @@ plainto_tsquery('french', unaccent(:mot_recherche))
-                   OR unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus)))
-                    AND (similarite_label + similmarite_decriptif) > 0.025)
-                ORDER BY (similarite_label + similmarite_decriptif) DESC;
+                       label,
+                       CASE
+                            WHEN similarite_label_decoupe = 1 THEN 1                                
+                            WHEN label_like THEN 1.01
+                            WHEN similarite_label_decoupe > 0.25 THEN 12 - (11 * similarite_label_decoupe)
+                            WHEN ts_vector_descriptif THEN 11
+                            ELSE 32 - 80 * similarite_label_decoupe END AS rank
+                FROM metiers_similaire
+                WHERE ts_vector_descriptif
+                   OR label_like
+                   OR similarite_label_decoupe > 0.2
+                GROUP BY id, label, rank
+                ORDER BY rank
                 """.trimIndent(),
                 MetierCourtEntity::class.java,
             )
