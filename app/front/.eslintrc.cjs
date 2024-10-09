@@ -9,7 +9,7 @@ module.exports = {
     "plugin:import/typescript",
     "canonical/auto",
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', '*.gen.ts', 'api-mps.d.ts'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', '*.gen.ts', 'api-mps.d.ts', 'public/dsfr'],
   parser: '@typescript-eslint/parser',
   plugins: [
     'react-refresh',
