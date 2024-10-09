@@ -26,12 +26,15 @@ class RechercheFormationBDDRepository(
                             mots_clefs,
                             t.i as mot_clef
                     FROM ref_formation
-                    LEFT JOIN LATERAL unnest(mots_clefs) AS t(i) ON true)
+                             LEFT JOIN LATERAL unnest(mots_clefs) AS t(i) ON true
+                )
                 SELECT id,
                        label
                 FROM expanded_keywords
                 WHERE unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot))
                    OR unaccent(lower(mot_clef)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot))
+                   OR similarity(unaccent(lower(label)), unaccent(lower(:mot_recherche_strict))) > 0.2
+                   OR similarity(unaccent(lower(mot_clef)), unaccent(lower(:mot_recherche_strict))) > 0.3
                 GROUP BY id,
                          label,
                          descriptif_general,
@@ -39,14 +42,14 @@ class RechercheFormationBDDRepository(
                          descriptif_conseils,
                          descriptif_diplome,
                          mots_clefs
-                ORDER BY CASE                             
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict)) THEN 1
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict_entre_parentheses)) THEN 2
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_debut_de_phrase)) THEN 3
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_fin_de_phrase)) THEN 4
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_une_phrase)) THEN 5
-                             WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot)) THEN 6                             
-                             ELSE 7
+                ORDER BY CASE   
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict)) THEN 1
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_strict_entre_parentheses)) THEN 2
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_debut_de_phrase)) THEN 3
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_en_fin_de_phrase)) THEN 4
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_une_phrase)) THEN 5
+                         WHEN unaccent(lower(label)) LIKE unaccent(lower(:mot_recherche_inclus_dans_un_mot)) THEN 6 
+                         ELSE (-90 * similarity(unaccent(lower(label)), unaccent(lower(:mot_recherche_strict)))) + 10                                               
                              END,
                          id;
                 """.trimIndent(),

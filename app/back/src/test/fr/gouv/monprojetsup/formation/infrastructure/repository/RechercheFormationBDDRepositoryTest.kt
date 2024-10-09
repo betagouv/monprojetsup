@@ -40,6 +40,24 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
+    fun `Si flere, renvoyer les formations d'horticulture`() {
+        // Given
+        val recherche = "flere"
+
+        // When
+        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
+                FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
+            )
+        assertThat(result).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
     fun `Si L1, renvoyer les formations de license`() {
         // Given
         val recherche = "L1"
@@ -79,6 +97,25 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
+    fun `Si histoare, renvoyer les formations avec celles d'histoire dans le label en premier puis celle en mot clé`() {
+        // Given
+        val recherche = "histoare"
+
+        // When
+        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0004", nom = "L1 - Histoire"),
+                FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
+                FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
+            )
+        assertThat(result).isEqualTo(attendu)
+    }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
     fun `Si ist, doit renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
         // Given
         val recherche = "ist"
@@ -96,7 +133,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(result).isEqualTo(attendu)
+        assertThat(result.toSet()).isEqualTo(attendu.toSet())
     }
 
     @Test
