@@ -19,7 +19,7 @@ export default function useRechercheFormations() {
     } else if (recherche && recherche.length < NB_CARACTÈRES_MINIMUM_RECHERCHE) {
       setStatus({
         type: "erreur",
-        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${NB_CARACTÈRES_MINIMUM_RECHERCHE} ${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES_SUITE}`,
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${NB_CARACTÈRES_MINIMUM_RECHERCHE} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
       });
     } else {
       réinitialiserÉlémentAffiché();

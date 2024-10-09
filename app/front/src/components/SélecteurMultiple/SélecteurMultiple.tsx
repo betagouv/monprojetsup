@@ -29,7 +29,7 @@ const SélecteurMultiple = ({
     if (recherche && recherche.length < nombreDeCaractèreMinimumRecherche) {
       return {
         type: "erreur" as const,
-        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${nombreDeCaractèreMinimumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES_SUITE}`,
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${nombreDeCaractèreMinimumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
       };
     }
 

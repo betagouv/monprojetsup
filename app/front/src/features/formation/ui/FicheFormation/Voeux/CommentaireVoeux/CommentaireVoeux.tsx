@@ -5,7 +5,7 @@ import ChampZoneDeTexte from "@/components/ChampZoneDeTexte/ChampZoneDeTexte";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const CommentaireVoeux = ({ formationId }: CommentaireVoeuxProps) => {
-  const { enregistrerLeCommentaire, commentaireParDéfaut } = useCommentaireVoeux({ formationId });
+  const { enregistrerLeCommentaire, commentaireParDéfaut, status } = useCommentaireVoeux({ formationId });
 
   return (
     <form
@@ -17,6 +17,7 @@ const CommentaireVoeux = ({ formationId }: CommentaireVoeuxProps) => {
           label: i18n.PAGE_FORMATION.VOEUX.COMMENTAIRE.LABEL,
         }}
         id="commentairevoeux"
+        status={status}
         valeurParDéfaut={commentaireParDéfaut}
       />
       <div className="sm:mt-7">
