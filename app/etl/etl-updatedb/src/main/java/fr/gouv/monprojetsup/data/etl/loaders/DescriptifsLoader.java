@@ -25,7 +25,6 @@ import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL2;
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
             OnisepData onisepData,
-            Map<String, String> psupKeyToMpsKey,
             Map<String, String> lasToGeneric,
             DataSources sources
     ) throws IOException {
@@ -88,13 +87,12 @@ public class DescriptifsLoader {
         keyDescFormation = line0.keySet().stream().filter(k -> k.contains("resume type formation")).findAny().orElse(null);
         keyDescFiliere = line0.keySet().stream().filter(k -> k.contains("resume filiere")).findAny().orElse(null);
 
-        val keyUrlCorrection = line0.keySet().stream().filter(k -> k.contains("URL corrections")).findAny().orElse(null);
-
-        val keyUrlSupplementaire = line0.keySet().stream().filter(k -> k.contains("Liens supplémentaires")).findAny().orElse(null);
+        //val keyUrlCorrection = line0.keySet().stream().filter(k -> k.contains("URL corrections")).findAny().orElse(null);
+        //val keyUrlSupplementaire = line0.keySet().stream().filter(k -> k.contains("Liens supplémentaires")).findAny().orElse(null);
 
         val keyRetoursOnisep = line0.keySet().stream().filter(k -> k.contains("Onisep")).findAny().orElse(null);
 
-        if (keyFlFr == null || keyDescFormation == null || keyDescFiliere == null || keyUrlSupplementaire == null || keyUrlCorrection == null || keyRetoursOnisep == null)
+        if (keyFlFr == null || keyDescFormation == null || keyDescFiliere == null  || keyRetoursOnisep == null)
             throw new IllegalStateException("No key found in " + line0);
 
         for (val line : lines) {
@@ -130,23 +128,6 @@ public class DescriptifsLoader {
                 descriptif.setSummaryFormation(descForm);
             } else if (!descForm.isBlank()) {
                 descriptif.setSummary(descForm);
-            }
-
-            val urlSupplementaire = line.getOrDefault(keyUrlSupplementaire, "").trim();
-            if (!urlSupplementaire.isBlank()) {
-                descriptif.getMultiUrls().addAll(Arrays.stream(urlSupplementaire.split("\n")).map(String::trim).toList());
-            }
-
-            val urlCorrection = line.getOrDefault(keyUrlCorrection, "").trim();
-            if (!urlCorrection.isBlank()) {
-                descriptif.setCorrectedUrl(true);
-                descriptif.getMultiUrls().addAll(Arrays.stream(
-                        urlCorrection.split("\n"))
-                        .map(String::trim)
-                        .map(s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL))
-                        .map(s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL))
-                        .toList()
-                );
             }
 
             descriptif.setMpsData(line);
