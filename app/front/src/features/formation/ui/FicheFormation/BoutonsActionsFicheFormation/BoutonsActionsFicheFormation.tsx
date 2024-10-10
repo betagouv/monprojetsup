@@ -13,6 +13,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
     supprimerDesFavoris,
     masquerUneFormation,
     afficherÀNouveauUneFormation,
+    estAffichéSurLaPageFavoris,
   } = useBoutonsActionsFicheFormation({
     formation,
   });
@@ -68,7 +69,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           />
         )}
       </div>
-      {estFavorite && <VoeuxFicheFormation formation={formation} />}
+      {estFavorite && estAffichéSurLaPageFavoris && <VoeuxFicheFormation formation={formation} />}
     </>
   );
 };

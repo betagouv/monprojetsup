@@ -2,8 +2,11 @@ import { type useBoutonsActionsFicheFormationArgs } from "./BoutonsActionsFicheF
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouterState } from "@tanstack/react-router";
+import { useMemo } from "react";
 
 export default function useBoutonsActionsFicheFormation({ formation }: useBoutonsActionsFicheFormationArgs) {
+  const router = useRouterState();
   const { data: élève } = useQuery(élèveQueryOptions);
   const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: ["mettreÀJourÉlève"] });
 
@@ -67,6 +70,8 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
     await modifierFormationsMasquées(formationsMasquées ?? []);
   };
 
+  const estAffichéSurLaPageFavoris = useMemo(() => router.location.pathname.includes("/favoris"), [router]);
+
   return {
     estFavorite,
     estMasquée,
@@ -74,5 +79,6 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
     supprimerDesFavoris,
     masquerUneFormation,
     afficherÀNouveauUneFormation,
+    estAffichéSurLaPageFavoris,
   };
 }

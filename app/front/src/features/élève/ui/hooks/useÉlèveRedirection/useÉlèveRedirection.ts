@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/pluginRules-of-hooks */
-/* eslint-disable react-hooks/rules-of-hooks */
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";

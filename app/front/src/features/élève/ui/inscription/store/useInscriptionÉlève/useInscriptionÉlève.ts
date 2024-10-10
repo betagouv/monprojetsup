@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { type InscriptionÉlèveStore } from "./useInscriptionÉlève.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { create } from "zustand";

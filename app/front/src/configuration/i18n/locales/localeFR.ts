@@ -134,6 +134,10 @@ export const localeFR = {
           TITRE_ONGLET: "Toutes les villes",
           RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",
+          LABEL: "Établissements",
+          DESCRIPTION: "Commence à taper puis sélectionne des établissements",
+          SÉLECTIONNÉS: "Établissement(s) sélectionné(s)",
+          LIEN_PLUS_RÉSULTATS: "Voir toutes les possibilités sur la carte Parcoursup",
         },
       },
       COMMENTAIRE: {

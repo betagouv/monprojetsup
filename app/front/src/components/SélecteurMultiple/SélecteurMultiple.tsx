@@ -1,10 +1,8 @@
-import { type SélecteurMultipleOption, type SélecteurMultipleProps } from "./SélecteurMultiple.interface";
+import { type SélecteurMultipleProps } from "./SélecteurMultiple.interface";
+import useSélecteurMultiple from "./useSélecteurMultiple";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import ChampDeRecherche from "@/components/ChampDeRecherche/ChampDeRecherche";
 import TagCliquable from "@/components/TagCliquable/TagCliquable";
-import { i18n } from "@/configuration/i18n/i18n";
-import { useEffect, useMemo, useState } from "react";
-import { useDebounceCallback } from "usehooks-ts";
 
 const SélecteurMultiple = ({
   label,
@@ -16,55 +14,25 @@ const SélecteurMultiple = ({
   àLaRechercheDUneOption,
   rechercheSuggestionsEnCours,
   nombreDeCaractèreMinimumRecherche,
+  forcerRafraichissementOptionsSélectionnées,
 }: SélecteurMultipleProps) => {
-  const [recherche, setRecherche] = useState<string>();
-  const [optionsAffichées, setOptionsAffichées] = useState<SélecteurMultipleOption[]>([]);
-  const [optionsSélectionnées, setOptionsSélectionnées] = useState<SélecteurMultipleOption[]>(
-    optionsSélectionnéesParDéfaut ?? [],
-  );
-
-  const debouncedSetRecherche = useDebounceCallback(setRecherche, 400);
-
-  const statusChampDeSaisie = useMemo(() => {
-    if (recherche && recherche.length < nombreDeCaractèreMinimumRecherche) {
-      return {
-        type: "erreur" as const,
-        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_X_CARACTÈRES} ${nombreDeCaractèreMinimumRecherche} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
-      };
-    }
-
-    if (recherche && optionsSuggérées.length === 0 && !rechercheSuggestionsEnCours)
-      return { type: "erreur" as const, message: i18n.COMMUN.ERREURS_FORMULAIRES.AUCUN_RÉSULTAT };
-
-    return undefined;
-  }, [nombreDeCaractèreMinimumRecherche, optionsSuggérées, recherche, rechercheSuggestionsEnCours]);
-
-  const supprimerOptionSélectionnée = (optionÀSupprimer: SélecteurMultipleOption) => {
-    const nouvellesOptionsSélectionnées = optionsSélectionnées.filter(
-      (option) => option.valeur !== optionÀSupprimer.valeur,
-    );
-    setOptionsSélectionnées(nouvellesOptionsSélectionnées);
-    auChangementOptionsSélectionnées(nouvellesOptionsSélectionnées);
-  };
-
-  const ajouterOptionSélectionnée = (optionÀAjouter: SélecteurMultipleOption) => {
-    const nouvellesOptionsSélectionnées = [...optionsSélectionnées, optionÀAjouter];
-    setOptionsSélectionnées(nouvellesOptionsSélectionnées);
-    auChangementOptionsSélectionnées(nouvellesOptionsSélectionnées);
-  };
-
-  useEffect(() => {
-    if (recherche) àLaRechercheDUneOption(recherche);
-  }, [recherche, àLaRechercheDUneOption]);
-
-  useEffect(() => {
-    const optionsÀAfficher = optionsSuggérées.filter(
-      (optionSuggérée) =>
-        !optionsSélectionnées.some((optionSélectionnée) => optionSélectionnée.valeur === optionSuggérée.valeur),
-    );
-
-    setOptionsAffichées(optionsÀAfficher);
-  }, [optionsSuggérées, optionsSélectionnées]);
+  const {
+    debouncedSetRecherche,
+    statusChampDeSaisie,
+    recherche,
+    optionsAffichées,
+    ajouterOptionSélectionnée,
+    supprimerOptionSélectionnée,
+    optionsSélectionnées,
+  } = useSélecteurMultiple({
+    nombreDeCaractèreMinimumRecherche,
+    àLaRechercheDUneOption,
+    auChangementOptionsSélectionnées,
+    rechercheSuggestionsEnCours,
+    optionsSélectionnéesParDéfaut,
+    optionsSuggérées,
+    forcerRafraichissementOptionsSélectionnées,
+  });
 
   return (
     <>

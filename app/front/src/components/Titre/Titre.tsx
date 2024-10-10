@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-component-props */
 import { type TitreProps } from "./Titre.interface";
 
 const Titre = ({ children, niveauDeTitre, styleDeTitre }: TitreProps) => {

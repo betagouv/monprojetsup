@@ -1,4 +1,4 @@
-import { type BacOptions, type ClasseOptions, type useScolaritéFormArgs } from "./ScolaritéForm.interface";
+import { type BacOptions, type ClasseOptions, type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
 import useMoyenneForm from "./useMoyenneScolaritéForm";
 import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
@@ -8,7 +8,7 @@ import { référentielDonnéesQueryOptions } from "@/features/référentielDonn�
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès }: useScolaritéFormArgs) {
+export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseScolaritéFormArgs) {
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
 
   const { register, erreurs, mettreÀJourÉlève, watch, setValue, getValues } = useÉlèveForm({

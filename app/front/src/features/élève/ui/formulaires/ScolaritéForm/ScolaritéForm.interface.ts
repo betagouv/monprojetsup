@@ -21,7 +21,7 @@ export type BacOptions = Array<{
   label: string;
 }>;
 
-export type useScolaritéFormArgs = {
+export type UseScolaritéFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès?: () => void;
 };
 

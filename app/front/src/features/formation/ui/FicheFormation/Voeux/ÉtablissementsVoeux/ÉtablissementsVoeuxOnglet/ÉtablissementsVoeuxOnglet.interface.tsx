@@ -1,11 +1,12 @@
+import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 
 export type ÉtablissementsVoeuxOngletProps = {
-  établissements: Formation["établissementsParCommuneFavorites"][number]["établissements"];
-  formationId: Formation["id"];
+  formation: Formation;
+  codeCommune: CommuneFavorite["codeInsee"];
 };
 
-export type useÉtablissementsVoeuxOngletArgs = {
-  établissements: ÉtablissementsVoeuxOngletProps["établissements"];
-  formationId: ÉtablissementsVoeuxOngletProps["formationId"];
+export type UseÉtablissementsVoeuxOngletArgs = {
+  formation: ÉtablissementsVoeuxOngletProps["formation"];
+  codeCommune: ÉtablissementsVoeuxOngletProps["codeCommune"];
 };
