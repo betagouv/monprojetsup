@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -27,32 +28,32 @@ class RechercherFormationsServiceTest {
         MockitoAnnotations.openMocks(this)
         val formationsPourRecherche =
             listOf(
-                FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl1", nom = "L1 - Psychologie"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl7", nom = "L1 - Philosophie"), null, null),
             )
         given(rechercheFormationRepository.rechercherUneFormation("réchèrche")).willReturn(formationsPourRecherche)
         val formationsPourPeu =
             listOf(
-                FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                FormationCourte(id = "fl1000", nom = "BPJEPS"),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl1", nom = "L1 - Psychologie"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl3", nom = "CAP Pâtisserie"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl17", nom = "L1 - Mathématique"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl1000", nom = "BPJEPS"), null, null),
             )
         given(rechercheFormationRepository.rechercherUneFormation("peu")).willReturn(formationsPourPeu)
-        val formationsPourTout = emptyList<FormationCourte>()
+        val formationsPourTout = emptyList<ResultatRechercheFormationCourte>()
         given(rechercheFormationRepository.rechercherUneFormation("Toùt")).willReturn(formationsPourTout)
         val formationsPourPetit =
             listOf(
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl17", nom = "L1 - Mathématique"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl7", nom = "L1 - Philosophie"), null, null),
             )
         given(rechercheFormationRepository.rechercherUneFormation("peTit")).willReturn(formationsPourPetit)
         val formationsPourLongue =
             listOf(
-                FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                FormationCourte(id = "fl18", nom = "L1 - Littérature"),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl20", nom = "CAP Boulangerie"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl17", nom = "L1 - Mathématique"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl10", nom = "DUT Informatique"), null, null),
+                ResultatRechercheFormationCourte(FormationCourte(id = "fl18", nom = "L1 - Littérature"), null, null),
             )
         given(rechercheFormationRepository.rechercherUneFormation("lôngue")).willReturn(formationsPourLongue)
     }
@@ -68,15 +69,15 @@ class RechercherFormationsServiceTest {
 
         // Then
         val attendu =
-            listOf(
-                FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
-                FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
-                FormationCourte(id = "fl1000", nom = "BPJEPS"),
-                FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                FormationCourte(id = "fl18", nom = "L1 - Littérature"),
+            mapOf(
+                FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 0.0,
+                FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 0.0,
+                FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 0.0,
+                FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 0.0,
+                FormationCourte(id = "fl1000", nom = "BPJEPS") to 0.0,
+                FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 0.0,
+                FormationCourte(id = "fl10", nom = "DUT Informatique") to 0.0,
+                FormationCourte(id = "fl18", nom = "L1 - Littérature") to 0.0,
             )
         assertThat(resultat).isEqualTo(attendu)
     }
@@ -91,6 +92,18 @@ class RechercherFormationsServiceTest {
 
         // Then
         then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "1")
+    }
+
+    @Test
+    fun `ne doit pas appeler le repository pour les mots vides`() {
+        // When
+        rechercherFormationsService.rechercheLesFormationsCorrespondantes(
+            recherche = rechercheLongue,
+            tailleMinimumRecherche = 2,
+        )
+
+        // Then
+        then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "ma")
     }
 
     @Test

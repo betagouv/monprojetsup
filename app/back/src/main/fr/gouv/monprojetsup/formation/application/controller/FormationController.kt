@@ -84,7 +84,7 @@ class FormationController(
         @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsCourtesDTO {
         val formationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche)
-        val formationsFiltrees = filtreesFormationPourEleve(formationRecherchees)
+        val formationsFiltrees = filtreesFormationPourEleve(formationRecherchees).map { it.key }
         val hateoas =
             hateoasBuilder.creerHateoas(
                 liste = formationsFiltrees,
@@ -101,7 +101,7 @@ class FormationController(
         @Parameter(description = "Formation recherchée") @RequestParam recherche: String,
         @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
     ): FormationsAvecExplicationsDTO {
-        val idsFormationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche).map { it.id }
+        val idsFormationRecherchees = recupererLesFormationsAssocieesALaRecherche(recherche).map { it.key.id }
         val dto =
             recupererUneListeDeFormationsDetaillees(
                 ids = idsFormationRecherchees,
@@ -119,10 +119,14 @@ class FormationController(
         return recupererUneListeDeFormationsDetaillees(ids = ids, numeroDePage = numeroDePage, tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE)
     }
 
-    private fun filtreesFormationPourEleve(formationRecherchees: List<FormationCourte>): List<FormationCourte> {
+    private fun filtreesFormationPourEleve(formationRecherchees: Map<FormationCourte, Double>): Map<FormationCourte, Double> {
         val formationsFiltrees =
             when (val utilisateur = recupererUtilisateur()) {
-                is Identifie -> formationRecherchees.filterNot { formation -> utilisateur.corbeilleFormations.any { it == formation.id } }
+                is Identifie ->
+                    formationRecherchees.filterNot {
+                            formation ->
+                        utilisateur.corbeilleFormations.any { it == formation.key.id }
+                    }
                 else -> formationRecherchees
             }
         return formationsFiltrees
@@ -156,7 +160,7 @@ class FormationController(
     }
 
     @Throws(MonProjetSupBadRequestException::class)
-    private fun recupererLesFormationsAssocieesALaRecherche(recherche: String): List<FormationCourte> {
+    private fun recupererLesFormationsAssocieesALaRecherche(recherche: String): Map<FormationCourte, Double> {
         if (recherche.length > TAILLE_MAXIMAL_RECHERCHE) {
             throw MonProjetSupBadRequestException(
                 code = "REQUETE_TROP_LONGUE",
