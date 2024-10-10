@@ -160,8 +160,8 @@ public class Labels {
                 libelle
                         .replace(" - Sciences, technologie, santé - ", " - ")
                         .replace("L1", "Licence")
-                        .replace("EA-BAC3", "Ecole d'architecture")
-                        .replace("EA-BAC5", "Ecole d'architecture")
+                        .replace("EA-BAC3", "Ecole ")
+                        .replace("EA-BAC5", "Ecole ")
                         .replace("CPGE", "Classes prépa (CPGE)")
                         .replace("CUPGE", "Classes prépa universitaires (CUPGE)")
                 ;
