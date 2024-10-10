@@ -142,5 +142,10 @@ class MpsDataPortTest : DataPortTest(){
         */
     }
 
+    @Test
+    fun `Les labels des formations ne contienne tps L1`() {
+        val formationsLabels = mpsDataPort.getFormationsLabels().values
+        assertThat(formationsLabels).noneMatch { l -> l.contains("L1") }
+    }
 
 }

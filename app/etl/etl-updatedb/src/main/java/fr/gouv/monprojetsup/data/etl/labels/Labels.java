@@ -22,7 +22,6 @@ public class Labels {
         val result = new HashMap<String, String>();
         /* les noms affichés sur la carte */
         val nomsFilieres = psupData.nomsFilieres();
-        val psupKeysToMpsKeys = psupData.getPsupKeyToMpsKey();
         val mpsKeyToPsupKeys = psupData.getMpsKeyToPsupKeys();
 
         nomsFilieres.forEach((key, libelle) -> {
@@ -157,7 +156,10 @@ public class Labels {
 
     private static String getLibelleFront(String key, String libelle) {
         //should be somewhere else
-        String newLibelle = libelle.replace(" - Sciences, technologie, santé - ", " - ");
+        String newLibelle =
+                libelle
+                        .replace(" - Sciences, technologie, santé - ", " - ")
+                        .replace("L1", "Licence");
         if(key.equals("fr90")) {
             newLibelle = "Sciences Po / Instituts d'études politiques";
         }
