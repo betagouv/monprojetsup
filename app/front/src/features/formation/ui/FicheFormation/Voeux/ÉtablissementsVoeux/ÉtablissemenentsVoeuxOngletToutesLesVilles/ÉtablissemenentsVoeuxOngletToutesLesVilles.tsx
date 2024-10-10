@@ -1,13 +1,16 @@
 import { type ÉtablissemenentsVoeuxOngletToutesLesVillesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
+import useÉtablissemenentsVoeuxOngletToutesLesVilles from "./useÉtablissementsVoeuxOngletToutesLesVilles";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({
-  établissements,
-  formationId,
-}: ÉtablissemenentsVoeuxOngletToutesLesVillesProps) => {
-  // eslint-disable-next-line  no-console
-  console.log(établissements, formationId);
+const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: ÉtablissemenentsVoeuxOngletToutesLesVillesProps) => {
+  const {
+    auChangementDesÉtablissementsSélectionnés,
+    établissementsSuggérés,
+    établissementsSélectionnésParDéfaut,
+    àLaRechercheDUnÉtablissement,
+  } = useÉtablissemenentsVoeuxOngletToutesLesVilles({ formation });
 
   return (
     <div className="grid gap-6">
@@ -29,6 +32,20 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({
             {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PRÉFÉRENCES}
           </LienInterne>
         </p>
+      </div>
+      <div>
+        <SélecteurMultiple
+          auChangementOptionsSélectionnées={auChangementDesÉtablissementsSélectionnés}
+          description={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.DESCRIPTION}
+          forcerRafraichissementOptionsSélectionnées
+          label={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.LABEL}
+          nombreDeCaractèreMinimumRecherche={3}
+          optionsSuggérées={établissementsSuggérés}
+          optionsSélectionnéesParDéfaut={établissementsSélectionnésParDéfaut}
+          rechercheSuggestionsEnCours={false}
+          texteOptionsSélectionnées={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.SÉLECTIONNÉS}
+          àLaRechercheDUneOption={àLaRechercheDUnÉtablissement}
+        />
       </div>
     </div>
   );

@@ -1,45 +1,44 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
-import { type useÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
-import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
-import { i18n } from "@/configuration/i18n/i18n";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
-import { useQuery } from "@tanstack/react-query";
+import { type UseÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
+import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
+import { useMemo } from "react";
 
-export default function useÉtablissementsVoeux({ formation }: useÉtablissementsVoeuxArgs) {
-  const { data: élève } = useQuery(élèveQueryOptions);
+export default function useÉtablissementsVoeux({ formation }: UseÉtablissementsVoeuxArgs) {
+  const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
 
-  const ongletToutesLesCommunes = {
-    titre: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
-    contenu: (
-      <ÉtablissemenentsVoeuxOngletToutesLesVilles
-        formationId={formation.id}
-        établissements={formation.établissements}
-      />
-    ),
+  const voeuxSélectionnés = useMemo(() => {
+    if (!élève) return [];
+
+    const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formation.id);
+
+    return formationFavorite?.voeux ?? [];
+  }, [formation.id, élève]);
+
+  const mettreÀJourLesVoeux = (voeux: FormationFavorite["voeux"]) => {
+    mettreÀJourUneFormationFavorite(formation.id, {
+      voeux: [...voeux],
+    });
   };
 
-  const ongletsParCommuneFavorite =
-    élève?.communesFavorites?.map((communeFavorite) => {
-      const établissements = formation.établissementsParCommuneFavorites.find(
-        (élément) => élément.commune.code === communeFavorite.codeInsee,
-      )?.établissements;
+  const mettreÀJourUnVoeu = (voeu: FormationFavorite["voeux"][number]) => {
+    if (!élève) return;
 
-      return {
-        titre: communeFavorite.nom,
-        contenu: (
-          <ÉtablissementsVoeuxOnglet
-            formationId={formation.id}
-            établissements={établissements ?? []}
-          />
-        ),
-      };
-    }) ?? [];
+    const voeux = new Set(voeuxSélectionnés);
 
-  const ongletsTriés = trierTableauDObjetsParOrdreAlphabétique(ongletsParCommuneFavorite, "titre");
+    if (voeux.has(voeu)) {
+      voeux.delete(voeu);
+    } else {
+      voeux.add(voeu);
+    }
+
+    mettreÀJourLesVoeux([...voeux]);
+  };
 
   return {
-    onglets: ongletsTriés.length > 0 ? ongletsTriés : [ongletToutesLesCommunes],
+    communesFavorites: élève?.communesFavorites,
+    mettreÀJourUnVoeu,
+    mettreÀJourLesVoeux,
+    voeuxSélectionnés,
+    key: JSON.stringify(élève?.formationsFavorites),
   };
 }

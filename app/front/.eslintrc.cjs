@@ -20,6 +20,8 @@ module.exports = {
     "testing-library"
   ],
   rules: {
+    "react-hooks/rules-of-hooks": "off",
+    "sonarjs/pluginRules-of-hooks": "off",
     "sonarjs/class-name": ["error", { format: "^[A-Za-zÀ-ÖØ-öø-ÿ]*$" }],
     "sonarjs/slow-regex": "off",
     "typescript-sort-keys/interface": "off",
@@ -82,6 +84,7 @@ module.exports = {
           {
             "propName": "className",
             "allowedFor": [
+              "Balise",
               "TextareaAutosize",
               "Link",
               "Accordion.Root",

@@ -4,6 +4,6 @@ export type ÉtablissementsVoeuxProps = {
   formation: Formation;
 };
 
-export type useÉtablissementsVoeuxArgs = {
+export type UseÉtablissementsVoeuxArgs = {
   formation: Formation;
 };

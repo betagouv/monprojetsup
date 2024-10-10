@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { type UseÉlèveFormArgs } from "./useÉlèveForm.interface";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";

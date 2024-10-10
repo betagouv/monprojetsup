@@ -1,7 +1,9 @@
+import { type Élève } from "@/features/élève/domain/élève.interface";
 import {
   type AlternanceÉlève,
   type DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type UseFormGetValues, type UseFormSetValue } from "react-hook-form";
 
 export type ÉtudeFormProps = {
   formId: string;
@@ -18,6 +20,11 @@ export type AlternanceOptions = Array<{
   label: string;
 }>;
 
-export type useÉtudeFormArgs = {
+export type UseÉtudeFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès?: () => void;
+};
+
+export type UseCommunesÉtudeFormArgs = {
+  setValue: UseFormSetValue<Élève>;
+  getValues: UseFormGetValues<Élève>;
 };

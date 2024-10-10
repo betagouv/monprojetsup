@@ -3,20 +3,14 @@ import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
 import Bouton from "@/components/Bouton/Bouton";
 import TagFiltre from "@/components/TagFiltre/TagFiltre";
 import { i18n } from "@/configuration/i18n/i18n";
+import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
 import { Fragment } from "react/jsx-runtime";
 
-const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: ÉtablissementsVoeuxOngletProps) => {
-  const {
-    établissementsÀAfficher,
-    rayonSélectionné,
-    changerRayonSélectionné,
-    rayons,
-    mettreÀJourVoeux,
-    voeuxSélectionnés,
-    key,
-  } = useÉtablissementsVoeuxOnglet({
-    établissements,
-    formationId,
+const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsVoeuxOngletProps) => {
+  const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useÉtablissementsVoeux({ formation });
+  const { établissementsÀAfficher, rayonSélectionné, changerRayonSélectionné, rayons } = useÉtablissementsVoeuxOnglet({
+    formation,
+    codeCommune,
   });
 
   return (
@@ -52,7 +46,7 @@ const ÉtablissementsVoeuxOnglet = ({ établissements, formationId }: Établisse
                 <TagFiltre
                   appuyéParDéfaut={voeuxSélectionnés?.includes(établissement.id)}
                   ariaLabel={établissement.nom}
-                  auClic={() => mettreÀJourVoeux(établissement.id)}
+                  auClic={() => mettreÀJourUnVoeu(établissement.id)}
                 >
                   {établissement.nom.split(" - ").map((it, index) => (
                     <Fragment key={it}>

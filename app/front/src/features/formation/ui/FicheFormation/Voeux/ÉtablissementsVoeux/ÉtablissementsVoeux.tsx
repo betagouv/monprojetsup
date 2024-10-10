@@ -1,12 +1,32 @@
+import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
 import { type ÉtablissementsVoeuxProps } from "./ÉtablissementsVoeux.interface";
+import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
 import useÉtablissementsVoeux from "./useÉtablissementsVoeux";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Onglets from "@/components/Onglets/Onglets";
 import { i18n } from "@/configuration/i18n/i18n";
+import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 
 const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
-  const { onglets } = useÉtablissementsVoeux({ formation });
+  const { communesFavorites } = useÉtablissementsVoeux({ formation });
+
+  const ongletsParCommuneFavorite = trierTableauDObjetsParOrdreAlphabétique(communesFavorites ?? [], "nom").map(
+    (communeFavorite) => ({
+      titre: communeFavorite.nom,
+      contenu: (
+        <ÉtablissementsVoeuxOnglet
+          codeCommune={communeFavorite.codeInsee}
+          formation={formation}
+        />
+      ),
+    }),
+  );
+
+  const ongletToutesLesCommunes = {
+    titre: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
+    contenu: <ÉtablissemenentsVoeuxOngletToutesLesVilles formation={formation} />,
+  };
 
   return (
     <>
@@ -36,7 +56,7 @@ const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
       </div>
       <Onglets
         nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_VOEUX_ÉTABLISSEMENTS}
-        onglets={onglets}
+        onglets={[...ongletsParCommuneFavorite, ongletToutesLesCommunes]}
       />
     </>
   );
