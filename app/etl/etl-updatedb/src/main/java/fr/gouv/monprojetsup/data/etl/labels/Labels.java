@@ -159,9 +159,14 @@ public class Labels {
         String newLibelle =
                 libelle
                         .replace(" - Sciences, technologie, santé - ", " - ")
-                        .replace("L1", "Licence");
+                        .replace("L1", "Licence")
+                        .replace("EA-BAC3", "Ecole d'architecture")
+                        .replace("EA-BAC5", "Ecole d'architecture")
+                        .replace("CPGE", "Classes prépa (CPGE)")
+                        .replace("CUPGE", "Classes prépa universitaires (CUPGE)")
+                ;
         if(key.equals("fr90")) {
-            newLibelle = "Sciences Po / Instituts d'études politiques";
+            newLibelle = "Sciences Po / Instituts d'études politiques (IEP)";
         }
         if(key.equals("fl230")) {
             newLibelle = "Bachelors des écoles d'ingénieurs (Bac+3)";
