@@ -127,6 +127,7 @@ export const localeFR = {
           PRÉFÉRENCES: "Préférences de villes",
         },
         RAYON: "Dans un rayon de",
+        VOIR_PLUS: "Voir plus d'établissements",
         AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ: "Il n'existe pas d'offres dans au rayon de",
         AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE:
           'km autour de cette ville, consulte la carte des formations Parcoursup ou l\'onglet "Toutes les villes"',

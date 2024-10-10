@@ -13,13 +13,12 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
     supprimerDesFavoris,
     masquerUneFormation,
     afficherÀNouveauUneFormation,
-    estAffichéSurLaPageFavoris,
   } = useBoutonsActionsFicheFormation({
     formation,
   });
 
   return (
-    <>
+    <div className="grid gap-6">
       <div className="grid justify-start justify-items-start gap-4 sm:grid-flow-col">
         {!estMasquée && !estFavorite && (
           <Bouton
@@ -69,8 +68,27 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
           />
         )}
       </div>
-      {estFavorite && estAffichéSurLaPageFavoris && <VoeuxFicheFormation formation={formation} />}
-    </>
+      {estFavorite && (
+        <section className="fr-accordion">
+          <h2 className="fr-accordion__title">
+            <button
+              aria-controls="accordeon-voeux"
+              aria-expanded="false"
+              className="fr-accordion__btn"
+              type="button"
+            >
+              {i18n.PAGE_FORMATION.VOEUX.TITRE}
+            </button>
+          </h2>
+          <div
+            className="fr-collapse"
+            id="accordeon-voeux"
+          >
+            <VoeuxFicheFormation formation={formation} />
+          </div>
+        </section>
+      )}
+    </div>
   );
 };
 
