@@ -21,7 +21,7 @@ public record DescriptifsFormationsMetiers(
         this(new HashMap<>());
     }
 
-    public static Link toAvenirs(String uri, String label) {
+    public static Link toAvenirs(String uri, String label, String source) {
         if(uri == null) return null;
         uri =  uri
                 .replace(
@@ -29,7 +29,7 @@ public record DescriptifsFormationsMetiers(
                 .replace(Constants.ONISEP_URL1, Constants.EXPLORER_AVENIRS_URL)
                 .replace(Constants.ONISEP_URL2, Constants.EXPLORER_AVENIRS_URL)
                 ;
-        return new Link(label, uri);
+        return new Link(label, uri, source);
     }
 
     public static String toParcoursupCarteUrl(@NotNull Collection<String> psupIds) {
@@ -73,15 +73,6 @@ public record DescriptifsFormationsMetiers(
         });
     }
 
-    public void inject(Map<String, String> summaries) {
-        for (Map.Entry<String, String> entry : summaries.entrySet()) {
-            String key = entry.getKey();
-            String summary = entry.getValue();
-            DescriptifFormation descriptif = keyToDescriptifs.get(key);
-            keyToDescriptifs.put(key, DescriptifFormation.setSummary(descriptif, summary));
-        }
-    }
-
     public DescriptifFormation get(String key) {
         return keyToDescriptifs.get(key);
     }
@@ -105,7 +96,7 @@ public record DescriptifsFormationsMetiers(
     }
 
 
-    public record Link(String label, String uri) {
+    public record Link(String label, String uri, String source) {
 
     }
 }

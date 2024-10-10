@@ -3,9 +3,12 @@ package fr.gouv.monprojetsup.data.etl
 import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.Constants.CARTE_PARCOURSUP_PREFIX_URI
 import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
+import fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL
 import fr.gouv.monprojetsup.data.Constants.FORMATION_PSUP_EXCLUES
 import fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT
+import fr.gouv.monprojetsup.data.Constants.ONISEP_URL1
+import fr.gouv.monprojetsup.data.Constants.ONISEP_URL2
 import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
 import fr.gouv.monprojetsup.data.Constants.PASS_MOT_CLE
 import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
@@ -16,6 +19,9 @@ import fr.gouv.monprojetsup.data.Constants.mpsIdToGFlCod
 import fr.gouv.monprojetsup.data.etl.labels.Labels
 import fr.gouv.monprojetsup.data.etl.loaders.CsvTools
 import fr.gouv.monprojetsup.data.etl.loaders.DataSources
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_EXTRAS
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_ID
+import fr.gouv.monprojetsup.data.etl.loaders.DataSources.LIENS_MPS_PATH_HEADER_IGNORER
 import fr.gouv.monprojetsup.data.etl.loaders.DescriptifsLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader
 import fr.gouv.monprojetsup.data.etl.loaders.OnisepDataLoader.loadLiensFormationsMpsDomainesMps
@@ -35,6 +41,8 @@ import fr.gouv.monprojetsup.data.model.cities.Coords
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
 import fr.gouv.monprojetsup.data.model.formations.Formation
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater
+import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.CARTE_PSUP
+import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.IDEO_HOTLINE
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
@@ -144,6 +152,42 @@ class MpsDataFiles(
 
     override fun exportDiagnostics() {
         exportResumesManquants()
+        exportLiens()
+    }
+    private fun exportLiens() {
+        val ignorer = getLiensMpsIgnorer()
+        val extras = getLiensMpsExtras()
+        val labels = getLabels()
+
+        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR + "liens.csv").use { csv ->
+            val headers = listOf(
+                LIENS_MPS_PATH_HEADER_ID,
+                "label",
+                "en ligne labels",
+                "en ligne urls",
+                LIENS_MPS_PATH_HEADER_EXTRAS,
+                "onisep data labels",
+                "onisep data urls",
+                LIENS_MPS_PATH_HEADER_IGNORER,
+                "analyse"
+            )
+            csv.appendHeaders(headers)
+            val liens = getLiens()
+            for(id in getFormationsMpsIds().sortedBy { labels.getOrDefault(it,it) }) {
+                val nextLine = listOf(
+                    id,
+                    labels[id].orEmpty(),
+                    liens[id].orEmpty().filter { !it.source.contains(CARTE_PSUP) }.joinToString("\n") { it.label},
+                    liens[id].orEmpty().filter { !it.source.contains(CARTE_PSUP) }.joinToString("\n") { it.uri },
+                    extras[id].orEmpty().joinToString("\n"),
+                    liens[id].orEmpty().filter { l -> l.source.contains(IDEO_HOTLINE) }.joinToString("\n") { it.label},
+                    liens[id].orEmpty().filter { l -> l.source.contains(IDEO_HOTLINE) }.joinToString("\n") { it.uri },
+                    ignorer[id].orEmpty().joinToString("\n"),
+                    ""
+                )
+                csv.append(nextLine)
+            }
+        }
     }
 
     private fun exportResumesManquants() {
@@ -156,11 +200,9 @@ class MpsDataFiles(
                 "code type formation",
                 "intitule type formation,",
                 "url onisep",
-                "URL corrections",
                 "url psup",
                 "resume type formation",
                 "resume filiere",
-                "Liens supplémentaires",
                 "Retours à Onisep"
             )
             csv.appendHeaders(headers)
@@ -195,10 +237,10 @@ class MpsDataFiles(
                     "",
                     liensOnisep,
                     "",//url corrections
+                    autresLiens,
                     liensPsup,//url psup
                     "",//resume type formation
                     "",//resume filiere
-                    autresLiens,
                     ""
                 )
                 csv.append(nextLine)
@@ -261,7 +303,6 @@ class MpsDataFiles(
         if(descriptifs == null) {
             descriptifs = DescriptifsLoader.loadDescriptifs(
                 onisepData,
-                psupData.psupKeyToMpsKey,
                 psupData.lasToGeneric,
                 dataSources
             )
@@ -376,15 +417,50 @@ class MpsDataFiles(
 
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
         val urls = UrlsUpdater.updateUrls(
-            onisepData,
+            onisepData.metiersIdeo,
             psupData.liensOnisep,
             psupData.lasToGeneric,
-            getDescriptifs(),
             psupData.psupKeyToMpsKey,
             getFormationsMpsIds(),
-            getLabels()
+            getLabels(),
+            getLiensMpsIgnorer(),
+            getLiensMpsExtras(),
         )
         return urls
+    }
+
+    private fun getLiensMpsIgnorer(): Map<String, Collection<String>> {
+        val lines = CsvTools.readCSV(
+            dataSources.getSourceDataFilePath(DataSources.LIENS_MPS_PATH),
+            ','
+        )
+        val result = HashMap<String, Collection<String>>()
+        //key	label	onisep	corrections	extras
+        for (line in lines) {
+            val key = line[LIENS_MPS_PATH_HEADER_ID] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_ID in $line")
+            val urls = line[LIENS_MPS_PATH_HEADER_IGNORER] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_IGNORER in $line")
+            val urlList = urls.split("\n")
+            result[key] = urlList
+        }
+        return result
+    }
+    private fun getLiensMpsExtras(): Map<String, Collection<String>> {
+        val lines = CsvTools.readCSV(
+            dataSources.getSourceDataFilePath(DataSources.LIENS_MPS_PATH),
+            ','
+        )
+        val result = HashMap<String, Collection<String>>()
+        for (line in lines) {
+            val key = line[LIENS_MPS_PATH_HEADER_ID] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_ID in $line")
+            val urls = line[LIENS_MPS_PATH_HEADER_EXTRAS] ?: throw java.lang.RuntimeException("Empty $LIENS_MPS_PATH_HEADER_EXTRAS in $line")
+            val urlList = urls
+                .split("\n")
+                .map { s -> s.trim()}
+                .map { s -> s.replace(ONISEP_URL1,EXPLORER_AVENIRS_URL) }
+                .map { s -> s.replace(ONISEP_URL2,EXPLORER_AVENIRS_URL) }
+            result[key] = urlList
+        }
+        return result
     }
 
     override fun getGrilles(): Map<String, GrilleAnalyse> {
@@ -519,7 +595,6 @@ class MpsDataFiles(
     private fun getFormationsVersMetiersFromDescriptifs(): Map<String, Set<String>> {
         val descriptifs = DescriptifsLoader.loadDescriptifs(
             onisepData,
-            psupData.psupKeyToMpsKey,
             psupData.lasToGeneric,
             dataSources
         )

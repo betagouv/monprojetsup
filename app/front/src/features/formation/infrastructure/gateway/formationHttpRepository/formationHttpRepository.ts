@@ -71,7 +71,6 @@ export class formationHttpRepository implements FormationRepository {
       },
       lienParcoursSup: formationHttp.formation.liens.find((lien) => lien.url.match(regexLienParcoursSup))?.url ?? null,
       liens: formationHttp.formation.liens
-        .filter((lien) => !regexLienParcoursSup.test(lien.url))
         .map((lien) => ({
           intitulé: lien.nom,
           url: lien.url,

@@ -19,7 +19,7 @@ public class DescriptifFormation implements Serializable {
     private String summary;
     private String summaryFormation;
     private Map<String, String> mpsData = new HashMap<>();
-    private boolean correctedUrl = false;
+    private List<String> correctedUrls = new ArrayList<>();
 
     public DescriptifFormation(
             String presentation,
@@ -83,35 +83,6 @@ public class DescriptifFormation implements Serializable {
         );
     }
 
-    public static DescriptifFormation mergeDescriptifs(List<DescriptifFormation> descriptifs) {
-        if (descriptifs.isEmpty()) {
-            return new DescriptifFormation("", null, null, null, "empty merge", "error", null, null, null, new HashMap<>());
-        } else if (descriptifs.size() == 1) {
-            return descriptifs.get(0);
-        }
-        String presentation = descriptifs.stream().map(d -> d.presentation)
-                .filter(d -> d != null && !d.isEmpty())
-                .reduce((s, s2) -> s + "<br/>" + s2
-                ).orElse("");
-        String poursuite = descriptifs.stream().map(d -> d.poursuite)
-                .filter(d -> d != null && !d.isEmpty())
-                .reduce((s, s2) -> s + "<br/>" + s2
-                ).orElse(null);
-        String metiers = descriptifs.stream().map(d -> d.metiers)
-                .filter(d -> d != null && !d.isEmpty())
-                .reduce((s, s2) -> s + "<br/>" + s2
-                ).orElse(null);
-        String summaries = descriptifs.stream().map(d -> d.summary)
-                .filter(d -> d != null && !d.isEmpty())
-                .reduce((s, s2) -> s + "<br/>" + s2
-                ).orElse(null);
-        String summariesFormations = descriptifs.stream().map(d -> d.summaryFormation)
-                .filter(d -> d != null && !d.isEmpty())
-                .findAny().orElse(null);
-        List<String> urls = descriptifs.stream().map(d -> d.url).filter(u -> u != null && !u.isEmpty()).distinct().toList();
-        return new DescriptifFormation(presentation, poursuite, metiers, urls.isEmpty() ? null : urls.get(0), null, "merge", urls, summaries, summariesFormations, new HashMap<>());
-    }
-
     public static DescriptifFormation setSummary(DescriptifFormation o, String summary) {
         if (o == null) {
             return new DescriptifFormation(summary, null, "summary");
@@ -131,61 +102,12 @@ public class DescriptifFormation implements Serializable {
         }
     }
 
-    public static DescriptifFormation setSummaries(
-            DescriptifFormation o,
-            String summaryFormation,
-            String summaryFiliere
-    ) {
-        if (o == null) {
-            return new DescriptifFormation(summaryFormation, summaryFiliere, null, "summary");
-        } else {
-            return new DescriptifFormation(
-                    o.presentation,
-                    o.poursuite,
-                    o.metiers,
-                    o.url,
-                    o.error,
-                    o.type,
-                    o.multiUrls,
-                    summaryFiliere,
-                    summaryFormation,
-                    new HashMap<>()
-            );
-        }
-    }
-
     public boolean hasError() {
         return error != null;
     }
 
-    public boolean isRedirectedToDefaultPage() {
-        return error != null && error.startsWith("redirected to");
-    }
-
-    public boolean isOutDated() {
-        return error != null && error.startsWith("www.terminales2021");
-    }
-
     public boolean isRecherche() {
         return error != null && error.startsWith("recherche");
-    }
-
-    public String getFrontRendering() {
-        if (summary != null) return summary;
-        StringBuilder b = new StringBuilder();
-        if (presentation != null) {
-            b.append("<p>").append(presentation).append("</p>");
-        }
-        if (poursuite != null) {
-            b.append("<br/><br/>").append("<p>").append(poursuite).append("</p>");
-        }
-        if (metiers != null) {
-            b.append("<br/><br/>").append("<p>").append(metiers).append("</p>");
-        }
-        String result = b.toString();
-        result = result.replace("<h3>", "<br>");
-        result = result.replace("</h3>", "<br/>");
-        return result;
     }
 
     public String presentation() {
@@ -200,20 +122,8 @@ public class DescriptifFormation implements Serializable {
         return url;
     }
 
-    public String error() {
-        return error;
-    }
-
     public @NotNull String type() {
         return type;
-    }
-
-    public Set<String> multiUrls() {
-        return multiUrls;
-    }
-
-    public String summary() {
-        return summary;
     }
 
     @Override
@@ -251,10 +161,6 @@ public class DescriptifFormation implements Serializable {
                 "summary=" + summary + ", " +
                 "summaryFormation=" + summaryFormation + ", " +
                 "mpsData=" + mpsData + ']';
-    }
-
-    public boolean isViable() {
-        return (mpsData != null && !mpsData.isEmpty()) || (error == null || error.isEmpty());
     }
 
     public @Nullable String getDescriptifGeneralFront() {
