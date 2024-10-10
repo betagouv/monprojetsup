@@ -46,7 +46,7 @@ public class DataSources {
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
     public static final String LIENS_MPS_PATH_HEADER_ID = "id";
-    public static final String LIENS_MPS_PATH_HEADER_IGNORER = "ignorer";
+    public static final String LIENS_MPS_PATH_HEADER_IGNORER = "probleme onisep data";
     public static final String LIENS_MPS_PATH_HEADER_EXTRAS = "ajouts";
     public static final String DOMAINES_MPS_PATH = "mps/Domaines MPS Onisep.csv";
     public static final String INTERETS_GROUPES_PATH = "mps/centres_d_interets_MPS_-_Feuille_1.csv";
