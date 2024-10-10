@@ -2402,6 +2402,11 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
             // Given
+            val mapRechercheL1 =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                )
             val rechercheL1 =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2412,7 +2417,7 @@ class FormationControllerTest(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).thenReturn(mapRechercheL1)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2468,10 +2473,10 @@ class FormationControllerTest(
         fun `si le service réussi pour un appel avec un profil, doit filtrer les formations de la corbeille`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl0010", nom = "L1 - Mathématique"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl0010", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
@@ -2541,6 +2546,17 @@ class FormationControllerTest(
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val rechercheLongueMap =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                )
             val rechercheLongue =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2557,7 +2573,7 @@ class FormationControllerTest(
                     recherche = rechercheDe50Caracteres,
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheLongue)
+            ).thenReturn(rechercheLongueMap)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2682,6 +2698,17 @@ class FormationControllerTest(
         fun `si connecté sans profil, doit retourner 200 avec la liste des formations`() {
             // Given
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val mapRechercheLongue =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                )
             val rechercheLongue =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2698,7 +2725,7 @@ class FormationControllerTest(
                     recherche = rechercheDe50Caracteres,
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheLongue)
+            ).thenReturn(mapRechercheLongue)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2788,6 +2815,11 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
             // Given
+            val mapRechercheL1 =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                )
             val rechercheL1 =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2798,7 +2830,7 @@ class FormationControllerTest(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).thenReturn(mapRechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
@@ -3241,9 +3273,9 @@ class FormationControllerTest(
         fun `pour un enseignant, doit retourner 200 avec le détail des formations associées à la recherche`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
@@ -3738,9 +3770,9 @@ class FormationControllerTest(
         fun `si connecté sans profil, doit retourner 200 avec les formations sans explications`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
