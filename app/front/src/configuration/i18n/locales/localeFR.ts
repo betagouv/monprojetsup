@@ -42,7 +42,7 @@ export const localeFR = {
     FORMATIONS: "formation(s) pour apprendre le métier",
   },
   CARTE_FORMATION: {
-    POINTS_AFFINITÉ: "point(s) d'affinité avec ton profil",
+    POINTS_AFFINITÉ: "raison(s) de t'intéresser à cette formation",
     FORMATION_DISPONIBLES: "Formation disponible dans",
     FORMATION_DISPONIBLES_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
