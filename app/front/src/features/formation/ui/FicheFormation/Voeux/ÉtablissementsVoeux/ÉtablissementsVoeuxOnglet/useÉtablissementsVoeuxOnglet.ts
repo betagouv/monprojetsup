@@ -5,6 +5,7 @@ const RAYONS = [10, 20, 50];
 
 export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }: UseÉtablissementsVoeuxOngletArgs) {
   const [rayonSélectionné, setRayonSélectionné] = useState(RAYONS[0]);
+  const [afficherTousLesÉtablissements, setAfficherTousLesÉtablissements] = useState(false);
 
   const établissements = useMemo(() => {
     return (
@@ -32,10 +33,17 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
     [rayonSélectionné, établissements],
   );
 
+  const changerRayonSélectionné = (rayon: number) => {
+    setRayonSélectionné(rayon);
+    setAfficherTousLesÉtablissements(false);
+  };
+
   return {
     établissementsÀAfficher,
     rayons: RAYONS,
     rayonSélectionné,
-    changerRayonSélectionné: setRayonSélectionné,
+    changerRayonSélectionné,
+    afficherTousLesÉtablissements,
+    setAfficherTousLesÉtablissements,
   };
 }
