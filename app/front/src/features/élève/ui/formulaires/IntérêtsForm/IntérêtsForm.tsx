@@ -1,9 +1,9 @@
-import { type IntêretsFormProps } from "./IntêretsForm.interface";
-import useIntêretsForm from "./useIntêretsForm";
+import { type IntérêtsFormProps } from "./IntérêtsForm.interface";
+import useIntérêtsForm from "./useIntérêtsForm";
 import FiltresGroupésParCatégorie from "@/components/FiltresGroupésParCatégorie/FiltresGroupésParCatégorie";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntêretsFormProps) => {
+const IntérêtsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: IntérêtsFormProps) => {
   const {
     mettreÀJourÉlève,
     erreurs,
@@ -11,7 +11,7 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
     filtreIdsSélectionnésParDéfaut,
     auChangementFiltresSélectionnés,
     légendeId,
-  } = useIntêretsForm({
+  } = useIntérêtsForm({
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
@@ -22,7 +22,7 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
       onSubmit={mettreÀJourÉlève}
     >
       <fieldset
-        aria-labelledby={`${légendeId} intêrets-message`}
+        aria-labelledby={`${légendeId} intérêts-message`}
         className="border-0 p-0"
       >
         <legend
@@ -39,11 +39,11 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
         />
         <div
           aria-live="assertive"
-          id="intêrets-message"
+          id="intérêts-message"
         >
-          {erreurs.centresIntêrets && (
+          {erreurs.centresIntérêts && (
             <div className="fr-alert fr-alert--error fr-alert--sm mt-12">
-              <p>{erreurs.centresIntêrets.message}</p>
+              <p>{erreurs.centresIntérêts.message}</p>
             </div>
           )}
         </div>
@@ -52,4 +52,4 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
   );
 };
 
-export default IntêretsForm;
+export default IntérêtsForm;

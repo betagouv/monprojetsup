@@ -74,8 +74,8 @@ export type Formation = {
     }>;
     duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
     alternance: AlternanceÉlève | null;
-    intêretsEtDomainesChoisis: {
-      intêrets: Array<{
+    intérêtsEtDomainesChoisis: {
+      intérêts: Array<{
         id: string;
         nom: string;
       }>;

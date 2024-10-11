@@ -16,7 +16,7 @@ class Test extends InscriptionTestHelper {
       bac: "Générale",
       spécialités: [],
       domaines: ["T_ITM_1534"],
-      centresIntêrets: ["travail_manuel_bricoler"],
+      centresIntérêts: ["travail_manuel_bricoler"],
       métiersFavoris: [],
     });
   }

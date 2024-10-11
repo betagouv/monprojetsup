@@ -15,7 +15,7 @@ export type Élève = {
   bac: BacÉlève | null;
   spécialités: string[] | null;
   domaines: string[] | null;
-  centresIntêrets: string[] | null;
+  centresIntérêts: string[] | null;
   métiersFavoris: string[] | null;
   duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
   alternance: AlternanceÉlève | null;

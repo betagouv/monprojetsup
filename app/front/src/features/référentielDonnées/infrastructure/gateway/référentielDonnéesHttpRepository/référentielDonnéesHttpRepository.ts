@@ -43,12 +43,12 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
           },
         };
       }),
-      centresIntêrets: référentielDonnéesHttp.categoriesDInteretsAvecLeursSousCategories.map((centreIntêret) => ({
-        id: centreIntêret.categorieInteret.id,
-        nom: centreIntêret.categorieInteret.nom,
-        emoji: centreIntêret.categorieInteret.emoji,
-        sousCatégoriesCentreIntêret: trierTableauDObjetsParOrdreAlphabétique(
-          centreIntêret.sousCategoriesInterets,
+      centresIntérêts: référentielDonnéesHttp.categoriesDInteretsAvecLeursSousCategories.map((centreIntérêt) => ({
+        id: centreIntérêt.categorieInteret.id,
+        nom: centreIntérêt.categorieInteret.nom,
+        emoji: centreIntérêt.categorieInteret.emoji,
+        sousCatégoriesCentreIntérêt: trierTableauDObjetsParOrdreAlphabétique(
+          centreIntérêt.sousCategoriesInterets,
           "nom",
         ),
       })),
@@ -65,7 +65,7 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
 
     return {
       ...référentielDonnées,
-      centresIntêrets: trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.centresIntêrets, "nom"),
+      centresIntérêts: trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.centresIntérêts, "nom"),
       domainesProfessionnels: trierTableauDObjetsParOrdreAlphabétique(référentielDonnées.domainesProfessionnels, "nom"),
     };
   }

@@ -148,11 +148,11 @@ export class formationHttpRepository implements FormationRepository {
         })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      intêretsEtDomainesChoisis: {
-        intêrets:
-          explications.interetsEtDomainesChoisis?.interets.map((intêret) => ({
-            id: intêret.id,
-            nom: intêret.nom,
+      intérêtsEtDomainesChoisis: {
+        intérêts:
+          explications.interetsEtDomainesChoisis?.interets.map((intérêt) => ({
+            id: intérêt.id,
+            nom: intérêt.nom,
           })) ?? [],
         domaines:
           explications.interetsEtDomainesChoisis?.domaines.map((domaine) => ({

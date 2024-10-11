@@ -14,8 +14,8 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
     explications.communes.length === 0 &&
     explications.formationsSimilaires.length === 0 &&
     explications.spécialitésChoisies.length === 0 &&
-    explications.intêretsEtDomainesChoisis.domaines.length === 0 &&
-    explications.intêretsEtDomainesChoisis.intêrets.length === 0 &&
+    explications.intérêtsEtDomainesChoisis.domaines.length === 0 &&
+    explications.intérêtsEtDomainesChoisis.intérêts.length === 0 &&
     !explications.duréeÉtudesPrévue &&
     !explications.alternance &&
     !explications.duréeÉtudesPrévue &&
@@ -33,13 +33,13 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.TITRE}
       </Titre>
       <ul className="m-0 grid list-none justify-start gap-6 p-0">
-        {(explications.intêretsEtDomainesChoisis.intêrets.length > 0 ||
-          explications.intêretsEtDomainesChoisis.domaines.length > 0) && (
+        {(explications.intérêtsEtDomainesChoisis.intérêts.length > 0 ||
+          explications.intérêtsEtDomainesChoisis.domaines.length > 0) && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÉRÊTS_ET_DOMAINES}
             éléments={[
-              ...explications.intêretsEtDomainesChoisis.intêrets.map((intêret) => intêret.nom),
-              ...explications.intêretsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
+              ...explications.intérêtsEtDomainesChoisis.intérêts.map((intérêt) => intérêt.nom),
+              ...explications.intérêtsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
             ]}
           />
         )}

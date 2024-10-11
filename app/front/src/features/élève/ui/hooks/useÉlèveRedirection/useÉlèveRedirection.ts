@@ -21,7 +21,7 @@ export default function useÉlèveRedirection() {
       Boolean(élève?.situation),
       Boolean(élève?.classe),
       élève?.domaines && élève.domaines.length > 0,
-      élève?.centresIntêrets && élève.centresIntêrets.length > 0,
+      élève?.centresIntérêts && élève.centresIntérêts.length > 0,
       Boolean(élève?.métiersFavoris),
       Boolean(élève?.communesFavorites),
       Boolean(élève?.formationsFavorites),

@@ -2579,12 +2579,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         },
       },
     ],
-    centresIntêrets: [
+    centresIntérêts: [
       {
         id: "avoir une activité physique",
         nom: "Avoir une activité physique",
         emoji: "🤸",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci18",
             nom: "Conduire",
@@ -2606,7 +2606,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "communiquer et informer",
         nom: "Communiquer et informer",
         emoji: "🗣",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci6",
             nom: "Communiquer et informer",
@@ -2618,7 +2618,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "découvrir le monde",
         nom: "Découvrir le monde",
         emoji: "🌎",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci11",
             nom: "Apprendre de nouvelles langues",
@@ -2640,7 +2640,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "découvrir, enquêter et rechercher",
         nom: "Découvrir, enquêter et rechercher",
         emoji: "🧐",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci19",
             nom: "Faire des expériences",
@@ -2657,7 +2657,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "développer les nouvelles technologies",
         nom: "Développer les nouvelles technologies",
         emoji: "💻",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci27",
             nom: "Développer les nouvelles technologies",
@@ -2669,7 +2669,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "faire respecter la loi",
         nom: "Faire respecter la loi",
         emoji: "🧑‍⚖",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci21",
             nom: "Faire respecter la loi",
@@ -2681,7 +2681,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "jongler avec les chiffres",
         nom: "Jongler avec les chiffres",
         emoji: "💯",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci29",
             nom: "Jongler avec les chiffres",
@@ -2693,7 +2693,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "mener une équipe",
         nom: "Mener une équipe",
         emoji: "🚀",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci25",
             nom: "Diriger une équipe",
@@ -2710,7 +2710,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "prendre soin des autres",
         nom: "Prendre soin des autres",
         emoji: "🧡",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci14",
             nom: "Aider les autres",
@@ -2732,7 +2732,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "protéger la nature et les animaux",
         nom: "Protéger la nature et les animaux",
         emoji: "🌱",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci4",
             nom: "Défendre l'écologie",
@@ -2754,7 +2754,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "transmettre et m'occuper des plus jeunes",
         nom: "Transmettre et m'occuper des plus jeunes",
         emoji: "🧑‍💻",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci2",
             nom: "Enseigner",
@@ -2771,7 +2771,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "travailler dans le monde de l'art",
         nom: "Travailler dans le monde de l'art",
         emoji: "🎥",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci23",
             nom: "Découvrir l'envers du décor",
@@ -2793,7 +2793,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "travailler de mes mains",
         nom: "Travailler de mes mains",
         emoji: "🔨",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci7",
             nom: "Bricoler",
@@ -2815,7 +2815,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "vendre, développer un commerce",
         nom: "Vendre, développer un commerce",
         emoji: "🤝",
-        sousCatégoriesCentreIntêret: [
+        sousCatégoriesCentreIntérêt: [
           {
             id: "ci28",
             nom: "Vendre, développer un commerce",

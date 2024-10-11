@@ -3,9 +3,9 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { expect, type Page, test } from "@playwright/test";
 
 class Test extends InscriptionTestHelper {
-  public CENTRE_INTÊRET_VOYAGER = "Voyager";
+  public CENTRE_INTÉRÊT_VOYAGER = "Voyager";
 
-  public CENTRE_INTÊRET_BRICOLER = "Bricoler";
+  public CENTRE_INTÉRÊT_BRICOLER = "Bricoler";
 
   public CATÉGORIE_DÉCOUVRIR_MONDE = "Découvrir le monde";
 
@@ -25,25 +25,25 @@ class Test extends InscriptionTestHelper {
     await this.boutonCatégorie(catégorieLabel).click();
   };
 
-  public cliquerSurUnCentreIntêret = async (nomDuCentreIntêret: string) => {
-    await this.boutonCentreIntêret(nomDuCentreIntêret).click();
+  public cliquerSurUnCentreIntérêt = async (nomDuCentreIntérêt: string) => {
+    await this.boutonCentreIntérêt(nomDuCentreIntérêt).click();
   };
 
   public boutonCatégorie = (catégorieLabel: string) => {
     return this._page.getByRole("button", { name: catégorieLabel, exact: true });
   };
 
-  public boutonCentreIntêret = (nomDuCentreIntêret: string) => {
-    return this._page.getByRole("button", { name: nomDuCentreIntêret, exact: true });
+  public boutonCentreIntérêt = (nomDuCentreIntérêt: string) => {
+    return this._page.getByRole("button", { name: nomDuCentreIntérêt, exact: true });
   };
 
-  public messageErreurAuMoinsUnIntêret = () => {
-    return this._page.locator("#intêrets-message").getByText(i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN);
+  public messageErreurAuMoinsUnIntérêt = () => {
+    return this._page.locator("#intérêts-message").getByText(i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN);
   };
 }
 
-test.describe("Inscription élève - Mes centres intêrets", () => {
-  test("L'élève doit choisir au moins un centre d'intêret", async ({ page }) => {
+test.describe("Inscription élève - Mes centres intérêts", () => {
+  test("L'élève doit choisir au moins un centre d'intérêt", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
@@ -52,48 +52,48 @@ test.describe("Inscription élève - Mes centres intêrets", () => {
     await testhelper.soumettreLeFormulaire();
 
     // THEN
-    await expect(testhelper.messageErreurAuMoinsUnIntêret()).toBeVisible();
+    await expect(testhelper.messageErreurAuMoinsUnIntérêt()).toBeVisible();
   });
 
-  test("Je peux sélectionner des centres intêrets", async ({ page }) => {
+  test("Je peux sélectionner des centres intérêts", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
     await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_DÉCOUVRIR_MONDE);
-    await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
+    await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER);
 
     // THEN
     expect(
-      await testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
+      await testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
     ).toBe("true");
   });
 
-  test("Je peux supprimer des centres intêrets sélectionnés", async ({ page }) => {
+  test("Je peux supprimer des centres intérêts sélectionnés", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
     await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_DÉCOUVRIR_MONDE);
-    await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
-    await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
+    await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER);
+    await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER);
 
     // THEN
     expect(
-      await testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
+      await testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
     ).toBe("false");
   });
 
-  test("Si au moins un centre d'intêret est renseigné, passage à l'étape suivante", async ({ page }) => {
+  test("Si au moins un centre d'intérêt est renseigné, passage à l'étape suivante", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
 
     // WHEN
     await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_DÉCOUVRIR_MONDE);
-    await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
+    await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER);
     await testhelper.soumettreLeFormulaire();
 
     // THEN
@@ -108,20 +108,20 @@ test.describe("Inscription élève - Mes centres intêrets", () => {
 
       // WHEN
       await testhelper.cliquerSurUneCatégorie(testhelper.CATÉGORIE_DÉCOUVRIR_MONDE);
-      await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER);
+      await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER);
       await testhelper.cliquerSurUneCatégorie("Travailler de mes mains");
-      await testhelper.cliquerSurUnCentreIntêret(testhelper.CENTRE_INTÊRET_BRICOLER);
+      await testhelper.cliquerSurUnCentreIntérêt(testhelper.CENTRE_INTÉRÊT_BRICOLER);
       await testhelper.soumettreLeFormulaire();
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
-      expect(testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER)).toBeVisible();
-      expect(testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_BRICOLER)).toBeVisible();
+      expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER)).toBeVisible();
+      expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_BRICOLER)).toBeVisible();
       expect(
-        await testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
+        await testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");
       expect(
-        await testhelper.boutonCentreIntêret(testhelper.CENTRE_INTÊRET_BRICOLER).getAttribute(testhelper.BOUTON_APPUYÉ),
+        await testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_BRICOLER).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");
     });
   });

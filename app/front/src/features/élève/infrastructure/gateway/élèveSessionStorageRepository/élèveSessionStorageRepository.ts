@@ -10,7 +10,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     bac: null,
     spécialités: null,
     domaines: null,
-    centresIntêrets: null,
+    centresIntérêts: null,
     métiersFavoris: null,
     duréeÉtudesPrévue: null,
     alternance: null,
