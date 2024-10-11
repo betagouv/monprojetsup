@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 const RAYONS = [10, 20, 50];
 
 export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }: UseÉtablissementsVoeuxOngletArgs) {
+  const NOMBRE_ÉTABLISSEMENTS_À_AFFICHER = 5;
+
   const [rayonSélectionné, setRayonSélectionné] = useState(RAYONS[0]);
-  const [afficherTousLesÉtablissements, setAfficherTousLesÉtablissements] = useState(false);
 
   const établissements = useMemo(() => {
     return (
@@ -29,21 +30,19 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
   }, [établissementsParRayon]);
 
   const établissementsÀAfficher = useMemo(
-    () => établissements.filter(({ distanceEnKm }) => distanceEnKm <= rayonSélectionné),
+    () =>
+      [...établissements]
+        .filter(({ distanceEnKm }) => distanceEnKm <= rayonSélectionné)
+        .sort((a, b) => a.distanceEnKm - b.distanceEnKm),
     [rayonSélectionné, établissements],
   );
 
-  const changerRayonSélectionné = (rayon: number) => {
-    setRayonSélectionné(rayon);
-    setAfficherTousLesÉtablissements(false);
-  };
-
   return {
-    établissementsÀAfficher,
+    nombreÉtablissementÀAfficher: NOMBRE_ÉTABLISSEMENTS_À_AFFICHER,
+    nombreÉtablissementsDansLeRayon: établissementsÀAfficher.length,
+    établissementsÀAfficher: établissementsÀAfficher.slice(0, NOMBRE_ÉTABLISSEMENTS_À_AFFICHER),
     rayons: RAYONS,
     rayonSélectionné,
-    changerRayonSélectionné,
-    afficherTousLesÉtablissements,
-    setAfficherTousLesÉtablissements,
+    changerRayonSélectionné: setRayonSélectionné,
   };
 }

@@ -52,9 +52,9 @@ const CarteFormation = ({
             className="fr-icon-map-pin-2-fill fr-icon--sm"
           />
           <p className="fr-text--sm mb-0">
-            {i18n.CARTE_FORMATION.FORMATION_DISPONIBLES}{" "}
+            {i18n.CARTE_FORMATION.VILLES_PROPOSANT_FORMATION}{" "}
             <strong>
-              {communes.length} {i18n.CARTE_FORMATION.FORMATION_DISPONIBLES_SUITE}
+              {communes.length} {i18n.CARTE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
             </strong>
           </p>
         </div>

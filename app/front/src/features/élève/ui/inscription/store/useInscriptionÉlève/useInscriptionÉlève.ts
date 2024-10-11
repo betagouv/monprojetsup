@@ -20,8 +20,8 @@ const useInscriptionÉlèveStore = create<InscriptionÉlèveStore>((set, get) =>
       url: "/eleve/inscription/domaines",
     },
     {
-      titreÉtape: i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-      titre: i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE,
+      titreÉtape: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+      titre: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE,
       url: "/eleve/inscription/interets",
     },
     {

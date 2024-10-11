@@ -51,12 +51,12 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
             />
             <div>
               <p className="mb-2 text-sm">
-                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES} {formation.communesProposantLaFormation.length}{" "}
-                {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES_SUITE}
+                {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION} {formation.communesProposantLaFormation.length}{" "}
+                {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
                 {formation.explications?.communes && formation.explications.communes.length > 0 && (
                   <>
                     {" "}
-                    {i18n.PAGE_FORMATION.FORMATION_DISPONIBLES_SUITE_SI_CORRESPONDANCE}{" "}
+                    {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
                     <strong>{formation.explications?.communes.map((commune) => commune.nom).join(" • ")}</strong>
                   </>
                 )}

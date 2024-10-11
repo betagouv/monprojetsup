@@ -36,7 +36,7 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {(explications.intêretsEtDomainesChoisis.intêrets.length > 0 ||
           explications.intêretsEtDomainesChoisis.domaines.length > 0) && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
-            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÊRETS_ET_DOMAINES}
+            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÉRÊTS_ET_DOMAINES}
             éléments={[
               ...explications.intêretsEtDomainesChoisis.intêrets.map((intêret) => intêret.nom),
               ...explications.intêretsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
