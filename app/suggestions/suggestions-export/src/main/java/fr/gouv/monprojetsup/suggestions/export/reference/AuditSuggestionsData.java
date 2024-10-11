@@ -322,12 +322,18 @@ public class AuditSuggestionsData {
                 val idsFormationsIdeo = Objects.requireNonNull(formation.getFormationsIdeo());
                 val nomsFormationsIdeo =
                         String.join("\n", idsFormationsIdeo.stream()
+                                .distinct()
                                 .map(this::getDebugLabel)
+                                .sorted()
+                                .limit(20)
                                 .toList());
+
 
                 val listeMetiers = keyLabelEdgesFormation.getRight().stream()
                         .filter(this::isMetier)
-                        .sorted().toList();
+                        .distinct()
+                        .sorted()
+                        .toList();
 
                 boolean first = true;
                 for (String idMetier : listeMetiers) {
