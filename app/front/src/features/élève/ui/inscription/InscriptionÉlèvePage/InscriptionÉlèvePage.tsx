@@ -10,7 +10,7 @@ import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
 import FormationsForm from "@/features/élève/ui/formulaires/FormationsForm/FormationsForm";
-import IntêretsForm from "@/features/élève/ui/formulaires/IntêretsForm/IntêretsForm";
+import IntérêtsForm from "@/features/élève/ui/formulaires/IntérêtsForm/IntérêtsForm";
 import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
@@ -61,7 +61,7 @@ const InscriptionÉlèvePage = () => {
         );
       case "/eleve/inscription/interets":
         return (
-          <IntêretsForm
+          <IntérêtsForm
             {...propsFormulaire}
             niveauDeTitreCatégories="h2"
           />

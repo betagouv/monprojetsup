@@ -73,7 +73,7 @@ const ProfilÉlève = () => {
                   titre: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
                   contenu: (
                     <ModifierProfilÉlèveForm
-                      formulaireId="intêrets"
+                      formulaireId="intérêts"
                       titre={i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),

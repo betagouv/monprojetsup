@@ -8,7 +8,7 @@ export type RéférentielDonnées = {
     alternances: AlternanceÉlève[];
   };
   bacs: Bac[];
-  centresIntêrets: CatégorieCentreIntêret[];
+  centresIntérêts: CatégorieCentreIntérêt[];
   domainesProfessionnels: CatégorieDomainesProfessionnels[];
 };
 
@@ -34,17 +34,17 @@ export type Bac = {
   };
 };
 
-export type SousCatégorieCentreIntêret = {
+export type SousCatégorieCentreIntérêt = {
   id: string;
   nom: string;
   emoji: string;
 };
 
-export type CatégorieCentreIntêret = {
+export type CatégorieCentreIntérêt = {
   id: string;
   nom: string;
   emoji: string;
-  sousCatégoriesCentreIntêret: SousCatégorieCentreIntêret[];
+  sousCatégoriesCentreIntérêt: SousCatégorieCentreIntérêt[];
 };
 
 export type SousCatégorieDomaineProfessionnel = {
