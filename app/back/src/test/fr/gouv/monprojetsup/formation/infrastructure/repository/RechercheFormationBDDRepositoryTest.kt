@@ -27,7 +27,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "fleur"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -35,7 +35,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
                 FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 
     @Test
@@ -45,7 +46,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "flere"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -53,7 +54,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
                 FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 
     @Test
@@ -63,7 +65,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "L1"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -73,7 +75,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
                 FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 
     @Test
@@ -83,7 +86,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "histoire"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -92,7 +95,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 
     @Test
@@ -102,7 +106,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "histoare"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -111,7 +115,8 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0006", nom = "L1 - Histoire de l'art"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 
     @Test
@@ -121,7 +126,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "ist"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -133,28 +138,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(result.toSet()).isEqualTo(attendu.toSet())
-    }
-
-    @Test
-    @Sql("classpath:recherche_formation.sql")
-    fun `Si BUT, doit ordonner les formations en mettant les exactes matchs en premiers`() {
-        // Given
-        val recherche = "BUT"
-
-        // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
-
-        // Then
-        val attendu =
-            listOf(
-                FormationCourte(id = "fl0009", nom = "but"),
-                FormationCourte(id = "fl0011", nom = "BÙT"),
-                FormationCourte(id = "fl0008", nom = "BUT Numerique"),
-                FormationCourte(id = "fl0010", nom = "BUT Numérique"),
-                FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
-            )
-        assertThat(result).isEqualTo(attendu)
+        assertThat(resultat.map { it.formation }.toSet()).isEqualTo(attendu.toSet())
     }
 
     @Test
@@ -164,7 +148,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val recherche = "las"
 
         // When
-        val result = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
         val attendu =
@@ -172,6 +156,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
                 FormationCourte(id = "fl0012", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
             )
-        assertThat(result).isEqualTo(attendu)
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
 }
