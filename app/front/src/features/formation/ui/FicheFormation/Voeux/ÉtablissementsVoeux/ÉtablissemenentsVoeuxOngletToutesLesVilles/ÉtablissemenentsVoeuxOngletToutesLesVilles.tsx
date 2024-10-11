@@ -25,6 +25,7 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: Établisseme
           {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.RAPPEL}{" "}
           <LienInterne
             ariaLabel={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PRÉFÉRENCES}
+            hash="etude"
             href="/profil"
             taille="petit"
             variante="simple"
