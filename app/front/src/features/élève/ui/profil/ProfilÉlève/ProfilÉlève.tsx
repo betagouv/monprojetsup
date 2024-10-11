@@ -7,9 +7,24 @@ import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import { useRouterState } from "@tanstack/react-router";
 
 const ProfilÉlève = () => {
   const utilisateur = useUtilisateur();
+  const router = useRouterState();
+
+  const indexOngletÀActiver = () => {
+    switch (router.location.hash) {
+      case "domaines":
+        return 1;
+      case "interets":
+        return 2;
+      case "etude":
+        return 3;
+      default:
+        return 0;
+    }
+  };
 
   return (
     <>
@@ -50,6 +65,7 @@ const ProfilÉlève = () => {
             </div>
             <Onglets
               nomAccessible={i18n.PAGE_PROFIL.TITRE}
+              ongletAffichéParDéfaut={indexOngletÀActiver()}
               onglets={[
                 {
                   titre: i18n.ÉLÈVE.SCOLARITÉ.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,

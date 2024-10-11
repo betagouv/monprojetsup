@@ -35,6 +35,7 @@ const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
         <div className="ml-1 grid grid-flow-col justify-start gap-6">
           <LienInterne
             ariaLabel={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PRÉFÉRENCES}
+            hash="etude"
             href="/profil"
             icône={{ classe: "fr-icon-equalizer-line", position: "gauche" }}
             taille="petit"
