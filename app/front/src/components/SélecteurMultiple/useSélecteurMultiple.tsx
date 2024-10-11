@@ -49,17 +49,24 @@ export default function useSélecteurMultiple({
   };
 
   useEffect(() => {
-    if (recherche) àLaRechercheDUneOption(recherche);
+    if (recherche) {
+      àLaRechercheDUneOption(recherche);
+    }
   }, [recherche, àLaRechercheDUneOption]);
 
   useEffect(() => {
-    const optionsÀAfficher = optionsSuggérées.filter(
-      (optionSuggérée) =>
-        !optionsSélectionnées.some((optionSélectionnée) => optionSélectionnée.valeur === optionSuggérée.valeur),
-    );
+    const rechercheEstValide = recherche && recherche.length >= nombreDeCaractèreMinimumRecherche;
 
-    setOptionsAffichées(optionsÀAfficher);
-  }, [optionsSuggérées, optionsSélectionnées]);
+    if (rechercheEstValide) {
+      const optionsÀAfficher = optionsSuggérées.filter(
+        (optionSuggérée) =>
+          !optionsSélectionnées.some((optionSélectionnée) => optionSélectionnée.valeur === optionSuggérée.valeur),
+      );
+      setOptionsAffichées(optionsÀAfficher);
+    } else {
+      setOptionsAffichées([]);
+    }
+  }, [nombreDeCaractèreMinimumRecherche, optionsSuggérées, optionsSélectionnées, recherche]);
 
   useEffect(() => {
     if (forcerRafraichissementOptionsSélectionnées) setOptionsSélectionnées(optionsSélectionnéesParDéfaut ?? []);
