@@ -15,8 +15,6 @@ queryClient.setMutationDefaults(["mettreÀJourÉlève"], {
     return await dépendances.mettreÀJourProfilÉlèveUseCase.run(élève);
   },
   onSuccess: async () => {
-    queryClient.removeQueries({ queryKey: ["formations"] });
-    queryClient.removeQueries({ queryKey: ["métiers"] });
     await queryClient.invalidateQueries(élèveQueryOptions);
   },
 });
