@@ -81,46 +81,46 @@ class FormationControllerTest(
     private val explications =
         ExplicationsSuggestionDetaillees(
             geographique =
-                listOf(
-                    ExplicationGeographique(
-                        ville = "Nantes",
-                        distanceKm = 1,
-                    ),
-                    ExplicationGeographique(
-                        ville = "Paris",
-                        distanceKm = 3,
-                    ),
+            listOf(
+                ExplicationGeographique(
+                    ville = "Nantes",
+                    distanceKm = 1,
                 ),
+                ExplicationGeographique(
+                    ville = "Paris",
+                    distanceKm = 3,
+                ),
+            ),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
             alternance = ChoixAlternance.TRES_INTERESSE,
             specialitesChoisies =
-                listOf(
-                    AffiniteSpecialite(idSpecialite = "mat001", nomSpecialite = "specialiteA", pourcentage = 12),
-                    AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
-                    AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
-                ),
+            listOf(
+                AffiniteSpecialite(idSpecialite = "mat001", nomSpecialite = "specialiteA", pourcentage = 12),
+                AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
+                AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
+            ),
             domaines =
-                listOf(
-                    Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
-                ),
+            listOf(
+                Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
+            ),
             interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
             explicationAutoEvaluationMoyenne =
-                ExplicationAutoEvaluationMoyenne(
-                    baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
-                    moyenneAutoEvalue = 15f,
-                    basIntervalleNotes = 14f,
-                    hautIntervalleNotes = 16f,
-                ),
+            ExplicationAutoEvaluationMoyenne(
+                baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
+                moyenneAutoEvalue = 15f,
+                basIntervalleNotes = 14f,
+                hautIntervalleNotes = 16f,
+            ),
             formationsSimilaires =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "CPGE MPSI"),
-                    FormationCourte(id = "fl7", nom = "BUT Informatique"),
-                ),
+            listOf(
+                FormationCourte(id = "fl1", nom = "CPGE MPSI"),
+                FormationCourte(id = "fl7", nom = "BUT Informatique"),
+            ),
             explicationTypeBaccalaureat =
-                ExplicationTypeBaccalaureat(
-                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
-                    pourcentage = 18,
-                ),
+            ExplicationTypeBaccalaureat(
+                baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                pourcentage = 18,
+            ),
             detailsCalculScore = emptyList(),
         )
     val ficheFormation =
@@ -129,126 +129,126 @@ class FormationControllerTest(
             nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
             formationsAssociees = listOf("fl0012"),
             descriptifGeneral =
-                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+            "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
                     "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
                     "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit de " +
                     "formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles sont " +
                     "organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
                     "établissement de l’enseignement supérieur, une université.",
             descriptifDiplome =
-                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+            "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
                     "conférent le grade de licence.",
             descriptifAttendus =
-                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+            "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
                     "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
                     "des fleurs, ainsi que les soins et l'entretien des végétaux.",
             descriptifConseils =
-                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+            "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
                     "actuelles en matière de design floral pour exceller dans ce domaine.",
             liens =
-                listOf(
-                    Lien(
-                        nom = "Voir sur l'ONISEP",
-                        url =
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
-                    ),
+            listOf(
+                Lien(
+                    nom = "Voir sur l'ONISEP",
+                    url =
+                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                            "cycle-pluridisciplinaire-d-etudes-superieures",
                 ),
+            ),
             voeux =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                ),
+            listOf(
+                Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+            ),
             voeuxParCommunesFavorites =
-                listOf(
-                    CommuneAvecVoeuxAuxAlentours(
-                        commune = PARIS15EME,
-                        distances =
-                            listOf(
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                                    km = 3,
-                                ),
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                                    km = 1,
-                                ),
-                            ),
+            listOf(
+                CommuneAvecVoeuxAuxAlentours(
+                    commune = PARIS15EME,
+                    distances =
+                    listOf(
+                        VoeuAvecDistance(
+                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                            km = 3,
+                        ),
+                        VoeuAvecDistance(
+                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                            km = 1,
+                        ),
                     ),
                 ),
+            ),
             metiersTriesParAffinites =
-                listOf(
-                    Metier(
-                        id = "MET001",
-                        nom = "géomaticien/ne",
-                        descriptif =
-                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                "exploite les données pour modéliser le territoire",
-                        liens =
-                            listOf(
-                                Lien(
-                                    nom = "Voir sur l'ONISEP",
-                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
-                                ),
-                            ),
-                    ),
-                    Metier(
-                        id = "MET002",
-                        nom = "documentaliste",
-                        descriptif = null,
-                        liens = emptyList(),
+            listOf(
+                Metier(
+                    id = "MET001",
+                    nom = "géomaticien/ne",
+                    descriptif =
+                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                            "exploite les données pour modéliser le territoire",
+                    liens =
+                    listOf(
+                        Lien(
+                            nom = "Voir sur l'ONISEP",
+                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
+                        ),
                     ),
                 ),
+                Metier(
+                    id = "MET002",
+                    nom = "documentaliste",
+                    descriptif = null,
+                    liens = emptyList(),
+                ),
+            ),
             tauxAffinite = 90,
             explications = explications,
             criteresAnalyseCandidature =
-                listOf(
-                    CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
-                    CritereAnalyseCandidature(
-                        nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                        pourcentage = 0,
-                    ),
-                    CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
-                    CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
-                    CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+            listOf(
+                CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                CritereAnalyseCandidature(
+                    nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                    pourcentage = 0,
                 ),
+                CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+            ),
             statistiquesDesAdmis =
-                StatistiquesDesAdmis(
-                    moyenneGeneraleDesAdmis =
-                        MoyenneGeneraleDesAdmis(
-                            baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
-                            centiles =
-                                listOf(
-                                    Centile(centile = 5, note = 13f),
-                                    Centile(centile = 25, note = 14.5f),
-                                    Centile(centile = 75, note = 17f),
-                                    Centile(centile = 95, note = 18f),
-                                ),
-                        ),
-                    repartitionAdmis =
-                        RepartitionAdmis(
-                            total = 6915,
-                            parBaccalaureat =
-                                listOf(
-                                    TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
-                                        nombreAdmis = 6677,
-                                    ),
-                                    TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
-                                        nombreAdmis = 15,
-                                    ),
-                                    TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
-                                        nombreAdmis = 223,
-                                    ),
-                                ),
-                        ),
+            StatistiquesDesAdmis(
+                moyenneGeneraleDesAdmis =
+                MoyenneGeneraleDesAdmis(
+                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                    centiles =
+                    listOf(
+                        Centile(centile = 5, note = 13f),
+                        Centile(centile = 25, note = 14.5f),
+                        Centile(centile = 75, note = 17f),
+                        Centile(centile = 95, note = 18f),
+                    ),
                 ),
+                repartitionAdmis =
+                RepartitionAdmis(
+                    total = 6915,
+                    parBaccalaureat =
+                    listOf(
+                        TotalAdmisPourUnBaccalaureat(
+                            baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                            nombreAdmis = 6677,
+                        ),
+                        TotalAdmisPourUnBaccalaureat(
+                            baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                            nombreAdmis = 15,
+                        ),
+                        TotalAdmisPourUnBaccalaureat(
+                            baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                            nombreAdmis = 223,
+                        ),
+                    ),
+                ),
+            ),
         )
 
     val ficheFormationSansProfil =
@@ -256,84 +256,84 @@ class FormationControllerTest(
             id = "fl680002",
             nom = "Cycle pluridisciplinaire d'Études Supérieures - Science",
             metiers =
-                listOf(
-                    Metier(
-                        id = "MET001",
-                        nom = "géomaticien/ne",
-                        descriptif =
-                            "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
-                                "exploite les données pour modéliser le territoire",
-                        liens =
-                            listOf(
-                                Lien(
-                                    nom = "Voir sur l'ONISEP",
-                                    url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
-                                ),
-                            ),
-                    ),
-                    Metier(
-                        id = "MET002",
-                        nom = "documentaliste",
-                        descriptif = null,
-                        liens = emptyList(),
+            listOf(
+                Metier(
+                    id = "MET001",
+                    nom = "géomaticien/ne",
+                    descriptif =
+                    "À la croisée de la géographie et de l'informatique, le géomaticien ou la géomaticienne " +
+                            "exploite les données pour modéliser le territoire",
+                    liens =
+                    listOf(
+                        Lien(
+                            nom = "Voir sur l'ONISEP",
+                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/geomaticien-geomaticienne",
+                        ),
                     ),
                 ),
+                Metier(
+                    id = "MET002",
+                    nom = "documentaliste",
+                    descriptif = null,
+                    liens = emptyList(),
+                ),
+            ),
             formationsAssociees = listOf("fl0012"),
             descriptifGeneral =
-                "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
+            "Les formations CPES recrutent des lycéen.nes de très bon niveau sur sélection et dispensent " +
                     "des enseignements pluri-disciplinaires (scientifiques, artistiques, de sciences sociales, " +
                     "de littérature) permettant une poursuite d'études en master ou en grande école. Il s’agit " +
                     "de formations ouvertes socialement recrutant 40% de boursiers sur critères sociaux. Elles " +
                     "sont organisées conjointement par un établissement d’enseignement secondaire lycée et un " +
                     "établissement de l’enseignement supérieur, une université.",
             descriptifDiplome =
-                "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
+            "Les formations CPES sont des diplômes d’établissement diplômants en trois ans qui " +
                     "conférent le grade de licence.",
             descriptifAttendus =
-                "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
+            "Il est attendu des candidats de démontrer une solide compréhension des techniques de base " +
                     "de la floristerie, y compris la composition florale, la reconnaissance des plantes et " +
                     "des fleurs, ainsi que les soins et l'entretien des végétaux.",
             descriptifConseils =
-                "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
+            "Nous vous conseillons de développer une sensibilité artistique et de rester informé des tendances " +
                     "actuelles en matière de design floral pour exceller dans ce domaine.",
             liens =
-                listOf(
-                    Lien(
-                        nom = "Voir sur l'ONISEP",
-                        url =
-                            "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
-                                "cycle-pluridisciplinaire-d-etudes-superieures",
-                    ),
+            listOf(
+                Lien(
+                    nom = "Voir sur l'ONISEP",
+                    url =
+                    "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/" +
+                            "cycle-pluridisciplinaire-d-etudes-superieures",
                 ),
+            ),
             voeux =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                ),
+            listOf(
+                Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+            ),
             criteresAnalyseCandidature =
-                listOf(
-                    CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
-                    CritereAnalyseCandidature(
-                        nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
-                        pourcentage = 0,
-                    ),
-                    CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
-                    CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
-                    CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+            listOf(
+                CritereAnalyseCandidature(nom = "Compétences académiques", pourcentage = 10),
+                CritereAnalyseCandidature(
+                    nom = "Engagements, activités et centres d’intérêt, réalisations péri ou extra-scolaires",
+                    pourcentage = 0,
                 ),
+                CritereAnalyseCandidature(nom = "Résultats académiques", pourcentage = 18),
+                CritereAnalyseCandidature(nom = "Savoir-être", pourcentage = 42),
+                CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
+            ),
             statistiquesDesAdmis =
-                StatistiquesDesAdmis(
-                    repartitionAdmis =
-                        RepartitionAdmis(
-                            total = 12,
-                            parBaccalaureat = listOf(),
-                        ),
-                    moyenneGeneraleDesAdmis = null,
+            StatistiquesDesAdmis(
+                repartitionAdmis =
+                RepartitionAdmis(
+                    total = 12,
+                    parBaccalaureat = listOf(),
                 ),
+                moyenneGeneraleDesAdmis = null,
+            ),
         )
 
     private val metiersTriesParAffinites =
@@ -2402,6 +2402,11 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
             // Given
+            val mapRechercheL1 =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                )
             val rechercheL1 =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2412,7 +2417,7 @@ class FormationControllerTest(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).thenReturn(mapRechercheL1)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2468,10 +2473,10 @@ class FormationControllerTest(
         fun `si le service réussi pour un appel avec un profil, doit filtrer les formations de la corbeille`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl0010", nom = "L1 - Mathématique"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl0010", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
@@ -2541,6 +2546,17 @@ class FormationControllerTest(
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val rechercheLongueMap =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                )
             val rechercheLongue =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2557,7 +2573,7 @@ class FormationControllerTest(
                     recherche = rechercheDe50Caracteres,
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheLongue)
+            ).thenReturn(rechercheLongueMap)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2682,6 +2698,17 @@ class FormationControllerTest(
         fun `si connecté sans profil, doit retourner 200 avec la liste des formations`() {
             // Given
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
+            val mapRechercheLongue =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                )
             val rechercheLongue =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2698,7 +2725,7 @@ class FormationControllerTest(
                     recherche = rechercheDe50Caracteres,
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheLongue)
+            ).thenReturn(mapRechercheLongue)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2788,6 +2815,11 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
             // Given
+            val mapRechercheL1 =
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                )
             val rechercheL1 =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2798,7 +2830,7 @@ class FormationControllerTest(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).thenReturn(mapRechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
             `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
             val fichesFormations =
@@ -3241,9 +3273,9 @@ class FormationControllerTest(
         fun `pour un enseignant, doit retourner 200 avec le détail des formations associées à la recherche`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
@@ -3738,9 +3770,9 @@ class FormationControllerTest(
         fun `si connecté sans profil, doit retourner 200 avec les formations sans explications`() {
             // Given
             val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                mapOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
                 )
             `when`(
                 rechercherFormation.rechercheLesFormationsCorrespondantes(
