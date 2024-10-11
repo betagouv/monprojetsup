@@ -70,11 +70,11 @@ const ProfilÉlève = () => {
                   ),
                 },
                 {
-                  titre: i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+                  titre: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
                   contenu: (
                     <ModifierProfilÉlèveForm
                       formulaireId="intêrets"
-                      titre={i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE}
+                      titre={i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
                 },

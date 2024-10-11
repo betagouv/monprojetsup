@@ -38,7 +38,7 @@ class Test extends InscriptionTestHelper {
   };
 
   public messageErreurAuMoinsUnIntêret = () => {
-    return this._page.locator("#intêrets-message").getByText(i18n.ÉLÈVE.INTÊRETS.SÉLECTIONNE_AU_MOINS_UN);
+    return this._page.locator("#intêrets-message").getByText(i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN);
   };
 }
 

@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from "react";
 export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
   formation,
 }: UseÉtablissementsVoeuxOngletToutesLesVillesArgs) {
-  const NB_SUGGESTIONS_MAX = 20;
+  const NB_SUGGESTIONS_MAX = 5;
 
   const { mettreÀJourLesVoeux, voeuxSélectionnés } = useÉtablissementsVoeux({ formation });
 
@@ -53,6 +53,6 @@ export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
     voeuxSélectionnés,
     établissementsSélectionnésParDéfaut,
     àLaRechercheDUnÉtablissement: setRechercheÉtablissement,
-    NB_SUGGESTIONS_MAX,
+    nombreSuggestionsMax: NB_SUGGESTIONS_MAX,
   };
 }

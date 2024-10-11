@@ -82,7 +82,7 @@ const InscriptionÉlèvePage = () => {
       case "/eleve/inscription/domaines":
         return i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN;
       case "/eleve/inscription/interets":
-        return i18n.ÉLÈVE.INTÊRETS.SÉLECTIONNE_AU_MOINS_UN;
+        return i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN;
       default:
         return (
           <>

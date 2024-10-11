@@ -29,7 +29,7 @@ const IntêretsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDe
           className="sr-only"
           id={légendeId}
         >
-          {i18n.ÉLÈVE.INTÊRETS.PARCOURS_INSCRIPTION.TITRE}
+          {i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE}
         </legend>
         <FiltresGroupésParCatégorie
           auChangementFiltresSélectionnés={auChangementFiltresSélectionnés}
