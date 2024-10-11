@@ -7,9 +7,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: MétiersFormProps) => {
   const {
     mettreÀJourÉlève,
-    situationMétiersOptions,
-    valeurSituationMétiers,
-    setValeurSituationMétiers,
+    situationMétiers,
     auChangementDesMétiersSélectionnés,
     métiersSuggérés,
     métiersSélectionnésParDéfaut,
@@ -24,12 +22,13 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) => setValeurSituationMétiers(valeur as SituationMétiersÉlève)}
+        auChangementValeurSélectionnée={(valeur) => situationMétiers.auChangement(valeur as SituationMétiersÉlève)}
         description={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
         légende={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
-        options={situationMétiersOptions}
+        options={situationMétiers.options}
+        status={situationMétiers.status}
       />
-      {valeurSituationMétiers === "quelques_pistes" && métiersSélectionnésParDéfaut && (
+      {situationMétiers.valeur === "quelques_pistes" && métiersSélectionnésParDéfaut && (
         <div className="mt-12">
           <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesMétiersSélectionnés}

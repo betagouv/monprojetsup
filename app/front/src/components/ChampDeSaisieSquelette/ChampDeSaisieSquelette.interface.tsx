@@ -1,3 +1,4 @@
+import { type StatusFormulaire } from "@/types/commons";
 import { type ReactNode } from "react";
 
 export type useChampDeSaisieSqueletteArgs = {
@@ -11,10 +12,7 @@ export type useChampDeSaisieSqueletteArgs = {
 export type ChampDeSaisieSqueletteProps = {
   id: string;
   entête: AvecTitre | SansTitre;
-  status?: {
-    type: "désactivé" | "erreur" | "succès";
-    message?: string;
-  };
+  status?: StatusFormulaire;
   placeholder?: string;
   obligatoire?: boolean;
   auChangement?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;

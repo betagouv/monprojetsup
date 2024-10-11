@@ -1,3 +1,5 @@
+import { type StatusFormulaire } from "@/types/commons";
+
 export type BoutonRadioRicheProps = {
   légende: string;
   description?: string;
@@ -8,10 +10,7 @@ export type BoutonRadioRicheProps = {
     pictogramme: string;
     cochéParDéfaut?: boolean;
   }>;
-  status?: {
-    type: "désactivé" | "erreur" | "succès";
-    message?: string;
-  };
+  status?: StatusFormulaire;
   auChangementValeurSélectionnée?: (valeur: string) => void;
   obligatoire?: boolean;
   registerHookForm?: {};

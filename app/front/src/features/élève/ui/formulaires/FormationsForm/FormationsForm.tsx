@@ -7,9 +7,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: FormationsFormProps) => {
   const {
     mettreÀJourÉlève,
-    situationFormationsOptions,
-    valeurSituationFormations,
-    setValeurSituationFormations,
+    situationFormations,
     auChangementDesFormationsSélectionnées,
     formationsSuggérées,
     formationsSélectionnéesParDéfaut,
@@ -24,11 +22,14 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
       onSubmit={mettreÀJourÉlève}
     >
       <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) => setValeurSituationFormations(valeur as SituationFormationsÉlève)}
+        auChangementValeurSélectionnée={(valeur) =>
+          situationFormations.auChangement(valeur as SituationFormationsÉlève)
+        }
         légende={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
-        options={situationFormationsOptions}
+        options={situationFormations.options}
+        status={situationFormations.status}
       />
-      {valeurSituationFormations === "quelques_pistes" && formationsSélectionnéesParDéfaut && (
+      {situationFormations.valeur === "quelques_pistes" && formationsSélectionnéesParDéfaut && (
         <div className="mt-12">
           <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesFormationsSélectionnées}

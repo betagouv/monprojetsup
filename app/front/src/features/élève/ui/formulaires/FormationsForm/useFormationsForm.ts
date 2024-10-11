@@ -9,6 +9,7 @@ import {
   rechercherFormationsQueryOptions,
   récupérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
+import { type StatusFormulaire } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -17,6 +18,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
 
   const [rechercheFormation, setRechercheFormation] = useState<string>();
   const [valeurSituationFormations, setValeurSituationFormations] = useState<SituationFormationsÉlève>();
+  const [statusSituationFormations, setStatusSituationFormations] = useState<StatusFormulaire>();
 
   const formationVersOptionFormation = useCallback((formation: Formation) => {
     return {
@@ -59,6 +61,8 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   }, [rechercheFormation, rechercherFormations]);
 
   useEffect(() => {
+    setStatusSituationFormations(undefined);
+
     if (!formationsSélectionnéesParDéfaut || valeurSituationFormations === "aucune_idee") {
       setValue(NOM_ATTRIBUT, []);
     }
@@ -94,13 +98,34 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     [valeurSituationFormations],
   );
 
+  const soumettreFormulaire = async (event?: React.BaseSyntheticEvent) => {
+    const nombreDeFormationsSélectionnées = getValues(NOM_ATTRIBUT)?.length;
+
+    if (
+      valeurSituationFormations === "quelques_pistes" &&
+      (!nombreDeFormationsSélectionnées || nombreDeFormationsSélectionnées === 0)
+    ) {
+      event?.preventDefault();
+      setStatusSituationFormations({
+        type: "erreur",
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_UNE} ${i18n.COMMUN.FORMATION.toLocaleLowerCase()}`,
+      });
+      return;
+    }
+
+    await mettreÀJourÉlève(event);
+  };
+
   return {
-    mettreÀJourÉlève,
+    mettreÀJourÉlève: soumettreFormulaire,
     erreurs,
     register,
-    situationFormationsOptions,
-    valeurSituationFormations,
-    setValeurSituationFormations,
+    situationFormations: {
+      valeur: valeurSituationFormations,
+      status: statusSituationFormations,
+      options: situationFormationsOptions,
+      auChangement: setValeurSituationFormations,
+    },
     formationsSuggérées: formations?.map(formationVersOptionFormation) ?? [],
     formationsSélectionnéesParDéfaut: formationsSélectionnéesParDéfaut?.map(formationVersOptionFormation),
     rechercheFormationsEnCours,

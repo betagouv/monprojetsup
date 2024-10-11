@@ -1,3 +1,5 @@
+import { type StatusFormulaire } from "@/types/commons";
+
 export type BoutonRadioProps = {
   légende: string;
   description?: string;
@@ -6,10 +8,7 @@ export type BoutonRadioProps = {
     label: string;
     description?: string;
   }>;
-  status?: {
-    type: "désactivé" | "erreur" | "succès";
-    message?: string;
-  };
+  status?: StatusFormulaire;
   obligatoire?: boolean;
   registerHookForm?: {};
 };

@@ -388,6 +388,8 @@ export const localeFR = {
     ERREURS_FORMULAIRES: {
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
+      AU_MOINS_UNE: "Tu dois indiquer au moins une",
+      AU_MOINS_UN: "Tu dois indiquer au moins un",
       VALEUR_INVALIDE: "La valeur saisie est invalide",
       AU_MOINS_X_CARACTÈRES: "Saisie au moins",
       MOINS_DE_X_CARACTÈRES: "Tu ne peux pas saisir plus de",
