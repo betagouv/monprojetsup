@@ -6,6 +6,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { rechercherMétiersQueryOptions, récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
+import { type StatusFormulaire } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -14,6 +15,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
 
   const [rechercheMétier, setRechercheMétier] = useState<string>();
   const [valeurSituationMétiers, setValeurSituationMétiers] = useState<SituationMétiersÉlève>();
+  const [statusSituationMétiers, setStatusSituationMétiers] = useState<StatusFormulaire>();
 
   const métierVersOptionMétier = useCallback((métier: Métier) => {
     return {
@@ -53,6 +55,8 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
   }, [rechercheMétier, rechercherMétiers]);
 
   useEffect(() => {
+    setStatusSituationMétiers(undefined);
+
     if (!métiersSélectionnésParDéfaut || valeurSituationMétiers === "aucune_idee") {
       setValue(NOM_ATTRIBUT, []);
     }
@@ -83,13 +87,34 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     [valeurSituationMétiers],
   );
 
+  const soumettreFormulaire = async (event?: React.BaseSyntheticEvent) => {
+    const nombreDeMétiersSélectionnés = getValues(NOM_ATTRIBUT)?.length;
+
+    if (
+      valeurSituationMétiers === "quelques_pistes" &&
+      (!nombreDeMétiersSélectionnés || nombreDeMétiersSélectionnés === 0)
+    ) {
+      event?.preventDefault();
+      setStatusSituationMétiers({
+        type: "erreur",
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.AU_MOINS_UN} ${i18n.COMMUN.MÉTIER.toLocaleLowerCase()}`,
+      });
+      return;
+    }
+
+    await mettreÀJourÉlève(event);
+  };
+
   return {
-    mettreÀJourÉlève,
+    mettreÀJourÉlève: soumettreFormulaire,
     erreurs,
     register,
-    situationMétiersOptions,
-    valeurSituationMétiers,
-    setValeurSituationMétiers,
+    situationMétiers: {
+      valeur: valeurSituationMétiers,
+      status: statusSituationMétiers,
+      options: situationMétiersOptions,
+      auChangement: setValeurSituationMétiers,
+    },
     métiersSuggérés: métiers?.map(métierVersOptionMétier) ?? [],
     métiersSélectionnésParDéfaut: métiersSélectionnésParDéfaut?.map(métierVersOptionMétier),
     rechercheMétiersEnCours,
