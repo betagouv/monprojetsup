@@ -40,6 +40,9 @@ class FormationEntity {
     @Column(name = "descriptif_attendu", nullable = true, columnDefinition = "text")
     var descriptifAttendus: String? = null
 
+    @Column(name = "type_formation", nullable = true)
+    var typeFormation: String? = null
+
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "formations_psup", nullable = true, columnDefinition = "varchar[]")
     var formationsAssociees: List<String>? = null
@@ -142,6 +145,7 @@ class FormationEntity {
     fun toFormation(): Formation {
         return Formation(
             id,
+            typeFormation.orEmpty(),
             label,
             labelDetails,
             capacite ?: -1,

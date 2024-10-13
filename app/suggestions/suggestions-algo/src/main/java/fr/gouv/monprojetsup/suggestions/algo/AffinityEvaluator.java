@@ -154,6 +154,7 @@ public class AffinityEvaluator {
         isInterestedinHealth = algo.isRelatedToHealth(nonZeroScores);
 
         //tag --> node --> distance
+        //noinspection DataFlowIssue
         pathesFromTagsIndexedByTarget =
                 nonZeroScores.stream()
                         .flatMap(
@@ -172,11 +173,11 @@ public class AffinityEvaluator {
      * computes affinity
      * @param fl key
      * @param inclureDetailsScores include scores details in result
-     * @return
+     * @return affinity
      */
     public Affinite getAffinityEvaluation(String fl, boolean inclureDetailsScores) {
         if (rejected.contains(fl)) return Affinite.getNoMatch();
-        return getScoreAndExplanation(fl, null, null, inclureDetailsScores);
+        return getAffinityAndExplanations(fl, null, null, inclureDetailsScores);
     }
 
 
@@ -211,7 +212,7 @@ public class AffinityEvaluator {
         var sortedExpl = new Explanations();
 
         //the computation
-        Affinite affinite = getScoreAndExplanation(fl, sortedExpl, subScores, true);
+        Affinite affinite = getAffinityAndExplanations(fl, sortedExpl, subScores, true);
 
         if (cfg.isVerbose() && subScores != null) {
             List<Explanation> expl2 = new ArrayList<>(sortedExpl.explanations);
@@ -219,7 +220,7 @@ public class AffinityEvaluator {
             //expl2.add(Explanation.getDebugExplanation("Score Total: " + df2.format(affinite.affinite())));
 
             StringBuilder calculScoreDetails = new StringBuilder();
-            calculScoreDetails.append("Score Total pour " + fl + " :");
+            calculScoreDetails.append("Score Total pour ").append(fl).append(" :");
             calculScoreDetails.append(df2.format(affinite.affinite()));
             calculScoreDetails.append(" obtenu comme le produit de [ ");
 
@@ -261,7 +262,7 @@ public class AffinityEvaluator {
      * @param subScores used to get debug info about what matched and how
      * @return the score
      */
-    private Affinite getScoreAndExplanation(
+    private Affinite getAffinityAndExplanations(
             String fl,
             Explanations expl,
             @Nullable Map<String, Double> subScores,
@@ -313,8 +314,8 @@ public class AffinityEvaluator {
         }
 
         double notSmallDiversity = getNotSmallDiversityScore(fl);
-        EnumMap<Affinite.SuggestionDiversityQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
-        quotas.put(Affinite.SuggestionDiversityQuota.OFFRE_FORMATION, notSmallDiversity);
+        EnumMap<Affinite.SuggestionQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionQuota.class);
+        quotas.put(Affinite.SuggestionQuota.OFFRE_FORMATION, notSmallDiversity);
 
         return new Affinite(score, includeScores ? scores : Map.of(), quotas);
     }
@@ -335,11 +336,7 @@ public class AffinityEvaluator {
 
     private double getMultiplier(String key, Double value) {
         val minMultiplier = cfg.minMultipliers().get(key);
-        if(minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
-        return getMultiplier(value, minMultiplier);
-    }
-
-    private double getMultiplier(double value, double minMultiplier) {
+        if (minMultiplier == null) throw new RuntimeException("Unknown key:" + key);
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;
     }
@@ -628,7 +625,7 @@ public class AffinityEvaluator {
             case "D" -> FULL_MATCH_MULTIPLIER;//pas du tout intéressé
             default -> FULL_MATCH_MULTIPLIER;
         };
-        if (expl != null && resultat > 0.5 && isApp) {
+        if (expl != null && (pf.apprentissage().equals("A") || pf.apprentissage().equals("B")) && isApp) {
             expl.add(Explanation.getAppExplanation(pf.apprentissage()));
         }
         return resultat;
@@ -685,7 +682,7 @@ public class AffinityEvaluator {
 
     /**
      * computes diversity score with respect to non small formations
-     * @param fl
+     * @param fl the key
      * @return the score
      */
     public double getNotSmallDiversityScore(String fl) {

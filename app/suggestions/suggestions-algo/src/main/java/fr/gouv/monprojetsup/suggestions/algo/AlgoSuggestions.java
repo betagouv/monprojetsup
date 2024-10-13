@@ -63,6 +63,8 @@ public class AlgoSuggestions {
     @Getter
     private final Edges edgesKeys = new Edges();
 
+    /* map les flcod vers les frcod */
+    private @NotNull Map<String, @NotNull String> typesFormations = new HashMap<>();
     /* les formations en apprentissage */
     private Set<String> apprentissage;
     /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
@@ -98,6 +100,8 @@ public class AlgoSuggestions {
                     codesSpecialites.put(Integer.toString(spe.idPsup()), spe.idPsup());//retrocompat pour experts métiers
                 }
         );
+
+        this.typesFormations = data.getTypesFormations();
 
         LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
         bacsWithSpecialites.addAll(data.getBacsWithAtLeastTwoSpecialites());
@@ -147,7 +151,6 @@ public class AlgoSuggestions {
         });
         edgesKeys.putAll(data.edgesDomainesMetiers(), true, Config.EDGES_DOMAINES_METIERS_WEIGHT);
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
-        //edgesKeys.putAll(data.edgesSecteursMetiers(), true, Config.EDGES_SECTEUR_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
 
 
@@ -195,7 +198,11 @@ public class AlgoSuggestions {
      * @param inclureScores if true, the scores are included in the result
      * @return the affinities
      */
-    public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(@NotNull ProfileDTO pf, @NotNull Config cfg, boolean inclureScores) {
+    public @NotNull List<Pair<String, Affinite>> getFormationsAffinities(
+            @NotNull ProfileDTO pf,
+            @NotNull Config cfg,
+            boolean inclureScores
+    ) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if (containsNothingPersonal(pf)) {
@@ -213,7 +220,7 @@ public class AlgoSuggestions {
                         ));
 
         //computing maximal score for etalonnage
-        double maxScore = affinites.values().stream().mapToDouble(Affinite::affinite).max().orElse(1.0) / Config.MAX_AFFINITY_PERCENT;
+        double maxScore = affinites.values().stream().mapToDouble(Affinite::affinite).max().orElse(1.0);
 
         if (maxScore <= NO_MATCH_SCORE) maxScore = 1.0;
 
@@ -230,7 +237,6 @@ public class AlgoSuggestions {
         affinites.entrySet().forEach(e -> e.setValue(Affinite.round(e.getValue(), finalMaxScore)));
         return affinites.entrySet().stream()
                 .map(Pair::of)
-                .sorted(Comparator.comparingDouble(p -> -p.getRight().affinite()))
                 .toList();
     }
 
@@ -240,28 +246,27 @@ public class AlgoSuggestions {
      * Get suggestions associated to a profile.
      *
      * @param pf  the profile
-     * @param cfg the config
      * @return the suggestions, each indexed with a score
      */
     public @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> getFormationsSuggestions(
             @NotNull ProfileDTO pf,
-            @NotNull Config cfg,
             boolean inclureScores) {
 
-        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(getFormationsAffinities(pf, cfg, inclureScores));
+        LinkedList<Pair<String, Affinite> > affinities = new LinkedList<>(
+                getFormationsAffinities(pf, data.getConfig(), inclureScores)
+        );
+        affinities.sort(Comparator.comparingDouble(p -> -p.getRight().affinite()));
 
-        //reordering with the following diversity rules
-        //the concatenation of the favoris and the suggestions shoudl include at most 1/3 rare formation
-        //the first should be adequate to bac
-
-        Map<Affinite.SuggestionDiversityQuota, Double> totals = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
+        Map<Affinite.SuggestionQuota, Double> totals = new EnumMap<>(Affinite.SuggestionQuota.class);
 
         @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> result = new ArrayList<>();
 
+        val config = data.getConfig();
+
         while(!affinities.isEmpty()) {
             int nb = result.size() + 1;
-            EnumMap<Affinite.SuggestionDiversityQuota, Double> minScoreForQuota = new EnumMap<>(Affinite.SuggestionDiversityQuota.class);
-            Affinite.quotas.forEach((k, v) -> minScoreForQuota.put(k,
+            EnumMap<Affinite.SuggestionQuota, Double> minScoreForQuotaSatisfaction = new EnumMap<>(Affinite.SuggestionQuota.class);
+            Affinite.quotas.forEach((k, v) -> minScoreForQuotaSatisfaction.put(k,
                     v * nb - totals.getOrDefault(k, 0.0))
             );
 
@@ -271,26 +276,51 @@ public class AlgoSuggestions {
 
             Map<String, Integer> nbQuotasSatisfied =
                     candidates.stream()
+                            .filter(p -> p.getRight().affinite() > NO_MATCH_SCORE)
                             .collect(Collectors.toMap(
                                     Pair::getLeft,
-                                    p -> p.getRight().getNbQuotasSatisfied(minScoreForQuota)
+                                    p -> p.getRight().getNbQuotasSatisfied(minScoreForQuotaSatisfaction)
                             ));
 
-            int maxNbQuotasSatisfied = nbQuotasSatisfied.values().stream().max(Integer::compareTo).orElse(0);
+            int maxNbQuotasSatisfied = nbQuotasSatisfied.values().stream().mapToInt(n -> n).max().orElse(0);
 
-            choice = candidates.stream()
+
+            //on sélectionne les 10 prochains candidats
+            val shortListStream = candidates.stream()
                     .filter(a -> nbQuotasSatisfied.getOrDefault(a.getLeft(), 0) >= maxNbQuotasSatisfied)
-                    .findFirst().orElse(null);
+                    .limit(config.DiversityShortListLength)
+                    ;
+
+            //on calcule la fréquence d'occurence de chaque type de formation dans les 10 derniers résultats
+            val typeFormationsCounters =
+                    result.stream().skip(Math.max(0, result.size() - config.DiversityShortListLength))
+                            .map(Pair::getLeft)
+                            .collect(Collectors.groupingBy(typesFormations::get, Collectors.counting()));
+
+            //on trie les 10 prochains candidats en fonction de leur afffinité,
+            //avec un malus multiplicatif pour celles qui sont déjà beaucoup apparues lors des 10 derniers résultats
+            val shortListSortedStream = shortListStream
+                    .sorted(Comparator.comparingDouble(
+                            a -> {
+                                val typeFormation = typesFormations.getOrDefault(a.getLeft(),"");
+                                val nbOccurences = typeFormationsCounters.getOrDefault(typeFormation, 0L);
+                                val diversityMalus = Math.pow(config.diversityMultiplicativeMalus, nbOccurences);
+                                val affiniteIncluantMalus = diversityMalus * a.getRight().affinite();
+                                return - affiniteIncluantMalus;
+                            }
+                    ));
+
+            choice = shortListSortedStream.findFirst().orElse(null);
 
             if (choice == null) {
-                //can happen when all scoresDiversiteResultats are zer
+                //can happen when all scoresDiversiteResultats are zero
                 choice = affinities.getFirst();
             }
 
             result.add(
                     Pair.of(
                             choice.getLeft(),
-                            choice.getRight().toMap()
+                            choice.getRight().toScoreDetailsMap()
                     )
             );
             affinities.remove(choice);
@@ -308,10 +338,9 @@ public class AlgoSuggestions {
      * Sort metiers by affinities
      * @param pf the profile
      * @param cles the keys
-     * @param cfg the config
      * @return the sorted metiers. Best first in the list, then second best and so on...
      */
-    public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles, @NotNull Config cfg) {
+    public List<String> sortMetiersByAffinites(@NotNull ProfileDTO pf, @Nullable Collection<String> cles) {
         counter.getAndIncrement();
         //rien de spécifique --> on ne suggère rien pour éviter les trucs généralistes
         if(containsNothingPersonal(pf)) {
@@ -328,7 +357,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, cfg, this).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, data.getConfig(), this).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -340,18 +369,16 @@ public class AlgoSuggestions {
      *
      * @param profile the profile
      * @param keys     the keys of the formations
-     * @param cfg     the config
      * @return the explanations and examples associated to the node
      */
     public List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> getExplanationsAndExamples(
             @Nullable ProfileDTO profile,
-            @NotNull List<String> keys,
-            @NotNull Config cfg
+            @NotNull List<String> keys
     ) {
         if(profile == null) {
             return List.of();
         }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, cfg, this);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this);
 
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
@@ -378,13 +405,13 @@ public class AlgoSuggestions {
         return apprentissage.contains(grp);
     }
 
+    private final ConcurrentHashMap< Pair<String,Integer>, List<Path> > pathes = new ConcurrentHashMap<>();
     /**
      * return s the set of pathes indexed by last node
      * @param n the node
      * @param maxDistance the max distance
-     * @return a map of pathes indexed by last node
+     * @return a list of pathes from nodes n with a distance less than maxDistance
      */
-    private ConcurrentHashMap< Pair<String,Integer>, List<Path> > pathes = new ConcurrentHashMap<>();
     public List<Path> computePathesFrom(String n, int maxDistance) {
         return pathes.computeIfAbsent(
                 Pair.of(n,maxDistance),
@@ -415,64 +442,64 @@ public class AlgoSuggestions {
     }
 
 
-    private ConcurrentHashMap<String,Ville> villes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String,Ville> villes = new ConcurrentHashMap<>();
     public Ville getVille(String nomVille) {
         return villes.computeIfAbsent(nomVille, z -> data.getVille(nomVille));
     }
 
 
-    private ConcurrentHashMap<Pair<String,Integer>, Map<String, Integer>> formationsSimilaires = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Pair<String,Integer>, Map<String, Integer>> formationsSimilaires = new ConcurrentHashMap<>();
     public Map<String, Integer> getFormationsSimilaires(String fl, int i) {
         return formationsSimilaires.computeIfAbsent(Pair.of(fl, i), z -> data.getFormationsSimilaires(fl, i));
     }
 
-    private ConcurrentHashMap<String, Integer> nbVoeux = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Integer> nbVoeux = new ConcurrentHashMap<>();
     public int getNbVoeux(String fl) {
         return nbVoeux.computeIfAbsent(fl, data::getNbVoeux);
     }
 
-    private ConcurrentHashMap<String, Integer> capacitoes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Integer> capacites = new ConcurrentHashMap<>();
     public int getCapacity(String fl) {
-        return capacitoes.computeIfAbsent(fl, data::getCapacity);
+        return capacites.computeIfAbsent(fl, data::getCapacity);
     }
 
-    private ConcurrentHashMap<Pair<String,String>, Integer> nbAdmis = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Pair<String,String>, Integer> nbAdmis = new ConcurrentHashMap<>();
     public Integer getNbAdmis(String grp, String tousBacsCodeMps) {
         return nbAdmis.computeIfAbsent(Pair.of(grp, tousBacsCodeMps), z -> data.getNbAdmis(grp, tousBacsCodeMps));
     }
 
-    private ConcurrentHashMap<Pair<String,String>, Pair<String, Middle50>> statsBac = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Pair<String,String>, Pair<String, Middle50>> statsBac = new ConcurrentHashMap<>();
     public @Nullable Pair<String, Middle50> getStatsBac(String fl, String bac) {
         return statsBac.computeIfAbsent(Pair.of(fl, bac), z -> data.getStatsBac(fl, bac));
     }
 
-    private ConcurrentHashMap<String, @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>>> voeuxCoords = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>>> voeuxCoords = new ConcurrentHashMap<>();
     public @NotNull List<@NotNull Pair<@NotNull String, @NotNull LatLng>> getVoeuxCoords(String fl) {
         return voeuxCoords.computeIfAbsent(fl, z -> data.getVoeuxCoords(fl));
     }
 
-    private ConcurrentHashMap<String, @NotNull Integer> durees = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, @NotNull Integer> durees = new ConcurrentHashMap<>();
     public int getDuree(String fl) {
         return durees.computeIfAbsent(fl, z -> data.getDuree(fl));
     }
 
-    private ConcurrentHashMap<String, @NotNull String> debugLabels = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, @NotNull String> debugLabels = new ConcurrentHashMap<>();
     public String getDebugLabel(String key) {
         return debugLabels.computeIfAbsent(key, z -> data.getDebugLabel(key));
     }
 
-    private ConcurrentHashMap<Pair<String,Integer>, Double> statsSpecialites = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Pair<String,Integer>, Double> statsSpecialites = new ConcurrentHashMap<>();
     public Double getStatsSpecialite(String fl, Integer iMtCod) {
         return statsSpecialites.computeIfAbsent(Pair.of(fl, iMtCod), z -> data.getStatsSpecialite(fl, iMtCod));
     }
 
-    private ConcurrentHashMap<String, Collection<String>> candidatsMetiers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Collection<String>> candidatsMetiers = new ConcurrentHashMap<>();
     public Collection<String> getAllCandidatesMetiers(String key) {
         return candidatsMetiers.computeIfAbsent(key, z -> data.getAllCandidatesMetiers(key));
     }
 
 
-    private ConcurrentHashMap<String, List<String>> formationIds = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<String>> formationIds = new ConcurrentHashMap<>();
     private List<String> getFormationIds() {
         return formationIds.computeIfAbsent( "", z->data.getFormationIds());
     }

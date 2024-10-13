@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.suggestions.services;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
 import fr.gouv.monprojetsup.suggestions.dto.GetAffinitiesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,11 @@ public class GetSuggestionsService extends MySuggService<GetAffinitiesServiceDTO
 
         @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> suggestions = algo.getFormationsSuggestions(
                 req.profile(),
-                SuggestionServer.getConfig().getSuggFilConfig(),
                 Objects.requireNonNullElse(req.inclureScores(), true)
         );
         List<String> metiers = algo.sortMetiersByAffinites(
                 req.profile(),
-                null,
-                SuggestionServer.getConfig().getSuggFilConfig()
+                null
         );
 
         return new GetAffinitiesServiceDTO.Response(suggestions, metiers);

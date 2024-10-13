@@ -9,18 +9,23 @@ import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
 import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.Constants;
+import fr.gouv.monprojetsup.suggestions.algo.Config;
+import fr.gouv.monprojetsup.suggestions.port.ConfigPort;
 import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
 import fr.gouv.monprojetsup.suggestions.port.MatieresPort;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
+import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,6 +42,7 @@ import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
 
 @Component
+@Service
 public class SuggestionsData {
 
     private static final int DUREE_DEFAULT_VALUE = 3;
@@ -46,6 +52,7 @@ public class SuggestionsData {
     private final FormationsMetiersPort formationsMetierPort;
     private final MatieresPort matieresPort;
     private final VillesPort villesPort;
+    private final ConfigPort configPort;
 
     @Autowired
     public SuggestionsData(
@@ -54,7 +61,8 @@ public class SuggestionsData {
             FormationsPort formationsPort,
             MatieresPort matieresPort,
             VillesPort villesPort,
-            FormationsMetiersPort formationsMetierPort
+            FormationsMetiersPort formationsMetierPort,
+            ConfigPort configPort
             ) {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
@@ -62,10 +70,25 @@ public class SuggestionsData {
         this.matieresPort = matieresPort;
         this.villesPort = villesPort;
         this.formationsMetierPort = formationsMetierPort;
+        this.configPort = configPort;
+        val config = configPort.retrieveActiveConfig();
+        if(config == null) {
+            this.config = new Config();
+            configPort.setActiveConfig(this.config);
+        }
     }
 
+    @Getter
+    private @NotNull Config config;
 
-
+    @Scheduled(fixedDelay = 1000) // Every second
+    private void refreshConfig() {
+        // Fetch the latest config from a database, external service, or file
+        val config = configPort.retrieveActiveConfig();
+        if(config != null) {
+            this.config = config;
+        }
+    }
 
     public @NotNull String getLabel(@NotNull String key) {
         return labelsPort.retrieveLabel(key).orElse(key);
@@ -290,6 +313,13 @@ public class SuggestionsData {
         return p50(
                 formationsPort.retrieveFormations().values().stream().map(Formation::nbVoeux).toList()
         );
+    }
+
+    public Map<String, String> getTypesFormations() {
+        return formationsPort.retrieveFormations().values().stream().collect(Collectors.toMap(
+                Formation::id,
+                Formation::typeFormation
+        ));
     }
 
 }

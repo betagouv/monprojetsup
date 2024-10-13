@@ -26,20 +26,15 @@ public final class Config {
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
     public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
     public static final double METIER_BONUS_TAG_MULTIPLIER = 2.0;
-    static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
-    //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
     static final double EDGES_FORMATIONS_DOMAINES_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse un peu au domaine
     static final double EDGES_DOMAINES_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au domaine, je m'intéresse à la formation
     static final double EDGES_METIERS_FORMATIONS_WEIGHT = 1.0;//sachant que je m'intéresse au métier, je m'intéresse à la formation
     static final double EDGES_FORMATIONS_METIERS_WEIGHT = 0.01;//sachant que je m'intéresse à la formation, je m'intéresse peut-être au métier
     static final double EDGES_DOMAINES_METIERS_WEIGHT = 0.01;
-
     static final double EDGES_INTERETS_METIERS_WEIGHT = 0.001;
-    static final double EDGES_SECTEUR_METIERS_WEIGHT = 0.01;
     static final double EDGES_METIERS_ASSOCIES_WEIGHT = 0.10;
     static final String NOTHING_PERSONAL = "Nothing personal in the profile, serving nothing.";
-    static final double MAX_AFFINITY_PERCENT = 0.90;
     static final double ZERO_ADMISSIBILITY = 0.001;
     static final double ADMISSIBILITY_10 = 0.1;//at the first décile
     static final double ADMISSIBILITY_25 = 0.3;//at the 25 and 75 quartile
@@ -51,14 +46,18 @@ public final class Config {
 
     @Getter
     @Setter
+    public long DiversityShortListLength = 10L;
+    @Getter
+    @Setter
+    public double diversityMultiplicativeMalus = 0.2;
+
+    @Getter
+    @Setter
     private int verbosityLevel = 0;
 
     @Getter
     @Setter
     private boolean useAutoEvalMoyGen = false;
-
-    public Config() {
-    }
 
     public static final String BONUS_APPRENTISSAGE = "app";
     public static final String BONUS_TAGS = "tags";
@@ -105,17 +104,6 @@ public final class Config {
             entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES)
     ));
     @JsonIgnore
-    private final transient Map<String, Integer> orderInExplanations = new HashMap<>(Map.ofEntries(
-            entry(BONUS_TAGS, 1),
-            entry(BONUS_TYPE_BAC, 2),
-            entry(BONUS_DURATION, 3),
-            entry(BONUS_APPRENTISSAGE, 4),
-            entry(BONUS_GEO, 5),
-            entry(BONUS_SIM, 6),
-            entry(BONUS_MOY_GEN, 7),
-            entry(BONUS_SPECIALITE, 8)
-    ));
-    @JsonIgnore
     private final transient List<String> personalCriteria = new ArrayList<>(
             List.of(BONUS_TAGS, BONUS_SIM)
     );
@@ -131,9 +119,12 @@ public final class Config {
         return personalCriteria;
     }
 
+    @JsonIgnore
     public boolean isVerbose() {
         return verbosityLevel >= 1;
     }
+
+    @JsonIgnore
     public boolean isVeryVerbose() {
         return verbosityLevel >= 2;
     }

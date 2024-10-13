@@ -10,6 +10,7 @@ import java.util.List;
 public record Formation(
 
         @NotNull String id,
+        @NotNull String typeFormation,
         @NotNull String label,
         @Nullable String labelDebug,
         int capacite,
@@ -21,10 +22,6 @@ public record Formation(
         @NotNull List<@NotNull String> filieresPsup
 
         ) {
-
-    public List<String> getVoeuxIds() {
-        return voeux.stream().map(Voeu::id).toList();
-    }
 
     public List<Pair<String, LatLng>> getVoeuxCoords() {
         return voeux.stream().map(v -> Pair.of(v.id(), v.coords())).toList();
