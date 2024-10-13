@@ -1,12 +1,16 @@
 package fr.gouv.monprojetsup.data.etl
 
-import fr.gouv.monprojetsup.data.model.*
+import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.model.Candidat
+import fr.gouv.monprojetsup.data.model.Matiere
+import fr.gouv.monprojetsup.data.model.StatsFormation
+import fr.gouv.monprojetsup.data.model.Ville
+import fr.gouv.monprojetsup.data.model.Voeu
 import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse
 import fr.gouv.monprojetsup.data.model.bacs.Bac
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers
-import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
-import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
+import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 
 
 interface MpsDataPort {
@@ -47,4 +51,5 @@ interface MpsDataPort {
     fun getMpsIdToIdeoIds(): Map<String, List<String>>
 
     fun exportDiagnostics()
+    fun getFormationToTypeformation(): Map<String,String>
 }

@@ -1,9 +1,8 @@
 package fr.gouv.monprojetsup.suggestions.services;
 
-import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.algo.AlgoSuggestions;
+import fr.gouv.monprojetsup.suggestions.dto.GetExplanationsAndExamplesServiceDTO;
 import fr.gouv.monprojetsup.suggestions.server.MySuggService;
-import fr.gouv.monprojetsup.suggestions.server.SuggestionServer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +29,7 @@ public class GetExplanationsAndExamplesService extends MySuggService<GetExplanat
         List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> eae
                 = algo.getExplanationsAndExamples(
                         req.profile(),
-                        req.keys(),
-                        SuggestionServer.getConfig().getSuggFilConfig()
+                        req.keys()
         );
         return new GetExplanationsAndExamplesServiceDTO.Response( eae);
     }

@@ -13,6 +13,7 @@ import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
 import fr.gouv.monprojetsup.data.Constants.PASS_MOT_CLE
 import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
+import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.isFiliere
 import fr.gouv.monprojetsup.data.Constants.isMetier
 import fr.gouv.monprojetsup.data.Constants.mpsIdToGFlCod
@@ -66,7 +67,7 @@ import java.util.logging.Logger
 
 
 @Component
-class MpsDataFiles(
+class MpsDataFromFiles(
     private val dataSources: DataSources
 ) : MpsDataPort {
 
@@ -78,7 +79,7 @@ class MpsDataFiles(
     private var specialites : Specialites? = null
     private var formationsMpsIds : List<String>? = null
 
-    private val logger: Logger = Logger.getLogger(MpsDataFiles::class.java.simpleName)
+    private val logger: Logger = Logger.getLogger(MpsDataFromFiles::class.java.simpleName)
     @PostConstruct
     private fun load() {
         logger.info("Chargement de " + dataSources.getSourceDataFilePath(
@@ -87,7 +88,7 @@ class MpsDataFiles(
             dataSources.getSourceDataFilePath(DataSources.BACK_PSUP_DATA_FILENAME),
             PsupData::class.java
         )
-        psupData.initDurees();
+        psupData.initDurees()
         statistiques = psupData.buildStats()
 
         logger.info("Chargement des données Onisep et Rome")
@@ -154,6 +155,22 @@ class MpsDataFiles(
         exportResumesManquants()
         exportLiens()
     }
+
+    override fun getFormationToTypeformation(): Map<String, String> {
+        val result = HashMap<String, String>()
+        psupData.formations.filieres.values.forEach{ f ->
+            result[gFlCodToMpsId(f.gFlCod)] = gFrCodToMpsId(f.gFrCod)
+            if(f.gFlCodeFi > 0) {
+                result[gFlCodToMpsId(f.gFlCodeFi)] = gFrCodToMpsId(f.gFrCod)
+            }
+            result[gFrCodToMpsId(f.gFrCod)] = gFrCodToMpsId(f.gFrCod)
+        }
+        getLasToGenericIdMapping().forEach { (las, generic) ->
+            result[las] = result.getOrDefault(generic, generic)
+        }
+        return result
+    }
+
     private fun exportLiens() {
         val ignorer = getLiensMpsIgnorer()
         val extras = getLiensMpsExtras()
@@ -800,7 +817,7 @@ class MpsDataFiles(
             var duree = psupData.getDuree(id, mpsKeyToPsupKeys, lasKeys)
             if(duree == null && Constants.isPsupFiliere(id)) {
                 try {
-                    val codeFilierePsup = mpsIdToGFlCod(id);
+                    val codeFilierePsup = mpsIdToGFlCod(id)
                     val filiere = psupData.filieres()[codeFilierePsup]
                     if(filiere != null) {
                         duree = psupData.getDuree(filiere)

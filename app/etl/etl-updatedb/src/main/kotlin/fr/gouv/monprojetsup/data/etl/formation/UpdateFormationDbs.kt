@@ -89,6 +89,7 @@ class UpdateFormationDbs(
          val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
          val apprentissage = mpsDataPort.getApprentissage()
          val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
+         val formationToTypeformation = mpsDataPort.getFormationToTypeformation()
          val voeux = mpsDataPort.getVoeux()
          val debugLabels = mpsDataPort.getDebugLabels()
          val capacitesAccueil = mpsDataPort.getCapacitesAccueil()
@@ -105,6 +106,7 @@ class UpdateFormationDbs(
              entity.id = id
              val label = labels[id] ?: throw RuntimeException("Pas de label pour la formation $id")
              entity.label = label
+             entity.typeFormation = formationToTypeformation.getOrDefault(id, id)
              entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(id).orEmpty()
              entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(id).orEmpty()
              entity.descriptifAttendus = attendus[id].orEmpty()
