@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
+import static fr.gouv.monprojetsup.data.Constants.isMetier;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_10;
@@ -569,7 +570,12 @@ public class AffinityEvaluator {
                         Map.Entry::getKey,
                         e -> getSubScoreOfPathList(e.getValue())
                 ));
-        double score = subscores.values().stream().mapToDouble(x -> x).sum() / Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT;
+        double score
+                = subscores.entrySet().stream()
+                .mapToDouble(e -> applySourceTypeBonusTagMultipliers(e.getKey(), e.getValue())).sum();
+
+        score  = score / Config.MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT;
+
         score = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, score));
 
         if (expl != null) {
@@ -593,6 +599,11 @@ public class AffinityEvaluator {
                     .distinct().forEach(fl -> expl.add(Explanation.getSimilarityExplanation(fl, 50)));
         }
         return score;
+    }
+
+    private double applySourceTypeBonusTagMultipliers(String key, Double value) {
+        if(isMetier(key)) return Config.METIER_BONUS_TAG_MULTIPLIER * value;
+        else return value;
     }
 
     private String getTagSubScoreExplanation(double score, Map<String, Double> subscores) {
