@@ -25,6 +25,7 @@ public final class Config {
     public static final int MAX_DISTANCE = 3;
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
     public static final double DISTANCE_KM_FOR_MAX_SCORE = 10.0;
+    public static final double METIER_BONUS_TAG_MULTIPLIER = 2.0;
     static final int MAX_LENGTH_FOR_SUGGESTIONS = 3;
     //because LAS informatique is a plus but not the canonical path to working as a surgeon for example
     static final double LASS_TO_PASS_INHERITANCE_PENALTY = 0.25;
