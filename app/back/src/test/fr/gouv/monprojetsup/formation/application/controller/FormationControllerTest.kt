@@ -249,6 +249,7 @@ class FormationControllerTest(
                                 ),
                         ),
                 ),
+            apprentissage = true,
         )
 
     val ficheFormationSansProfil =
@@ -334,6 +335,7 @@ class FormationControllerTest(
                         ),
                     moyenneGeneraleDesAdmis = null,
                 ),
+            apprentissage = false,
         )
 
     private val metiersTriesParAffinites =
@@ -440,6 +442,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         voeux = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 ),
@@ -646,7 +649,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -772,7 +776,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -1020,7 +1025,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -1182,6 +1188,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         voeux = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 ),
@@ -1388,7 +1395,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -1514,7 +1522,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -1851,7 +1860,8 @@ class FormationControllerTest(
                                 "liens": []
                               }
                             ],
-                            "tauxAffinite": 90
+                            "tauxAffinite": 90,
+                            "apprentissage": true
                           },
                           "explications": {
                             "geographique": [
@@ -2136,7 +2146,8 @@ class FormationControllerTest(
                                 "liens": []
                               }
                             ],
-                            "tauxAffinite": 90
+                            "tauxAffinite": 90,
+                            "apprentissage": true
                           },
                           "explications": {
                             "geographique": [
@@ -2344,7 +2355,8 @@ class FormationControllerTest(
                                 "liens": []
                               }
                             ],
-                            "tauxAffinite": null
+                            "tauxAffinite": null,
+                            "apprentissage": false
                           },
                           "explications": null
                         }
@@ -2849,6 +2861,7 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 )
@@ -3068,7 +3081,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -3243,7 +3257,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -3301,6 +3316,7 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 )
@@ -3520,7 +3536,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -3695,7 +3712,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -3933,7 +3951,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null
+                                "tauxAffinite": null,
+                                "apprentissage": false
                               },
                               "explications": null
                             },
@@ -4004,7 +4023,8 @@ class FormationControllerTest(
                                 ],
                                 "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
-                                "tauxAffinite": null
+                                "tauxAffinite": null,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -4063,6 +4083,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         voeux = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 )
@@ -4282,7 +4303,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -4408,7 +4430,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -4456,6 +4479,7 @@ class FormationControllerTest(
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
                         voeux = emptyList(),
+                        apprentissage = false,
                         explications = null,
                     ),
                 )
@@ -4675,7 +4699,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": 90
+                                "tauxAffinite": 90,
+                                "apprentissage": true
                               },
                               "explications": {
                                 "geographique": [
@@ -4801,7 +4826,8 @@ class FormationControllerTest(
                                   }
                                 ],
                                 "metiers": [],
-                                "tauxAffinite": 17
+                                "tauxAffinite": 17,
+                                "apprentissage": false
                               },
                               "explications": null
                             }
@@ -4984,7 +5010,8 @@ class FormationControllerTest(
                                     "liens": []
                                   }
                                 ],
-                                "tauxAffinite": null
+                                "tauxAffinite": null,
+                                "apprentissage": false
                               },
                               "explications": null
                             },
@@ -5006,7 +5033,8 @@ class FormationControllerTest(
                                 "voeux": [],
                                 "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
-                                "tauxAffinite": null
+                                "tauxAffinite": null,
+                                "apprentissage": false
                               },
                               "explications": null
                             }

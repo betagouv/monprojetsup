@@ -52,6 +52,7 @@ data class FormationAvecExplicationsDTO(
         val communesFavoritesAvecLeursVoeux: List<CommuneAvecSesVoeuxDTO>,
         val metiers: List<MetierDTO>,
         val tauxAffinite: Int?,
+        val apprentissage: Boolean,
     ) {
         constructor(ficheFormation: FicheFormation) : this(
             id = ficheFormation.id,
@@ -100,6 +101,7 @@ data class FormationAvecExplicationsDTO(
                 ficheFormation.criteresAnalyseCandidature.map {
                     CriteresAnalyseCandidatureDTO(it)
                 },
+            apprentissage = ficheFormation.apprentissage,
         )
 
         data class CriteresAnalyseCandidatureDTO(

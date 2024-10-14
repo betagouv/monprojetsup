@@ -17,7 +17,8 @@ VALUES ('fl0001',
             "nom": "Voir la fiche France Travail",
             "url": "https://candidat.francetravail.fr/formations/detail/3139962/true"
           }
-        ]'::jsonb);
+        ]'::jsonb,
+        false);
 
 INSERT INTO ref_formation
 VALUES ('fl0002',
@@ -29,7 +30,8 @@ VALUES ('fl0002',
         'Le Baccalauréat Professionnel, communément appelé Bac Pro, est un diplôme national de niveau 4 du système éducatif français. Il est conçu pour préparer les élèves à une insertion rapide et réussie dans le monde du travail tout en leur offrant la possibilité de poursuivre leurs études supérieures s''ils le souhaitent. Le Bac Pro se prépare généralement en trois ans après la classe de troisième, ou en deux ans après l''obtention d''un Certificat d''Aptitude Professionnelle (CAP).',
         '{fl0012}',
         ARRAY [13, 50, 12, 5, 15],
-        '[]'::jsonb);
+        '[]'::jsonb,
+        true);
 
 INSERT INTO ref_formation
 VALUES ('fl0003',
@@ -50,7 +52,8 @@ VALUES ('fl0003',
             "nom": "Voir les formations",
             "url": "https://www.culture.gouv.fr/Thematiques/Architecture/Formations-recherche-et-metiers/Les-formations-d-architecte-et-de-paysagiste/Les-cursus-et-les-diplomes/Les-ecoles-nationales-superieures-d-architecture"
           }
-        ]'::jsonb);
+        ]'::jsonb,
+        false);
 
 INSERT INTO ref_formation
 VALUES ('fl0005',
@@ -67,7 +70,8 @@ VALUES ('fl0005',
             "nom": "Voir la fiche Onisep",
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
           }
-        ]'::jsonb);
+        ]'::jsonb,
+        true);
 
 INSERT INTO ref_formation
 VALUES ('fl0004',
@@ -84,7 +88,7 @@ VALUES ('fl0004',
             "nom": "Voir la fiche Onisep",
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
           }
-        ]'::jsonb);
+        ]'::jsonb, false);
 
 INSERT INTO ref_formation
 VALUES ('fl0006',
@@ -101,4 +105,5 @@ VALUES ('fl0006',
             "nom": "Voir la fiche Onisep",
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire-de-l-art"
           }
-        ]'::jsonb);
+        ]'::jsonb,
+        true);

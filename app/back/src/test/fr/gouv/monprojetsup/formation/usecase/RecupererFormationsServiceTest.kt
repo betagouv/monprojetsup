@@ -103,6 +103,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = listOf("fl0004", "fl0003"),
                         liens = listOf(lien1, lien2),
                         valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
+                        apprentissage = true,
                     ),
                     Formation(
                         id = "fl0003",
@@ -114,6 +115,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = emptyList(),
                         liens = emptyList(),
                         valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
+                        apprentissage = false,
                     ),
                 )
             given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
@@ -262,6 +264,7 @@ class RecupererFormationsServiceTest {
                     voeux = voeuxPossiblesPourLaFormationFL0001,
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                     explications = explicationsFL0001,
+                    apprentissage = true,
                 )
             val ficheFormationFl0003 =
                 FicheFormation.FicheFormationPourProfil(
@@ -280,6 +283,7 @@ class RecupererFormationsServiceTest {
                     voeux = voeuxPossiblesPourLaFormationFL0003,
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0003,
                     explications = explicationsFL0003,
+                    apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
         }
@@ -315,6 +319,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = listOf("fl0004", "fl0003"),
                         liens = listOf(lien1, lien2),
                         valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
+                        apprentissage = true,
                     ),
                     Formation(
                         id = "fl0003",
@@ -326,6 +331,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = emptyList(),
                         liens = emptyList(),
                         valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
+                        apprentissage = false,
                     ),
                 )
             given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
@@ -444,6 +450,7 @@ class RecupererFormationsServiceTest {
                     voeux = voeuxFL0001,
                     voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
                     explications = explicationsFL0001,
+                    apprentissage = true,
                 )
             val ficheFormationFl0003 =
                 FicheFormation.FicheFormationPourProfil(
@@ -462,6 +469,7 @@ class RecupererFormationsServiceTest {
                     voeux = emptyList(),
                     voeuxParCommunesFavorites = emptyList(),
                     explications = null,
+                    apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
         }
@@ -487,6 +495,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = listOf("fl0004", "fl0003"),
                         liens = listOf(lien1, lien2),
                         valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
+                        apprentissage = true,
                     ),
                     Formation(
                         id = "fl0003",
@@ -498,6 +507,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = emptyList(),
                         liens = emptyList(),
                         valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
+                        apprentissage = false,
                     ),
                 )
             given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
@@ -576,6 +586,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     metiers = listOf(metier123, metier534),
                     voeux = voeuxPossiblesPourLaFormationFL0001,
+                    apprentissage = true,
                 )
             val ficheFormationFl0003 =
                 FicheFormation.FicheFormationSansProfil(
@@ -591,6 +602,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                     metiers = listOf(metier234, metier534),
                     voeux = voeuxPossiblesPourLaFormationFL0003,
+                    apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
         }
@@ -613,6 +625,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = listOf("fl0004", "fl0003"),
                         liens = listOf(lien1, lien2),
                         valeurCriteresAnalyseCandidature = listOf(0, 6, 14, 68, 12),
+                        apprentissage = true,
                     ),
                     Formation(
                         id = "fl0003",
@@ -624,6 +637,7 @@ class RecupererFormationsServiceTest {
                         formationsAssociees = emptyList(),
                         liens = emptyList(),
                         valeurCriteresAnalyseCandidature = listOf(10, 0, 40, 20, 30),
+                        apprentissage = false,
                     ),
                 )
             given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
@@ -687,6 +701,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     metiers = listOf(metier123, metier534),
                     voeux = voeuxPossiblesPourLaFormationFL0001,
+                    apprentissage = true,
                 )
             val ficheFormationFl0003 =
                 FicheFormation.FicheFormationSansProfil(
@@ -702,6 +717,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = null,
                     metiers = emptyList(),
                     voeux = emptyList(),
+                    apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
         }

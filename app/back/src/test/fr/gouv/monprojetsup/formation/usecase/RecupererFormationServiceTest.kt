@@ -91,6 +91,7 @@ class RecupererFormationServiceTest {
                     Lien(nom = "Voir sur Parcoursup", url = "https://www.parcoursup.fr/cap-fleuriste"),
                 ),
             valeurCriteresAnalyseCandidature = listOf(10, 0, 18, 42, 30),
+            apprentissage = true,
         )
 
     private val criteresAnalyseCandidature =
@@ -162,6 +163,7 @@ class RecupererFormationServiceTest {
                             CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
                     statistiquesDesAdmis = statistiquesDesAdmis,
+                    apprentissage = true,
                 ),
             )
         }
@@ -424,6 +426,7 @@ class RecupererFormationServiceTest {
                             CritereAnalyseCandidature(nom = "Motivation, connaissance", pourcentage = 30),
                         ),
                     statistiquesDesAdmis = statistiquesDesAdmis,
+                    apprentissage = true,
                 ),
             )
         }
