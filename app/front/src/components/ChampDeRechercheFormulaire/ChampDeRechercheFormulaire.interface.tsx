@@ -1,4 +1,5 @@
 import { type ChampDeSaisieSqueletteProps } from "@/components/ChampDeSaisieSquelette/ChampDeSaisieSquelette.interface";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 export type ChampDeRechercheFormulaireProps = {
   entête: ChampDeSaisieSqueletteProps["entête"];
@@ -8,5 +9,5 @@ export type ChampDeRechercheFormulaireProps = {
   placeholder?: ChampDeSaisieSqueletteProps["placeholder"];
   valeurParDéfaut?: string;
   obligatoire?: ChampDeSaisieSqueletteProps["obligatoire"];
-  registerHookForm?: {};
+  registerHookForm?: UseFormRegisterReturn;
 };

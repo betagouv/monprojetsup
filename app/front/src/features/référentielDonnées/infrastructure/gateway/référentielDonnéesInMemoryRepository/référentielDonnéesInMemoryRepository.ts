@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 

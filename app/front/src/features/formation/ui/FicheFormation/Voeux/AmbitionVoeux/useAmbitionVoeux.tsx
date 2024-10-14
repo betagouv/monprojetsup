@@ -31,9 +31,9 @@ export default function useAmbitionVoeux({ formationId }: useAmbitionVoeuxArgs) 
     const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formationId);
 
     if (formationFavorite && niveauAmbition === formationFavorite.niveauAmbition) {
-      mettreÀJourUneFormationFavorite(formationId, { niveauAmbition: null });
+      void mettreÀJourUneFormationFavorite(formationId, { niveauAmbition: null });
     } else {
-      mettreÀJourUneFormationFavorite(formationId, { niveauAmbition });
+      void mettreÀJourUneFormationFavorite(formationId, { niveauAmbition });
     }
   };
 

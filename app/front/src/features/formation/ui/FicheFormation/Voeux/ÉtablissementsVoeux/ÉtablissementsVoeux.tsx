@@ -1,7 +1,7 @@
+import useÉtablissementsVoeux from "./useÉtablissementsVoeux";
 import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
 import { type ÉtablissementsVoeuxProps } from "./ÉtablissementsVoeux.interface";
 import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
-import useÉtablissementsVoeux from "./useÉtablissementsVoeux";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Onglets from "@/components/Onglets/Onglets";

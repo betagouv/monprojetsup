@@ -1,3 +1,8 @@
+export type SélecteurMultipleOption = {
+  valeur: string;
+  label: string;
+};
+
 export type SélecteurMultipleProps = {
   label: string;
   texteOptionsSélectionnées: string;
@@ -9,11 +14,6 @@ export type SélecteurMultipleProps = {
   description?: string;
   optionsSélectionnéesParDéfaut?: SélecteurMultipleOption[];
   forcerRafraichissementOptionsSélectionnées?: boolean;
-};
-
-export type SélecteurMultipleOption = {
-  valeur: string;
-  label: string;
 };
 
 export type UseSélecteurMultipleArgs = {

@@ -3,18 +3,16 @@ module.exports = {
   env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',
-    'plugin:react-hooks/recommended',
     "plugin:sonarjs/recommended-legacy",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    "canonical/auto",
+    "canonical/react",
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', '*.gen.ts', 'api-mps.d.ts', 'i18next-generated.d.ts', 'public/dsfr'],
   parser: '@typescript-eslint/parser',
   plugins: [
     'react-refresh',
     "sonarjs",
-    "react-hooks",
     "import",
     "no-relative-import-paths",
     "testing-library"

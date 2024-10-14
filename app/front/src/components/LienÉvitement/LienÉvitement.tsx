@@ -1,11 +1,11 @@
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import { i18n } from "@/configuration/i18n/i18n";
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 import { useRouterState } from "@tanstack/react-router";
 
 const LienÉvitement = () => {
   const routerState = useRouterState();
-  const routeActuelle = routerState.location.pathname as keyof (typeof router)["routesByPath"];
+  const routeActuelle = routerState.location.pathname as Paths;
 
   return (
     <div className="fr-skiplinks">

@@ -11,7 +11,7 @@ export const resources = {
   },
 } as const;
 
-const i18n = use(initReactI18next).init({
+const i18next = use(initReactI18next).init({
   resources,
   ns: ["commun", "ficheFormation"],
   defaultNS,
@@ -21,4 +21,4 @@ const i18n = use(initReactI18next).init({
   },
 });
 
-export default i18n;
+export default i18next;

@@ -1,5 +1,5 @@
-import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOnglet.interface";
 import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
+import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOnglet.interface";
 import Bouton from "@/components/Bouton/Bouton";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import TagFiltre from "@/components/TagFiltre/TagFiltre";

@@ -1,12 +1,13 @@
 import { type StatusFormulaire } from "@/types/commons";
 import { type ReactNode } from "react";
 
-export type useChampDeSaisieSqueletteArgs = {
-  id: ChampDeSaisieSqueletteProps["id"];
-  status?: ChampDeSaisieSqueletteProps["status"];
-  placeholder?: ChampDeSaisieSqueletteProps["placeholder"];
-  obligatoire?: ChampDeSaisieSqueletteProps["obligatoire"];
-  auChangement?: ChampDeSaisieSqueletteProps["auChangement"];
+type AvecTitre = {
+  label: string;
+  description?: string;
+};
+
+type SansTitre = {
+  labelAccessibilité: string;
 };
 
 export type ChampDeSaisieSqueletteProps = {
@@ -19,11 +20,10 @@ export type ChampDeSaisieSqueletteProps = {
   children: ReactNode;
 };
 
-type AvecTitre = {
-  label: string;
-  description?: string;
-};
-
-type SansTitre = {
-  labelAccessibilité: string;
+export type useChampDeSaisieSqueletteArgs = {
+  id: ChampDeSaisieSqueletteProps["id"];
+  status?: ChampDeSaisieSqueletteProps["status"];
+  placeholder?: ChampDeSaisieSqueletteProps["placeholder"];
+  obligatoire?: ChampDeSaisieSqueletteProps["obligatoire"];
+  auChangement?: ChampDeSaisieSqueletteProps["auChangement"];
 };

@@ -1,6 +1,8 @@
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
+/* eslint-disable sonarjs/rules-of-hooks */
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import { étapesInscriptionÉlèveStore } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { Paths } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { useLayoutEffect, useState } from "react";
@@ -33,8 +35,8 @@ export default function useÉlèveRedirection() {
       const routesAutorisées = étapesInscription.slice(0, indexÉtapeNonRemplie + 1).map((étape) => étape.url);
       const urlDeRedirection = étapesInscription[indexÉtapeNonRemplie].url;
 
-      if (!routesAutorisées.includes(routerState.location.pathname as keyof (typeof router)["routesByPath"])) {
-        router.navigate({ to: urlDeRedirection });
+      if (!routesAutorisées.includes(routerState.location.pathname as Paths)) {
+        void router.navigate({ to: urlDeRedirection });
       }
     }
 

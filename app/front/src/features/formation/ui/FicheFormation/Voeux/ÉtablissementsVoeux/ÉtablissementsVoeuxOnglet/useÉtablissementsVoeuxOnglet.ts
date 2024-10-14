@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxOngletArgs } from "./ÉtablissementsVoeuxOnglet.interface";
 import { constantes } from "@/configuration/constantes";
 import { useEffect, useMemo, useState } from "react";
@@ -23,7 +24,7 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
   );
 
   useEffect(() => {
-    const rayonParDéfaut = établissementsParRayon.find(({ établissements: it }) => it.length)?.rayon || rayons[2];
+    const rayonParDéfaut = établissementsParRayon.find(({ établissements: it }) => it.length)?.rayon ?? rayons[2];
     setRayonSélectionné(rayonParDéfaut);
   }, [établissementsParRayon]);
 

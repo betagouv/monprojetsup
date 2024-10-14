@@ -116,8 +116,8 @@ test.describe("Inscription élève - Mes domaines", () => {
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
-      expect(testhelper.boutonDomaine(testhelper.DOMAINE_AUDIOVISUEL)).toBeVisible();
-      expect(testhelper.boutonDomaine(testhelper.DOMAINE_COMMERCE_VENTE)).toBeVisible();
+      await expect(testhelper.boutonDomaine(testhelper.DOMAINE_AUDIOVISUEL)).toBeVisible();
+      await expect(testhelper.boutonDomaine(testhelper.DOMAINE_COMMERCE_VENTE)).toBeVisible();
       expect(
         await testhelper.boutonDomaine(testhelper.DOMAINE_AUDIOVISUEL).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");

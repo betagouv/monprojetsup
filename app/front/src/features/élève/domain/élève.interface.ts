@@ -9,6 +9,15 @@ import { type components } from "@/types/api-mps";
 
 type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
+export type CommuneFavorite = Omit<Commune, "codePostal">;
+
+export type FormationFavorite = {
+  id: string;
+  niveauAmbition: 1 | 2 | 3 | null;
+  voeux: string[];
+  commentaire: string | null;
+};
+
 export type Élève = {
   situation: SituationÉlève | null;
   classe: ClasseÉlève | null;
@@ -23,15 +32,6 @@ export type Élève = {
   communesFavorites: CommuneFavorite[] | null;
   formationsFavorites: FormationFavorite[] | null;
   formationsMasquées: string[] | null;
-};
-
-export type CommuneFavorite = Omit<Commune, "codePostal">;
-
-export type FormationFavorite = {
-  id: string;
-  niveauAmbition: 1 | 2 | 3 | null;
-  voeux: string[];
-  commentaire: string | null;
 };
 
 export const situationÉlève = [

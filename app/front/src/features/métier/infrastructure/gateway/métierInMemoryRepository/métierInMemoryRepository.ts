@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { type MétierRepository } from "@/features/métier/infrastructure/métierRepository.interface";
 

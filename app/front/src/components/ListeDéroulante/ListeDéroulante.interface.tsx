@@ -1,4 +1,5 @@
 import { type StatusFormulaire } from "@/types/commons";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 export type ListeDéroulanteProps = {
   label: string;
@@ -7,5 +8,5 @@ export type ListeDéroulanteProps = {
   status?: StatusFormulaire;
   obligatoire?: boolean;
   valeurOptionSélectionnéeParDéfaut?: string;
-  registerHookForm?: {};
+  registerHookForm?: UseFormRegisterReturn;
 };

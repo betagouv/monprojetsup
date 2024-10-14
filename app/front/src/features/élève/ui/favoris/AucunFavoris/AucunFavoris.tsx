@@ -1,6 +1,7 @@
 import { catégorieAffichéeListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const AucunFavoris = () => {
@@ -15,11 +16,16 @@ const AucunFavoris = () => {
         {i18n.PAGE_FAVORIS.AUCUN_FAVORI.EMOJI}
       </div>
       <p className="fr-display--xs mb-0">{i18n.PAGE_FAVORIS.AUCUN_FAVORI.OUPS}</p>
-      <p className="fr-h3 mb-0">
-        {catégorieAffichée === "première"
-          ? i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_FORMATIONS
-          : i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_MÉTIERS}
-      </p>
+      <div className="*:mb-0">
+        <Titre
+          niveauDeTitre="h1"
+          styleDeTitre="h3"
+        >
+          {catégorieAffichée === "première"
+            ? i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_FORMATIONS
+            : i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_MÉTIERS}
+        </Titre>
+      </div>
       <div className="mt-5">
         <LienInterne
           ariaLabel={i18n.PAGE_FAVORIS.AUCUN_FAVORI.BOUTON}

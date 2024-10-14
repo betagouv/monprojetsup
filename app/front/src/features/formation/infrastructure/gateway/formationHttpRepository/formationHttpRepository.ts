@@ -70,7 +70,7 @@ export class formationHttpRepository implements FormationRepository {
         conseils: formationHttp.formation.descriptifConseils ?? null,
       },
       estEnAlternance: formationHttp.formation.apprentissage,
-      lienParcoursSup: formationHttp.formation.liens.find((lien) => lien.url.match(regexLienParcoursSup))?.url ?? null,
+      lienParcoursSup: formationHttp.formation.liens.find((lien) => regexLienParcoursSup.exec(lien.url))?.url ?? null,
       liens: formationHttp.formation.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       admis: {
         moyenneGénérale: {

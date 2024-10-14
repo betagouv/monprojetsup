@@ -1,7 +1,7 @@
 import { type useIntérêtsFormArgs } from "./IntérêtsForm.interface";
 import { centresIntérêtsValidationSchema } from "./IntérêtsForm.validation";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { useQuery } from "@tanstack/react-query";
 import { useId } from "react";
 

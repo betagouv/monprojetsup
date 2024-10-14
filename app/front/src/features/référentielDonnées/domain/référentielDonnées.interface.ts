@@ -1,17 +1,5 @@
 import { type components } from "@/types/api-mps";
 
-export type RéférentielDonnées = {
-  élève: {
-    situations: SituationÉlève[];
-    classes: ClasseÉlève[];
-    duréesÉtudesPrévue: DuréeÉtudesPrévueÉlève[];
-    alternances: AlternanceÉlève[];
-  };
-  bacs: Bac[];
-  centresIntérêts: CatégorieCentreIntérêt[];
-  domainesProfessionnels: CatégorieDomainesProfessionnels[];
-};
-
 export type SituationÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["situation"]>;
 export type ClasseÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["classe"]>;
 export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["dureeEtudesPrevue"]>;
@@ -58,4 +46,16 @@ export type CatégorieDomainesProfessionnels = {
   nom: string;
   emoji: string;
   sousCatégoriesdomainesProfessionnels: SousCatégorieDomaineProfessionnel[];
+};
+
+export type RéférentielDonnées = {
+  élève: {
+    situations: SituationÉlève[];
+    classes: ClasseÉlève[];
+    duréesÉtudesPrévue: DuréeÉtudesPrévueÉlève[];
+    alternances: AlternanceÉlève[];
+  };
+  bacs: Bac[];
+  centresIntérêts: CatégorieCentreIntérêt[];
+  domainesProfessionnels: CatégorieDomainesProfessionnels[];
 };

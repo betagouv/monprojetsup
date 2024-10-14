@@ -1,10 +1,10 @@
 import { type BacOptions, type ClasseOptions, type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
-import useMoyenneForm from "./useMoyenneScolaritéForm";
+import useMoyenneScolaritéForm from "./useMoyenneScolaritéForm";
 import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -38,7 +38,7 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
     [référentielDonnées],
   );
 
-  const moyenneScolaritéForm = useMoyenneForm({
+  const moyenneScolaritéForm = useMoyenneScolaritéForm({
     référentielDonnées,
     watch,
     setValue,

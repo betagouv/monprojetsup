@@ -4,11 +4,11 @@ import ListeEtAperçuContenu from "@/components/_layout/ListeEtAperçuLayout/Lis
 import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuLayout";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import { i18n } from "@/configuration/i18n/i18n";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import BarreLatéraleFavoris from "@/features/élève/ui/favoris/BarreLatéraleFavoris/BarreLatéraleFavoris";
-import ContenuFavoris from "@/features/élève/ui/favoris/ContenuFavoris/ContenuFavoris";
 import { récupérerFormationsQueryOptions } from "@/features/formation/ui/formationQueries";
 import { récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
+import BarreLatéraleFavoris from "@/features/élève/ui/favoris/BarreLatéraleFavoris/BarreLatéraleFavoris";
+import ContenuFavoris from "@/features/élève/ui/favoris/ContenuFavoris/ContenuFavoris";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
 const FavorisPage = () => {

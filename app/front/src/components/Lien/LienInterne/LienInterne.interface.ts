@@ -1,17 +1,14 @@
 import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 import { type ReactNode } from "react";
 
-type ParamètresPath<H> = H extends keyof (typeof router)["routesByPath"]
-  ? (typeof router)["routesByPath"][H]["types"]["allParams"]
-  : never;
+type ParamètresPath<H> = H extends Paths ? (typeof router)["routesByPath"][H]["types"]["allParams"] : never;
 
-type ParamètresSearch<H> = H extends keyof (typeof router)["routesByPath"]
-  ? (typeof router)["routesByPath"][H]["types"]["searchSchema"]
-  : never;
+type ParamètresSearch<H> = H extends Paths ? (typeof router)["routesByPath"][H]["types"]["searchSchema"] : never;
 
-export type LienInterneProps<H extends keyof (typeof router)["routesByPath"]> = {
+export type LienInterneProps<H extends Paths> = {
   children: ReactNode;
-  href: keyof (typeof router)["routesByPath"];
+  href: Paths;
   ariaLabel: string;
   hash?: string;
   paramètresPath?: ParamètresPath<H>;

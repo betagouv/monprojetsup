@@ -2,15 +2,17 @@ import DétailFormationPage from "@/features/formation/ui/DétailFormationPage/D
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-const ficheFormationSearchSchema = z.object({
-  recherche: z.string().optional(),
-  formation: z.string().optional(),
-});
+const ficheFormationSearchSchema = z
+  .object({
+    recherche: z.string().optional(),
+    formation: z.string().optional(),
+  })
+  .strict();
 
 export const Route = createFileRoute("/_auth/formations/")({
   component: DétailFormationPage,
   validateSearch: (searchParamètres) => ficheFormationSearchSchema.parse(searchParamètres),
-  loader: async ({ context: { queryClient } }) => {
+  loader: ({ context: { queryClient } }) => {
     queryClient.removeQueries({ queryKey: ["métiers"] });
     queryClient.removeQueries({ queryKey: ["formationsSuggestions"] });
     queryClient.removeQueries({ queryKey: ["formations"] });

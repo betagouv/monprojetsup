@@ -1,9 +1,9 @@
 import { i18n } from "@/configuration/i18n/i18n";
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 import { Link } from "@tanstack/react-router";
 
 const Navigation = () => {
-  const pages: Array<{ titre: string; href: keyof (typeof router)["routesByPath"] }> = [
+  const pages: Array<{ titre: string; href: Paths }> = [
     {
       titre: i18n.NAVIGATION.TABLEAU_DE_BORD,
       href: "/",

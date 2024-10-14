@@ -115,8 +115,8 @@ test.describe("Inscription élève - Mes centres intérêts", () => {
       await testhelper.revenirÀLÉtapePrécédente();
 
       // THEN
-      expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER)).toBeVisible();
-      expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_BRICOLER)).toBeVisible();
+      await expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER)).toBeVisible();
+      await expect(testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_BRICOLER)).toBeVisible();
       expect(
         await testhelper.boutonCentreIntérêt(testhelper.CENTRE_INTÉRÊT_VOYAGER).getAttribute(testhelper.BOUTON_APPUYÉ),
       ).toBe("true");

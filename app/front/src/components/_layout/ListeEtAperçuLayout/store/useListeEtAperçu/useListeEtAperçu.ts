@@ -1,7 +1,7 @@
 import {
-  type ÉlémentAffichéListeEtAperçuStore,
   type ListeEtAperçuStore,
   type ListeEtAperçuStoreState,
+  type ÉlémentAffichéListeEtAperçuStore,
 } from "./useListeEtAperçu.interface";
 import { create } from "zustand";
 

@@ -3,12 +3,12 @@ import { formationsValidationSchema } from "./FormationsForm.validation";
 import { type BoutonRadioRicheProps } from "@/components/BoutonRadioRiche/BoutonRadioRiche.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import {
   rechercherFormationsQueryOptions,
   récupérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type StatusFormulaire } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -41,7 +41,6 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
     if (formationIdsSélectionnéesParDéfaut && formationIdsSélectionnéesParDéfaut.length > 0) {
       setValeurSituationFormations("quelques_pistes");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -56,7 +55,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
 
   useEffect(() => {
     if (rechercheFormation && rechercheFormation.length >= 2) {
-      rechercherFormations();
+      void rechercherFormations();
     }
   }, [rechercheFormation, rechercherFormations]);
 

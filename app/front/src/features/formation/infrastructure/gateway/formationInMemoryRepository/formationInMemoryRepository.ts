@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 

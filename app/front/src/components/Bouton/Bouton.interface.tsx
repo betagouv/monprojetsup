@@ -3,7 +3,7 @@ import { type BoutonSqueletteProps } from "@/components/BoutonSquelette/BoutonSq
 export type BoutonProps = {
   label: BoutonSqueletteProps["label"];
   type: HTMLButtonElement["type"];
-  auClic?: () => void;
+  auClic?: () => Promise<void> | void;
   taille?: BoutonSqueletteProps["taille"];
   variante?: BoutonSqueletteProps["variante"];
   désactivé?: boolean;

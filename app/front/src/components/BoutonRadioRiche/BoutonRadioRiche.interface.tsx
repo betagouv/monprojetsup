@@ -1,4 +1,5 @@
 import { type StatusFormulaire } from "@/types/commons";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 export type BoutonRadioRicheProps = {
   légende: string;
@@ -13,5 +14,5 @@ export type BoutonRadioRicheProps = {
   status?: StatusFormulaire;
   auChangementValeurSélectionnée?: (valeur: string) => void;
   obligatoire?: boolean;
-  registerHookForm?: {};
+  registerHookForm?: UseFormRegisterReturn;
 };

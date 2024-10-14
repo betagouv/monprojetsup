@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 

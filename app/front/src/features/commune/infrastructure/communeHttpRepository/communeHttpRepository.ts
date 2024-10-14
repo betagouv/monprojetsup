@@ -14,7 +14,7 @@ export class communeHttpRepository implements CommuneRepository {
 
     if (!réponse) return undefined;
 
-    return réponse.features.map(this._mapperVersDomaine);
+    return réponse.features.map((commune) => this._mapperVersDomaine(commune));
   }
 
   private _mapperVersDomaine(commune: CommuneHttp): Commune {

@@ -11,7 +11,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   const classEnFonctionDeAfficherEnEntier = () => {
     if (afficherEnEntier) return "";
 
-    return `line-clamp-4`;
+    return "line-clamp-4";
   };
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
         className={`${classEnFonctionDeAfficherEnEntier()} mb-2`}
         ref={ref}
       >
-        {texte.replaceAll(/(<([^>]+)>)/gu, "")}
+        {texte}
       </p>
       {afficherBoutonLireLaSuite && (
         <button

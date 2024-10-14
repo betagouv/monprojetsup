@@ -1,9 +1,9 @@
 import { TestHelper } from "./testHelper";
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 import Axe from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
-const PAGES_PATH: Array<keyof (typeof router)["routesByPath"]> = [
+const PAGES_PATH: Array<Paths> = [
   "/",
   "/profil",
   "/eleve/inscription/projet",
@@ -23,7 +23,7 @@ class Test extends TestHelper {
     super(_page);
   }
 
-  public naviguerVersLaPage = async (path: keyof (typeof router)["routesByPath"]) => {
+  public naviguerVersLaPage = async (path: Paths) => {
     await this.seConnecterCommeÉlèveAvecParcoursInscriptionTerminé();
     await this._page.goto(path, { waitUntil: "networkidle" });
     await new Promise((resolve) => {

@@ -3,7 +3,7 @@ import useScolaritéForm from "./useScolaritéForm";
 import CurseurCranté from "@/components/CurseurCranté/CurseurCranté";
 import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
-import { env } from "@/configuration/environnement";
+import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ScolaritéFormProps) => {
@@ -48,7 +48,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
           status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
         />
       </div>
-      {env.VITE_FF_MOYENNE_GENERALE && afficherChampMoyenne && (
+      {environnement.VITE_FF_MOYENNE_GENERALE && afficherChampMoyenne && (
         <div>
           <CurseurCranté
             auClicSurNeVeutPasRépondre={auClicSurNeVeutPasRépondreMoyenne}

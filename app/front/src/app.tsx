@@ -1,7 +1,7 @@
+/* eslint-disable import/no-unassigned-import */
 import "@/style/global.scss";
-// eslint-disable-next-line import/no-unassigned-import
 import "./configuration/i18n/i18next";
-import { àLaConnexionOIDCClientCallback, userManagerOIDCClient } from "./configuration/lib/oidc-client";
+import { userManagerOIDCClient, àLaConnexionOIDCClientCallback } from "./configuration/lib/oidc-client";
 import { queryClient } from "./configuration/lib/tanstack-query";
 import { router } from "./configuration/lib/tanstack-router";
 import { QueryClientProvider } from "@tanstack/react-query";
