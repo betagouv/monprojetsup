@@ -26,7 +26,7 @@ export default function useCommunesÉtudeForm({ getValues, setValue }: UseCommun
 
   useEffect(() => {
     if (rechercheCommune && rechercheCommune.length >= 3) {
-      rechercherCommunes();
+      void rechercherCommunes();
     }
   }, [rechercheCommune, rechercherCommunes]);
 
@@ -35,7 +35,7 @@ export default function useCommunesÉtudeForm({ getValues, setValue }: UseCommun
   const auChangementDesCommunesSélectionnées = (communesSélectionnées: SélecteurMultipleOption[]) => {
     setValue(
       "communesFavorites",
-      communesSélectionnées.map((commune) => JSON.parse(commune.valeur)),
+      communesSélectionnées.map((commune) => JSON.parse(commune.valeur) as CommuneFavorite),
     );
   };
 

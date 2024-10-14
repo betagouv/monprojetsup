@@ -1,5 +1,5 @@
-import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
 import { type Formation } from "@/features/formation/domain/formation.interface";
+import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
 
 export type ÉtablissementsVoeuxOngletProps = {
   formation: Formation;

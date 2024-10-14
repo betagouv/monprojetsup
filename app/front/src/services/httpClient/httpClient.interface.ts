@@ -1,11 +1,11 @@
-export type IHttpClient = {
-  récupérer: <O extends {}>(options: HttpClientOptions) => Promise<O | undefined>;
-};
-
 export type HttpClientOptions = {
-  body?: {};
+  body?: object;
   endpoint: string;
   méthode: "GET" | "POST";
   contentType?: string;
-  headers?: {};
+  headers?: object;
+};
+
+export type IHttpClient = {
+  récupérer: <O extends object>(options: HttpClientOptions) => Promise<O | undefined>;
 };

@@ -34,7 +34,7 @@ const ChampDeRechercheFormulaire = ({
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          àLaSoumission((event.target as unknown as HTMLInputElement[])?.[0]?.value);
+          void àLaSoumission((event.target as unknown as HTMLInputElement[])?.[0]?.value);
         }}
       >
         <div

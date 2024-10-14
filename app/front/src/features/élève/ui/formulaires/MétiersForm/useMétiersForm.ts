@@ -3,9 +3,9 @@ import { métiersValidationSchema } from "./MétiersForm.validation";
 import { type BoutonRadioRicheProps } from "@/components/BoutonRadioRiche/BoutonRadioRiche.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { rechercherMétiersQueryOptions, récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { type StatusFormulaire } from "@/types/commons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -35,7 +35,6 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
     if (métierIdsSélectionnésParDéfaut && métierIdsSélectionnésParDéfaut.length > 0) {
       setValeurSituationMétiers("quelques_pistes");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -50,7 +49,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
 
   useEffect(() => {
     if (rechercheMétier && rechercheMétier.length >= 2) {
-      rechercherMétiers();
+      void rechercherMétiers();
     }
   }, [rechercheMétier, rechercherMétiers]);
 

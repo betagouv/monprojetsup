@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxOngletToutesLesVillesArgs } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { constantes } from "@/configuration/constantes";
@@ -6,7 +7,7 @@ import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeu
 import Fuse from "fuse.js";
 import { useCallback, useMemo, useState } from "react";
 
-export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
+export default function useÉtablissementsVoeuxOngletToutesLesVilles({
   formation,
 }: UseÉtablissementsVoeuxOngletToutesLesVillesArgs) {
   const { mettreÀJourLesVoeux, voeuxSélectionnés } = useÉtablissementsVoeux({ formation });

@@ -5,8 +5,8 @@ import FilAriane from "@/components/FilAriane/FilAriane";
 import Onglets from "@/components/Onglets/Onglets";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
 import { useRouterState } from "@tanstack/react-router";
 
 const ProfilÉlève = () => {

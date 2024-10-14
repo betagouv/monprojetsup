@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 
@@ -24,7 +25,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     const élève = sessionStorage.getItem(this._SESSION_STORAGE_PREFIX);
 
     if (élève) {
-      this._élève = JSON.parse(élève);
+      this._élève = JSON.parse(élève) as Élève;
     } else {
       sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(this._élève));
     }

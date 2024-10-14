@@ -1,9 +1,9 @@
+import useCommunesÉtudeForm from "./useCommunesÉtudeForm";
 import { type AlternanceOptions, type DuréeÉtudesPrévueOptions, type UseÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
-import useCommunesÉtudeForm from "./useCommunesÉtudeForm";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseÉtudeFormArgs) {

@@ -1,15 +1,15 @@
-import { type UseSpécialitésFormArgs } from "./ScolaritéForm.interface";
+import { type UseSpécialitésScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { type SpécialitéBac } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import Fuse from "fuse.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export default function useSpécialitésForm({
+export default function useSpécialitésScolaritéForm({
   référentielDonnées,
   valeurBac,
   setValue,
   getValues,
-}: UseSpécialitésFormArgs) {
+}: UseSpécialitésScolaritéFormArgs) {
   const CHAMP_SPÉCIALITÉS = "spécialités";
   const [rechercheSpécialité, setRechercheSpécialité] = useState<string>("");
   const [spécialitésAssociéesAuBacSélectionné, setSpécialitésAssociéesAuBacSélectionné] = useState<SpécialitéBac[]>([]);

@@ -1,8 +1,8 @@
-import { type Élève } from "@/features/élève/domain/élève.interface";
 import {
   type AlternanceÉlève,
   type DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type UseFormGetValues, type UseFormSetValue } from "react-hook-form";
 
 export type ÉtudeFormProps = {

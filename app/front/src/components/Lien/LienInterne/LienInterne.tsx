@@ -1,9 +1,9 @@
 import { type LienInterneProps } from "./LienInterne.interface";
 import useLien from "@/components/Lien/useLien";
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 import { Link } from "@tanstack/react-router";
 
-const LienInterne = <H extends keyof (typeof router)["routesByPath"]>({
+const LienInterne = <H extends Paths>({
   children,
   ariaLabel,
   href,

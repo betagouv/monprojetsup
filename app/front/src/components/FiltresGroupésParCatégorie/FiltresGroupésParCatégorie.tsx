@@ -25,11 +25,6 @@ const FiltresGroupésParCatégorie = ({
     setFiltreIdsSélectionnés(nouveauxFiltreIdsSélectionnés);
   };
 
-  const auChangementAppuieDUnFiltre = (estAppuyé: boolean, filtreId: string) => {
-    if (estAppuyé) ajouterFiltreIdSélectionné(filtreId);
-    else supprimerFiltreIdSélectionné(filtreId);
-  };
-
   const catégoriesOuvertesParDéfaut = catégories
     .filter((catégorie) => catégorie.filtres.some((filtre) => filtreIdsSélectionnés.includes(filtre.id)))
     .map((catégorie) => catégorie.nom);
@@ -94,7 +89,9 @@ const FiltresGroupésParCatégorie = ({
                   <TagFiltre
                     appuyéParDéfaut={filtreIdsSélectionnés.includes(filtre.id)}
                     ariaLabel={filtre.nom}
-                    auClic={(estAppuyé) => auChangementAppuieDUnFiltre(estAppuyé, filtre.id)}
+                    auClic={(estAppuyé) =>
+                      estAppuyé ? ajouterFiltreIdSélectionné(filtre.id) : supprimerFiltreIdSélectionné(filtre.id)
+                    }
                     emoji={filtre.emoji}
                   >
                     {filtre.nom}

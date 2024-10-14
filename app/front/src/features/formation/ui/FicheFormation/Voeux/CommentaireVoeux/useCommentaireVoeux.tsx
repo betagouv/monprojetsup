@@ -32,7 +32,7 @@ export default function useCommentaireVoeux({ formationId }: UseCommentaireVoeux
 
     setStatus(undefined);
 
-    mettreÀJourUneFormationFavorite(formationId, {
+    void mettreÀJourUneFormationFavorite(formationId, {
       commentaire: event.currentTarget.elements.commentairevoeux.value,
     });
   };

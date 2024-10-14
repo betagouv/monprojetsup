@@ -1,5 +1,5 @@
+import useÉtablissementsVoeuxOngletToutesLesVilles from "./useÉtablissementsVoeuxOngletToutesLesVilles";
 import { type ÉtablissemenentsVoeuxOngletToutesLesVillesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
-import useÉtablissemenentsVoeuxOngletToutesLesVilles from "./useÉtablissementsVoeuxOngletToutesLesVilles";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -10,7 +10,7 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: Établisseme
     établissementsSuggérés,
     établissementsSélectionnésParDéfaut,
     àLaRechercheDUnÉtablissement,
-  } = useÉtablissemenentsVoeuxOngletToutesLesVilles({ formation });
+  } = useÉtablissementsVoeuxOngletToutesLesVilles({ formation });
 
   return (
     <div className="grid gap-6">

@@ -1,4 +1,4 @@
-import type FilArianeProps from "./FilAriane.interface";
+import { FilArianeProps } from "./FilAriane.interface";
 import { i18n } from "@/configuration/i18n/i18n";
 import { Link } from "@tanstack/react-router";
 import { useId, useState } from "react";

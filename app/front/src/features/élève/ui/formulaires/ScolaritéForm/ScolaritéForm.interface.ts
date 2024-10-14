@@ -1,9 +1,9 @@
-import { type Élève } from "@/features/élève/domain/élève.interface";
 import {
   type Bac,
   type ClasseÉlève,
   type RéférentielDonnées,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type UseFormGetValues, type UseFormSetValue, type UseFormWatch } from "react-hook-form";
 
 export type ScolaritéFormProps = {
@@ -25,14 +25,14 @@ export type UseScolaritéFormArgs = {
   àLaSoumissionDuFormulaireAvecSuccès?: () => void;
 };
 
-export type UseSpécialitésFormArgs = {
+export type UseSpécialitésScolaritéFormArgs = {
   référentielDonnées?: RéférentielDonnées | null;
   valeurBac: Élève["bac"] | null;
   setValue: UseFormSetValue<Élève>;
   getValues: UseFormGetValues<Élève>;
 };
 
-export type UseMoyenneFormArgs = {
+export type UseMoyenneScolaritéFormArgs = {
   référentielDonnées?: RéférentielDonnées | null;
   watch: UseFormWatch<Élève>;
   setValue: UseFormSetValue<Élève>;

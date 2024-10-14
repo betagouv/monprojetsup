@@ -1,5 +1,5 @@
 import { type IMpsApiHttpClient } from "./mpsApiHttpClient.interface";
-import { env } from "@/configuration/environnement";
+import { environnement } from "@/configuration/environnement";
 import { type IHttpClient } from "@/services/httpClient/httpClient.interface";
 import { type paths } from "@/types/api-mps";
 
@@ -9,7 +9,7 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     private readonly _apiBaseUrl: string,
   ) {}
 
-  public get = async <O extends {}>(
+  public get = async <O extends object>(
     endpoint: keyof paths,
     paramètresDeRequête?: URLSearchParams,
   ): Promise<O | undefined> => {
@@ -24,7 +24,7 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
     });
   };
 
-  public post = async <O extends {}>(endpoint: keyof paths, body: {}): Promise<O | undefined> => {
+  public post = async <O extends object>(endpoint: keyof paths, body: object): Promise<O | undefined> => {
     return await this._httpClient.récupérer<O>({
       endpoint: `${this._apiBaseUrl}${endpoint}`,
       méthode: "POST",
@@ -37,11 +37,13 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
 
   private _récupérerJWT = (): string => {
     const sessionStorageOIDC = sessionStorage.getItem(
-      `oidc.user:${env.VITE_KEYCLOAK_ROYAUME_URL}:${env.VITE_KEYCLOAK_CLIENT_ID}`,
+      `oidc.user:${environnement.VITE_KEYCLOAK_ROYAUME_URL}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
     );
 
     if (!sessionStorageOIDC) return "";
 
-    return JSON.parse(sessionStorageOIDC).access_token ?? "";
+    const sessionStorageParsé = JSON.parse(sessionStorageOIDC) as unknown as { access_token: string | null };
+
+    return sessionStorageParsé.access_token ?? "";
   };
 }

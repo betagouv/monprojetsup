@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
 import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
@@ -15,7 +16,7 @@ export default function useÉtablissementsVoeux({ formation }: UseÉtablissement
   }, [formation.id, élève]);
 
   const mettreÀJourLesVoeux = (voeux: FormationFavorite["voeux"]) => {
-    mettreÀJourUneFormationFavorite(formation.id, {
+    void mettreÀJourUneFormationFavorite(formation.id, {
       voeux: [...voeux],
     });
   };

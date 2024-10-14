@@ -1,4 +1,5 @@
 import { type StatusFormulaire } from "@/types/commons";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 export type CaseÀCocherProps = {
   légende: string;
@@ -10,5 +11,5 @@ export type CaseÀCocherProps = {
   }>;
   status?: StatusFormulaire;
   obligatoire?: boolean;
-  registerHookForm?: {};
+  registerHookForm?: UseFormRegisterReturn;
 };

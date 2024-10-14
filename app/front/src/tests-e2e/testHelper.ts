@@ -5,7 +5,7 @@ export class TestHelper {
   public constructor(protected _page: Page) {}
 
   protected initialiserProfilÉlèveParDéfaut = async (profilÉlève: Partial<Élève>) => {
-    await this._page.context().addInitScript((argProfilÉlève) => {
+    await this._page.context().addInitScript((argumentsProfilÉlève) => {
       const élève: Élève = {
         situation: null,
         classe: null,
@@ -20,7 +20,7 @@ export class TestHelper {
         communesFavorites: null,
         formationsFavorites: null,
         formationsMasquées: null,
-        ...argProfilÉlève,
+        ...argumentsProfilÉlève,
       };
 
       window.sessionStorage.setItem("élève", JSON.stringify(élève));

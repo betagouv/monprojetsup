@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/function-return-type */
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
@@ -6,24 +7,24 @@ import IndicateurÉtapes from "@/components/IndicateurÉtapes/IndicateurÉtapes"
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
-import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
 import FormationsForm from "@/features/élève/ui/formulaires/FormationsForm/FormationsForm";
 import IntérêtsForm from "@/features/élève/ui/formulaires/IntérêtsForm/IntérêtsForm";
 import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ProjetForm from "@/features/élève/ui/formulaires/ProjetForm/ProjetForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
+import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
 import {
+  indexÉtapeActuelleInscriptionÉlèveStore,
   étapeActuelleInscriptionÉlèveStore,
   étapePrécédenteInscriptionÉlèveStore,
   étapesInscriptionÉlèveStore,
   étapeSuivanteInscriptionÉlèveStore,
-  indexÉtapeActuelleInscriptionÉlèveStore,
 } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
+import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
 const InscriptionÉlèvePage = () => {
   useSuspenseQuery(élèveQueryOptions);
@@ -35,8 +36,8 @@ const InscriptionÉlèvePage = () => {
   const indexÉtapeActuelle = indexÉtapeActuelleInscriptionÉlèveStore();
   const étapes = étapesInscriptionÉlèveStore();
 
-  const àLaSoumissionDuFormulaireAvecSuccès = () => {
-    navigate({ to: étapeSuivante?.url });
+  const àLaSoumissionDuFormulaireAvecSuccès = async () => {
+    await navigate({ to: étapeSuivante?.url });
   };
 
   if (!étapeActuelle) return null;
@@ -77,7 +78,7 @@ const InscriptionÉlèvePage = () => {
     }
   };
 
-  const préambuleÀAfficher = () => {
+  const préambuleÀAfficher = (): ReactNode => {
     switch (étapeActuelle?.url) {
       case "/eleve/inscription/domaines":
         return i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN;

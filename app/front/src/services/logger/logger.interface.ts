@@ -1,7 +1,7 @@
 export type ILogger = {
-  debug: (object: {}) => void;
-  error: (object: {}) => void;
-  info: (object: {}) => void;
-  trace: (object: {}) => void;
-  warn: (object: {}) => void;
+  debug: (object: unknown) => void;
+  error: (object: unknown) => void;
+  info: (object: unknown) => void;
+  trace: (object: unknown) => void;
+  warn: (object: unknown) => void;
 };

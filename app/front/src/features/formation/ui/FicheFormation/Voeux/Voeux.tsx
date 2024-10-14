@@ -1,7 +1,7 @@
 import AmbitionVoeux from "./AmbitionVoeux/AmbitionVoeux";
 import CommentaireVoeux from "./CommentaireVoeux/CommentaireVoeux";
-import ÉtablissementsVoeux from "./ÉtablissementsVoeux/ÉtablissementsVoeux";
 import { type VoeuxProps } from "./Voeux.interface";
+import ÉtablissementsVoeux from "./ÉtablissementsVoeux/ÉtablissementsVoeux";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";

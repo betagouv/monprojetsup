@@ -1,6 +1,6 @@
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
 
-export default interface FilArianeProps {
+export type FilArianeProps = {
   libelléPageCourante: string;
-  chemin: Array<{ nom: string; lien: keyof (typeof router)["routesByPath"] }>;
-}
+  chemin: Array<{ nom: string; lien: Paths }>;
+};

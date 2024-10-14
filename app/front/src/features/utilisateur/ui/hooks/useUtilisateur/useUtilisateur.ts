@@ -1,4 +1,4 @@
-import { env } from "@/configuration/environnement";
+import { environnement } from "@/configuration/environnement";
 import { queryClient } from "@/configuration/lib/tanstack-query";
 import { useSearch } from "@tanstack/react-router";
 import { useMemo } from "react";
@@ -17,7 +17,7 @@ export default function useUtilisateur() {
   };
 
   const récupérerInformationsUtilisateur = useMemo(() => {
-    if (env.VITE_TEST_MODE && paramètresURL?.simulerCompte === "expert") {
+    if (environnement.VITE_TEST_MODE && paramètresURL?.simulerCompte === "expert") {
       return {
         prénom: "hugo",
         nom: "expert",
@@ -26,7 +26,7 @@ export default function useUtilisateur() {
       };
     }
 
-    if (env.VITE_TEST_MODE) {
+    if (environnement.VITE_TEST_MODE) {
       return {
         prénom: "nina",
         nom: "élève",

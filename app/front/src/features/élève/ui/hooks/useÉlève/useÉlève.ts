@@ -1,5 +1,5 @@
 import { type UseÉlèveArgs } from "./useÉlève.interface";
-import { type Élève, type FormationFavorite } from "@/features/élève/domain/élève.interface";
+import { type FormationFavorite, type Élève } from "@/features/élève/domain/élève.interface";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -29,7 +29,7 @@ export default function useÉlève({ àLaSoumissionDuFormulaireAvecSuccès }: Us
         return formationFavorite;
       }) ?? [];
 
-    mettreÀJourÉlève({
+    await mettreÀJourÉlève({
       formationsFavorites: nouvellesFormationsFavorites,
     });
   };

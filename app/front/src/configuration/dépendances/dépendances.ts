@@ -1,13 +1,8 @@
-import { env } from "@/configuration/environnement";
+import { environnement } from "@/configuration/environnement";
 import { communeHttpRepository } from "@/features/commune/infrastructure/communeHttpRepository/communeHttpRepository";
 import { communeInMemoryRepository } from "@/features/commune/infrastructure/communeInMemoryRepository/communeInMemoryRepository";
 import { type CommuneRepository } from "@/features/commune/infrastructure/communeRepository.interface";
 import { RechercherCommunesUseCase } from "@/features/commune/usecase/RechercherCommunes";
-import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
-import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
-import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
-import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
-import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { type FormationRepository } from "@/features/formation/infrastructure/formationRepository.interface";
 import { formationHttpRepository } from "@/features/formation/infrastructure/gateway/formationHttpRepository/formationHttpRepository";
 import { formationInMemoryRepository } from "@/features/formation/infrastructure/gateway/formationInMemoryRepository/formationInMemoryRepository";
@@ -25,11 +20,17 @@ import { RéférentielDonnéesHttpRepository } from "@/features/référentielDon
 import { RéférentielDonnéesInMemoryRepository } from "@/features/référentielDonnées/infrastructure/gateway/référentielDonnéesInMemoryRepository/référentielDonnéesInMemoryRepository";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { RécupérerRéférentielDonnéesUseCase } from "@/features/référentielDonnées/usecase/RécupérerRéférentielDonnées";
+import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
+import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
+import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
+import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
+import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { HttpClient } from "@/services/httpClient/httpClient";
 import { Logger } from "@/services/logger/logger";
 import { MpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient";
 
 export class Dépendances {
+  // eslint-disable-next-line no-use-before-define
   private static instance: Dépendances;
 
   private readonly _logger: Logger;
@@ -73,22 +74,22 @@ export class Dépendances {
   private constructor() {
     this._logger = new Logger();
     this._httpClient = new HttpClient(this._logger);
-    this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, env.VITE_API_URL);
+    this._mpsApiHttpClient = new MpsApiHttpClient(this._httpClient, environnement.VITE_API_URL);
 
     // Repositories
-    this._référentielDonnéesRepository = env.VITE_TEST_MODE
+    this._référentielDonnéesRepository = environnement.VITE_TEST_MODE
       ? new RéférentielDonnéesInMemoryRepository()
       : new RéférentielDonnéesHttpRepository(this._mpsApiHttpClient);
-    this._élèveRepository = env.VITE_TEST_MODE
+    this._élèveRepository = environnement.VITE_TEST_MODE
       ? new ÉlèveSessionStorageRepository()
       : new ÉlèveHttpRepository(this._mpsApiHttpClient);
-    this._formationRepository = env.VITE_TEST_MODE
+    this._formationRepository = environnement.VITE_TEST_MODE
       ? new formationInMemoryRepository()
       : new formationHttpRepository(this._mpsApiHttpClient);
-    this._métierRepository = env.VITE_TEST_MODE
+    this._métierRepository = environnement.VITE_TEST_MODE
       ? new métierInMemoryRepository()
       : new métierHttpRepository(this._mpsApiHttpClient);
-    this._communeRepository = env.VITE_TEST_MODE
+    this._communeRepository = environnement.VITE_TEST_MODE
       ? new communeInMemoryRepository()
       : new communeHttpRepository(this._httpClient);
 

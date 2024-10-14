@@ -9,7 +9,8 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
-    port: 5_001, // Si changement, modifier le .env du repo pour faire correspondre le port
+    // Si changement, modifier le .env du repo pour faire correspondre le port
+    port: 5_001,
   },
   plugins: [react(), TanStackRouterVite()],
   css: {

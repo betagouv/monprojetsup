@@ -1,4 +1,10 @@
-import { type router } from "@/configuration/lib/tanstack-router";
+import { Paths } from "@/types/commons";
+
+type Étape = {
+  titreÉtape: string;
+  titre: string;
+  url: Paths;
+};
 
 export type InscriptionÉlèveStore = {
   étapes: Étape[];
@@ -9,10 +15,4 @@ export type InscriptionÉlèveStore = {
   actions: {
     définirÉtapeActuelle: (url: string) => void;
   };
-};
-
-type Étape = {
-  titreÉtape: string;
-  titre: string;
-  url: keyof (typeof router)["routesByPath"];
 };

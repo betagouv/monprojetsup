@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 
-export interface OngletsProps {
+export type OngletsProps = {
   onglets: Array<{ titre: string; contenu: ReactNode }>;
   ongletAffichéParDéfaut?: number;
   nomAccessible: string;
-}
+};
