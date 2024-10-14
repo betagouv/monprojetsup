@@ -19,6 +19,7 @@ class TestData {
         const val ECOLE_COMMERCE_PSUP_FR_COD: Int = 24
         const val CPGE_LETTRES_PSUP_FL_COD: Int = 31
         const val CPGE_LETTRE_IDEO_CODE: String = "FOR.1471"
+        const val L1_HISTOIRE_ART_IDEO_CODE: String = "FOR.4741"
         const val CUPGE_ECO_GESTION_PSUP_FR_COD: Int = 85
         const val CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD: Int = 83
         const val CUPGE_ECO_GESTION_PSUP_FL_COD1: Int = 984
@@ -36,9 +37,8 @@ class TestData {
 
         const val MET_DIR_HOTEL_IDEO = "MET.2"
         const val MET_TECH_FORGE_IDEO = "MET.550"
+        const val MET_COMMISSAIRE_PRISEUR_IDEO = "MET.673"
         const val MASTER_TOURISME = "FOR.10361"
-
-        const val PARIS_CODE_COMMUNE_INSEE = "75056"
 
         val psupToIdeoReference = mapOf(
             Constants.gFlCodToMpsId(BTS_AERONAUTIQUE_FL_COD_PSUP) to BTS_AERONAUTIQUE_IDEO_COD,

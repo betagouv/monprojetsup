@@ -56,5 +56,11 @@ class FormationsIdeoDuSupTest {
         assertThat(formationsIdeoDuSup.values.flatMap { f -> f.metiers }).allMatch { FormationIdeoDuSup.isIdeoMetierKey(it) }
     }
 
+    @Test
+    fun `Les formations ideo du sup incluent L1 - histoire de l'art et archéologie et cette formation est connectée a commissaire priseur`() {
+        assertThat(formationsIdeoDuSup).containsKey(TestData.L1_HISTOIRE_ART_IDEO_CODE)
+        val formation = formationsIdeoDuSup[TestData.L1_HISTOIRE_ART_IDEO_CODE]!!
+        assertThat(formation.metiers).contains(TestData.MET_COMMISSAIRE_PRISEUR_IDEO)
+    }
 
 }
