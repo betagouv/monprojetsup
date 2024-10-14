@@ -3,6 +3,7 @@ import AnimationChargement from "@/components/AnimationChargement/AnimationCharg
 import Badge from "@/components/Badge/Badge";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import BoutonsActionsFicheMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsFicheMétier";
@@ -36,8 +37,9 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
           taille="grand"
         />
       </div>
-      <hr className="mb-9 mt-5" />
+      <hr className="mb-3 mt-5" />
       <p className="grid gap-12">{métier.descriptif}</p>
+      <ListeLiensExternesSousFormeBouton liens={métier.liens} />
       {métier.formations.length > 0 && (
         <div className="mt-12">
           <div className="*:mb-4">
