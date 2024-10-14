@@ -3,6 +3,7 @@ import Badge from "@/components/Badge/Badge";
 import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoyenne/GraphiqueRépartitionMoyenne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import { useQuery } from "@tanstack/react-query";
@@ -18,8 +19,6 @@ const OngletCritèresFicheFormation = ({
   répartitionParBac,
   descriptifAttendus,
 }: OngletCritèresFicheFormationProps) => {
-  const POURCENTAGE_MIN_POUR_AFFICHER = 15;
-
   const { data: référentielDonnées } = useQuery(référentielDonnéesQueryOptions);
 
   return (
@@ -63,7 +62,7 @@ const OngletCritèresFicheFormation = ({
           <ul className="m-0 grid list-none justify-start gap-4 p-0">
             {trierTableauParPourcentage(critèresAnalyse).map((critère) => (
               <Fragment key={critère.nom}>
-                {critère.pourcentage >= POURCENTAGE_MIN_POUR_AFFICHER && (
+                {critère.pourcentage >= constantes.FICHE_FORMATION.POURCENTAGE_MIN_AFFICHAGE_CRITÈRES && (
                   <li className="grid grid-flow-col justify-start gap-2 font-medium">
                     <span
                       aria-hidden="true"
