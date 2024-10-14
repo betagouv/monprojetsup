@@ -14,7 +14,9 @@
     "test:watch": "npx vitest watch src --passWithNoTests",
     "lint": "npm run lint:eslint && npm run lint:tsc",
     "lint:eslint": "eslint --report-unused-disable-directives --max-warnings 0 './**/*.{ts,tsx}'",
-    "lint:tsc": "npx tsc"
+    "lint:tsc": "npx tsc",
+    "i18n-types": "npx i18next-resources-for-ts interface -i ./src/configuration/i18n/locales/ -o ./src/types/i18next-generated.d.ts",
+    "openapi-types": "npx openapi-typescript http://localhost:5002/v3/api-docs -o ./src/types/api-mps.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -23,16 +25,18 @@
     "@tanstack/react-query": "^5.56.2",
     "@tanstack/react-router": "^1.58.3",
     "fuse.js": "^7.0.0",
+    "i18next": "^23.16.0",
     "oidc-client-ts": "^3.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.53.0",
+    "react-i18next": "^15.0.3",
     "react-oidc-context": "^3.1.1",
+    "react-textarea-autosize": "^8.5.3",
     "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
-    "zustand": "^4.5.5",
-    "react-textarea-autosize": "^8.5.3"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

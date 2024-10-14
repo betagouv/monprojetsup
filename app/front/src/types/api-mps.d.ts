@@ -258,20 +258,19 @@ export interface components {
             /**
              * @description Domaines d'activité
              * @example [
-             *       "T_ITM_1054",
-             *       "T_ITM_1534",
-             *       "T_ITM_1248",
-             *       "T_ITM_1351"
+             *       "dom41",
+             *       "dom32",
+             *       "dom26"
              *     ]
              */
             domaines?: string[];
             /**
              * @description Centres d'intérêt
              * @example [
-             *       "T_ROME_609891024_T_IDEO2_4815",
-             *       "T_IDEO2_4822_T_IDEO2_4806",
-             *       "T_ROME_731379930_T_IDEO2_4812_T_ROME_803089798",
-             *       "T_ROME_2018646295_T_IDEO2_4814"
+             *       "ci16",
+             *       "ci27",
+             *       "ci6",
+             *       "ci11"
              *     ]
              */
             centresInterets?: string[];
@@ -417,15 +416,15 @@ export interface components {
             rel: string;
             href: string;
         };
-        MetierDTO: {
+        MetierAvecSesFormationsDTO: {
             id: string;
             nom: string;
             descriptif?: string;
             liens: components["schemas"]["LienDTO"][];
             formations: components["schemas"]["FormationCourteDTO"][];
         };
-        MetiersDTO: {
-            metiers: components["schemas"]["MetierDTO"][];
+        MetiersAvecSesFormationsDTO: {
+            metiers: components["schemas"]["MetierAvecSesFormationsDTO"][];
             liens: components["schemas"]["LienHateoasDTO"][];
         };
         MetierCourtDTO: {
@@ -507,6 +506,7 @@ export interface components {
             metiers: components["schemas"]["MetierDTO"][];
             /** Format: int32 */
             tauxAffinite?: number;
+            apprentissage: boolean;
         };
         FormationAvecExplicationsDTO: {
             formation: components["schemas"]["FicheFormationDTO"];
@@ -527,6 +527,12 @@ export interface components {
         InteretsEtDomainesDTO: {
             interets: components["schemas"]["InteretDTO"][];
             domaines: components["schemas"]["DomaineDTO"][];
+        };
+        MetierDTO: {
+            id: string;
+            nom: string;
+            descriptif?: string;
+            liens: components["schemas"]["LienDTO"][];
         };
         MoyenneGeneraleDesAdmisDTO: {
             baccalaureat?: components["schemas"]["BaccalaureatDTO"];
@@ -657,7 +663,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["MetiersDTO"];
+                    "*/*": components["schemas"]["MetiersAvecSesFormationsDTO"];
                 };
             };
         };

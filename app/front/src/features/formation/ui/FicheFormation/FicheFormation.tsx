@@ -1,3 +1,4 @@
+import BlocAlternanceFicheFormation from "./BlocAlternanceFicheFormation/BlocAlternanceFicheFormation";
 import BoutonsActionsFicheFormation from "./BoutonsActionsFicheFormation/BoutonsActionsFicheFormation";
 import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondanceFicheFormation/ExplicationsCorrespondanceFicheFormation";
 import { type FicheFormationProps } from "./FicheFormation.interface";
@@ -80,7 +81,10 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
       </div>
       <hr className="mb-9 mt-5" />
       <div className="grid gap-12">
-        <OngletsFicheFormation formation={formation} />
+        <div className="grid gap-4">
+          <OngletsFicheFormation formation={formation} />
+          {formation.estEnAlternance && <BlocAlternanceFicheFormation />}
+        </div>
         <MétiersAccessiblesFicheFormation métiers={formation.métiersAccessibles} />
         <ExplicationsCorrespondanceFicheFormation explications={formation.explications} />
       </div>

@@ -8,7 +8,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Tourisme -  Accès Santé (LAS)",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
-
+      estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
       établissements: [],
@@ -33,7 +33,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Tourisme - en apprentissage",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
-
+      estEnAlternance: false,
       liens: [],
       communesProposantLaFormation: [],
       établissements: [],
@@ -58,7 +58,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "L1 - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
-
+      estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
       établissements: [],
@@ -83,7 +83,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Tourisme",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
-
+      estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
       établissements: [],
@@ -108,7 +108,7 @@ export class formationInMemoryRepository implements FormationRepository {
       nom: "BTS - Métiers de l'eau",
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
-
+      estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
       établissements: [],
@@ -134,6 +134,7 @@ export class formationInMemoryRepository implements FormationRepository {
       descriptifs: { formation: null, détails: null, attendus: null, conseils: null },
       lienParcoursSup: null,
       liens: [],
+      estEnAlternance: true,
       communesProposantLaFormation: [],
       établissements: [],
       établissementsParCommuneFavorites: [],

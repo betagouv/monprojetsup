@@ -87,6 +87,11 @@ export const localeFR = {
       QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
+    ALTERNANCE: {
+      TITRE: "Cette formation est aussi réalisable en alternance",
+      TEXTE: "La formation en alternance te permet d'étudier et de travailler en même temps.",
+      LIEN: "En savoir plus",
+    },
     EXPLICATIONS_CORRESPONDANCE_PROFIL: {
       TITRE: "Pourquoi cette formation pourrait te plaire",
       COMMUNES: "Plusieurs formations disponibles à proximité de",
