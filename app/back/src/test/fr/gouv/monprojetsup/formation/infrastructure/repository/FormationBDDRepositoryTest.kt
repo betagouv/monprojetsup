@@ -65,6 +65,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 ),
             valeurCriteresAnalyseCandidature = listOf(0, 50, 0, 50, 0),
+            apprentissage = false,
         )
 
     @BeforeEach
@@ -115,6 +116,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     formationsAssociees = listOf("fl0012"),
                     liens = emptyList(),
                     valeurCriteresAnalyseCandidature = listOf(13, 50, 12, 5, 15),
+                    apprentissage = true,
                 )
             val formationFL0004 =
                 Formation(
@@ -136,6 +138,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
+                    apprentissage = false,
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(listOf(formationFL0002, formationFL0001, formationFL0004))
         }
@@ -221,6 +224,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
+                    apprentissage = false,
                 ),
             )
         }
@@ -290,6 +294,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                             ),
                         ),
                     valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
+                    apprentissage = true,
                 ),
             )
         }

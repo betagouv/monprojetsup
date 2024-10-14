@@ -17,6 +17,7 @@ sealed class FicheFormation(
     open val voeux: List<Voeu>,
     open val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
     open val statistiquesDesAdmis: StatistiquesDesAdmis?,
+    open val apprentissage: Boolean,
 ) {
     data class FicheFormationSansProfil(
         override val id: String,
@@ -31,6 +32,7 @@ sealed class FicheFormation(
         override val voeux: List<Voeu>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
+        override val apprentissage: Boolean,
     ) : FicheFormation(
             id = id,
             nom = nom,
@@ -44,6 +46,7 @@ sealed class FicheFormation(
             voeux = voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
+            apprentissage = apprentissage,
         )
 
     data class FicheFormationPourProfil(
@@ -58,6 +61,7 @@ sealed class FicheFormation(
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
         override val voeux: List<Voeu>,
+        override val apprentissage: Boolean,
         val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
@@ -75,6 +79,7 @@ sealed class FicheFormation(
             voeux = voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
+            apprentissage = apprentissage,
         ) {
         data class ExplicationAutoEvaluationMoyenne(
             val baccalaureatUtilise: Baccalaureat,

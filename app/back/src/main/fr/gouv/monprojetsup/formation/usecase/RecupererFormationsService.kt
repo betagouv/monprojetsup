@@ -73,6 +73,7 @@ class RecupererFormationsService(
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
+                apprentissage = formation.apprentissage,
             )
         }
     }
@@ -103,6 +104,7 @@ class RecupererFormationsService(
                 metiers = metiers[formation.id] ?: emptyList(),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
+                apprentissage = formation.apprentissage,
             )
         }
     }

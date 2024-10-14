@@ -73,6 +73,7 @@ class RecupererFormationService(
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,
+                apprentissage = formation.apprentissage,
             )
         } else {
             val voeux = recupererVoeuxDUneFormationService.recupererVoeux(formation.id)
@@ -89,6 +90,7 @@ class RecupererFormationService(
                 metiers = emptyList(), // Voir avec Hugo
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 statistiquesDesAdmis = statistiquesDesAdmis,
+                apprentissage = formation.apprentissage,
             )
         }
     }

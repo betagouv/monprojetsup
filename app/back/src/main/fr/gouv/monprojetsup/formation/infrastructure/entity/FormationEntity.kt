@@ -62,6 +62,9 @@ class FormationDetailleeEntity {
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
+    @Column(name = "apprentissage", nullable = false)
+    var apprentissage: Boolean = false
+
     fun toFormation() =
         Formation(
             id = id,
@@ -73,5 +76,6 @@ class FormationDetailleeEntity {
             descriptifConseils = descriptifConseils,
             descriptifDiplome = descriptifDiplome,
             valeurCriteresAnalyseCandidature = criteresAnalyse,
+            apprentissage = apprentissage,
         )
 }
