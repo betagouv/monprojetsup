@@ -9,7 +9,7 @@ module.exports = {
     "plugin:import/typescript",
     "canonical/auto",
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', '*.gen.ts', 'api-mps.d.ts', 'public/dsfr'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', '*.gen.ts', 'api-mps.d.ts', 'i18next-generated.d.ts', 'public/dsfr'],
   parser: '@typescript-eslint/parser',
   plugins: [
     'react-refresh',
@@ -20,6 +20,7 @@ module.exports = {
     "testing-library"
   ],
   rules: {
+    "id-length": ["error", { "exceptions": ["a", "b", "t", "i"] }],
     "react-hooks/rules-of-hooks": "off",
     "sonarjs/pluginRules-of-hooks": "off",
     "sonarjs/class-name": ["error", { format: "^[A-Za-zÀ-ÖØ-öø-ÿ]*$" }],

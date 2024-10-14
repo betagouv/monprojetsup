@@ -12,6 +12,7 @@ export type Formation = {
     attendus: string | null;
     conseils: string | null;
   };
+  estEnAlternance: boolean;
   lienParcoursSup: string | null;
   liens: Array<{
     intitulé: string;
