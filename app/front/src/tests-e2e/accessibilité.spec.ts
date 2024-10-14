@@ -14,6 +14,8 @@ const PAGES_PATH: Array<keyof (typeof router)["routesByPath"]> = [
   "/eleve/inscription/etude",
   "/eleve/inscription/formations",
   "/eleve/inscription/confirmation",
+  "/formations",
+  "/favoris",
 ];
 
 class Test extends TestHelper {

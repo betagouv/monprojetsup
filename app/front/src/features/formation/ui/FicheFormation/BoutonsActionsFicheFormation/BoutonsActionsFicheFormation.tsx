@@ -1,11 +1,11 @@
 import { type BoutonsActionsFicheFormationProps } from "./BoutonsActionsFicheFormation.interface";
 import useBoutonsActionsFicheFormation from "./useBoutonsActionsFicheFormation";
 import Bouton from "@/components/Bouton/Bouton";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import VoeuxFicheFormation from "@/features/formation/ui/FicheFormation/Voeux/Voeux";
 
 const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormationProps) => {
-  const TAILLE_BOUTON = "grand";
   const {
     estFavorite,
     estMasquée,
@@ -25,7 +25,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             auClic={ajouterEnFavori}
             icône={{ position: "gauche", classe: "fr-icon-heart-line" }}
             label={i18n.COMMUN.AJOUTER_À_MA_SÉLECTION}
-            taille={TAILLE_BOUTON}
+            taille={constantes.FICHE_FORMATION.TAILLE_BOUTONS_ACTIONS}
             type="button"
           />
         )}
@@ -42,7 +42,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
               auClic={supprimerDesFavoris}
               icône={{ position: "gauche", classe: "fr-icon-close-line" }}
               label={i18n.COMMUN.SUPPRIMER_DE_MA_SÉLECTION}
-              taille={TAILLE_BOUTON}
+              taille={constantes.FICHE_FORMATION.TAILLE_BOUTONS_ACTIONS}
               type="button"
               variante="secondaire"
             />
@@ -53,7 +53,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             auClic={masquerUneFormation}
             icône={{ position: "gauche", classe: "fr-icon-eye-off-line" }}
             label={i18n.COMMUN.NE_PLUS_VOIR}
-            taille={TAILLE_BOUTON}
+            taille={constantes.FICHE_FORMATION.TAILLE_BOUTONS_ACTIONS}
             type="button"
             variante="secondaire"
           />
@@ -63,7 +63,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             auClic={afficherÀNouveauUneFormation}
             icône={{ position: "gauche", classe: "fr-icon-eye-line" }}
             label={i18n.COMMUN.AFFICHER_À_NOUVEAU}
-            taille={TAILLE_BOUTON}
+            taille={constantes.FICHE_FORMATION.TAILLE_BOUTONS_ACTIONS}
             type="button"
           />
         )}

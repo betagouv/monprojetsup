@@ -1,12 +1,10 @@
 import { type UseÉtablissementsVoeuxOngletArgs } from "./ÉtablissementsVoeuxOnglet.interface";
+import { constantes } from "@/configuration/constantes";
 import { useEffect, useMemo, useState } from "react";
 
-const RAYONS = [10, 20, 50];
-
+const rayons = constantes.FICHE_FORMATION.RAYONS_RECHERCHE_ÉTABLISSEMENTS;
 export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }: UseÉtablissementsVoeuxOngletArgs) {
-  const NOMBRE_ÉTABLISSEMENTS_À_AFFICHER = 5;
-
-  const [rayonSélectionné, setRayonSélectionné] = useState(RAYONS[0]);
+  const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
 
   const établissements = useMemo(() => {
     return (
@@ -17,7 +15,7 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
 
   const établissementsParRayon = useMemo(
     () =>
-      RAYONS.map((rayon) => ({
+      rayons.map((rayon) => ({
         rayon,
         établissements: établissements.filter(({ distanceEnKm }) => distanceEnKm <= rayon),
       })),
@@ -25,7 +23,7 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
   );
 
   useEffect(() => {
-    const rayonParDéfaut = établissementsParRayon.find(({ établissements: it }) => it.length)?.rayon || RAYONS[2];
+    const rayonParDéfaut = établissementsParRayon.find(({ établissements: it }) => it.length)?.rayon || rayons[2];
     setRayonSélectionné(rayonParDéfaut);
   }, [établissementsParRayon]);
 
@@ -38,10 +36,10 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
   );
 
   return {
-    nombreÉtablissementÀAfficher: NOMBRE_ÉTABLISSEMENTS_À_AFFICHER,
+    nombreÉtablissementÀAfficher: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS,
     nombreÉtablissementsDansLeRayon: établissementsÀAfficher.length,
-    établissementsÀAfficher: établissementsÀAfficher.slice(0, NOMBRE_ÉTABLISSEMENTS_À_AFFICHER),
-    rayons: RAYONS,
+    établissementsÀAfficher: établissementsÀAfficher.slice(0, constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS),
+    rayons,
     rayonSélectionné,
     changerRayonSélectionné: setRayonSélectionné,
   };

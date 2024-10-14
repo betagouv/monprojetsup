@@ -1,5 +1,6 @@
 import { type UseÉtablissementsVoeuxOngletToutesLesVillesArgs } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
+import { constantes } from "@/configuration/constantes";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
 import Fuse from "fuse.js";
@@ -8,8 +9,6 @@ import { useCallback, useMemo, useState } from "react";
 export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
   formation,
 }: UseÉtablissementsVoeuxOngletToutesLesVillesArgs) {
-  const NB_SUGGESTIONS_MAX = 5;
-
   const { mettreÀJourLesVoeux, voeuxSélectionnés } = useÉtablissementsVoeux({ formation });
 
   const [rechercheÉtablissement, setRechercheÉtablissement] = useState<string>("");
@@ -43,7 +42,7 @@ export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
     });
 
     return fuse
-      .search(rechercheÉtablissement, { limit: NB_SUGGESTIONS_MAX })
+      .search(rechercheÉtablissement, { limit: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS })
       .map((correspondance) => établissementVersOptionÉtablissement(correspondance.item));
   }, [formation, rechercheÉtablissement, établissementVersOptionÉtablissement]);
 
@@ -53,6 +52,6 @@ export default function useÉtablissemenentsVoeuxOngletToutesLesVilles({
     voeuxSélectionnés,
     établissementsSélectionnésParDéfaut,
     àLaRechercheDUnÉtablissement: setRechercheÉtablissement,
-    nombreSuggestionsMax: NB_SUGGESTIONS_MAX,
+    nombreSuggestionsMax: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS,
   };
 }

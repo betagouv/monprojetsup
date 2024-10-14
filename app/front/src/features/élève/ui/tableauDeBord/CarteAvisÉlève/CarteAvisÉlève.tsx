@@ -1,6 +1,7 @@
 import avisSVG from "@/assets/avis.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const CarteAvisÉlève = () => {
@@ -19,7 +20,7 @@ const CarteAvisÉlève = () => {
         <div className="pt-2">
           <LienExterne
             ariaLabel={i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.AVIS.BOUTON}
-            href="https://grist.numerique.gouv.fr/o/docs/forms/2Saro42MBAB4ZvJYb9fNzV/4"
+            href={constantes.LIENS.DONNER_SON_AVIS}
             variante="neutre"
           >
             <BoutonSquelette

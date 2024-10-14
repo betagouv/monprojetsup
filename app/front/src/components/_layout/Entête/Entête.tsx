@@ -3,6 +3,7 @@ import Navigation from "@/components/_layout/Navigation/Navigation";
 import Bouton from "@/components/Bouton/Bouton";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
 import { useRouterState } from "@tanstack/react-router";
@@ -11,7 +12,6 @@ const Entête = () => {
   const router = useRouterState();
   const utilisateur = useUtilisateur();
 
-  const PARCOURS_INSCRIPTION_PATH = "/eleve/inscription/";
   return (
     <header
       className="fr-header"
@@ -40,7 +40,7 @@ const Entête = () => {
                     src={logoMPS}
                   />
                 </div>
-                {!router.location.pathname.includes(PARCOURS_INSCRIPTION_PATH) && (
+                {!router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION) && (
                   <div className="fr-header__navbar">
                     <button
                       aria-controls="navigation-modal"
@@ -69,7 +69,7 @@ const Entête = () => {
             <div className="fr-header__tools">
               <div className="fr-header__tools-links">
                 <ul className="fr-btns-group">
-                  {router.location.pathname.includes(PARCOURS_INSCRIPTION_PATH) ? (
+                  {router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION) ? (
                     <li>
                       <Bouton
                         auClic={async () => await utilisateur.seDéconnecter()}
@@ -84,7 +84,7 @@ const Entête = () => {
                       <li>
                         <LienExterne
                           ariaLabel={i18n.ENTÊTE.PLATEFORME_AVENIRS}
-                          href="https://avenirs.onisep.fr/"
+                          href={constantes.LIENS.AVENIRS}
                           icône={{ classe: "fr-icon-arrow-go-back-fill", position: "droite" }}
                         >
                           <span className="fr-btn fr-icon-arrow-go-back-fill">{i18n.ENTÊTE.PLATEFORME_AVENIRS}</span>
@@ -118,7 +118,7 @@ const Entête = () => {
           </div>
         </div>
       </div>
-      {!router.location.pathname.includes(PARCOURS_INSCRIPTION_PATH) && <Navigation />}
+      {!router.location.pathname.includes(constantes.ÉLÈVE.PATH_PARCOURS_INSCRIPTION) && <Navigation />}
     </header>
   );
 };
