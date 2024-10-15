@@ -56,9 +56,25 @@ jobs:
       - name: Run lint command
         run: npm run lint
   
+  security:
+    name: Security
+    needs: install
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and packages
+        uses: ./.github/actions/setupNodeAndPackages
+
+      - name: Audit npm packages
+        run: npm audit --production
+  
   playwright:
     name: E2E Tests
-    needs: [test, lint]
+    needs: [test, lint, security]
     runs-on: ubuntu-latest
     defaults:
       run:
