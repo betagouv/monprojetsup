@@ -6,7 +6,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class RecupererVoeuxDUneFormationService(
@@ -79,7 +78,7 @@ class RecupererVoeuxDUneFormationService(
     }
 
     private fun estDansUnDepartementFavoris(
-        idEleve: UUID,
+        idEleve: String,
         communes: List<Commune>,
         voeu: Voeu,
         messagesDeWarning: MutableList<String>,

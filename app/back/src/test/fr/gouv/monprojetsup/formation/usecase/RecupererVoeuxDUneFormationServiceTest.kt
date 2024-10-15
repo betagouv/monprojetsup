@@ -26,7 +26,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
-import java.util.UUID
 
 class RecupererVoeuxDUneFormationServiceTest {
     @Mock
@@ -41,12 +40,12 @@ class RecupererVoeuxDUneFormationServiceTest {
     @Mock
     private lateinit var profilEleve: ProfilEleve.Identifie
 
-    private val uuid = UUID.fromString("f859056f-1f3b-49d4-96c8-2a93b925fbaa")
+    private val id = "f859056f-1f3b-49d4-96c8-2a93b925fbaa"
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        given(profilEleve.id).willReturn(uuid)
+        given(profilEleve.id).willReturn(id)
     }
 
     @Nested
@@ -94,7 +93,7 @@ class RecupererVoeuxDUneFormationServiceTest {
         @BeforeEach
         fun setUp() {
             given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation)).willReturn(voeux)
-            given(profilEleve.id).willReturn(uuid)
+            given(profilEleve.id).willReturn(id)
         }
 
         @Test

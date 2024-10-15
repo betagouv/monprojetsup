@@ -19,7 +19,6 @@ import org.mockito.Mock
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
-import java.util.UUID
 
 class EleveBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
@@ -37,7 +36,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
 
     val profil0f88 =
         ProfilEleve.Identifie(
-            id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+            id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
             baccalaureat = "Général",
@@ -73,10 +72,10 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit retourner son profil`() {
             // Given
-            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+            val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
 
             // When
-            val result = eleveBDDRepository.recupererUnEleve(id = uuid)
+            val result = eleveBDDRepository.recupererUnEleve(id = id)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(profil0f88)
@@ -86,13 +85,13 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève n'existe pas, doit retourner un profil inconnu`() {
             // Given
-            val uuid = UUID.fromString("45fdce8e-0717-4848-9a0c-505dea093b8c")
+            val id = "45fdce8e-0717-4848-9a0c-505dea093b8c"
 
             // When
-            val result = eleveBDDRepository.recupererUnEleve(id = uuid)
+            val result = eleveBDDRepository.recupererUnEleve(id = id)
 
             // Then
-            assertThat(result).isEqualTo(ProfilEleve.SansCompte(uuid))
+            assertThat(result).isEqualTo(ProfilEleve.SansCompte(id))
         }
     }
 
@@ -102,13 +101,13 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève n'existe pas, doit retourner son profil`() {
             // Given
-            val uuid = UUID.fromString("45fdce8e-0717-4848-9a0c-505dea093b8c")
+            val id = "45fdce8e-0717-4848-9a0c-505dea093b8c"
 
             // When
-            val result = eleveBDDRepository.creerUnEleve(id = uuid)
+            val result = eleveBDDRepository.creerUnEleve(id = id)
 
             // Then
-            val attendu = ProfilEleve.Identifie(id = uuid)
+            val attendu = ProfilEleve.Identifie(id = id)
             assertThat(result).isEqualTo(attendu)
         }
 
@@ -116,10 +115,10 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit le retourner et logguer un warning`() {
             // Given
-            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+            val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
 
             // When
-            val result = eleveBDDRepository.creerUnEleve(id = uuid)
+            val result = eleveBDDRepository.creerUnEleve(id = id)
 
             // Then
             assertThat(result).isEqualTo(profil0f88)
@@ -134,14 +133,14 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:profil_eleve.sql")
         fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
             // Given
-            val uuid = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
-            val nouveauProfil = ProfilEleve.Identifie(id = uuid)
+            val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
+            val nouveauProfil = ProfilEleve.Identifie(id = id)
 
             // When
             eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = nouveauProfil)
 
             // Then
-            val resultat = eleveJPARepository.findById(uuid).orElseThrow().toProfilEleve()
+            val resultat = eleveJPARepository.findById(id).orElseThrow().toProfilEleve()
             assertThat(resultat).usingRecursiveAssertion().isEqualTo(nouveauProfil)
         }
 
@@ -151,7 +150,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             // Given
             val profilInconnu =
                 ProfilEleve.Identifie(
-                    id = UUID.fromString("871a33a9-fd55-4d9d-9211-22edf3c3d1e5"),
+                    id = "871a33a9-fd55-4d9d-9211-22edf3c3d1e5",
                     situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                     classe = ChoixNiveau.SECONDE,
                     baccalaureat = "Général",

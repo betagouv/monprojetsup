@@ -28,7 +28,6 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import java.util.UUID
 
 class MiseAJourEleveServiceTest {
     @Mock
@@ -65,7 +64,7 @@ class MiseAJourEleveServiceTest {
 
     private val profilEleve =
         ProfilEleve.Identifie(
-            id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+            id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
             baccalaureat = "Général",
@@ -95,7 +94,7 @@ class MiseAJourEleveServiceTest {
             corbeilleFormations = listOf("fl1234", "fl5678"),
         )
 
-    private val profilVide = ProfilEleve.Identifie(id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"))
+    private val profilVide = ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
     private val modificationProfilEleveVide = ModificationProfilEleve()
 
     @Nested
@@ -905,7 +904,7 @@ class MiseAJourEleveServiceTest {
             // Then
             val nouveauProfil =
                 ProfilEleve.Identifie(
-                    id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
                     situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                     classe = ChoixNiveau.PREMIERE,
                     baccalaureat = "Pro",
@@ -949,7 +948,7 @@ class MiseAJourEleveServiceTest {
             // Then
             val nouveauProfil =
                 ProfilEleve.Identifie(
-                    id = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"),
+                    id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
                     situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                     classe = ChoixNiveau.SECONDE,
                     baccalaureat = "Général",

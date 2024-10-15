@@ -15,7 +15,6 @@ import org.mockito.BDDMockito.given
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
-import java.util.UUID
 
 @ContextConfiguration(classes = [MonProjetSupTestConfiguration::class])
 @Import(value = [SecuriteConfiguration::class])
@@ -25,16 +24,16 @@ abstract class ControllerTest {
 
     @BeforeEach
     fun setup() {
-        given(eleveRepository.recupererUnEleve(id = uuidEleve)).willReturn(unProfilEleve)
-        given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
+        given(eleveRepository.recupererUnEleve(id = idEleve)).willReturn(unProfilEleve)
+        given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
     }
 
-    private val uuidEleve = UUID.fromString("adcf627c-36dd-4df5-897b-159443a6d49c")
-    val uuidEnseignant = UUID.fromString("49e8e8c2-5eec-4eae-a90d-992225bbea1b")
+    private val idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c"
+    val idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b"
 
     val unProfilEleve =
         ProfilEleve.Identifie(
-            id = uuidEleve,
+            id = idEleve,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.TERMINALE,
             baccalaureat = "Générale",
@@ -64,5 +63,5 @@ abstract class ControllerTest {
             corbeilleFormations = listOf("fl0010", "fl0012"),
         )
 
-    val unProfilEnseignant = ProfilEleve.SansCompte(id = uuidEnseignant)
+    val unProfilEnseignant = ProfilEleve.SansCompte(id = idEnseignant)
 }

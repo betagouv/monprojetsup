@@ -14,14 +14,13 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
-import java.util.UUID
 
 @Entity
 @Table(name = "profil_eleve")
 class ProfilEleveEntity() {
     @Id
     @Column(name = "id", nullable = false)
-    lateinit var id: UUID
+    lateinit var id: String
 
     @Enumerated(EnumType.STRING)
     @Column(name = "situation", nullable = true)

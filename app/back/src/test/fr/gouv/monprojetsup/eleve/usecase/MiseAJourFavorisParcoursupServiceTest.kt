@@ -20,7 +20,6 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import java.util.UUID
 
 class MiseAJourFavorisParcoursupServiceTest {
     @Mock
@@ -261,6 +260,6 @@ class MiseAJourFavorisParcoursupServiceTest {
         )
 
     companion object {
-        private val idEleve = UUID.fromString("0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+        private val idEleve = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
     }
 }

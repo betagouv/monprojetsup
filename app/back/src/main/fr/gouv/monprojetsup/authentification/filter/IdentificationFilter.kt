@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.UUID
 
 @Component
 class IdentificationFilter(
@@ -52,5 +51,5 @@ class IdentificationFilter(
         }
     }
 
-    private fun getIdIndividu(token: Jwt): UUID? = token.getClaim<String>("sub")?.let { UUID.fromString(it) }
+    private fun getIdIndividu(token: Jwt): String? = token.getClaim<String>("sub")
 }
