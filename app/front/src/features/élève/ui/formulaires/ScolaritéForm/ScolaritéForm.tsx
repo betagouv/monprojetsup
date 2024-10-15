@@ -3,6 +3,7 @@ import useScolaritéForm from "./useScolaritéForm";
 import CurseurCranté from "@/components/CurseurCranté/CurseurCranté";
 import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 
@@ -84,7 +85,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
             description={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.DESCRIPTION}
             key={`${valeurBac}${spécialitésSélectionnéesParDéfaut.length}`}
             label={i18n.ÉLÈVE.SCOLARITÉ.SPÉCIALITÉS.LABEL}
-            nombreDeCaractèreMinimumRecherche={2}
+            nombreDeCaractèreMinimumRecherche={constantes.SPÉCIALITÉS.NB_CARACTÈRES_MIN_RECHERCHE}
             optionsSuggérées={spécialitésSuggérées}
             optionsSélectionnéesParDéfaut={spécialitésSélectionnéesParDéfaut}
             rechercheSuggestionsEnCours={false}

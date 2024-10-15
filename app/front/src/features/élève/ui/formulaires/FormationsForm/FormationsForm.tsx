@@ -2,6 +2,7 @@ import { type FormationsFormProps, type SituationFormationsÉlève } from "./For
 import useFormationsForm from "./useFormationsForm";
 import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: FormationsFormProps) => {
@@ -35,7 +36,7 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
             auChangementOptionsSélectionnées={auChangementDesFormationsSélectionnées}
             description={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.DESCRIPTION}
             label={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL}
-            nombreDeCaractèreMinimumRecherche={2}
+            nombreDeCaractèreMinimumRecherche={constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE}
             optionsSuggérées={formationsSuggérées}
             optionsSélectionnéesParDéfaut={formationsSélectionnéesParDéfaut}
             rechercheSuggestionsEnCours={rechercheFormationsEnCours}

@@ -2,6 +2,7 @@ import useÉtablissementsVoeuxOngletToutesLesVilles from "./useÉtablissementsVo
 import { type ÉtablissemenentsVoeuxOngletToutesLesVillesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: ÉtablissemenentsVoeuxOngletToutesLesVillesProps) => {
@@ -40,7 +41,7 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: Établisseme
           description={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.DESCRIPTION}
           forcerRafraichissementOptionsSélectionnées
           label={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.LABEL}
-          nombreDeCaractèreMinimumRecherche={3}
+          nombreDeCaractèreMinimumRecherche={constantes.ÉTABLISSEMENTS.NB_CARACTÈRES_MIN_RECHERCHE}
           optionsSuggérées={établissementsSuggérés}
           optionsSélectionnéesParDéfaut={établissementsSélectionnésParDéfaut}
           rechercheSuggestionsEnCours={false}

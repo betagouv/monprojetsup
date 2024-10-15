@@ -2,6 +2,7 @@ import useÉtudeForm from "./useÉtudeForm";
 import { type ÉtudeFormProps } from "./ÉtudeForm.interface";
 import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFormProps) => {
@@ -49,7 +50,7 @@ const ÉtudeForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ÉtudeFor
           auChangementOptionsSélectionnées={auChangementDesCommunesSélectionnées}
           description={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.DESCRIPTION}
           label={i18n.ÉLÈVE.ÉTUDE.COMMUNES_ENVISAGÉES.LABEL}
-          nombreDeCaractèreMinimumRecherche={3}
+          nombreDeCaractèreMinimumRecherche={constantes.COMMUNES.NB_CARACTÈRES_MIN_RECHERCHE}
           optionsSuggérées={communesSuggérées}
           optionsSélectionnéesParDéfaut={communesSélectionnéesParDéfaut}
           rechercheSuggestionsEnCours={rechercheCommunesEnCours}

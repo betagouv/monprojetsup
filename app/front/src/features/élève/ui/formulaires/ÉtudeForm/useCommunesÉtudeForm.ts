@@ -1,5 +1,6 @@
 import { type UseCommunesÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
+import { constantes } from "@/configuration/constantes";
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import { rechercheCommunesQueryOptions } from "@/features/commune/ui/communeQueries";
 import { type CommuneFavorite } from "@/features/élève/domain/élève.interface";
@@ -25,7 +26,7 @@ export default function useCommunesÉtudeForm({ getValues, setValue }: UseCommun
   } = useQuery(rechercheCommunesQueryOptions(rechercheCommune));
 
   useEffect(() => {
-    if (rechercheCommune && rechercheCommune.length >= 3) {
+    if (rechercheCommune && rechercheCommune.length >= constantes.COMMUNES.NB_CARACTÈRES_MIN_RECHERCHE) {
       void rechercherCommunes();
     }
   }, [rechercheCommune, rechercherCommunes]);
