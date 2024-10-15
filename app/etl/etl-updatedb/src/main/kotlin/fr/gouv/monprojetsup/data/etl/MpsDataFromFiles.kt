@@ -383,7 +383,7 @@ class MpsDataFromFiles(
             if (formuleVersLibelles.size <= 1) {
                 texte = formuleVersLibelles.keys.firstOrNull().orEmpty()
             } else {
-                texte = formuleVersLibelles.entries.joinToString("<br><br>\n\n") { (formule, libelles) ->
+                texte = formuleVersLibelles.entries.joinToString("\n\n") { (formule, libelles) ->
                     val libellesTexte = libelles.joinToString(" - ")
                     "$libellesTexte: $formule"
                 }
