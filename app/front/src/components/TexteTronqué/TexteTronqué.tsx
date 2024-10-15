@@ -31,7 +31,7 @@ const TexteTronqué = ({ texte }: TexteTronquéProps) => {
   return (
     <div className="justify-start">
       <p
-        className={`${classEnFonctionDeAfficherEnEntier()} mb-2`}
+        className={`${classEnFonctionDeAfficherEnEntier()} mb-2 whitespace-pre-line`}
         ref={ref}
       >
         {texte}
