@@ -56,7 +56,7 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
           titre={métierSélectionné?.nom ?? ""}
         >
           <div className="grid gap-6">
-            <p className="mb-0">{métierSélectionné?.descriptif ?? null}</p>
+            <p className="mb-0 whitespace-pre-line">{métierSélectionné?.descriptif ?? null}</p>
             <ListeLiensExternesSousFormeBouton liens={métierSélectionné?.liens ?? []} />
           </div>
         </Modale>
