@@ -9,7 +9,7 @@ VALUES ('Professionnel',
         'P');
 
 INSERT INTO profil_eleve
-VALUES ('0f88ddd1-62ef-436e-ad3f-cf56d5d14c15'::uuid,
+VALUES (
         'AUCUNE_IDEE',
         'SECONDE',
         'Général',
@@ -51,4 +51,5 @@ VALUES ('0f88ddd1-62ef-436e-ad3f-cf56d5d14c15'::uuid,
               "ta17831"
             ]
           }
-        ]'::jsonb);
+        ]'::jsonb,
+        '0f88ddd1-62ef-436e-ad3f-cf56d5d14c15');

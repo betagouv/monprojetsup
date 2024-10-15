@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
 
 @WebMvcTest(controllers = [ProfilEleveController::class])
 class ProfilEleveControllerTest(
@@ -106,9 +105,9 @@ class ProfilEleveControllerTest(
         @Test
         fun `si élève n'existe pas et que le service réussi, doit retourner 204`() {
             // Given
-            val uuidProfilInconnu = UUID.fromString("61a3b1a9-03dd-4fc6-9549-c0e5d1403214")
-            val profilSansCompte = ProfilEleve.SansCompte(id = uuidProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilSansCompte)
+            val idProfilInconnu = "61a3b1a9-03dd-4fc6-9549-c0e5d1403214"
+            val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(
@@ -195,7 +194,7 @@ class ProfilEleveControllerTest(
             // Given
             val unProfilEnseignant =
                 ProfilEleve.Identifie(
-                    id = uuidEnseignant,
+                    id = idEnseignant,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
                     baccalaureat = "NC",
@@ -224,7 +223,7 @@ class ProfilEleveControllerTest(
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
                 )
-            given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
+            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
 
             // When & Then
             mvc.perform(
@@ -485,9 +484,9 @@ class ProfilEleveControllerTest(
         @Test
         fun `si l'élève n'existe pas, doit renvoyer 403`() {
             // Given
-            val uuidProfilInconnu = UUID.fromString("123f627c-36dd-4df5-897b-159443a6d49c")
-            val profilSansCompte = ProfilEleve.SansCompte(id = uuidProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = uuidProfilInconnu)).willReturn(profilSansCompte)
+            val idProfilInconnu = "123f627c-36dd-4df5-897b-159443a6d49c"
+            val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
+            given(eleveRepository.recupererUnEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
@@ -514,7 +513,7 @@ class ProfilEleveControllerTest(
             // Given
             val unProfilEnseignant =
                 ProfilEleve.Identifie(
-                    id = uuidEnseignant,
+                    id = idEnseignant,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
                     baccalaureat = "NC",
@@ -543,7 +542,7 @@ class ProfilEleveControllerTest(
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
                 )
-            given(eleveRepository.recupererUnEleve(id = uuidEnseignant)).willReturn(unProfilEnseignant)
+            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
             given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEnseignant)).willReturn(unProfilEnseignant)
 
             // When & Then

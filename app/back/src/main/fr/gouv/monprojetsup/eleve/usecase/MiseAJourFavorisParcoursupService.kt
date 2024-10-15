@@ -7,7 +7,6 @@ import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class MiseAJourFavorisParcoursupService(
@@ -76,7 +75,7 @@ class MiseAJourFavorisParcoursupService(
         return idsVoeuxParcoursupEtMonProjetSupDistincts.size == idsVoeuxMonProjetSup.size
     }
 
-    private fun recupererFavorisParcoursup(idEleve: UUID): List<FavorisParcoursup> {
+    private fun recupererFavorisParcoursup(idEleve: String): List<FavorisParcoursup> {
         return compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)?.let { compteParcoursup ->
             parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
         } ?: emptyList()

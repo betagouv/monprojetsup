@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RequestMapping("test")
 @RestController
@@ -132,8 +131,8 @@ class IdentificationFilterTest(
     @Test
     fun `si connecté avec un élève mais ne le reconnait pas, doit retourner 200 avec le détail des infos de l'élève et son authorité`() {
         // Given
-        val uuid = UUID.fromString("40422ae5-f535-4f9a-8a1f-9e24978c2b14")
-        given(eleveRepository.recupererUnEleve(uuid)).willReturn(ProfilEleve.SansCompte(uuid))
+        val id = "40422ae5-f535-4f9a-8a1f-9e24978c2b14"
+        given(eleveRepository.recupererUnEleve(id)).willReturn(ProfilEleve.SansCompte(id))
 
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isOk)

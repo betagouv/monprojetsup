@@ -6,11 +6,10 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
-import java.util.UUID
 
-sealed class ProfilEleve(open val id: UUID) : ProfilUtilisateur() {
+sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
     data class Identifie(
-        override val id: UUID,
+        override val id: String,
         val situation: SituationAvanceeProjetSup?,
         val classe: ChoixNiveau?,
         val baccalaureat: String?,
@@ -25,7 +24,7 @@ sealed class ProfilEleve(open val id: UUID) : ProfilUtilisateur() {
         val moyenneGenerale: Float?,
         val corbeilleFormations: List<String>,
     ) : ProfilEleve(id) {
-        constructor(id: UUID) : this(
+        constructor(id: String) : this(
             id = id,
             situation = null,
             classe = null,
@@ -43,5 +42,5 @@ sealed class ProfilEleve(open val id: UUID) : ProfilUtilisateur() {
         )
     }
 
-    data class SansCompte(override val id: UUID) : ProfilEleve(id)
+    data class SansCompte(override val id: String) : ProfilEleve(id)
 }

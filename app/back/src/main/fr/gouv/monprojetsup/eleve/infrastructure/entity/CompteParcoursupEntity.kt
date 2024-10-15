@@ -5,14 +5,13 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.util.Date
-import java.util.UUID
 
 @Entity
 @Table(name = "eleve_compte_parcoursup")
 class CompteParcoursupEntity() {
     @Id
     @Column(name = "id_eleve", nullable = false)
-    lateinit var idEleve: UUID
+    lateinit var idEleve: String
 
     @Column(name = "id_parcoursup", nullable = false)
     var idParcoursup: Int = 0
