@@ -34,6 +34,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
+import fr.gouv.monprojetsup.formation.usecase.OrdonnerRechercheFormationsBuilder
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
@@ -46,7 +47,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.BDDMockito.`when`
+import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -74,6 +75,9 @@ class FormationControllerTest(
 
     @MockBean
     lateinit var rechercherFormation: RechercherFormationsService
+
+    @MockBean
+    lateinit var ordonnerRechercheFormationsBuilder: OrdonnerRechercheFormationsBuilder
 
     @MockBean
     lateinit var hateoasBuilder: HateoasBuilder
@@ -384,7 +388,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi sans page indiquée, doit retourner 200 avec la premiere page des fiches formations suggérées`() {
             // Given
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
             val hateoas =
@@ -395,7 +399,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = formations,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
             val idsFormations =
@@ -423,9 +427,9 @@ class FormationControllerTest(
                     "fl41",
                     "fl2051",
                 )
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
-            ).thenReturn(
+            ).willReturn(
                 listOf(
                     ficheFormation,
                     ficheFormation.copy(
@@ -806,7 +810,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour la page 2, doit retourner 200 avec une liste des fiches formations suggérées`() {
             // Given
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
             val listeCoupee =
@@ -816,13 +820,13 @@ class FormationControllerTest(
                     FormationAvecSonAffinite(idFormation = "fl680003", tauxAffinite = 0.6735823f),
                 )
             val hateoas = Hateoas(pageActuelle = 2, pageSuivante = 3, premierePage = 1, dernierePage = 4, listeCoupee = listeCoupee)
-            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 2, tailleLot = 30)).willReturn(
                 hateoas,
             )
             val idsFormations = listOf("fl2016", "fl2118", "fl680003")
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
-            ).thenReturn(listOf(ficheFormation.copy(id = "fl2016")))
+            ).willReturn(listOf(ficheFormation.copy(id = "fl2016")))
 
             // When & Then
             mvc.perform(
@@ -1130,7 +1134,7 @@ class FormationControllerTest(
         @Test
         fun `si connecté en tant qu'enseignant, doit retourner 200 avec les formations suggérées`() {
             // Given
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
             val hateoas =
@@ -1141,7 +1145,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = formations,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
             val idsFormations =
@@ -1169,9 +1173,9 @@ class FormationControllerTest(
                     "fl41",
                     "fl2051",
                 )
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
-            ).thenReturn(
+            ).willReturn(
                 listOf(
                     ficheFormation,
                     ficheFormation.copy(
@@ -1593,12 +1597,12 @@ class FormationControllerTest(
                     code = "PAGE_DEMANDEE_INXISTANTE",
                     msg = "La page 100 n'existe pas. Veuillez en donner une entre 1 et 8",
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(
                 affinitesFormationEtMetier,
             )
-            `when`(
+            given(
                 hateoasBuilder.creerHateoas(liste = formations, numeroDePageActuelle = 100, tailleLot = 30),
-            ).thenThrow(uneException)
+            ).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -1630,7 +1634,7 @@ class FormationControllerTest(
                     msg = "Erreur lors de la connexion à l'API de suggestions",
                     origine = ConnectException("Connection refused"),
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenThrow(uneException)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -1659,7 +1663,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail de la formation`() {
             // Given
-            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).thenReturn(ficheFormation)
+            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -1945,7 +1949,7 @@ class FormationControllerTest(
         @Test
         fun `si le service réussi pour un enseignant, doit retourner 200 avec le détail de la formation`() {
             // Given
-            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).thenReturn(ficheFormation)
+            given(recupererFormationService.recupererFormation(unProfilEleve, "fl680002")).willReturn(ficheFormation)
 
             // When & Then
             mvc.perform(
@@ -2230,9 +2234,9 @@ class FormationControllerTest(
         @ConnecteSansId
         @Test
         fun `si connecté sans profil, doit retourner 200 avec la formation sans explications`() {
-            `when`(
+            given(
                 recupererFormationService.recupererFormation(profilEleve = null, idFormation = "fl680002"),
-            ).thenReturn(ficheFormationSansProfil)
+            ).willReturn(ficheFormationSansProfil)
 
             // When & Then
             mvc.perform(
@@ -2380,7 +2384,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl00010 existe plusieurs fois entre id et dans les formations équivalentes",
                 )
-            `when`(recupererFormationService.recupererFormation(unProfilEleve, "fl00010")).thenThrow(uneException)
+            given(recupererFormationService.recupererFormation(unProfilEleve, "fl00010")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -2398,7 +2402,7 @@ class FormationControllerTest(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation inconnu n'existe pas",
                 )
-            `when`(recupererFormationService.recupererFormation(unProfilEleve, "inconnu")).thenThrow(uneException)
+            given(recupererFormationService.recupererFormation(unProfilEleve, "inconnu")).willThrow(uneException)
 
             // When & Then
             mvc.perform(
@@ -2412,33 +2416,47 @@ class FormationControllerTest(
     inner class `Quand on appelle la route de recherche succincte de formations` {
         @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations`() {
+        fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec la listes de formations triées selon le profil`() {
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
+                    FormationCourte(id = "fl3", nom = "L1 - Philosophie") to 100,
+                    FormationCourte(id = "fl7", nom = "L1 - Mathématique") to 100,
                 )
-            val rechercheL1 =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(mapRechercheL1)
+            ).willReturn(mapRechercheL1)
+            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
+            val formationsOrdonnees =
+                listOf(
+                    FormationAvecSonAffinite("fl7", 0.56f),
+                    FormationAvecSonAffinite("fl3", 0.36f),
+                    FormationAvecSonAffinite("fl1", 1f),
+                )
+            given(suggestionsPourUnProfil.formations).willReturn(formationsOrdonnees)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(suggestionsPourUnProfil)
+            val rechercheTriee =
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Mathématique"),
+                    FormationCourte(id = "fl3", nom = "L1 - Philosophie"),
+                )
+            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(mapRechercheL1, formationsOrdonnees))
+                .willReturn(rechercheTriee)
+
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
                     pageSuivante = null,
                     premierePage = 1,
                     dernierePage = 1,
-                    listeCoupee = rechercheL1,
+                    listeCoupee = rechercheTriee,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = rechercheL1, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -2457,79 +2475,10 @@ class FormationControllerTest(
                             },
                             {
                               "id": "fl7",
-                              "nom": "L1 - Philosophie"
-                            }
-                          ],
-                          "liens": [
-                            {
-                              "rel": "premier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
+                              "nom": "L1 - Mathématique"
                             },
                             {
-                              "rel": "dernier",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            },
-                            {
-                              "rel": "actuel",
-                              "href": "http://localhost/api/v1/formations/recherche/succincte?recherche=L1&numeroDePage=1"
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
-                    ),
-                )
-        }
-
-        @ConnecteAvecUnEleve(idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c")
-        @Test
-        fun `si le service réussi pour un appel avec un profil, doit filtrer les formations de la corbeille`() {
-            // Given
-            val rechercheL1 =
-                mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl0010", nom = "L1 - Mathématique") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
-                )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
-                    recherche = "L1",
-                    tailleMinimumRecherche = 2,
-                ),
-            ).thenReturn(rechercheL1)
-            val rechercheSansFormationCorbeille =
-                listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                )
-            val hateoas =
-                Hateoas(
-                    pageActuelle = 1,
-                    pageSuivante = null,
-                    premierePage = 1,
-                    dernierePage = 1,
-                    listeCoupee = rechercheSansFormationCorbeille,
-                )
-            `when`(
-                hateoasBuilder.creerHateoas(liste = rechercheSansFormationCorbeille, numeroDePageActuelle = 1, tailleLot = 30),
-            ).thenReturn(
-                hateoas,
-            )
-
-            // When & Then
-            mvc.perform(
-                get("/api/v1/formations/recherche/succincte?recherche=L1"),
-            ).andDo(print()).andExpect(status().isOk).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(
-                    content().json(
-                        """
-                        {
-                          "formations": [
-                            {
-                              "id": "fl1",
-                              "nom": "L1 - Psychologie"
-                            },
-                            {
-                              "id": "fl7",
+                              "id": "fl3",
                               "nom": "L1 - Philosophie"
                             }
                           ],
@@ -2560,41 +2509,58 @@ class FormationControllerTest(
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
             val rechercheLongueMap =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 100,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 110,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 75,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 150,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 10,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 0,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 150,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 110,
                 )
-            val rechercheLongue =
+            val suggestionsPourUnProfil = mock(SuggestionsPourUnProfil::class.java)
+            val formationsOrdonnees =
                 listOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
+                    FormationAvecSonAffinite("fl1", 0.56f),
+                    FormationAvecSonAffinite("fl7", 0.36f),
+                    FormationAvecSonAffinite("fl3", 1f),
+                    FormationAvecSonAffinite("fl1000", 0f),
+                    FormationAvecSonAffinite("fl17", 0.24f),
+                    FormationAvecSonAffinite("fl20", 0.98f),
+                    FormationAvecSonAffinite("fl10", 0.24f),
+                    FormationAvecSonAffinite("fl18", 0.45f),
+                )
+            given(suggestionsPourUnProfil.formations).willReturn(formationsOrdonnees)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(suggestionsPourUnProfil)
+            val rechercheTriee =
+                listOf(
+                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
                     FormationCourte(id = "fl1000", nom = "BPJEPS"),
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie"),
                     FormationCourte(id = "fl17", nom = "L1 - Mathématique"),
                     FormationCourte(id = "fl20", nom = "CAP Boulangerie"),
-                    FormationCourte(id = "fl10", nom = "DUT Informatique"),
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
+            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(rechercheLongueMap, formationsOrdonnees))
+                .willReturn(rechercheTriee)
+
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
                     recherche = rechercheDe50Caracteres,
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheLongueMap)
+            ).willReturn(rechercheLongueMap)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
                     pageSuivante = null,
                     premierePage = 1,
                     dernierePage = 1,
-                    listeCoupee = rechercheLongue,
+                    listeCoupee = rechercheTriee,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = rechercheTriee, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -2608,20 +2574,28 @@ class FormationControllerTest(
                         {
                           "formations": [
                             {
-                              "id": "fl1",
-                              "nom": "L1 - Psychologie"
+                              "id": "fl10",
+                              "nom": "DUT Informatique"
+                            },
+                            {
+                              "id": "fl1000",
+                              "nom": "BPJEPS"
+                            },
+                            {
+                              "id": "fl18",
+                              "nom": "L1 - Littérature"
                             },
                             {
                               "id": "fl7",
                               "nom": "L1 - Philosophie"
                             },
                             {
-                              "id": "fl3",
-                              "nom": "CAP Pâtisserie"
+                              "id": "fl1",
+                              "nom": "L1 - Psychologie"
                             },
                             {
-                              "id": "fl1000",
-                              "nom": "BPJEPS"
+                              "id": "fl3",
+                              "nom": "CAP Pâtisserie"
                             },
                             {
                               "id": "fl17",
@@ -2630,14 +2604,6 @@ class FormationControllerTest(
                             {
                               "id": "fl20",
                               "nom": "CAP Boulangerie"
-                            },
-                            {
-                              "id": "fl10",
-                              "nom": "DUT Informatique"
-                            },
-                            {
-                              "id": "fl18",
-                              "nom": "L1 - Littérature"
                             }
                           ],
                           "liens": [
@@ -2712,15 +2678,21 @@ class FormationControllerTest(
             val rechercheDe50Caracteres = "Lorem ipsum dolor sit amet, consectetur porta ante"
             val mapRechercheLongue =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
-                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1.0,
-                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1.0,
-                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1.0,
-                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1.0,
-                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1.0,
-                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
+                    FormationCourte(id = "fl3", nom = "CAP Pâtisserie") to 1,
+                    FormationCourte(id = "fl1000", nom = "BPJEPS") to 1,
+                    FormationCourte(id = "fl17", nom = "L1 - Mathématique") to 1,
+                    FormationCourte(id = "fl20", nom = "CAP Boulangerie") to 1,
+                    FormationCourte(id = "fl10", nom = "DUT Informatique") to 1,
+                    FormationCourte(id = "fl18", nom = "L1 - Littérature") to 1,
                 )
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
+                    recherche = rechercheDe50Caracteres,
+                    tailleMinimumRecherche = 2,
+                ),
+            ).willReturn(mapRechercheLongue)
             val rechercheLongue =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -2732,12 +2704,7 @@ class FormationControllerTest(
                     FormationCourte(id = "fl10", nom = "DUT Informatique"),
                     FormationCourte(id = "fl18", nom = "L1 - Littérature"),
                 )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
-                    recherche = rechercheDe50Caracteres,
-                    tailleMinimumRecherche = 2,
-                ),
-            ).thenReturn(mapRechercheLongue)
+            given(ordonnerRechercheFormationsBuilder.trierParScore(mapRechercheLongue)).willReturn(rechercheLongue)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2746,7 +2713,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = rechercheLongue,
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = rechercheLongue, numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -2829,22 +2796,32 @@ class FormationControllerTest(
             // Given
             val mapRechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
                 )
             val rechercheL1 =
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
                     FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
                 )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(mapRechercheL1)
+            ).willReturn(mapRechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
+            val formationsTriees =
+                listOf(
+                    FormationAvecSonAffinite("fl7", 0.87f),
+                    FormationAvecSonAffinite("fl1", 0.65f),
+                )
+            given(toutesLesSuggestions.formations).willReturn(formationsTriees)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(toutesLesSuggestions)
+            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(mapRechercheL1, formationsTriees)).willReturn(
+                rechercheL1,
+            )
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
                     ficheFormation.copy(id = "fl1"),
@@ -2865,9 +2842,9 @@ class FormationControllerTest(
                         explications = null,
                     ),
                 )
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
-            ).thenReturn(fichesFormations)
+            ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -2876,7 +2853,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = listOf("fl1", "fl7"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -3289,20 +3266,31 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
                 )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).willReturn(rechercheL1)
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
+            val formationsTriees =
+                listOf(
+                    FormationAvecSonAffinite("fl7", 0.87f),
+                    FormationAvecSonAffinite("fl1", 0.65f),
+                )
+            given(toutesLesSuggestions.formations).willReturn(formationsTriees)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(toutesLesSuggestions)
+            given(ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(rechercheL1, formationsTriees)).willReturn(
+                listOf(
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                ),
+            )
             val fichesFormations =
                 listOf(
-                    ficheFormation.copy(id = "fl1"),
                     ficheFormation.copy(
                         id = "fl7",
                         nom = "2eme formation",
@@ -3319,19 +3307,20 @@ class FormationControllerTest(
                         apprentissage = false,
                         explications = null,
                     ),
+                    ficheFormation.copy(id = "fl1"),
                 )
-            `when`(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
-            ).thenReturn(fichesFormations)
+            given(
+                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl7", "fl1")),
+            ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
                     pageSuivante = null,
                     premierePage = 1,
                     dernierePage = 1,
-                    listeCoupee = listOf("fl1", "fl7"),
+                    listeCoupee = listOf("fl7", "fl1"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl7", "fl1"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -3344,6 +3333,111 @@ class FormationControllerTest(
                         """
                         {
                           "formations": [
+                            {
+                              "formation": {
+                                "id": "fl7",
+                                "nom": "2eme formation",
+                                "idsFormationsAssociees": [
+                                  "fl3"
+                                ],
+                                "descriptifFormation": null,
+                                "descriptifDiplome": null,
+                                "descriptifConseils": null,
+                                "descriptifAttendus": null,
+                                "moyenneGeneraleDesAdmis": null,
+                                "criteresAnalyseCandidature": [],
+                                "repartitionAdmisAnneePrecedente": null,
+                                "liens": [],
+                                "voeux": [
+                                  {
+                                    "id": "ta10",
+                                    "nom": "Nom du ta10",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta3",
+                                    "nom": "Nom du ta3",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75105"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta11",
+                                    "nom": "Nom du ta11",
+                                    "commune": {
+                                      "nom": "Lyon",
+                                      "codeInsee": "69123"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta32",
+                                    "nom": "Nom du ta32",
+                                    "commune": {
+                                      "nom": "Paris",
+                                      "codeInsee": "75115"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta17",
+                                    "nom": "Nom du ta17",
+                                    "commune": {
+                                      "nom": "Strasbourg",
+                                      "codeInsee": "67482"
+                                    }
+                                  },
+                                  {
+                                    "id": "ta7",
+                                    "nom": "Nom du ta7",
+                                    "commune": {
+                                      "nom": "Marseille",
+                                      "codeInsee": "13055"
+                                    }
+                                  }
+                                ],
+                                "communesFavoritesAvecLeursVoeux": [
+                                  {
+                                    "commune": {
+                                      "codeInsee": "75115",
+                                      "nom": "Paris",
+                                      "latitude": 48.851227,
+                                      "longitude": 2.2885659
+                                    },
+                                    "voeuxAvecDistance": [
+                                      {
+                                        "voeu": {
+                                          "id": "ta3",
+                                          "nom": "Nom du ta3",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75105"
+                                          }
+                                        },
+                                        "distanceKm": 3
+                                      },
+                                      {
+                                        "voeu": {
+                                          "id": "ta32",
+                                          "nom": "Nom du ta32",
+                                          "commune": {
+                                            "nom": "Paris",
+                                            "codeInsee": "75115"
+                                          }
+                                        },
+                                        "distanceKm": 1
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "metiers": [],
+                                "tauxAffinite": 17,
+                                "apprentissage": false
+                              },
+                              "explications": null
+                            },
                             {
                               "formation": {
                                 "id": "fl1",
@@ -3611,111 +3705,6 @@ class FormationControllerTest(
                                   "details": []
                                 }
                               }
-                            },
-                            {
-                              "formation": {
-                                "id": "fl7",
-                                "nom": "2eme formation",
-                                "idsFormationsAssociees": [
-                                  "fl3"
-                                ],
-                                "descriptifFormation": null,
-                                "descriptifDiplome": null,
-                                "descriptifConseils": null,
-                                "descriptifAttendus": null,
-                                "moyenneGeneraleDesAdmis": null,
-                                "criteresAnalyseCandidature": [],
-                                "repartitionAdmisAnneePrecedente": null,
-                                "liens": [],
-                                "voeux": [
-                                  {
-                                    "id": "ta10",
-                                    "nom": "Nom du ta10",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta3",
-                                    "nom": "Nom du ta3",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75105"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta11",
-                                    "nom": "Nom du ta11",
-                                    "commune": {
-                                      "nom": "Lyon",
-                                      "codeInsee": "69123"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta32",
-                                    "nom": "Nom du ta32",
-                                    "commune": {
-                                      "nom": "Paris",
-                                      "codeInsee": "75115"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta17",
-                                    "nom": "Nom du ta17",
-                                    "commune": {
-                                      "nom": "Strasbourg",
-                                      "codeInsee": "67482"
-                                    }
-                                  },
-                                  {
-                                    "id": "ta7",
-                                    "nom": "Nom du ta7",
-                                    "commune": {
-                                      "nom": "Marseille",
-                                      "codeInsee": "13055"
-                                    }
-                                  }
-                                ],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
-                                "metiers": [],
-                                "tauxAffinite": 17,
-                                "apprentissage": false
-                              },
-                              "explications": null
                             }
                           ],
                           "liens": [
@@ -3789,15 +3778,15 @@ class FormationControllerTest(
             // Given
             val rechercheL1 =
                 mapOf(
-                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1.0,
-                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1.0,
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie") to 1,
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie") to 1,
                 )
-            `when`(
-                rechercherFormation.rechercheLesFormationsCorrespondantes(
+            given(
+                rechercherFormation.rechercheLesFormationsAvecLeurScoreCorrespondantes(
                     recherche = "L1",
                     tailleMinimumRecherche = 2,
                 ),
-            ).thenReturn(rechercheL1)
+            ).willReturn(rechercheL1)
             val fichesFormations =
                 listOf(
                     ficheFormationSansProfil.copy(id = "fl1"),
@@ -3815,7 +3804,14 @@ class FormationControllerTest(
                         metiers = emptyList(),
                     ),
                 )
-            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).thenReturn(fichesFormations)
+            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).willReturn(fichesFormations)
+            given(ordonnerRechercheFormationsBuilder.trierParScore(rechercheL1)).willReturn(
+                listOf(
+                    FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
+                    FormationCourte(id = "fl7", nom = "L1 - Philosophie"),
+                ),
+            )
+
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -3824,7 +3820,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = listOf("fl1", "fl7"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl7"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -4065,7 +4061,7 @@ class FormationControllerTest(
         fun `si le service réussi pour un appel avec un profil, doit retourner 200 avec le détail des formations`() {
             // Given
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
                     ficheFormation.copy(id = "fl1"),
@@ -4087,9 +4083,9 @@ class FormationControllerTest(
                         explications = null,
                     ),
                 )
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
-            ).thenReturn(fichesFormations)
+            ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -4098,7 +4094,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = listOf("fl1", "fl2"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -4461,7 +4457,7 @@ class FormationControllerTest(
         fun `si enseignant, doit retourner 200 avec le detail des formations`() {
             // Given
             val toutesLesSuggestions = mock(SuggestionsPourUnProfil::class.java)
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenReturn(toutesLesSuggestions)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willReturn(toutesLesSuggestions)
             val fichesFormations =
                 listOf(
                     ficheFormation.copy(id = "fl1"),
@@ -4483,9 +4479,9 @@ class FormationControllerTest(
                         explications = null,
                     ),
                 )
-            `when`(
+            given(
                 recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
-            ).thenReturn(fichesFormations)
+            ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -4494,7 +4490,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = listOf("fl1", "fl2"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -4874,7 +4870,7 @@ class FormationControllerTest(
                         voeux = emptyList(),
                     ),
                 )
-            `when`(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).thenReturn(fichesFormations)
+            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,
@@ -4883,7 +4879,7 @@ class FormationControllerTest(
                     dernierePage = 1,
                     listeCoupee = listOf("fl1", "fl2"),
                 )
-            `when`(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).thenReturn(
+            given(hateoasBuilder.creerHateoas(liste = listOf("fl1", "fl2"), numeroDePageActuelle = 1, tailleLot = 30)).willReturn(
                 hateoas,
             )
 
@@ -5075,7 +5071,7 @@ class FormationControllerTest(
                     "Erreur lors de la connexion à l'API de suggestions à l'url /api/v1/formations?ids=fl1&ids=fl2",
                     null,
                 )
-            `when`(suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(unProfilEleve)).thenThrow(uneException)
+            given(suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(unProfilEleve)).willThrow(uneException)
 
             // When & Then
             mvc.perform(

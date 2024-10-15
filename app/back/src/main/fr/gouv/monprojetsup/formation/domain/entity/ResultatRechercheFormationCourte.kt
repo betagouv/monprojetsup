@@ -7,11 +7,11 @@ data class ResultatRechercheFormationCourte(
 ) {
     data class ScoreMot(
         val mot: String,
-        val motExactPresent: Boolean,
+        val motExact: Boolean,
         val motExactPresentDebutPhrase: Boolean,
         val motExactPresentFin: Boolean,
         val motExactMilieu: Boolean,
         val sequencePresenteMot: Boolean,
-        val pourcentageMot: Double,
+        val pourcentageMot: Int,
     )
 }

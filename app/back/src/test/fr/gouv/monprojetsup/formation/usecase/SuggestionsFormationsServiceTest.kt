@@ -35,7 +35,7 @@ class SuggestionsFormationsServiceTest {
             given(suggestionHttpClient.recupererLesSuggestions(profilEleve)).willReturn(suggestionsPourUnProfil)
 
             // When
-            val resultat = suggestionsFormationsService.recupererToutesLesSuggestionsPourUnProfil(profilEleve = profilEleve)
+            val resultat = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve = profilEleve)
 
             // Then
             assertThat(resultat).isEqualTo(suggestionsPourUnProfil)

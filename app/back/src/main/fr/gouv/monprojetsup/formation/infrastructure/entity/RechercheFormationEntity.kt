@@ -52,24 +52,24 @@ data class RechercheFormationEntity(
                 labelDecoupe?.let {
                     ResultatRechercheFormationCourte.ScoreMot(
                         mot = it,
-                        motExactPresent = labelExact!!,
+                        motExact = labelExact!!,
                         motExactPresentDebutPhrase = labelExactDebut!!,
                         motExactPresentFin = labelExactFin!!,
                         motExactMilieu = labelExactMilieu!!,
                         sequencePresenteMot = sequencePresenteLabel!!,
-                        pourcentageMot = pourcentageLabelDecoupe!!,
+                        pourcentageMot = pourcentageLabelDecoupe!!.toInt(),
                     )
                 },
             scoreMotClef =
                 motClef?.let {
                     ResultatRechercheFormationCourte.ScoreMot(
                         mot = it,
-                        motExactPresent = motCleExact!!,
+                        motExact = motCleExact!!,
                         motExactPresentDebutPhrase = motCleExactDebut!!,
                         motExactPresentFin = motCleExactFin!!,
                         motExactMilieu = motCleExactMilieu!!,
                         sequencePresenteMot = sequencePresenteMotCle!!,
-                        pourcentageMot = pourcentageMotCle!!,
+                        pourcentageMot = pourcentageMotCle!!.toInt(),
                     )
                 },
         )
