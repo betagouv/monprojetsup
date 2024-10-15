@@ -2,6 +2,7 @@ import { type MétiersFormProps, type SituationMétiersÉlève } from "./Métier
 import useMétiersForm from "./useMétiersForm";
 import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: MétiersFormProps) => {
@@ -34,7 +35,7 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
             auChangementOptionsSélectionnées={auChangementDesMétiersSélectionnés}
             description={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.DESCRIPTION}
             label={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL}
-            nombreDeCaractèreMinimumRecherche={2}
+            nombreDeCaractèreMinimumRecherche={constantes.MÉTIERS.NB_CARACTÈRES_MIN_RECHERCHE}
             optionsSuggérées={métiersSuggérés}
             optionsSélectionnéesParDéfaut={métiersSélectionnésParDéfaut}
             rechercheSuggestionsEnCours={rechercheMétiersEnCours}

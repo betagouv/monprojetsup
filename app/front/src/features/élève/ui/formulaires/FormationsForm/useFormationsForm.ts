@@ -2,6 +2,7 @@ import { type SituationFormationsÉlève, type useFormationsFormArgs } from "./F
 import { formationsValidationSchema } from "./FormationsForm.validation";
 import { type BoutonRadioRicheProps } from "@/components/BoutonRadioRiche/BoutonRadioRiche.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { type Formation } from "@/features/formation/domain/formation.interface";
 import {
@@ -54,7 +55,7 @@ export default function useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccè
   );
 
   useEffect(() => {
-    if (rechercheFormation && rechercheFormation.length >= 2) {
+    if (rechercheFormation && rechercheFormation.length >= constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE) {
       void rechercherFormations();
     }
   }, [rechercheFormation, rechercherFormations]);

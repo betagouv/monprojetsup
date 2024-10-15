@@ -34,7 +34,7 @@ export default function useÉtablissementsVoeuxOngletToutesLesVilles({
   }, [formation.établissements, voeuxSélectionnés, établissementVersOptionÉtablissement]);
 
   const établissementsSuggérés = useMemo<SélecteurMultipleOption[]>(() => {
-    if (rechercheÉtablissement.length < 3) return [];
+    if (rechercheÉtablissement.length < constantes.ÉTABLISSEMENTS.NB_CARACTÈRES_MIN_RECHERCHE) return [];
 
     const fuse = new Fuse<Formation["établissements"][number]>(formation.établissements, {
       distance: 200,

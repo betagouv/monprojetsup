@@ -1,5 +1,6 @@
 import { type UseSpécialitésScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
+import { constantes } from "@/configuration/constantes";
 import { type SpécialitéBac } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import Fuse from "fuse.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -40,7 +41,7 @@ export default function useSpécialitésScolaritéForm({
   );
 
   const spécialitésSuggérées = useMemo<SélecteurMultipleOption[]>(() => {
-    if (rechercheSpécialité.length < 2) return [];
+    if (rechercheSpécialité.length < constantes.SPÉCIALITÉS.NB_CARACTÈRES_MIN_RECHERCHE) return [];
 
     const fuse = new Fuse<SpécialitéBac>(spécialitésAssociéesAuBacSélectionné, {
       distance: 200,

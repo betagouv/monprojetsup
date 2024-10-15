@@ -2,6 +2,7 @@ import { type SituationMétiersÉlève, type useMétiersFormArgs } from "./Méti
 import { métiersValidationSchema } from "./MétiersForm.validation";
 import { type BoutonRadioRicheProps } from "@/components/BoutonRadioRiche/BoutonRadioRiche.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { type Métier } from "@/features/métier/domain/métier.interface";
 import { rechercherMétiersQueryOptions, récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
@@ -48,7 +49,7 @@ export default function useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès 
   );
 
   useEffect(() => {
-    if (rechercheMétier && rechercheMétier.length >= 2) {
+    if (rechercheMétier && rechercheMétier.length >= constantes.MÉTIERS.NB_CARACTÈRES_MIN_RECHERCHE) {
       void rechercherMétiers();
     }
   }, [rechercheMétier, rechercherMétiers]);

@@ -13,4 +13,19 @@ export const constantes = {
     RAYONS_RECHERCHE_ÉTABLISSEMENTS: [10, 20, 50],
     TAILLE_BOUTONS_ACTIONS: "grand",
   },
+  ÉTABLISSEMENTS: {
+    NB_CARACTÈRES_MIN_RECHERCHE: 3,
+  },
+  COMMUNES: {
+    NB_CARACTÈRES_MIN_RECHERCHE: 3,
+  },
+  FORMATIONS: {
+    NB_CARACTÈRES_MIN_RECHERCHE: 2,
+  },
+  MÉTIERS: {
+    NB_CARACTÈRES_MIN_RECHERCHE: 2,
+  },
+  SPÉCIALITÉS: {
+    NB_CARACTÈRES_MIN_RECHERCHE: 2,
+  },
 } as const;
