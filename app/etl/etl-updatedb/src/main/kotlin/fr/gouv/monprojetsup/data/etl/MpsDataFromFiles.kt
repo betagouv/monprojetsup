@@ -343,15 +343,10 @@ class MpsDataFromFiles(
         )
         val mpsIds = getFormationsMpsIds()
         val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
-        val result = HashMap<String, String>()
-        mpsIds.forEach { id ->
-            val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
-            val attendusId = psupKeys.asSequence().map { attendusPsup[it] }.filterNotNull().map { att -> att.attendusFront }.distinct().joinToString("\n\n")
-            if(attendusId.isNotBlank() && !attendusId.contains("null")) {
-                result[id] = attendusId
-            }
-        }
-        return result
+        val labels = getLabels()
+        val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it))}
+        val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.attendusFront.orEmpty() }
+        return mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
     }
 
     override fun getConseils(): Map<String, String> {
@@ -360,16 +355,46 @@ class MpsDataFromFiles(
         )
         val mpsIds = getFormationsMpsIds()
         val mpsKeyToPsupKeys = psupData.mpsKeyToPsupKeys
+        val labels = getLabels()
+        val allPsupKeys = mpsIds.flatMap { mpsKeyToPsupKeys.getOrDefault(it, setOf(it))}
+        val allTexts = allPsupKeys.associateWith { psupKey -> attendusPsup[psupKey]?.conseilsFront.orEmpty() }
+        return mergeAttendusOrConseils(allTexts, mpsIds, mpsKeyToPsupKeys, labels)
+    }
+
+    private fun mergeAttendusOrConseils(
+        allTexts: Map<String, String>,
+        mpsIds: List<String>,
+        mpsKeyToPsupKeys: Map<String, MutableSet<String>>,
+        labels: Map<String, String>
+    ): Map<String, String> {
         val result = HashMap<String, String>()
         mpsIds.forEach { id ->
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
-            val attendusId = psupKeys.asSequence().map { attendusPsup[it] }.filterNotNull().map { att -> att.conseilsFront }.distinct().joinToString("\n\n")
-            if(attendusId.isNotBlank() && !attendusId.contains("null")) {
-                result[id] = attendusId
+            val formuleVersLibelles = HashMap<String, MutableList<String>>()
+            psupKeys.forEach { psupKey ->
+                val formule = allTexts[psupKey]
+                val libelle = labels.getOrDefault(psupKey, "")
+                if (formule != null && !formule.contains("null") && formule.isNotBlank() && libelle.isNotBlank()) {
+                    val l = formuleVersLibelles.computeIfAbsent(formule) { ArrayList() }
+                    l.add(libelle)
+                }
+            }
+            var texte = ""
+            if (formuleVersLibelles.size <= 1) {
+                texte = formuleVersLibelles.keys.firstOrNull().orEmpty()
+            } else {
+                texte = formuleVersLibelles.entries.joinToString("<br><br>\n\n") { (formule, libelles) ->
+                    val libellesTexte = libelles.joinToString(" - ")
+                    "$libellesTexte: $formule"
+                }
+            }
+            if (texte.isNotBlank()) {
+                result[id] = texte
             }
         }
         return result
     }
+
 
     override fun getCities(): List<Ville> {
         val citiesOld = Serialisation.fromJsonFile(

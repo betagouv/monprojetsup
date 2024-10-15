@@ -143,9 +143,21 @@ class MpsDataPortTest : DataPortTest(){
     }
 
     @Test
-    fun `Les labels des formations ne contienne tps L1`() {
+    fun `Les labels des formations ne contiennent pas L1`() {
         val formationsLabels = mpsDataPort.getFormationsLabels().values
         assertThat(formationsLabels).noneMatch { l -> l.contains("L1") }
+    }
+
+    @Test
+    fun `Les attendus ne sont pas trop longs`() {
+        val attendus = mpsDataPort.getAttendus()
+        assertThat(attendus.entries).allSatisfy { e -> e.value.length < 200 }
+    }
+
+    @Test
+    fun `Les conseils ne sont pas trop longs`() {
+        val conseils = mpsDataPort.getConseils()
+        assertThat(conseils.entries).allSatisfy { e -> e.value.length < 200 }
     }
 
 }
