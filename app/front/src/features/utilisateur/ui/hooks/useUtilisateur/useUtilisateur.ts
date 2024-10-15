@@ -19,6 +19,7 @@ export default function useUtilisateur() {
   const récupérerInformationsUtilisateur = useMemo(() => {
     if (environnement.VITE_TEST_MODE && paramètresURL?.simulerCompte === "expert") {
       return {
+        id: "expert",
         prénom: "hugo",
         nom: "expert",
         email: "expert@example.com",
@@ -28,6 +29,7 @@ export default function useUtilisateur() {
 
     if (environnement.VITE_TEST_MODE) {
       return {
+        id: "eleve",
         prénom: "nina",
         nom: "élève",
         email: "eleve@example.com",
@@ -36,6 +38,7 @@ export default function useUtilisateur() {
     }
 
     return {
+      id: auth.user?.profile.sub,
       prénom: auth.user?.profile.given_name,
       nom: auth.user?.profile.family_name,
       email: auth.user?.profile.email,

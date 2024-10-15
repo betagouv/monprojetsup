@@ -55,7 +55,9 @@ const ProfilÉlève = () => {
                 <br />
                 {utilisateur.nom}
               </p>
-              <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
+              {utilisateur.email && (
+                <p className="fr-text mb-1 break-all text-center text-[--text-mention-grey]">{utilisateur.email}</p>
+              )}
               <Bouton
                 auClic={async () => await utilisateur.seDéconnecter()}
                 label={i18n.PAGE_PROFIL.SE_DÉCONNECTER}

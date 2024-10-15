@@ -90,7 +90,7 @@ const Entête = () => {
                           <span className="fr-btn fr-icon-arrow-go-back-fill">{i18n.ENTÊTE.PLATEFORME_AVENIRS}</span>
                         </LienExterne>
                       </li>
-                      {utilisateur.email ? (
+                      {utilisateur.id ? (
                         <li>
                           <LienInterne
                             ariaLabel={`${utilisateur.prénom} ${utilisateur.nom}`}
