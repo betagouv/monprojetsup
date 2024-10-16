@@ -43,7 +43,7 @@ export default function useÉtablissementsVoeuxOngletToutesLesVilles({
     });
 
     return fuse
-      .search(rechercheÉtablissement, { limit: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS })
+      .search(rechercheÉtablissement)
       .map((correspondance) => établissementVersOptionÉtablissement(correspondance.item));
   }, [formation, rechercheÉtablissement, établissementVersOptionÉtablissement]);
 
@@ -53,6 +53,5 @@ export default function useÉtablissementsVoeuxOngletToutesLesVilles({
     voeuxSélectionnés,
     établissementsSélectionnésParDéfaut,
     àLaRechercheDUnÉtablissement: setRechercheÉtablissement,
-    nombreSuggestionsMax: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS,
   };
 }
