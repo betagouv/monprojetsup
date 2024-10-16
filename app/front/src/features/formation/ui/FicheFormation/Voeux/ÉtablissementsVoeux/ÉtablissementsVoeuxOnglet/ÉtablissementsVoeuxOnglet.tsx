@@ -24,7 +24,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
   return (
     <div key={key}>
       <p className="fr-text--xs mb-3">
-        {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.RAYON}{" "}
+        {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.RAYON}{" "}
         <ul className="m-0 inline-flex list-none flex-wrap justify-start gap-1 p-0">
           {rayons.map((rayon) => (
             <li
@@ -69,7 +69,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
             </ul>
             {nombreÉtablissementsDansLeRayon > nombreÉtablissementÀAfficher && (
               <p className="fr-text--sm mb-0">
-                {nombreÉtablissementsDansLeRayon} {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.VOIR_PLUS}{" "}
+                {nombreÉtablissementsDansLeRayon} {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.VOIR_PLUS}{" "}
                 {formation.lienParcoursSup && (
                   <LienExterne
                     ariaLabel={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PARCOURSUP}
@@ -85,8 +85,8 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
           </div>
         ) : (
           <p className="fr-text--sm mb-0">
-            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ} {rayonSélectionné}{" "}
-            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE}
+            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ} {rayonSélectionné}{" "}
+            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE}
           </p>
         )}
       </div>

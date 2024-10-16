@@ -131,11 +131,13 @@ export const localeFR = {
           PARCOURSUP: "Carte Parcoursup",
           PRÉFÉRENCES: "Préférences de villes",
         },
-        RAYON: "Dans un rayon de",
-        VOIR_PLUS: "établissements dans ce rayon, retrouve toute l’offre de formation sur la",
-        AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
-        AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE:
-          'km autour de cette ville, consulte la carte des formations Parcoursup ou l’onglet "Toutes les villes"',
+        PAR_COMMUNE: {
+          RAYON: "Dans un rayon de",
+          VOIR_PLUS: "établissements dans ce rayon, retrouve toute l’offre de formation sur la",
+          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
+          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE:
+            'km autour de cette ville, consulte la carte des formations Parcoursup ou l’onglet "Toutes les villes"',
+        },
         TOUTES_LES_COMMUNES: {
           TITRE_ONGLET: "Toutes les villes",
           RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
@@ -144,6 +146,7 @@ export const localeFR = {
           DESCRIPTION:
             "Commence à taper puis sélectionne des établissements. Les résultats retournés sont limités à 5, retrouve toute l'offre de formation sur la carte Parcoursup.",
           SÉLECTIONNÉS: "Établissement(s) sélectionné(s)",
+          VOIR_PLUS: "établissement(s) conforme(s) à ta recherche, retrouve toute l’offre de formation sur la",
         },
       },
       COMMENTAIRE: {

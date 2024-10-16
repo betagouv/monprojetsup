@@ -1,5 +1,6 @@
 import useÉtablissementsVoeuxOngletToutesLesVilles from "./useÉtablissementsVoeuxOngletToutesLesVilles";
 import { type ÉtablissemenentsVoeuxOngletToutesLesVillesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
+import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { constantes } from "@/configuration/constantes";
@@ -41,7 +42,23 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: Établisseme
           description={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.DESCRIPTION}
           forcerRafraichissementOptionsSélectionnées
           label={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.LABEL}
+          messageNbSuggestionsMaxDépassé={
+            <>
+              {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.VOIR_PLUS}{" "}
+              {formation.lienParcoursSup && (
+                <LienExterne
+                  ariaLabel={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PARCOURSUP}
+                  href={formation.lienParcoursSup}
+                  taille="petit"
+                  variante="simple"
+                >
+                  {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PARCOURSUP}
+                </LienExterne>
+              )}
+            </>
+          }
           nombreDeCaractèreMinimumRecherche={constantes.ÉTABLISSEMENTS.NB_CARACTÈRES_MIN_RECHERCHE}
+          nombreDeSuggestionsMax={constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS}
           optionsSuggérées={établissementsSuggérés}
           optionsSélectionnéesParDéfaut={établissementsSélectionnésParDéfaut}
           rechercheSuggestionsEnCours={false}

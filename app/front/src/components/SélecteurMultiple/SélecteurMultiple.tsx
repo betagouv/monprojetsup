@@ -14,6 +14,8 @@ const SélecteurMultiple = ({
   àLaRechercheDUneOption,
   rechercheSuggestionsEnCours,
   nombreDeCaractèreMinimumRecherche,
+  nombreDeSuggestionsMax,
+  messageNbSuggestionsMaxDépassé,
   forcerRafraichissementOptionsSélectionnées,
 }: SélecteurMultipleProps) => {
   const {
@@ -23,6 +25,7 @@ const SélecteurMultiple = ({
     optionsAffichées,
     ajouterOptionSélectionnée,
     supprimerOptionSélectionnée,
+    nombreDeSuggestionsRestantes,
     optionsSélectionnées,
   } = useSélecteurMultiple({
     nombreDeCaractèreMinimumRecherche,
@@ -31,6 +34,7 @@ const SélecteurMultiple = ({
     rechercheSuggestionsEnCours,
     optionsSélectionnéesParDéfaut,
     optionsSuggérées,
+    nombreDeSuggestionsMax,
     forcerRafraichissementOptionsSélectionnées,
   });
 
@@ -47,20 +51,28 @@ const SélecteurMultiple = ({
       ) : (
         recherche &&
         optionsAffichées.length > 0 && (
-          <ul
-            aria-live="polite"
-            className="fr-tags-group mb-6 mt-2 list-none"
-            data-testid="suggérées"
-          >
-            {optionsAffichées.map((option) => (
-              <li key={option.valeur}>
-                <TagCliquable
-                  auClic={() => ajouterOptionSélectionnée(option)}
-                  libellé={option.label}
-                />
-              </li>
-            ))}
-          </ul>
+          <div aria-live="polite">
+            {messageNbSuggestionsMaxDépassé &&
+              nombreDeSuggestionsMax &&
+              nombreDeSuggestionsRestantes > nombreDeSuggestionsMax && (
+                <p className="fr-text--sm mb-6">
+                  {nombreDeSuggestionsRestantes} {messageNbSuggestionsMaxDépassé}
+                </p>
+              )}
+            <ul
+              className="fr-tags-group mb-6 mt-2 list-none"
+              data-testid="suggérées"
+            >
+              {optionsAffichées.map((option) => (
+                <li key={option.valeur}>
+                  <TagCliquable
+                    auClic={() => ajouterOptionSélectionnée(option)}
+                    libellé={option.label}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         )
       )}
       {optionsSélectionnées.length > 0 && (

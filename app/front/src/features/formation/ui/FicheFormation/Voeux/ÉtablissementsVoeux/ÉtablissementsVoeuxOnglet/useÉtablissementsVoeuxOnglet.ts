@@ -37,9 +37,9 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
   );
 
   return {
-    nombreÉtablissementÀAfficher: constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS,
+    nombreÉtablissementÀAfficher: constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS,
     nombreÉtablissementsDansLeRayon: établissementsÀAfficher.length,
-    établissementsÀAfficher: établissementsÀAfficher.slice(0, constantes.FICHE_FORMATION.NB_MAX_ÉTABLISSEMENTS),
+    établissementsÀAfficher: établissementsÀAfficher.slice(0, constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS),
     rayons,
     rayonSélectionné,
     changerRayonSélectionné: setRayonSélectionné,

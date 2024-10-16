@@ -10,6 +10,7 @@ export default function useSélecteurMultiple({
   rechercheSuggestionsEnCours,
   optionsSélectionnéesParDéfaut,
   optionsSuggérées,
+  nombreDeSuggestionsMax,
   forcerRafraichissementOptionsSélectionnées,
 }: UseSélecteurMultipleArgs) {
   const [recherche, setRecherche] = useState<string>();
@@ -48,6 +49,11 @@ export default function useSélecteurMultiple({
     auChangementOptionsSélectionnées(nouvellesOptionsSélectionnées);
   };
 
+  const nombreDeSuggestionsRestantes = useMemo(
+    () => optionsSuggérées.filter((opt) => !optionsSélectionnées.some((xyz) => xyz.valeur === opt.valeur)).length,
+    [optionsSuggérées, optionsSélectionnées],
+  );
+
   useEffect(() => {
     if (recherche) {
       àLaRechercheDUneOption(recherche);
@@ -58,15 +64,17 @@ export default function useSélecteurMultiple({
     const rechercheEstValide = recherche && recherche.length >= nombreDeCaractèreMinimumRecherche;
 
     if (rechercheEstValide) {
-      const optionsÀAfficher = optionsSuggérées.filter(
-        (optionSuggérée) =>
-          !optionsSélectionnées.some((optionSélectionnée) => optionSélectionnée.valeur === optionSuggérée.valeur),
-      );
+      const optionsÀAfficher = optionsSuggérées
+        .filter(
+          (optionSuggérée) =>
+            !optionsSélectionnées.some((optionSélectionnée) => optionSélectionnée.valeur === optionSuggérée.valeur),
+        )
+        .slice(0, nombreDeSuggestionsMax ? nombreDeSuggestionsMax : Number.POSITIVE_INFINITY);
       setOptionsAffichées(optionsÀAfficher);
     } else {
       setOptionsAffichées([]);
     }
-  }, [nombreDeCaractèreMinimumRecherche, optionsSuggérées, optionsSélectionnées, recherche]);
+  }, [nombreDeCaractèreMinimumRecherche, nombreDeSuggestionsMax, optionsSuggérées, optionsSélectionnées, recherche]);
 
   useEffect(() => {
     if (forcerRafraichissementOptionsSélectionnées) setOptionsSélectionnées(optionsSélectionnéesParDéfaut ?? []);
@@ -79,6 +87,7 @@ export default function useSélecteurMultiple({
     optionsAffichées,
     ajouterOptionSélectionnée,
     supprimerOptionSélectionnée,
+    nombreDeSuggestionsRestantes,
     optionsSélectionnées,
   };
 }

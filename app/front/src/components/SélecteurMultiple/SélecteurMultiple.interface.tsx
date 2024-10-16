@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type SélecteurMultipleOption = {
   valeur: string;
   label: string;
@@ -13,6 +15,8 @@ export type SélecteurMultipleProps = {
   nombreDeCaractèreMinimumRecherche: number;
   description?: string;
   optionsSélectionnéesParDéfaut?: SélecteurMultipleOption[];
+  nombreDeSuggestionsMax?: number;
+  messageNbSuggestionsMaxDépassé?: ReactNode;
   forcerRafraichissementOptionsSélectionnées?: boolean;
 };
 
@@ -23,5 +27,6 @@ export type UseSélecteurMultipleArgs = {
   rechercheSuggestionsEnCours: SélecteurMultipleProps["rechercheSuggestionsEnCours"];
   optionsSélectionnéesParDéfaut: SélecteurMultipleProps["optionsSélectionnéesParDéfaut"];
   optionsSuggérées: SélecteurMultipleProps["optionsSuggérées"];
+  nombreDeSuggestionsMax: SélecteurMultipleProps["nombreDeSuggestionsMax"];
   forcerRafraichissementOptionsSélectionnées: SélecteurMultipleProps["forcerRafraichissementOptionsSélectionnées"];
 };
