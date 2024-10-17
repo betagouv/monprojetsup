@@ -73,13 +73,9 @@ const PiedDePage = () => {
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
             <p className="fr-logo">
-              Ministère
+              République
               <br />
-              de l’enseignement
-              <br />
-              supérieur
-              <br />
-              et de la recherche
+              Française
             </p>
             <Link
               className="fr-footer__brand-link"

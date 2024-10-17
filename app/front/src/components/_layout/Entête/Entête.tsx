@@ -24,13 +24,9 @@ const Entête = () => {
               <div className="fr-header__brand-top">
                 <div className="fr-header__logo">
                   <p className="fr-logo">
-                    Ministère
+                    République
                     <br />
-                    de l’enseignement
-                    <br />
-                    supérieur
-                    <br />
-                    et de la recherche
+                    Française
                   </p>
                 </div>
                 <div className="fr-header__operator">
