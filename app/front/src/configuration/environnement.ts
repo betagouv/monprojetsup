@@ -18,6 +18,8 @@ export const environnement = createEnv({
       .optional()
       .refine((variable) => variable === "true" || variable === "false" || variable === undefined)
       .transform((variable) => variable === "true"),
+    VITE_PARCOURSUP_OAUTH2_URL: z.string().url().optional(),
+    VITE_PARCOURSUP_OAUTH2_CLIENT: z.string().optional(),
   },
   clientPrefix: "VITE_",
   runtimeEnv: import.meta.env,

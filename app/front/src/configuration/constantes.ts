@@ -1,9 +1,11 @@
 export const constantes = {
   LIENS: {
     ALTERNANCE: "https://www.parcoursup.gouv.fr/trouver-une-formation/zoom-sur-les-formations-en-apprentissage-1634",
+    SIX_NIVEAUX_MPS: "https://monprojetsup.fr/niveaux-de-progression-pedagogique-monprojetsup",
     DONNER_SON_AVIS: "https://grist.numerique.gouv.fr/o/docs/forms/2Saro42MBAB4ZvJYb9fNzV/4",
     AVENIRS: "https://avenirs.onisep.fr/",
   },
+  EMAIL_CONTACT: "support@monprojetsup.fr",
   ÉLÈVE: {
     PATH_PARCOURS_INSCRIPTION: "/eleve/inscription/",
   },

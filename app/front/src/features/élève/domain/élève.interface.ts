@@ -17,6 +17,7 @@ export type FormationFavorite = {
 };
 
 export type Élève = {
+  compteParcoursupAssocié: boolean;
   situation: SituationÉlève | null;
   classe: ClasseÉlève | null;
   bac: BacÉlève | null;

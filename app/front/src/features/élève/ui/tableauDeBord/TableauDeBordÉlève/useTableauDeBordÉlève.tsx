@@ -1,11 +1,31 @@
 import explorerSVG from "@/assets/explorer.svg";
 import favorisSVG from "@/assets/favoris.svg";
 import profilSVG from "@/assets/profil.svg";
+import { actionsToastStore } from "@/components/Toast/useToast/useToast";
 import { i18n } from "@/configuration/i18n/i18n";
-import { type CarteTableauDeBordÉlèveProps } from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève.interface";
+import { CartePrimaireTableauDeBordÉlèveProps } from "@/features/élève/ui/tableauDeBord/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève.interface";
+import { getRouteApi } from "@tanstack/react-router";
 
 export default function useTableauDeBordÉlève() {
-  const cartes: CarteTableauDeBordÉlèveProps[] = [
+  const route = getRouteApi("/_auth/");
+  const { associationPS } = route.useSearch();
+  const { déclencherToast } = actionsToastStore();
+
+  if (associationPS === "ok") {
+    déclencherToast(
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.TITRE,
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.SUCCÈS.DESCRIPTION,
+      "success",
+    );
+  } else if (associationPS === "erreur") {
+    déclencherToast(
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.TITRE,
+      i18n.ÉLÈVE.TABLEAU_DE_BORD.TOAST_PARCOURSUP.ERREUR.DESCRIPTION,
+      "error",
+    );
+  }
+
+  const cartes: CartePrimaireTableauDeBordÉlèveProps[] = [
     {
       titre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.TITRE,
       sousTitre: i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.SUGGESTIONS.SOUS_TITRE,
@@ -26,14 +46,7 @@ export default function useTableauDeBordÉlève() {
     },
   ];
 
-  const témoignage = {
-    contenu: i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE,
-    auteur: i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR,
-    rôle: i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.RÔLE,
-  };
-
   return {
-    témoignage,
     cartes,
   };
 }

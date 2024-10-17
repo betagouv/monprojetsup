@@ -9,6 +9,7 @@ export class RécupérerÉlèveUseCase {
 
     if (!élève) {
       await this._élèveRepository.mettreÀJourProfil({
+        compteParcoursupAssocié: false,
         situation: null,
         classe: null,
         bac: null,

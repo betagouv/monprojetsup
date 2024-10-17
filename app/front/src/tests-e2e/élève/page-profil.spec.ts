@@ -28,10 +28,6 @@ class Test extends TestHelper {
     await this.champClasseActuelle().selectOption({ label: optionLabel });
   };
 
-  public messageModificationsEnregistrées = () => {
-    return this._page.getByText(i18n.COMMUN.MODIFICATIONS_ENREGISTRÉES);
-  };
-
   public champClasseActuelle = () => {
     return this._page.getByLabel(i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL);
   };
@@ -81,6 +77,6 @@ test.describe("Page Profil Élève", () => {
     await testhelper.soumettreLeFormulaire();
 
     // THEN
-    await expect(testhelper.messageModificationsEnregistrées()).toBeVisible();
+    await expect(testhelper.toast()).toContainText(i18n.COMMUN.MODIFICATIONS_ENREGISTRÉES);
   });
 });

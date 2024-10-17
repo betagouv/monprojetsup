@@ -2,18 +2,19 @@ import { type ModifierProfilÉlèveFormProps } from "./ModifierProfilÉlèveForm
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
 import Titre from "@/components/Titre/Titre";
+import { actionsToastStore } from "@/components/Toast/useToast/useToast";
 import { i18n } from "@/configuration/i18n/i18n";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import IntérêtsForm from "@/features/élève/ui/formulaires/IntérêtsForm/IntérêtsForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 
 const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèveFormProps) => {
-  const [statusMessage, setStatusMessage] = useState<string | undefined>();
+  const { déclencherToast, fermerToast } = actionsToastStore();
 
   const àLaSoumissionDuFormulaireAvecSuccès = () => {
-    setStatusMessage(i18n.COMMUN.MODIFICATIONS_ENREGISTRÉES);
+    déclencherToast("", i18n.COMMUN.MODIFICATIONS_ENREGISTRÉES, "success");
   };
 
   const formulaireÀAfficher = () => {
@@ -68,17 +69,10 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
         </Titre>
       </div>
       {formulaireÀAfficher()}
-      <div aria-live="assertive">
-        {statusMessage && (
-          <div className="fr-alert fr-alert--success fr-alert--sm mt-12">
-            <p>{statusMessage}</p>
-          </div>
-        )}
-      </div>
       <hr className="mt-12" />
       <div className="fr-grid-row justify-end">
         <Bouton
-          auClic={() => setStatusMessage(undefined)}
+          auClic={fermerToast}
           formId={formulaireId}
           label={i18n.COMMUN.ENREGISTRER}
           type="submit"

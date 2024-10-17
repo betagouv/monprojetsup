@@ -7,6 +7,7 @@ export class TestHelper {
   protected initialiserProfilÉlèveParDéfaut = async (profilÉlève: Partial<Élève>) => {
     await this._page.context().addInitScript((argumentsProfilÉlève) => {
       const élève: Élève = {
+        compteParcoursupAssocié: false,
         situation: null,
         classe: null,
         bac: null,
@@ -29,6 +30,7 @@ export class TestHelper {
 
   public seConnecterCommeÉlèveAvecParcoursInscriptionTerminé = async () => {
     const profilÉlève: Élève = {
+      compteParcoursupAssocié: false,
       situation: "quelques_pistes",
       classe: "terminale",
       bac: "Générale",
@@ -45,5 +47,9 @@ export class TestHelper {
     };
 
     await this.initialiserProfilÉlèveParDéfaut(profilÉlève);
+  };
+
+  public toast = () => {
+    return this._page.locator("#contenu").getByRole("status");
   };
 }

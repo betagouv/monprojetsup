@@ -6,6 +6,7 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
   private _SESSION_STORAGE_PREFIX = "élève";
 
   private _élève: Élève = {
+    compteParcoursupAssocié: false,
     situation: null,
     classe: null,
     bac: null,
@@ -38,5 +39,16 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
     sessionStorage.setItem(this._SESSION_STORAGE_PREFIX, JSON.stringify(this._élève));
 
     return this._élève;
+  }
+
+  public async associerCompteParcourSup(): Promise<boolean | undefined> {
+    const élève = await this.récupérerProfil();
+
+    if (élève) {
+      await this.mettreÀJourProfil({ ...élève, compteParcoursupAssocié: true });
+      return true;
+    }
+
+    return false;
   }
 }

@@ -1,14 +1,18 @@
 import useTableauDeBordÉlève from "./useTableauDeBordÉlève";
 import Head from "@/components/_layout/Head/Head";
+import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import Titre from "@/components/Titre/Titre";
+import { constantes } from "@/configuration/constantes";
+import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import CarteAvisÉlève from "@/features/élève/ui/tableauDeBord/CarteAvisÉlève/CarteAvisÉlève";
-import CarteTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève";
-import TémoignageTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/TémoignageTableauDeBordÉlève/TémoignageTableauDeBordÉlève";
+import CarteParcourSupÉlève from "@/features/élève/ui/tableauDeBord/CarteParcourSupÉlève/CarteParcourSupÉlève";
+import CartePrimaireTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CartePrimaireTableauDeBordÉlève/CartePrimaireTableauDeBordÉlève";
+import CarteTémoignageÉlève from "@/features/élève/ui/tableauDeBord/CarteTémoignageÉlève/CarteTémoignageÉlève";
 import { Fragment } from "react/jsx-runtime";
 
 const TableauDeBordÉlève = () => {
-  const { cartes, témoignage } = useTableauDeBordÉlève();
+  const { cartes } = useTableauDeBordÉlève();
 
   return (
     <>
@@ -28,7 +32,7 @@ const TableauDeBordÉlève = () => {
             {cartes.map((carte, index) => (
               <Fragment key={carte.lien}>
                 <li>
-                  <CarteTableauDeBordÉlève
+                  <CartePrimaireTableauDeBordÉlève
                     illustration={carte.illustration}
                     lien={carte.lien}
                     sousTitre={carte.sousTitre}
@@ -37,18 +41,36 @@ const TableauDeBordÉlève = () => {
                 </li>
                 {index === 1 && (
                   <li>
-                    <TémoignageTableauDeBordÉlève
-                      auteur={témoignage.auteur}
-                      contenu={témoignage.contenu}
-                      rôle={témoignage.rôle}
-                    />
+                    <CarteTémoignageÉlève
+                      auteur={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.AUTEUR}
+                      rôle={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.RÔLE}
+                    >
+                      {i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE}{" "}
+                      <LienExterne
+                        ariaLabel={i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_SUITE}
+                        href={constantes.LIENS.SIX_NIVEAUX_MPS}
+                      >
+                        {i18n.ÉLÈVE.TABLEAU_DE_BORD.TÉMOIGNAGE.PHRASE_SUITE}
+                      </LienExterne>
+                    </CarteTémoignageÉlève>
                   </li>
                 )}
               </Fragment>
             ))}
           </ul>
           <hr className="mb-4 mt-10" />
-          <CarteAvisÉlève />
+          <ul
+            className={`grid list-none grid-cols-1 gap-6 p-0 ${environnement.VITE_PARCOURSUP_OAUTH2_URL ? "md:grid-cols-2" : ""} `}
+          >
+            {environnement.VITE_PARCOURSUP_OAUTH2_URL && (
+              <li>
+                <CarteParcourSupÉlève />
+              </li>
+            )}
+            <li>
+              <CarteAvisÉlève />
+            </li>
+          </ul>
         </div>
       </div>
     </>

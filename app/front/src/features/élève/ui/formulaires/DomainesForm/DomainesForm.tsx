@@ -6,7 +6,6 @@ import { i18n } from "@/configuration/i18n/i18n";
 const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeTitreCatégories }: DomainesFormProps) => {
   const {
     mettreÀJourÉlève,
-    erreurs,
     filtresGroupésParCatégories,
     filtreIdsSélectionnésParDéfaut,
     auChangementFiltresSélectionnés,
@@ -37,16 +36,6 @@ const DomainesForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId, niveauDeT
           filtreIdsSélectionnésParDéfaut={filtreIdsSélectionnésParDéfaut}
           niveauDeTitre={niveauDeTitreCatégories}
         />
-        <div
-          aria-live="assertive"
-          id="domaines-message"
-        >
-          {erreurs.domaines && (
-            <div className="fr-alert fr-alert--error fr-alert--sm mt-12">
-              <p>{erreurs.domaines.message}</p>
-            </div>
-          )}
-        </div>
       </fieldset>
     </form>
   );

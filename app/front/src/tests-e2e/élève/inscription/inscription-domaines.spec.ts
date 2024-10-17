@@ -37,10 +37,6 @@ class Test extends InscriptionTestHelper {
   public boutonDomaine = (nomDuDomaine: string) => {
     return this._page.getByRole("button", { name: nomDuDomaine });
   };
-
-  public messageErreurAuMoinsUnDomaine = () => {
-    return this._page.locator("#domaines-message").getByText(i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN);
-  };
 }
 
 test.describe("Inscription élève - Mes domaines", () => {
@@ -53,7 +49,7 @@ test.describe("Inscription élève - Mes domaines", () => {
     await testhelper.soumettreLeFormulaire();
 
     // THEN
-    await expect(testhelper.messageErreurAuMoinsUnDomaine()).toBeVisible();
+    await expect(testhelper.toast()).toContainText(i18n.ÉLÈVE.DOMAINES.SÉLECTIONNE_AU_MOINS_UN);
   });
 
   test("Je peux sélectionner des domaines", async ({ page }) => {

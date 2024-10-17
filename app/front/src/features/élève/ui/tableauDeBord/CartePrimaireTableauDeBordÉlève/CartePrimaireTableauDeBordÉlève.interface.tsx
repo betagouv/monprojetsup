@@ -1,6 +1,6 @@
 import { Paths } from "@/types/commons";
 
-export type CarteTableauDeBordÉlèveProps = {
+export type CartePrimaireTableauDeBordÉlèveProps = {
   titre: string;
   sousTitre: string;
   illustration: string;

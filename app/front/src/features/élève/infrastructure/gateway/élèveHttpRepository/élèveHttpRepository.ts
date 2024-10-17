@@ -1,4 +1,5 @@
 import {
+  AssocierCompteParcourSupÉlèveRéponseHTTP,
   type BodyMettreÀJourProfilÉlèveHTTP,
   type MettreÀJourProfilÉlèveRéponseHTTP,
   type RécupérerProfilÉlèveRéponseHTTP,
@@ -31,6 +32,25 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
     return élève;
   }
 
+  public async associerCompteParcourSup(
+    codeVerifier: string,
+    code: string,
+    redirectUri: string,
+  ): Promise<boolean | undefined> {
+    const réponse = await this._mpsApiHttpClient.post<AssocierCompteParcourSupÉlèveRéponseHTTP>(
+      `${this._ENDPOINT}/parcoursup`,
+      {
+        codeVerifier,
+        code,
+        redirectUri,
+      },
+    );
+
+    if (!réponse) return undefined;
+
+    return true;
+  }
+
   private _mapperVersLApiMps(élève: Élève): BodyMettreÀJourProfilÉlèveHTTP {
     return {
       situation: élève.situation ?? undefined,
@@ -57,6 +77,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
 
   private _mapperVersLeDomaine(élève: RécupérerProfilÉlèveRéponseHTTP): Élève {
     return {
+      compteParcoursupAssocié: élève.compteParcoursupAssocie ?? false,
       situation: élève.situation ?? null,
       classe: élève.classe ?? null,
       bac: élève.baccalaureat ?? null,

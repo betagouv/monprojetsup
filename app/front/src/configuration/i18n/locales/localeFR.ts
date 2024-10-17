@@ -224,14 +224,14 @@ export const localeFR = {
         TITRE_ÉTAPE: "Domaines professionnels",
         TITRE: "Les domaines professionnels qui t’attirent",
       },
-      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste",
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un domaine parmi la liste.",
     },
     INTÉRÊTS: {
       PARCOURS_INSCRIPTION: {
         TITRE_ÉTAPE: "Centres d’intérêts",
         TITRE: "Plus tard, je voudrais ...",
       },
-      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste",
+      SÉLECTIONNE_AU_MOINS_UN: "Sélectionne au moins un centre d’intérêt parmi la liste.",
     },
     MÉTIERS: {
       PARCOURS_INSCRIPTION: {
@@ -345,6 +345,12 @@ export const localeFR = {
     TABLEAU_DE_BORD: {
       TITRE: "Bienvenue dans ton espace MPS",
       MESSAGE_BIENVENUE: "Ravi de te voir connecté 👋",
+      MODALE_PARCOURSUP: {
+        TITRE: "Synchronisation avec Parcoursup",
+        CONTENU:
+          "J’autorise MonProjetSup à accéder à mes favoris enregistrés depuis mon compte Parcoursup. A noter que MonProjetSup n’accède à aucun autre élément de ton dossier Parcoursup. Cette autorisation est valable toute la durée de l'année scolaire en cours, et révocable en écrivant à",
+        BOUTON_ACTION: "C'est parti",
+      },
       CARTES: {
         SUGGESTIONS: {
           TITRE: "Explore les suggestions de formations post-bac",
@@ -363,12 +369,32 @@ export const localeFR = {
           SOUS_TITRE: "Donne ton avis sur ton expérience en quelques clics",
           BOUTON: "Je donne mon avis",
         },
+        PARCOURSUP: {
+          TITRE: "Synchronise MPS à ton compte Parcoursup",
+          SOUS_TITRE: "3 clics pour te faciliter la vie",
+          BOUTON: "Synchroniser",
+          ALT_ILLUSTRATION: "MPS & ParcourSup (entrez dans l'enseignement supérieur)",
+          SI_SYNCHRO: {
+            SOUS_TITRE: "Tes comptes sont bien synchronisés. Cette autorisation est revocable en écrivant à",
+          },
+        },
+      },
+      TOAST_PARCOURSUP: {
+        SUCCÈS: {
+          TITRE: "Synchronisation réussie",
+          DESCRIPTION: "Tes comptes MPS & ParcourSup sont désormais associés.",
+        },
+        ERREUR: {
+          TITRE: "Echec de la synchronisation",
+          DESCRIPTION: "Une erreur est survenue, réessaye dans quelques instants.",
+        },
       },
       TÉMOIGNAGE: {
         AUTEUR: "Charlotte",
         RÔLE: "De l’équipe MPS",
         PHRASE:
-          "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup.",
+          "Bienvenue sur MPS ! Ici tu peux explorer et sélectionner les formations correspondant à tes préférences, et préparer sereinement tes vœux Parcoursup, en atteignant progressivement les",
+        PHRASE_SUITE: "6 niveaux MPS",
       },
     },
   },
@@ -399,6 +425,7 @@ export const localeFR = {
     PRÉCISER_CATÉGORIES: "Sélectionne la ou les catégories qui t’intéressent",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
+      TITRE_GÉNÉRIQUE: "Une erreur est survenue",
       AUCUN_RÉSULTAT: "Aucun résultat ne correspond à la recherche.",
       LISTE_OBLIGATOIRE: "Sélectionne une option parmi la liste.",
       AU_MOINS_UNE: "Tu dois indiquer au moins une",

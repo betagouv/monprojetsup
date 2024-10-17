@@ -11,9 +11,33 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupérer le profil de l'utilisateur connecté
+         * @description Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup
+         */
         get: operations["getProfilEleve"];
         put?: never;
+        /**
+         * Modifier le profil de l'utilisateur connecté
+         * @description  Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)
+         */
         post: operations["postProfilEleve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/profil/parcoursup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["postCompteParcoursup"];
         delete?: never;
         options?: never;
         head?: never;
@@ -27,6 +51,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupérer les données nécessaires au parcours d'inscription de MonProjetSup
+         * @description Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.
+         */
         get: operations["getReferentielPourInscription"];
         put?: never;
         post?: never;
@@ -43,6 +71,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupérer des métiers en indiquant leurs ids
+         * @description Renvoie les métiers correspondant aux ids dans l'ordre donné. Ce endpoint est paginé à 30 résultats par page.
+         */
         get: operations["getMetiers"];
         put?: never;
         post?: never;
@@ -59,6 +91,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Rechercher des métiers selons des mots clés
+         * @description Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à 30 résultats par page.
+         */
         get: operations["getRechercheMetierSuccincte"];
         put?: never;
         post?: never;
@@ -75,6 +111,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupération d'une liste de formations, mode détaillé
+         * @description A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.
+         */
         get: operations["getFormations"];
         put?: never;
         post?: never;
@@ -91,6 +131,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Récupération d'une formation, mode détaillé
+         * @description A partir de l'identifiant d'une fiche formation, récupère toutes les informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion.
+         */
         get: operations["getFormation"];
         put?: never;
         post?: never;
@@ -107,7 +151,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Récupérer les suggestions de formations pour un profil d'élève */
+        /**
+         * Récupère les suggestions de formations
+         * @description Récupère les suggestions de formations pour un profil d'élève. Chaque suggestion s'accompagne des informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion. Un lien permet la pagination des résultats.
+         */
         get: operations["getSuggestionsFormations"];
         put?: never;
         post?: never;
@@ -124,6 +171,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Recherche de formation, mode succint
+         * @description A partir du contenu de la barre de recherche, récupérer la liste des formations associées à cette recherche, et le lien de pagination.
+         */
         get: operations["getRechercheFormationSuccincte"];
         put?: never;
         post?: never;
@@ -140,6 +191,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Recherche de formation, mode détaillé
+         * @description A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des explications sur la raison de cette suggestion.
+         */
         get: operations["getRechercheFormationDetaillee"];
         put?: never;
         post?: never;
@@ -340,6 +395,11 @@ export interface components {
             priseDeNote?: string;
         };
         Unit: Record<string, never>;
+        AjoutCompteParcoursupDTO: {
+            codeVerifier: string;
+            code: string;
+            redirectUri: string;
+        };
         AdmissionsParcoursupDTO: {
             annee: string;
             parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
@@ -403,6 +463,96 @@ export interface components {
         SpecialitesDTO: {
             id: string;
             nom: string;
+        };
+        ProfilDTO: {
+            /**
+             * @description Etat d'avancée du projet de l'élève
+             * @example aucune_idee
+             * @enum {string}
+             */
+            situation?: "aucune_idee" | "quelques_pistes" | "projet_precis" | "aucune_idee" | "quelques_pistes" | "projet_precis";
+            /**
+             * @description Classe actuelle
+             * @example terminale
+             * @enum {string}
+             */
+            classe?: "seconde" | "premiere" | "terminale" | "seconde" | "premiere" | "terminale";
+            /**
+             * @description Type de Bac choisi ou envisagé
+             * @example Générale
+             * @enum {string}
+             */
+            baccalaureat?: "NC" | "Générale" | "P" | "PA" | "S2TMD" | "ST2S" | "STAV" | "STD2A" | "STHR" | "STI2D" | "STL" | "STMG";
+            /**
+             * @description Enseignements de spécialité de terminale choisis ou envisagés
+             * @example [
+             *       "mat707",
+             *       "mat700"
+             *     ]
+             */
+            specialites?: string[];
+            /**
+             * @description Domaines d'activité
+             * @example [
+             *       "dom41",
+             *       "dom32",
+             *       "dom26"
+             *     ]
+             */
+            domaines?: string[];
+            /**
+             * @description Centres d'intérêt
+             * @example [
+             *       "ci16",
+             *       "ci27",
+             *       "ci6",
+             *       "ci11"
+             *     ]
+             */
+            centresInterets?: string[];
+            /**
+             * @description Les idées de métiers de l'élève
+             * @example [
+             *       "MET_384",
+             *       "MET_469"
+             *     ]
+             */
+            metiersFavoris?: string[];
+            /**
+             * @description Durée envisagée des études
+             * @example indifferent
+             * @enum {string}
+             */
+            dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee" | "indifferent" | "courte" | "longue" | "aucune_idee";
+            /**
+             * @description Intérêt pour les formations en apprentissage
+             * @example pas_interesse
+             * @enum {string}
+             */
+            alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse" | "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
+            /** @description Villes préférées pour étudier */
+            communesFavorites?: components["schemas"]["CommuneDTO"][];
+            /**
+             * Format: float
+             * @description Moyenne générale scolaire estimée en terminale
+             * @example 14
+             */
+            moyenneGenerale?: number;
+            /** @description Les idées de formations de l'élève */
+            formationsFavorites?: components["schemas"]["VoeuFormationDTO"][];
+            /**
+             * @description Les formations mises à la corbeille par l'élève
+             * @example [
+             *       "fl1",
+             *       "fl810505"
+             *     ]
+             */
+            corbeilleFormations?: string[];
+            /**
+             * @description Prénom de l'élève
+             * @example false
+             */
+            compteParcoursupAssocie: boolean;
         };
         FormationCourteDTO: {
             id: string;
@@ -595,7 +745,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ModificationProfilDTO"];
+                    "*/*": components["schemas"]["ProfilDTO"];
                 };
             };
         };
@@ -610,6 +760,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ModificationProfilDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
+    postCompteParcoursup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AjoutCompteParcoursupDTO"];
             };
         };
         responses: {

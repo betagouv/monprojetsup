@@ -14,6 +14,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
+import { Route as ParcoursupCallbackIndexImport } from './routes/parcoursup-callback/index'
+import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthFormationsIndexImport } from './routes/_auth/formations/index'
 import { Route as AuthFavorisIndexImport } from './routes/_auth/favoris/index'
 import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscription'
@@ -21,7 +23,6 @@ import { Route as AuthEleveInscriptionImport } from './routes/_auth/eleve/_inscr
 // Create Virtual Routes
 
 const AuthEleveImport = createFileRoute('/_auth/eleve')()
-const AuthIndexLazyImport = createFileRoute('/_auth/')()
 const AuthProfilIndexLazyImport = createFileRoute('/_auth/profil/')()
 const AuthEleveInscriptionInscriptionScolariteIndexLazyImport = createFileRoute(
   '/_auth/eleve/_inscription/inscription/scolarite/',
@@ -58,10 +59,15 @@ const AuthEleveRoute = AuthEleveImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthIndexLazyRoute = AuthIndexLazyImport.update({
+const ParcoursupCallbackIndexRoute = ParcoursupCallbackIndexImport.update({
+  path: '/parcoursup-callback/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthIndexRoute = AuthIndexImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
-} as any).lazy(() => import('./routes/_auth/index.lazy').then((d) => d.Route))
+} as any)
 
 const AuthProfilIndexLazyRoute = AuthProfilIndexLazyImport.update({
   path: '/profil/',
@@ -180,8 +186,15 @@ declare module '@tanstack/react-router' {
       id: '/_auth/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthIndexLazyImport
+      preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthImport
+    }
+    '/parcoursup-callback/': {
+      id: '/parcoursup-callback/'
+      path: '/parcoursup-callback'
+      fullPath: '/parcoursup-callback'
+      preLoaderRoute: typeof ParcoursupCallbackIndexImport
+      parentRoute: typeof rootRoute
     }
     '/_auth/eleve': {
       id: '/_auth/eleve'
@@ -325,7 +338,7 @@ const AuthEleveRouteWithChildren = AuthEleveRoute._addFileChildren(
 )
 
 interface AuthRouteChildren {
-  AuthIndexLazyRoute: typeof AuthIndexLazyRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   AuthEleveRoute: typeof AuthEleveRouteWithChildren
   AuthFavorisIndexRoute: typeof AuthFavorisIndexRoute
   AuthFormationsIndexRoute: typeof AuthFormationsIndexRoute
@@ -333,7 +346,7 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthIndexLazyRoute: AuthIndexLazyRoute,
+  AuthIndexRoute: AuthIndexRoute,
   AuthEleveRoute: AuthEleveRouteWithChildren,
   AuthFavorisIndexRoute: AuthFavorisIndexRoute,
   AuthFormationsIndexRoute: AuthFormationsIndexRoute,
@@ -344,7 +357,8 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 export interface FileRoutesByFullPath {
   '': typeof AuthRouteWithChildren
-  '/': typeof AuthIndexLazyRoute
+  '/': typeof AuthIndexRoute
+  '/parcoursup-callback': typeof ParcoursupCallbackIndexRoute
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
@@ -360,7 +374,8 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/': typeof AuthIndexLazyRoute
+  '/': typeof AuthIndexRoute
+  '/parcoursup-callback': typeof ParcoursupCallbackIndexRoute
   '/eleve': typeof AuthEleveInscriptionRouteWithChildren
   '/favoris': typeof AuthFavorisIndexRoute
   '/formations': typeof AuthFormationsIndexRoute
@@ -378,7 +393,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/_auth/': typeof AuthIndexLazyRoute
+  '/_auth/': typeof AuthIndexRoute
+  '/parcoursup-callback/': typeof ParcoursupCallbackIndexRoute
   '/_auth/eleve': typeof AuthEleveRouteWithChildren
   '/_auth/eleve/_inscription': typeof AuthEleveInscriptionRouteWithChildren
   '/_auth/favoris/': typeof AuthFavorisIndexRoute
@@ -399,6 +415,7 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/'
+    | '/parcoursup-callback'
     | '/eleve'
     | '/favoris'
     | '/formations'
@@ -414,6 +431,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/parcoursup-callback'
     | '/eleve'
     | '/favoris'
     | '/formations'
@@ -430,6 +448,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/_auth/'
+    | '/parcoursup-callback/'
     | '/_auth/eleve'
     | '/_auth/eleve/_inscription'
     | '/_auth/favoris/'
@@ -448,10 +467,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
+  ParcoursupCallbackIndexRoute: typeof ParcoursupCallbackIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
+  ParcoursupCallbackIndexRoute: ParcoursupCallbackIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -466,7 +487,8 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_auth"
+        "/_auth",
+        "/parcoursup-callback/"
       ]
     },
     "/_auth": {
@@ -480,8 +502,11 @@ export const routeTree = rootRoute
       ]
     },
     "/_auth/": {
-      "filePath": "_auth/index.lazy.tsx",
+      "filePath": "_auth/index.tsx",
       "parent": "/_auth"
+    },
+    "/parcoursup-callback/": {
+      "filePath": "parcoursup-callback/index.tsx"
     },
     "/_auth/eleve": {
       "filePath": "_auth/eleve",

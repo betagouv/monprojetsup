@@ -36,10 +36,6 @@ class Test extends InscriptionTestHelper {
   public boutonCentreIntérêt = (nomDuCentreIntérêt: string) => {
     return this._page.getByRole("button", { name: nomDuCentreIntérêt, exact: true });
   };
-
-  public messageErreurAuMoinsUnIntérêt = () => {
-    return this._page.locator("#intérêts-message").getByText(i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN);
-  };
 }
 
 test.describe("Inscription élève - Mes centres intérêts", () => {
@@ -52,7 +48,7 @@ test.describe("Inscription élève - Mes centres intérêts", () => {
     await testhelper.soumettreLeFormulaire();
 
     // THEN
-    await expect(testhelper.messageErreurAuMoinsUnIntérêt()).toBeVisible();
+    await expect(testhelper.toast()).toContainText(i18n.ÉLÈVE.INTÉRÊTS.SÉLECTIONNE_AU_MOINS_UN);
   });
 
   test("Je peux sélectionner des centres intérêts", async ({ page }) => {
