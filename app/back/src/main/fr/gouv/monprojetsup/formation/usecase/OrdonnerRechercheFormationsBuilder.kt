@@ -22,17 +22,20 @@ class OrdonnerRechercheFormationsBuilder {
         formationsOrdonnees: List<String>,
         resultats: Map<FormationCourte, Int>,
     ): List<FormationCourte> {
-        val comparateur =
-            Comparator<String> { s1, s2 ->
-                val index1 = formationsOrdonnees.indexOf(s1)
-                val index2 = formationsOrdonnees.indexOf(s2)
-                index1.compareTo(index2)
-            }
-
+        val comparateur = creerComparateur(formationsOrdonnees)
         return resultats.toList()
             .sortedWith(
                 compareByDescending<Pair<FormationCourte, Int>> { it.second }
                     .thenComparing { p1, p2 -> comparateur.compare(p1.first.id, p2.first.id) },
             ).map { it.first }
+    }
+
+    private fun creerComparateur(formationsOrdonnees: List<String>): java.util.Comparator<String> {
+        val mapAvecLesIndex = formationsOrdonnees.withIndex().associate { it.value to it.index }
+        return Comparator { s1, s2 ->
+            val index1 = mapAvecLesIndex[s1] ?: -1
+            val index2 = mapAvecLesIndex[s2] ?: -1
+            index1.compareTo(index2)
+        }
     }
 }
