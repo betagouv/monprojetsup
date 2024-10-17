@@ -49,11 +49,13 @@ Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
 - Login: enseignant
 - Mot de passe: password
 
+### Se connecter à l'application en tant qu'expert
+- Url: http://localhost:5001
+- Login: expert
+- Mot de passe: password
 
 ## Déploiement de l'application
 - Lors du push sur la branch `demo` ou `prod` et une fois les CI validées le code va être push sur un repo privé Gitlab appartenant à Avenir(s) sur les branches respectives correspondants aux différents environnements. 
 - Ce push va déclencher automatiquement le build et le deploy de l'application uniquement pour la branch `demo`.
 - Pour la branch `prod` il est nécessaire de le faire manuellement dans l'interface gitlab du repo Avenir(s).
-- À ce stade du projet nous n'utilisons que l'environnement `preprod` et `prod` chez Avenir(s). 
-
 
