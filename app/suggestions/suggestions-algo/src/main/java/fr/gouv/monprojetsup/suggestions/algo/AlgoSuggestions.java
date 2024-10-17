@@ -210,7 +210,7 @@ public class AlgoSuggestions {
             return List.of();
         }
         //computing interests of all alive filieres
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(pf, cfg, this, true);
 
         Map<String, Affinite> affinites =
                 getFormationIds().stream()
@@ -357,7 +357,7 @@ public class AlgoSuggestions {
         }
         pf.suggRejected().stream().map(SuggestionDTO::fl).toList().forEach(clesFiltrees::remove);
 
-        return  new AffinityEvaluator(pf, data.getConfig(), this).getCandidatesOrderedByPertinence(clesFiltrees);
+        return  new AffinityEvaluator(pf, data.getConfig(), this, false).getCandidatesOrderedByPertinence(clesFiltrees);
     }
 
 
@@ -378,7 +378,7 @@ public class AlgoSuggestions {
         if(profile == null) {
             return List.of();
         }
-        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this);
+        AffinityEvaluator affinityEvaluator = new AffinityEvaluator(profile, data.getConfig(), this, false);
 
         return keys.stream().map(affinityEvaluator::getExplanationsAndExamples).toList();
 
