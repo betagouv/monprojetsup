@@ -87,10 +87,6 @@ public class AffinityEvaluator {
     /* list of formations in the bin.  */
     private final Set<String> rejected =  new HashSet<>();
 
-    /* list of formations + metiers in the bin or in the selction.  */
-    public final Set<String> alreadyKnown = new HashSet<>();
-
-
     /* precomputed candidates for  formations similar to selected formations */
     private final Set<String> candidatsSimilaires;
 
@@ -99,7 +95,7 @@ public class AffinityEvaluator {
 
 
 
-    public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo) {
+    public AffinityEvaluator(ProfileDTO pf, Config cfg, AlgoSuggestions algo, boolean excludeRejected) {
         this.cfg = cfg;
         this.pf = pf;
         this.algo = algo;
@@ -128,13 +124,9 @@ public class AffinityEvaluator {
 
         List<SuggestionDTO> rejectedSuggestions = pf.suggRejected();
 
-        alreadyKnown.addAll(
-                pf.choices().stream()
-                        .filter(SuggestionDTO::isKnown)
-                        .map(SuggestionDTO::fl)
-                        .toList()
-        );
-        rejected.addAll(rejectedSuggestions.stream().map(SuggestionDTO::fl).toList());
+        if(excludeRejected) {
+            rejected.addAll(rejectedSuggestions.stream().map(SuggestionDTO::fl).toList());
+        }
 
         //precomputing candidats for filieres similaires
         candidatsSimilaires = flApproved.stream().flatMap(

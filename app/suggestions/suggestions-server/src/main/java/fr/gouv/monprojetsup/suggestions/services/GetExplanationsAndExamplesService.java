@@ -25,7 +25,7 @@ public class GetExplanationsAndExamplesService extends MySuggService<GetExplanat
 
 
     @Override
-    protected @NotNull GetExplanationsAndExamplesServiceDTO.Response handleRequest(@NotNull GetExplanationsAndExamplesServiceDTO.Request req) throws Exception {
+    protected @NotNull GetExplanationsAndExamplesServiceDTO.Response handleRequest(@NotNull GetExplanationsAndExamplesServiceDTO.Request req) {
         List<GetExplanationsAndExamplesServiceDTO.ExplanationAndExamples> eae
                 = algo.getExplanationsAndExamples(
                         req.profile(),
