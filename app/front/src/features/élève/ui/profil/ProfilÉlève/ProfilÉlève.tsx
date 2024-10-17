@@ -31,7 +31,7 @@ const ProfilÉlève = () => {
 
   return (
     <>
-      <Head title={i18n.PAGE_PROFIL.TITRE_PAGE} />
+      <Head titre={i18n.PAGE_PROFIL.TITRE_PAGE} />
       <div className="h-full bg-[--background-alt-beige-gris-galet] bg-right-top bg-no-repeat lg:bg-[url('/images-de-fond/tableau-de-bord.svg')]">
         <div className="fr-container h-full pb-20 pt-4">
           <FilAriane

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.fr-footer__partners .fr-footer__logo {
+  box-shadow: none;
+}
+
 .fr-segmented input:not([disabled]):not(:checked)+label:hover {
   background: none;
 }

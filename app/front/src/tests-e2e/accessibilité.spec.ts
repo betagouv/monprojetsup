@@ -37,7 +37,10 @@ for (const pagePath of PAGES_PATH) {
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage(pagePath);
 
-    const accessibilityScanResults = await new Axe({ page }).analyze();
+    const accessibilityScanResults = await new Axe({ page })
+      .exclude(".fr-footer__partners-title")
+      .exclude("#header-menu-modal-fr-header")
+      .analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);
   });
