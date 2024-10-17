@@ -26,7 +26,7 @@ const FavorisPage = () => {
 
   return (
     <>
-      <Head title={i18n.PAGE_FAVORIS.TITRE_PAGE} />
+      <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
       <ListeEtAperçuLayout variante="favoris">
         <ListeEtAperçuBarreLatérale>
           <BarreLatéraleFavoris

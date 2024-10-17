@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/function-return-type */
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
@@ -96,7 +95,7 @@ const InscriptionÉlèvePage = () => {
 
   return (
     <>
-      <Head title={étapeActuelle.titreÉtape} />
+      <Head titre={étapeActuelle.titreÉtape} />
       <div className="fr-p-2w fr-py-md-3w fr-px-md-10w shadow-md">
         <IndicateurÉtapes
           indexÉtapeActuelle={indexÉtapeActuelle ?? 1}

@@ -8,7 +8,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 const ConfirmationInscriptionÉlève = () => {
   return (
     <>
-      <Head title={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE} />
+      <Head titre={i18n.ÉLÈVE.CONFIRMATION_INSCRIPTION.TITRE_PAGE} />
       <div className="fr-py-3w fr-px-2w fr-py-md-6w fr-px-md-8w text-center">
         <img
           alt=""
