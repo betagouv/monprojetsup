@@ -2,6 +2,8 @@ import Bouton from "@/components/Bouton/Bouton.tsx";
 import Titre from "@/components/Titre/Titre.tsx";
 import { i18n } from "@/configuration/i18n/i18n.ts";
 import { FormationMasquéeProps } from "@/features/formation/ui/FormationMasquée/FormationMasquée.interface";
+import NombreRaisonsDInteret from "@/features/formation/ui/NombreRaisonsDInteret/NombreRaisonsDInteret";
+import NombreVillesDontFavorites from "@/features/formation/ui/NombreVillesDontFavortites/NombreVillesDontFavorites.tsx";
 import { type Élève } from "@/features/élève/domain/élève.interface.ts";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries.tsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -39,37 +41,11 @@ const FormationMasquée = ({ formation }: FormationMasquéeProps) => {
             {formation.nom}
           </Titre>
         </div>
-        {formation.affinité && formation.affinité > 0 ? (
-          <div className="grid grid-flow-col justify-start gap-2">
-            <span
-              aria-hidden="true"
-              className="fr-icon-checkbox-fill fr-icon--sm text-[--background-flat-success]"
-            />
-            <p className="fr-text--sm mb-0 text-[--text-label-green-emeraude]">
-              {formation.affinité} {i18n.CARTE_FORMATION.POINTS_AFFINITÉ}
-            </p>
-          </div>
-        ) : null}
-
-        {formation.communesProposantLaFormation.length > 0 && (
-          <div className="grid grid-flow-col justify-start gap-2 text-[--text-mention-grey]">
-            <span
-              aria-hidden="true"
-              className="fr-icon-map-pin-2-fill fr-icon--sm"
-            />
-            <p className="mb-2 text-sm">
-              {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION} {formation.communesProposantLaFormation.length}{" "}
-              {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
-              {formation.explications?.communes && formation.explications.communes.length > 0 && (
-                <>
-                  {" "}
-                  {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
-                  <strong>{formation.explications?.communes.map((commune) => commune.nom).join(" • ")}</strong>
-                </>
-              )}
-            </p>
-          </div>
-        )}
+        <NombreRaisonsDInteret affinité={formation.affinité} />
+        <NombreVillesDontFavorites
+          communesProposantLaFormation={formation.communesProposantLaFormation}
+          explications={formation.explications}
+        />
       </div>
       <Bouton
         auClic={() => masquerUneFormation()}
