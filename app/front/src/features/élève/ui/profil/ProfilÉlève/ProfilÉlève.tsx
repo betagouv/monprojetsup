@@ -21,6 +21,8 @@ const ProfilÉlève = () => {
         return 2;
       case "etude":
         return 3;
+      case "corbeille":
+        return 4;
       default:
         return 0;
     }
@@ -102,6 +104,15 @@ const ProfilÉlève = () => {
                     <ModifierProfilÉlèveForm
                       formulaireId="étude"
                       titre={i18n.ÉLÈVE.ÉTUDE.PARCOURS_INSCRIPTION.TITRE}
+                    />
+                  ),
+                },
+                {
+                  titre: i18n.FORMATIONS_MASQUÉES.TITRE,
+                  contenu: (
+                    <ModifierProfilÉlèveForm
+                      formulaireId="corbeille"
+                      titre={i18n.FORMATIONS_MASQUÉES.TITRE}
                     />
                   ),
                 },

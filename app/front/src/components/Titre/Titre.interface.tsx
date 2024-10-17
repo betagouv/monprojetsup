@@ -19,4 +19,5 @@ export type TitreProps = {
     | "text"
     | "text--sm"
     | "text--xs";
+  couleurDeTitre?: string;
 };
