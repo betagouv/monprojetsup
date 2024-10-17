@@ -2,6 +2,7 @@ import useTableauDeBordÉlève from "./useTableauDeBordÉlève";
 import Head from "@/components/_layout/Head/Head";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import ModaleConnexionParcourSup from "@/features/élève/ui/parcoursup/ModaleConnexionParcourSup/ModaleConnexionParcourSup";
 import CarteAvisÉlève from "@/features/élève/ui/tableauDeBord/CarteAvisÉlève/CarteAvisÉlève";
 import CarteTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CarteTableauDeBordÉlève/CarteTableauDeBordÉlève";
 import TémoignageTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/TémoignageTableauDeBordÉlève/TémoignageTableauDeBordÉlève";
@@ -15,6 +16,7 @@ const TableauDeBordÉlève = () => {
       <Head title={i18n.PAGE_TABLEAU_DE_BORD.TITRE_PAGE} />
       <div className="h-full bg-[--background-alt-beige-gris-galet] bg-right-top bg-no-repeat lg:bg-[url('/images-de-fond/tableau-de-bord.svg')]">
         <div className="fr-container pb-20 pt-12">
+          <ModaleConnexionParcourSup />
           <div className="*:mb-2 *:font-normal *:text-[--text-mention-grey]">
             <Titre
               niveauDeTitre="h1"
