@@ -6,6 +6,7 @@ import Onglets from "@/components/Onglets/Onglets";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
+import FormationsMasquées from "@/features/élève/ui/profil/FormationsMasquées/FormationsMasquées";
 import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
 import { useRouterState } from "@tanstack/react-router";
 
@@ -21,6 +22,8 @@ const ProfilÉlève = () => {
         return 2;
       case "etude":
         return 3;
+      case "formations-masquees":
+        return 4;
       default:
         return 0;
     }
@@ -104,6 +107,10 @@ const ProfilÉlève = () => {
                       titre={i18n.ÉLÈVE.ÉTUDE.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
+                },
+                {
+                  titre: i18n.FORMATIONS_MASQUÉES.TITRE,
+                  contenu: <FormationsMasquées />,
                 },
               ]}
             />

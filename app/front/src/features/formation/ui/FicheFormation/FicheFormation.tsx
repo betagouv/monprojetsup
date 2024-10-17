@@ -7,9 +7,9 @@ import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Badge from "@/components/Badge/Badge";
-import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
 import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
 
@@ -44,37 +44,11 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
             </p>
           </div>
         )}
-        {formation.communesProposantLaFormation.length > 0 && (
-          <div className="grid grid-flow-col items-start justify-start gap-2">
-            <span
-              aria-hidden="true"
-              className="fr-icon-map-pin-2-fill fr-icon--sm"
-            />
-            <div>
-              <p className="mb-2 text-sm">
-                {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION} {formation.communesProposantLaFormation.length}{" "}
-                {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
-                {formation.explications?.communes && formation.explications.communes.length > 0 && (
-                  <>
-                    {" "}
-                    {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
-                    <strong>{formation.explications?.communes.map((commune) => commune.nom).join(" • ")}</strong>
-                  </>
-                )}
-              </p>
-              {formation.lienParcoursSup && (
-                <LienExterne
-                  ariaLabel={i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
-                  href={formation.lienParcoursSup}
-                  taille="petit"
-                  variante="simple"
-                >
-                  {i18n.PAGE_FORMATION.VOIR_SUR_PARCOURSUP}
-                </LienExterne>
-              )}
-            </div>
-          </div>
-        )}
+        <CommunesProposantLaFormation
+          communes={formation.communesProposantLaFormation}
+          explications={formation.explications}
+          lienParcoursSup={formation.lienParcoursSup}
+        />
       </div>
       <div className="mt-9">
         <BoutonsActionsFicheFormation formation={formation} />
