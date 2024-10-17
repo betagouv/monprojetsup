@@ -45,7 +45,7 @@ export const localeFR = {
     POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
     VILLES_PROPOSANT_FORMATION: "Formation disponible dans",
     VILLES_PROPOSANT_FORMATION_SUITE: "ville(s)",
-    MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles après cette formation",
+    MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
   },
   PAGE_FAVORIS: {
     TITRE_PAGE: pages.FAVORIS,
@@ -86,7 +86,7 @@ export const localeFR = {
       TROISIÈME_DÉCILE: "50% des lycéens admis avaient une moyenne générale comprise entre",
       QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
-    EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles après cette formation",
+    EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles via cette formation",
     ALTERNANCE: {
       TITRE: "Cette formation est aussi réalisable en alternance",
       TEXTE: "La formation en alternance te permet d'étudier et de travailler en même temps.",
