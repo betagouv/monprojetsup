@@ -1,3 +1,3 @@
 export type HeadProps = {
-  title: string;
+  titre: string;
 };

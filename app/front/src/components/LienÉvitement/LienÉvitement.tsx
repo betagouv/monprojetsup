@@ -24,15 +24,6 @@ const LienÉvitement = () => {
               {i18n.ACCESSIBILITÉ.CONTENU}
             </LienInterne>
           </li>
-          <li>
-            <LienInterne
-              ariaLabel={i18n.ACCESSIBILITÉ.PIED_PAGE}
-              hash="footer"
-              href={routeActuelle}
-            >
-              {i18n.ACCESSIBILITÉ.PIED_PAGE}
-            </LienInterne>
-          </li>
         </ul>
       </nav>
     </div>

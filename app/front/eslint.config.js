@@ -144,6 +144,7 @@ export default [
       "sonarjs/pluginRules-of-hooks": "off",
       "sonarjs/no-misused-promises": "off",
       "sonarjs/slow-regex": "off",
+      "sonarjs/function-return-type": "off",
       "sonarjs/class-name": [
         "error",
         { format: "^[A-Za-zÀ-ÖØ-öø-ÿ]*$" },

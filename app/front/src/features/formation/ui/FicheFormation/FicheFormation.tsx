@@ -22,7 +22,7 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
 
   return (
     <>
-      <Head title={formation.nom} />
+      <Head titre={formation.nom} />
       <div className="mb-6 lg:mt-6">
         <Badge
           titre={i18n.COMMUN.FORMATION}
