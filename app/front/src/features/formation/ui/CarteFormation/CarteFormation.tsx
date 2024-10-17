@@ -2,6 +2,7 @@ import { type CarteFormationProps } from "./CarteFormation.interface";
 import Carte from "@/components/Carte/Carte";
 import Tag from "@/components/Tag/Tag";
 import { i18n } from "@/configuration/i18n/i18n";
+import NombreRaisonsDInteret from "@/features/formation/ui/NombreRaisonsDInteret/NombreRaisonsDInteret";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
@@ -34,17 +35,7 @@ const CarteFormation = ({
       sélectionnée={sélectionnée}
       titre={titre}
     >
-      {affinité && affinité > 0 ? (
-        <div className="grid grid-flow-col justify-start gap-2">
-          <span
-            aria-hidden="true"
-            className="fr-icon-checkbox-fill fr-icon--sm text-[--background-flat-success]"
-          />
-          <p className="fr-text--sm mb-0 text-[--text-label-green-emeraude]">
-            {affinité} {i18n.CARTE_FORMATION.POINTS_AFFINITÉ}
-          </p>
-        </div>
-      ) : null}
+      <NombreRaisonsDInteret affinité={affinité} />
       {communes.length > 0 && (
         <div className="grid grid-flow-col justify-start gap-2">
           <span
