@@ -2,6 +2,8 @@ import { type CarteFormationProps } from "./CarteFormation.interface";
 import Carte from "@/components/Carte/Carte";
 import Tag from "@/components/Tag/Tag";
 import { i18n } from "@/configuration/i18n/i18n";
+import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
+import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
@@ -34,31 +36,8 @@ const CarteFormation = ({
       sélectionnée={sélectionnée}
       titre={titre}
     >
-      {affinité && affinité > 0 ? (
-        <div className="grid grid-flow-col justify-start gap-2">
-          <span
-            aria-hidden="true"
-            className="fr-icon-checkbox-fill fr-icon--sm text-[--background-flat-success]"
-          />
-          <p className="fr-text--sm mb-0 text-[--text-label-green-emeraude]">
-            {affinité} {i18n.CARTE_FORMATION.POINTS_AFFINITÉ}
-          </p>
-        </div>
-      ) : null}
-      {communes.length > 0 && (
-        <div className="grid grid-flow-col justify-start gap-2">
-          <span
-            aria-hidden="true"
-            className="fr-icon-map-pin-2-fill fr-icon--sm"
-          />
-          <p className="fr-text--sm mb-0">
-            {i18n.CARTE_FORMATION.VILLES_PROPOSANT_FORMATION}{" "}
-            <strong>
-              {communes.length} {i18n.CARTE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
-            </strong>
-          </p>
-        </div>
-      )}
+      <NombreAffinité affinité={affinité} />
+      <CommunesProposantLaFormation communes={communes} />
       {métiersAccessibles.length > 0 && (
         <div className="grid gap-3">
           <p className="fr-text--sm mb-0 text-[--text-label-grey]">{i18n.CARTE_FORMATION.MÉTIERS_ACCESSIBLES}</p>

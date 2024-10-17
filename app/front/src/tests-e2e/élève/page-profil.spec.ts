@@ -56,7 +56,7 @@ test.describe("Page Profil Élève", () => {
     await testhelper.naviguerVersLaPage();
 
     // THEN
-    await expect(testhelper.listeOnglets().getByRole("tab")).toHaveCount(4);
+    await expect(testhelper.listeOnglets().getByRole("tab")).toHaveCount(5);
   });
 
   test("Je peux naviguer entre les onglets", async ({ page }) => {

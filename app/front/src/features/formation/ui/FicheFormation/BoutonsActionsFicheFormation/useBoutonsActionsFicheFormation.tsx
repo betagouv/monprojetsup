@@ -1,11 +1,10 @@
 import { type useBoutonsActionsFicheFormationArgs } from "./BoutonsActionsFicheFormation.interface";
-import { type Élève } from "@/features/élève/domain/élève.interface";
+import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève.ts";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useBoutonsActionsFicheFormation({ formation }: useBoutonsActionsFicheFormationArgs) {
   const { data: élève } = useQuery(élèveQueryOptions);
-  const mutationÉlève = useMutation<Élève, unknown, Élève>({ mutationKey: ["mettreÀJourÉlève"] });
 
   const estFavorite =
     élève?.formationsFavorites?.some((formationFavorite) => formationFavorite.id === formation.id) ?? false;
@@ -13,23 +12,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
   const estMasquée =
     élève?.formationsMasquées?.some((formationsMasquée) => formationsMasquée === formation.id) ?? false;
 
-  const modifierFormationsFavorites = async (formationsFavorites: Élève["formationsFavorites"]) => {
-    if (!élève) return;
-
-    await mutationÉlève.mutateAsync({
-      ...élève,
-      formationsFavorites,
-    });
-  };
-
-  const modifierFormationsMasquées = async (formationsMasquées: Élève["formationsMasquées"]) => {
-    if (!élève) return;
-
-    await mutationÉlève.mutateAsync({
-      ...élève,
-      formationsMasquées,
-    });
-  };
+  const { mettreÀJourÉlève } = useÉlève({});
 
   const ajouterEnFavori = async () => {
     const formationsFavorites = [
@@ -42,7 +25,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
       ...(élève?.formationsFavorites ?? []),
     ];
 
-    await modifierFormationsFavorites(formationsFavorites);
+    await mettreÀJourÉlève({ formationsFavorites });
   };
 
   const supprimerDesFavoris = async () => {
@@ -50,13 +33,13 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
       (formationFavorite) => formationFavorite.id !== formation.id,
     );
 
-    await modifierFormationsFavorites(formationsFavorites ?? []);
+    await mettreÀJourÉlève({ formationsFavorites: formationsFavorites ?? [] });
   };
 
   const masquerUneFormation = async () => {
     const formationsMasquées = élève?.formationsMasquées ?? [];
 
-    await modifierFormationsMasquées([formation.id, ...formationsMasquées]);
+    await mettreÀJourÉlève({ formationsMasquées: [formation.id, ...formationsMasquées] });
   };
 
   const afficherÀNouveauUneFormation = async () => {
@@ -64,7 +47,7 @@ export default function useBoutonsActionsFicheFormation({ formation }: useBouton
       (formationMasquée) => formationMasquée !== formation.id,
     );
 
-    await modifierFormationsMasquées(formationsMasquées ?? []);
+    await mettreÀJourÉlève({ formationsMasquées: formationsMasquées ?? [] });
   };
 
   return {
