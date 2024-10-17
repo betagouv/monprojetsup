@@ -3,6 +3,7 @@ import AnimationChargement from "@/components/AnimationChargement/AnimationCharg
 import Bouton from "@/components/Bouton/Bouton";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import FormationsMasquéesForm from "@/features/élève/ui/formulaires/FormationsMasquéesForm/FormationsMasquéesForm";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import IntérêtsForm from "@/features/élève/ui/formulaires/IntérêtsForm/IntérêtsForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
@@ -52,10 +53,14 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
             {...propsFormulaire}
           />
         );
+      case "corbeille":
+        return <FormationsMasquéesForm />;
       default:
         return null;
     }
   };
+
+  const afficherBoutonEnregistrer = formulaireId !== "corbeille";
 
   return (
     <Suspense fallback={<AnimationChargement />}>
@@ -75,15 +80,19 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
           </div>
         )}
       </div>
-      <hr className="mt-12" />
-      <div className="fr-grid-row justify-end">
-        <Bouton
-          auClic={() => setStatusMessage(undefined)}
-          formId={formulaireId}
-          label={i18n.COMMUN.ENREGISTRER}
-          type="submit"
-        />
-      </div>
+      {afficherBoutonEnregistrer && (
+        <div>
+          <hr className="mt-12" />
+          <div className="fr-grid-row justify-end">
+            <Bouton
+              auClic={() => setStatusMessage(undefined)}
+              formId={formulaireId}
+              label={i18n.COMMUN.ENREGISTRER}
+              type="submit"
+            />
+          </div>
+        </div>
+      )}
     </Suspense>
   );
 };
