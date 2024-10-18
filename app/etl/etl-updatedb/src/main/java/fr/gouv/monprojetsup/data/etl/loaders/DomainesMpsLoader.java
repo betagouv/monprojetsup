@@ -26,6 +26,7 @@ public class DomainesMpsLoader {
             String emojiCategorie = g.getOrDefault("emoji regroupements MPS", "");
             String emojiElement = g.getOrDefault("emoji domaines MPS", "");
             String atomesList = g.getOrDefault("clés ideo2 des sousdomaines web", "");
+            val description = g.getOrDefault("descriptif domaines MPS", "");
 
             if(!labelCategorie.isBlank()) {
                 if(emojiCategorie.isBlank()) {
@@ -57,7 +58,6 @@ public class DomainesMpsLoader {
                 throw new RuntimeException("Atome avec code inconnu:" + atomes);
             }
 
-            val description = g.getOrDefault("descriptif", "");
             val element = Taxonomie.TaxonomieCategorie.TaxonomieElement.build(
                     idElement,
                     atomes,
