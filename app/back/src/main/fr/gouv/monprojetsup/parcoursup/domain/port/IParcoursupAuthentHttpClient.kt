@@ -2,12 +2,15 @@ package fr.gouv.monprojetsup.parcoursup.domain.port
 
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
-import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
+import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 
-interface ParcoursupHttpClient {
+interface IParcoursupAuthentHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    fun recupererLesVoeuxSelectionnesSurParcoursup(idParcoursup: Int): List<FavorisParcoursup>
+    fun recupererClientAccessToken(
+        clientId: String,
+        clientSecret: String,
+    ): String?
 
     @Throws(MonProjetSupNotFoundException::class)
-    fun recupererIdParcoursupEleve(jwt: String): Int
+    fun recupererIdParcoursupEleve(parametresPourRecupererToken: ParametresPourRecupererToken): Int
 }

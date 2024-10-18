@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
-import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
+import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupFavorisApiHttpClient
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -26,7 +26,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     lateinit var compteParcoursupRepository: CompteParcoursupRepository
 
     @Mock
-    lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
+    lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiHttpClient
 
     @Mock
     lateinit var voeuRepository: VoeuRepository

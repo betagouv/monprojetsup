@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations
 import org.slf4j.Logger
 import org.springframework.http.HttpStatus
 
-class ParcoursupApiHttpClientTest {
+class ParcoursupFavorisApiHttpClientTest {
     @Mock
     private lateinit var httpClient: OkHttpClient
 
@@ -31,13 +31,13 @@ class ParcoursupApiHttpClientTest {
 
     private val objectMapper = ObjectMapper()
 
-    private lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
+    private lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiHttpClient
 
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
         parcoursupApiHttpClient =
-            ParcoursupApiHttpClient(
+            ParcoursupFavorisApiHttpClient(
                 clientId = "clientId",
                 clientSecret = "clientSecret",
                 urlAuthent = "https://monauthentification.fr/Authentification",

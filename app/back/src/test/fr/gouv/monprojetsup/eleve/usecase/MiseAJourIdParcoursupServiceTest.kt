@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
-import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupApiHttpClient
+import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupFavorisApiHttpClient
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -17,7 +17,7 @@ class MiseAJourIdParcoursupServiceTest {
     lateinit var compteParcoursupRepository: CompteParcoursupRepository
 
     @Mock
-    lateinit var parcoursupApiHttpClient: ParcoursupApiHttpClient
+    lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiHttpClient
 
     @InjectMocks
     lateinit var miseAJourIdParcoursupService: MiseAJourIdParcoursupService

@@ -65,31 +65,6 @@ abstract class ApiHttpClient(
     }
 
     @Throws(MonProjetSupInternalErrorException::class)
-    protected fun recupererAccessToken(
-        clientId: String,
-        clientSecret: String,
-        urlToken: String,
-    ): String? {
-        val formBody =
-            FormBody.Builder()
-                .add("grant_type", "client_credentials")
-                .build()
-
-        val request =
-            Request.Builder()
-                .url(urlToken)
-                .post(formBody)
-                .header("Authorization", Credentials.basic(clientId, clientSecret))
-                .build()
-
-        httpClient.newCall(request).execute().use { response ->
-            verifierCodeErreur(response, urlToken)
-            val bodyRetour = deserialisation<TokenReponseDTO>(response.body?.string(), urlToken)
-            return bodyRetour.token
-        }
-    }
-
-    @Throws(MonProjetSupInternalErrorException::class)
     protected fun verifierCodeErreur(
         reponse: Response,
         url: String,
