@@ -29,7 +29,9 @@ class RunDiagnostics
     "fr.gouv.monprojetsup.suggestions.config"
 ])
 @EntityScan(basePackages = [
-    "fr.gouv.monprojetsup.data"]
+    "fr.gouv.monprojetsup.data",
+    "fr.gouv.monprojetsup.suggestions.entities"
+]
 )
 @EnableJpaRepositories(basePackages = [
     "fr.gouv.monprojetsup.suggestions"]

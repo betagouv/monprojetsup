@@ -29,7 +29,6 @@ class ApplicationSuggestions
 @ComponentScan(basePackages = [
     "fr.gouv.monprojetsup.suggestions",
     "fr.gouv.monprojetsup.suggestions.config",
-
     "fr.gouv.monprojetsup.data.formation.infrastructure",
     "fr.gouv.monprojetsup.data.metier.infrastructure",
     "fr.gouv.monprojetsup.data.referentiel.infrastructure",

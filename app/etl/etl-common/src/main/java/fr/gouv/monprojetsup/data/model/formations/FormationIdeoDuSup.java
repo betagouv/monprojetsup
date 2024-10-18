@@ -32,10 +32,12 @@ public record FormationIdeoDuSup(
 
 ) {
 
-    public void inheritFrom(FormationIdeoDuSup rich) {
+    public void inheritFrom(FormationIdeoDuSup rich, boolean seulementMetiers) {
         metiers.addAll(rich.metiers);
-        motsCles.addAll(rich.motsCles);
-        libellesOuClesSousdomainesWeb.addAll(rich.libellesOuClesSousdomainesWeb);
+        if(!seulementMetiers) {
+            motsCles.addAll(rich.motsCles);
+            libellesOuClesSousdomainesWeb.addAll(rich.libellesOuClesSousdomainesWeb);
+        }
     }
 
     public FormationIdeoDuSup(@NotNull FicheFormationIdeo f) {
