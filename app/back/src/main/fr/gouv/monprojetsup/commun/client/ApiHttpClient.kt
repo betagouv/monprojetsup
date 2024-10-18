@@ -3,8 +3,6 @@ package fr.gouv.monprojetsup.commun.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
-import okhttp3.Credentials
-import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request

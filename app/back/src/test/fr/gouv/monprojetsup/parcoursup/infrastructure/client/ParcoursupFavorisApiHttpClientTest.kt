@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
+import fr.gouv.monprojetsup.parcoursup.domain.port.IParcoursupAuthentHttpClient
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -31,6 +32,9 @@ class ParcoursupFavorisApiHttpClientTest {
 
     private val objectMapper = ObjectMapper()
 
+    @Mock
+    private lateinit var parcoursupAuthentHttpClient: IParcoursupAuthentHttpClient
+
     private lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiHttpClient
 
     @BeforeEach
@@ -40,11 +44,11 @@ class ParcoursupFavorisApiHttpClientTest {
             ParcoursupFavorisApiHttpClient(
                 clientId = "clientId",
                 clientSecret = "clientSecret",
-                urlAuthent = "https://monauthentification.fr/Authentification",
                 baseUrl = "https://parcoursup.fr",
                 objectMapper = objectMapper,
                 httpClient = httpClient,
                 logger = logger,
+                parcoursupAuthentHttpClient = parcoursupAuthentHttpClient,
             )
     }
 

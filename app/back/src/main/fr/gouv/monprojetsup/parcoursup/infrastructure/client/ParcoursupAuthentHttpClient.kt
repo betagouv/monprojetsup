@@ -9,19 +9,13 @@ import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 import fr.gouv.monprojetsup.parcoursup.domain.port.IParcoursupAuthentHttpClient
 import okhttp3.Credentials
 import okhttp3.FormBody
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders
 import org.springframework.stereotype.Component
-import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class ParcoursupAuthentHttpClient(
@@ -41,13 +35,12 @@ class ParcoursupAuthentHttpClient(
         logger,
     ),
     IParcoursupAuthentHttpClient {
-
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererClientAccessToken(
         clientId: String,
         clientSecret: String,
     ): String? {
-        val urlToken = baseUrl+ URL_TOKEN
+        val urlToken = baseUrl + URL_TOKEN
         val formBody =
             FormBody.Builder()
                 .add("grant_type", "client_credentials")
@@ -69,11 +62,12 @@ class ParcoursupAuthentHttpClient(
 
     @Throws(MonProjetSupBadRequestException::class)
     override fun recupererIdParcoursupEleve(parametresPourRecupererToken: ParametresPourRecupererToken): Int {
-        val url = (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
-            .addQueryParameter("redirect_uri", parametresPourRecupererToken.redirectUri)
-            .addQueryParameter("code", parametresPourRecupererToken.code)
-            .addQueryParameter("code_verifier", parametresPourRecupererToken.codeVerifier)
-            .build()
+        val url =
+            (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
+                .addQueryParameter("redirect_uri", parametresPourRecupererToken.redirectUri)
+                .addQueryParameter("code", parametresPourRecupererToken.code)
+                .addQueryParameter("code_verifier", parametresPourRecupererToken.codeVerifier)
+                .build()
 
         val formBody =
             FormBody.Builder()

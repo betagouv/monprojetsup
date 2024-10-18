@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
+import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
@@ -633,7 +634,9 @@ class ProfilEleveControllerTest(
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
@@ -647,7 +650,9 @@ class ProfilEleveControllerTest(
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
@@ -665,13 +670,21 @@ class ProfilEleveControllerTest(
                         "L'élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c tente de sauvegarder son id parcoursup " +
                             "mais il n'est pas encore sauvegardé en BDD",
                 )
-            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, "eyzefkgzejkfezlnkj")).willThrow(exception)
+            val parametresPourRecupererToken =
+                ParametresPourRecupererToken(
+                    codeVerifier = "code_verifier",
+                    code = "code",
+                    redirectUri = "redirect_uri",
+                )
+            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, parametresPourRecupererToken)).willThrow(exception)
 
             // When & Then
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
@@ -697,13 +710,21 @@ class ProfilEleveControllerTest(
         fun `si l'élève existe mais que le service renvoie MonProjetSupBadRequestException, doit retourner 400`() {
             // Given
             val exception = MonProjetSupBadRequestException(code = "JWT_NON_VALIDE", msg = "JWT envoyé invalide")
-            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, "eyzefkgzejkfezlnkj")).willThrow(exception)
+            val parametresPourRecupererToken =
+                ParametresPourRecupererToken(
+                    codeVerifier = "code_verifier",
+                    code = "code",
+                    redirectUri = "redirect_uri",
+                )
+            given(miseAJourIdParcoursupService.mettreAJourIdParcoursup(unProfilEleve, parametresPourRecupererToken)).willThrow(exception)
 
             // When & Then
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
@@ -735,7 +756,9 @@ class ProfilEleveControllerTest(
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
@@ -763,7 +786,9 @@ class ProfilEleveControllerTest(
             val bodyEntree =
                 """
                 {
-                  "jwtParcoursup": "eyzefkgzejkfezlnkj"
+                  "codeVerifier": "code_verifier",
+                  "code": "code",
+                  "redirectUri": "redirect_uri"
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))

@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.swagger.v3.oas.annotations.media.Schema
+import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 
 data class AjoutCompteParcoursupDTO(
     @JsonProperty("codeVerifier")
@@ -10,4 +10,11 @@ data class AjoutCompteParcoursupDTO(
     val code: String,
     @JsonProperty("redirectUri")
     val redirectUri: String,
-)
+) {
+    fun toParametresPourRecupererToken() =
+        ParametresPourRecupererToken(
+            codeVerifier = codeVerifier,
+            code = code,
+            redirectUri = redirectUri,
+        )
+}

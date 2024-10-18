@@ -44,8 +44,10 @@ class ProfilEleveController(
     fun postCompteParcoursup(
         @RequestBody ajoutCompteParcoursup: AjoutCompteParcoursupDTO,
     ): ResponseEntity<Unit> {
-        val profil = recupererEleveIdentifie()
-        miseAJourIdParcoursupService.mettreAJourIdParcoursup(profil, ajoutCompteParcoursup.jwtParcoursup)
+        miseAJourIdParcoursupService.mettreAJourIdParcoursup(
+            profil = recupererEleveIdentifie(),
+            parametresPourRecupererToken = ajoutCompteParcoursup.toParametresPourRecupererToken(),
+        )
         return ResponseEntity<Unit>(HttpStatus.NO_CONTENT)
     }
 }

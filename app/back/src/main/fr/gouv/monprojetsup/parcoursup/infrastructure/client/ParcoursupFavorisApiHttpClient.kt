@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
+import fr.gouv.monprojetsup.parcoursup.domain.port.IParcoursupAuthentHttpClient
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupApiHttpClient
 import fr.gouv.monprojetsup.parcoursup.infrastructure.dto.ParcoursupFavorisReponseDTO
 import okhttp3.OkHttpClient
@@ -17,7 +18,7 @@ class ParcoursupFavorisApiHttpClient(
     private val clientId: String,
     @Value("\${parcoursup.api.favoris.client.password}")
     private val clientSecret: String,
-    private val parcoursupAuthentHttpClient: ParcoursupAuthentHttpClient,
+    private val parcoursupAuthentHttpClient: IParcoursupAuthentHttpClient,
     @Value("\${parcoursup.api.favoris.url}")
     override val baseUrl: String,
     override val objectMapper: ObjectMapper,
