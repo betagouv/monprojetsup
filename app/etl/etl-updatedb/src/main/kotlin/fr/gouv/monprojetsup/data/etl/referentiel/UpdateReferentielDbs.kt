@@ -174,11 +174,13 @@ class UpdateReferentielDbs(
             entity.emoji = categorie.emoji
             domainesCategoriesDb.save(entity)
             categorie.elements.forEach { element ->
-                val domaine = DomaineEntity()
-                domaine.id = element.id
-                domaine.nom = element.label
-                domaine.emoji = element.emoji
-                domaine.idCategorie = groupeId
+                val domaine = DomaineEntity().apply {
+                    this.id = element.id
+                    this.nom = element.label
+                    this.emoji = element.emoji
+                    this.description = element.description
+                    this.idCategorie = groupeId
+                }
                 domainesDb.save(domaine)
                 element.atomes.forEach { (key,label) ->
                     val domaineIdeo = DomaineIdeoEntity()
