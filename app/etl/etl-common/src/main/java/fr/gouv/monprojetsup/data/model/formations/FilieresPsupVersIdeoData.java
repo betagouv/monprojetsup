@@ -5,8 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.val;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
@@ -24,7 +29,6 @@ public record FilieresPsupVersIdeoData(
 
 ) {
 
-    private static final Logger logger = Logger.getLogger(FilieresPsupVersIdeoData.class.getSimpleName());
     public static List<FilieresPsupVersIdeoData> compute(
             PsupToIdeoCorrespondance lines,
             Map<String, FormationIdeoDuSup> formationsIdeo
@@ -152,7 +156,7 @@ public record FilieresPsupVersIdeoData(
 
     }
 
-    /* returns the sorte dlist of items that appear often in the list */
+    /* returns the sorted list of items that appear often in the list */
     private static List<String> majorityItems(List<String> list) {
         val counts = new HashMap<String, Integer>();
         list.forEach(

@@ -132,7 +132,8 @@ public class OnisepDataLoader {
 
     public static void injectInFormationsIdeo(
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup,
-            Map<String, Set<String>> legataireToHeritier) {
+            Map<String, Set<String>> legataireToHeritier,
+            boolean seulementMetiers) {
         legataireToHeritier.forEach((legataireId, heritiersIds) -> {
             val legataire = formationsIdeoDuSup.get(legataireId);
             if (legataire == null) {
@@ -143,7 +144,7 @@ public class OnisepDataLoader {
                     if (poor == null) {
                         LOGGER.warning(FORMATION_INCONNUE + " héritier " +  heritierId);
                     } else {
-                        poor.inheritFrom(legataire);
+                        poor.inheritFrom(legataire, seulementMetiers);
                     }
                 });
             }
@@ -632,10 +633,10 @@ public class OnisepDataLoader {
 
         val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
         val mastersIdeoToLicencesIdeo = loadIdeoHeritagesMastersLicences(sources, formationsIdeoDuSup.keySet(), oldIdeoToNewIdeo);
-        injectInFormationsIdeo(formationsIdeoDuSup, mastersIdeoToLicencesIdeo);
+        injectInFormationsIdeo(formationsIdeoDuSup, mastersIdeoToLicencesIdeo, true);
 
         val licencesIdeoToCPGEIdeo  = loadIdeoHeritagesLicencesCpge(sources, formationsIdeoDuSup.keySet(), oldIdeoToNewIdeo);
-        injectInFormationsIdeo(formationsIdeoDuSup, licencesIdeoToCPGEIdeo);
+        injectInFormationsIdeo(formationsIdeoDuSup, licencesIdeoToCPGEIdeo, false);
 
         val formationsIdeoToMetiersIdeo = loadLiensFormationsIdeoMetiers(sources);
         injectMetiersInFormationsIdeo(formationsIdeoDuSup, formationsIdeoToMetiersIdeo);
