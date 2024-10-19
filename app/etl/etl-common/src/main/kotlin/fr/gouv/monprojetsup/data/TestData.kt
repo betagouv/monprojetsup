@@ -17,6 +17,9 @@ class TestData {
         const val MIN_NB_ARETES_SUGGESTIONS_GRAPH: Long = 1000
 
         const val ECOLE_COMMERCE_PSUP_FR_COD: Int = 24
+        const val ECOLE_COMMERCE_PSUP_FL_COD1: Int = 10 * ECOLE_COMMERCE_PSUP_FR_COD
+        const val ECOLE_COMMERCE_PSUP_FL_COD2: Int = 10 * ECOLE_COMMERCE_PSUP_FR_COD + 1
+        const val ECOLE_COMMERCE_PSUP_FL_COD3: Int = 10 * ECOLE_COMMERCE_PSUP_FR_COD + 2
         const val CPGE_LETTRES_PSUP_FL_COD: Int = 31
         const val CPGE_LETTRE_IDEO_CODE: String = "FOR.1471"
         const val L1_HISTOIRE_ART_IDEO_CODE: String = "FOR.4741"
@@ -39,6 +42,8 @@ class TestData {
         const val MET_TECH_FORGE_IDEO = "MET.550"
         const val MET_COMMISSAIRE_PRISEUR_IDEO = "MET.673"
         const val MASTER_TOURISME = "FOR.10361"
+
+        const val VILLE_SOULAC_SUR_MER_INSEE_CODE: String = "33514"
 
         val psupToIdeoReference = mapOf(
             Constants.gFlCodToMpsId(BTS_AERONAUTIQUE_FL_COD_PSUP) to BTS_AERONAUTIQUE_IDEO_COD,

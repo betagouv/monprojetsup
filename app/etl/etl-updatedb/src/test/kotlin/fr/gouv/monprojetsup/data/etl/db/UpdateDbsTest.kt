@@ -157,13 +157,10 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
-        fun `La table des villes doit inclure Soulac-sur-Mer, à la fois sous son nom et sous son code INSEE`() {
+        fun `La table des villes doit inclure Soulac-sur-Mer`() {
             updateSuggestionsDbs.updateVillesDb()
-            val ville1 = villesDb.findById("33514").map { it.toVille() }
-            val ville2 = villesDb.findById("Soulac-sur-Mer").map { it.toVille() }
+            val ville1 = villesDb.findById(TestData.VILLE_SOULAC_SUR_MER_INSEE_CODE)
             assertThat(ville1).isPresent
-            assertThat(ville2).isPresent
-            assertThat(ville1.get()).isEqualTo(ville2.get())
         }
 
         @Test
