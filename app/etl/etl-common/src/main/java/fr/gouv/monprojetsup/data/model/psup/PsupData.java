@@ -290,10 +290,10 @@ public record PsupData(
                     || fr == 75000 // Diplôme d'Etablissement
                     || fr == IEP_PSUP_FR_COD //sciences po
                     || fr == ECOLES_ARTS_PSUP_FR_COD
-                    || fr == ECOLES_INGE_PSUP_FR_COD
+                    //|| fr == ECOLES_INGE_PSUP_FR_COD
+                    //|| fr == ECOLE_COMMERCE_PSUP_FR_COD
                     || fr == 75001 // DSP
                     || fr == 75 // DU,
-                    || fr == ECOLE_COMMERCE_PSUP_FR_COD
 
             ) {
                 String grp = gFrCodToMpsId(fr);
