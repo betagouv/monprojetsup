@@ -160,16 +160,32 @@ public class Labels {
                 libelle
                         .replace(" - Sciences, technologie, santé - ", " - ")
                         .replace("L1", "Licence")
-                        .replace("EA-BAC3", "Ecole ")
-                        .replace("EA-BAC5", "Ecole ")
                         .replace("CPGE", "Classes prépa (CPGE)")
                         .replace("CUPGE", "Classes prépa universitaires (CUPGE)")
                 ;
+        if(newLibelle.contains("EA-BAC3")) {
+            newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +3)";
+        }
+        if(newLibelle.contains("EA-BAC5")) {
+            newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +5)";
+        }
         if(key.equals("fr90")) {
             newLibelle = "Sciences Po / Instituts d'études politiques (IEP)";
         }
         if(key.equals("fl230")) {
             newLibelle = "Bachelors des écoles d'ingénieurs (Bac+3)";
+        }
+        if(key.equals("fl210")) {
+            newLibelle = "Ecoles d'ingénieurs (Bac+5)";
+        }
+        if(key.equals("fl241")) {
+            newLibelle = "Bachelors des écoles de commerce (Bac+3)";
+        }
+        if(key.equals("fl240")) {
+            newLibelle = "Ecoles de commerce (Bac+5)";
+        }
+        if(key.equals("fl242")) {
+            newLibelle = "Ecoles de commerce (Bac+4)";
         }
         return newLibelle;
     }

@@ -11,16 +11,12 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL;
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
-import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL1;
-import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL2;
 
 public class DescriptifsLoader {
     public static @NotNull DescriptifsFormationsMetiers loadDescriptifs(
@@ -104,6 +100,7 @@ public class DescriptifsLoader {
         }
 
         for (val line : lines) {
+            if(line.values().stream().allMatch(String::isBlank)) continue;
             String flfrcod = line.getOrDefault(keyFlFr, "");
             if (flfrcod.isBlank()) {
                 throw new RuntimeException("Empty key " + keyFlFr + " in " + line);
