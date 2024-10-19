@@ -46,7 +46,9 @@ class UpdateFormationDbs(
     private val criteresDb: CriteresDb,
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val mpsDataPort: MpsDataPort,
-    private val batchUpdate: BatchUpdate
+    private val batchUpdate: BatchUpdate,
+    private val villesVoeuxDb: VillesVoeuxDb
+
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
@@ -188,10 +190,10 @@ class UpdateFormationDbs(
 
         val voeux = mpsDataPort.getVoeux().flatMap { it.value }.toList()
 
-        var letter = '_'
+        logger.info("Récupération des paires villes voeux actuelles")
+        val villesVoeuxActuels = villesVoeuxDb.findAll().associateBy { v -> v.idVille }
 
-        val className = VilleVoeuxEntity::class.simpleName!!
-        batchUpdate.clearEntities(className)
+        var letter = '_'
 
         val entities = ArrayList<VilleVoeuxEntity>()
         cities.forEach { city ->
@@ -199,22 +201,35 @@ class UpdateFormationDbs(
             if(newLetter != letter) {
                 logger.info("Calcul des distances pour les villes commençant par $newLetter")
                 letter = newLetter
-                logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
-                batchUpdate.addEntities(className, entities)
-                entities.clear()
+                if(entities.isNotEmpty()) {
+                    logger.info("Enregistrement des correspondances villes-voeux commençant par $letter")
+                    batchUpdate.upsertEntities(entities)
+                    entities.clear()
+                }
             }
-            val distances = voeux.map { voeu ->
+            val currentEntity = villesVoeuxActuels[city.codeInsee]
+
+            val voeuxAlreadyKnow = currentEntity?.distancesVoeuxKm?.keys.orEmpty()
+
+            val nouvellesDistances = voeux
+                .filter { v -> !voeuxAlreadyKnow.contains(v.id) }
+                .map { voeu ->
                 voeu.id to geodeticDistance(voeu.coords(), city.coords)
             }
                 .filter { it.second <= Constants.MAX_DISTANCE_VILLE_VOEU_KM }
                 .toMap()
-            entities.add(VilleVoeuxEntity().apply {
-                idVille = city.codeInsee
-                distancesVoeuxKm = distances
-            })
+            if(nouvellesDistances.isNotEmpty()) {
+                val distances = HashMap(currentEntity?.distancesVoeuxKm.orEmpty())
+                distances.putAll(nouvellesDistances)
+                val newEntity = VilleVoeuxEntity().apply {
+                    idVille = city.codeInsee
+                    distancesVoeuxKm = distances
+                }
+                entities.add(newEntity)
+            }
         }
         logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
-        batchUpdate.addEntities(className, entities)
+        batchUpdate.addEntities(entities)
         entities.clear()
     }
 

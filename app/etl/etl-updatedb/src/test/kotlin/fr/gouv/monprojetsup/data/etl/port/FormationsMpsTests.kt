@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.data.etl.port
 
-import fr.gouv.monprojetsup.data.Constants
+import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
+import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.TestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -79,18 +80,19 @@ class FormationsMpsTests : DataPortTest() {
 
         @Test
         fun `CUPGE - Droit-économie-gestion hérite de tous les métiers des écoles de commerce`() {
-            //c'est le mapping CPGE - licence qui crée les assciations métiers
+            //c'est le mapping CPGE - licence qui crée les associations métiers
             val mpsIds = mpsDataPort.getFormationsMpsIds()
-            val cupgeEcoGestionMpsId = Constants.gFrCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FR_COD)
+            val cupgeEcoGestionMpsId = gFrCodToMpsId(TestData.CUPGE_ECO_GESTION_PSUP_FR_COD)
             assertThat(mpsIds).contains(cupgeEcoGestionMpsId)
 
-            val ecoleCommerceMpsId = Constants.gFrCodToMpsId(TestData.ECOLE_COMMERCE_PSUP_FR_COD)
-            assertThat(mpsIds).contains(ecoleCommerceMpsId)
+            val ecoleCommerceMpsId =
+                listOf(TestData.ECOLE_COMMERCE_PSUP_FL_COD1, TestData.ECOLE_COMMERCE_PSUP_FL_COD2,TestData.ECOLE_COMMERCE_PSUP_FL_COD3)
+                    .map { gFlCodToMpsId(it) }
+            assertThat(mpsIds).containsAll(ecoleCommerceMpsId)
 
             val formationsVersMetiers = mpsDataPort.getFormationsVersMetiersEtMetiersAssocies()
 
-            val metiersEcoleCommerce = formationsVersMetiers[ecoleCommerceMpsId]
-            assertThat(metiersEcoleCommerce).isNotNull()
+            val metiersEcoleCommerce = ecoleCommerceMpsId.flatMap { formationsVersMetiers[it].orEmpty() }
             assertThat(metiersEcoleCommerce).isNotEmpty()
 
             val metiersCupge = formationsVersMetiers[cupgeEcoGestionMpsId]
@@ -106,7 +108,7 @@ class FormationsMpsTests : DataPortTest() {
     fun `CUPGE - Sciences, technologie, santé ne contient pas le mot-clé commerce international `() {
         val mpsIds = mpsDataPort.getFormationsMpsIds()
         val cupgeSciencesTechnoSanteMpsId =
-            Constants.gFrCodToMpsId(TestData.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD)
+            gFrCodToMpsId(TestData.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD)
         assertThat(mpsIds).contains(cupgeSciencesTechnoSanteMpsId)
         assertThat(mpsDataPort.getMotsClesFormations()[cupgeSciencesTechnoSanteMpsId]).doesNotContain("commerce international")
     }

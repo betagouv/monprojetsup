@@ -37,12 +37,6 @@ class SuggestionsVilleEntity {
                     nom = it.nom
                     insee = it.codeInsee
                     coords = it.coords
-                },
-                SuggestionsVilleEntity().apply {
-                    id = it.nom
-                    nom = it.nom
-                    insee = it.codeInsee
-                    coords = it.coords
                 }
             )
         }
