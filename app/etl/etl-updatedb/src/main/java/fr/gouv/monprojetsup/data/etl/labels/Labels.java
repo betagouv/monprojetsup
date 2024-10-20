@@ -187,6 +187,12 @@ public class Labels {
         if(key.equals("fl242")) {
             newLibelle = "Ecoles de commerce (Bac+4)";
         }
+        if(key.equals("fl270")) {
+            newLibelle = "Ecoles supérieures d'art (Bac +5)";
+        }
+        if(key.equals("fl271")) {
+            newLibelle = "Formations des écoles supérieures d'art (Bac +3)";
+        }
         return newLibelle;
     }
 
