@@ -59,6 +59,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Test
         fun `Les tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsDb() }
+            assertDoesNotThrow { updateFormationDbs.updateVoeuxDb() }
             val formations = formationsdb.findAll()
             assertThat(formations).isNotEmpty
             val nbFormations = formations.size
