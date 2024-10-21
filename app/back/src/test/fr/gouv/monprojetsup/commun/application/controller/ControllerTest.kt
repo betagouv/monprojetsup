@@ -24,27 +24,28 @@ abstract class ControllerTest {
 
     @BeforeEach
     fun setup() {
-        given(eleveRepository.recupererUnEleve(id = idEleve)).willReturn(unProfilEleve)
-        given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+        given(eleveRepository.recupererUnEleve(id = ID_ELEVE)).willReturn(unProfilEleve)
+        given(eleveRepository.recupererUnEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
     }
 
-    private val idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c"
-    val idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b"
+    companion object {
+        private const val ID_ELEVE = "adcf627c-36dd-4df5-897b-159443a6d49c"
+        const val ID_ENSEIGNANT = "49e8e8c2-5eec-4eae-a90d-992225bbea1b"
 
-    val unProfilEleve =
-        ProfilEleve.Identifie(
-            id = idEleve,
-            situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
-            classe = ChoixNiveau.TERMINALE,
-            baccalaureat = "Générale",
-            dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
-            alternance = ChoixAlternance.PAS_INTERESSE,
-            communesFavorites = listOf(Communes.PARIS15EME),
-            specialites = listOf("1056", "1054"),
-            centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
-            moyenneGenerale = 14f,
-            metiersFavoris = listOf("MET_123", "MET_456"),
-            formationsFavorites =
+        val unProfilEleve =
+            ProfilEleve.Identifie(
+                id = ID_ELEVE,
+                situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
+                classe = ChoixNiveau.TERMINALE,
+                baccalaureat = "Générale",
+                dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
+                alternance = ChoixAlternance.PAS_INTERESSE,
+                communesFavorites = listOf(Communes.PARIS15EME),
+                specialites = listOf("1056", "1054"),
+                centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
+                moyenneGenerale = 14f,
+                metiersFavoris = listOf("MET_123", "MET_456"),
+                formationsFavorites =
                 listOf(
                     VoeuFormation(
                         idFormation = "fl1234",
@@ -59,9 +60,11 @@ abstract class ControllerTest {
                         priseDeNote = "Mon voeu préféré",
                     ),
                 ),
-            domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
-            corbeilleFormations = listOf("fl0010", "fl0012"),
-        )
+                domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
+                corbeilleFormations = listOf("fl0010", "fl0012"),
+                compteParcoursupLie = true,
+            )
 
-    val unProfilEnseignant = ProfilEleve.SansCompte(id = idEnseignant)
+        private val unProfilEnseignant = ProfilEleve.SansCompte(id = ID_ENSEIGNANT)
+    }
 }

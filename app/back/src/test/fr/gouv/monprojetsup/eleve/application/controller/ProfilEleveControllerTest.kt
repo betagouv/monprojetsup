@@ -200,7 +200,7 @@ class ProfilEleveControllerTest(
             // Given
             val unProfilEnseignant =
                 ProfilEleve.Identifie(
-                    id = idEnseignant,
+                    id = ID_ENSEIGNANT,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
                     baccalaureat = "NC",
@@ -228,8 +228,9 @@ class ProfilEleveControllerTest(
                         ),
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
+                    compteParcoursupLie = false,
                 )
-            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+            given(eleveRepository.recupererUnEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
 
             // When & Then
             mvc.perform(
@@ -519,7 +520,7 @@ class ProfilEleveControllerTest(
             // Given
             val unProfilEnseignant =
                 ProfilEleve.Identifie(
-                    id = idEnseignant,
+                    id = ID_ENSEIGNANT,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
                     baccalaureat = "NC",
@@ -547,8 +548,9 @@ class ProfilEleveControllerTest(
                         ),
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
+                    compteParcoursupLie = true,
                 )
-            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+            given(eleveRepository.recupererUnEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
             given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEnseignant)).willReturn(unProfilEnseignant)
 
             // When & Then

@@ -92,6 +92,7 @@ class MiseAJourEleveServiceTest {
                 ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
+            compteParcoursupLie = true,
         )
 
     private val profilVide = ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
@@ -932,6 +933,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
+                    compteParcoursupLie = true,
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(eleveRepository).should(only()).mettreAJourUnProfilEleve(nouveauProfil)
@@ -976,6 +978,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     moyenneGenerale = -1.0f,
                     corbeilleFormations = listOf("fl1234", "fl5678"),
+                    compteParcoursupLie = true,
                 )
             then(baccalaureatRepository).shouldHaveNoInteractions()
             then(baccalaureatSpecialiteRepository).shouldHaveNoInteractions()

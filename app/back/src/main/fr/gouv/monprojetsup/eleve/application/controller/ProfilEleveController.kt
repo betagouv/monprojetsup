@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.eleve.application.controller
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
 import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
+import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
@@ -34,10 +35,10 @@ class ProfilEleveController(
     }
 
     @GetMapping
-    fun getProfilEleve(): ModificationProfilDTO {
+    fun getProfilEleve(): ProfilDTO {
         val profil = recupererEleveIdentifie()
         val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
-        return ModificationProfilDTO(profilMisAJour)
+        return ProfilDTO(profilMisAJour)
     }
 
     @PostMapping("/parcoursup")

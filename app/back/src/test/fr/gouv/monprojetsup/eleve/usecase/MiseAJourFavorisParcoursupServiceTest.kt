@@ -60,7 +60,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(null)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(null)
 
         // When
         val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
@@ -92,7 +92,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(emptyList())
 
         // When
@@ -123,7 +123,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         val voeuxParcoursup = listOf(FavorisParcoursup("ta2", null, 0))
         given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willReturn(voeuxParcoursup)
         given(voeuRepository.recupererVoeux(listOf("ta2"))).willReturn(
@@ -167,7 +167,7 @@ class MiseAJourFavorisParcoursupServiceTest {
                         ),
                     ),
             )
-        given(compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)).willReturn(510)
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
         val voeuxParcoursup =
             listOf(
                 FavorisParcoursup(idVoeu = "ta1", commentaire = null, notation = 0),
@@ -243,7 +243,7 @@ class MiseAJourFavorisParcoursupServiceTest {
 
     private fun creerProfilIdentifie(formationsFavorites: List<VoeuFormation>) =
         ProfilEleve.Identifie(
-            id = idEleve,
+            id = ID_ELEVE,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
             baccalaureat = "Général",
@@ -257,9 +257,10 @@ class MiseAJourFavorisParcoursupServiceTest {
             formationsFavorites = formationsFavorites,
             moyenneGenerale = -1.0f,
             corbeilleFormations = listOf("fl1234", "fl5678"),
+            compteParcoursupLie = true,
         )
 
     companion object {
-        private val idEleve = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
+        private const val ID_ELEVE = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
     }
 }
