@@ -2,21 +2,25 @@ import { générerPKCECodeChallenge, générerPKCECodeVerifier } from "@/utils/c
 
 export default function useModaleConnexionParcourSup() {
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  const connecterLesComptesPSetMPS = async () => {
+  const redirigerVersAuthParcourSup = async () => {
     const codeVerifier = générerPKCECodeVerifier();
     const codeChallenge = await générerPKCECodeChallenge(codeVerifier);
 
-    window.location.href = `http://authentification.parcoursup.fr/Authentification/oauth2/authorize?
-                            client_id=monProjetSup
-                            &response_type=code
-                            &scope=openid
-                            &state=d7a619c8e91f48dda4ba3b052c8469cc
-                            &code_challenge=${codeChallenge}
-                            &code_challenge_method=S256
-                            &redirect_uri=${encodeURI("http://localhost:5001/parcoursup-callback")}`;
+    const paramètresDeRequêteAuthorizePS = new URLSearchParams();
+    paramètresDeRequêteAuthorizePS.append("client_id", "monProjetSup");
+    paramètresDeRequêteAuthorizePS.append("response_type", "code");
+    paramètresDeRequêteAuthorizePS.append("scope", "openid");
+    paramètresDeRequêteAuthorizePS.append("state", "d7a619c8e91f48dda4ba3b052c8469cc");
+    paramètresDeRequêteAuthorizePS.append("code_challenge_method", "S256");
+    paramètresDeRequêteAuthorizePS.append("code_challenge", codeChallenge);
+    paramètresDeRequêteAuthorizePS.append("redirect_uri", encodeURI("http://localhost:5001/parcoursup-callback"));
+    sessionStorage.setItem("psCodeVerifier", codeVerifier);
+    sessionStorage.setItem("psRedirectUri", encodeURI("http://localhost:5001/parcoursup-callback"));
+
+    window.location.href = `http://authentification.parcoursup.fr/Authentification/oauth2/authorize?${paramètresDeRequêteAuthorizePS.toString()}`;
   };
 
   return {
-    connecterLesComptesPSetMPS,
+    redirigerVersAuthParcourSup,
   };
 }

@@ -1,15 +1,15 @@
 import useModaleConnexionParcourSup from "./useModaleConnexionParcourSup";
+import Bouton from "@/components/Bouton/Bouton";
 
 const ModaleConnexionParcourSup = () => {
-  const { connecterLesComptesPSetMPS } = useModaleConnexionParcourSup();
+  const { redirigerVersAuthParcourSup } = useModaleConnexionParcourSup();
 
   return (
-    <button
-      onClick={() => connecterLesComptesPSetMPS}
+    <Bouton
+      auClic={redirigerVersAuthParcourSup}
+      label="Associer à PS"
       type="button"
-    >
-      Associer à PS
-    </button>
+    />
   );
 };
 

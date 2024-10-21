@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/profil/parcoursup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["postCompteParcoursup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/referentiel": {
         parameters: {
             query?: never;
@@ -340,6 +356,11 @@ export interface components {
             priseDeNote?: string;
         };
         Unit: Record<string, never>;
+        AjoutCompteParcoursupDTO: {
+            codeVerifier: string;
+            code: string;
+            redirectUri: string;
+        };
         AdmissionsParcoursupDTO: {
             annee: string;
             parBaccalaureat: components["schemas"]["PourcentagesPourChaqueMoyenneParBaccalaureatDTO"][];
@@ -610,6 +631,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ModificationProfilDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
+    postCompteParcoursup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AjoutCompteParcoursupDTO"];
             };
         };
         responses: {

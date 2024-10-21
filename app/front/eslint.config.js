@@ -41,13 +41,7 @@ export default [
         ...vitest.recommended.plugins.vitest.environments.env.globals,
       }
     },
-    rules: {
-      "@typescript-eslint/no-misused-promises": [2, {
-        "checksVoidReturn": {
-          "attributes": false
-        }
-      }],
-    }
+
   },
   {
     ...canonical.recommended,
@@ -168,7 +162,18 @@ export default [
   regexp.recommended,
   yaml.recommended,
   browser.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.recommendedTypeChecked.map(config => ({
+    ...config,
+    rules: {
+      ...config.rules,
+      "@typescript-eslint/only-throw-error": "off",
+      "@typescript-eslint/no-misused-promises": [2, {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }],
+    }
+  })),
   eslintConfigPrettier,
   prettierPlugin
 ];

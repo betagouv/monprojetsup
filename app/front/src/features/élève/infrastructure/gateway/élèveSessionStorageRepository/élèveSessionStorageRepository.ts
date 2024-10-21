@@ -39,4 +39,8 @@ export class ÉlèveSessionStorageRepository implements ÉlèveRepository {
 
     return this._élève;
   }
+
+  public async associerCompteParcourSup(): Promise<boolean | undefined> {
+    return true;
+  }
 }

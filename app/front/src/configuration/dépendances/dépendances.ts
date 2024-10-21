@@ -23,6 +23,7 @@ import { RécupérerRéférentielDonnéesUseCase } from "@/features/référentie
 import { ÉlèveHttpRepository } from "@/features/élève/infrastructure/gateway/élèveHttpRepository/élèveHttpRepository";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
 import { ÉlèveSessionStorageRepository } from "@/features/élève/infrastructure/gateway/élèveSessionStorageRepository/élèveSessionStorageRepository";
+import { AssocierCompteParcourSupÉlèveUseCase } from "@/features/élève/usecase/AssocierCompteParcourSupÉlève";
 import { MettreÀJourÉlèveUseCase } from "@/features/élève/usecase/MettreÀJourProfilÉlève";
 import { RécupérerÉlèveUseCase } from "@/features/élève/usecase/RécupérerProfilÉlève";
 import { HttpClient } from "@/services/httpClient/httpClient";
@@ -54,6 +55,8 @@ export class Dépendances {
   public readonly mettreÀJourProfilÉlèveUseCase: MettreÀJourÉlèveUseCase;
 
   public readonly récupérerProfilÉlèveUseCase: RécupérerÉlèveUseCase;
+
+  public readonly associerCompteParcourSupÉlèveUseCase: AssocierCompteParcourSupÉlèveUseCase;
 
   public readonly récupérerFormationUseCase: RécupérerFormationUseCase;
 
@@ -101,6 +104,7 @@ export class Dépendances {
     // Élève
     this.mettreÀJourProfilÉlèveUseCase = new MettreÀJourÉlèveUseCase(this._élèveRepository);
     this.récupérerProfilÉlèveUseCase = new RécupérerÉlèveUseCase(this._élèveRepository);
+    this.associerCompteParcourSupÉlèveUseCase = new AssocierCompteParcourSupÉlèveUseCase(this._élèveRepository);
 
     // Formations
     this.récupérerFormationUseCase = new RécupérerFormationUseCase(this._formationRepository);
