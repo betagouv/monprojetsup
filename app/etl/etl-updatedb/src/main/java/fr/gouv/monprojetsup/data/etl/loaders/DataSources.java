@@ -47,6 +47,11 @@ public class DataSources {
 
     /* MPS data */
     public static final String RESUMES_MPS_PATH = "mps/Tableau_resume_descriptifs_formations.csv";
+    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION = "resume type formation";
+    public static final String RESUMES_MPS_RESUME_TYPE_FORMATION_MOS = "Retours MOSS type formation";
+    public static final String RESUMES_MPS_RESUME_FORMATION = "resume filiere";
+    public static final String RESUMES_MPS_RESUME_FORMATION_MOS = "Retours MOSS filiere";
+    public static final String RESUMES_MPS_RESUME_KEY = "code filiere";
     public static final String LIENS_MPS_PATH = "mps/Tableau_resume_descriptifs_formations_liens.csv";
     public static final String LIENS_MPS_PATH_HEADER_ID = "id";
     public static final String LIENS_MPS_PATH_HEADER_IGNORER = "probleme onisep data";

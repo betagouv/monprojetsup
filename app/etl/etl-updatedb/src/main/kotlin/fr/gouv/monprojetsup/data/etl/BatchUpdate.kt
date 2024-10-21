@@ -43,4 +43,12 @@ class BatchUpdate(
         statelessSession.close()
     }
 
+    fun <T> deleteEntities(entities: Collection<T>) {
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+        entities.forEach{ statelessSession.delete(it)}
+        transaction.commit()
+        statelessSession.close()
+    }
+
 }

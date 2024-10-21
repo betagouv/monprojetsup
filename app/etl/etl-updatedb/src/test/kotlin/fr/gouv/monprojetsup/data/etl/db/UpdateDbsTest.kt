@@ -58,7 +58,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Test
         fun `Les tables des formations est correctement remplie`() {
-            assertDoesNotThrow { updateFormationDbs.updateFormationsAndVoeuxDb() }
+            assertDoesNotThrow { updateFormationDbs.updateFormationsDb() }
             val formations = formationsdb.findAll()
             assertThat(formations).isNotEmpty
             val nbFormations = formations.size
@@ -124,7 +124,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         private fun update() {
             updateFormationsMetiersDbs.clearAll()
-            updateFormationDbs.updateFormationsAndVoeuxDb()
+            updateFormationDbs.updateFormationsDb()
             updateMetierDbs.update()
             updateFormationsMetiersDbs.update()
         }
@@ -153,7 +153,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         @Test
         @Tag("resource-intensive-test")
         fun `Doit réussir à mettre à jour les tables sugg_`() {
-            assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs() }
+            assertDoesNotThrow { updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange) }
         }
 
         @Test

@@ -47,21 +47,40 @@ class UpdateFormationDbs(
     private val moyennesGeneralesAdmisDb: MoyennesGeneralesAdmisDb,
     private val mpsDataPort: MpsDataPort,
     private val batchUpdate: BatchUpdate,
-    private val villesVoeuxDb: VillesVoeuxDb
-
+    private val villesVoeuxDb: VillesVoeuxDb,
+    private val voeuxDb: VoeuxDb,
+    private val formationDb: FormationDb
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun update() {
-        logger.info("Mise à jour de la table des formations et de la table des voeux")
-        updateFormationsAndVoeuxDb()
-        logger.info("Mise à jour de la table de correspondance ville voeux")
-        updateVillesVoeuxDb()
+        val voeuxOntChange = checkVoeuxOuFormationsOntChange()
+        if(voeuxOntChange) {
+            logger.info("Mise à jour de la table des formations")
+            updateFormationsDb()
+            logger.info("Mise à jour de la table des voeux")
+            updateVoeuxDb()
+            logger.info("Mise à jour de la table de correspondance ville voeux")
+            updateVillesVoeuxDb()
+        } else {
+            logger.info("Mise à jour de la table des formations")
+            updateFormationsDb()
+        }
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
+    }
+
+    public fun checkVoeuxOuFormationsOntChange(): Boolean {
+        val anciensVoeux = voeuxDb.findAll().map { Pair(it.idFormation, it.id) }.toSet()
+        val formationsMps = mpsDataPort.getFormationsMpsIds()
+        val nouveauxVoeux = mpsDataPort.getVoeux()
+            .filter { e -> formationsMps.contains(e.key)}
+            .flatMap { e -> e.value.map { Pair(it.formation, it.id) } }
+            .toSet()
+        return anciensVoeux != nouveauxVoeux
     }
 
 
@@ -78,8 +97,21 @@ class UpdateFormationDbs(
         moyennesGeneralesAdmisDb.saveAll(entities)
     }
 
+    fun updateVoeuxDb() {
+        val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
+        val voeux = mpsDataPort.getVoeux()
+        val voeuxEntities = ArrayList<VoeuEntity>()
+        formationsMpsIds.forEach { id ->
+            val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
+            voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
+        }
+        batchUpdate.setEntities(
+            VoeuEntity::class.simpleName!!,
+            voeuxEntities
+        )
+    }
 
-     fun updateFormationsAndVoeuxDb() {
+     fun updateFormationsDb() {
 
          val labels = mpsDataPort.getFormationsLabels()
          val descriptifs = mpsDataPort.getDescriptifs()
@@ -92,7 +124,6 @@ class UpdateFormationDbs(
          val apprentissage = mpsDataPort.getApprentissage()
          val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
          val formationToTypeformation = mpsDataPort.getFormationToTypeformation()
-         val voeux = mpsDataPort.getVoeux()
          val debugLabels = mpsDataPort.getDebugLabels()
          val capacitesAccueil = mpsDataPort.getCapacitesAccueil()
          val stats = mpsDataPort.getStatsFormation()
@@ -100,9 +131,19 @@ class UpdateFormationDbs(
          val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
          val mpsKeyToIdeoKeys = mpsDataPort.getMpsIdToIdeoIds()
 
-         val formationEntities = ArrayList<FormationEntity>()
-         val voeuxEntities = ArrayList<VoeuEntity>()
+         val deprecatedFormations = HashSet(formationDb.findAll())
+         deprecatedFormations.removeIf { f -> formationsMpsIds.contains(f.id) }
+         val deprecatedWishes = deprecatedFormations.flatMap { f -> f.voeux }.toSet()
+         if(deprecatedWishes.isNotEmpty()) {
+             logger.info("Suppression des ${deprecatedWishes.count()} voeux non présents dans les données actuelles")
+             batchUpdate.deleteEntities(deprecatedWishes)
+         }
+         if(deprecatedFormations.isNotEmpty()) {
+             logger.info("Suppression des ${deprecatedFormations.count()} formations non présentes dans les données actuelles")
+             batchUpdate.deleteEntities(deprecatedFormations)
+         }
 
+         val formationEntities = ArrayList<FormationEntity>()
          formationsMpsIds.forEach { id ->
              val entity = FormationEntity()
              entity.id = id
@@ -139,14 +180,12 @@ class UpdateFormationDbs(
              }
              entity.motsClefs = motsClefsCourts
 
-             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
 
              entity.labelDetails = debugLabels.getOrDefault(id, id)
              entity.capacite = capacitesAccueil.getOrDefault(id, 0)
              entity.apprentissage = apprentissage.contains(id)
              entity.las = lasToGeneric[id]
 
-             voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
 
              val statsFormation = stats[id]
              if (statsFormation != null) {
@@ -165,21 +204,7 @@ class UpdateFormationDbs(
              }
              formationEntities.add(entity)
          }
-
-         batchUpdate.clearEntities(
-             VoeuEntity::class.simpleName!!
-         )
-         batchUpdate.clearEntities(
-             FormationMetierEntity::class.simpleName!!
-         )
-         batchUpdate.setEntities(
-             FormationEntity::class.simpleName!!,
-             formationEntities
-         )
-         batchUpdate.setEntities(
-             VoeuEntity::class.simpleName!!,
-             voeuxEntities
-         )
+         batchUpdate.upsertEntities(formationEntities)
      }
 
     fun updateVillesVoeuxDb() {
