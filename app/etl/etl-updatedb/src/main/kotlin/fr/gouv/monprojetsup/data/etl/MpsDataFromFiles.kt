@@ -94,6 +94,7 @@ class MpsDataFromFiles(
         logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
 
+        OnisepDataLoader.exportDiagnosticsLiens(getLabels());
 
     }
 

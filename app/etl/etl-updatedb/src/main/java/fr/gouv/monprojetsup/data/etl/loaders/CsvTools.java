@@ -15,6 +15,9 @@ import java.util.*;
 
 public class CsvTools implements Closeable {
 
+    public static final String MISSING_HEADER = "Missing header ";
+    public static final String IN_LINE = " in line ";
+
     private final @NotNull ICSVWriter csvWriter;
     private CsvTools(String filename, char separator, Charset charset) throws IOException {
         Path filePath = Paths.get(filename);
