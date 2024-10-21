@@ -128,7 +128,7 @@ public class UrlsUpdater {
         }
 
         extraUrls.forEach((key, extraLinks) -> {
-            val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(String::isBlank).toList();
+            val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
             if(!cleanupExtraLinks.isEmpty()) {
                 val cleanedupKey = Constants.cleanup(key);
                 cleanupExtraLinks.forEach(e -> addUrl(cleanedupKey, e, getLabel(labels, cleanedupKey, e), AJOUTS_MPS, urls));
