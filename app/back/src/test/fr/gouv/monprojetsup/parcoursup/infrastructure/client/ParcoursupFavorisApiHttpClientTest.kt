@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
-import fr.gouv.monprojetsup.parcoursup.domain.port.IParcoursupAuthentHttpClient
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -32,14 +31,22 @@ class ParcoursupFavorisApiHttpClientTest {
 
     private val objectMapper = ObjectMapper()
 
-    @Mock
-    private lateinit var parcoursupAuthentHttpClient: IParcoursupAuthentHttpClient
-
+    private lateinit var parcoursupAuthentHttpClient: ParcoursupAuthentHttpClient
     private lateinit var parcoursupApiHttpClient: ParcoursupFavorisApiHttpClient
 
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
+        parcoursupAuthentHttpClient =
+            ParcoursupAuthentHttpClient(
+                clientId = "clientIdAuthent",
+                clientSecret = "clientSecretAuthent",
+                baseUrl = "https://monauthentification.fr/Authentification",
+                objectMapper,
+                httpClient,
+                logger,
+            )
+
         parcoursupApiHttpClient =
             ParcoursupFavorisApiHttpClient(
                 clientId = "clientId",
@@ -124,7 +131,8 @@ class ParcoursupFavorisApiHttpClientTest {
         val stringBodyAuthent =
             """
             {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
+              "access_token": "eyJjkezhjfgkyfbzhjzg",
+              "id_token": "eyJazfhjehgfkjqmmalzijed"
             }
             """.trimIndent()
         val callAuthentMock =
@@ -158,7 +166,8 @@ class ParcoursupFavorisApiHttpClientTest {
         val stringBodyAuthent =
             """
             {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
+              "access_token": "eyJjkezhjfgkyfbzhjzg",
+              "id_token": "eyJazfhjehgfkjqmmalzijed"
             }
             """.trimIndent()
         val callAuthentMock =
@@ -206,7 +215,8 @@ class ParcoursupFavorisApiHttpClientTest {
         val stringBodyAuthent =
             """
             {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
+              "access_token": "eyJjkezhjfgkyfbzhjzg",
+              "id_token": "eyJazfhjehgfkjqmmalzijed"
             }
             """.trimIndent()
         val callAuthentMock =
@@ -244,7 +254,8 @@ class ParcoursupFavorisApiHttpClientTest {
         val stringBodyAuthent =
             """
             {
-              "access_token": "eyJjkezhjfgkyfbzhjzg"
+              "access_token": "eyJjkezhjfgkyfbzhjzg",
+              "id_token": "eyJazfhjehgfkjqmmalzijed"
             }
             """.trimIndent()
         val callAuthentMock =

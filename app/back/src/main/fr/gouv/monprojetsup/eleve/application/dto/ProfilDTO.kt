@@ -3,7 +3,6 @@ package fr.gouv.monprojetsup.eleve.application.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -20,11 +19,9 @@ data class ProfilDTO(
     )
     @JsonProperty("situation")
     val situation: SituationAvanceeProjetSup? = null,
-
     @Schema(description = "Classe actuelle", example = "terminale", allowableValues = ["seconde", "premiere", "terminale"])
     @JsonProperty("classe")
     val classe: ChoixNiveau? = null,
-
     @Schema(
         description = "Type de Bac choisi ou envisagé",
         example = "Générale",
@@ -32,7 +29,6 @@ data class ProfilDTO(
     )
     @JsonProperty("baccalaureat")
     val baccalaureat: String? = null,
-
     @ArraySchema(
         arraySchema =
             Schema(
@@ -42,7 +38,6 @@ data class ProfilDTO(
     )
     @JsonProperty("specialites")
     val specialites: List<String>? = null,
-
     @ArraySchema(
         arraySchema =
             Schema(
@@ -52,7 +47,6 @@ data class ProfilDTO(
     )
     @JsonProperty("domaines")
     val domaines: List<String>? = null,
-
     @ArraySchema(
         arraySchema =
             Schema(
@@ -63,7 +57,6 @@ data class ProfilDTO(
     )
     @JsonProperty("centresInterets")
     val centresInterets: List<String>? = null,
-
     @ArraySchema(
         arraySchema =
             Schema(
@@ -73,7 +66,6 @@ data class ProfilDTO(
     )
     @JsonProperty("metiersFavoris")
     val metiersFavoris: List<String>? = null,
-
     @Schema(
         description = "Durée envisagée des études",
         example = "indifferent",
@@ -81,7 +73,6 @@ data class ProfilDTO(
     )
     @JsonProperty("dureeEtudesPrevue")
     val dureeEtudesPrevue: ChoixDureeEtudesPrevue? = null,
-
     @Schema(
         description = "Intérêt pour les formations en apprentissage",
         example = "pas_interesse",
@@ -89,19 +80,15 @@ data class ProfilDTO(
     )
     @JsonProperty("alternance")
     val alternance: ChoixAlternance? = null,
-
-    @ArraySchema(arraySchema = Schema(description = "Villes préférées pour étudier",))
+    @ArraySchema(arraySchema = Schema(description = "Villes préférées pour étudier"))
     @JsonProperty("communesFavorites")
     val communesFavorites: List<CommuneDTO>? = null,
-
     @Schema(description = "Moyenne générale scolaire estimée en terminale", example = "14")
     @JsonProperty("moyenneGenerale")
     val moyenneGenerale: Float? = null,
-
     @ArraySchema(arraySchema = Schema(description = "Les idées de formations de l'élève"))
     @JsonProperty("formationsFavorites")
     val formationsFavorites: List<VoeuFormationDTO>? = null,
-
     @ArraySchema(
         arraySchema =
             Schema(
@@ -111,7 +98,6 @@ data class ProfilDTO(
     )
     @JsonProperty("corbeilleFormations")
     val corbeilleFormations: List<String>? = null,
-
     @Schema(description = "Prénom de l'élève", example = "Kévin")
     @JsonProperty("compteParcoursupAssocie")
     val compteParcoursupAssocie: Boolean,

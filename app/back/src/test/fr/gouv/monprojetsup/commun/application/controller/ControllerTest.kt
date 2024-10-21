@@ -46,20 +46,20 @@ abstract class ControllerTest {
                 moyenneGenerale = 14f,
                 metiersFavoris = listOf("MET_123", "MET_456"),
                 formationsFavorites =
-                listOf(
-                    VoeuFormation(
-                        idFormation = "fl1234",
-                        niveauAmbition = 1,
-                        voeuxChoisis = emptyList(),
-                        priseDeNote = null,
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl1234",
+                            niveauAmbition = 1,
+                            voeuxChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl5678",
+                            niveauAmbition = 3,
+                            voeuxChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
                     ),
-                    VoeuFormation(
-                        idFormation = "fl5678",
-                        niveauAmbition = 3,
-                        voeuxChoisis = listOf("ta1", "ta2"),
-                        priseDeNote = "Mon voeu préféré",
-                    ),
-                ),
                 domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                 corbeilleFormations = listOf("fl0010", "fl0012"),
                 compteParcoursupLie = true,

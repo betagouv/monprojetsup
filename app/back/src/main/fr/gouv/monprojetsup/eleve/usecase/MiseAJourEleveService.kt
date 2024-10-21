@@ -63,7 +63,6 @@ class MiseAJourEleveService(
                 moyenneGenerale = miseAJourDuProfil.moyenneGenerale ?: profilInitial.moyenneGenerale,
                 corbeilleFormations = miseAJourDuProfil.corbeilleFormations ?: profilInitial.corbeilleFormations,
                 compteParcoursupLie = profilInitial.compteParcoursupLie,
-
             )
         if (profilEleveAMettreAJour != profilInitial) {
             eleveRepository.mettreAJourUnProfilEleve(profilEleveAMettreAJour)

@@ -85,20 +85,20 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             alternance = ChoixAlternance.TRES_INTERESSE,
             communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
             formationsFavorites =
-            listOf(
-                VoeuFormation(
-                    idFormation = "fl0010",
-                    niveauAmbition = 1,
-                    voeuxChoisis = emptyList(),
-                    priseDeNote = null,
+                listOf(
+                    VoeuFormation(
+                        idFormation = "fl0010",
+                        niveauAmbition = 1,
+                        voeuxChoisis = emptyList(),
+                        priseDeNote = null,
+                    ),
+                    VoeuFormation(
+                        idFormation = "fl0012",
+                        niveauAmbition = 3,
+                        voeuxChoisis = listOf("ta15974", "ta17831"),
+                        priseDeNote = "Mon voeu préféré",
+                    ),
                 ),
-                VoeuFormation(
-                    idFormation = "fl0012",
-                    niveauAmbition = 3,
-                    voeuxChoisis = listOf("ta15974", "ta17831"),
-                    priseDeNote = "Mon voeu préféré",
-                ),
-            ),
             moyenneGenerale = 10.5f,
             corbeilleFormations = listOf("fl0001", "fl0002"),
             compteParcoursupLie = false,

@@ -64,22 +64,21 @@ class ParcoursupAuthentHttpClient(
     override fun recupererIdParcoursupEleve(parametresPourRecupererToken: ParametresPourRecupererToken): Int {
         val url =
             (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
+                .addQueryParameter("grant_type", "authorization_code")
                 .addQueryParameter("redirect_uri", parametresPourRecupererToken.redirectUri)
                 .addQueryParameter("code", parametresPourRecupererToken.code)
                 .addQueryParameter("code_verifier", parametresPourRecupererToken.codeVerifier)
                 .build()
 
-        val formBody =
-            FormBody.Builder()
-                .add("grant_type", "client_credentials")
-                .build()
-
+        val formBody = FormBody.Builder().build()
         val request =
             Request.Builder()
                 .url(url)
-                .post(formBody)
                 .header("Authorization", Credentials.basic(clientId, clientSecret))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .post(formBody)
                 .build()
+
         httpClient.newCall(request).execute().use { response ->
             verifierCodeErreur(response, url.toString())
             val bodyRetour = deserialisation<TokenReponseDTO>(response.body?.string(), url.toString())
