@@ -42,10 +42,12 @@ class UpdateSuggestionsDbs(
 
     private val logger: Logger = Logger.getLogger(UpdateSuggestionsDbs::class.java.simpleName)
 
-    internal fun updateSuggestionDbs() {
+    internal fun updateSuggestionDbs(voeuxOntChange: Boolean) {
 
-        logger.info("Mise à jour des voeux candidats")
-        updateCandidatsDb()
+        if(voeuxOntChange) {
+            logger.info("Mise à jour des voeux candidats")
+            updateCandidatsDb()
+        }
 
         logger.info("Mise à jour des edges")
         updateEdgesDb()

@@ -50,7 +50,6 @@ open class Runner(
 		//clearAll in this order to avoid foreign key constraint errors
 		logger.info("Vidage des tables métiers, formations, suggestions et référentiels")
 		updateFormationsMetiersDbs.clearAll()
-		updateFormationDbs.clearAll()
 		updateMetierDbs.clearAll()
 		updateSuggestionsDbs.clearAll()
 		updateReferentielDbs.clearAll()
@@ -67,8 +66,9 @@ open class Runner(
 		logger.info("Mise à jour des liens formations metiers")
 		updateFormationsMetiersDbs.update()//after formations ert metiers
 
+		val voeuxOntChange = updateFormationDbs.checkVoeuxOuFormationsOntChange()
 		logger.info("Mise à jour des suggestions")
-		updateSuggestionsDbs.updateSuggestionDbs()
+		updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
 
 	}
 }
