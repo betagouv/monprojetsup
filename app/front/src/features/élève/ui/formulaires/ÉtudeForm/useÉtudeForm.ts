@@ -1,9 +1,14 @@
 import useCommunesÉtudeForm from "./useCommunesÉtudeForm";
-import { type AlternanceOptions, type DuréeÉtudesPrévueOptions, type UseÉtudeFormArgs } from "./ÉtudeForm.interface";
+import { type UseÉtudeFormArgs } from "./ÉtudeForm.interface";
 import { étudeValidationSchema } from "./ÉtudeForm.validation";
 import { i18n } from "@/configuration/i18n/i18n";
+import {
+  AlternanceÉlève,
+  DuréeÉtudesPrévueÉlève,
+} from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }: UseÉtudeFormArgs) {
@@ -14,15 +19,15 @@ export default function useÉtudeForm({ àLaSoumissionDuFormulaireAvecSuccès }:
     àLaSoumissionDuFormulaireAvecSuccès,
   });
 
-  const duréeÉtudesPrévueOptions: DuréeÉtudesPrévueOptions =
+  const duréeÉtudesPrévueOptions: SelectProps.Option<DuréeÉtudesPrévueÉlève>[] =
     référentielDonnées?.élève.duréesÉtudesPrévue.map((duréeÉtudesPrévue) => ({
-      valeur: duréeÉtudesPrévue,
+      value: duréeÉtudesPrévue,
       label: i18n.ÉLÈVE.ÉTUDE.DURÉE_ÉTUDES.OPTIONS[duréeÉtudesPrévue].LABEL,
     })) ?? [];
 
-  const alternanceOptions: AlternanceOptions =
+  const alternanceOptions: SelectProps.Option<AlternanceÉlève>[] =
     référentielDonnées?.élève.alternances.map((alternance) => ({
-      valeur: alternance,
+      value: alternance,
       label: i18n.ÉLÈVE.ÉTUDE.ALTERNANCE.OPTIONS[alternance].LABEL,
     })) ?? [];
 

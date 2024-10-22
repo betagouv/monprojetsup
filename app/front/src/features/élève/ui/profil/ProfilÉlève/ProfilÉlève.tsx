@@ -2,32 +2,17 @@ import profilSVG from "@/assets/profil.svg";
 import Head from "@/components/_layout/Head/Head";
 import Bouton from "@/components/Bouton/Bouton";
 import FilAriane from "@/components/FilAriane/FilAriane";
-import Onglets from "@/components/Onglets/Onglets";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
 import FormationsMasquées from "@/features/élève/ui/profil/FormationsMasquées/FormationsMasquées";
 import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useRouterState } from "@tanstack/react-router";
 
 const ProfilÉlève = () => {
   const utilisateur = useUtilisateur();
   const router = useRouterState();
-
-  const indexOngletÀActiver = () => {
-    switch (router.location.hash) {
-      case "domaines":
-        return 1;
-      case "interets":
-        return 2;
-      case "etude":
-        return 3;
-      case "formations-masquees":
-        return 4;
-      default:
-        return 0;
-    }
-  };
 
   return (
     <>
@@ -68,49 +53,53 @@ const ProfilÉlève = () => {
                 variante="quaternaire"
               />
             </div>
-            <Onglets
-              nomAccessible={i18n.PAGE_PROFIL.TITRE}
-              ongletAffichéParDéfaut={indexOngletÀActiver()}
-              onglets={[
+            <Tabs
+              label={i18n.PAGE_PROFIL.TITRE}
+              tabs={[
                 {
-                  titre: i18n.ÉLÈVE.SCOLARITÉ.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-                  contenu: (
+                  label: i18n.ÉLÈVE.SCOLARITÉ.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+                  content: (
                     <ModifierProfilÉlèveForm
                       formulaireId="scolarité"
                       titre={i18n.ÉLÈVE.SCOLARITÉ.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
+                  isDefault: !router.location.hash,
                 },
                 {
-                  titre: i18n.ÉLÈVE.DOMAINES.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-                  contenu: (
+                  label: i18n.ÉLÈVE.DOMAINES.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+                  content: (
                     <ModifierProfilÉlèveForm
                       formulaireId="domaines"
                       titre={i18n.ÉLÈVE.DOMAINES.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
+                  isDefault: router.location.hash === "domaines",
                 },
                 {
-                  titre: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-                  contenu: (
+                  label: i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+                  content: (
                     <ModifierProfilÉlèveForm
                       formulaireId="intérêts"
                       titre={i18n.ÉLÈVE.INTÉRÊTS.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
+                  isDefault: router.location.hash === "interets",
                 },
                 {
-                  titre: i18n.ÉLÈVE.ÉTUDE.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
-                  contenu: (
+                  label: i18n.ÉLÈVE.ÉTUDE.PARCOURS_INSCRIPTION.TITRE_ÉTAPE,
+                  content: (
                     <ModifierProfilÉlèveForm
                       formulaireId="étude"
                       titre={i18n.ÉLÈVE.ÉTUDE.PARCOURS_INSCRIPTION.TITRE}
                     />
                   ),
+                  isDefault: router.location.hash === "etude",
                 },
                 {
-                  titre: i18n.FORMATIONS_MASQUÉES.TITRE,
-                  contenu: <FormationsMasquées />,
+                  label: i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.TITRE,
+                  content: <FormationsMasquées />,
+                  isDefault: router.location.hash === "formation-masquees",
                 },
               ]}
             />

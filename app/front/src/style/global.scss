@@ -2,14 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+label:has(+ *:required)::after {
+  content: "*";
+  color: var(--artwork-minor-red-marianne);
+  margin-left: 4px;
+}
+
+// Footer DSFR override
 .fr-footer__partners .fr-footer__logo {
   box-shadow: none;
 }
 
+
+// Segmented Control DSFR override
 .fr-segmented input:not([disabled]):not(:checked)+label:hover {
   background: none;
 }
 
 .fr-segmented__element input:checked+label {
   background: white;
+}
+
+.fr-segmented__elements {
+  border: 1px solid var(--background-open-blue-france-hover);
+  box-shadow: none
+}
+
+.fr-segmented__element {
+  width: 170px;
+}
+
+.fr-segmented__element>.fr-label {
+  justify-content: center;
+}
+
+
+// Tabs DSFR override
+.fr-tabs {
+  box-shadow: none;
+}
+
+.fr-tabs::before {
+  box-shadow: none;
+  content: "";
+}
+
+.fr-tabs__panel {
+  border: 1px solid var(--border-default-grey);
+  background: white;
+}
+
+// Margin DSFR override
+.fr-select-group:not(:last-child) {
+  margin-bottom: 0;
 }

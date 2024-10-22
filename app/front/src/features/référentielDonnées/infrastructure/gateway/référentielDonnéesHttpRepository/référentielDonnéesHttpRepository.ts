@@ -1,5 +1,5 @@
 import { type RécupérerRéférentielDonnéesRéponseHTTP } from "./référentielDonnéesHttpRepository.interface";
-import { type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { BacÉlève, type RéférentielDonnées } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { type RéférentielDonnéesRepository } from "@/features/référentielDonnées/infrastructure/référentielDonnéesRepository.interface";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
@@ -31,7 +31,7 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         );
 
         return {
-          id: bac.baccalaureat.id,
+          id: bac.baccalaureat.id as BacÉlève,
           nom: bac.baccalaureat.nom,
           spécialités: bac.specialites,
           statistiquesAdmission: {

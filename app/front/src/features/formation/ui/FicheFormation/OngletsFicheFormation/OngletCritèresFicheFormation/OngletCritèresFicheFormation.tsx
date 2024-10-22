@@ -1,11 +1,11 @@
 import { type OngletCritèresFicheFormationProps } from "./OngletCritèresFicheFormation.interface";
-import Badge from "@/components/Badge/Badge";
 import GraphiqueRépartitionMoyenne from "@/components/GraphiqueRépartitionMoyenne/GraphiqueRépartitionMoyenne";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import Titre from "@/components/Titre/Titre";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react/jsx-runtime";
 
@@ -38,9 +38,9 @@ const OngletCritèresFicheFormation = ({
               <Fragment key={bac.idBac}>
                 {bac.pourcentage !== 0 && (
                   <li>
-                    <Badge
-                      titre={`${référentielDonnées?.bacs.find((élément) => élément.id === bac.idBac)?.nom} ${bac.pourcentage}%`}
-                    />
+                    <Badge noIcon>
+                      {`${référentielDonnées?.bacs.find((élément) => élément.id === bac.idBac)?.nom} ${bac.pourcentage}%`}
+                    </Badge>
                   </li>
                 )}
               </Fragment>

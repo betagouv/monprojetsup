@@ -45,7 +45,7 @@ const useInscriptionÉlèveStore = create<InscriptionÉlèveStore>((set, get) =>
       url: "/eleve/inscription/confirmation",
     },
   ],
-  indexÉtapeActuelle: undefined,
+  indexÉtapeActuelle: 0,
   étapeActuelle: undefined,
   étapeSuivante: undefined,
   étapePrécédente: undefined,

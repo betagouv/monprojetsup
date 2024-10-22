@@ -1,6 +1,5 @@
 import { type FicheMétierProps } from "./FicheMétier.interface";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
-import Badge from "@/components/Badge/Badge";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
@@ -8,6 +7,7 @@ import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import BoutonsActionsFicheMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsFicheMétier";
 import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -24,9 +24,11 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
     <>
       <div className="mb-6 lg:mt-6">
         <Badge
-          titre={i18n.COMMUN.MÉTIER}
-          type="nouveauté"
-        />
+          noIcon
+          severity="new"
+        >
+          {i18n.COMMUN.MÉTIER}
+        </Badge>
       </div>
       <div className="*:mb-6">
         <Titre niveauDeTitre="h1">{métier.nom}</Titre>

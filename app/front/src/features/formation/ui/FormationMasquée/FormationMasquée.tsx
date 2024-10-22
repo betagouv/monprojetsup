@@ -24,7 +24,7 @@ const FormationMasquée = ({ formation }: FormationMasquéeProps) => {
       <Bouton
         auClic={démasquerUneFormation}
         icône={{ classe: "fr-icon-arrow-go-back-line", position: "gauche" }}
-        label={i18n.FORMATIONS_MASQUÉES.BOUTON_NE_PLUS_MASQUER}
+        label={i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.BOUTON_NE_PLUS_MASQUER}
         type="button"
         variante="secondaire"
       />

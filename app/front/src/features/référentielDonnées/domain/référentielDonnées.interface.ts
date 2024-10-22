@@ -4,6 +4,7 @@ export type SituationÉlève = NonNullable<components["schemas"]["ModificationPr
 export type ClasseÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["classe"]>;
 export type DuréeÉtudesPrévueÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["dureeEtudesPrevue"]>;
 export type AlternanceÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["alternance"]>;
+export type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
 export type SpécialitéBac = {
   id: string;
@@ -11,7 +12,7 @@ export type SpécialitéBac = {
 };
 
 export type Bac = {
-  id: string;
+  id: BacÉlève;
   nom: string;
   spécialités: SpécialitéBac[];
   statistiquesAdmission: {

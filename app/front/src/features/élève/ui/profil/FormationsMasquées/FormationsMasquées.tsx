@@ -15,7 +15,7 @@ const FormationsMasquées = () => {
           niveauDeTitre="h2"
           styleDeTitre="h4"
         >
-          {i18n.FORMATIONS_MASQUÉES.TITRE}
+          {i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.TITRE}
         </Titre>
       </div>
       {formationsMasquées?.length > 0 ? (
@@ -28,7 +28,7 @@ const FormationsMasquées = () => {
           ))}
         </ul>
       ) : (
-        <p className="fr-text mb-1 text-[--text-mention-grey]">{i18n.FORMATIONS_MASQUÉES.MESSAGE_AUCUNE}</p>
+        <p className="fr-text mb-1 text-[--text-mention-grey]">{i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.MESSAGE_AUCUNE}</p>
       )}
     </>
   );

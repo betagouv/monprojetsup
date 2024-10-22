@@ -2,7 +2,7 @@ import { type SélecteurMultipleProps } from "./SélecteurMultiple.interface";
 import useSélecteurMultiple from "./useSélecteurMultiple";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import ChampDeRecherche from "@/components/ChampDeRecherche/ChampDeRecherche";
-import TagCliquable from "@/components/TagCliquable/TagCliquable";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const SélecteurMultiple = ({
   label,
@@ -65,10 +65,14 @@ const SélecteurMultiple = ({
             >
               {optionsAffichées.map((option) => (
                 <li key={option.valeur}>
-                  <TagCliquable
-                    auClic={() => ajouterOptionSélectionnée(option)}
-                    libellé={option.label}
-                  />
+                  <Tag
+                    nativeButtonProps={{
+                      onClick: () => ajouterOptionSélectionnée(option),
+                      type: "button",
+                    }}
+                  >
+                    {option.label}
+                  </Tag>
                 </li>
               ))}
             </ul>
@@ -84,11 +88,15 @@ const SélecteurMultiple = ({
           >
             {optionsSélectionnées.map((option) => (
               <li key={option.valeur}>
-                <TagCliquable
-                  auClic={() => supprimerOptionSélectionnée(option)}
-                  libellé={option.label}
-                  supprimable
-                />
+                <Tag
+                  dismissible
+                  nativeButtonProps={{
+                    onClick: () => supprimerOptionSélectionnée(option),
+                    type: "button",
+                  }}
+                >
+                  {option.label}
+                </Tag>
               </li>
             ))}
           </ul>

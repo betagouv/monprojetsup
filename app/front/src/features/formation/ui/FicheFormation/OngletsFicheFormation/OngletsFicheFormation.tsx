@@ -1,9 +1,9 @@
 import OngletCritèresFicheFormation from "./OngletCritèresFicheFormation/OngletCritèresFicheFormation";
 import OngletFormationFicheFormation from "./OngletFormationFicheFormation/OngletFormationFicheFormation";
 import { type OngletsFicheFormationProps } from "./OngletsFicheFormation.interface";
-import Onglets from "@/components/Onglets/Onglets";
 import TexteTronqué from "@/components/TexteTronqué/TexteTronqué";
 import { i18n } from "@/configuration/i18n/i18n";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
   const générerLesOnglets = () => {
@@ -11,8 +11,8 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
 
     if ((formation.descriptifs.formation && formation.descriptifs.formation !== "") || formation.liens.length > 0) {
       onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_FORMATION,
-        contenu: (
+        label: i18n.PAGE_FORMATION.ONGLET_FORMATION,
+        content: (
           <OngletFormationFicheFormation
             liens={formation.liens}
             texte={formation.descriptifs.formation}
@@ -23,8 +23,8 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
 
     if (formation.descriptifs.détails && formation.descriptifs.détails !== "") {
       onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_DÉTAILS,
-        contenu: <TexteTronqué texte={formation.descriptifs.détails} />,
+        label: i18n.PAGE_FORMATION.ONGLET_DÉTAILS,
+        content: <TexteTronqué texte={formation.descriptifs.détails} />,
       });
     }
 
@@ -35,8 +35,8 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
       formation.admis.moyenneGénérale.centiles.length > 0
     ) {
       onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_CRITÈRES,
-        contenu: (
+        label: i18n.PAGE_FORMATION.ONGLET_CRITÈRES,
+        content: (
           <OngletCritèresFicheFormation
             critèresAnalyse={formation.critèresAnalyse}
             descriptifAttendus={formation.descriptifs.attendus}
@@ -49,8 +49,8 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
 
     if (formation.descriptifs.conseils && formation.descriptifs.conseils !== "") {
       onglets.push({
-        titre: i18n.PAGE_FORMATION.ONGLET_CONSEILS,
-        contenu: <TexteTronqué texte={formation.descriptifs.conseils} />,
+        label: i18n.PAGE_FORMATION.ONGLET_CONSEILS,
+        content: <TexteTronqué texte={formation.descriptifs.conseils} />,
       });
     }
 
@@ -58,9 +58,9 @@ const OngletsFicheFormation = ({ formation }: OngletsFicheFormationProps) => {
   };
 
   return (
-    <Onglets
-      nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
-      onglets={générerLesOnglets()}
+    <Tabs
+      label={i18n.ACCESSIBILITÉ.ONGLETS_FORMATION}
+      tabs={générerLesOnglets()}
     />
   );
 };
