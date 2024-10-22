@@ -322,7 +322,7 @@ class MetierAvecSesFormationsControllerTest(
                     MetierCourt(id = "MET_98", nom = "sellier/ère"),
                 )
             `when`(
-                rechercherMetiersService.rechercherMetiers(
+                rechercherMetiersService.rechercherMetiersTriesParScores(
                     recherche = "cheval",
                     tailleMinimumRecherche = 2,
                 ),
@@ -410,7 +410,7 @@ class MetierAvecSesFormationsControllerTest(
                     MetierCourt(id = "MET_98", nom = "sellier/ère"),
                 )
             `when`(
-                rechercherMetiersService.rechercherMetiers(
+                rechercherMetiersService.rechercherMetiersTriesParScores(
                     recherche = "cheval",
                     tailleMinimumRecherche = 2,
                 ),
@@ -498,7 +498,7 @@ class MetierAvecSesFormationsControllerTest(
                     MetierCourt(id = "MET_98", nom = "sellier/ère"),
                 )
             `when`(
-                rechercherMetiersService.rechercherMetiers(
+                rechercherMetiersService.rechercherMetiersTriesParScores(
                     recherche = "cheval",
                     tailleMinimumRecherche = 2,
                 ),
@@ -641,7 +641,7 @@ class MetierAvecSesFormationsControllerTest(
                     MetierCourt(id = "MET_98", nom = "sellier/ère"),
                 )
             `when`(
-                rechercherMetiersService.rechercherMetiers(
+                rechercherMetiersService.rechercherMetiersTriesParScores(
                     recherche = "cheval",
                     tailleMinimumRecherche = 2,
                 ),

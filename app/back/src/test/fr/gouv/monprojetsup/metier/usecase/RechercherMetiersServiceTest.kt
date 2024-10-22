@@ -69,7 +69,7 @@ class RechercherMetiersServiceTest {
 
         // When
         val resultat =
-            rechercherMetiersService.rechercherMetiers(
+            rechercherMetiersService.rechercherMetiersTriesParScores(
                 recherche = rechercheLongue,
                 tailleMinimumRecherche = 4,
             )
@@ -98,7 +98,7 @@ class RechercherMetiersServiceTest {
     @Test
     fun `ne doit pas appeler le repository pour les mots de moins de 4 caractères`() {
         // When
-        rechercherMetiersService.rechercherMetiers(
+        rechercherMetiersService.rechercherMetiersTriesParScores(
             recherche = rechercheLongue,
             tailleMinimumRecherche = 4,
         )
@@ -116,7 +116,7 @@ class RechercherMetiersServiceTest {
     @Test
     fun `ne doit pas appeler le repository plusieurs fois pour le même mot`() {
         // When
-        rechercherMetiersService.rechercherMetiers(
+        rechercherMetiersService.rechercherMetiersTriesParScores(
             recherche = rechercheLongue,
             tailleMinimumRecherche = 2,
         )

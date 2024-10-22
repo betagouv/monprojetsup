@@ -48,7 +48,7 @@ class MetierController(
             )
         }
         val metiers =
-            rechercherMetiersService.rechercherMetiers(
+            rechercherMetiersService.rechercherMetiersTriesParScores(
                 recherche = recherche,
                 tailleMinimumRecherche = TAILLE_MINIMUM_RECHERCHE,
             )
