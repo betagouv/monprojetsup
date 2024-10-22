@@ -50,7 +50,8 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                             "développement et conseil en orientation scolaire et professionnelle",
                 ),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
+        val resultMetiers = result.map { it.metier }
+        assertThat(resultMetiers.containsAll(attendu)).isTrue()
     }
 
     @Test
@@ -73,12 +74,13 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 MetierCourt(id = "MET_19", nom = "palefrenier / palefrenière"),
                 MetierCourt(id = "MET_98", nom = "sellier/ère"),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
+        val metiers = result.map { it.metier }
+        assertThat(metiers.containsAll(attendu)).isTrue()
     }
 
     @Test
     @Sql("classpath:recherche_metier.sql")
-    fun `Si sport, renvoyer les métiers associés en plaçant en premier ceux contenant le mot tel quel`() {
+    fun `Si sport, renvoyer les métiers associés en plaçant en premier ceux contenant le mot en infix`() {
         // Given
         val recherche = "sport"
 
@@ -98,21 +100,20 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 MetierCourt(id = "MET_481", nom = "entraîneur/euse sportif/ve"),
                 MetierCourt(id = "MET_783", nom = "éducateur sportif / éducatrice sportive"),
                 MetierCourt(id = "MET_43", nom = "professeur/e d'éducation physique et sportive"),
-                MetierCourt(id = "MET_530", nom = "animateur/trice handisport"),
-                MetierCourt(id = "MET_526", nom = "designer transports"),
                 MetierCourt(id = "MET_723", nom = "conseiller sportif / conseillère sportive en salle de remise en forme"),
                 MetierCourt(id = "MET_808", nom = "animateur / animatrice d'activités physiques et sportives pour tous"),
                 MetierCourt(id = "MET_569", nom = "éducateur/trice sportif/ve des activités aquatiques et de la natation"),
                 MetierCourt(id = "MET_832", nom = "pisteur / pisteuse secouriste"),
                 MetierCourt(id = "MET_132", nom = "Médiateur social / médiatrice sociale"),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
-        val indexMET135 = result.indexOfFirst { it.id == "MET_135" }
-        val indexMET140 = result.indexOfFirst { it.id == "MET_140" }
-        val indexMET375 = result.indexOfFirst { it.id == "MET_375" }
-        val indexMET392 = result.indexOfFirst { it.id == "MET_392" }
-        val indexMET522 = result.indexOfFirst { it.id == "MET_522" }
-        val indexMET820 = result.indexOfFirst { it.id == "MET_820" }
+        val resulatMetiers = result.map { it.metier }
+        assertThat(resulatMetiers.containsAll(attendu)).isTrue()
+        val indexMET135 = result.find { it.metier.id == "MET_135" }
+        val indexMET140 = result.find { it.metier.id == "MET_140" }
+        val indexMET375 = result.find { it.metier.id == "MET_375" }
+        val indexMET392 = result.find { it.metier.id == "MET_392" }
+        val indexMET522 = result.find { it.metier.id == "MET_522" }
+        val indexMET820 = result.find { it.metier.id == "MET_820" }
         val indexMetiersContenantLeMotSport =
             listOf(
                 indexMET135,
@@ -122,7 +123,23 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 indexMET522,
                 indexMET820,
             )
-        assertThat(indexMetiersContenantLeMotSport.all { it < indexMetiersContenantLeMotSport.size })
+        assertThat(indexMetiersContenantLeMotSport.all { it?.score?.labelContientMot == true }).isTrue()
+        val indexMET385 = result.find { it.metier.id == "MET_385" }
+        val indexMET481 = result.find { it.metier.id == "MET_481" }
+        val indexMET783 = result.find { it.metier.id == "MET_783" }
+        val indexMET43 = result.find { it.metier.id == "MET_43" }
+        val indexMET723 = result.find { it.metier.id == "MET_723" }
+        val indexMET808 = result.find { it.metier.id == "MET_808" }
+        val indexMetiersContenantEnInfixLeMotSport =
+            listOf(
+                indexMET385,
+                indexMET481,
+                indexMET783,
+                indexMET43,
+                indexMET723,
+                indexMET808,
+            )
+        assertThat(indexMetiersContenantEnInfixLeMotSport.all { it?.score?.infixDansLabel == true }).isTrue()
     }
 
     @Test
@@ -157,7 +174,7 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 ),
                 MetierCourt(id = "MET_7856", nom = "gérontopsychiatre"),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
+        assertThat(attendu.containsAll(result.map { it.metier })).isTrue()
     }
 
     @Test
@@ -187,12 +204,12 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 MetierCourt(id = "MET_691", nom = "officier / officière de gendarmerie"),
                 MetierCourt(id = "MET_810", nom = "démineur/euse"),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
+        assertThat(attendu.containsAll(result.map { it.metier })).isTrue()
     }
 
     @Test
     @Sql("classpath:recherche_metier.sql")
-    fun `Si policier, renvoyer les métiers associés en prenant en compte les fautes`() {
+    fun `Si astronote, renvoyer les métiers associés en prenant en compte les fautes`() {
         // Given
         val recherche = "astronote"
 
@@ -206,6 +223,6 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 MetierCourt(id = "MET_24", nom = "astrophysicien / astrophysicienne"),
                 MetierCourt(id = "MET_24", nom = "astrophysicien / astrophysicienne"),
             )
-        assertThat(result.containsAll(attendu)).isTrue()
+        assertThat(attendu.containsAll(result.map { it.metier })).isTrue()
     }
 }

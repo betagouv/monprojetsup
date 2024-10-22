@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
-import fr.gouv.monprojetsup.commun.Constantes.REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT
+import fr.gouv.monprojetsup.commun.recherche.usecase.FiltrerRechercheBuilder
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
@@ -9,12 +9,13 @@ import org.springframework.stereotype.Service
 @Service
 class RechercherFormationsService(
     private val rechercheFormationRepository: RechercheFormationRepository,
+    private val filtrerRechercheBuilder: FiltrerRechercheBuilder,
 ) {
     fun rechercheLesFormationsAvecLeurScoreCorrespondantes(
         recherche: String,
         tailleMinimumRecherche: Int,
     ): Map<FormationCourte, Int> {
-        val motsRecherches = filtrerMotsRecherches(recherche, tailleMinimumRecherche)
+        val motsRecherches = filtrerRechercheBuilder.filtrerMotsRecherches(recherche, tailleMinimumRecherche)
         val resultats = mutableMapOf<FormationCourte, Int>()
         motsRecherches.forEach { mot ->
             val recherches = rechercheFormationRepository.rechercherUneFormation(mot)
@@ -58,89 +59,5 @@ class RechercherFormationsService(
                 (coefficient * it.pourcentageMot).toInt()
             } ?: 0
         return score
-    }
-
-    private fun filtrerMotsRecherches(
-        recherche: String,
-        tailleMinimumRecherche: Int,
-    ): List<String> {
-        val regexNonAlphaNumericAvecAccent = Regex(REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT)
-        return recherche
-            .split(regexNonAlphaNumericAvecAccent)
-            .distinct()
-            .filter { it.length >= tailleMinimumRecherche }
-            .filterNot { MOTS_VIDES.contains(it) }
-    }
-
-    companion object {
-        private val MOTS_VIDES =
-            listOf(
-                "le",
-                "la",
-                "les",
-                "aux",
-                "un",
-                "une",
-                "des",
-                "du",
-                "des",
-                "de",
-                "en",
-                "sur",
-                "sous",
-                "dans",
-                "chez",
-                "par",
-                "pour",
-                "avec",
-                "sans",
-                "contre",
-                "entre",
-                "parmi",
-                "vers",
-                "derrière",
-                "devant",
-                "après",
-                "avant",
-                "autour",
-                "et",
-                "ou",
-                "mais",
-                "donc",
-                "ni",
-                "car",
-                "que",
-                "quand",
-                "comme",
-                "puisque",
-                "quoique",
-                "mon",
-                "ma",
-                "mes",
-                "ton",
-                "ta",
-                "tes",
-                "son",
-                "sa",
-                "ses",
-                "notre",
-                "nos",
-                "votre",
-                "vos",
-                "leur",
-                "leurs",
-                "ce",
-                "cet",
-                "cette",
-                "ces",
-                "qui",
-                "que",
-                "quoi",
-                "dont",
-                "lequel",
-                "laquelle",
-                "lesquels",
-                "lesquelles",
-            )
     }
 }
