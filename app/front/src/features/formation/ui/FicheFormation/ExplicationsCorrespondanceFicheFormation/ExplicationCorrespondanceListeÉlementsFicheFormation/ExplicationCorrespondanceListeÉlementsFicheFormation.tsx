@@ -1,5 +1,5 @@
 import { type ExplicationCorrespondanceListeÉlementsFicheFormationProps } from "./ExplicationCorrespondanceListeÉlementsFicheFormation.interface";
-import Tag from "@/components/Tag/Tag";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 const ExplicationCorrespondanceListeÉlementsFicheFormation = ({
   texteIntroductif,
@@ -16,10 +16,7 @@ const ExplicationCorrespondanceListeÉlementsFicheFormation = ({
         <ul className="mb-0 mt-2 flex list-none flex-wrap justify-start gap-3 p-0">
           {éléments.map((élément) => (
             <li key={élément}>
-              <Tag
-                libellé={élément}
-                taille="petit"
-              />
+              <Tag small>{élément}</Tag>
             </li>
           ))}
         </ul>

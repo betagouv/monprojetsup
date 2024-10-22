@@ -2,7 +2,6 @@ import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
-import IndicateurÉtapes from "@/components/IndicateurÉtapes/IndicateurÉtapes";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
@@ -21,6 +20,7 @@ import {
   étapeSuivanteInscriptionÉlèveStore,
 } from "@/features/élève/ui/inscription/store/useInscriptionÉlève/useInscriptionÉlève";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { ReactNode, Suspense } from "react";
@@ -97,9 +97,11 @@ const InscriptionÉlèvePage = () => {
     <>
       <Head titre={étapeActuelle.titreÉtape} />
       <div className="fr-p-2w fr-py-md-3w fr-px-md-10w shadow-md">
-        <IndicateurÉtapes
-          indexÉtapeActuelle={indexÉtapeActuelle ?? 1}
-          étapes={étapes.map((étape) => étape.titreÉtape)}
+        <Stepper
+          currentStep={indexÉtapeActuelle + 1}
+          nextTitle={étapes[indexÉtapeActuelle + 1].titreÉtape}
+          stepCount={étapes.length}
+          title={étapes[indexÉtapeActuelle].titreÉtape}
         />
       </div>
       <div className="fr-py-3w fr-px-2w fr-py-md-6w fr-px-md-8w">

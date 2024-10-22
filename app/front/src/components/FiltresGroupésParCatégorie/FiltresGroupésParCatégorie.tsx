@@ -1,5 +1,5 @@
 import { type FiltresGroupésParCatégorieProps } from "./FiltresGroupésParCatégorie.interface";
-import TagFiltre from "@/components/TagFiltre/TagFiltre";
+import TagFiltreAvecEmoji from "@/components/TagFiltreAvecEmoji/TagFiltreAvecEmoji";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -86,16 +86,15 @@ const FiltresGroupésParCatégorie = ({
             <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
               {catégorie.filtres.map((filtre) => (
                 <li key={filtre.id}>
-                  <TagFiltre
+                  <TagFiltreAvecEmoji
                     appuyéParDéfaut={filtreIdsSélectionnés.includes(filtre.id)}
-                    ariaLabel={filtre.nom}
                     auClic={(estAppuyé) =>
                       estAppuyé ? ajouterFiltreIdSélectionné(filtre.id) : supprimerFiltreIdSélectionné(filtre.id)
                     }
                     emoji={filtre.emoji}
                   >
                     {filtre.nom}
-                  </TagFiltre>
+                  </TagFiltreAvecEmoji>
                 </li>
               ))}
             </ul>

@@ -1,6 +1,6 @@
 import { type AmbitionVoeuxProps } from "./AmbitionVoeux.interface";
 import useAmbitionVoeux from "./useAmbitionVoeux";
-import TagFiltre from "@/components/TagFiltre/TagFiltre";
+import TagFiltreAvecEmoji from "@/components/TagFiltreAvecEmoji/TagFiltreAvecEmoji";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const AmbitionVoeux = ({ ambitionActuelle, formationId }: AmbitionVoeuxProps) => {
@@ -12,15 +12,14 @@ const AmbitionVoeux = ({ ambitionActuelle, formationId }: AmbitionVoeuxProps) =>
       <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
         {ambitions.map((ambition) => (
           <li key={ambition.niveau}>
-            <TagFiltre
+            <TagFiltreAvecEmoji
               appuyéParDéfaut={ambitionActuelle === ambition.niveau}
-              ariaLabel={ambition.libellé}
               auClic={() => mettreAJourAmbition(ambition.niveau)}
               emoji={ambition.emoji}
               key={key}
             >
               {ambition.libellé}
-            </TagFiltre>
+            </TagFiltreAvecEmoji>
           </li>
         ))}
       </ul>

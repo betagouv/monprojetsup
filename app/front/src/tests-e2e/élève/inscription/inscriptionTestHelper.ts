@@ -67,7 +67,7 @@ export class InscriptionTestHelper extends TestHelper {
 
   public boutonOptionSélectionnée = (nom: string) => {
     return this.listeDesOptionsSélectionnées().getByRole("button", {
-      name: `${i18n.ACCESSIBILITÉ.RETIRER} ${nom}`,
+      name: nom,
       exact: true,
     });
   };

@@ -1,10 +1,12 @@
-import { type BacOptions, type ClasseOptions, type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
+import { type UseScolaritéFormArgs } from "./ScolaritéForm.interface";
 import { scolaritéValidationSchema } from "./ScolaritéForm.validation";
 import useMoyenneScolaritéForm from "./useMoyenneScolaritéForm";
 import useSpécialitésScolaritéForm from "./useSpécialitésScolaritéForm";
 import { i18n } from "@/configuration/i18n/i18n";
+import { BacÉlève, ClasseÉlève } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { référentielDonnéesQueryOptions } from "@/features/référentielDonnées/ui/référentielDonnéesQueries";
 import useÉlèveForm from "@/features/élève/ui/hooks/useÉlèveForm/useÉlèveForm";
+import { SelectProps } from "@codegouvfr/react-dsfr/SelectNext";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -18,21 +20,21 @@ export default function useScolaritéForm({ àLaSoumissionDuFormulaireAvecSuccè
 
   const valeurBac = watch("bac");
 
-  const classeOptions: ClasseOptions = useMemo(
+  const classeOptions: SelectProps.Option<ClasseÉlève>[] = useMemo(
     () =>
       référentielDonnées?.élève.classes.map((classe) => ({
-        valeur: classe,
+        value: classe,
         label: i18n.ÉLÈVE.SCOLARITÉ.CLASSE.OPTIONS[classe].LABEL,
       })) ?? [],
     [référentielDonnées],
   );
 
-  const bacOptions: BacOptions = useMemo(
+  const bacOptions: SelectProps.Option<NonNullable<BacÉlève>>[] = useMemo(
     () =>
       référentielDonnées?.bacs
         .filter((bac) => bac.id !== "NC")
         .map((bac) => ({
-          valeur: bac.id,
+          value: bac.id,
           label: bac.nom,
         })) ?? [],
     [référentielDonnées],

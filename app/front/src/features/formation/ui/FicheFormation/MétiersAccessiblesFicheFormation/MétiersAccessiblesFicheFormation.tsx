@@ -1,15 +1,14 @@
 import { type MétiersAccessiblesFicheFormationProps } from "./MétiersAccessiblesFicheFormation.interface";
 import Bouton from "@/components/Bouton/Bouton";
 import { BoutonProps } from "@/components/Bouton/Bouton.interface.tsx";
-import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
-import Modale from "@/components/Modale/Modale";
 import Titre from "@/components/Titre/Titre";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
-import BoutonsActionsModalMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsModalMétier";
+import ModaleMétier from "@/features/métier/ui/ModaleMétier/ModaleMétier";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFicheFormationProps) => {
   const { data: élève } = useQuery(élèveQueryOptions);
@@ -39,9 +38,16 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
     return 0;
   });
 
-  if (métiers.length === 0) return null;
+  const modaleMétier = useMemo(
+    () =>
+      createModal({
+        id: "modale-métier",
+        isOpenedByDefault: false,
+      }),
+    [],
+  );
 
-  const idModale = "modale-métier";
+  if (métiers.length === 0) return null;
 
   return (
     <div>
@@ -57,9 +63,10 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
         {métiersTriésParFavoris.slice(0, constantes.FICHE_FORMATION.NB_MÉTIERS_À_AFFICHER).map((métier) => (
           <li key={métier.id}>
             <Bouton
-              ariaControls={idModale}
-              auClic={() => setMétierSélectionné(métier)}
-              dataFrOpened="false"
+              auClic={() => {
+                modaleMétier.open();
+                setMétierSélectionné(métier);
+              }}
               icône={afficherCoeurFavoris(métier.id)}
               label={métier.nom}
               taille="petit"
@@ -69,24 +76,10 @@ const MétiersAccessiblesFicheFormation = ({ métiers }: MétiersAccessiblesFich
           </li>
         ))}
       </ul>
-      {métierSélectionné && (
-        <Modale
-          boutons={
-            <BoutonsActionsModalMétier
-              ariaControls={idModale}
-              métier={{ ...métierSélectionné, formations: [] }}
-              taille="grand"
-            />
-          }
-          id={idModale}
-          titre={métierSélectionné?.nom ?? ""}
-        >
-          <div className="grid gap-6">
-            <p className="mb-0 whitespace-pre-line">{métierSélectionné?.descriptif ?? null}</p>
-            <ListeLiensExternesSousFormeBouton liens={métierSélectionné?.liens ?? []} />
-          </div>
-        </Modale>
-      )}
+      <ModaleMétier
+        modale={modaleMétier}
+        métier={métierSélectionné}
+      />
     </div>
   );
 };

@@ -16,36 +16,60 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac Général",
         spécialités: [
           {
+            id: "mat709",
+            nom: "Théâtre-Expression dramatique (TED)",
+          },
+          {
+            id: "mat1066",
+            nom: "Littérature et langues et cultures de l'Antiquité: Grec (LLCA)",
+          },
+          {
+            id: "mat1065",
+            nom: "Numérique et Sciences Informatiques (NSI)",
+          },
+          {
             id: "mat10001076",
             nom: "Langues, littératures et cultures étrangères et régionales (LLCE)",
+          },
+          {
+            id: "mat20001076",
+            nom: "Anglais Monde Contemporain (AMC)",
+          },
+          {
+            id: "mat1063",
+            nom: "Littérature et langues et cultures de l’Antiquité: Latin (LLCA)",
+          },
+          {
+            id: "mat1062",
+            nom: "Histoire-Géographie, Géopolitique et Sciences politiques (HGGSP)",
+          },
+          {
+            id: "mat1095",
+            nom: "Éducation Physique, Pratiques Et Culture Sportives",
+          },
+          {
+            id: "mat1061",
+            nom: "Sciences de l'ingénieur et sciences physiques (SISP)",
+          },
+          {
+            id: "mat4",
+            nom: "Sciences de l'ingénieur (SI)",
           },
           {
             id: "mat5",
             nom: "Biologie/Ecologie (BE)",
           },
           {
+            id: "mat710",
+            nom: "Cinéma-Audiovisuel (CA)",
+          },
+          {
+            id: "mat700",
+            nom: "Mathématiques",
+          },
+          {
             id: "mat1067",
             nom: "Humanités, Littérature et Philosophie (HLP)",
-          },
-          {
-            id: "mat709",
-            nom: "Théâtre-Expression dramatique (TED)",
-          },
-          {
-            id: "mat705",
-            nom: "Danse",
-          },
-          {
-            id: "mat706",
-            nom: "Arts Plastiques (AP)",
-          },
-          {
-            id: "mat707",
-            nom: "Histoire des Arts",
-          },
-          {
-            id: "mat708",
-            nom: "Arts du Cirque (AC)",
           },
           {
             id: "mat701",
@@ -64,40 +88,20 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Musique",
           },
           {
-            id: "mat1065",
-            nom: "Numérique et Sciences Informatiques (NSI)",
+            id: "mat705",
+            nom: "Danse",
           },
           {
-            id: "mat1066",
-            nom: "Littérature et langues et cultures de l'Antiquité: Grec (LLCA)",
+            id: "mat706",
+            nom: "Arts Plastiques (AP)",
           },
           {
-            id: "mat1063",
-            nom: "Littérature et langues et cultures de l’Antiquité: Latin (LLCA)",
+            id: "mat707",
+            nom: "Histoire des Arts",
           },
           {
-            id: "mat710",
-            nom: "Cinéma-Audiovisuel (CA)",
-          },
-          {
-            id: "mat700",
-            nom: "Mathématiques",
-          },
-          {
-            id: "mat20001076",
-            nom: "Anglais Monde Contemporain (AMC)",
-          },
-          {
-            id: "mat1061",
-            nom: "Sciences de l'ingénieur et sciences physiques (SISP)",
-          },
-          {
-            id: "mat1062",
-            nom: "Histoire-Géographie, Géopolitique et Sciences politiques (HGGSP)",
-          },
-          {
-            id: "mat1095",
-            nom: "Éducation Physique, Pratiques Et Culture Sportives",
+            id: "mat708",
+            nom: "Arts du Cirque (AC)",
           },
         ],
         statistiquesAdmission: {
@@ -270,12 +274,28 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac STAV",
         spécialités: [
           {
+            id: "mat321",
+            nom: "Biologie et physiopathologie humaines (BPH)",
+          },
+          {
+            id: "mat1039",
+            nom: "Chimie, biologie et physiopathologie humaines (CBPH)",
+          },
+          {
+            id: "mat1079",
+            nom: "Territoires et société (TS)",
+          },
+          {
             id: "mat1078",
             nom: "Territoires et technologie (TT)",
           },
           {
             id: "mat1077",
             nom: "Gestion des ressources et alimentation",
+          },
+          {
+            id: "mat1052",
+            nom: "Physique-Chimie pour la santé (PCS)",
           },
         ],
         statistiquesAdmission: {
@@ -448,12 +468,20 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac STHR",
         spécialités: [
           {
+            id: "mat1008",
+            nom: "Enseignement scientifique alimentation - environnement",
+          },
+          {
             id: "mat1006",
             nom: "Economie et gestion hôtelière (EGH)",
           },
           {
             id: "mat1051",
             nom: "Sciences et technologies culinaires et services-ESAE (STES)",
+          },
+          {
+            id: "mat1050",
+            nom: "Sciences et technologies culinaires et des services (STCS)",
           },
         ],
         statistiquesAdmission: {
@@ -626,12 +654,20 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac ST2S",
         spécialités: [
           {
+            id: "mat320",
+            nom: "Sciences et techniques sanitaires et sociales (STSS)",
+          },
+          {
+            id: "mat321",
+            nom: "Biologie et physiopathologie humaines (BPH)",
+          },
+          {
             id: "mat1039",
             nom: "Chimie, biologie et physiopathologie humaines (CBPH)",
           },
           {
-            id: "mat320",
-            nom: "Sciences et techniques sanitaires et sociales (STSS)",
+            id: "mat1052",
+            nom: "Physique-Chimie pour la santé (PCS)",
           },
         ],
         statistiquesAdmission: {
@@ -804,20 +840,28 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac STMG",
         spécialités: [
           {
-            id: "mat282",
-            nom: "Mercatique",
-          },
-          {
             id: "mat1038",
             nom: "Droit et Economie (DE)",
+          },
+          {
+            id: "mat887",
+            nom: "Gestion et Finance",
           },
           {
             id: "mat888",
             nom: "Systèmes d'information et de Gestion (SIG)",
           },
           {
-            id: "mat887",
-            nom: "Gestion et Finance",
+            id: "mat1054",
+            nom: "Management",
+          },
+          {
+            id: "mat1053",
+            nom: "Sciences de la gestion et numérique (SGN)",
+          },
+          {
+            id: "mat282",
+            nom: "Mercatique",
           },
           {
             id: "mat1009",
@@ -993,6 +1037,18 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         id: "STD2A",
         nom: "Bac STD2A",
         spécialités: [
+          {
+            id: "mat2",
+            nom: "Physique/Chimie (PC)",
+          },
+          {
+            id: "mat1059",
+            nom: "Outils et langages numériques (OLN)",
+          },
+          {
+            id: "mat1058",
+            nom: "Design et métiers d'art (DMA)",
+          },
           {
             id: "mat1043",
             nom: "Analyse et méthodes en design (AMD)",
@@ -1172,6 +1228,14 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac STI2D",
         spécialités: [
           {
+            id: "mat1056",
+            nom: "Innovation Technologique (IT)",
+          },
+          {
+            id: "mat1055",
+            nom: "Ingénierie et développement durable (IDD)",
+          },
+          {
             id: "mat1096",
             nom: "Ingénierie, innovation et développement durable (IIDD)",
           },
@@ -1350,8 +1414,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         nom: "Bac STL",
         spécialités: [
           {
-            id: "mat719",
-            nom: "Sciences physiques et chimiques en laboratoire (SPCL)",
+            id: "mat740",
+            nom: "Biotechnologies",
+          },
+          {
+            id: "mat1057",
+            nom: "Biochimie-Biologie (BB)",
           },
           {
             id: "mat1041",
@@ -1360,6 +1428,10 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "mat1040",
             nom: "Physique-Chimie et Mathématiques (PCM)",
+          },
+          {
+            id: "mat719",
+            nom: "Sciences physiques et chimiques en laboratoire (SPCL)",
           },
         ],
         statistiquesAdmission: {
@@ -1536,24 +1608,28 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Pratique chorégraphiques (PC)",
           },
           {
-            id: "mat1047",
-            nom: "Pratique musicale (PM)",
-          },
-          {
             id: "mat1048",
             nom: "Culture et sciences chorégraphiques (CSC)",
           },
           {
-            id: "mat1045",
-            nom: "Culture et sciences théâtrale (CST)",
+            id: "mat1047",
+            nom: "Pratique musicale (PM)",
           },
           {
             id: "mat1046",
             nom: "Culture et sciences musicale (CSM)",
           },
           {
+            id: "mat1045",
+            nom: "Culture et sciences théâtrale (CST)",
+          },
+          {
             id: "mat1044",
             nom: "Pratique théâtrale (PT)",
+          },
+          {
+            id: "mat1060",
+            nom: "Economie, droit et environnement du spectacle vivant (EDESV)",
           },
         ],
         statistiquesAdmission: {
@@ -1893,12 +1969,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "PA",
         nom: "Bac Professionnel Agricole",
-        spécialités: [
-          {
-            id: "mat5",
-            nom: "Biologie/Ecologie (BE)",
-          },
-        ],
+        spécialités: [],
         statistiquesAdmission: {
           parMoyenneGénérale: [
             {
@@ -2065,213 +2136,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         },
       },
       {
-        id: "E",
-        nom: "Bac Européen",
-        spécialités: [],
-        statistiquesAdmission: {
-          parMoyenneGénérale: [
-            {
-              moyenne: 0,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 0.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 1,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 1.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 2,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 2.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 3,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 3.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 4,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 4.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 5.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 6,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 6.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 7,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 7.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 8,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 8.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 9,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 9.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 10,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 10.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 11,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 1,
-            },
-            {
-              moyenne: 11.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 1,
-            },
-            {
-              moyenne: 12,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 4,
-            },
-            {
-              moyenne: 12.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 7,
-            },
-            {
-              moyenne: 13,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 11,
-            },
-            {
-              moyenne: 13.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 15,
-            },
-            {
-              moyenne: 14,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 21,
-            },
-            {
-              moyenne: 14.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 28,
-            },
-            {
-              moyenne: 15,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 35,
-            },
-            {
-              moyenne: 15.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 44,
-            },
-            {
-              moyenne: 16,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 57,
-            },
-            {
-              moyenne: 16.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 71,
-            },
-            {
-              moyenne: 17,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 81,
-            },
-            {
-              moyenne: 17.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 89,
-            },
-            {
-              moyenne: 18,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 93,
-            },
-            {
-              moyenne: 18.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 96,
-            },
-            {
-              moyenne: 19,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 99,
-            },
-            {
-              moyenne: 19.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 100,
-            },
-          ],
-        },
-      },
-      {
         id: "NC",
         nom: "Non-communiqué",
         spécialités: [
           {
-            id: "mat282",
-            nom: "Mercatique",
-          },
-          {
-            id: "mat1049",
-            nom: "Pratique chorégraphiques (PC)",
-          },
-          {
-            id: "mat1006",
-            nom: "Economie et gestion hôtelière (EGH)",
-          },
-          {
-            id: "mat1047",
-            nom: "Pratique musicale (PM)",
-          },
-          {
-            id: "mat1048",
-            nom: "Culture et sciences chorégraphiques (CSC)",
-          },
-          {
             id: "mat1067",
             nom: "Humanités, Littérature et Philosophie (HLP)",
-          },
-          {
-            id: "mat1045",
-            nom: "Culture et sciences théâtrale (CST)",
-          },
-          {
-            id: "mat1046",
-            nom: "Culture et sciences musicale (CSM)",
-          },
-          {
-            id: "mat1009",
-            nom: "Ressources humaines et communication (RHC)",
           },
           {
             id: "mat705",
@@ -2288,10 +2158,6 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "mat708",
             nom: "Arts du Cirque (AC)",
-          },
-          {
-            id: "mat888",
-            nom: "Systèmes d'information et de Gestion (SIG)",
           },
           {
             id: "mat701",
@@ -2314,40 +2180,16 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Gestion des ressources et alimentation",
           },
           {
-            id: "mat1096",
-            nom: "Ingénierie, innovation et développement durable (IIDD)",
-          },
-          {
-            id: "mat887",
-            nom: "Gestion et Finance",
-          },
-          {
             id: "mat700",
             nom: "Mathématiques",
           },
           {
-            id: "mat20001076",
-            nom: "Anglais Monde Contemporain (AMC)",
-          },
-          {
-            id: "mat320",
-            nom: "Sciences et techniques sanitaires et sociales (STSS)",
-          },
-          {
-            id: "mat1051",
-            nom: "Sciences et technologies culinaires et services-ESAE (STES)",
-          },
-          {
-            id: "mat1095",
-            nom: "Éducation Physique, Pratiques Et Culture Sportives",
+            id: "mat740",
+            nom: "Biotechnologies",
           },
           {
             id: "mat1038",
             nom: "Droit et Economie (DE)",
-          },
-          {
-            id: "mat10001076",
-            nom: "Langues, littératures et cultures étrangères et régionales (LLCE)",
           },
           {
             id: "mat1039",
@@ -2358,8 +2200,8 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Territoires et technologie (TT)",
           },
           {
-            id: "mat5",
-            nom: "Biologie/Ecologie (BE)",
+            id: "mat1079",
+            nom: "Territoires et société (TS)",
           },
           {
             id: "mat709",
@@ -2370,36 +2212,160 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Sciences physiques et chimiques en laboratoire (SPCL)",
           },
           {
-            id: "mat1065",
-            nom: "Numérique et Sciences Informatiques (NSI)",
-          },
-          {
             id: "mat1043",
             nom: "Analyse et méthodes en design (AMD)",
-          },
-          {
-            id: "mat1066",
-            nom: "Littérature et langues et cultures de l'Antiquité: Grec (LLCA)",
           },
           {
             id: "mat1044",
             nom: "Pratique théâtrale (PT)",
           },
           {
-            id: "mat1063",
-            nom: "Littérature et langues et cultures de l’Antiquité: Latin (LLCA)",
+            id: "mat710",
+            nom: "Cinéma-Audiovisuel (CA)",
           },
           {
             id: "mat1041",
             nom: "Biochimie-Biologie-Biotechnologie (BBB)",
           },
           {
-            id: "mat710",
-            nom: "Cinéma-Audiovisuel (CA)",
-          },
-          {
             id: "mat1042",
             nom: "Conception et création en design et métiers d'art (CCDMA)",
+          },
+          {
+            id: "mat1040",
+            nom: "Physique-Chimie et Mathématiques (PCM)",
+          },
+          {
+            id: "mat282",
+            nom: "Mercatique",
+          },
+          {
+            id: "mat1008",
+            nom: "Enseignement scientifique alimentation - environnement",
+          },
+          {
+            id: "mat1049",
+            nom: "Pratique chorégraphiques (PC)",
+          },
+          {
+            id: "mat1006",
+            nom: "Economie et gestion hôtelière (EGH)",
+          },
+          {
+            id: "mat1047",
+            nom: "Pratique musicale (PM)",
+          },
+          {
+            id: "mat1048",
+            nom: "Culture et sciences chorégraphiques (CSC)",
+          },
+          {
+            id: "mat1045",
+            nom: "Culture et sciences théâtrale (CST)",
+          },
+          {
+            id: "mat1046",
+            nom: "Culture et sciences musicale (CSM)",
+          },
+          {
+            id: "mat1009",
+            nom: "Ressources humaines et communication (RHC)",
+          },
+          {
+            id: "mat888",
+            nom: "Systèmes d'information et de Gestion (SIG)",
+          },
+          {
+            id: "mat1054",
+            nom: "Management",
+          },
+          {
+            id: "mat1055",
+            nom: "Ingénierie et développement durable (IDD)",
+          },
+          {
+            id: "mat1052",
+            nom: "Physique-Chimie pour la santé (PCS)",
+          },
+          {
+            id: "mat1096",
+            nom: "Ingénierie, innovation et développement durable (IIDD)",
+          },
+          {
+            id: "mat887",
+            nom: "Gestion et Finance",
+          },
+          {
+            id: "mat1053",
+            nom: "Sciences de la gestion et numérique (SGN)",
+          },
+          {
+            id: "mat20001076",
+            nom: "Anglais Monde Contemporain (AMC)",
+          },
+          {
+            id: "mat1050",
+            nom: "Sciences et technologies culinaires et des services (STCS)",
+          },
+          {
+            id: "mat320",
+            nom: "Sciences et techniques sanitaires et sociales (STSS)",
+          },
+          {
+            id: "mat1095",
+            nom: "Éducation Physique, Pratiques Et Culture Sportives",
+          },
+          {
+            id: "mat1051",
+            nom: "Sciences et technologies culinaires et services-ESAE (STES)",
+          },
+          {
+            id: "mat321",
+            nom: "Biologie et physiopathologie humaines (BPH)",
+          },
+          {
+            id: "mat2",
+            nom: "Physique/Chimie (PC)",
+          },
+          {
+            id: "mat10001076",
+            nom: "Langues, littératures et cultures étrangères et régionales (LLCE)",
+          },
+          {
+            id: "mat1058",
+            nom: "Design et métiers d'art (DMA)",
+          },
+          {
+            id: "mat1059",
+            nom: "Outils et langages numériques (OLN)",
+          },
+          {
+            id: "mat1056",
+            nom: "Innovation Technologique (IT)",
+          },
+          {
+            id: "mat5",
+            nom: "Biologie/Ecologie (BE)",
+          },
+          {
+            id: "mat4",
+            nom: "Sciences de l'ingénieur (SI)",
+          },
+          {
+            id: "mat1057",
+            nom: "Biochimie-Biologie (BB)",
+          },
+          {
+            id: "mat1065",
+            nom: "Numérique et Sciences Informatiques (NSI)",
+          },
+          {
+            id: "mat1066",
+            nom: "Littérature et langues et cultures de l'Antiquité: Grec (LLCA)",
+          },
+          {
+            id: "mat1063",
+            nom: "Littérature et langues et cultures de l’Antiquité: Latin (LLCA)",
           },
           {
             id: "mat1061",
@@ -2410,173 +2376,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             nom: "Histoire-Géographie, Géopolitique et Sciences politiques (HGGSP)",
           },
           {
-            id: "mat1040",
-            nom: "Physique-Chimie et Mathématiques (PCM)",
+            id: "mat1060",
+            nom: "Economie, droit et environnement du spectacle vivant (EDESV)",
           },
         ],
         statistiquesAdmission: {
-          parMoyenneGénérale: [
-            {
-              moyenne: 0,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 0.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 1,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 1.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 2,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 2.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 3,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 3.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 4,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 4.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 5.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 6,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 6.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 7,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 7.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 8,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 8.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 9,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 0,
-            },
-            {
-              moyenne: 9.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 1,
-            },
-            {
-              moyenne: 10,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 3,
-            },
-            {
-              moyenne: 10.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 6,
-            },
-            {
-              moyenne: 11,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 10,
-            },
-            {
-              moyenne: 11.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 17,
-            },
-            {
-              moyenne: 12,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 25,
-            },
-            {
-              moyenne: 12.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 34,
-            },
-            {
-              moyenne: 13,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 44,
-            },
-            {
-              moyenne: 13.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 55,
-            },
-            {
-              moyenne: 14,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 64,
-            },
-            {
-              moyenne: 14.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 73,
-            },
-            {
-              moyenne: 15,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 80,
-            },
-            {
-              moyenne: 15.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 86,
-            },
-            {
-              moyenne: 16,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 91,
-            },
-            {
-              moyenne: 16.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 95,
-            },
-            {
-              moyenne: 17,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 97,
-            },
-            {
-              moyenne: 17.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 98,
-            },
-            {
-              moyenne: 18,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 99,
-            },
-            {
-              moyenne: 18.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 99,
-            },
-            {
-              moyenne: 19,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 99,
-            },
-            {
-              moyenne: 19.5,
-              pourcentageAdmisAyantCetteMoyenneOuMoins: 100,
-            },
-          ],
+          parMoyenneGénérale: [],
         },
       },
     ],
@@ -2846,7 +2651,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "architecture et construction",
         nom: "Architecture et construction",
-        emoji: "🏗️",
+        emoji: "🚧",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom8",
@@ -2856,12 +2661,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom9",
             nom: "Architecture",
-            emoji: "🏛",
+            emoji: "🏚️",
           },
           {
             id: "dom10",
             nom: "Bâtiment - construction",
-            emoji: "🚧",
+            emoji: "🏗️",
           },
         ],
       },
@@ -2871,19 +2676,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         emoji: "🎨",
         sousCatégoriesdomainesProfessionnels: [
           {
+            id: "dom5",
+            nom: "Art",
+            emoji: "🎨",
+          },
+          {
             id: "dom3",
-            nom: "Artisanat d'art",
+            nom: "Artisanat - création",
             emoji: "💎",
           },
           {
             id: "dom4",
             nom: "Arts du spectacle",
             emoji: "🎭",
-          },
-          {
-            id: "dom5",
-            nom: "Arts plastiques, graphiques et appliqués",
-            emoji: "🖌",
           },
           {
             id: "dom6",
@@ -2893,14 +2698,14 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom7",
             nom: "Culture et patrimoine",
-            emoji: "🖼",
+            emoji: "🏰",
           },
         ],
       },
       {
-        id: "commerce",
-        nom: "Commerce",
-        emoji: "🧑‍💼",
+        id: "commerce et gestion",
+        nom: "Commerce et gestion",
+        emoji: "💰",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom11",
@@ -2910,12 +2715,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom12",
             nom: "Commerce - vente",
-            emoji: "🏢",
+            emoji: "🛒",
           },
           {
             id: "dom13",
             nom: "Gestion des entreprises - comptabilité",
-            emoji: "👨🏽‍💼",
+            emoji: "📈",
           },
           {
             id: "dom14",
@@ -2927,29 +2732,29 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "droit",
         nom: "Droit",
-        emoji: "👩🏽‍⚖️",
+        emoji: "⚖️",
         sousCatégoriesdomainesProfessionnels: [
-          {
-            id: "dom15",
-            nom: "Activité judiciaire",
-            emoji: "🧑‍⚖",
-          },
           {
             id: "dom16",
             nom: "Droit",
-            emoji: "🎓",
+            emoji: "👩🏽‍⚖️",
+          },
+          {
+            id: "dom15",
+            nom: "Métiers de la justice",
+            emoji: "⚖️",
           },
         ],
       },
       {
         id: "enseignement",
         nom: "Enseignement",
-        emoji: "🔣",
+        emoji: "🎓",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom17",
             nom: "Enseignement - formation",
-            emoji: "🧑‍💻",
+            emoji: "🎓",
           },
         ],
       },
@@ -2961,7 +2766,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom38",
             nom: "Environnement - développement durable",
-            emoji: "♻",
+            emoji: "♻️",
           },
           {
             id: "dom37",
@@ -2977,18 +2782,13 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom18",
-            nom: "Industrie de transformation - procédés de fabrication",
+            nom: "Industries",
             emoji: "🏭",
           },
           {
             id: "dom19",
             nom: "Logistique - transport",
-            emoji: "➡",
-          },
-          {
-            id: "dom21",
-            nom: "Travail des métaux",
-            emoji: "🧑‍🏭",
+            emoji: "🚚",
           },
           {
             id: "dom20",
@@ -3005,34 +2805,34 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom22",
             nom: "Information communication - multimédia",
-            emoji: "🗞",
+            emoji: "🎥",
           },
           {
             id: "dom23",
             nom: "Lettres - langues",
-            emoji: "✍",
+            emoji: "📚",
           },
         ],
       },
       {
         id: "loisirs et tourisme",
         nom: "Loisirs et tourisme",
-        emoji: "🏖",
+        emoji: "🥳",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom24",
             nom: "Hôtellerie - restauration",
-            emoji: "🛎",
+            emoji: "🍴",
           },
           {
             id: "dom25",
             nom: "Sport",
-            emoji: "🏅",
+            emoji: "⚽️",
           },
           {
             id: "dom26",
             nom: "Tourisme",
-            emoji: "🍸",
+            emoji: "🏖",
           },
         ],
       },
@@ -3044,33 +2844,33 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom28",
             nom: "Esthétique",
-            emoji: "🌟",
+            emoji: "🤩",
           },
           {
             id: "dom27",
             nom: "Santé",
-            emoji: "🏥",
+            emoji: "🩺",
           },
           {
             id: "dom29",
-            nom: "Social",
-            emoji: "🆘",
+            nom: "Travail social",
+            emoji: "🛟",
           },
         ],
       },
       {
         id: "sciences et technologie",
         nom: "Sciences et technologie",
-        emoji: "🧑‍🔬",
+        emoji: "🧬",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom30",
             nom: "Biologie",
-            emoji: "🧬",
+            emoji: "🔬",
           },
           {
             id: "dom32",
-            nom: "Informatique - réseaux",
+            nom: "Informatique",
             emoji: "💻",
           },
           {
@@ -3091,7 +2891,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom36",
             nom: "Sciences de la Terre et de l'univers",
-            emoji: "🌱",
+            emoji: "🔭",
           },
           {
             id: "dom31",
@@ -3103,17 +2903,17 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "sciences humaines et sociales",
         nom: "Sciences humaines et sociales",
-        emoji: "🤵",
+        emoji: "📚",
         sousCatégoriesdomainesProfessionnels: [
           {
             id: "dom39",
             nom: "Histoire - géographie",
-            emoji: "📑",
+            emoji: "🗺️",
           },
           {
             id: "dom40",
             nom: "Philosophie",
-            emoji: "📖",
+            emoji: "ɸ",
           },
           {
             id: "dom41",
@@ -3128,7 +2928,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom43",
             nom: "Sociologie",
-            emoji: "📔",
+            emoji: "👓",
           },
         ],
       },
@@ -3140,12 +2940,12 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
           {
             id: "dom44",
             nom: "Armée - défense publique",
-            emoji: "🛡",
+            emoji: "🎖️",
           },
           {
             id: "dom45",
             nom: "Sécurité - prévention",
-            emoji: "🛟",
+            emoji: "🦺",
           },
         ],
       },

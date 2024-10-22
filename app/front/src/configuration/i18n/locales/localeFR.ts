@@ -375,15 +375,15 @@ export const localeFR = {
   PAGE_TABLEAU_DE_BORD: {
     TITRE_PAGE: pages.TABLEAU_DE_BORD,
   },
-  FORMATIONS_MASQUÉES: {
-    TITRE: "Formations masquées",
-    BOUTON_NE_PLUS_MASQUER: "Ne plus masquer",
-    MESSAGE_AUCUNE: "Aucune formation masquée pour le moment !",
-  },
   PAGE_PROFIL: {
     TITRE_PAGE: pages.PROFIL,
     TITRE: pages.PROFIL,
     SE_DÉCONNECTER: "Se déconnecter",
+    FORMATIONS_MASQUÉES: {
+      TITRE: "Formations masquées",
+      BOUTON_NE_PLUS_MASQUER: "Ne plus masquer",
+      MESSAGE_AUCUNE: "Aucune formation masquée pour le moment !",
+    },
   },
   COMMUN: {
     FERMER: "Fermer",

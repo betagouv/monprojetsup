@@ -1,11 +1,11 @@
 import { type ScolaritéFormProps } from "./ScolaritéForm.interface";
 import useScolaritéForm from "./useScolaritéForm";
 import CurseurCranté from "@/components/CurseurCranté/CurseurCranté";
-import ListeDéroulante from "@/components/ListeDéroulante/ListeDéroulante";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { constantes } from "@/configuration/constantes";
 import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
+import { Select } from "@codegouvfr/react-dsfr/SelectNext";
 
 const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: ScolaritéFormProps) => {
   const {
@@ -35,18 +35,19 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
       onSubmit={mettreÀJourÉlève}
     >
       <div className="grid grid-flow-row gap-8 md:grid-cols-[1fr_1fr]">
-        <ListeDéroulante
+        <Select
           label={i18n.ÉLÈVE.SCOLARITÉ.CLASSE.LABEL}
-          obligatoire
+          nativeSelectProps={{ required: true, ...register("classe") }}
           options={classeOptions}
-          registerHookForm={register("classe")}
-          status={erreurs.classe ? { type: "erreur", message: erreurs.classe.message } : undefined}
+          state={erreurs.classe ? "error" : "default"}
+          stateRelatedMessage={erreurs.classe?.message}
         />
-        <ListeDéroulante
+        <Select
           label={i18n.ÉLÈVE.SCOLARITÉ.BAC.LABEL}
-          options={bacOptions ?? []}
-          registerHookForm={register("bac")}
-          status={erreurs.bac ? { type: "erreur", message: erreurs.bac.message } : undefined}
+          nativeSelectProps={{ ...register("bac") }}
+          options={bacOptions}
+          state={erreurs.bac ? "error" : "default"}
+          stateRelatedMessage={erreurs.bac?.message}
         />
       </div>
       {environnement.VITE_FF_MOYENNE_GENERALE && afficherChampMoyenne && (
@@ -70,7 +71,7 @@ const ScolaritéForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Scola
               <p>
                 {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE} {pourcentageAdmisAyantCetteMoyenneOuMoins}{" "}
                 {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_SUITE}{" "}
-                {bacOptions.find((bacOption) => valeurBac === bacOption.valeur)?.label}{" "}
+                {bacOptions.find((bacOption) => valeurBac === bacOption.value)?.label}{" "}
                 {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_SUITE_2} {moyenneGénérale}{" "}
                 {i18n.ÉLÈVE.SCOLARITÉ.MOYENNE.AUTO_CENSURE_FIN}
               </p>

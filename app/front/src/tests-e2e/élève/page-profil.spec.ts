@@ -21,7 +21,7 @@ class Test extends TestHelper {
   };
 
   public titreDeOngletActif = () => {
-    return this._page.getByRole("heading", { level: 2 });
+    return this._page.locator(".fr-tabs__panel--selected").getByRole("heading", { level: 2 });
   };
 
   public renseignerChampClasseActuelle = async (optionLabel: string) => {

@@ -4,17 +4,17 @@ import { type ÉtablissementsVoeuxProps } from "./ÉtablissementsVoeux.interface
 import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
-import Onglets from "@/components/Onglets/Onglets";
 import { i18n } from "@/configuration/i18n/i18n";
 import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
   const { communesFavorites } = useÉtablissementsVoeux({ formation });
 
   const ongletsParCommuneFavorite = trierTableauDObjetsParOrdreAlphabétique(communesFavorites ?? [], "nom").map(
     (communeFavorite) => ({
-      titre: communeFavorite.nom,
-      contenu: (
+      label: communeFavorite.nom,
+      content: (
         <ÉtablissementsVoeuxOnglet
           codeCommune={communeFavorite.codeInsee}
           formation={formation}
@@ -24,8 +24,8 @@ const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
   );
 
   const ongletToutesLesCommunes = {
-    titre: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
-    contenu: <ÉtablissemenentsVoeuxOngletToutesLesVilles formation={formation} />,
+    label: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
+    content: <ÉtablissemenentsVoeuxOngletToutesLesVilles formation={formation} />,
   };
 
   return (
@@ -55,9 +55,9 @@ const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
           )}
         </div>
       </div>
-      <Onglets
-        nomAccessible={i18n.ACCESSIBILITÉ.ONGLETS_VOEUX_ÉTABLISSEMENTS}
-        onglets={[...ongletsParCommuneFavorite, ongletToutesLesCommunes]}
+      <Tabs
+        label={i18n.ACCESSIBILITÉ.ONGLETS_VOEUX_ÉTABLISSEMENTS}
+        tabs={[...ongletsParCommuneFavorite, ongletToutesLesCommunes]}
       />
     </>
   );

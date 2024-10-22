@@ -1,10 +1,8 @@
 import { type ReactNode } from "react";
 
-export type TagFiltreProps = {
+export type TagFiltreAvecEmojiProps = {
   children: ReactNode;
-  ariaLabel: string;
   auClic: (estAppuyé: boolean) => void;
-  taille?: "petit";
-  emoji?: string;
+  emoji: string;
   appuyéParDéfaut?: boolean;
 };

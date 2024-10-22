@@ -8,7 +8,7 @@ type Étape = {
 
 export type InscriptionÉlèveStore = {
   étapes: Étape[];
-  indexÉtapeActuelle: number | undefined;
+  indexÉtapeActuelle: number;
   étapeActuelle: Étape | undefined;
   étapeSuivante: Étape | undefined;
   étapePrécédente: Étape | undefined;

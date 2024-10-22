@@ -1,5 +1,5 @@
 import { i18n } from "@/configuration/i18n/i18n";
-import { type Bac } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
+import { type Bac, BacÉlève } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 import { classeÉlève } from "@/features/élève/domain/élève.interface";
 import { z } from "zod";
 
@@ -13,6 +13,7 @@ export const scolaritéValidationSchema = (bacs: Bac[]) => {
     bac: z
       .string()
       .nullable()
+      .transform((valeur): BacÉlève | null => valeur as BacÉlève)
       .refine((valeur) => !valeur || bacIdsAutorisés.includes(valeur), {
         message: i18n.COMMUN.ERREURS_FORMULAIRES.LISTE_OBLIGATOIRE,
       }),

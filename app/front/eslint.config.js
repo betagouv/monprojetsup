@@ -43,9 +43,7 @@ export default [
     },
     rules: {
       "@typescript-eslint/no-misused-promises": [2, {
-        "checksVoidReturn": {
-          "attributes": false
-        }
+        "checksVoidReturn": false
       }],
     }
   },

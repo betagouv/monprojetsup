@@ -6,11 +6,11 @@ import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormati
 import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation";
 import Head from "@/components/_layout/Head/Head";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
-import Badge from "@/components/Badge/Badge";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
 import { récupérerFormationQueryOptions } from "@/features/formation/ui/formationQueries";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 
 const FicheFormation = ({ id }: FicheFormationProps) => {
@@ -25,9 +25,11 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
       <Head titre={formation.nom} />
       <div className="mb-6 lg:mt-6">
         <Badge
-          titre={i18n.COMMUN.FORMATION}
-          type="alerte"
-        />
+          noIcon
+          severity="warning"
+        >
+          {i18n.COMMUN.FORMATION}
+        </Badge>
       </div>
       <div className="*:mb-6">
         <Titre niveauDeTitre="h1">{formation.nom}</Titre>

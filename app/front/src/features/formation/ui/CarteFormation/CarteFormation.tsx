@@ -1,10 +1,10 @@
 import { type CarteFormationProps } from "./CarteFormation.interface";
 import Carte from "@/components/Carte/Carte";
-import Tag from "@/components/Tag/Tag";
 import { i18n } from "@/configuration/i18n/i18n";
 import CommunesProposantLaFormation from "@/features/formation/ui/CommunesProposantLaFormation/CommunesProposantLaFormation";
 import NombreAffinité from "@/features/formation/ui/NombreAffinité/NombreAffinité";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 
 const CarteFormation = ({
@@ -44,18 +44,12 @@ const CarteFormation = ({
           <ul className="m-0 flex list-none flex-wrap justify-start gap-2 p-0">
             {métiersAccessibles.slice(0, NOMBRE_MÉTIERS_À_AFFICHER).map((métier) => (
               <li key={métier.id}>
-                <Tag
-                  libellé={métier.nom}
-                  taille="petit"
-                />
+                <Tag small>{métier.nom}</Tag>
               </li>
             ))}
             {métiersAccessibles.length > NOMBRE_MÉTIERS_À_AFFICHER && (
               <li>
-                <Tag
-                  libellé={`+${(métiersAccessibles.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}
-                  taille="petit"
-                />
+                <Tag small>{`+${(métiersAccessibles.length - NOMBRE_MÉTIERS_À_AFFICHER).toString()}`}</Tag>
               </li>
             )}
           </ul>

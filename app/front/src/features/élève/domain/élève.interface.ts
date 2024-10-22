@@ -1,13 +1,11 @@
 import { type Commune } from "@/features/commune/domain/commune.interface";
 import {
   type AlternanceÉlève,
+  BacÉlève,
   type ClasseÉlève,
   type DuréeÉtudesPrévueÉlève,
   type SituationÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
-import { type components } from "@/types/api-mps";
-
-type BacÉlève = NonNullable<components["schemas"]["ModificationProfilDTO"]["baccalaureat"]>;
 
 export type CommuneFavorite = Omit<Commune, "codePostal">;
 
