@@ -1,0 +1,2642 @@
+<!doctype html>
+<html>
+  <head>
+    <title>MonProjetSup API</title>
+    <style type="text/css">
+      body {
+      	font-family: Trebuchet MS, sans-serif;
+      	font-size: 15px;
+      	color: #444;
+      	margin-right: 24px;
+      }
+      
+      h1	{
+      	font-size: 25px;
+      }
+      h2	{
+      	font-size: 20px;
+      }
+      h3	{
+      	font-size: 16px;
+      	font-weight: bold;
+      }
+      hr	{
+      	height: 1px;
+      	border: 0;
+      	color: #ddd;
+      	background-color: #ddd;
+      }
+      
+      .app-desc {
+        clear: both;
+        margin-left: 20px;
+      }
+      .param-name {
+        width: 100%;
+      }
+      .license-info {
+        margin-left: 20px;
+      }
+      
+      .license-url {
+        margin-left: 20px;
+      }
+      
+      .model {
+        margin: 0 0 0px 20px;
+      }
+      
+      .method {
+        margin-left: 20px;
+      }
+      
+      .method-notes	{
+      	margin: 10px 0 20px 0;
+      	font-size: 90%;
+      	color: #555;
+      }
+      
+      pre {
+        padding: 10px;
+        margin-bottom: 2px;
+      }
+      
+      .http-method {
+       text-transform: uppercase;
+      }
+      
+      pre.get {
+        background-color: #0f6ab4;
+      }
+      
+      pre.post {
+        background-color: #10a54a;
+      }
+      
+      pre.put {
+        background-color: #c5862b;
+      }
+      
+      pre.delete {
+        background-color: #a41e22;
+      }
+      
+      .huge	{
+      	color: #fff;
+      }
+      
+      pre.example {
+        background-color: #f3f3f3;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+      
+      code {
+        white-space: pre;
+      }
+      
+      .nickname {
+        font-weight: bold;
+      }
+      
+      .method-path {
+        font-size: 1.5em;
+        background-color: #0f6ab4;
+      }
+      
+      .up {
+        float:right;
+      }
+      
+      .parameter {
+        width: 500px;
+      }
+      
+      .param {
+        width: 500px;
+        padding: 10px 0 0 20px;
+        font-weight: bold;
+      }
+      
+      .param-desc {
+        width: 700px;
+        padding: 0 0 0 20px;
+        color: #777;
+      }
+      
+      .param-type {
+        font-style: italic;
+      }
+      
+      .param-enum-header {
+      width: 700px;
+      padding: 0 0 0 60px;
+      color: #777;
+      font-weight: bold;
+      }
+      
+      .param-enum {
+      width: 700px;
+      padding: 0 0 0 80px;
+      color: #777;
+      font-style: italic;
+      }
+      
+      .field-label {
+        padding: 0;
+        margin: 0;
+        clear: both;
+      }
+      
+      .field-items	{
+      	padding: 0 0 15px 0;
+      	margin-bottom: 15px;
+      }
+      
+      .return-type {
+        clear: both;
+        padding-bottom: 10px;
+      }
+      
+      .param-header {
+        font-weight: bold;
+      }
+      
+      .method-tags {
+        text-align: right;
+      }
+      
+      .method-tag {
+        background: none repeat scroll 0% 0% #24A600;
+        border-radius: 3px;
+        padding: 2px 10px;
+        margin: 2px;
+        color: #FFF;
+        display: inline-block;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+  <h1>MonProjetSup API</h1>
+    <div class="app-desc">API du frontend MonProjetSup</div>
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
+    <div class="app-desc">Version: 1.0</div>
+    
+    <div class="license-info">All rights reserved</div>
+    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
+    <ol>
+      <li></li>
+      <li>OAuth AuthorizationUrl:http://localhost:5003/realms/avenirs/protocol/openid-connect/authTokenUrl:http://localhost:5003/realms/avenirs/protocol/openid-connect/token</li>
+    </ol>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Actuator">Actuator</a></h4>
+  <ul>
+  <li><a href="#health"><code><span class="http-method">get</span> /actuator/health</code></a></li>
+  <li><a href="#healthPath"><code><span class="http-method">get</span> /actuator/health/**</code></a></li>
+  <li><a href="#links"><code><span class="http-method">get</span> /actuator</code></a></li>
+  </ul>
+  <h4><a href="#Formation">Formation</a></h4>
+  <ul>
+  <li><a href="#getFormation"><code><span class="http-method">get</span> /api/v1/formations/{idformation}</code></a></li>
+  <li><a href="#getFormations"><code><span class="http-method">get</span> /api/v1/formations</code></a></li>
+  <li><a href="#getRechercheFormationDetaillee"><code><span class="http-method">get</span> /api/v1/formations/recherche/detaillee</code></a></li>
+  <li><a href="#getRechercheFormationSuccincte"><code><span class="http-method">get</span> /api/v1/formations/recherche/succincte</code></a></li>
+  <li><a href="#getSuggestionsFormations"><code><span class="http-method">get</span> /api/v1/formations/suggestions</code></a></li>
+  </ul>
+  <h4><a href="#Mtiers">Mtiers</a></h4>
+  <ul>
+  <li><a href="#getMetiers"><code><span class="http-method">get</span> /api/v1/metiers</code></a></li>
+  <li><a href="#getRechercheMetierSuccincte"><code><span class="http-method">get</span> /api/v1/metiers/recherche/succincte</code></a></li>
+  </ul>
+  <h4><a href="#ProfilLve">ProfilLve</a></h4>
+  <ul>
+  <li><a href="#getProfilEleve"><code><span class="http-method">get</span> /api/v1/profil</code></a></li>
+  <li><a href="#postProfilEleve"><code><span class="http-method">post</span> /api/v1/profil</code></a></li>
+  </ul>
+  <h4><a href="#Rfrentiel">Rfrentiel</a></h4>
+  <ul>
+  <li><a href="#getReferentielPourInscription"><code><span class="http-method">get</span> /api/v1/referentiel</code></a></li>
+  </ul>
+
+  <h1><a name="Actuator">Actuator</a></h1>
+  <div class="method"><a name="health"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /actuator/health</code></pre></div>
+    <div class="method-summary">Actuator web endpoint 'health' (<span class="nickname">health</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      Object
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/vnd.spring-boot.actuator.v3+json</code></li>
+      <li><code>application/vnd.spring-boot.actuator.v2+json</code></li>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Object">Object</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="healthPath"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /actuator/health/**</code></pre></div>
+    <div class="method-summary">Actuator web endpoint 'health-path' (<span class="nickname">healthPath</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      Object
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/vnd.spring-boot.actuator.v3+json</code></li>
+      <li><code>application/vnd.spring-boot.actuator.v2+json</code></li>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Object">Object</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="links"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /actuator</code></pre></div>
+    <div class="method-summary">Actuator root web endpoint (<span class="nickname">links</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      map[String, map[String, Link]]
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "key" : {
+    "key" : {
+      "templated" : true,
+      "href" : "href"
+    }
+  }
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/vnd.spring-boot.actuator.v3+json</code></li>
+      <li><code>application/vnd.spring-boot.actuator.v2+json</code></li>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Formation">Formation</a></h1>
+  <div class="method"><a name="getFormation"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/formations/{idformation}</code></pre></div>
+    <div class="method-summary">Récupération d'une formation, mode détaillé (<span class="nickname">getFormation</span>)</div>
+    <div class="method-notes">A partir de l'identifiant d'une fiche formation, récupère toutes les informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">idformation (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FormationAvecExplicationsDTO">FormationAvecExplicationsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "formation" : {
+    "descriptifFormation" : "descriptifFormation",
+    "moyenneGeneraleDesAdmis" : {
+      "baccalaureat" : {
+        "id" : "id",
+        "nom" : "nom"
+      },
+      "centiles" : [ {
+        "note" : 6.0274563,
+        "centile" : 0
+      }, {
+        "note" : 6.0274563,
+        "centile" : 0
+      } ]
+    },
+    "nom" : "nom",
+    "metiers" : [ {
+      "id" : "id",
+      "nom" : "nom",
+      "descriptif" : "descriptif",
+      "liens" : [ null, null ]
+    }, {
+      "id" : "id",
+      "nom" : "nom",
+      "descriptif" : "descriptif",
+      "liens" : [ null, null ]
+    } ],
+    "liens" : [ {
+      "nom" : "nom",
+      "url" : "url"
+    }, {
+      "nom" : "nom",
+      "url" : "url"
+    } ],
+    "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+    "descriptifAttendus" : "descriptifAttendus",
+    "criteresAnalyseCandidature" : [ {
+      "pourcentage" : 1,
+      "nom" : "nom"
+    }, {
+      "pourcentage" : 1,
+      "nom" : "nom"
+    } ],
+    "tauxAffinite" : 7,
+    "communesFavoritesAvecLeursVoeux" : [ {
+      "voeuxAvecDistance" : [ {
+        "distanceKm" : 2
+      }, {
+        "distanceKm" : 2
+      } ],
+      "commune" : {
+        "latitude" : 48.8512252,
+        "codeInsee" : "75115",
+        "nom" : "Paris",
+        "longitude" : 2.2885659
+      }
+    }, {
+      "voeuxAvecDistance" : [ {
+        "distanceKm" : 2
+      }, {
+        "distanceKm" : 2
+      } ],
+      "commune" : {
+        "latitude" : 48.8512252,
+        "codeInsee" : "75115",
+        "nom" : "Paris",
+        "longitude" : 2.2885659
+      }
+    } ],
+    "id" : "id",
+    "apprentissage" : true,
+    "repartitionAdmisAnneePrecedente" : {
+      "total" : 5,
+      "parBaccalaureat" : [ {
+        "nombreAdmis" : 5
+      }, {
+        "nombreAdmis" : 5
+      } ]
+    },
+    "voeux" : [ {
+      "commune" : {
+        "codeInsee" : "codeInsee",
+        "nom" : "nom"
+      },
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "commune" : {
+        "codeInsee" : "codeInsee",
+        "nom" : "nom"
+      },
+      "id" : "id",
+      "nom" : "nom"
+    } ],
+    "descriptifDiplome" : "descriptifDiplome",
+    "descriptifConseils" : "descriptifConseils"
+  },
+  "explications" : {
+    "autoEvaluationMoyenne" : {
+      "basIntervalleNotes" : 7.386282,
+      "moyenne" : 4.145608,
+      "hautIntervalleNotes" : 1.2315135
+    },
+    "formationsSimilaires" : [ {
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "id" : "id",
+      "nom" : "nom"
+    } ],
+    "alternance" : "pas_interesse",
+    "geographique" : [ {
+      "nomVille" : "nomVille",
+      "distanceKm" : 9
+    }, {
+      "nomVille" : "nomVille",
+      "distanceKm" : 9
+    } ],
+    "typeBaccalaureat" : {
+      "pourcentage" : 2
+    },
+    "interetsEtDomainesChoisis" : {
+      "domaines" : [ {
+        "emoji" : "emoji",
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "emoji" : "emoji",
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "interets" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ]
+    },
+    "dureeEtudesPrevue" : "indifferent",
+    "specialitesChoisies" : [ {
+      "pourcentage" : 3,
+      "nomSpecialite" : "nomSpecialite"
+    }, {
+      "pourcentage" : 3,
+      "nomSpecialite" : "nomSpecialite"
+    } ],
+    "detailsCalculScore" : {
+      "details" : [ "details", "details" ]
+    }
+  }
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FormationAvecExplicationsDTO">FormationAvecExplicationsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getFormations"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/formations</code></pre></div>
+    <div class="method-summary">Récupération d'une liste de formations, mode détaillé (<span class="nickname">getFormations</span>)</div>
+    <div class="method-notes">A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">ids (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  </div>      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "formations" : [ {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  }, {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRechercheFormationDetaillee"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/formations/recherche/detaillee</code></pre></div>
+    <div class="method-summary">Recherche de formation, mode détaillé (<span class="nickname">getRechercheFormationDetaillee</span>)</div>
+    <div class="method-notes">A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des explications sur la raison de cette suggestion.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">recherche (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Formation recherchée </div>      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "formations" : [ {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  }, {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRechercheFormationSuccincte"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/formations/recherche/succincte</code></pre></div>
+    <div class="method-summary">Recherche de formation, mode succint (<span class="nickname">getRechercheFormationSuccincte</span>)</div>
+    <div class="method-notes">A partir du contenu de la barre de recherche, récupérer la liste des formations associées à cette recherche, et le lien de pagination.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">recherche (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Formation recherchée </div>      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FormationsCourtesDTO">FormationsCourtesDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "formations" : [ {
+    "id" : "id",
+    "nom" : "nom"
+  }, {
+    "id" : "id",
+    "nom" : "nom"
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FormationsCourtesDTO">FormationsCourtesDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSuggestionsFormations"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/formations/suggestions</code></pre></div>
+    <div class="method-summary">Récupère les suggestions de formations (<span class="nickname">getSuggestionsFormations</span>)</div>
+    <div class="method-notes">Récupère les suggestions de formations pour un profil d'élève. Chaque suggestion s'accompagne des informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion. Un lien permet la pagination des résultats.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "formations" : [ {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  }, {
+    "formation" : {
+      "descriptifFormation" : "descriptifFormation",
+      "moyenneGeneraleDesAdmis" : {
+        "baccalaureat" : {
+          "id" : "id",
+          "nom" : "nom"
+        },
+        "centiles" : [ {
+          "note" : 6.0274563,
+          "centile" : 0
+        }, {
+          "note" : 6.0274563,
+          "centile" : 0
+        } ]
+      },
+      "nom" : "nom",
+      "metiers" : [ {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      }, {
+        "id" : "id",
+        "nom" : "nom",
+        "descriptif" : "descriptif",
+        "liens" : [ null, null ]
+      } ],
+      "liens" : [ {
+        "nom" : "nom",
+        "url" : "url"
+      }, {
+        "nom" : "nom",
+        "url" : "url"
+      } ],
+      "idsFormationsAssociees" : [ "idsFormationsAssociees", "idsFormationsAssociees" ],
+      "descriptifAttendus" : "descriptifAttendus",
+      "criteresAnalyseCandidature" : [ {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      }, {
+        "pourcentage" : 1,
+        "nom" : "nom"
+      } ],
+      "tauxAffinite" : 7,
+      "communesFavoritesAvecLeursVoeux" : [ {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      }, {
+        "voeuxAvecDistance" : [ {
+          "distanceKm" : 2
+        }, {
+          "distanceKm" : 2
+        } ],
+        "commune" : {
+          "latitude" : 48.8512252,
+          "codeInsee" : "75115",
+          "nom" : "Paris",
+          "longitude" : 2.2885659
+        }
+      } ],
+      "id" : "id",
+      "apprentissage" : true,
+      "repartitionAdmisAnneePrecedente" : {
+        "total" : 5,
+        "parBaccalaureat" : [ {
+          "nombreAdmis" : 5
+        }, {
+          "nombreAdmis" : 5
+        } ]
+      },
+      "voeux" : [ {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "commune" : {
+          "codeInsee" : "codeInsee",
+          "nom" : "nom"
+        },
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "descriptifDiplome" : "descriptifDiplome",
+      "descriptifConseils" : "descriptifConseils"
+    },
+    "explications" : {
+      "autoEvaluationMoyenne" : {
+        "basIntervalleNotes" : 7.386282,
+        "moyenne" : 4.145608,
+        "hautIntervalleNotes" : 1.2315135
+      },
+      "formationsSimilaires" : [ {
+        "id" : "id",
+        "nom" : "nom"
+      }, {
+        "id" : "id",
+        "nom" : "nom"
+      } ],
+      "alternance" : "pas_interesse",
+      "geographique" : [ {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      }, {
+        "nomVille" : "nomVille",
+        "distanceKm" : 9
+      } ],
+      "typeBaccalaureat" : {
+        "pourcentage" : 2
+      },
+      "interetsEtDomainesChoisis" : {
+        "domaines" : [ {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "emoji" : "emoji",
+          "id" : "id",
+          "nom" : "nom"
+        } ],
+        "interets" : [ {
+          "id" : "id",
+          "nom" : "nom"
+        }, {
+          "id" : "id",
+          "nom" : "nom"
+        } ]
+      },
+      "dureeEtudesPrevue" : "indifferent",
+      "specialitesChoisies" : [ {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      }, {
+        "pourcentage" : 3,
+        "nomSpecialite" : "nomSpecialite"
+      } ],
+      "detailsCalculScore" : {
+        "details" : [ "details", "details" ]
+      }
+    }
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FormationsAvecExplicationsDTO">FormationsAvecExplicationsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Mtiers">Mtiers</a></h1>
+  <div class="method"><a name="getMetiers"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/metiers</code></pre></div>
+    <div class="method-summary">Récupérer des métiers en indiquant leurs ids (<span class="nickname">getMetiers</span>)</div>
+    <div class="method-notes">Renvoie les métiers correspondant aux ids dans l'ordre donné. Ce endpoint est paginé à 30 résultats par page.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">ids (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  </div>      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#MetiersAvecSesFormationsDTO">MetiersAvecSesFormationsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "metiers" : [ {
+    "formations" : [ {
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "id" : "id",
+      "nom" : "nom"
+    } ],
+    "id" : "id",
+    "nom" : "nom",
+    "descriptif" : "descriptif",
+    "liens" : [ {
+      "nom" : "nom",
+      "url" : "url"
+    }, {
+      "nom" : "nom",
+      "url" : "url"
+    } ]
+  }, {
+    "formations" : [ {
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "id" : "id",
+      "nom" : "nom"
+    } ],
+    "id" : "id",
+    "nom" : "nom",
+    "descriptif" : "descriptif",
+    "liens" : [ {
+      "nom" : "nom",
+      "url" : "url"
+    }, {
+      "nom" : "nom",
+      "url" : "url"
+    } ]
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#MetiersAvecSesFormationsDTO">MetiersAvecSesFormationsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getRechercheMetierSuccincte"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/metiers/recherche/succincte</code></pre></div>
+    <div class="method-summary">Rechercher des métiers selons des mots clés (<span class="nickname">getRechercheMetierSuccincte</span>)</div>
+    <div class="method-notes">Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à 30 résultats par page.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">recherche (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  </div>      <div class="param">numeroDePage (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Numéro de page default: 1 format: int32</div>    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#MetiersCourtsDTO">MetiersCourtsDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "metiers" : [ {
+    "id" : "id",
+    "nom" : "nom"
+  }, {
+    "id" : "id",
+    "nom" : "nom"
+  } ],
+  "liens" : [ {
+    "rel" : "rel",
+    "href" : "href"
+  }, {
+    "rel" : "rel",
+    "href" : "href"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#MetiersCourtsDTO">MetiersCourtsDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ProfilLve">ProfilLve</a></h1>
+  <div class="method"><a name="getProfilEleve"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/profil</code></pre></div>
+    <div class="method-summary">Récupérer le profil de l'utilisateur connecté (<span class="nickname">getProfilEleve</span>)</div>
+    <div class="method-notes">Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ModificationProfilDTO">ModificationProfilDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "communesFavorites" : [ {
+    "latitude" : 48.8512252,
+    "codeInsee" : "75115",
+    "nom" : "Paris",
+    "longitude" : 2.2885659
+  }, {
+    "latitude" : 48.8512252,
+    "codeInsee" : "75115",
+    "nom" : "Paris",
+    "longitude" : 2.2885659
+  } ],
+  "baccalaureat" : "Générale",
+  "classe" : "terminale",
+  "formationsFavorites" : [ {
+    "priseDeNote" : "Ma note personnalisée",
+    "niveauAmbition" : 2,
+    "idFormation" : "fl490030",
+    "voeuxChoisis" : [ "ta15974", "ta17831" ]
+  }, {
+    "priseDeNote" : "Ma note personnalisée",
+    "niveauAmbition" : 2,
+    "idFormation" : "fl490030",
+    "voeuxChoisis" : [ "ta15974", "ta17831" ]
+  } ],
+  "domaines" : [ "dom41", "dom32", "dom26" ],
+  "corbeilleFormations" : [ "fl1", "fl810505" ],
+  "moyenneGenerale" : 14,
+  "dureeEtudesPrevue" : "indifferent",
+  "centresInterets" : [ "ci16", "ci27", "ci6", "ci11" ],
+  "alternance" : "pas_interesse",
+  "specialites" : [ "mat707", "mat700" ],
+  "metiersFavoris" : [ "MET_384", "MET_469" ],
+  "situation" : "aucune_idee"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#ModificationProfilDTO">ModificationProfilDTO</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postProfilEleve"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/v1/profil</code></pre></div>
+    <div class="method-summary">Modifier le profil de l'utilisateur connecté (<span class="nickname">postProfilEleve</span>)</div>
+    <div class="method-notes">Mise à jour d'un profil en totalité ou partiellement (ex: mettre à jour la classe)</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#ModificationProfilDTO">ModificationProfilDTO</a> (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+                </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Unit">Unit</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Unit">Unit</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Rfrentiel">Rfrentiel</a></h1>
+  <div class="method"><a name="getReferentielPourInscription"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/v1/referentiel</code></pre></div>
+    <div class="method-summary">Récupérer les données nécessaires au parcours d'inscription de MonProjetSup (<span class="nickname">getReferentielPourInscription</span>)</div>
+    <div class="method-notes">Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ReferentielDTO">ReferentielDTO</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "choixDureeEtudesPrevue" : [ "indifferent", "indifferent" ],
+  "categoriesDomaineAvecLeursDomaines" : [ {
+    "categorieDomaine" : {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "domaines" : [ {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  }, {
+    "categorieDomaine" : {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "domaines" : [ {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  } ],
+  "choixNiveau" : [ "seconde", "seconde" ],
+  "admissionsParcoursup" : {
+    "parBaccalaureat" : [ {
+      "pourcentages" : [ {
+        "note" : 0.8008282,
+        "pourcentageAdmisAyantCetteMoyenneOuMoins" : 6
+      }, {
+        "note" : 0.8008282,
+        "pourcentageAdmisAyantCetteMoyenneOuMoins" : 6
+      } ]
+    }, {
+      "pourcentages" : [ {
+        "note" : 0.8008282,
+        "pourcentageAdmisAyantCetteMoyenneOuMoins" : 6
+      }, {
+        "note" : 0.8008282,
+        "pourcentageAdmisAyantCetteMoyenneOuMoins" : 6
+      } ]
+    } ],
+    "annee" : "annee"
+  },
+  "baccalaureatsAvecLeurSpecialites" : [ {
+    "baccalaureat" : {
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "specialites" : [ {
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  }, {
+    "baccalaureat" : {
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "specialites" : [ {
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  } ],
+  "categoriesDInteretsAvecLeursSousCategories" : [ {
+    "categorieInteret" : {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "sousCategoriesInterets" : [ {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  }, {
+    "categorieInteret" : {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    },
+    "sousCategoriesInterets" : [ {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    }, {
+      "emoji" : "emoji",
+      "id" : "id",
+      "nom" : "nom"
+    } ]
+  } ],
+  "choixAlternance" : [ "pas_interesse", "pas_interesse" ],
+  "situations" : [ "aucune_idee", "aucune_idee" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>*/*</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#ReferentielDTO">ReferentielDTO</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#AdmissionsParcoursupDTO"><code>AdmissionsParcoursupDTO</code></a></li>
+    <li><a href="#AffiniteSpecialiteDTO"><code>AffiniteSpecialiteDTO</code></a></li>
+    <li><a href="#AutoEvaluationMoyenneDTO"><code>AutoEvaluationMoyenneDTO</code></a></li>
+    <li><a href="#BaccalaureatAvecSesSpecialitesDTO"><code>BaccalaureatAvecSesSpecialitesDTO</code></a></li>
+    <li><a href="#BaccalaureatDTO"><code>BaccalaureatDTO</code></a></li>
+    <li><a href="#CategorieDomaineAvecDomainesDTO"><code>CategorieDomaineAvecDomainesDTO</code></a></li>
+    <li><a href="#CategorieDomaineDTO"><code>CategorieDomaineDTO</code></a></li>
+    <li><a href="#CategorieInteretAvecSousCategoriesDTO"><code>CategorieInteretAvecSousCategoriesDTO</code></a></li>
+    <li><a href="#CentileDTO"><code>CentileDTO</code></a></li>
+    <li><a href="#CommuneAvecSesVoeuxDTO"><code>CommuneAvecSesVoeuxDTO</code></a></li>
+    <li><a href="#CommuneCourteDTO"><code>CommuneCourteDTO</code></a></li>
+    <li><a href="#CommuneDTO"><code>CommuneDTO</code></a></li>
+    <li><a href="#CriteresAnalyseCandidatureDTO"><code>CriteresAnalyseCandidatureDTO</code></a></li>
+    <li><a href="#DetailsCalculScoreDTO"><code>DetailsCalculScoreDTO</code></a></li>
+    <li><a href="#DomaineDTO"><code>DomaineDTO</code></a></li>
+    <li><a href="#ExplicationGeographiqueDTO"><code>ExplicationGeographiqueDTO</code></a></li>
+    <li><a href="#ExplicationsDTO"><code>ExplicationsDTO</code></a></li>
+    <li><a href="#FicheFormationDTO"><code>FicheFormationDTO</code></a></li>
+    <li><a href="#FormationAvecExplicationsDTO"><code>FormationAvecExplicationsDTO</code></a></li>
+    <li><a href="#FormationCourteDTO"><code>FormationCourteDTO</code></a></li>
+    <li><a href="#FormationSimilaireDTO"><code>FormationSimilaireDTO</code></a></li>
+    <li><a href="#FormationsAvecExplicationsDTO"><code>FormationsAvecExplicationsDTO</code></a></li>
+    <li><a href="#FormationsCourtesDTO"><code>FormationsCourtesDTO</code></a></li>
+    <li><a href="#InteretCategorieDTO"><code>InteretCategorieDTO</code></a></li>
+    <li><a href="#InteretDTO"><code>InteretDTO</code></a></li>
+    <li><a href="#InteretSousCategorieDTO"><code>InteretSousCategorieDTO</code></a></li>
+    <li><a href="#InteretsEtDomainesDTO"><code>InteretsEtDomainesDTO</code></a></li>
+    <li><a href="#LienDTO"><code>LienDTO</code></a></li>
+    <li><a href="#LienHateoasDTO"><code>LienHateoasDTO</code></a></li>
+    <li><a href="#Link"><code>Link</code></a></li>
+    <li><a href="#MetierAvecSesFormationsDTO"><code>MetierAvecSesFormationsDTO</code></a></li>
+    <li><a href="#MetierCourtDTO"><code>MetierCourtDTO</code></a></li>
+    <li><a href="#MetierDTO"><code>MetierDTO</code></a></li>
+    <li><a href="#MetiersAvecSesFormationsDTO"><code>MetiersAvecSesFormationsDTO</code></a></li>
+    <li><a href="#MetiersCourtsDTO"><code>MetiersCourtsDTO</code></a></li>
+    <li><a href="#ModificationProfilDTO"><code>ModificationProfilDTO</code></a></li>
+    <li><a href="#MoyenneGeneraleDesAdmisDTO"><code>MoyenneGeneraleDesAdmisDTO</code></a></li>
+    <li><a href="#PourcentagesMoyenneDTO"><code>PourcentagesMoyenneDTO</code></a></li>
+    <li><a href="#PourcentagesPourChaqueMoyenneParBaccalaureatDTO"><code>PourcentagesPourChaqueMoyenneParBaccalaureatDTO</code></a></li>
+    <li><a href="#ReferentielDTO"><code>ReferentielDTO</code></a></li>
+    <li><a href="#RepartitionAdmisAnneePrecedenteDTO"><code>RepartitionAdmisAnneePrecedenteDTO</code></a></li>
+    <li><a href="#SpecialitesDTO"><code>SpecialitesDTO</code></a></li>
+    <li><a href="#TotalAdmisPourUnBaccalaureatDTO"><code>TotalAdmisPourUnBaccalaureatDTO</code></a></li>
+    <li><a href="#TypeBaccalaureatDTO"><code>TypeBaccalaureatDTO</code></a></li>
+    <li><a href="#Unit"><code>Unit</code></a></li>
+    <li><a href="#VoeuAvecCommuneDTO"><code>VoeuAvecCommuneDTO</code></a></li>
+    <li><a href="#VoeuAvecDistanceDTO"><code>VoeuAvecDistanceDTO</code></a></li>
+    <li><a href="#VoeuFormationDTO"><code>VoeuFormationDTO</code></a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="AdmissionsParcoursupDTO"><code>AdmissionsParcoursupDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">annee </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">parBaccalaureat </div><div class="param-desc"><span class="param-type"><a href="#PourcentagesPourChaqueMoyenneParBaccalaureatDTO">array[PourcentagesPourChaqueMoyenneParBaccalaureatDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="AffiniteSpecialiteDTO"><code>AffiniteSpecialiteDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">nomSpecialite </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">pourcentage </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="AutoEvaluationMoyenneDTO"><code>AutoEvaluationMoyenneDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">moyenne </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span>  format: float</div>
+<div class="param">basIntervalleNotes </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span>  format: float</div>
+<div class="param">hautIntervalleNotes </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span>  format: float</div>
+<div class="param">baccalaureatUtilise </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="BaccalaureatAvecSesSpecialitesDTO"><code>BaccalaureatAvecSesSpecialitesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">baccalaureat </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+<div class="param">specialites </div><div class="param-desc"><span class="param-type"><a href="#SpecialitesDTO">array[SpecialitesDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="BaccalaureatDTO"><code>BaccalaureatDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CategorieDomaineAvecDomainesDTO"><code>CategorieDomaineAvecDomainesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">categorieDomaine </div><div class="param-desc"><span class="param-type"><a href="#CategorieDomaineDTO">CategorieDomaineDTO</a></span>  </div>
+<div class="param">domaines </div><div class="param-desc"><span class="param-type"><a href="#DomaineDTO">array[DomaineDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CategorieDomaineDTO"><code>CategorieDomaineDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">emoji </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CategorieInteretAvecSousCategoriesDTO"><code>CategorieInteretAvecSousCategoriesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">categorieInteret </div><div class="param-desc"><span class="param-type"><a href="#InteretCategorieDTO">InteretCategorieDTO</a></span>  </div>
+<div class="param">sousCategoriesInterets </div><div class="param-desc"><span class="param-type"><a href="#InteretSousCategorieDTO">array[InteretSousCategorieDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CentileDTO"><code>CentileDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">centile </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+<div class="param">note </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span>  format: float</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CommuneAvecSesVoeuxDTO"><code>CommuneAvecSesVoeuxDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">commune </div><div class="param-desc"><span class="param-type"><a href="#CommuneDTO">CommuneDTO</a></span>  </div>
+<div class="param">voeuxAvecDistance </div><div class="param-desc"><span class="param-type"><a href="#VoeuAvecDistanceDTO">array[VoeuAvecDistanceDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CommuneCourteDTO"><code>CommuneCourteDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">codeInsee </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CommuneDTO"><code>CommuneDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">codeInsee </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Code Insee de la ville </div>
+          <div class="param-desc"><span class="param-type">example: 75115</span></div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Dénomination de la ville </div>
+          <div class="param-desc"><span class="param-type">example: Paris</span></div>
+<div class="param">latitude </div><div class="param-desc"><span class="param-type"><a href="#double">Double</a></span> Latitude de la ville format: double</div>
+          <div class="param-desc"><span class="param-type">example: 48.8512252</span></div>
+<div class="param">longitude </div><div class="param-desc"><span class="param-type"><a href="#double">Double</a></span> Longitude de la ville format: double</div>
+          <div class="param-desc"><span class="param-type">example: 2.2885659</span></div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CriteresAnalyseCandidatureDTO"><code>CriteresAnalyseCandidatureDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">pourcentage </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DetailsCalculScoreDTO"><code>DetailsCalculScoreDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">details </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DomaineDTO"><code>DomaineDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">emoji </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ExplicationGeographiqueDTO"><code>ExplicationGeographiqueDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">nomVille </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">distanceKm </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ExplicationsDTO"><code>ExplicationsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">geographique </div><div class="param-desc"><span class="param-type"><a href="#ExplicationGeographiqueDTO">array[ExplicationGeographiqueDTO]</a></span>  </div>
+<div class="param">formationsSimilaires </div><div class="param-desc"><span class="param-type"><a href="#FormationSimilaireDTO">array[FormationSimilaireDTO]</a></span>  </div>
+<div class="param">dureeEtudesPrevue (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">indifferent</div><div class="param-enum">courte</div><div class="param-enum">longue</div><div class="param-enum">aucune_idee</div>
+<div class="param">alternance (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">pas_interesse</div><div class="param-enum">indifferent</div><div class="param-enum">interesse</div><div class="param-enum">tres_interesse</div>
+<div class="param">interetsEtDomainesChoisis (optional)</div><div class="param-desc"><span class="param-type"><a href="#InteretsEtDomainesDTO">InteretsEtDomainesDTO</a></span>  </div>
+<div class="param">specialitesChoisies </div><div class="param-desc"><span class="param-type"><a href="#AffiniteSpecialiteDTO">array[AffiniteSpecialiteDTO]</a></span>  </div>
+<div class="param">typeBaccalaureat (optional)</div><div class="param-desc"><span class="param-type"><a href="#TypeBaccalaureatDTO">TypeBaccalaureatDTO</a></span>  </div>
+<div class="param">autoEvaluationMoyenne (optional)</div><div class="param-desc"><span class="param-type"><a href="#AutoEvaluationMoyenneDTO">AutoEvaluationMoyenneDTO</a></span>  </div>
+<div class="param">detailsCalculScore (optional)</div><div class="param-desc"><span class="param-type"><a href="#DetailsCalculScoreDTO">DetailsCalculScoreDTO</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FicheFormationDTO"><code>FicheFormationDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">idsFormationsAssociees </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">descriptifFormation (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">descriptifDiplome (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">descriptifConseils (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">descriptifAttendus (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">moyenneGeneraleDesAdmis (optional)</div><div class="param-desc"><span class="param-type"><a href="#MoyenneGeneraleDesAdmisDTO">MoyenneGeneraleDesAdmisDTO</a></span>  </div>
+<div class="param">criteresAnalyseCandidature </div><div class="param-desc"><span class="param-type"><a href="#CriteresAnalyseCandidatureDTO">array[CriteresAnalyseCandidatureDTO]</a></span>  </div>
+<div class="param">repartitionAdmisAnneePrecedente (optional)</div><div class="param-desc"><span class="param-type"><a href="#RepartitionAdmisAnneePrecedenteDTO">RepartitionAdmisAnneePrecedenteDTO</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienDTO">array[LienDTO]</a></span>  </div>
+<div class="param">voeux </div><div class="param-desc"><span class="param-type"><a href="#VoeuAvecCommuneDTO">array[VoeuAvecCommuneDTO]</a></span>  </div>
+<div class="param">communesFavoritesAvecLeursVoeux </div><div class="param-desc"><span class="param-type"><a href="#CommuneAvecSesVoeuxDTO">array[CommuneAvecSesVoeuxDTO]</a></span>  </div>
+<div class="param">metiers </div><div class="param-desc"><span class="param-type"><a href="#MetierDTO">array[MetierDTO]</a></span>  </div>
+<div class="param">tauxAffinite (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+<div class="param">apprentissage </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FormationAvecExplicationsDTO"><code>FormationAvecExplicationsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">formation </div><div class="param-desc"><span class="param-type"><a href="#FicheFormationDTO">FicheFormationDTO</a></span>  </div>
+<div class="param">explications (optional)</div><div class="param-desc"><span class="param-type"><a href="#ExplicationsDTO">ExplicationsDTO</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FormationCourteDTO"><code>FormationCourteDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FormationSimilaireDTO"><code>FormationSimilaireDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FormationsAvecExplicationsDTO"><code>FormationsAvecExplicationsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">formations </div><div class="param-desc"><span class="param-type"><a href="#FormationAvecExplicationsDTO">array[FormationAvecExplicationsDTO]</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienHateoasDTO">array[LienHateoasDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FormationsCourtesDTO"><code>FormationsCourtesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">formations </div><div class="param-desc"><span class="param-type"><a href="#FormationCourteDTO">array[FormationCourteDTO]</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienHateoasDTO">array[LienHateoasDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InteretCategorieDTO"><code>InteretCategorieDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">emoji </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InteretDTO"><code>InteretDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InteretSousCategorieDTO"><code>InteretSousCategorieDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">emoji </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InteretsEtDomainesDTO"><code>InteretsEtDomainesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">interets </div><div class="param-desc"><span class="param-type"><a href="#InteretDTO">array[InteretDTO]</a></span>  </div>
+<div class="param">domaines </div><div class="param-desc"><span class="param-type"><a href="#DomaineDTO">array[DomaineDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LienDTO"><code>LienDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">url </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LienHateoasDTO"><code>LienHateoasDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">rel </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">href </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Link"><code>Link</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">href (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">templated (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MetierAvecSesFormationsDTO"><code>MetierAvecSesFormationsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">descriptif (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienDTO">array[LienDTO]</a></span>  </div>
+<div class="param">formations </div><div class="param-desc"><span class="param-type"><a href="#FormationCourteDTO">array[FormationCourteDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MetierCourtDTO"><code>MetierCourtDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MetierDTO"><code>MetierDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">descriptif (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienDTO">array[LienDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MetiersAvecSesFormationsDTO"><code>MetiersAvecSesFormationsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">metiers </div><div class="param-desc"><span class="param-type"><a href="#MetierAvecSesFormationsDTO">array[MetierAvecSesFormationsDTO]</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienHateoasDTO">array[LienHateoasDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MetiersCourtsDTO"><code>MetiersCourtsDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">metiers </div><div class="param-desc"><span class="param-type"><a href="#MetierCourtDTO">array[MetierCourtDTO]</a></span>  </div>
+<div class="param">liens </div><div class="param-desc"><span class="param-type"><a href="#LienHateoasDTO">array[LienHateoasDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ModificationProfilDTO"><code>ModificationProfilDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">situation (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Etat d&#x27;avancée du projet de l&#x27;élève </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">aucune_idee</div><div class="param-enum">quelques_pistes</div><div class="param-enum">projet_precis</div><div class="param-enum">aucune_idee</div><div class="param-enum">quelques_pistes</div><div class="param-enum">projet_precis</div>
+          <div class="param-desc"><span class="param-type">example: aucune_idee</span></div>
+<div class="param">classe (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Classe actuelle </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">seconde</div><div class="param-enum">premiere</div><div class="param-enum">terminale</div><div class="param-enum">seconde</div><div class="param-enum">premiere</div><div class="param-enum">terminale</div>
+          <div class="param-desc"><span class="param-type">example: terminale</span></div>
+<div class="param">baccalaureat (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Type de Bac choisi ou envisagé </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">NC</div><div class="param-enum">Générale</div><div class="param-enum">P</div><div class="param-enum">PA</div><div class="param-enum">S2TMD</div><div class="param-enum">ST2S</div><div class="param-enum">STAV</div><div class="param-enum">STD2A</div><div class="param-enum">STHR</div><div class="param-enum">STI2D</div><div class="param-enum">STL</div><div class="param-enum">STMG</div>
+          <div class="param-desc"><span class="param-type">example: Générale</span></div>
+<div class="param">specialites (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Enseignements de spécialité de terminale choisis ou envisagés </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;mat707&quot;,&quot;mat700&quot;]</span></div>
+<div class="param">domaines (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Domaines d&#x27;activité </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;dom41&quot;,&quot;dom32&quot;,&quot;dom26&quot;]</span></div>
+<div class="param">centresInterets (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Centres d&#x27;intérêt </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;ci16&quot;,&quot;ci27&quot;,&quot;ci6&quot;,&quot;ci11&quot;]</span></div>
+<div class="param">metiersFavoris (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Les idées de métiers de l&#x27;élève </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;MET_384&quot;,&quot;MET_469&quot;]</span></div>
+<div class="param">dureeEtudesPrevue (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Durée envisagée des études </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">indifferent</div><div class="param-enum">courte</div><div class="param-enum">longue</div><div class="param-enum">aucune_idee</div><div class="param-enum">indifferent</div><div class="param-enum">courte</div><div class="param-enum">longue</div><div class="param-enum">aucune_idee</div>
+          <div class="param-desc"><span class="param-type">example: indifferent</span></div>
+<div class="param">alternance (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Intérêt pour les formations en apprentissage </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">pas_interesse</div><div class="param-enum">indifferent</div><div class="param-enum">interesse</div><div class="param-enum">tres_interesse</div><div class="param-enum">pas_interesse</div><div class="param-enum">indifferent</div><div class="param-enum">interesse</div><div class="param-enum">tres_interesse</div>
+          <div class="param-desc"><span class="param-type">example: pas_interesse</span></div>
+<div class="param">communesFavorites (optional)</div><div class="param-desc"><span class="param-type"><a href="#CommuneDTO">array[CommuneDTO]</a></span> Villes préférées pour étudier </div>
+<div class="param">moyenneGenerale (optional)</div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span> Moyenne générale scolaire estimée en terminale format: float</div>
+          <div class="param-desc"><span class="param-type">example: 14</span></div>
+<div class="param">formationsFavorites (optional)</div><div class="param-desc"><span class="param-type"><a href="#VoeuFormationDTO">array[VoeuFormationDTO]</a></span> Les idées de formations de l&#x27;élève </div>
+<div class="param">corbeilleFormations (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Les formations mises à la corbeille par l&#x27;élève </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;fl1&quot;,&quot;fl810505&quot;]</span></div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MoyenneGeneraleDesAdmisDTO"><code>MoyenneGeneraleDesAdmisDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">baccalaureat (optional)</div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+<div class="param">centiles </div><div class="param-desc"><span class="param-type"><a href="#CentileDTO">array[CentileDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="PourcentagesMoyenneDTO"><code>PourcentagesMoyenneDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">note </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span>  format: float</div>
+<div class="param">pourcentageAdmisAyantCetteMoyenneOuMoins </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="PourcentagesPourChaqueMoyenneParBaccalaureatDTO"><code>PourcentagesPourChaqueMoyenneParBaccalaureatDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">baccalaureat </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+<div class="param">pourcentages </div><div class="param-desc"><span class="param-type"><a href="#PourcentagesMoyenneDTO">array[PourcentagesMoyenneDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ReferentielDTO"><code>ReferentielDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">situations </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        
+<div class="param">choixNiveau </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        
+<div class="param">choixAlternance </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        
+<div class="param">choixDureeEtudesPrevue </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        
+<div class="param">baccalaureatsAvecLeurSpecialites </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatAvecSesSpecialitesDTO">array[BaccalaureatAvecSesSpecialitesDTO]</a></span>  </div>
+<div class="param">categoriesDInteretsAvecLeursSousCategories </div><div class="param-desc"><span class="param-type"><a href="#CategorieInteretAvecSousCategoriesDTO">array[CategorieInteretAvecSousCategoriesDTO]</a></span>  </div>
+<div class="param">categoriesDomaineAvecLeursDomaines </div><div class="param-desc"><span class="param-type"><a href="#CategorieDomaineAvecDomainesDTO">array[CategorieDomaineAvecDomainesDTO]</a></span>  </div>
+<div class="param">admissionsParcoursup </div><div class="param-desc"><span class="param-type"><a href="#AdmissionsParcoursupDTO">AdmissionsParcoursupDTO</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="RepartitionAdmisAnneePrecedenteDTO"><code>RepartitionAdmisAnneePrecedenteDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">total </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+<div class="param">parBaccalaureat </div><div class="param-desc"><span class="param-type"><a href="#TotalAdmisPourUnBaccalaureatDTO">array[TotalAdmisPourUnBaccalaureatDTO]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SpecialitesDTO"><code>SpecialitesDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="TotalAdmisPourUnBaccalaureatDTO"><code>TotalAdmisPourUnBaccalaureatDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">baccalaureat </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+<div class="param">nombreAdmis </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="TypeBaccalaureatDTO"><code>TypeBaccalaureatDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">baccalaureat </div><div class="param-desc"><span class="param-type"><a href="#BaccalaureatDTO">BaccalaureatDTO</a></span>  </div>
+<div class="param">pourcentage </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Unit"><code>Unit</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="VoeuAvecCommuneDTO"><code>VoeuAvecCommuneDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">nom </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">commune </div><div class="param-desc"><span class="param-type"><a href="#CommuneCourteDTO">CommuneCourteDTO</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="VoeuAvecDistanceDTO"><code>VoeuAvecDistanceDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">voeu </div><div class="param-desc"><span class="param-type"><a href="#VoeuAvecCommuneDTO">VoeuAvecCommuneDTO</a></span>  </div>
+<div class="param">distanceKm </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="VoeuFormationDTO"><code>VoeuFormationDTO</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">idFormation </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Id de la formation </div>
+          <div class="param-desc"><span class="param-type">example: fl490030</span></div>
+<div class="param">niveauAmbition </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Niveau de l&#x27;ambition du voeux avec 1 &#x3D; Plan B, 2 &#x3D; Réaliste et 3 &#x3D; Ambitieux format: int32</div>
+          <div class="param-desc"><span class="param-type">example: 2</span></div>
+<div class="param">voeuxChoisis </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Les voeux (triplets d&#x27;affectation) souhaités </div>
+          <div class="param-desc"><span class="param-type">example: [&quot;ta15974&quot;,&quot;ta17831&quot;]</span></div>
+<div class="param">priseDeNote (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Prise de note additionnel sur le voeu </div>
+          <div class="param-desc"><span class="param-type">example: Ma note personnalisée</span></div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>
