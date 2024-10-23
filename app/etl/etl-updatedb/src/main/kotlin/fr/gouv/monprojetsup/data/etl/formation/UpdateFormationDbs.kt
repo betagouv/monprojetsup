@@ -106,7 +106,7 @@ class UpdateFormationDbs(
             voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
         }
 
-        val voeuxIds = voeux.map { it.key }.toSet()
+        val voeuxIds = voeuxEntities.map { it.id }.toSet()
 
         val voeuxObsoletes = HashSet(voeuxDb.findAll())
         voeuxObsoletes.removeIf { voeuxIds.contains(it.id) }
