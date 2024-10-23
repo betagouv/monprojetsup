@@ -69,8 +69,6 @@ public class AlgoSuggestions {
     private Set<String> apprentissage;
     /* les formations qui sont des LAS, elles sont systématiquement supprimées des suggestions su run profil qui n'a pas coché un intérêt "santé" */
     protected Set<String> las;
-    /* le décodage des matières qui sont des spécialités, soit par nom soit par code string */
-    protected final Map<String, Integer> codesSpecialites = new HashMap<>();
     /* la médiane du nombre d'action de formation dans une formation, permet de définir beaucoup d'offre ou peu d'offre */
     public final int p50NbFormations;
     /* le 75 percentiel de la capacité d'accueil globale d'une formation, permet de définir gros ou petit */
@@ -93,18 +91,7 @@ public class AlgoSuggestions {
 
         createGraph();
 
-        data.getSpecialites().forEach(
-                spe -> {
-                    codesSpecialites.put(spe.idMps(), spe.idPsup());//prod ref
-                    codesSpecialites.put(spe.label(), spe.idPsup());//retrocompat pour experts métiers
-                    codesSpecialites.put(Integer.toString(spe.idPsup()), spe.idPsup());//retrocompat pour experts métiers
-                }
-        );
-
         this.typesFormations = data.getTypesFormations();
-
-        LOGGER.info("Liste des types de bacs ayant au moins 3 spécialités en terminale");
-        bacsWithSpecialites.addAll(data.getBacsWithAtLeastTwoSpecialites());
 
         apprentissage = data.getFormationIdsWithApprentissage();
 
@@ -390,17 +377,6 @@ public class AlgoSuggestions {
                 && (pf.geo_pref() == null || pf.geo_pref().isEmpty());
     }
 
-
-    /**
-     * @param bac the bac
-     * @return true if the bac is specified and it has three or more different specialites in terminale
-     */
-    public boolean hasSpecialitesInTerminale(String bac) {
-        return bac == null || bac.isEmpty() || bacsWithSpecialites.contains(bac);
-    }
-
-    private final Set<String> bacsWithSpecialites = new HashSet<>();
-
     public boolean existsInApprentissage(String grp) {
         return apprentissage.contains(grp);
     }
@@ -488,8 +464,8 @@ public class AlgoSuggestions {
         return debugLabels.computeIfAbsent(key, z -> data.getDebugLabel(key));
     }
 
-    private final ConcurrentHashMap<Pair<String,Integer>, Double> statsSpecialites = new ConcurrentHashMap<>();
-    public Double getStatsSpecialite(String fl, Integer iMtCod) {
+    private final ConcurrentHashMap<Pair<String,String>, Double> statsSpecialites = new ConcurrentHashMap<>();
+    public Double getStatsSpecialite(String fl, String iMtCod) {
         return statsSpecialites.computeIfAbsent(Pair.of(fl, iMtCod), z -> data.getStatsSpecialite(fl, iMtCod));
     }
 

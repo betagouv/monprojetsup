@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -48,7 +46,6 @@ public record ProfileDTO(
     }
 
     public int bacIndex() {
-        if (bac == null || bac.equals(TOUS_BACS_CODE_MPS) || bac.equals(TOUS_BACS_CODE_LEGACY)) return 0;
         if(bac.startsWith("S")) return 2;
         return switch (bac) {
             case "Générale" -> 1;

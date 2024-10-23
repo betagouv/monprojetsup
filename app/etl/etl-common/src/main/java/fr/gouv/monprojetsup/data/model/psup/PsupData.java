@@ -7,7 +7,7 @@ import fr.gouv.monprojetsup.data.model.attendus.GrilleAnalyse;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques;
+import fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParGroupe;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +34,7 @@ import static fr.gouv.monprojetsup.data.Constants.MIN_NB_ADMIS_FOR_BAC_ACTIF;
 import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_FRONT_LIBELLE;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
+import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
@@ -70,7 +69,7 @@ public record PsupData(
         //liens onisep, par filière
         @NotNull Map<String, @NotNull String> liensOnisep,
 
-        PsupStatistiques stats,
+        fr.gouv.monprojetsup.data.model.stats.PsupStatistiques stats,
 
         @NotNull List<@NotNull Bac> bacs
 
@@ -94,17 +93,14 @@ public record PsupData(
                 new TreeMap<>(),
                 new TagsSources(),
                 new TreeMap<>(),
-                new PsupStatistiques(),
+                new fr.gouv.monprojetsup.data.model.stats.PsupStatistiques(),
                 new ArrayList<>()
         );
     }
 
 
     public @NotNull List<@NotNull Bac> getBacs() {
-        val result = new ArrayList<>(bacs);
-        result.removeIf( it -> it.key().equals(TOUS_BACS_CODE_LEGACY ));
-        result.add(new Bac(TOUS_BACS_CODE_MPS, TOUS_BACS_CODE_FRONT_LIBELLE));
-        return result;
+        return bacs;
     }
 
     public List<Filiere> getFilieres() {
@@ -114,21 +110,27 @@ public record PsupData(
         return filieres.values().stream().filter(f -> f.isLas).map(f -> f.cle).toList();
     }
 
-    public PsupStatistiques buildStats() {
+    public AdmissionStats buildStats() {
 
         val bacsKeys = getBacs().stream().map(Bac::key).collect(Collectors.toSet());
         val groups = getGtaToMpsIdMapping();
-        return PsupStatistiques.build(
-                stats,
-                bacsKeys,
-                groups
+
+        StatistiquesAdmisParGroupe statsAdmisParGroupe
+                = stats.createGroupAdmisStatistique(groups, bacsKeys);
+
+        return new AdmissionStats(
+                stats.getAnnee(),
+                statsAdmisParGroupe.parGroupe(),
+                statsAdmisParGroupe.getAdmisParGroupes(),
+                statsAdmisParGroupe.getStatsSpecialites()
         );
     }
+
 
     public Map<String, String> getGtaToMpsIdMapping() {
         val gtaToFl = formations.formations.values().stream()
                 .collect(Collectors.toMap(
-                        f -> Constants.gTaCodToMpsId(f.gTaCod),
+                        f -> gTaCodToMpsId(f.gTaCod),
                         f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
                 ));
         val psupKeyToMpsKey = getPsupKeyToMpsKey();
@@ -220,7 +222,6 @@ public record PsupData(
         Set<String> bacsActifs = new HashSet<>(stats.getBacsWithAtLeastNdAdmis(MIN_NB_ADMIS_FOR_BAC_ACTIF));
         bacsActifs.add(TOUS_BACS_CODE_MPS);
         this.stats.restrictToBacs(bacsActifs);
-        stats.cleanup();
     }
 
     public void injecterNomsFilieresManquants(Map<Integer, Filiere> filieres, Set<Integer> filActives) {
@@ -282,7 +283,7 @@ public record PsupData(
                 .entrySet().stream()
                 .collect(Collectors.toMap(
                                 Map.Entry::getKey,
-                                e -> e.getValue().stream().mapToInt(f -> f.capacite).count()
+                                e -> (long) e.getValue().size()
                         )
 
                 );
@@ -632,7 +633,7 @@ public record PsupData(
             throw new RuntimeException("No libelle for psup key " + candidateMpsKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
         }
         return new Voeu(
-                    Constants.gTaCodToMpsId(f.gTaCod),
+                    gTaCodToMpsId(f.gTaCod),
                     mpsKey,
                     f.lat,
                     f.lng,
@@ -687,4 +688,5 @@ public record PsupData(
         });
         return result;
     }
+
 }

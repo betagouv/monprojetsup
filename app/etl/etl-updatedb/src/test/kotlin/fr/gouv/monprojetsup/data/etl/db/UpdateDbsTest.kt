@@ -81,13 +81,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
 
         @Test
-        fun `Les stats incluent l'indice tous bacs`() {
-            //When
-            val formation = formationsdb.findAll()
-            assertThat(formation).allSatisfy { it.stats.toStats().inclutTousBacs() }
-        }
-
-        @Test
         fun `Une formation ou un voeu qui disparait est marqué obsolete`() {
             //When
             val formation =  FormationEntity().apply {

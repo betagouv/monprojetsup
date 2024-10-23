@@ -30,7 +30,6 @@ import fr.gouv.monprojetsup.data.etl.loaders.SpecialitesLoader
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisId
 import fr.gouv.monprojetsup.data.model.Candidat
 import fr.gouv.monprojetsup.data.model.LatLng
-import fr.gouv.monprojetsup.data.model.Matiere
 import fr.gouv.monprojetsup.data.model.StatsFormation
 import fr.gouv.monprojetsup.data.model.Ville
 import fr.gouv.monprojetsup.data.model.Voeu
@@ -45,9 +44,9 @@ import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.CARTE_PSUP
 import fr.gouv.monprojetsup.data.model.liens.UrlsUpdater.IDEO_HOTLINE
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData
+import fr.gouv.monprojetsup.data.model.psup.AdmissionStats
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_ATOME_ELEMENT
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_DOMAINES_METIERS
@@ -73,7 +72,7 @@ class MpsDataFromFiles(
 
     private lateinit var psupData: PsupData
     private lateinit var  onisepData: OnisepData
-    private lateinit var  statistiques: PsupStatistiques
+    private lateinit var  statistiques: AdmissionStats
 
     private var descriptifs : DescriptifsFormationsMetiers? = null
     private var specialites : Specialites? = null
@@ -94,7 +93,7 @@ class MpsDataFromFiles(
         logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
 
-        OnisepDataLoader.exportDiagnosticsLiens(getLabels());
+        OnisepDataLoader.exportDiagnosticsLiens(getLabels())
 
     }
 
@@ -331,7 +330,6 @@ class MpsDataFromFiles(
     override fun getSpecialites(): Specialites {
         if(specialites == null) {
             specialites = SpecialitesLoader.load(
-                statistiques.getAdmisMatiereBacAnneeStats(),
                 dataSources,
                 psupData.getSpesBacs()
             )
@@ -381,7 +379,7 @@ class MpsDataFromFiles(
                     l.add(libelle)
                 }
             }
-            var texte = ""
+            var texte: String
             if (formuleVersLibelles.size <= 1) {
                 texte = formuleVersLibelles.keys.firstOrNull().orEmpty()
             } else {
@@ -739,10 +737,8 @@ class MpsDataFromFiles(
             val psupKeys = mpsKeyToPsupKeys.getOrDefault(id, setOf(id))
             if (psupKeys.isEmpty()) throw RuntimeException("Pas de clé psup pour $id")
             val stat = StatsFormation(
-                statistiques.getStatsMoyGenParBac(id),
+                statistiques.getStatsMoyGenParBac(id).entries.associateByTo(HashMap(), { it.key }, { it.value.middle50 }),
                 statistiques.getNbAdmisParBac(id),
-                statistiques.getPctAdmisParBac(id),
-                statistiques.getNbAdmisParSpec(id) ?: mapOf(),
                 statistiques.getPctAdmisParSpec(id),
                 psupData.getStatsFilSim(psupKeys)
             )
@@ -812,24 +808,6 @@ class MpsDataFromFiles(
         return m.map { (src, dst) -> Triple(src, dst, t) }
     }
 
-    override fun getMatieres(): List<Matiere> {
-        val specs = getSpecialites()
-        val result = ArrayList(
-            statistiques.matieres.entries
-                .filter { !specs.isSpecialite(it.key) }
-                .map {
-            Matiere(
-                Matiere.idPsupToIdMps(it.key.toLong()),
-                it.key,
-                it.value,
-                false,
-                listOf()
-            )}
-        )
-        result.addAll(specs.toEds())
-        return result
-    }
-
     private fun getEdges(edges: Map<String, String>, type: Int): List<Triple<String, String, Int>> {
         return edges.entries.map { (src, dst) -> Triple(src, dst, type) }
     }
@@ -859,19 +837,19 @@ class MpsDataFromFiles(
     }
 
     override fun getMoyennesGeneralesAdmis(): Map<MoyenneGeneraleAdmisId, List<Int>> {
-        val annee = statistiques.annee
-        val stats = getStatsFormation()
+        val annee = statistiques.annee.toString()
         val result = HashMap<MoyenneGeneraleAdmisId, List<Int>>()
-        stats.values.forEach{ stat -> stat.restrictToBacs(getBacs().map { it.key }) }
-        stats.forEach {
-            val formationId = it.key
-            val admissions = it.value.admissions
-            admissions.forEach { (bac, stat) ->
-                val id = MoyenneGeneraleAdmisId(annee.toString(), formationId, bac)
-                val frequencesCumulees = stat.frequencesCumulees.toList()
-                result[id] = frequencesCumulees
+        val bacs = getBacs().map { it.key }.toSet()
+
+        getFormationsMpsIds().forEach { id ->
+            statistiques.getStatsMoyGenParBac(id).forEach { (bac, stat) ->
+                if(bacs.contains(bac)) {
+                    val id = MoyenneGeneraleAdmisId(annee, id, bac)
+                    result[id] = stat.frequencesCumulees.toList()
+                }
             }
         }
+
         return result
     }
 

@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_ADMIS_CODE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_BAC_CODE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
 
-record StatistiquesAdmisParMatiere(
+public record StatistiquesAdmisParMatiere(
         //indexé par I_TC_COD
-        Map<Integer, Statistique> parMatiere
+        Map<String, Statistique> parMatiere
 ) implements Serializable  {
     public StatistiquesAdmisParMatiere() {
         this(new HashMap<>());
@@ -31,7 +33,7 @@ record StatistiquesAdmisParMatiere(
         );
     }
 
-    public void setStatistique(Map<Integer, int[]> integerMapMap) {
+    public void setStatistique(Map<String, int[]> integerMapMap) {
         parMatiere.clear();
         integerMapMap.forEach(
                 (matiere, integerIntegerMap)
@@ -39,8 +41,10 @@ record StatistiquesAdmisParMatiere(
         );
     }
 
-    private static final List<Integer> matieresPrincipales
-            = Arrays.asList(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE, MATIERE_MOYENNE_BAC_CODE, 1, 2, 3, 4, 5, 6);
+    private static final List<String> matieresPrincipales
+            = Arrays.asList(
+                    PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE,
+                    MATIERE_MOYENNE_BAC_CODE);
 
     public void minimize() {
         parMatiere.keySet().retainAll(matieresPrincipales);
@@ -65,9 +69,9 @@ record StatistiquesAdmisParMatiere(
         return new TauxSpecialites(
                 parMatiere.entrySet().stream()
                         .filter(e ->
-                                e.getKey() != MATIERE_ADMIS_CODE
-                                        && e.getKey() != MATIERE_MOYENNE_GENERALE_CODE
-                                        && e.getKey() != MATIERE_MOYENNE_BAC_CODE)
+                                !e.getKey().equals(MATIERE_ADMIS_CODE)
+                                        && !e.getKey().equals(MATIERE_MOYENNE_GENERALE_CODE)
+                                        && !e.getKey().equals(MATIERE_MOYENNE_BAC_CODE))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
                                 e -> e.getValue().nb()

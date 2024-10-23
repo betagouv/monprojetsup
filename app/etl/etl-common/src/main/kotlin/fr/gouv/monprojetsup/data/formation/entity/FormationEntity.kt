@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.data.formation.entity
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.model.Formation
 import fr.gouv.monprojetsup.data.model.StatsFormation
-import fr.gouv.monprojetsup.data.model.stats.Statistique
+import fr.gouv.monprojetsup.data.model.stats.Middle50
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -109,26 +109,22 @@ class FormationEntity {
     data class StatsEntity (
 
         //type de bac → admissions
-        val admissions : Map<String, Statistique> = mapOf(),
+        val admissions : Map<String, Middle50> = mapOf(),
 
         val nbAdmisParBac : Map<String, Int> = mapOf(),
-        val pctAdmisParBac : Map<String, Int> = mapOf(),
 
         //spécialité → pourcentage
-        val nbAdmisParSpecialite: Map<Int, Int> = mapOf(),
-        val pctAdmisParSpecialite: Map<Int, Int> = mapOf(),
+        val pctAdmisParSpecialite: Map<String, Int> = mapOf(),
 
         //type de bac générique → formation → score
         val formationsSimilaires : Map<Int, Map<String,Int>> = mapOf(),
 
         ) : Serializable {
 
-        constructor() : this(mapOf(), mapOf(), mapOf(), mapOf(), mapOf(), mapOf())
+        constructor() : this(mapOf(), mapOf(), mapOf(), mapOf())
         constructor(admissions: StatsFormation) : this(
             admissions.admissions,
             admissions.nbAdmisParBac,
-            admissions.pctAdmisParBac,
-            admissions.nbAdmisParSpecialite,
             admissions.pctAdmisParSpecialite,
             admissions.formationsSimilaires)
 
@@ -136,8 +132,6 @@ class FormationEntity {
             return StatsFormation(
                 admissions,
                 nbAdmisParBac,
-                pctAdmisParBac,
-                nbAdmisParSpecialite,
                 pctAdmisParSpecialite,
                 formationsSimilaires
             )

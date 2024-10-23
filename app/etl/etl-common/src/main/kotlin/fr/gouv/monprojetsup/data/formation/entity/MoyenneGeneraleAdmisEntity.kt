@@ -1,7 +1,10 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.io.Serializable
@@ -37,7 +40,7 @@ data class MoyenneGeneraleAdmisId(
     var idFormation : String = "",
 
     @Column(name = "id_bac")
-    var idBaccalaureat : String = TOUS_BACS_CODE_MPS
+    var idBaccalaureat : String = ""
 ) : Serializable {
     constructor() : this("","","")
 

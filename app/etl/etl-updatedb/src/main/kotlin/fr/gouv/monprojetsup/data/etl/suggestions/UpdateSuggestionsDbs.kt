@@ -5,7 +5,6 @@ import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsCandidatEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
-import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsMatiereEntity
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsVilleEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
@@ -22,10 +21,6 @@ interface SuggestionsVillesDb :
     JpaRepository<SuggestionsVilleEntity, String>
 
 @Repository
-interface SuggestionsMatieresDb :
-    JpaRepository<SuggestionsMatiereEntity, String>
-
-@Repository
 interface SuggestionsLabelsDb :
     JpaRepository<SuggestionsLabelEntity, String>
 
@@ -35,7 +30,6 @@ interface SuggestionsEdgesDb :
 
 @Component
 class UpdateSuggestionsDbs(
-    private val matieresPort: SuggestionsMatieresDb,
     private val mpsDataPort: MpsDataPort,
     private val batchUpdate: BatchUpdate
 ) {
@@ -55,17 +49,9 @@ class UpdateSuggestionsDbs(
         logger.info("Mise à jour des labels")
         updateLabelsDb()
 
-        logger.info("Mise à jour des matieres")
-        updateMatieresDb()
-
         logger.info("Mise à jour des villes")
         updateVillesDb()
 
-    }
-
-    private fun updateMatieresDb() {
-        matieresPort.deleteAll()
-        matieresPort.saveAll(mpsDataPort.getMatieres().map { SuggestionsMatiereEntity(it) })
     }
 
     private fun updateLabelsDb() {

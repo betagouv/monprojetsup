@@ -11,7 +11,7 @@ CREATE TABLE mps_specs as
     select distinct i_cl_cod, i_ne_cod, i_ne_lib, i_sp_cod, i_sp_lib, i_mt_cod, i_mt_lib
     from sp_bul_sco
     where
---i_cl_cod in ('STAV','ST2S','S2TMD','STMG','STL','STHR','STD2A','STI2D', 'Générale') and 
+--i_cl_cod in ('STAV','ST2S','S2TMD','STMG','STL','STHR','STD2A','STI2D', 'Gï¿½nï¿½rale') and 
     sp_bs_flg_eds = 1
     and sp_flg_ouv = 1
     and i_cs_ann = 0
@@ -50,23 +50,6 @@ create table mps_bacs as
     (select distinct i_cla.i_cl_cod,i_cl_bac_lib
     from i_cla,mps_bacs_candidats
     where i_cla.i_cl_cod=mps_bacs_candidats.i_cl_cod and i_tc_cod in (1,2,3) and nvl(i_cl_clo,0)=0 );
-
-DROP TABLE mps_admis_filiere;
-CREATE TABLE mps_admis_filiere as (select distinct can.g_cn_cod,aff.g_fl_cod_aff g_fl_cod
-                                       from
-                                       g_can  can,
-                                       a_adm  adm,
-                                       g_pro_new  g_pro_new,
-                                       sp_g_tri_aff  aff,
-                                       a_sit_voe  asv
-                                       where can.g_cn_cod=adm.g_cn_cod
-                                       and adm.g_ta_cod=aff.g_ta_cod
-                                       and adm.a_ta_cod in (1,2)
-                                       and adm.a_sv_cod=asv.a_sv_cod
-                                       and asv.a_sv_flg_aff=1
-                                       and can.g_pn_cod=g_pro_new.g_pn_cod
-                                       and g_pro_new.g_pm_cod=1);
-ALTER TABLE mps_admis_filiere ADD  CONSTRAINT constr2 PRIMARY KEY (g_cn_cod);
 
 DROP TABLE mps_candidats_filieres;
 CREATE TABLE mps_candidats_filieres as (select distinct can.g_cn_cod,aff.g_fl_cod_aff g_fl_cod
@@ -145,13 +128,13 @@ ALTER TABLE mps_descriptions_formations ADD  CONSTRAINT constr_de_for PRIMARY KE
 
 drop table mps_filieres_actives;
 create table mps_filieres_actives as
---les recrutements à n-1
+--les recrutements ï¿½ n-1
 (
 select distinct g_fl_cod_aff, g_ta_flg_for_las 
 from sp_g_tri_aff aff,a_rec_grp arg 
 where aff.g_ta_cod=arg.g_ta_cod and NVL(arg.a_rg_pla,0) > 0
 union 
---les admissions à n
+--les admissions ï¿½ n
 select distinct g_fl_cod_aff, g_ta_flg_for_las 
 from sp_g_tri_aff aff,a_adm adm  
 where aff.g_ta_cod=adm.g_ta_cod
@@ -175,14 +158,6 @@ select g_fl_cod, g_fl_lie_inf
 from 
 g_fil -- 
 where g_fl_lie_inf is not null;
-
-
-drop table mps_matieres2;
-create table mps_matieres2 as
-select i_mt_cod,i_mt_lib 
-from i_mat; -- 
-
-
 
 CREATE OR REPLACE view mps_a_rec_grp as 
 (select "C_GP_COD","G_TI_COD","G_TA_COD","C_JA_COD","A_RG_PLA","A_RG_RAN_MAX_CON_ALT","A_RG_NBR_SOU","A_RG_RAN_LIM","A_RG_JUS_SUR","A_RG_RAN_DER","A_RG_FIN_LIS","A_RG_ETA_CPL","A_RG_DAT_RET_CPL","A_RG_FLG_INS_PC_OTO","A_RG_MOD_RET_PC","A_RG_RAN_MAX_CON_ALT_AFF","A_RG_RAN_LIM_MAX","A_RG_RAN_LIM_OLD","A_RG_RAN_LIM_REF","A_RG_NBR_SOU_OLD","A_RG_NBR_SOU_DER_ALG","A_RG_NBR_ATT","A_RG_NBR_SOU_CAES","A_RG_FLG_NON_PC","A_RG_PCT_OUI","A_RG_NBR_VOE_CONF","A_RG_RAN_LIM_UTI_MAX","A_RG_RAN_DER_ANN_PRE","A_RG_RAN_DER_ADM","A_RG_DAT_INS_CPL","A_RG_MOD_ADM_PC","A_RG_RAN_DER_SIM","A_RG_VAL_DON_APP","A_RG_DAT_DER_VAL_DON_APP","A_RG_FLG_ADM_STOP","G_UP_COD_VAL_DON_APP","A_RG_RAN_LIM_MAX_SCN","A_RG_RAN_LIM_MAX_PAS_CLA","A_RG_RAN_LIM_MAX_LABRI","A_RG_RAN_LIM_MAX_DYN","A_RG_RAN_LIM_MAX_SCN_BRUT","A_RG_RAN_LIM_MAX_TYP_OPE","A_RG_FLG_RES_CAES","A_RG_RAN_LIM_MAX_LABRI_NEW","A_RG_FLG_RET_CPL","A_RG_FLG_RAN_LIM_POS_SCN","A_RG_RAN_DER_CLA","A_RG_RAN_DER_ANN_PRE_GDD","A_RG_FIN_LIS_ANN_PRE","A_RG_FLG_PC_ANN_PRE","A_RG_RAN_LIM_J1_ANN_PRE","A_RG_RAN_LIM_DEC_SCN","A_RG_RAN_LIM_DEC_JT_FLO","A_RG_NBR_SOU_PC_APR_ALGO_VEI","A_RG_RAN_DER_PP" from a_rec_grp);
@@ -258,18 +233,6 @@ create table mps_voeux as
                     AND voeu.a_sv_cod > -90
                     AND NVL(ins.i_is_val,0) = 1
                     );
-                    
-drop table mps_stats_mat_bac;
-create table mps_stats_mat_bac as
-select i_cs_ann,i_mt_cod,i_cl_cod,count(*)  nb
-from  i_bul_sco bul,  mps_admis, 
-g_can can
-where i_cs_ann in (0,1) 
-and mps_admis.g_cn_cod=can.g_cn_cod 
-and bul.g_cn_cod=can.g_cn_cod 
-and can.g_cn_ann_sec=&anneeSeconde
-group by i_cs_ann,i_mt_cod,i_cl_cod 
-order by i_mt_cod;
 
 drop table mps_v_fil_car;
 create table mps_v_fil_car as select * from v_fil_car;
@@ -287,14 +250,13 @@ and b_mf_dat_fer is null
 
 drop table mps_admis_bacs_spe;
 create table mps_admis_bacs_spe as
-(select cs.i_cl_cod, cs.i_sp_cod, maf.g_ta_cod,  count(*) nb
-from i_can_sco cs , mps_admis_formations maf
+(select admis.g_cn_cod, cs.i_sp_cod
+from i_can_sco cs , mps_admis admis
 where 
-cs.g_cn_cod=maf.g_cn_cod
-and cs.i_ne_cod = 10 --élève terminale
-and cs.i_cs_ann = 0 --anné scolaire actuelle
---and cs.i_cl_cod in ('P','PA') --cddt pro ou pro agri
-group by cs.i_cl_cod, cs.i_sp_cod, maf.g_ta_cod)
+cs.g_cn_cod=admis.g_cn_cod
+and cs.i_sp_cod is not null
+and cs.i_cs_ann = 0 --annï¿½ scolaire actuelle
+)
 ;
 
 --select i_cl_cod, i_sp_cod, g_ta_cod,  nb from mps_admis_bacs_spe;
