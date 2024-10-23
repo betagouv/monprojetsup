@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl
 
+import fr.gouv.monprojetsup.data.model.specialites.Specialites
 import fr.gouv.monprojetsup.data.psup.ConnecteurBackendSQL
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import lombok.extern.slf4j.Slf4j
@@ -57,8 +58,14 @@ class Runner : CommandLineRunner {
 		.use { co ->
 			val conn = ConnecteurBackendSQL(co)
 
+			val specialites: Specialites =
+				Serialisation.fromJsonFile(
+					getSourceDataFilePath("parcoursup/specialites.json"),
+					Specialites::class.java
+				)
+
 			logger.info("Récupération des données backend autres que les stats")
-			val data = conn.recupererData()
+			val data = conn.recupererData(specialites.eds.keys)
 
 			logger.info("Export du backend data au format json  ")
 			Serialisation.toZippedJson(
