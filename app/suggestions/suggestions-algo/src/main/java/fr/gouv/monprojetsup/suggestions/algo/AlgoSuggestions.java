@@ -249,6 +249,7 @@ public class AlgoSuggestions {
         @NotNull List<Pair<String, @NotNull Map<String, @NotNull Double>>> result = new ArrayList<>();
 
         val config = data.getConfig();
+        val diversityMultiplicativeMalus = config.getDiversityMultiplicativeMalusBacGen(pf.bac());
 
         while(!affinities.isEmpty()) {
             int nb = result.size() + 1;
@@ -291,7 +292,7 @@ public class AlgoSuggestions {
                             a -> {
                                 val typeFormation = typesFormations.getOrDefault(a.getLeft(),"");
                                 val nbOccurences = typeFormationsCounters.getOrDefault(typeFormation, 0L);
-                                val diversityMalus = Math.pow(config.diversityMultiplicativeMalus, nbOccurences);
+                                val diversityMalus = Math.pow(diversityMultiplicativeMalus, nbOccurences);
                                 val affiniteIncluantMalus = diversityMalus * a.getRight().affinite();
                                 return - affiniteIncluantMalus;
                             }
@@ -440,8 +441,8 @@ public class AlgoSuggestions {
     }
 
     private final ConcurrentHashMap<Pair<String,String>, Integer> nbAdmis = new ConcurrentHashMap<>();
-    public Integer getNbAdmis(String grp, String tousBacsCodeMps) {
-        return nbAdmis.computeIfAbsent(Pair.of(grp, tousBacsCodeMps), z -> data.getNbAdmis(grp, tousBacsCodeMps));
+    public Integer getNbAdmis(String grp, String bac) {
+        return nbAdmis.computeIfAbsent(Pair.of(grp, bac), z -> data.getNbAdmis(grp, bac));
     }
 
     private final ConcurrentHashMap<Pair<String,String>, Pair<String, Middle50>> statsBac = new ConcurrentHashMap<>();

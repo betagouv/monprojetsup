@@ -77,6 +77,8 @@ public class AffinityEvaluator {
     /* bac of the profile.  */
     private final @NotNull String bac;
 
+    private final boolean isBacPro;
+
     /* estimate of moygen.  */
     private Double moyGenEstimee;
 
@@ -102,6 +104,7 @@ public class AffinityEvaluator {
         String pfBac = pf.bac();
         if(pfBac == null || pfBac.isBlank()) pfBac = TOUS_BACS_CODE_MPS;
         this.bac = pfBac;
+        this.isBacPro = pfBac.equals("P") || pfBac.equals("PA");
 
         try {
             this.moyGenEstimee
@@ -294,6 +297,12 @@ public class AffinityEvaluator {
                 )
             );
         }
+        if(isBacPro) {
+            //plus de poids sur ce critère de la spécialité en bac pro
+            scores.put(Config.BONUS_SPECIALITE_BAC_PRO, getBonusSpecialites(fl, expl));
+        } else {
+            scores.put(Config.BONUS_SPECIALITE, getBonusSpecialites(fl, expl));
+        }
 
         double score = aggregateScores(scores);
 
@@ -303,8 +312,8 @@ public class AffinityEvaluator {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
-        double notSmallDiversity = getNotSmallDiversityScore(fl);
         EnumMap<Affinite.SuggestionQuota, Double> quotas = new EnumMap<>(Affinite.SuggestionQuota.class);
+        double notSmallDiversity = getNotSmallDiversityScore(fl);
         quotas.put(Affinite.SuggestionQuota.OFFRE_FORMATION, notSmallDiversity);
 
         return new Affinite(score, includeScores ? scores : Map.of(), quotas);
@@ -330,6 +339,7 @@ public class AffinityEvaluator {
         value = Math.max(NO_MATCH_SCORE, Math.min(FULL_MATCH_MULTIPLIER, value));
         return minMultiplier + (1.0 - minMultiplier) * value;
     }
+
 
 
     private double getBonusTypeBac(String grp, Explanations expl) {
@@ -623,10 +633,9 @@ public class AffinityEvaluator {
 
     private double getBonusSpecialites(String fl, Explanations expl) {
         if (pf.spe_classes() == null || pf.spe_classes().isEmpty())
-            return Config.NO_MATCH_SCORE;
+            return FULL_MATCH_MULTIPLIER;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
-            //Décodage soit par nom spécialité soit par code
             Double stat = algo.getStatsSpecialite(fl, s);
             if (stat != null) {
                 stats.put(s, stat);
@@ -634,8 +643,8 @@ public class AffinityEvaluator {
         });
         if (stats.isEmpty()) {
             if (expl != null && cfg.isVerbose())
-                expl.add(Explanation.getDebugExplanation("Pas de stats spécialités pour cette filiere"));
-            return (FULL_MATCH_MULTIPLIER + NO_MATCH_SCORE) / 2;
+                expl.add(Explanation.getDebugExplanation("Aucune des spécialités ne correspond"));
+            return NO_MATCH_SCORE;
         }
         double score = stats.values().stream().mapToDouble(x -> x).sum();
         if (expl != null && stats.values().stream().anyMatch(x -> x >= Config.MIN_SPEC_PCT_FOR_EXP)) {
