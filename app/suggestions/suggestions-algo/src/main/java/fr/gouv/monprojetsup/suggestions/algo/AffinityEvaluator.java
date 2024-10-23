@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.isFiliere;
 import static fr.gouv.monprojetsup.data.Constants.isMetier;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_10;
 import static fr.gouv.monprojetsup.suggestions.algo.Config.ADMISSIBILITY_25;
@@ -101,8 +100,7 @@ public class AffinityEvaluator {
         this.algo = algo;
 
         String pfBac = pf.bac();
-        if(pfBac == null) pfBac = TOUS_BACS_CODE_MPS;
-        if(pfBac.equals(TOUS_BACS_CODE_LEGACY)) pfBac = TOUS_BACS_CODE_MPS;
+        if(pfBac == null || pfBac.isBlank()) pfBac = TOUS_BACS_CODE_MPS;
         this.bac = pfBac;
 
         try {

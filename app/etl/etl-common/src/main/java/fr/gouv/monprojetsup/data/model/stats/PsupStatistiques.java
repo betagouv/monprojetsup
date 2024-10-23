@@ -19,7 +19,6 @@ public class PsupStatistiques implements Serializable {
 
     public static final String TOUS_GROUPES_CODE = "";
 
-    public static final String TOUS_BACS_CODE_LEGACY = "";
     public static final String TOUS_BACS_CODE_MPS = "NC";
 
     public static final int PRECISION_PERCENTILES = 40;
