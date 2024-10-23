@@ -8,26 +8,12 @@
       "apprentissage": "A",
       "geo_pref": [],
       "spe_classes": [
-        "Conception et création en design et métiers d\u0026#39;art (CCDMA)",
-        "Analyse et méthodes en design (AMD)"
+        "mat1042"
       ],
       "interests": [
         "dom5",
         "dom22"
       ],
-      "moygen": "16",
-      "choices": [
-        {
-          "fl": "fl10413",
-          "status": 1,
-          "score": 3
-        },
-        {
-          "fl": "MET.936)",
-          "status": 1,
-          "score": 5
-        }
-        ],
       "statut": "2"
     }
   },
@@ -49,7 +35,6 @@
         "ci6",
         "ci25"
       ],
-      "moygen": "13.5",
       "choices": [
         {
           "fl": "MET.161",
