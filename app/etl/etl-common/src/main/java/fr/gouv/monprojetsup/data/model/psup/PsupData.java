@@ -13,11 +13,30 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.Constants.BPJEPS_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.CMI_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.IEP_PSUP_FR_COD;
+import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
+import static fr.gouv.monprojetsup.data.Constants.MIN_NB_ADMIS_FOR_BAC_ACTIF;
+import static fr.gouv.monprojetsup.data.Constants.PASS_FL_COD;
+import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_FRONT_LIBELLE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_LEGACY;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 
 
 public record PsupData(
@@ -647,5 +666,25 @@ public record PsupData(
                 duree.durees().put(gFlCodToMpsId(f.gFlCod), 5);
             }
         });
+    }
+
+    @NotNull
+    public Collection<@NotNull SpeBac> getSpesBacs() {
+        val result = new ArrayList<@NotNull SpeBac>();
+        val mpsBacsSpe = diversPsup.get("mps_bacs_spe");
+        if(mpsBacsSpe == null)
+            throw new RuntimeException("spécialités de bac sont nulles");
+        mpsBacsSpe.forEach(m -> {
+            val spe = new SpeBac(
+                    m.get("b_mf_cod_nat".toUpperCase()),
+                    m.get("b_mf_lib_lon".toUpperCase()),
+                    m.get("i_sp_cod".toUpperCase()),
+                    m.get("i_sp_lib".toUpperCase()),
+                    m.get("i_cl_cod".toUpperCase())
+            );
+            spe.checkAllFieldsAreNonNull();
+            result.add(spe);
+        });
+        return result;
     }
 }
