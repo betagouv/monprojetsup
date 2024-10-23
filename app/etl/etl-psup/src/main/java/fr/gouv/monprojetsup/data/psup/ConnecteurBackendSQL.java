@@ -260,7 +260,9 @@ public class ConnecteurBackendSQL {
                         "a_rec_grp", "select c_gp_cod,g_ti_cod,g_ta_cod,c_ja_cod,a_rg_pla,a_rg_nbr_sou from mps_a_rec_grp",
                         "g_fil_att_con", "select g_fl_cod,g_fl_lib,g_fl_des_att, g_fl_sig_mot_rec,g_fl_con_lyc_prem,g_fl_con_lyc_term, g_fl_typ_con_lyc from mps_g_fil",
                         "descriptions_formations", "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from mps_descriptions_formations",
-                        "mps_bacs_spe", "select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe"
+                        "mps_bacs_spe", "select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe",
+                        "mps_prepas_bacs_pro", "select g_ta_cod from mps_prepas_bacs_pro",
+                        "mps_prepas_slt_bacs_pro", "select g_ta_cod from mps_prepas_slt_bacs_pro"
                 )
         );
         data.diversPsup().putAll(o);
