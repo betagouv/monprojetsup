@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.referentiel
 
+import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
 import fr.gouv.monprojetsup.data.referentiel.entity.BaccalaureatEntity
 import fr.gouv.monprojetsup.data.referentiel.entity.BaccalaureatSpecialiteEntity
@@ -58,16 +59,8 @@ interface InteretsSousCategorieDb :
 
 @Component
 class UpdateReferentielDbs(
-    private val baccalaureatBd: BaccalaureatDb,
-    private val specialitesDb: SpecialitesDb,
-    private val specialitesBacDb: BaccalaureatSpecialiteDb,
-    private val domainesIdeoDb: DomainesIdeoDb,
-    private val domainesDb: DomainesDb,
-    private val domainesCategoriesDb: DomainesCategoryDb,
-    private val interetsDb: InteretsDb,
-    private val interetsCategorieDb: InteretsCategoryDb,
-    private val interetsSousCategorieDb: InteretsSousCategorieDb,
-    private val mpsDataPort: MpsDataPort
+    private val mpsDataPort: MpsDataPort,
+    private val batchUpdate: BatchUpdate
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateReferentielDbs::class.java.simpleName)
@@ -86,53 +79,54 @@ class UpdateReferentielDbs(
     }
 
     internal fun updateBaccalaureatDb() {
-        //delete table already using bacs foreign keys
-        //baccalaureatBd.deleteAll() bot doing that becaus eit would break a constraint on profil_eleve
         val bacs = mpsDataPort.getBacs()
-        bacs.forEach { baccalaureat ->
-            val entity = BaccalaureatEntity()
-            entity.id = baccalaureat.key
-            entity.nom = baccalaureat.label
-            entity.idExterne = baccalaureat.key
-            baccalaureatBd.save(entity)
-        }
+        batchUpdate.upsertEntities(
+            bacs.map { baccalaureat ->
+                BaccalaureatEntity().apply {
+                    id = baccalaureat.key
+                    nom = baccalaureat.label
+                    idExterne = baccalaureat.key
+                }
+            })
     }
 
     private fun updateSpecialiteDb() {
         val specialites = mpsDataPort.getSpecialites().toMatieres()
-        specialitesDb.deleteAll()
-        specialites.forEach { matiere ->
-            val entity = SpecialiteEntity()
-            entity.id = matiere.idMps
-            entity.label = matiere.label
-            specialitesDb.save(entity)
-        }
+        batchUpdate.upsertEntities(
+            specialites.map { matiere ->
+                SpecialiteEntity().apply {
+                    id = matiere.idMps
+                    label = matiere.label
+                }
+            }
+        )
     }
 
     private fun updateBaccalaureatSpecialiteDb() {
         val specialites = mpsDataPort.getSpecialites()
-        val bacsKeys = mpsDataPort.getBacs().map { b -> b.key}.toSet()
-        specialitesBacDb.deleteAll()
-        specialites.specialitesParBac
-            .filter { s -> bacsKeys.contains(s.key) }
-            .forEach {
-            it.value.forEach { bacSpec ->
-                val entity = BaccalaureatSpecialiteEntity()
-                entity.id = BaccalaureatSpecialiteId(
-                    it.key,
-                    bacSpec
-                )
-                specialitesBacDb.save(entity)
-            }
-        }
+        val bacsKeys = mpsDataPort.getBacs().map { b -> b.key }.toSet()
+        batchUpdate.upsertEntities(
+            specialites.specialitesParBac
+                .filter { s -> bacsKeys.contains(s.key) }
+                .flatMap {
+                    it.value.map { bacSpec ->
+                        BaccalaureatSpecialiteEntity().apply {
+                            id = BaccalaureatSpecialiteId(
+                                it.key,
+                                bacSpec
+                            )
+                        }
+                    }
+                }
+        )
     }
 
     private fun updateInteretDbs() {
         val interets = mpsDataPort.getInterets()
 
-        interetsDb.deleteAll()
-        interetsSousCategorieDb.deleteAll()
-        interetsCategorieDb.deleteAll()
+        val listInteretsCategorie = ArrayList<InteretCategorieEntity>()
+        val listInteretsSousCategorie = ArrayList<InteretSousCategorieEntity>()
+        val listInterets = ArrayList<InteretEntity>()
 
         interets.categories.forEach { categorie ->
             val entity = InteretCategorieEntity()
@@ -140,30 +134,35 @@ class UpdateReferentielDbs(
             entity.id = groupeInteretId
             entity.nom = categorie.label
             entity.emoji = categorie.emoji
-            interetsCategorieDb.save(entity)
+            listInteretsCategorie.add(entity)
             categorie.elements.forEach { element ->
                 val sousCategorie = InteretSousCategorieEntity()
                 sousCategorie.id = element.id
                 sousCategorie.nom = element.label
                 sousCategorie.emoji = element.emoji
                 sousCategorie.idCategorie = groupeInteretId
-                interetsSousCategorieDb.save(sousCategorie)
+                listInteretsSousCategorie.add(sousCategorie)
                 element.atomes.forEach { (key,label) ->
                     val interet = InteretEntity()
                     interet.id = key
                     interet.nom = label
                     interet.idSousCategorie = sousCategorie.id
-                    interetsDb.save(interet)
+                    listInterets.add(interet)
                 }
             }
         }
+
+        batchUpdate.upsertEntities(listInteretsCategorie)
+        batchUpdate.upsertEntities(listInteretsSousCategorie)
+        batchUpdate.upsertEntities(listInterets)
+
     }
 
     private fun updateDomainesDbs() {
 
-        domainesIdeoDb.deleteAll()
-        domainesDb.deleteAll()
-        domainesCategoriesDb.deleteAll()
+        val listDomaineCategorie = ArrayList<DomainesCategorieEntity>()
+        val listDomaineIdeo = ArrayList<DomaineIdeoEntity>()
+        val listDomaine = ArrayList<DomaineEntity>()
 
         val domaines = mpsDataPort.getDomaines()
         domaines.categories.forEach { categorie ->
@@ -172,7 +171,7 @@ class UpdateReferentielDbs(
             entity.id = groupeId
             entity.nom = categorie.label
             entity.emoji = categorie.emoji
-            domainesCategoriesDb.save(entity)
+            listDomaineCategorie.add(entity)
             categorie.elements.forEach { element ->
                 val domaine = DomaineEntity().apply {
                     this.id = element.id
@@ -181,32 +180,21 @@ class UpdateReferentielDbs(
                     this.description = element.description
                     this.idCategorie = groupeId
                 }
-                domainesDb.save(domaine)
+                listDomaine.add(domaine)
                 element.atomes.forEach { (key,label) ->
                     val domaineIdeo = DomaineIdeoEntity()
                     domaineIdeo.id = key
                     domaineIdeo.nom = label
                     domaineIdeo.idDomaineMps = domaine.id
-                    domainesIdeoDb.save(domaineIdeo)
+                    listDomaineIdeo.add(domaineIdeo)
                 }
             }
         }
-    }
 
-    fun clearAll() {
-        //delete tables in reverse order of creation
-        //to avoid foreign key constraint errors
+        batchUpdate.upsertEntities(listDomaineCategorie)
+        batchUpdate.upsertEntities(listDomaineIdeo)
+        batchUpdate.upsertEntities(listDomaine)
 
-        specialitesBacDb.deleteAll()
-        specialitesDb.deleteAll()
-        //baccalaureatBd.deleteAll()
-
-        domainesDb.deleteAll()
-        domainesCategoriesDb.deleteAll()
-
-        interetsDb.deleteAll()
-        interetsSousCategorieDb.deleteAll()
-        interetsCategorieDb.deleteAll()
     }
 
 
