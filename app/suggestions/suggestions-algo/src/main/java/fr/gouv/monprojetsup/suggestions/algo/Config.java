@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.suggestions.algo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
 import static java.util.Map.entry;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Config {
     public static final double SEUIL_TYPE_BAC_NO_MATCH = 0.01;
     public static final double SEUIL_TYPE_BAC_FULL_MATCH = 0.2;
@@ -20,7 +23,7 @@ public final class Config {
     public static final int DUREE_COURTE = 1;
     public static final String DUREE_COURTE_PROFILE_VALUE = "court";
     public static final String DUREE_LONGUE_PROFILE_VALUE = "long";
-    public static final double MIN_SPEC_PCT_FOR_EXP = 0.2;
+    public static final double MIN_SPEC_PCT_FOR_EXP = 0.1;
     public static final int ADMISSIBILITY_LOWEST_GRADE = 8;
     public static final int MAX_DISTANCE = 3;
     public static final int MIN_NB_TAGS_MATCH_FOR_PERFECT_FIT = 6;
@@ -47,9 +50,18 @@ public final class Config {
     @Getter
     @Setter
     public long DiversityShortListLength = 10L;
+
     @Getter
     @Setter
-    public double diversityMultiplicativeMalus = 0.2;
+    public double diversityMultiplicativeMalusBacGen = 0.2;
+
+    @Getter
+    @Setter
+    public double diversityMultiplicativeMalusBacPro = 0.9;
+
+    @Getter
+    @Setter
+    public double diversityMultiplicativeMalusBacTechno = 0.6;
 
     @Getter
     @Setter
@@ -66,6 +78,7 @@ public final class Config {
     public static final String BONUS_GEO = "geo";
     public static final String BONUS_TYPE_BAC = "typebac";
     public static final String BONUS_SPECIALITE = "spec";
+    public static final String BONUS_SPECIALITE_BAC_PRO = "spec_bac_pro";
     public static final String BONUS_MOY_GEN = "moygen";
     public static final double NO_MATCH_SCORE = 0.0;
 
@@ -74,6 +87,7 @@ public final class Config {
     public static final Map<String,String> BONUS_LABELS = Map.of(
             BONUS_TAGS,"proximité intérêts et favoris",
             BONUS_SPECIALITE,"EDS",
+            BONUS_SPECIALITE_BAC_PRO, "spécialité",
             BONUS_DURATION,"durée",
             BONUS_SIM,"similarité avec autres favoris",
             BONUS_MOY_GEN,"moyenne générale",
@@ -89,7 +103,8 @@ public final class Config {
     static final double MULTIPLIER_FOR_UNFITTED_GEO = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_DURATION = 1.0E-04;
     static final double MULTIPLIER_FOR_UNFITTED_SIM = 1.0E-03;
-    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-01;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC = 1.0E-03;
+    static final double MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO = 1.0E-08;
     static final double MULTIPLIER_FOR_UNFITTED_NOTES = 1.0E-01;
 
     @JsonIgnore
@@ -101,6 +116,7 @@ public final class Config {
             entry(BONUS_GEO, MULTIPLIER_FOR_UNFITTED_GEO),
             entry(BONUS_SIM, MULTIPLIER_FOR_UNFITTED_SIM),
             entry(BONUS_SPECIALITE, MULTIPLIER_FOR_UNFITTED_SPEC),
+            entry(BONUS_SPECIALITE_BAC_PRO, MULTIPLIER_FOR_UNFITTED_SPEC_BAC_PRO),
             entry(BONUS_MOY_GEN, MULTIPLIER_FOR_UNFITTED_NOTES)
     ));
     @JsonIgnore
@@ -127,5 +143,15 @@ public final class Config {
     @JsonIgnore
     public boolean isVeryVerbose() {
         return verbosityLevel >= 2;
+    }
+
+    public double getDiversityMultiplicativeMalusBacGen(String bac) {
+        if(bac == null || bac.isEmpty() || bac.startsWith("G") || bac.equals(TOUS_BACS_CODE_MPS)) {
+            return diversityMultiplicativeMalusBacGen;
+        }
+        if(bac.startsWith("P")) {
+            return diversityMultiplicativeMalusBacPro;
+        }
+        return diversityMultiplicativeMalusBacTechno;
     }
 }
