@@ -43,14 +43,14 @@ class ParcoursupAuthentHttpClient(
         val urlToken = baseUrl + URL_TOKEN
         val formBody =
             FormBody.Builder()
-                .add("grant_type", "client_credentials")
+                .add(GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS)
                 .build()
 
         val request =
             Request.Builder()
                 .url(urlToken)
                 .post(formBody)
-                .header("Authorization", Credentials.basic(clientId, clientSecret))
+                .header(HEADER_AUTHORIZATION, Credentials.basic(clientId, clientSecret))
                 .build()
 
         httpClient.newCall(request).execute().use { response ->
@@ -64,30 +64,41 @@ class ParcoursupAuthentHttpClient(
     override fun recupererIdParcoursupEleve(parametresPourRecupererToken: ParametresPourRecupererToken): Int {
         val url =
             (baseUrl + URL_TOKEN).toHttpUrl().newBuilder()
-                .addQueryParameter("grant_type", "authorization_code")
-                .addQueryParameter("redirect_uri", parametresPourRecupererToken.redirectUri)
-                .addQueryParameter("code", parametresPourRecupererToken.code)
-                .addQueryParameter("code_verifier", parametresPourRecupererToken.codeVerifier)
+                .addQueryParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
+                .addQueryParameter(REDIRECT_URI, parametresPourRecupererToken.redirectUri)
+                .addQueryParameter(CODE, parametresPourRecupererToken.code)
+                .addQueryParameter(CODE_VERIFIER, parametresPourRecupererToken.codeVerifier)
                 .build()
 
         val formBody = FormBody.Builder().build()
         val request =
             Request.Builder()
                 .url(url)
-                .header("Authorization", Credentials.basic(clientId, clientSecret))
-                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header(HEADER_AUTHORIZATION, Credentials.basic(clientId, clientSecret))
+                .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_URL_ENCODED)
                 .post(formBody)
                 .build()
 
         httpClient.newCall(request).execute().use { response ->
             verifierCodeErreur(response, url.toString())
             val bodyRetour = deserialisation<TokenReponseDTO>(response.body?.string(), url.toString())
-            val idToken = NimbusJwtDecoder.withJwkSetUri("$baseUrl/oauth2/jwk").build().decode(bodyRetour.idToken)
-            return idToken.getClaim<String>("id").toInt()
+            val idToken = NimbusJwtDecoder.withJwkSetUri(baseUrl + URL_JWKS).build().decode(bodyRetour.idToken)
+            return idToken.getClaim<String>(CLAIM_ID).toInt()
         }
     }
 
     companion object {
         private const val URL_TOKEN = "/oauth2/token"
+        private const val URL_JWKS = "/oauth2/jwks"
+        private const val CLAIM_ID = "sub"
+        private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val HEADER_CONTENT_TYPE = "Content-Type"
+        private const val CONTENT_TYPE_URL_ENCODED = "application/x-www-form-urlencoded"
+        private const val GRANT_TYPE = "grant_type"
+        private const val GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code"
+        private const val GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials"
+        private const val REDIRECT_URI = "redirect_uri"
+        private const val CODE = "code"
+        private const val CODE_VERIFIER = "code_verifier"
     }
 }

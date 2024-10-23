@@ -9,7 +9,7 @@ export default function useModaleConnexionParcourSup() {
     const paramètresDeRequêteAuthorizePS = new URLSearchParams();
     paramètresDeRequêteAuthorizePS.append("client_id", "monProjetSup");
     paramètresDeRequêteAuthorizePS.append("response_type", "code");
-    paramètresDeRequêteAuthorizePS.append("scope", "openid");
+    paramètresDeRequêteAuthorizePS.append("scope", "openid read:favoris");
     paramètresDeRequêteAuthorizePS.append("state", "d7a619c8e91f48dda4ba3b052c8469cc");
     paramètresDeRequêteAuthorizePS.append("code_challenge_method", "S256");
     paramètresDeRequêteAuthorizePS.append("code_challenge", codeChallenge);
@@ -17,7 +17,7 @@ export default function useModaleConnexionParcourSup() {
     sessionStorage.setItem("psCodeVerifier", codeVerifier);
     sessionStorage.setItem("psRedirectUri", encodeURI("http://localhost:5001/parcoursup-callback"));
 
-    window.location.href = `http://authentification.parcoursup.fr/Authentification/oauth2/authorize?${paramètresDeRequêteAuthorizePS.toString()}`;
+    window.location.href = `https://authentification.parcoursup.fr/Authentification/oauth2/authorize?${paramètresDeRequêteAuthorizePS.toString()}`;
   };
 
   return {
