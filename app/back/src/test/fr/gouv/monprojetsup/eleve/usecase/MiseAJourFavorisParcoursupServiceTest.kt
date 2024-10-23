@@ -242,7 +242,7 @@ class MiseAJourFavorisParcoursupServiceTest {
     }
 
     private fun creerProfilIdentifie(formationsFavorites: List<VoeuFormation>) =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id = idEleve,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,

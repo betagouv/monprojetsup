@@ -31,7 +31,8 @@ class InteretBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun verifierCentresInteretsExistent(ids: List<String>): Boolean {
-        return interetSousCategorieJPARepository.countAllByIdIn(ids) == ids.size
+    override fun recupererIdsCentresInteretsInexistants(ids: List<String>): List<String> {
+        val existingIds = interetSousCategorieJPARepository.findExistingIds(ids)
+        return ids.filterNot { existingIds.contains(it) }
     }
 }

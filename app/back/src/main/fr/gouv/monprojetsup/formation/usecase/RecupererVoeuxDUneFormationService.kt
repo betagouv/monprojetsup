@@ -14,7 +14,7 @@ class RecupererVoeuxDUneFormationService(
 ) {
     fun recupererVoeuxTriesParAffinites(
         idsFormations: List<String>,
-        profilEleve: ProfilEleve.Identifie,
+        profilEleve: ProfilEleve.AvecProfilExistant,
     ): Map<String, List<Voeu>> {
         val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
         val messagesDeWarning = mutableListOf<String>()
@@ -35,7 +35,7 @@ class RecupererVoeuxDUneFormationService(
 
     fun recupererVoeuxTriesParAffinites(
         idFormation: String,
-        profilEleve: ProfilEleve.Identifie,
+        profilEleve: ProfilEleve.AvecProfilExistant,
     ): List<Voeu> {
         val voeux = voeuRepository.recupererLesVoeuxDUneFormation(idFormation)
         val messagesDeWarning = mutableListOf<String>()
@@ -57,7 +57,7 @@ class RecupererVoeuxDUneFormationService(
 
     private fun triesParAffinitesVoeux(
         voeux: List<Voeu>,
-        profilEleve: ProfilEleve.Identifie,
+        profilEleve: ProfilEleve.AvecProfilExistant,
         messagesDeWarning: MutableList<String>,
     ): List<Voeu> {
         return profilEleve.communesFavorites?.takeUnless { it.isEmpty() }?.let { communesFavorites ->

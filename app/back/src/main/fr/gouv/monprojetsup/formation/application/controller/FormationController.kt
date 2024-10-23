@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
-import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.Identifie
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.AvecProfilExistant
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve.SansCompte
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.hateoas.domain.PaginationConstants.NUMERO_PREMIERE_PAGE
@@ -54,7 +54,7 @@ class FormationController(
         if (numeroDePage < NUMERO_PREMIERE_PAGE) {
             throw MonProjetSupBadRequestException("PAGINATION_COMMENCE_A_1", "La pagination commence à 1")
         }
-        val profilEleve = recupererEleveIdentifie()
+        val profilEleve = recupererEleveAvecProfilExistant()
         val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(profilEleve)
         val hateoas =
             hateoasBuilder.creerHateoas(
@@ -89,7 +89,7 @@ class FormationController(
         val resultatRecherche = recupererLesFormationsAssocieesALaRecherche(recherche)
         val formationsTriees =
             when (val utilisateur = recupererUtilisateur()) {
-                is Identifie ->
+                is AvecProfilExistant ->
                     ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(
                         resultats = resultatRecherche,
                         formationsAvecLeurAffinite =
@@ -125,7 +125,7 @@ class FormationController(
     ): FormationsAvecExplicationsDTO {
         val resultatRecherche = recupererLesFormationsAssocieesALaRecherche(recherche)
         return when (val utilisateur = recupererUtilisateur()) {
-            is Identifie -> {
+            is AvecProfilExistant -> {
                 val suggestions = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(utilisateur)
                 val formationRechercheesTriees =
                     ordonnerRechercheFormationsBuilder.trierParScoreEtSelonSuggestionsProfil(resultatRecherche, suggestions.formations)
@@ -171,7 +171,7 @@ class FormationController(
     ): FormationAvecExplicationsDTO {
         val profil =
             when (val utilisateur = recupererUtilisateur()) {
-                is Identifie -> utilisateur
+                is AvecProfilExistant -> utilisateur
                 is SansCompte, ProfilConnnecte, null -> null
             }
         val ficheFormation = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = idFormation)
@@ -197,7 +197,7 @@ class FormationController(
             )
         val formations =
             when (val utilisateur = recupererUtilisateur()) {
-                is Identifie ->
+                is AvecProfilExistant ->
                     recupererFormationsService.recupererFichesFormationPourProfil(
                         profilEleve = utilisateur,
                         suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(utilisateur),

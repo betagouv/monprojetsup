@@ -10,5 +10,5 @@ interface MetierRepository {
 
     fun recupererLesMetiersAvecSesFormations(ids: List<String>): List<MetierAvecSesFormations>
 
-    fun verifierMetiersExistent(ids: List<String>): Boolean
+    fun recupererIdsMetiersInexistants(ids: List<String>): List<String>
 }

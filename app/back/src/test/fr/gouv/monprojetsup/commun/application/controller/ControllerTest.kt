@@ -1,10 +1,10 @@
 package fr.gouv.monprojetsup.commun.application.controller
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
 import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
 import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -20,19 +20,19 @@ import org.springframework.test.context.ContextConfiguration
 @Import(value = [SecuriteConfiguration::class])
 abstract class ControllerTest {
     @MockBean
-    lateinit var eleveRepository: EleveRepository
+    lateinit var recupererEleveService: RecupererEleveService
 
     @BeforeEach
     fun setup() {
-        given(eleveRepository.recupererUnEleve(id = idEleve)).willReturn(unProfilEleve)
-        given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+        given(recupererEleveService.recupererEleve(id = idEleve)).willReturn(unProfilEleve)
+        given(recupererEleveService.recupererEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
     }
 
     private val idEleve = "adcf627c-36dd-4df5-897b-159443a6d49c"
     val idEnseignant = "49e8e8c2-5eec-4eae-a90d-992225bbea1b"
 
     val unProfilEleve =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id = idEleve,
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.TERMINALE,

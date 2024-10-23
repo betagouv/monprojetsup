@@ -132,7 +132,7 @@ class IdentificationFilterTest(
     fun `si connecté avec un élève mais ne le reconnait pas, doit retourner 200 avec le détail des infos de l'élève et son authorité`() {
         // Given
         val id = "40422ae5-f535-4f9a-8a1f-9e24978c2b14"
-        given(eleveRepository.recupererUnEleve(id)).willReturn(ProfilEleve.SansCompte(id))
+        given(recupererEleveService.recupererEleve(id)).willReturn(ProfilEleve.SansCompte(id))
 
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isOk)
@@ -196,13 +196,13 @@ class IdentificationFilterTest(
                     """.trimIndent(),
                 ),
             )
-        then(eleveRepository).shouldHaveNoInteractions()
+        then(recupererEleveService).shouldHaveNoInteractions()
     }
 
     @Test
     fun `si pas connecté, doit retourner 401 avec body vide`() {
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isUnauthorized)
-        then(eleveRepository).shouldHaveNoInteractions()
+        then(recupererEleveService).shouldHaveNoInteractions()
     }
 }

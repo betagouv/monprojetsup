@@ -63,7 +63,7 @@ class MiseAJourEleveServiceTest {
     }
 
     private val profilEleve =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
@@ -94,7 +94,7 @@ class MiseAJourEleveServiceTest {
             corbeilleFormations = listOf("fl1234", "fl5678"),
         )
 
-    private val profilVide = ProfilEleve.Identifie(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
+    private val profilVide = ProfilEleve.AvecProfilExistant(id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15")
     private val modificationProfilEleveVide = ModificationProfilEleve()
 
     @Nested
@@ -297,7 +297,7 @@ class MiseAJourEleveServiceTest {
             // Given
             val metiersFavoris = listOf("MET_INCONNU", "MET001")
             val nouveauProfil = modificationProfilEleveVide.copy(metiersFavoris = metiersFavoris)
-            given(metierRepository.verifierMetiersExistent(metiersFavoris)).willReturn(false)
+            given(metierRepository.recupererIdsMetiersInexistants(metiersFavoris)).willReturn(listOf("MET_INCONNU"))
 
             // When & Then
             assertThatThrownBy {
@@ -305,7 +305,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des métiers n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les métiers [MET_INCONNU] n'existent pas")
         }
 
         @Test
@@ -329,7 +329,7 @@ class MiseAJourEleveServiceTest {
             // Given
             val domaines = listOf("inconnu", "animaux")
             val nouveauProfil = modificationProfilEleveVide.copy(domainesInterets = domaines)
-            given(domaineRepository.verifierDomainesExistent(domaines)).willReturn(false)
+            given(domaineRepository.recupererIdsDomainesInexistants(domaines)).willReturn(listOf("inconnu"))
 
             // When & Then
             assertThatThrownBy {
@@ -337,7 +337,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des domaines n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les domaines [inconnu] n'existent pas")
         }
 
         @Test
@@ -345,7 +345,7 @@ class MiseAJourEleveServiceTest {
             // Given
             val interets = listOf("inconnu", "linguistique", "voyage")
             val nouveauProfil = modificationProfilEleveVide.copy(centresInterets = interets)
-            given(interetRepository.verifierCentresInteretsExistent(interets)).willReturn(false)
+            given(interetRepository.recupererIdsCentresInteretsInexistants(interets)).willReturn(listOf("inconnu"))
 
             // When & Then
             assertThatThrownBy {
@@ -353,7 +353,7 @@ class MiseAJourEleveServiceTest {
                     miseAJourDuProfil = nouveauProfil,
                     profilActuel = profilVide,
                 )
-            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Un ou plusieurs des centres d'intérêt n'existent pas")
+            }.isInstanceOf(MonProjetSupBadRequestException::class.java).hasMessage("Les centres d'intérêt [inconnu] n'existent pas")
         }
     }
 
@@ -384,8 +384,8 @@ class MiseAJourEleveServiceTest {
                     corbeilleFormations = corbeilleFormations,
                 )
             given(
-                formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
-            ).willReturn(false)
+                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+            ).willReturn(listOf("flInconnue"))
 
             // When & Then
             assertThatThrownBy {
@@ -395,7 +395,7 @@ class MiseAJourEleveServiceTest {
                 )
             }.isInstanceOf(
                 MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
         }
 
         @Test
@@ -417,7 +417,9 @@ class MiseAJourEleveServiceTest {
                     ),
                 )
             val nouveauProfil = modificationProfilEleveVide.copy(formationsFavorites = formationsFavorites)
-            given(formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001"))).willReturn(false)
+            given(
+                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("flInconnue", "fl0001")),
+            ).willReturn(listOf("flInconnue"))
 
             // When & Then
             assertThatThrownBy {
@@ -427,7 +429,7 @@ class MiseAJourEleveServiceTest {
                 )
             }.isInstanceOf(
                 MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
         }
 
         @Test
@@ -435,7 +437,7 @@ class MiseAJourEleveServiceTest {
             // Given
             val corbeilleFormations = listOf("flInconnue", "fl1234", "fl5678")
             val nouveauProfil = modificationProfilEleveVide.copy(corbeilleFormations = corbeilleFormations)
-            given(formationRepository.verifierFormationsExistent(corbeilleFormations)).willReturn(false)
+            given(formationRepository.recupererIdsFormationsInexistantes(corbeilleFormations)).willReturn(listOf("flInconnue"))
 
             // When & Then
             assertThatThrownBy {
@@ -445,7 +447,7 @@ class MiseAJourEleveServiceTest {
                 )
             }.isInstanceOf(
                 MonProjetSupBadRequestException::class.java,
-            ).hasMessage("Une ou plusieurs des formations envoyées n'existent pas")
+            ).hasMessage("Les formations [flInconnue] envoyées n'existent pas")
         }
 
         @Test
@@ -473,8 +475,8 @@ class MiseAJourEleveServiceTest {
                     corbeilleFormations = corbeilleFormations,
                 )
             given(
-                formationRepository.verifierFormationsExistent(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
-            ).willReturn(false)
+                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("flInconnue", "fl0001") + corbeilleFormations),
+            ).willReturn(listOf("flInconnue"))
 
             // When & Then
             assertThatThrownBy {
@@ -588,7 +590,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si le repository renvoie une map vide, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
+            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -625,7 +627,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si le repository renvoie des listes vides, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
+            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -679,7 +681,7 @@ class MiseAJourEleveServiceTest {
         @Test
         fun `si un des voeux n'est pas présent da,ns la liste des possibilités, doit throw BadRequestException`() {
             // Given
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl1", "fl3"))).willReturn(true)
+            given(formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl1", "fl3"))).willReturn(emptyList())
             val nouveauProfil =
                 modificationProfilEleveVide.copy(
                     formationsFavorites =
@@ -869,10 +871,12 @@ class MiseAJourEleveServiceTest {
                     moyenneGenerale = 14.5f,
                     corbeilleFormations = listOf("fl0013"),
                 )
-            given(domaineRepository.verifierDomainesExistent(ids = listOf("agroequipement"))).willReturn(true)
-            given(interetRepository.verifierCentresInteretsExistent(ids = listOf("linguistique", "etude"))).willReturn(true)
-            given(metierRepository.verifierMetiersExistent(ids = listOf("MET004"))).willReturn(true)
-            given(formationRepository.verifierFormationsExistent(ids = listOf("fl0011", "fl0015", "fl0013"))).willReturn(true)
+            given(domaineRepository.recupererIdsDomainesInexistants(ids = listOf("agroequipement"))).willReturn(emptyList())
+            given(interetRepository.recupererIdsCentresInteretsInexistants(ids = listOf("linguistique", "etude"))).willReturn(emptyList())
+            given(metierRepository.recupererIdsMetiersInexistants(ids = listOf("MET004"))).willReturn(emptyList())
+            given(
+                formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl0011", "fl0015", "fl0013")),
+            ).willReturn(emptyList())
             given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl0011"))).willReturn(
                 mapOf(
                     "fl0011" to
@@ -903,7 +907,7 @@ class MiseAJourEleveServiceTest {
 
             // Then
             val nouveauProfil =
-                ProfilEleve.Identifie(
+                ProfilEleve.AvecProfilExistant(
                     id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
                     situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                     classe = ChoixNiveau.PREMIERE,
@@ -947,7 +951,7 @@ class MiseAJourEleveServiceTest {
 
             // Then
             val nouveauProfil =
-                ProfilEleve.Identifie(
+                ProfilEleve.AvecProfilExistant(
                     id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
                     situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                     classe = ChoixNiveau.SECONDE,

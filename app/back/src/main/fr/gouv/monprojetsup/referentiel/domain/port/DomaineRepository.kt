@@ -8,5 +8,5 @@ interface DomaineRepository {
 
     fun recupererTousLesDomainesEtLeursCategories(): Map<CategorieDomaine, List<Domaine>>
 
-    fun verifierDomainesExistent(ids: List<String>): Boolean
+    fun recupererIdsDomainesInexistants(ids: List<String>): List<String>
 }

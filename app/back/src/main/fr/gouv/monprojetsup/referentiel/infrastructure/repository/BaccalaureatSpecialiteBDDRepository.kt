@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.Specialite
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatSpecialiteRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class BaccalaureatSpecialiteBDDRepository(
@@ -30,6 +31,14 @@ class BaccalaureatSpecialiteBDDRepository(
                     specialites.first { it.id == paire.id.idSpecialite }.toSpecialite()
                 }
             baccalaureatEntity.toBaccalaureat() to specialitesDuBac
+        }
+    }
+
+    @Transactional(readOnly = true)
+    override fun recupererUnBaccalaureatEtLesIdsDeSesSpecialites(idBaccalaureat: String): Pair<String, List<String>>? {
+        return baccalaureatJPARepository.findById(idBaccalaureat).getOrNull()?.let { baccalaureat ->
+            val idsSpecialites = baccalaureatSpecialiteJPARepository.findAllByIdBaccalaureat(idBaccalaureat).map { it.id.idSpecialite }
+            Pair(baccalaureat.id, idsSpecialites)
         }
     }
 }

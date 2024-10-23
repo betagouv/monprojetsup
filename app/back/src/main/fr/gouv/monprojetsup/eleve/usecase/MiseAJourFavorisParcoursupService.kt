@@ -14,7 +14,7 @@ class MiseAJourFavorisParcoursupService(
     private val parcoursupApiHttpClient: ParcoursupApiHttpClient,
     private val voeuRepository: VoeuRepository,
 ) {
-    fun mettreAJourFavorisParcoursup(profil: ProfilEleve.Identifie): ProfilEleve.Identifie {
+    fun mettreAJourFavorisParcoursup(profil: ProfilEleve.AvecProfilExistant): ProfilEleve.AvecProfilExistant {
         val formationsFavorites = profil.formationsFavorites ?: emptyList()
         val idsVoeuxParcoursup = recupererFavorisParcoursup(profil.id).map { it.idVoeu }
 

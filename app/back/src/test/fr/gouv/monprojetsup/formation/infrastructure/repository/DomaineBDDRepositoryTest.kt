@@ -93,31 +93,31 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierDomainesExistent {
+    inner class RecupererIdsDomainesInexistants {
         @Test
         @Sql("classpath:domaine.sql")
-        fun `si toutes les domaines existent, renvoyer true`() {
+        fun `si toutes les domaines existent, renvoyer liste vide`() {
             // Given
             val ids = listOf("agroequipement", "animaux")
 
             // When
-            val result = domaineBDDRepository.verifierDomainesExistent(ids)
+            val result = domaineBDDRepository.recupererIdsDomainesInexistants(ids)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:domaine.sql")
-        fun `si un des domaines n'existe pas, renvoyer false`() {
+        fun `si un des domaines n'existe pas, renvoyer la liste de ces domaines`() {
             // Given
             val ids = listOf("agroequipement", "agriculture_alimentaire", "animaux")
 
             // When
-            val result = domaineBDDRepository.verifierDomainesExistent(ids)
+            val result = domaineBDDRepository.recupererIdsDomainesInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("agriculture_alimentaire"))
         }
     }
 }

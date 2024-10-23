@@ -29,7 +29,7 @@ data class APISuggestionProfilDTO(
     @field:JsonProperty(value = "choices")
     val choix: List<SuggestionDTO>?,
 ) {
-    constructor(profilEleve: ProfilEleve.Identifie) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this(
         classe = profilEleve.classe?.apiSuggestionValeur,
         baccalaureat =
             when (profilEleve.baccalaureat) {

@@ -13,5 +13,5 @@ interface FormationRepository {
 
     fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte>
 
-    fun verifierFormationsExistent(ids: List<String>): Boolean
+    fun recupererIdsFormationsInexistantes(ids: List<String>): List<String>
 }

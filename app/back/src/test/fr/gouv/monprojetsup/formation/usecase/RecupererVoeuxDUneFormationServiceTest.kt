@@ -38,7 +38,7 @@ class RecupererVoeuxDUneFormationServiceTest {
     lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
 
     @Mock
-    private lateinit var profilEleve: ProfilEleve.Identifie
+    private lateinit var profilEleve: ProfilEleve.AvecProfilExistant
 
     private val id = "f859056f-1f3b-49d4-96c8-2a93b925fbaa"
 

@@ -19,7 +19,7 @@ class APISuggestionProfilDTOTest {
     @ParameterizedTest
     @MethodSource("testsProfileDTO")
     fun `doit créer le ProfilDTO attendu`(
-        entree: ProfilEleve.Identifie,
+        entree: ProfilEleve.AvecProfilExistant,
         dtoAttendu: APISuggestionProfilDTO,
     ) {
         // When
@@ -31,7 +31,7 @@ class APISuggestionProfilDTOTest {
 
     companion object {
         private val unProfil =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "adcf627c-36dd-4df5-897b-159443a6d49c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
@@ -94,7 +94,7 @@ class APISuggestionProfilDTOTest {
             )
 
         private val profilEleveSeconde =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "a08266d7-7eca-4198-a753-9e6b168c277f",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.SECONDE,
@@ -156,7 +156,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveSecondeSTHR =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "915a5cf7-cf93-43f5-98db-39d6b4b0b8b7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.SECONDE,
@@ -193,7 +193,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveSecondeTMD =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "6d8aca7a-846c-4b42-b909-f1f8c8ab1e6a",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = ChoixNiveau.SECONDE,
@@ -240,7 +240,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilElevePremiere =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "93de7b80-d43e-4357-90ea-28a44beed8f7",
                 situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                 classe = ChoixNiveau.PREMIERE,
@@ -270,7 +270,7 @@ class APISuggestionProfilDTOTest {
             )
 
         private val profilEleveTerminal =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "de8c0c9c-a683-4f2f-9d1f-ccd5be89dd8c",
                 situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                 classe = ChoixNiveau.TERMINALE,
@@ -322,7 +322,7 @@ class APISuggestionProfilDTOTest {
                     ),
             )
         private val profilEleveNull =
-            ProfilEleve.Identifie(
+            ProfilEleve.AvecProfilExistant(
                 id = "3e72892b-b6bb-4d5e-b349-81c2adfd292b",
                 situation = SituationAvanceeProjetSup.QUELQUES_PISTES,
                 classe = null,

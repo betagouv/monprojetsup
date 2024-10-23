@@ -43,7 +43,7 @@ class ProfilEleveController(
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
     fun getProfilEleve(): ModificationProfilDTO {
-        val profil = recupererEleveIdentifie()
+        val profil = recupererEleveAvecProfilExistant()
         val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
         return ModificationProfilDTO(profilMisAJour)
     }

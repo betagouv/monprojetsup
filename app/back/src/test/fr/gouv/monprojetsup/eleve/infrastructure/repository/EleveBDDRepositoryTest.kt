@@ -35,7 +35,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     val profil0f88 =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15",
             situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
             classe = ChoixNiveau.SECONDE,
@@ -107,7 +107,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             val result = eleveBDDRepository.creerUnEleve(id = id)
 
             // Then
-            val attendu = ProfilEleve.Identifie(id = id)
+            val attendu = ProfilEleve.AvecProfilExistant(id = id)
             assertThat(result).isEqualTo(attendu)
         }
 
@@ -134,7 +134,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         fun `Quand l'élève existe, doit mettre à jour ses données qui ne sont pas à nulles`() {
             // Given
             val id = "0f88ddd1-62ef-436e-ad3f-cf56d5d14c15"
-            val nouveauProfil = ProfilEleve.Identifie(id = id)
+            val nouveauProfil = ProfilEleve.AvecProfilExistant(id = id)
 
             // When
             eleveBDDRepository.mettreAJourUnProfilEleve(profilEleve = nouveauProfil)
@@ -149,7 +149,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
         fun `Quand l'élève n'existe pas, doit throw une erreur`() {
             // Given
             val profilInconnu =
-                ProfilEleve.Identifie(
+                ProfilEleve.AvecProfilExistant(
                     id = "871a33a9-fd55-4d9d-9211-22edf3c3d1e5",
                     situation = SituationAvanceeProjetSup.AUCUNE_IDEE,
                     classe = ChoixNiveau.SECONDE,

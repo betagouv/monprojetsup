@@ -150,23 +150,23 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierCentresInteretsExistent {
+    inner class RecupererIdsCentresInteretsInexistants {
         @Test
         @Sql("classpath:interet.sql")
-        fun `si toutes les centres d'intérêt existent, renvoyer true`() {
+        fun `si toutes les centres d'intérêt existent, renvoyer la liste vide`() {
             // Given
             val ids = listOf("linguistique", "voyage")
 
             // When
-            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+            val result = interetBDDRepository.recupererIdsCentresInteretsInexistants(ids)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:interet.sql")
-        fun `si un des centres d'intérêt n'existe pas, renvoyer false`() {
+        fun `si un des centres d'intérêt n'existe pas, renvoyer la liste des centres n'existant pas`() {
             // Given
             val ids =
                 listOf(
@@ -177,10 +177,10 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = interetBDDRepository.verifierCentresInteretsExistent(ids)
+            val result = interetBDDRepository.recupererIdsCentresInteretsInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("decouvrir_monde", "T_ROME_1825212206"))
         }
     }
 }
