@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.data.model.stats;
 
 import fr.gouv.monprojetsup.data.tools.Serialisation;
-import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,13 +38,13 @@ public class PsupStatistiques implements Serializable {
     //par groupe puis par bac
     public final @NotNull Map<@NotNull Integer, @NotNull String> matieres = new TreeMap<>();
 
-    private AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats;
+    private @NotNull AdmisMatiereBacAnneeStats admisMatiereBacAnneeStats = new AdmisMatiereBacAnneeStats();
 
     //par groupe puis par bac
-    private transient @NotNull Map<String,@NotNull Map<@NotNull String, @NotNull Integer>> admisParGroupes = Map.of();
+    private transient @NotNull Map<String,@NotNull Map<@NotNull String, @NotNull Integer>> admisParGroupes = new HashMap<>();
 
     /* stats sur les spécialités des admis, vide pour les las */
-    private transient TauxSpecialitesParGroupe statsSpecialites;
+    private transient @NotNull TauxSpecialitesParGroupe statsSpecialites = new TauxSpecialitesParGroupe();
 
     public PsupStatistiques() {
 
@@ -56,13 +55,13 @@ public class PsupStatistiques implements Serializable {
             Set<String> bacsKeys,
             Map<String,String> groups
     ) {
-        val statsAdmisParGroupe
+        StatistiquesAdmisParGroupe statsAdmisParGroupe
                 = stats.statsAdmis.createGroupAdmisStatistique(groups, bacsKeys);
 
         statsAdmisParGroupe.rebuilMiddle50();
         statsAdmisParGroupe.removeEmptyGroups();
 
-        val result = new PsupStatistiques();
+        PsupStatistiques result = new PsupStatistiques();
         result.setAnnee(stats.getAnnee());
         result.statsAdmis.parGroupe().putAll(statsAdmisParGroupe.parGroupe());
         result.matieres.putAll(stats.matieres);

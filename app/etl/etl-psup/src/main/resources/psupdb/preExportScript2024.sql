@@ -5,6 +5,21 @@ define MOYENNE_BAC_I_EB_COD = 20;
 drop view mps_annee;
 CREATE VIEW mps_annee as select max(a_am_dat) A_AM_DAT_MAX from a_adm;
 
+DROP TABLE mps_specs;
+CREATE TABLE mps_specs as 
+(
+    select distinct i_cl_cod, i_ne_cod, i_ne_lib, i_sp_cod, i_sp_lib, i_mt_cod, i_mt_lib
+    from sp_bul_sco
+    where
+--i_cl_cod in ('STAV','ST2S','S2TMD','STMG','STL','STHR','STD2A','STI2D', 'Générale') and 
+    sp_bs_flg_eds = 1
+    and sp_flg_ouv = 1
+    and i_cs_ann = 0
+    and i_ne_cod in (1,10)
+ --   order by i_cl_cod,i_mt_lib
+);
+
+select * from mps_specs order by i_cl_cod,i_mt_lib;
 
 DROP TABLE mps_admis;
 CREATE TABLE mps_admis as (select distinct can.g_cn_cod
@@ -259,3 +274,28 @@ order by i_mt_cod;
 drop table mps_v_fil_car;
 create table mps_v_fil_car as select * from v_fil_car;
 
+drop table mps_bacs_spe;
+create table mps_bacs_spe as
+select mn.b_mf_cod_nat, mn.b_mf_lib_lon, mn.i_sp_cod , sp.i_sp_lib, i_cl_cod
+from b_mef_nat mn
+inner join i_spe sp on sp.i_sp_cod = mn.i_sp_cod
+where 
+--i_cl_cod in ('P','PA') and 
+i_ne_cod = 10 -- terminale
+and b_mf_dat_fer is null
+;
+
+drop table mps_admis_bacs_spe;
+create table mps_admis_bacs_spe as
+(select cs.i_cl_cod, cs.i_sp_cod, maf.g_ta_cod,  count(*) nb
+from i_can_sco cs , mps_admis_formations maf
+where 
+cs.g_cn_cod=maf.g_cn_cod
+and cs.i_ne_cod = 10 --élève terminale
+and cs.i_cs_ann = 0 --anné scolaire actuelle
+--and cs.i_cl_cod in ('P','PA') --cddt pro ou pro agri
+group by cs.i_cl_cod, cs.i_sp_cod, maf.g_ta_cod)
+;
+
+--select i_cl_cod, i_sp_cod, g_ta_cod,  nb from mps_admis_bacs_spe;
+select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe;
