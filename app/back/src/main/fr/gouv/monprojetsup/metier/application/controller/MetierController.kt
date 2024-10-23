@@ -28,7 +28,9 @@ class MetierController(
     @GetMapping("/recherche/succincte")
     @Operation(
         summary = "Rechercher des métiers selons des mots clés",
-        description = "Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à $TAILLE_LOT_RECHERCHE_SUCCINCTE résultats par page.",
+        description =
+            "Renvoie les métiers correspondant à la recherche, triés par pertinence. Ce endpoint est paginé à " +
+                "$TAILLE_LOT_RECHERCHE_SUCCINCTE résultats par page.",
     )
     fun getRechercheMetierSuccincte(
         @RequestParam recherche: String,
@@ -59,7 +61,9 @@ class MetierController(
     @GetMapping
     @Operation(
         summary = "Récupérer des métiers en indiquant leurs ids",
-        description = "Renvoie les métiers correspondant aux ids dans l'ordre donné. Ce endpoint est paginé à $TAILLE_LOT_ID résultats par page.",
+        description =
+            "Renvoie les métiers correspondant aux ids dans l'ordre donné. Ce endpoint est paginé à " +
+                "$TAILLE_LOT_ID résultats par page.",
     )
     fun getMetiers(
         @RequestParam ids: List<String>,
