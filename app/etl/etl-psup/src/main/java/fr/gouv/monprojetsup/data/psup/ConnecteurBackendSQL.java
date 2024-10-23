@@ -116,7 +116,7 @@ public class ConnecteurBackendSQL {
         }
     }
 
-    public PsupData recupererData() throws Exception {
+    public PsupData recupererData(@NotNull Set<Integer> eds) throws Exception {
         PsupData data = new PsupData();
 
         recupererAnnee(data);
@@ -140,7 +140,7 @@ public class ConnecteurBackendSQL {
         recupererVoeuxParCandidat(data, bacs);
 
         Map<Integer, Integer> speBacs = recupereBacsSpecialitesCandidats();
-        recupererProfilsScolaires(data.stats(), bacs, speBacs);
+        recupererProfilsScolaires(data.stats(), bacs, speBacs, eds);
 
         data.cleanupAfterUpdate();
 
@@ -601,6 +601,7 @@ public class ConnecteurBackendSQL {
                             String group,
                             Set<Integer> gcns,
                             Map<Integer, Map<String, Double>> datasCandidatsMoyennes) {
+
         gcns.forEach(gcn -> {
             Map<String, Double> notes = datasCandidatsMoyennes.get(gcn);
             if(notes != null) {
@@ -625,8 +626,8 @@ public class ConnecteurBackendSQL {
     private void recupererProfilsScolaires(
             PsupStatistiques data,
             Map<Integer, String> bacs,
-            Map<Integer, Integer> spebacs
-            ) throws SQLException {
+            Map<Integer, Integer> spebacs,
+            @NotNull Set<Integer> eds) throws SQLException {
 
 
         //bac / groupe / compteur
@@ -662,10 +663,12 @@ public class ConnecteurBackendSQL {
                 while (result.next()) {
                     int gCnCod = result.getInt(1);
                     int iMtCod = result.getInt(2);
-                    double note = result.getDouble(3);
-                    datasCandidatsMoyennes
-                            .computeIfAbsent(gCnCod, z -> new HashMap<>())
-                            .put(Specialite.idPsupMatToIdMps(iMtCod), note);
+                    if(eds.contains(iMtCod)) {
+                        double note = result.getDouble(3);
+                        datasCandidatsMoyennes
+                                .computeIfAbsent(gCnCod, z -> new HashMap<>())
+                                .put(Specialite.idPsupMatToIdMps(iMtCod), note);
+                    }
                 }
             }
         }
