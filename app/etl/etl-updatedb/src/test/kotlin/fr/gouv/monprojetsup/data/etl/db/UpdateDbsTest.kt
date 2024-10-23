@@ -1,9 +1,11 @@
 package fr.gouv.monprojetsup.data.etl.db
 
 import fr.gouv.monprojetsup.data.TestData
+import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
 import fr.gouv.monprojetsup.data.etl.formation.VillesVoeuxDb
+import fr.gouv.monprojetsup.data.etl.formation.VoeuxDb
 import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
 import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
@@ -12,6 +14,9 @@ import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsCandidatsDb
 import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsEdgesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsVillesDb
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
+import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
+import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -35,6 +40,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var formationsdb: FormationDb
 
         @Autowired
+        lateinit var voeuxDb: VoeuxDb
+
+        @Autowired
         lateinit var updateReferentielsDbs: UpdateReferentielDbs
 
         @Autowired
@@ -42,6 +50,9 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
         @Autowired
         lateinit var updateFormationDbs: UpdateFormationDbs
+
+        @Autowired
+        lateinit var batchUpdate: BatchUpdate
 
         @BeforeEach
         fun init() {
@@ -72,6 +83,40 @@ class UpdateDbsTest : BDDRepositoryTest() {
             //When
             val formation = formationsdb.findAll()
             assertThat(formation).allSatisfy { it.stats.toStats().inclutTousBacs() }
+        }
+
+        @Test
+        fun `Une formation ou un voeu qui disparait est marqué obsolete`() {
+            //When
+            val formation =  FormationEntity().apply {
+                id = "obsolete"
+                label = "label"
+                liens = listOf()
+                obsolete = false
+            }
+            batchUpdate.upsertEntities(listOf(formation))
+
+            val voeu = VoeuEntity().apply {
+                id = "obsolete"
+                nom = "label"
+                commune = ""
+                codeCommune = ""
+                idFormation = "obsolete"
+                lat = 0.0
+                lng = 0.0
+                obsolete = false
+                descriptif = DescriptifVoeu(0,0,0,"","","","")
+                capacite = 0
+                obsolete = false
+            }
+            batchUpdate.upsertEntities(listOf(voeu))
+
+            updateFormationDbs.updateFormationsDb()
+            updateFormationDbs.updateVoeuxDb()
+            val formation2 = formationsdb.findById("obsolete").orElse(null)
+            assertThat(formation2?.obsolete)
+            val voeu2 = voeuxDb.findById("obsolete").orElse(null)
+            assertThat(voeu2?.obsolete)
         }
 
     }

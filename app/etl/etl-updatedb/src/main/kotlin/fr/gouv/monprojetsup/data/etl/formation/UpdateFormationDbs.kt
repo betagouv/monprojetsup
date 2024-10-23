@@ -105,10 +105,21 @@ class UpdateFormationDbs(
             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
             voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
         }
+
+        val voeuxIds = voeux.map { it.key }.toSet()
+        val voeuxObsoletes = HashSet(voeuxDb.findAll())
+        voeuxObsoletes.removeIf { f -> voeuxIds.contains(f.id) }
+        if(voeuxObsoletes.isNotEmpty()) {
+            logger.info("Marquage de ${voeuxObsoletes.count()} voeux obsoletes")
+            voeuxObsoletes.forEach { it.obsolete = true }
+            batchUpdate.upsertEntities(voeuxObsoletes)
+        }
+
         batchUpdate.setEntities(
             VoeuEntity::class.simpleName!!,
             voeuxEntities
         )
+
     }
 
      fun updateFormationsDb() {
@@ -131,30 +142,26 @@ class UpdateFormationDbs(
          val mpsKeyToPsupKeys = mpsDataPort.getMpsIdToPsupFlIds()
          val mpsKeyToIdeoKeys = mpsDataPort.getMpsIdToIdeoIds()
 
-         val deprecatedFormations = HashSet(formationDb.findAll())
-         deprecatedFormations.removeIf { f -> formationsMpsIds.contains(f.id) }
-         val deprecatedWishes = deprecatedFormations.flatMap { f -> f.voeux }.toSet()
-         if(deprecatedWishes.isNotEmpty()) {
-             logger.info("Suppression des ${deprecatedWishes.count()} voeux non présents dans les données actuelles")
-             batchUpdate.deleteEntities(deprecatedWishes)
-         }
-         if(deprecatedFormations.isNotEmpty()) {
-             logger.info("Suppression des ${deprecatedFormations.count()} formations non présentes dans les données actuelles")
-             batchUpdate.deleteEntities(deprecatedFormations)
+         val formationsObsoletes = HashSet(formationDb.findAll())
+         formationsObsoletes.removeIf { f -> formationsMpsIds.contains(f.id) }
+         if(formationsObsoletes.isNotEmpty()) {
+             logger.info("Marquage de ${formationsObsoletes.count()} formations obsoletes")
+             formationsObsoletes.forEach { it.obsolete = true }
+             batchUpdate.upsertEntities(formationsObsoletes)
          }
 
          val formationEntities = ArrayList<FormationEntity>()
          formationsMpsIds.forEach { id ->
+             val label = labels[id] ?: throw RuntimeException("Pas de label pour la formation $id")
              val entity = FormationEntity()
              entity.id = id
-             val label = labels[id] ?: throw RuntimeException("Pas de label pour la formation $id")
+             entity.obsolete = false
              entity.label = label
              entity.typeFormation = formationToTypeformation.getOrDefault(id, id)
              entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(id).orEmpty()
              entity.descriptifDiplome = descriptifs.getDescriptifDiplomeFront(id).orEmpty()
              entity.descriptifAttendus = attendus[id].orEmpty()
              entity.descriptifConseils = conseils[id].orEmpty()
-
              entity.formationsAssociees = mpsKeyToPsupKeys.getOrDefault(id, setOf(id)).toList().sorted()
              entity.formationsIdeo = mpsKeyToIdeoKeys[id].orEmpty().sorted()
 
