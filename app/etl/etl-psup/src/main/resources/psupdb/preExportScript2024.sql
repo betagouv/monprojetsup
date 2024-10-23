@@ -37,7 +37,7 @@ CREATE TABLE mps_admis as (select distinct can.g_cn_cod
                                            and can.g_pn_cod=g_pro_new.g_pn_cod
                                            and g_pro_new.g_pm_cod=1);
 ALTER TABLE mps_admis ADD  CONSTRAINT constr PRIMARY KEY (g_cn_cod);
-             
+
 drop table mps_bacs_candidats;
 create table mps_bacs_candidats as
     (select admis.g_cn_cod g_cn_cod,can.i_cl_cod i_cl_cod
@@ -80,7 +80,7 @@ CREATE TABLE mps_admis_formations as (select distinct can.g_cn_cod,aff.g_ta_cod 
                                        and asv.a_sv_flg_aff=1
                                        and can.g_pn_cod=g_pro_new.g_pn_cod
                                        and g_pro_new.g_pm_cod=1);   
-ALTER TABLE mps_admis_formations ADD  CONSTRAINT constr_adm_for PRIMARY KEY (g_cn_cod,g_ta_cod);
+ALTER TABLE mps_admis_formations ADD  CONSTRAINT constr_adm_forr PRIMARY KEY (g_cn_cod,g_ta_cod);
 
 
 drop table mps_matieres;
@@ -261,36 +261,38 @@ and cs.i_cs_ann = 0 --ann� scolaire actuelle
 
 drop table mps_prepas_bacs_pro;
 create table mps_prepas_bacs_pro as
-select g_ta_cod
-from i_cla_spe_fil_cnd_ins ci
+select distinct g_ta_cod
+from i_cla_spe_fil_cnd_ins ci, a_rec_grp arg
 where
 --autorisation d'inscription
 i_ci_flg_int = 0
 --pour des séries de classes pro
 AND i_cl_cod in ('P','PA')
+and ci.g_ti_cod=arg.g_ti_cod
 --les cnd inscription sont sur une CPGE
 AND exists (
            select 1
            from sp_g_tri_ins
-           where g_ti_cod = ci.g_ti_cod
+           where sp_g_tri_ins.g_ti_cod = ci.g_ti_cod
            and g_tf_cod = 1
            )
 ;
 
 drop table mps_prepas_slt_bacs_pro;
 create table mps_prepas_slt_bacs_pro as
-select g_ta_cod
-from i_cla_spe_fil_cnd_ins ci
+select distinct g_ta_cod
+from i_cla_spe_fil_cnd_ins ci, a_rec_grp arg
 where
 --autorisation d'inscription
 i_ci_flg_int = 0
 --pour des séries de classes pro
 AND i_cl_cod in ('P','PA')
+and ci.g_ti_cod=arg.g_ti_cod
 --les cnd inscription sont sur une CPGE
 AND exists (
            select 1
            from sp_g_tri_ins
-           where g_ti_cod = ci.g_ti_cod
+           where sp_g_tri_ins.g_ti_cod = ci.g_ti_cod
            and g_tf_cod = 1
            )
 --pas de cnd insc sur d'autres classes que les séries pro pour cette formation si tu veux des prépas exclusivement réservées aux pros
@@ -298,11 +300,13 @@ AND exists (
 AND NOT EXISTS (
                select 1
                from i_cla_spe_fil_cnd_ins
-               where g_ti_cod = ci.g_ti_cod
+               where i_cla_spe_fil_cnd_ins.g_ti_cod = ci.g_ti_cod
                and i_cl_cod not in ('P','PA')
                )
-order by g_ti_cod
+order by arg.g_ta_cod
 ;
 
 --select i_cl_cod, i_sp_cod, g_ta_cod,  nb from mps_admis_bacs_spe;
 select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe;
+select g_ta_cod from mps_prepas_bacs_pro;
+select g_ta_cod from mps_prepas_slt_bacs_pro;
