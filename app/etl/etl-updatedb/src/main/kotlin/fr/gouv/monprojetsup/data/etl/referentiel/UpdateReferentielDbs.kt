@@ -104,21 +104,22 @@ class UpdateReferentielDbs(
 
     private fun updateBaccalaureatSpecialiteDb() {
         val specialites = mpsDataPort.getSpecialites()
-        val bacsKeys = mpsDataPort.getBacs().map { b -> b.key }.toSet()
-        batchUpdate.upsertEntities(
-            specialites.specialitesParBac
-                .filter { s -> bacsKeys.contains(s.key) }
-                .flatMap {
-                    it.value.map { bacSpec ->
-                        BaccalaureatSpecialiteEntity().apply {
-                            id = BaccalaureatSpecialiteId(
-                                it.key,
-                                bacSpec
-                            )
-                        }
+        val bacsKeys = mpsDataPort.getBacs().map { it.key }.toSet()
+        val entities = specialites.specialitesParBac
+            .filter { s -> bacsKeys.contains(s.key) }
+            .flatMap {
+                it.value.map { bacSpec ->
+                    BaccalaureatSpecialiteEntity().apply {
+                        id = BaccalaureatSpecialiteId(
+                            it.key,
+                            bacSpec
+                        )
+                        idSpecialite = it.key
+                        idBaccalaureat = bacSpec
                     }
                 }
-        )
+            }
+        batchUpdate.setEntities(BaccalaureatSpecialiteEntity::class.simpleName!!, entities)
     }
 
     private fun updateInteretDbs() {

@@ -8,6 +8,7 @@ import fr.gouv.monprojetsup.data.etl.formation.VillesVoeuxDb
 import fr.gouv.monprojetsup.data.etl.formation.VoeuxDb
 import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
+import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatDb
 import fr.gouv.monprojetsup.data.etl.referentiel.BaccalaureatSpecialiteDb
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
 import fr.gouv.monprojetsup.data.etl.suggestions.SuggestionsCandidatsDb
@@ -133,17 +134,27 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateReferentielDbs: UpdateReferentielDbs
 
         @Autowired
+        lateinit var baccalaureatDb: BaccalaureatDb
+
+        @Autowired
+        lateinit var specialiteDb: BaccalaureatSpecialiteDb
+
+        @Autowired
         lateinit var specialitesBacDb: BaccalaureatSpecialiteDb
 
-        @Test
-        fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
-            assertDoesNotThrow { updateReferentielDbs.updateReferentielDbs() }
+        @BeforeEach
+        fun init() {
+            updateReferentielDbs.updateReferentielDbs()
         }
 
         @Test
-        fun `La table join_baccalaureat_specialite doit être non vide`() {
-            updateReferentielDbs.updateReferentielDbs()
-            assertThat(specialitesBacDb.findAll()).isNotEmpty
+        fun `Les table bacs et specialites doivent être non vide`() {
+            val bacs = baccalaureatDb.findAll()
+            val specialites = specialiteDb.findAll()
+            val specialitesBacs = specialitesBacDb.findAll()
+            assertThat(bacs).isNotEmpty
+            assertThat(specialites).isNotEmpty
+            assertThat(specialitesBacs).isNotEmpty
         }
     }
 
