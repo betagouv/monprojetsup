@@ -38,7 +38,7 @@ class Test extends InscriptionTestHelper {
 }
 
 test.describe("Inscription élève - Formations", () => {
-  test("Aucun champ n'est obligatoire pour passer à l'étape suivante", async ({ page }) => {
+  test("Le champ situation est obligatoire", async ({ page }) => {
     // GIVEN
     const testhelper = new Test(page);
     await testhelper.naviguerVersLaPage();
@@ -47,7 +47,7 @@ test.describe("Inscription élève - Formations", () => {
     await testhelper.soumettreLeFormulaire();
 
     // THEN
-    expect(page.url()).toContain(testhelper.urlPageSuivante);
+    await expect(testhelper.messageErreurChampObligatoire()).toBeVisible();
   });
 
   test.describe("Si j'indique que j'ai quelques idées de formations", () => {

@@ -1,9 +1,9 @@
-import { type FormationsFormProps, type SituationFormationsÉlève } from "./FormationsForm.interface";
+import { type FormationsFormProps } from "./FormationsForm.interface";
 import useFormationsForm from "./useFormationsForm";
-import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 
 const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: FormationsFormProps) => {
   const {
@@ -13,7 +13,7 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
     formationsSuggérées,
     formationsSélectionnéesParDéfaut,
     àLaRechercheDUneFormation,
-    rechercheFormationsEnCours,
+    rechercheEnCours,
   } = useFormationsForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
   return (
@@ -22,24 +22,24 @@ const FormationsForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Forma
       noValidate
       onSubmit={mettreÀJourÉlève}
     >
-      <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) =>
-          situationFormations.auChangement(valeur as SituationFormationsÉlève)
-        }
-        légende={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
+      <RadioButtons
+        legend={i18n.ÉLÈVE.FORMATIONS.SITUATION.LÉGENDE}
         options={situationFormations.options}
-        status={situationFormations.status}
+        orientation="horizontal"
+        state={situationFormations.status.type}
+        stateRelatedMessage={situationFormations.status.message}
       />
-      {situationFormations.valeur === "quelques_pistes" && formationsSélectionnéesParDéfaut && (
+      {situationFormations.optionSélectionnée === "quelques_pistes" && (
         <div className="mt-12">
           <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesFormationsSélectionnées}
             description={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.DESCRIPTION}
+            forcerRafraichissementOptionsSélectionnées
             label={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.LABEL}
             nombreDeCaractèreMinimumRecherche={constantes.FORMATIONS.NB_CARACTÈRES_MIN_RECHERCHE}
             optionsSuggérées={formationsSuggérées}
             optionsSélectionnéesParDéfaut={formationsSélectionnéesParDéfaut}
-            rechercheSuggestionsEnCours={rechercheFormationsEnCours}
+            rechercheSuggestionsEnCours={rechercheEnCours}
             texteOptionsSélectionnées={i18n.ÉLÈVE.FORMATIONS.FORMATIONS_ENVISAGÉES.SÉLECTIONNÉES}
             àLaRechercheDUneOption={àLaRechercheDUneFormation}
           />

@@ -1,9 +1,9 @@
-import { type MétiersFormProps, type SituationMétiersÉlève } from "./MétiersForm.interface";
+import { type MétiersFormProps } from "./MétiersForm.interface";
 import useMétiersForm from "./useMétiersForm";
-import BoutonRadioRiche from "@/components/BoutonRadioRiche/BoutonRadioRiche";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 
 const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: MétiersFormProps) => {
   const {
@@ -13,7 +13,7 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
     métiersSuggérés,
     métiersSélectionnésParDéfaut,
     àLaRechercheDUnMétier,
-    rechercheMétiersEnCours,
+    rechercheEnCours,
   } = useMétiersForm({ àLaSoumissionDuFormulaireAvecSuccès });
 
   return (
@@ -22,23 +22,25 @@ const MétiersForm = ({ àLaSoumissionDuFormulaireAvecSuccès, formId }: Métier
       noValidate
       onSubmit={mettreÀJourÉlève}
     >
-      <BoutonRadioRiche
-        auChangementValeurSélectionnée={(valeur) => situationMétiers.auChangement(valeur as SituationMétiersÉlève)}
-        description={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
-        légende={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
+      <RadioButtons
+        hintText={i18n.ÉLÈVE.MÉTIERS.SITUATION.DESCRIPTION}
+        legend={i18n.ÉLÈVE.MÉTIERS.SITUATION.LÉGENDE}
         options={situationMétiers.options}
-        status={situationMétiers.status}
+        orientation="horizontal"
+        state={situationMétiers.status.type}
+        stateRelatedMessage={situationMétiers.status.message}
       />
-      {situationMétiers.valeur === "quelques_pistes" && métiersSélectionnésParDéfaut && (
+      {situationMétiers.optionSélectionnée === "quelques_pistes" && (
         <div className="mt-12">
           <SélecteurMultiple
             auChangementOptionsSélectionnées={auChangementDesMétiersSélectionnés}
             description={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.DESCRIPTION}
+            forcerRafraichissementOptionsSélectionnées
             label={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.LABEL}
             nombreDeCaractèreMinimumRecherche={constantes.MÉTIERS.NB_CARACTÈRES_MIN_RECHERCHE}
             optionsSuggérées={métiersSuggérés}
             optionsSélectionnéesParDéfaut={métiersSélectionnésParDéfaut}
-            rechercheSuggestionsEnCours={rechercheMétiersEnCours}
+            rechercheSuggestionsEnCours={rechercheEnCours}
             texteOptionsSélectionnées={i18n.ÉLÈVE.MÉTIERS.MÉTIERS_ENVISAGÉS.SÉLECTIONNÉS}
             àLaRechercheDUneOption={àLaRechercheDUnMétier}
           />
