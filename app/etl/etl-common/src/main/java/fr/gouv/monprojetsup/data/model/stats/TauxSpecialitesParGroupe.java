@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-record TauxSpecialitesParGroupe(
+public record TauxSpecialitesParGroupe(
         Map<String, TauxSpecialites> parGroupe
 ) implements Serializable {
     public TauxSpecialitesParGroupe() {

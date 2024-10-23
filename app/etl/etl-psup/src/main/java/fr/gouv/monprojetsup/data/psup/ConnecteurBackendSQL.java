@@ -23,6 +23,7 @@ package fr.gouv.monprojetsup.data.psup;
 
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.Candidat;
+import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
 import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
@@ -46,7 +47,6 @@ import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
 
 public class ConnecteurBackendSQL {
 
-    public static final String LYCEENS_ADMIS_FILIERE = " mps_admis_filiere ";
     public static final String LYCEENS_ADMIS_FORMATION = " mps_admis_formations ";
     public static final String FOR_TYPE_TABLE = " mps_G_FOR " ;
     public static final String FIL_TYPE_TABLE = " mps_G_FIL " ;
@@ -54,7 +54,6 @@ public class ConnecteurBackendSQL {
     private static final Logger LOGGER = Logger.getLogger(ConnecteurBackendSQL.class.getSimpleName());
     private static final String FROM = " FROM ";
     private static final String MPS_V_FIL_CAR = " mps_v_fil_car ";
-    private static final String MPS_MATIERES = "mps_matieres";
     private static final String MPS_BACS_CANDIDATS = "mps_bacs_candidats";
 
     @NotNull
@@ -117,64 +116,6 @@ public class ConnecteurBackendSQL {
         }
     }
 
-    private void recupererStatsAdmisParFiliereEtSpecialites(PsupStatistiques stats, Map<Integer, String> bacs, Set<Integer> filActives) throws SQLException {
-
-        ConnecteurBackendSQL.LOGGER.info("Récupération du nombre de lycéens admis à n-1 dans chaque filière");
-        String sqlAdmisParFilieres =
-                "select g_cn_cod,g_fl_cod from " + ConnecteurBackendSQL.LYCEENS_ADMIS_FILIERE;
-        ConnecteurBackendSQL.LOGGER.info(sqlAdmisParFilieres);
-        try (Statement stmt = conn.createStatement()) {
-            stmt.setFetchSize(500000);
-            try (ResultSet result = stmt.executeQuery(sqlAdmisParFilieres)) {
-                while (result.next()) {
-                    int gCnCod = result.getInt(1);
-                    int gFlCod = result.getInt(2);
-                    if(!filActives.contains(gFlCod)) continue;
-                    String bac = bacs.get(gCnCod);
-                    if(bac != null) {
-                        String g = Constants.gFlCodToMpsId(gFlCod);
-                        stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, TOUS_BACS_CODE_MPS);
-                        stats.incrementeAdmisParFiliere(g, TOUS_BACS_CODE_MPS);
-                        if (!bac.equals(TOUS_BACS_CODE_MPS)) {
-                            stats.incrementeAdmisParFiliere(TOUS_GROUPES_CODE, bac);
-                            stats.incrementeAdmisParFiliere(g, bac);
-                        }
-                    }
-                }
-            }
-        }
-
-
-        ConnecteurBackendSQL.LOGGER.info("Récupération du nombre de lycéens admis à n-1 de chaque spécialité/matière dans chaque filière");
-        String sqlAdmisParFilieresMatieres =
-                "select count(*) cnt, i_mt_cod, g_fl_cod from "
-                        + LYCEENS_ADMIS_FILIERE + " admis_filiere, "
-                        + MPS_MATIERES + " matieres "
-                        +
-                        """
-                        where admis_filiere.g_cn_cod=matieres.g_cn_cod
-                        group by i_mt_cod,g_fl_cod
-                        order by g_fl_cod, cnt desc
-                        """;
-        ConnecteurBackendSQL.LOGGER.info(sqlAdmisParFilieresMatieres);
-        try (
-                Statement stmt = conn.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-            try (ResultSet result = stmt.executeQuery(sqlAdmisParFilieresMatieres)) {
-                while (result.next()) {
-                    int nb = result.getInt(1);
-                    int mtCod = result.getInt(2);
-                    int gFlCod = result.getInt(3);
-                    stats.setAdmisParFiliereMatiere(Constants.gFlCodToMpsId(gFlCod),mtCod,nb);
-                }
-            }
-        }
-
-
-    }
-
-
-
     public PsupData recupererData() throws Exception {
         PsupData data = new PsupData();
 
@@ -197,8 +138,9 @@ public class ConnecteurBackendSQL {
 
         Map<Integer, String> bacs = recupereBacsCandidats();
         recupererVoeuxParCandidat(data, bacs);
-        recupererProfilsScolaires(data.stats(), bacs);
-        recupererStatsAdmisParFiliereEtSpecialites(data.stats(), bacs, filActives);
+
+        Map<Integer, Integer> speBacs = recupereBacsSpecialitesCandidats();
+        recupererProfilsScolaires(data.stats(), bacs, speBacs);
 
         data.cleanupAfterUpdate();
 
@@ -217,6 +159,24 @@ public class ConnecteurBackendSQL {
                     int gCnCod = result.getInt(1);
                     String bac = result.getString(2);
                     bacs.put(gCnCod, bac);
+                }
+            }
+        }
+        return bacs;
+    }
+
+    private Map<Integer, Integer> recupereBacsSpecialitesCandidats() throws SQLException {
+        LOGGER.info("Récupération des bacs de chaque candidat");
+        Map<Integer, Integer> bacs = new HashMap<>();
+        try (Statement stmt = conn.createStatement()) {
+            stmt.setFetchSize(1_000_000);
+            String sql = "select g_cn_cod,i_sp_cod from mps_admis_bacs_spe";
+            LOGGER.info(sql);
+            try (ResultSet result = stmt.executeQuery(sql)) {
+                while (result.next()) {
+                    int gCnCod = result.getInt(1);
+                    int iSpCod = result.getInt(2);
+                    bacs.put(gCnCod, iSpCod);
                 }
             }
         }
@@ -300,8 +260,7 @@ public class ConnecteurBackendSQL {
                         "a_rec_grp", "select c_gp_cod,g_ti_cod,g_ta_cod,c_ja_cod,a_rg_pla,a_rg_nbr_sou from mps_a_rec_grp",
                         "g_fil_att_con", "select g_fl_cod,g_fl_lib,g_fl_des_att, g_fl_sig_mot_rec,g_fl_con_lyc_prem,g_fl_con_lyc_term, g_fl_typ_con_lyc from mps_g_fil",
                         "descriptions_formations", "select g_ta_cod,g_fr_cod_aff,g_fl_cod_aff,g_fl_lib_aff, g_ta_lib_voe, g_ta_des_deb, g_ta_des_ens from mps_descriptions_formations",
-                        "mps_bacs_spe", "select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe",
-                        "mps_admis_bacs_spe", "select i_cl_cod, i_sp_cod, g_ta_cod,  nb from mps_admis_bacs_spe"
+                        "mps_bacs_spe", "select b_mf_cod_nat, b_mf_lib_lon, i_sp_cod , i_sp_lib, i_cl_cod from mps_bacs_spe"
                 )
         );
         data.diversPsup().putAll(o);
@@ -621,12 +580,13 @@ public class ConnecteurBackendSQL {
 
 
     //group bac mat
-    Map<String, Map<String, Map<Integer, int[] >>> percCounters = new HashMap<>();
-    void incremente(String bac, String group, int mat, double note) {
+    Map<String, Map<String, Map<String, int[] >>> percCounters = new HashMap<>();
+
+    void incremente(String bac, String group, String matCod, double note) {
         int[] c = percCounters
                 .computeIfAbsent(group, z -> new HashMap<>())
                 .computeIfAbsent(bac, z -> new HashMap<>())
-                .computeIfAbsent(mat, z -> new int[PsupStatistiques.PRECISION_PERCENTILES]);
+                .computeIfAbsent(matCod, z -> new int[PsupStatistiques.PRECISION_PERCENTILES]);
         int percentile = Math.max(0,
                 Math.min(PsupStatistiques.PRECISION_PERCENTILES-1,
                         (int) Math.floor( note / 20 * PsupStatistiques.PRECISION_PERCENTILES ))
@@ -635,66 +595,43 @@ public class ConnecteurBackendSQL {
     }
 
     private void incremente(Map<Integer, String> bacs,
+                            Map<Integer, Integer> spebacs,
                             String group,
                             Set<Integer> gcns,
-                            Map<Integer, Map<Integer, Double>> datasCandidatsMoyennes) {
+                            Map<Integer, Map<String, Double>> datasCandidatsMoyennes) {
         gcns.forEach(gcn -> {
-            Map<Integer, Double> notes = datasCandidatsMoyennes.get(gcn);
+            Map<String, Double> notes = datasCandidatsMoyennes.get(gcn);
             if(notes != null) {
-                String bac = bacs.getOrDefault(gcn, "?");
+                String bac = bacs.get(gcn);
+                Integer speBac = spebacs.get(gcn);
                 incremente(TOUS_BACS_CODE_MPS, group, MATIERE_ADMIS_CODE,20);
-                incremente(bac, group, MATIERE_ADMIS_CODE,20);
+                if(bac != null) incremente(bac, group, MATIERE_ADMIS_CODE,20);
+                if(speBac != null) {
+                    String speBAcStr = Specialite.idSpeBacPsupToIdMps(speBac);
+                    incremente(TOUS_BACS_CODE_MPS, group, speBAcStr,20);
+                    if(bac != null) incremente(bac, group, speBAcStr,20);
+                }
                 notes.forEach((matiere, note) -> {
-                    incremente(bac, group, matiere,note);
                     incremente(TOUS_BACS_CODE_MPS, group, matiere,note);
+                    if(bac != null) incremente(bac, group, matiere,note);
                 });
             }
         });
     }
 
 
-    private void recupererProfilsScolaires(PsupStatistiques data, Map<Integer, String> bacs) throws SQLException {
-        //recuperer matieres
-        data.ajouterMatiere(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE, "Moyenne générale");
-        LOGGER.info("Récupération des matières");
-        try (Statement stmt = conn.createStatement()) {
-            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
-            ConnecteurBackendSQL.LOGGER.info("Récupération des matières");
-            stmt.setFetchSize(1_000_000);
-            String sql = "select i_mt_cod,i_mt_lib from mps_matieres2";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int iMtCod = result.getInt(1);
-                    String iMtLib = result.getString(2);
-                    data.ajouterMatiere(iMtCod, iMtLib);
-                }
-            }
-        }
+    private void recupererProfilsScolaires(
+            PsupStatistiques data,
+            Map<Integer, String> bacs,
+            Map<Integer, Integer> spebacs
+            ) throws SQLException {
 
-        try (Statement stmt = conn.createStatement()) {
-            stmt.setFetchSize(1_000_000);
-            String sql = "select i_cs_ann," +
-                    "i_mt_cod, " +
-                    "i_cl_cod, " +
-                        "nb from mps_stats_mat_bac " +
-                    "order by i_mt_cod ";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int iCsAnn = result.getInt(1);
-                    int iMtCod = result.getInt(2);
-                    String iClCod = result.getString(3);
-                    int nb = result.getInt(4);
-                    data.ajouterStatMatiereBac(iCsAnn == 0 ?  PsupStatistiques.ANNEE_LYCEE_TERMINALE : PsupStatistiques.ANNEE_LYCEE_PREMIERE, iMtCod, iClCod, nb);
-                }
-            }
-        }
 
         //bac / groupe / compteur
         percCounters.clear();
 
-        Map<Integer, Map<Integer, Double>> datasCandidatsMoyennes = new HashMap<>();
+        //gCnCod / matiere / note
+        Map<Integer, Map<String, Double>> datasCandidatsMoyennes = new HashMap<>();
 
 
         ConnecteurBackendSQL.LOGGER.info("Récupération des  moyennes générales de chaque lycéen");
@@ -726,7 +663,7 @@ public class ConnecteurBackendSQL {
                     double note = result.getDouble(3);
                     datasCandidatsMoyennes
                             .computeIfAbsent(gCnCod, z -> new HashMap<>())
-                            .put(iMtCod, note);
+                            .put(Specialite.idPsupMatToIdMps(iMtCod), note);
                 }
             }
         }
@@ -748,8 +685,8 @@ public class ConnecteurBackendSQL {
         }
 
         percCounters.clear();
-        incremente(bacs, TOUS_GROUPES_CODE, datasCandidatsMoyennes.keySet(), datasCandidatsMoyennes);
-        gtaToGcn.forEach((gta, gcns) -> incremente(bacs, gta, gcns, datasCandidatsMoyennes));
+        incremente(bacs, spebacs, TOUS_GROUPES_CODE, datasCandidatsMoyennes.keySet(), datasCandidatsMoyennes);
+        gtaToGcn.forEach((gta, gcns) -> incremente(bacs, spebacs, gta, gcns, datasCandidatsMoyennes));
         data.setStatistiquesAdmisFromPercentileCounters(percCounters);
     }
 

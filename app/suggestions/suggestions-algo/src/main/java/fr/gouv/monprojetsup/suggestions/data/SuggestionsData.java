@@ -3,11 +3,8 @@ package fr.gouv.monprojetsup.suggestions.data;
 import fr.gouv.monprojetsup.data.model.Edge;
 import fr.gouv.monprojetsup.data.model.Formation;
 import fr.gouv.monprojetsup.data.model.LatLng;
-import fr.gouv.monprojetsup.data.model.Matiere;
-import fr.gouv.monprojetsup.data.model.StatsFormation;
 import fr.gouv.monprojetsup.data.model.Ville;
 import fr.gouv.monprojetsup.data.model.stats.Middle50;
-import fr.gouv.monprojetsup.data.model.stats.StatsContainers;
 import fr.gouv.monprojetsup.suggestions.Constants;
 import fr.gouv.monprojetsup.suggestions.algo.Config;
 import fr.gouv.monprojetsup.suggestions.port.ConfigPort;
@@ -15,7 +12,6 @@ import fr.gouv.monprojetsup.suggestions.port.EdgesPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsMetiersPort;
 import fr.gouv.monprojetsup.suggestions.port.FormationsPort;
 import fr.gouv.monprojetsup.suggestions.port.LabelsPort;
-import fr.gouv.monprojetsup.suggestions.port.MatieresPort;
 import fr.gouv.monprojetsup.suggestions.port.VillesPort;
 import lombok.Getter;
 import lombok.val;
@@ -28,15 +24,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE;
 import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
-import static fr.gouv.monprojetsup.data.model.stats.StatFront.getStatistique;
 import static fr.gouv.monprojetsup.suggestions.Constants.PASS_FL_COD;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p50;
 import static fr.gouv.monprojetsup.suggestions.tools.Stats.p75;
@@ -50,7 +43,6 @@ public class SuggestionsData {
     private final LabelsPort labelsPort;
     private final FormationsPort formationsPort;
     private final FormationsMetiersPort formationsMetierPort;
-    private final MatieresPort matieresPort;
     private final VillesPort villesPort;
     private final ConfigPort configPort;
 
@@ -59,7 +51,6 @@ public class SuggestionsData {
             EdgesPort edgesPort,
             LabelsPort labelsPort,
             FormationsPort formationsPort,
-            MatieresPort matieresPort,
             VillesPort villesPort,
             FormationsMetiersPort formationsMetierPort,
             ConfigPort configPort
@@ -67,14 +58,15 @@ public class SuggestionsData {
         this.edgesPort = edgesPort;
         this.labelsPort = labelsPort;
         this.formationsPort = formationsPort;
-        this.matieresPort = matieresPort;
         this.villesPort = villesPort;
         this.formationsMetierPort = formationsMetierPort;
         this.configPort = configPort;
-        val config = configPort.retrieveActiveConfig();
-        if(config == null) {
+        val activeConfig = configPort.retrieveActiveConfig();
+        if(activeConfig == null) {
             this.config = new Config();
             configPort.setActiveConfig(this.config);
+        } else {
+            this.config = activeConfig;
         }
     }
 
@@ -84,9 +76,9 @@ public class SuggestionsData {
     @Scheduled(fixedDelay = 1000) // Every second
     private void refreshConfig() {
         // Fetch the latest config from a database, external service, or file
-        val config = configPort.retrieveActiveConfig();
-        if(config != null) {
-            this.config = config;
+        val activeConfig = configPort.retrieveActiveConfig();
+        if(activeConfig != null) {
+            this.config = activeConfig;
         }
     }
 
@@ -134,15 +126,16 @@ public class SuggestionsData {
         if(f.isEmpty()) return null;
         val stats = f.get().stats().admissions();
         if(stats.containsKey(bac)) {
-            return Pair.of(bac, stats.get(bac).middle50());
+            return Pair.of(bac, stats.get(bac));
+        } else {
+            val d = stats.get(TOUS_BACS_CODE_MPS);
+            if(d == null) return null;
+            return Pair.of(TOUS_BACS_CODE_MPS, d);
         }
-        if(stats.containsKey(TOUS_BACS_CODE_MPS)) {
-            return Pair.of(TOUS_BACS_CODE_MPS, stats.get(TOUS_BACS_CODE_MPS).middle50());
-        }
-        return null;
     }
 
-    public @Nullable Double getStatsSpecialite(String formationId, Integer iMtCod) {
+
+    public @Nullable Double getStatsSpecialite(String formationId, String iMtCod) {
         return formationsPort.retrieveFormation(formationId)
                 .map(f -> 1.0 * f.stats().pctAdmisParSpecialite().getOrDefault(iMtCod, 0))
                 .orElse(null);
@@ -162,69 +155,11 @@ public class SuggestionsData {
         return f.map(Formation::capacite).orElse(0);
     }
 
-    public @NotNull List<@NotNull Matiere> getSpecialites() {
-        return matieresPort.retrieveSpecialites();
-    }
-
     public Set<String> getFormationIdsWithApprentissage() {
         return formationsPort.retrieveFormations().values().stream()
                 .filter(Formation::apprentissage)
                 .map(Formation::id)
                 .collect(Collectors.toSet());
-    }
-
-    public Set<String> getBacsWithAtLeastTwoSpecialites() {
-        Map<String, Integer> nbSpecialitesParBack = matieresPort.retrieveSpecialites().stream()
-                .flatMap(m -> m.bacs().stream())
-                .collect(Collectors.groupingBy(b -> b, Collectors.summingInt(b -> 1)));
-        return nbSpecialitesParBack.entrySet().stream().filter(e -> e.getValue() > 1).map(Map.Entry::getKey).collect(Collectors.toSet());
-    }
-
-
-    /**
-     * utilisé pour l'envoi des stats aux élèves
-     *
-     * @param bac le bac
-     * @param formationId le groupe
-     * @return les détails
-     */
-    public @NotNull StatsContainers.SimpleStatGroupParBac getSimpleGroupStats(@Nullable String bac, String formationId) {
-        if(bac == null) bac = TOUS_BACS_CODE_MPS;
-        val f = formationsPort.retrieveFormation(formationId);
-        if(f.isEmpty()) return new StatsContainers.SimpleStatGroupParBac(Map.of());
-        val stats = f.get().stats();
-
-        val statsTousBacs = getSimpleStatGroup(formationId, stats, TOUS_BACS_CODE_MPS);
-        val statsBacs = getSimpleStatGroup(formationId, stats, bac);
-
-        Map<String, StatsContainers.SimpleStatGroup> statsMap = new HashMap<>();
-        if(statsTousBacs != null) statsMap.put(TOUS_BACS_CODE_MPS, statsTousBacs);
-        if(statsBacs != null) statsMap.put(bac, statsBacs);
-        return new StatsContainers.SimpleStatGroupParBac(statsMap);
-    }
-
-    private static @Nullable StatsContainers.SimpleStatGroup getSimpleStatGroup(String formationId, StatsFormation stats, String bac) {
-        if(stats.admissions().containsKey(bac)) {
-
-            @Nullable Integer nbAdmis = stats.nbAdmisParBac().get(bac);
-            if(nbAdmis == null) return null;
-
-            val frequencesCumulees = stats.admissions().get(bac).frequencesCumulees();
-
-            val stat = getStatistique(frequencesCumulees, true);
-
-            Map<Integer, Integer> statsSpecs = stats.nbAdmisParSpecialite().entrySet().stream()
-                    .map(e -> Pair.of(e.getKey(), 100 * e.getValue()))
-                    .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
-
-            return new StatsContainers.SimpleStatGroup(
-                    formationId,
-                    nbAdmis,
-                    statsSpecs,
-                    Map.of(MATIERE_MOYENNE_GENERALE_CODE, stat)
-            );
-        }
-        return null;
     }
 
 
@@ -269,10 +204,6 @@ public class SuggestionsData {
 
     public List<Edge> edgesDomainesMetiers() {
         return edgesPort.getEdgesDomainesMetiers();
-    }
-
-    public List<Edge> edgesSecteursMetiers() {
-        return edgesPort.getEdgesSecteursMetiers();
     }
 
     public List<Edge> edgesMetiersAssocies() {

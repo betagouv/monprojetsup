@@ -1,7 +1,10 @@
 package fr.gouv.monprojetsup.data.referentiel.entity
 
-import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
@@ -21,7 +24,7 @@ class BaccalaureatSpecialiteEntity {
 @Embeddable
 data class BaccalaureatSpecialiteId(
     @Column(name = "id_baccalaureat")
-    var idBaccalaureat: String = TOUS_BACS_CODE_MPS,
+    var idBaccalaureat: String = "",
 
     @Column(name = "id_specialite")
     var idSpecialite: String = ""

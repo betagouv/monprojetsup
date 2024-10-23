@@ -624,17 +624,14 @@ public class AffinityEvaluator {
     }
 
     private double getBonusSpecialites(String fl, Explanations expl) {
-        if (pf.spe_classes() == null || pf.spe_classes().isEmpty() || !algo.hasSpecialitesInTerminale(bac))
+        if (pf.spe_classes() == null || pf.spe_classes().isEmpty())
             return Config.NO_MATCH_SCORE;
         Map<String, Double> stats = new HashMap<>();
         pf.spe_classes().forEach(s -> {
             //Décodage soit par nom spécialité soit par code
-            Integer iMtCod = algo.codesSpecialites.get(s);
-            if (iMtCod != null) {
-                Double stat = algo.getStatsSpecialite(fl, iMtCod);
-                if (stat != null) {
-                    stats.put(s, stat);
-                }
+            Double stat = algo.getStatsSpecialite(fl, s);
+            if (stat != null) {
+                stats.put(s, stat);
             }
         });
         if (stats.isEmpty()) {

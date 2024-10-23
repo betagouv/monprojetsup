@@ -141,7 +141,7 @@ class FormationsMpsTests : DataPortTest() {
     }
 
     @Nested
-    inner class StatistiquesTests {
+    inner class AdmissionStatsTests {
 
         @Test
         fun `tous les bacs de toutes les stats sont connus`() {

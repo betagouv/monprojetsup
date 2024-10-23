@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record Matiere (
+public record Specialite(
     @NotNull String idMps,
     @NotNull Integer idPsup,
     @NotNull String label,
@@ -13,7 +13,7 @@ public record Matiere (
 {
 
     @NotNull
-    public static String idPsupToIdMps(long key) {
+    public static String idPsupMatToIdMps(long key) {
         return "mat" + key;
     }
     @NotNull

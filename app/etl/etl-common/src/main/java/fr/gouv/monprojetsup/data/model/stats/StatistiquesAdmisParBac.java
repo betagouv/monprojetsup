@@ -15,21 +15,7 @@ public record StatistiquesAdmisParBac(
 ) implements Serializable  {
     public StatistiquesAdmisParBac() { this(new HashMap<>()); }
 
-    public StatistiquesAdmisParBac(
-            StatistiquesAdmisParBac v,
-            Set<String> bacsKeys
-    ) {
-        this(new HashMap<>());
-        v.parBac.forEach(
-                (k, v1) -> {
-                    if (bacsKeys.contains(k)) {
-                        parBac.put(k, v1);
-                    }
-                }
-        );
-    }
-
-    public void set(Map<String, Map<Integer, int[]>> stringMapMap) {
+    public void set(Map<String, Map<String, int[]>> stringMapMap) {
         parBac.clear();
         stringMapMap.forEach((s, integerMapMap)
                 -> parBac.computeIfAbsent(s, z-> new StatistiquesAdmisParMatiere())
@@ -45,7 +31,7 @@ public record StatistiquesAdmisParBac(
         if(s == null) {
             parBac.clear();
         } else {
-            s.parMatiere().keySet().removeIf( m -> m != PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE && m != PsupStatistiques.MATIERE_MOYENNE_BAC_CODE);
+            s.parMatiere().keySet().removeIf( m -> !m.equals(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE) && !m.equals(PsupStatistiques.MATIERE_MOYENNE_BAC_CODE));
             Statistique ss = s.parMatiere().get(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE);
             if (ss == null) {
                 parBac.clear();
