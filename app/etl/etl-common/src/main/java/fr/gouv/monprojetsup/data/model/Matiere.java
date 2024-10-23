@@ -13,7 +13,11 @@ public record Matiere (
 {
 
     @NotNull
-    public static String idPsupToIdMps(int key) {
+    public static String idPsupToIdMps(long key) {
         return "mat" + key;
+    }
+    @NotNull
+    public static String idSpeBacPsupToIdMps(long key) {
+        return "sp" + key;
     }
 }

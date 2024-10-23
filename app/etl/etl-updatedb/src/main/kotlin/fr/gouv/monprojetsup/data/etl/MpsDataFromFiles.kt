@@ -331,8 +331,9 @@ class MpsDataFromFiles(
     override fun getSpecialites(): Specialites {
         if(specialites == null) {
             specialites = SpecialitesLoader.load(
-                statistiques,
-                dataSources
+                statistiques.getAdmisMatiereBacAnneeStats(),
+                dataSources,
+                psupData.getSpesBacs()
             )
         }
         return specialites!!
@@ -818,14 +819,14 @@ class MpsDataFromFiles(
                 .filter { !specs.isSpecialite(it.key) }
                 .map {
             Matiere(
-                Matiere.idPsupToIdMps(it.key),
+                Matiere.idPsupToIdMps(it.key.toLong()),
                 it.key,
                 it.value,
                 false,
                 listOf()
             )}
         )
-        result.addAll(specs.toMatieres())
+        result.addAll(specs.toEds())
         return result
     }
 
