@@ -17,7 +17,9 @@ class ReferentielController(
     @GetMapping
     @Operation(
         summary = "Récupérer les données nécessaires au parcours d'inscription de MonProjetSup",
-        description = "Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis Parcoursup, les interêts et domaines.",
+        description =
+            "Contient les choix des écrans, les baccalauréats et leurs spécialités associées, les statistiques des admis" +
+                " Parcoursup, les interêts et domaines.",
     )
     fun getReferentielPourInscription(): ReferentielDTO {
         return ReferentielDTO(referentielService.recupererReferentiel())

@@ -43,7 +43,10 @@ class FormationController(
     @GetMapping("/suggestions")
     @Operation(
         summary = "Récupère les suggestions de formations",
-        description = "Récupère les suggestions de formations pour un profil d'élève. Chaque suggestion s'accompagne des informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion. Un lien permet la pagination des résultats."
+        description =
+            "Récupère les suggestions de formations pour un profil d'élève. Chaque suggestion s'accompagne des " +
+                "informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de " +
+                "cette suggestion. Un lien permet la pagination des résultats.",
     )
     fun getSuggestionsFormations(
         @Parameter(description = "Numéro de page") @RequestParam(defaultValue = "1", value = PARAMETRE_NUMERO_PAGE) numeroDePage: Int,
@@ -75,7 +78,9 @@ class FormationController(
     @GetMapping("/recherche/succincte")
     @Operation(
         summary = "Recherche de formation, mode succint",
-        description = "A partir du contenu de la barre de recherche, récupérer la liste des formations associées à cette recherche, et le lien de pagination."
+        description =
+            "A partir du contenu de la barre de recherche, récupérer la liste des formations associées à cette " +
+                "recherche, et le lien de pagination.",
     )
     fun getRechercheFormationSuccincte(
         @Parameter(description = "Formation recherchée") @RequestParam recherche: String,
@@ -109,7 +114,10 @@ class FormationController(
     @GetMapping("/recherche/detaillee")
     @Operation(
         summary = "Recherche de formation, mode détaillé",
-        description = "A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des explications sur la raison de cette suggestion."
+        description =
+            "A partir du contenu de la barre de recherche, récupère la liste des formations associées à cette recherche, " +
+                "et toutes les informations nécessaires à l'affichage des fiches formations correspondantes, y compris la liste des " +
+                "explications sur la raison de cette suggestion.",
     )
     fun getRechercheFormationDetaillee(
         @Parameter(description = "Formation recherchée") @RequestParam recherche: String,
@@ -154,7 +162,9 @@ class FormationController(
     @GetMapping("/{idformation}")
     @Operation(
         summary = "Récupération d'une formation, mode détaillé",
-        description = "A partir de l'identifiant d'une fiche formation, récupère toutes les informations nécessaires à l'affichage de la fiche formation, y compris la liste des explications sur la raison de cette suggestion."
+        description =
+            "A partir de l'identifiant d'une fiche formation, récupère toutes les informations nécessaires à l'affichage de " +
+                "la fiche formation, y compris la liste des explications sur la raison de cette suggestion.",
     )
     fun getFormation(
         @PathVariable("idformation") idFormation: String,
@@ -170,8 +180,10 @@ class FormationController(
 
     @GetMapping
     @Operation(
-        summary= "Récupération d'une liste de formations, mode détaillé",
-        description = "A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination."
+        summary = "Récupération d'une liste de formations, mode détaillé",
+        description =
+            "A partir d'une liste d'ids, récupère toutes les informations nécessaires à l'affichage des fiches formations, " +
+                "y compris la liste des explications sur la raison de cette suggestion, plus un lien de pagination.",
     )
     fun getFormations(
         @RequestParam ids: List<String>,
