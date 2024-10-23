@@ -86,6 +86,9 @@ class FormationEntity {
     @Column(nullable = true)
     var las: String? = null
 
+    @Column(nullable = false)
+    var obsolete: Boolean = false
+
     @JdbcTypeCode(SqlTypes.JSON)
     var stats : StatsEntity = StatsEntity()
 

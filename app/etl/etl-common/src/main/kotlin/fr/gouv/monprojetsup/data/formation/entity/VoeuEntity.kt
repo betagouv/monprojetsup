@@ -1,6 +1,5 @@
 package fr.gouv.monprojetsup.data.formation.entity
 
-import fr.gouv.monprojetsup.data.model.LatLng
 import fr.gouv.monprojetsup.data.model.Voeu
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsLabelEntity
@@ -25,6 +24,7 @@ class VoeuEntity {
         this.idFormation = voeu.formation
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
+        this.obsolete = false
     }
 
     @Id
@@ -54,6 +54,9 @@ class VoeuEntity {
 
     @Column(name = "capacite", nullable = false)
     var capacite : Int = 0
+
+    @Column(nullable = false)
+    var obsolete: Boolean = false
 
     fun toVoeu() : Voeu {
         return Voeu(
