@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl.port
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
 import fr.gouv.monprojetsup.data.TestData
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -145,7 +146,8 @@ class FormationsMpsTests : DataPortTest() {
 
         @Test
         fun `tous les bacs de toutes les stats sont connus`() {
-            val keys = mpsDataPort.getBacs().map { b -> b.key }
+            val keys = HashSet(mpsDataPort.getBacs().map { b -> b.key })
+            keys.add(PsupStatistiques.TOUS_BACS_CODE_MPS)
             val statsKeys = mpsDataPort.getStatsFormation().flatMap { it.value.nbAdmisParBac.keys }
             assertThat(keys).containsAll(statsKeys)
         }

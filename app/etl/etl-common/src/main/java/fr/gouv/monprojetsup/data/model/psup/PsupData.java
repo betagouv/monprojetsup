@@ -112,7 +112,8 @@ public record PsupData(
 
     public AdmissionStats buildStats() {
 
-        val bacsKeys = getBacs().stream().map(Bac::key).collect(Collectors.toSet());
+        val bacsKeys = new HashSet<>(getBacs().stream().map(Bac::key).toList());
+        bacsKeys.add(TOUS_BACS_CODE_MPS);
         val groups = getGtaToMpsIdMapping();
 
         StatistiquesAdmisParGroupe statsAdmisParGroupe
@@ -218,7 +219,6 @@ public record PsupData(
         filActives.retainAll(formations().filieres.keySet());
         //do not restrict to fil actives because we want to keep apprentissage
         formations().cleanup();
-
         Set<String> bacsActifs = new HashSet<>(stats.getBacsWithAtLeastNdAdmis(MIN_NB_ADMIS_FOR_BAC_ACTIF));
         bacsActifs.add(TOUS_BACS_CODE_MPS);
         this.stats.restrictToBacs(bacsActifs);

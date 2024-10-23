@@ -25,19 +25,20 @@ public record StatistiquesAdmisParBac(
 
     public void minimize() {
         parBac.values().forEach(StatistiquesAdmisParMatiere::minimize);
-        StatistiquesAdmisParMatiere s1 = parBac.get(PsupStatistiques.TOUS_BACS_CODE_LEGACY);
-        StatistiquesAdmisParMatiere s2 = parBac.get(PsupStatistiques.TOUS_BACS_CODE_MPS);
-        StatistiquesAdmisParMatiere s = s2 != null ? s2 : s1;
+        StatistiquesAdmisParMatiere s = parBac.get(PsupStatistiques.TOUS_BACS_CODE_MPS);
         if(s == null) {
             parBac.clear();
         } else {
-            s.parMatiere().keySet().removeIf( m -> !m.equals(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE) && !m.equals(PsupStatistiques.MATIERE_MOYENNE_BAC_CODE));
+            s.parMatiere().keySet().removeIf(
+                    m -> !m.equals(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE)
+                            && !m.equals(PsupStatistiques.MATIERE_MOYENNE_BAC_CODE)
+            );
             Statistique ss = s.parMatiere().get(PsupStatistiques.MATIERE_MOYENNE_GENERALE_CODE);
             if (ss == null) {
                 parBac.clear();
             } else {
                 if (ss.nb() <= 3) {
-                    parBac.keySet().removeIf( b -> !b.equals(PsupStatistiques.TOUS_BACS_CODE_LEGACY) && !b.equals(PsupStatistiques.TOUS_BACS_CODE_MPS));
+                    parBac.keySet().removeIf( b -> !b.equals(PsupStatistiques.TOUS_BACS_CODE_MPS));
                 }
             }
         }
