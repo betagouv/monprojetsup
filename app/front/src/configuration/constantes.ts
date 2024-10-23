@@ -21,9 +21,11 @@ export const constantes = {
     NB_CARACTÈRES_MIN_RECHERCHE: 3,
   },
   FORMATIONS: {
+    CHAMP_FORMATIONS_FAVORITES: "formationsFavorites",
     NB_CARACTÈRES_MIN_RECHERCHE: 2,
   },
   MÉTIERS: {
+    CHAMP_MÉTIERS_FAVORIS: "métiersFavoris",
     NB_CARACTÈRES_MIN_RECHERCHE: 2,
   },
   SPÉCIALITÉS: {

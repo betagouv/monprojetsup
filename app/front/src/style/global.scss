@@ -52,6 +52,18 @@ label:has(+ *:required)::after {
   background: white;
 }
 
+
+// Fieldset DSFR override
+.fr-fieldset--inline {
+  .fr-fieldset__content {
+    @apply grid grid-flow-row justify-normal items-start gap-4 my-1 md:grid-flow-col;
+  }
+
+  .fr-radio-rich {
+    @apply mt-0 h-full !important;
+  }
+}
+
 // Margin DSFR override
 .fr-select-group:not(:last-child) {
   margin-bottom: 0;

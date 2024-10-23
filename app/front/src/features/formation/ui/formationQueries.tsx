@@ -28,7 +28,7 @@ export const récupérerFormationsQueryOptions = (formationIds: Array<Formation[
 
 export const rechercherFormationsQueryOptions = (recherche?: string) =>
   queryOptions({
-    queryKey: ["formations", "rechercher"],
+    queryKey: ["formations", "rechercher", recherche],
     queryFn: async () => {
       if (recherche === undefined) return [];
 
