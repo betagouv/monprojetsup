@@ -4,12 +4,13 @@ import fr.gouv.monprojetsup.commun.lien.infrastructure.entity.LienEntity
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
-import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.Type
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "ref_formation")
@@ -58,7 +59,7 @@ class FormationDetailleeEntity {
     @Column(name = "criteres_analyse", columnDefinition = "int[]")
     lateinit var criteresAnalyse: List<Int>
 
-    @Type(JsonType::class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
 
