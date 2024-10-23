@@ -3,11 +3,11 @@ package fr.gouv.monprojetsup.data.etl.metier
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
-import fr.gouv.monprojetsup.data.formationmetier.entity.FormationMetierEntity
 import fr.gouv.monprojetsup.data.metier.entity.MetierEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
+import java.util.logging.Logger
 
 @Repository
 interface MetiersDb :
@@ -16,11 +16,14 @@ interface MetiersDb :
 @Component
 class UpdateMetierDbs(
     private val mpsDataPort: MpsDataPort,
-    private val batchUpdate: BatchUpdate
+    private val batchUpdate: BatchUpdate,
+    private val metiersDb: MetiersDb
+
 ) {
 
+    private val logger: Logger = Logger.getLogger(UpdateMetierDbs::class.java.simpleName)
+
     fun update() {
-        clearAll()
         updateMetierDb()
     }
 
@@ -32,8 +35,7 @@ class UpdateMetierDbs(
         val metiersAssocies = mpsDataPort.getMetiersAssociesLabels()
 
         val entities =
-            mpsDataPort.getMetiersMpsIds()
-                .map { metierId ->
+            mpsDataPort.getMetiersMpsIds().map { metierId ->
                     val label = labels[metierId]
                     val entity = MetierEntity()
                     if (label != null) {
@@ -54,23 +56,21 @@ class UpdateMetierDbs(
                     }
                     entity
                 }
-        batchUpdate.clearEntities(
-            FormationMetierEntity::class.simpleName!!
-        )
-        batchUpdate.setEntities(
-            MetierEntity::class.simpleName!!,
-            entities
-        )
+
+        val metiersIds =  entities.map { it.id }.toSet()
+
+        val metiersObsoletes = HashSet(metiersDb.findAll())
+        metiersObsoletes.removeIf { metiersIds.contains(it.id) }
+        if(metiersObsoletes.isNotEmpty()) {
+            logger.warning("Marquage de ${metiersObsoletes.count()} métiers obsoletes")
+            metiersObsoletes.forEach { it.obsolete = true }
+            batchUpdate.upsertEntities(metiersObsoletes)
+        }
+
+        logger.warning("Insertion et mise à jour de ${entities.count()} métiers")
+        batchUpdate.upsertEntities(entities)
+
     }
 
-
-    fun clearAll() {
-        batchUpdate.clearEntities(
-            FormationMetierEntity::class.simpleName!!
-        )
-        batchUpdate.clearEntities(
-            MetierEntity::class.simpleName!!
-        )
-    }
 
 }

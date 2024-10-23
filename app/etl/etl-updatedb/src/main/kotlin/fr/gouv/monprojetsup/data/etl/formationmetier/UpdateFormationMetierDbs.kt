@@ -47,8 +47,4 @@ class UpdateFormationMetierDbs(
         )
     }
 
-    fun clearAll() {
-        batchUpdate.clearEntities(FormationMetierEntity::class.simpleName!!)
-    }
-
 }

@@ -77,11 +77,7 @@ class UpdateSuggestionsDbs(
             .associateBy { it.id }
             .values
 
-        batchUpdate.setEntities(
-            SuggestionsLabelEntity::class.simpleName!!,
-            entities
-        )
-
+        batchUpdate.upsertEntities(entities)
     }
 
     internal fun updateCandidatsDb() {
@@ -99,10 +95,7 @@ class UpdateSuggestionsDbs(
             .flatMap {  SuggestionsVilleEntity.getEntities(it) }
             .associateBy { it.id }
             .values
-        batchUpdate.setEntities(
-            SuggestionsVilleEntity::class.simpleName!!,
-            entities
-        )
+        batchUpdate.upsertEntities(entities)
     }
 
     internal fun updateEdgesDb() {
@@ -112,15 +105,6 @@ class UpdateSuggestionsDbs(
             SuggestionsEdgeEntity::class.simpleName!!,
             entities
         )
-    }
-
-
-    fun clearAll() {
-        batchUpdate.clearEntities(SuggestionsCandidatEntity::class.simpleName!!)
-        batchUpdate.clearEntities(SuggestionsVilleEntity::class.simpleName!!)
-        batchUpdate.clearEntities(SuggestionsMatiereEntity::class.simpleName!!)
-        batchUpdate.clearEntities(SuggestionsLabelEntity::class.simpleName!!)
-        batchUpdate.clearEntities(SuggestionsEdgeEntity::class.simpleName!!)
     }
 
 

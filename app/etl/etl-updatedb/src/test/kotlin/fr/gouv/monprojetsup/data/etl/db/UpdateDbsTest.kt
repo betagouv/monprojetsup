@@ -26,6 +26,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import kotlin.test.assertNotNull
 
 @TestPropertySource(properties = [
     "logging.level.org.hibernate.SQL=WARN",
@@ -113,9 +114,13 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
             updateFormationDbs.updateFormationsDb()
             updateFormationDbs.updateVoeuxDb()
+
             val formation2 = formationsdb.findById("obsolete").orElse(null)
+            assertNotNull(formation2)
             assertThat(formation2?.obsolete)
+
             val voeu2 = voeuxDb.findById("obsolete").orElse(null)
+            assertNotNull(voeu2)
             assertThat(voeu2?.obsolete)
         }
 
@@ -169,7 +174,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateFormationsMetiersDbs: UpdateFormationMetierDbs
 
         private fun update() {
-            updateFormationsMetiersDbs.clearAll()
             updateFormationDbs.updateFormationsDb()
             updateMetierDbs.update()
             updateFormationsMetiersDbs.update()

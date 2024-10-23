@@ -25,4 +25,8 @@ class MetierEntity {
     @Type(JsonType::class)
     @Column(name = "liens", columnDefinition = "jsonb")
     var liens = arrayListOf<LienEntity>()
+
+    @Column(nullable = false)
+    var obsolete: Boolean = false
+
 }

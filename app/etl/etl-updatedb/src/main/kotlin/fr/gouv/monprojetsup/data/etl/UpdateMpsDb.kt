@@ -47,13 +47,6 @@ open class Runner(
 		logger.info("Création des fichiers de diagnostic")
 		mpsDataPort.exportDiagnostics()
 
-		//clearAll in this order to avoid foreign key constraint errors
-		logger.info("Vidage des tables métiers, formations, suggestions et référentiels")
-		updateFormationsMetiersDbs.clearAll()
-		updateMetierDbs.clearAll()
-		updateSuggestionsDbs.clearAll()
-		updateReferentielDbs.clearAll()
-
 		logger.info("Mise à jour des référentiel")
 		updateReferentielDbs.updateReferentielDbs()
 

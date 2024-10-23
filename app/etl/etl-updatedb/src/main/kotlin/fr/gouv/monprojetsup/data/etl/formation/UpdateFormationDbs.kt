@@ -107,18 +107,17 @@ class UpdateFormationDbs(
         }
 
         val voeuxIds = voeux.map { it.key }.toSet()
+
         val voeuxObsoletes = HashSet(voeuxDb.findAll())
-        voeuxObsoletes.removeIf { f -> voeuxIds.contains(f.id) }
+        voeuxObsoletes.removeIf { voeuxIds.contains(it.id) }
         if(voeuxObsoletes.isNotEmpty()) {
-            logger.info("Marquage de ${voeuxObsoletes.count()} voeux obsoletes")
+            logger.warning("Marquage de ${voeuxObsoletes.count()} voeux obsoletes")
             voeuxObsoletes.forEach { it.obsolete = true }
             batchUpdate.upsertEntities(voeuxObsoletes)
         }
 
-        batchUpdate.setEntities(
-            VoeuEntity::class.simpleName!!,
-            voeuxEntities
-        )
+        logger.warning("Insertion et mise à jour de ${voeuxEntities.count()} voeux")
+        batchUpdate.upsertEntities(voeuxEntities)
 
     }
 
@@ -145,7 +144,7 @@ class UpdateFormationDbs(
          val formationsObsoletes = HashSet(formationDb.findAll())
          formationsObsoletes.removeIf { f -> formationsMpsIds.contains(f.id) }
          if(formationsObsoletes.isNotEmpty()) {
-             logger.info("Marquage de ${formationsObsoletes.count()} formations obsoletes")
+             logger.warning("Marquage de ${formationsObsoletes.count()} formations obsoletes")
              formationsObsoletes.forEach { it.obsolete = true }
              batchUpdate.upsertEntities(formationsObsoletes)
          }
@@ -211,6 +210,8 @@ class UpdateFormationDbs(
              }
              formationEntities.add(entity)
          }
+
+         logger.warning("Insertion et mise à jour de ${formationEntities.count()} formations")
          batchUpdate.upsertEntities(formationEntities)
      }
 
@@ -261,8 +262,7 @@ class UpdateFormationDbs(
             }
         }
         logger.info("Sauvegarde des correspondances villes-voeux commençant par $letter")
-        batchUpdate.addEntities(entities)
-        entities.clear()
+        batchUpdate.upsertEntities(entities)
     }
 
     /**
@@ -283,7 +283,6 @@ class UpdateFormationDbs(
     }
 
 
-
     private fun updateCriteresDb() {
         val criteres = ArrayList<CritereAnalyseCandidatureEntity>()
         var i = 0
@@ -296,13 +295,6 @@ class UpdateFormationDbs(
         }
         criteresDb.deleteAll()
         criteresDb.saveAll(criteres)
-    }
-
-    fun clearAll() {
-        batchUpdate.clearEntities(MoyenneGeneraleAdmisEntity::class.simpleName!!)
-        batchUpdate.clearEntities(VoeuEntity::class.simpleName!!)
-        batchUpdate.clearEntities(FormationEntity::class.simpleName!!)
-        batchUpdate.clearEntities(CritereAnalyseCandidatureEntity::class.simpleName!!)
     }
 
 
