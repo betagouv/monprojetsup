@@ -8,4 +8,6 @@ interface VoeuRepository {
     fun recupererLesVoeuxDeFormations(idsFormations: List<String>): Map<String, List<Voeu>>
 
     fun recupererLesVoeuxDUneFormation(idFormation: String): List<Voeu>
+
+    fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String>
 }

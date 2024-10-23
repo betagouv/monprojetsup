@@ -22,7 +22,8 @@ class DomaineBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun verifierDomainesExistent(ids: List<String>): Boolean {
-        return domaineJPARepository.countAllByIdIn(ids) == ids.size
+    override fun recupererIdsDomainesInexistants(ids: List<String>): List<String> {
+        val existingIds = domaineJPARepository.findExistingIds(ids)
+        return ids.filterNot { existingIds.contains(it) }
     }
 }

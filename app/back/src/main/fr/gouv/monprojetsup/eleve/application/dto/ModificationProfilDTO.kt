@@ -119,7 +119,7 @@ data class ModificationProfilDTO(
     @JsonProperty("corbeilleFormations")
     val corbeilleFormations: List<String>? = null,
 ) {
-    constructor(profilEleve: ProfilEleve.Identifie) : this(
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this(
         situation = profilEleve.situation,
         classe = profilEleve.classe,
         baccalaureat = profilEleve.baccalaureat,

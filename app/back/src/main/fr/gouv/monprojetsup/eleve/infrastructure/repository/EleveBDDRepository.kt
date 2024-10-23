@@ -21,7 +21,7 @@ class EleveBDDRepository(
     }
 
     @Transactional(readOnly = false)
-    override fun creerUnEleve(id: String): ProfilEleve.Identifie {
+    override fun creerUnEleve(id: String): ProfilEleve.AvecProfilExistant {
         if (eleveJPARepository.existsById(id)) {
             logger.warn("L'élève $id a voulu être crée alors qu'il existe déjà en base")
             return eleveJPARepository.findById(id).get().toProfilEleve()
@@ -35,7 +35,7 @@ class EleveBDDRepository(
 
     @Throws(MonProjetSupNotFoundException::class)
     @Transactional(readOnly = false)
-    override fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.Identifie) {
+    override fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.AvecProfilExistant) {
         try {
             eleveJPARepository.getReferenceById(profilEleve.id)
             eleveJPARepository.save(ProfilEleveEntity(profilEleve))

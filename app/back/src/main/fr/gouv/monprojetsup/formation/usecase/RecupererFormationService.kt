@@ -22,7 +22,7 @@ class RecupererFormationService(
 ) {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
-        profilEleve: ProfilEleve.Identifie?,
+        profilEleve: ProfilEleve.AvecProfilExistant?,
         idFormation: String,
     ): FicheFormation {
         val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)

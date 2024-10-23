@@ -72,7 +72,7 @@ class ProfilEleveEntity() {
     @Column(name = "corbeille_formations", nullable = false)
     var corbeilleFormations: List<String> = emptyList()
 
-    constructor(profilEleve: ProfilEleve.Identifie) : this() {
+    constructor(profilEleve: ProfilEleve.AvecProfilExistant) : this() {
         id = profilEleve.id
         situation = profilEleve.situation
         classe = profilEleve.classe
@@ -90,7 +90,7 @@ class ProfilEleveEntity() {
     }
 
     fun toProfilEleve() =
-        ProfilEleve.Identifie(
+        ProfilEleve.AvecProfilExistant(
             id,
             situation,
             classe,

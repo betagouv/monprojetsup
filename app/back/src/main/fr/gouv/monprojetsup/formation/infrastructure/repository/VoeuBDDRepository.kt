@@ -30,4 +30,10 @@ class VoeuBDDRepository(
             it.toVoeu()
         }
     }
+
+    @Transactional(readOnly = true)
+    override fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String> {
+        val existingIds = voeuJPARepository.findExistingIds(idsVoeux)
+        return idsVoeux.filterNot { existingIds.contains(it) }
+    }
 }

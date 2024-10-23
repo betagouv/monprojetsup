@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.authentification.filter
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilConnnecte
-import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
+import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class IdentificationFilter(
-    val eleveRepository: EleveRepository,
+    val recupererEleveService: RecupererEleveService,
 ) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORITY_UTILISATEUR = "UTILISATEUR_AUTHENTIFIE"
@@ -31,7 +31,7 @@ class IdentificationFilter(
         jwtToken?.let {
             val idIndividu = getIdIndividu(jwtToken)
             if (idIndividu != null) {
-                val eleve = eleveRepository.recupererUnEleve(idIndividu)
+                val eleve = recupererEleveService.recupererEleve(idIndividu)
                 val authenticationEleve = UsernamePasswordAuthenticationToken(eleve, null, mutableListOf(GRANTED_AUTHORITY_UTILISATEUR))
                 SecurityContextHolder.getContext().authentication = authenticationEleve
             } else {

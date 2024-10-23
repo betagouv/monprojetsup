@@ -75,7 +75,8 @@ class MetierBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun verifierMetiersExistent(ids: List<String>): Boolean {
-        return metierJPARepository.countAllByIdIn(ids) == ids.size
+    override fun recupererIdsMetiersInexistants(ids: List<String>): List<String> {
+        val existingIds = metierJPARepository.findExistingIds(ids)
+        return ids.filterNot { existingIds.contains(it) }
     }
 }

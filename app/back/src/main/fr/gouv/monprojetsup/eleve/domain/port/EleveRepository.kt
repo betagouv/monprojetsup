@@ -7,8 +7,8 @@ import kotlin.jvm.Throws
 interface EleveRepository {
     fun recupererUnEleve(id: String): ProfilEleve
 
-    fun creerUnEleve(id: String): ProfilEleve.Identifie
+    fun creerUnEleve(id: String): ProfilEleve.AvecProfilExistant
 
     @Throws(MonProjetSupNotFoundException::class)
-    fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.Identifie)
+    fun mettreAJourUnProfilEleve(profilEleve: ProfilEleve.AvecProfilExistant)
 }

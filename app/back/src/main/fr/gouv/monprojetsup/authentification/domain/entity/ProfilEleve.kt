@@ -8,7 +8,7 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import fr.gouv.monprojetsup.referentiel.domain.entity.SituationAvanceeProjetSup
 
 sealed class ProfilEleve(open val id: String) : ProfilUtilisateur() {
-    data class Identifie(
+    data class AvecProfilExistant(
         override val id: String,
         val situation: SituationAvanceeProjetSup?,
         val classe: ChoixNiveau?,

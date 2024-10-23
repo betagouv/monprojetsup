@@ -27,7 +27,7 @@ class SuggestionApiHttpClient(
     override val logger: Logger,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
-    override fun recupererLesSuggestions(profilEleve: ProfilEleve.Identifie): SuggestionsPourUnProfil {
+    override fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil {
         val reponseDTO =
             post<AffinitesProfilReponseDTO>(
                 url = "$baseUrl/suggestions",
@@ -38,7 +38,7 @@ class SuggestionApiHttpClient(
 
     @Throws(MonProjetSupInternalErrorException::class, MonProjetIllegalStateErrorException::class)
     override fun recupererLesExplications(
-        profilEleve: ProfilEleve.Identifie,
+        profilEleve: ProfilEleve.AvecProfilExistant,
         idsFormations: List<String>,
     ): Map<String, ExplicationsSuggestionEtExemplesMetiers?> {
         val reponseDTO =

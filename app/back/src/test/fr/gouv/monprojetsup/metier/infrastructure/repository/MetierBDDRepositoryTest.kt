@@ -310,31 +310,31 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierMetiersExistent {
+    inner class RecupererIdsMetiersInexistants {
         @Test
         @Sql("classpath:metier.sql")
-        fun `si toutes les métiers existent, renvoyer true`() {
+        fun `si toutes les métiers existent, renvoyer une liste vide`() {
             // Given
             val ids = listOf("MET003", "MET002", "MET001")
 
             // When
-            val result = metierBDDRepository.verifierMetiersExistent(ids)
+            val result = metierBDDRepository.recupererIdsMetiersInexistants(ids)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:metier.sql")
-        fun `si un des métiers n'existent pas, renvoyer false`() {
+        fun `si un des métiers n'existent pas, renvoyer la liste de ces métiers`() {
             // Given
             val ids = listOf("MET_INCONNU", "MET003", "MET002", "MET001")
 
             // When
-            val result = metierBDDRepository.verifierMetiersExistent(ids)
+            val result = metierBDDRepository.recupererIdsMetiersInexistants(ids)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("MET_INCONNU"))
         }
     }
 }

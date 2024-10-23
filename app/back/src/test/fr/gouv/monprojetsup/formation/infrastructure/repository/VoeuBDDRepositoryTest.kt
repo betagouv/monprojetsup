@@ -31,10 +31,10 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
         @Sql("classpath:formation_voeu.sql")
         fun `Doit retourner les voeux grouper par formation en ignorant les inconnus`() {
             // Given
-            val idsFormations = listOf("ta0001", "ta0002", "tainconnu")
+            val idsVoeux = listOf("ta0001", "ta0002", "tainconnu")
 
             // When
-            val result = voeuBDDRepository.recupererVoeux(idsFormations)
+            val result = voeuBDDRepository.recupererVoeux(idsVoeux)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
@@ -143,6 +143,35 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(emptyList<Voeu>())
+        }
+    }
+
+    @Nested
+    inner class RecupererIdsVoeuxInexistants {
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `si toutes les voeux existent, renvoyer la liste vide`() {
+            // Given
+            val idsVoeux = listOf("ta0001", "ta0002")
+
+            // When
+            val result = voeuBDDRepository.recupererIdsVoeuxInexistants(idsVoeux)
+
+            // Then
+            assertThat(result).isEqualTo(emptyList<String>())
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
+        fun `si un des voeux n'existe pas, renvoyer la liste des voeux inexistants`() {
+            // Given
+            val idsVoeux = listOf("ta0001", "ta0002", "tainconnu")
+
+            // When
+            val result = voeuBDDRepository.recupererIdsVoeuxInexistants(idsVoeux)
+
+            // Then
+            assertThat(result).isEqualTo(listOf("tainconnu"))
         }
     }
 }

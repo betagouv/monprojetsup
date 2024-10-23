@@ -107,7 +107,7 @@ class ProfilEleveControllerTest(
             // Given
             val idProfilInconnu = "61a3b1a9-03dd-4fc6-9549-c0e5d1403214"
             val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
+            given(recupererEleveService.recupererEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(
@@ -193,7 +193,7 @@ class ProfilEleveControllerTest(
         fun `si enseignant existe, doit retourner 204`() {
             // Given
             val unProfilEnseignant =
-                ProfilEleve.Identifie(
+                ProfilEleve.AvecProfilExistant(
                     id = idEnseignant,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
@@ -223,7 +223,7 @@ class ProfilEleveControllerTest(
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
                 )
-            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+            given(recupererEleveService.recupererEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
 
             // When & Then
             mvc.perform(
@@ -486,7 +486,7 @@ class ProfilEleveControllerTest(
             // Given
             val idProfilInconnu = "123f627c-36dd-4df5-897b-159443a6d49c"
             val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
-            given(eleveRepository.recupererUnEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
+            given(recupererEleveService.recupererEleve(id = idProfilInconnu)).willReturn(profilSansCompte)
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
@@ -512,7 +512,7 @@ class ProfilEleveControllerTest(
         fun `si enseignant, doit retourner 200`() {
             // Given
             val unProfilEnseignant =
-                ProfilEleve.Identifie(
+                ProfilEleve.AvecProfilExistant(
                     id = idEnseignant,
                     situation = SituationAvanceeProjetSup.PROJET_PRECIS,
                     classe = ChoixNiveau.TERMINALE,
@@ -542,7 +542,7 @@ class ProfilEleveControllerTest(
                     domainesInterets = listOf("T_ITM_1054", "T_ITM_1534", "T_ITM_1248", "T_ITM_1351"),
                     corbeilleFormations = listOf("fl0012"),
                 )
-            given(eleveRepository.recupererUnEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
+            given(recupererEleveService.recupererEleve(id = idEnseignant)).willReturn(unProfilEnseignant)
             given(miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(unProfilEnseignant)).willReturn(unProfilEnseignant)
 
             // When & Then

@@ -55,8 +55,9 @@ class FormationBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun verifierFormationsExistent(ids: List<String>): Boolean {
-        return formationJPARepository.countAllByIdIn(ids) == ids.size
+    override fun recupererIdsFormationsInexistantes(ids: List<String>): List<String> {
+        val existingIds = formationJPARepository.findExistingIds(ids)
+        return ids.filterNot { existingIds.contains(it) }
     }
 
     private fun logguerFormationInconnue(idFormation: String) {

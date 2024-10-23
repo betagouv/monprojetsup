@@ -18,10 +18,10 @@ abstract class AuthentifieController {
     }
 
     @Throws(MonProjetSupForbiddenException::class)
-    protected fun recupererEleveIdentifie(): ProfilEleve.Identifie {
+    protected fun recupererEleveAvecProfilExistant(): ProfilEleve.AvecProfilExistant {
         val authentification = SecurityContextHolder.getContext().authentication
         return when (val utilisateur = authentification.principal) {
-            is ProfilEleve.Identifie -> utilisateur
+            is ProfilEleve.AvecProfilExistant -> utilisateur
             is ProfilEleve.SansCompte -> throw EleveSansCompteException()
             else -> throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève identifié")
         }

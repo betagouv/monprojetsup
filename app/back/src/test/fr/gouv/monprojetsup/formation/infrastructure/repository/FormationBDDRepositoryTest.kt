@@ -326,31 +326,31 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class VerifierFormationsExistent {
+    inner class RecupererIdsFormationsInexistantes {
         @Test
         @Sql("classpath:formation.sql")
-        fun `si toutes les formations existent, renvoyer true`() {
+        fun `si toutes les formations existent, renvoyer liste vide`() {
             // Given
             val idsFormations = listOf("fl0001", "fl0003", "fl0002")
 
             // When
-            val result = formationBDDRepository.verifierFormationsExistent(idsFormations)
+            val result = formationBDDRepository.recupererIdsFormationsInexistantes(idsFormations)
 
             // Then
-            assertThat(result).isTrue()
+            assertThat(result).isEqualTo(emptyList<String>())
         }
 
         @Test
         @Sql("classpath:formation.sql")
-        fun `si une des formations n'existe pas, renvoyer false`() {
+        fun `si une des formations n'existe pas, renvoyer la liste de ces formations`() {
             // Given
             val idsFormations = listOf("fl0001", "idInconnu", "fl0003", "fl0002")
 
             // When
-            val result = formationBDDRepository.verifierFormationsExistent(idsFormations)
+            val result = formationBDDRepository.recupererIdsFormationsInexistantes(idsFormations)
 
             // Then
-            assertThat(result).isFalse()
+            assertThat(result).isEqualTo(listOf("idInconnu"))
         }
     }
 }
