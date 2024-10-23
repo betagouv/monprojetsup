@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.metier.usecase
 
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
+import fr.gouv.monprojetsup.metier.domain.entity.ResultatRechercheMetierCourt
+import fr.gouv.monprojetsup.metier.domain.entity.ResultatRechercheMetierCourt.ScoreMot
 import fr.gouv.monprojetsup.metier.domain.port.RechercheMetierRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -33,38 +35,158 @@ class RechercherMetiersServiceTest {
         // Given
         val metiersPourPique =
             listOf(
-                MetierCourt(id = "MET_4321", nom = "Piqueur d'herbe"),
-                MetierCourt(id = "MET_4322", nom = "Piquelogue"),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_4321", nom = "Piqueur d'herbe"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_4322", nom = "Piquelogue"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
             )
         given(rechercheMetierRepository.rechercherMetiersCourts(motRecherche = "pique")).willReturn(metiersPourPique)
 
         val metiersPourNique =
             listOf(
-                MetierCourt(id = "MET_4325", nom = "Technicien électronique"),
-                MetierCourt(id = "MET_354", nom = "traducteur/trice technique"),
-                MetierCourt(id = "MET_357", nom = "électromécanicien/ne en remontées mécaniques"),
-                MetierCourt(id = "MET_348", nom = "chargé / chargée d'affaires en génie mécanique"),
-                MetierCourt(id = "MET_300", nom = "attaché / attachée de recherche clinique"),
-                MetierCourt(id = "MET_306", nom = "dessinateur / dessinatrice en construction mécanique"),
-                MetierCourt(id = "MET_499", nom = "ingénieur/e méthodes mécaniques"),
-                MetierCourt(id = "MET_401", nom = "ingénieur / ingénieure en mécanique"),
-                MetierCourt(id = "MET_7830", nom = "Adjoint / adjointe technique des établissements d'enseignement"),
-                MetierCourt(id = "MET_598", nom = "ingénieur / ingénieure de la police technique et scientifique"),
-                MetierCourt(id = "MET_4326", nom = "Testeur technique mécanique"),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_4325", nom = "Technicien électronique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_354", nom = "traducteur/trice technique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_357", nom = "électromécanicien/ne en remontées mécaniques"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_348", nom = "chargé / chargée d'affaires en génie mécanique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_300", nom = "attaché / attachée de recherche clinique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_306", nom = "dessinateur / dessinatrice en construction mécanique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_499", nom = "ingénieur/e méthodes mécaniques"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_401", nom = "ingénieur / ingénieure en mécanique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_7830", nom = "Adjoint / adjointe technique des établissements d'enseignement"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_598", nom = "ingénieur / ingénieure de la police technique et scientifique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_4326", nom = "Testeur technique mécanique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
             )
         given(rechercheMetierRepository.rechercherMetiersCourts(motRecherche = "nique")).willReturn(metiersPourNique)
 
-        val metiersPourEmmelees = emptyList<MetierCourt>()
+        val metiersPourEmmelees = emptyList<ResultatRechercheMetierCourt>()
         given(rechercheMetierRepository.rechercherMetiersCourts(motRecherche = "émmêlées")).willReturn(metiersPourEmmelees)
 
         val metiersPourTest =
             listOf(
-                MetierCourt(id = "MET_84", nom = "testeur / testeuse en informatique"),
-                MetierCourt(id = "MET_4326", nom = "Testeur technique mécanique"),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_84", nom = "testeur / testeuse en informatique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
+                ResultatRechercheMetierCourt(
+                    metier = MetierCourt(id = "MET_4326", nom = "Testeur technique mécanique"),
+                    score = ScoreMot(
+                        motDansLeDescriptif = true,
+                        labelContientMot = true,
+                        infixDansLabel = true,
+                        similariteLabelDecoupe = 100,
+                    ),
+                ),
             )
         given(rechercheMetierRepository.rechercherMetiersCourts(motRecherche = "TesT")).willReturn(metiersPourTest)
 
-        val metiersPourExample = emptyList<MetierCourt>()
+        val metiersPourExample = emptyList<ResultatRechercheMetierCourt>()
         given(rechercheMetierRepository.rechercherMetiersCourts(motRecherche = "exàmple")).willReturn(metiersPourExample)
 
         // When
