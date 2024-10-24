@@ -21,11 +21,12 @@ data class RechercheMetierEntity(
     fun toResultatRechercheMetierCourt() =
         ResultatRechercheMetierCourt(
             metier = MetierCourt(id = id, nom = label),
-            score = ResultatRechercheMetierCourt.ScoreMot(
-                motDansLeDescriptif = motDansLeDescriptif,
-                labelContientMot = labelContientMot,
-                infixDansLabel = infixDansLabel,
-                similariteLabelDecoupe = (similariteLabelDecoupe * 100).toInt()
-            )
+            score =
+                ResultatRechercheMetierCourt.ScoreMot(
+                    motDansLeDescriptif = motDansLeDescriptif,
+                    labelContientMot = labelContientMot,
+                    infixDansLabel = infixDansLabel,
+                    similariteLabelDecoupe = (similariteLabelDecoupe * 100).toInt(),
+                ),
         )
 }

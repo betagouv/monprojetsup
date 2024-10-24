@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [MetierController::class])
-class MetierAvecSesFormationsControllerTest(
+class MetiersControllerTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
     @MockBean

@@ -1,11 +1,7 @@
 package fr.gouv.monprojetsup.commun.recherche.usecase
 
 import fr.gouv.monprojetsup.commun.Constantes.REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT
-import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
-import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
-import fr.gouv.monprojetsup.formation.domain.port.RechercheFormationRepository
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 
 @Component
 class FiltrerRechercheBuilder {

@@ -18,20 +18,23 @@ class RechercherMetiersService(
         val motsRecherches = filtrerRechercheBuilder.filtrerMotsRecherches(recherche, tailleMinimumRecherche)
         val resultats = mutableListOf<ResultatRechercheMetierCourt>()
         motsRecherches.forEach { mot ->
-            resultats.addAll(rechercheMetierRepository.rechercherMetiersCourts(mot))
+            val resultatsRechercheMot = rechercheMetierRepository.rechercherMetiersCourts(mot)
+            resultats.addAll(resultatsRechercheMot)
         }
         val nombreDeMetiersrecherches = motsRecherches.size
-        val metiersCorrespondantAToutesLesRecherches = if (nombreDeMetiersrecherches == 1) {
-            resultats
-        } else {
-            val metiersEtLeurNombreDApparitions =
-                resultats.groupingBy { it.metier }.eachCount().filterValues { it == nombreDeMetiersrecherches }
-            resultats.filter { metiersEtLeurNombreDApparitions.contains(it.metier) }
-        }
+        val metiersCorrespondantAToutesLesRecherches =
+            if (nombreDeMetiersrecherches == 1) {
+                resultats
+            } else {
+                val metiersEtLeurNombreDApparitions =
+                    resultats.groupingBy { it.metier }.eachCount().filterValues { it == nombreDeMetiersrecherches }
+                resultats.filter { metiersEtLeurNombreDApparitions.contains(it.metier) }
+            }
 
-        val resultatsTries = metiersCorrespondantAToutesLesRecherches.groupBy { it.metier }.map { entry ->
-            entry.key to calculerScoreTotal(entry.value)
-        }.sortedByDescending { it.second }
+        val resultatsTries =
+            metiersCorrespondantAToutesLesRecherches.groupBy { it.metier }.map { entry ->
+                entry.key to calculerScoreTotal(entry.value)
+            }.sortedByDescending { it.second }
         return resultatsTries.map { it.first }
     }
 
@@ -43,9 +46,10 @@ class RechercherMetiersService(
         return score
     }
 
-    private fun calculerScore(score: ResultatRechercheMetierCourt.ScoreMot) = when {
-        score.labelContientMot -> 110
-        score.infixDansLabel -> 100
-        else -> score.similariteLabelDecoupe + (if (score.motDansLeDescriptif) 20 else 0)
-    }
+    private fun calculerScore(score: ResultatRechercheMetierCourt.ScoreMot) =
+        when {
+            score.labelContientMot -> 110
+            score.infixDansLabel -> 100
+            else -> score.similariteLabelDecoupe + (if (score.motDansLeDescriptif) 20 else 0)
+        }
 }

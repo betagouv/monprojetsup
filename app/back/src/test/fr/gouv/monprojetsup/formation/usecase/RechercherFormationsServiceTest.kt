@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.commun.recherche.usecase.FiltrerRechercheBuilder
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.ResultatRechercheFormationCourte.ScoreMot
@@ -9,18 +10,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.inOrder
-import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.never
 import org.mockito.Mockito.times
-import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 
 class RechercherFormationsServiceTest {
     @Mock
     private lateinit var rechercheFormationRepository: RechercheFormationRepository
+
+    @Mock
+    private lateinit var filtrerRechercheBuilder: FiltrerRechercheBuilder
 
     @InjectMocks
     private lateinit var rechercherFormationsService: RechercherFormationsService
@@ -33,80 +33,12 @@ class RechercherFormationsServiceTest {
     }
 
     @Nested
-    inner class FiltrerMotsRecherches {
-        @Test
-        fun `ne doit pas appeler le repository pour les mots alpha numérique`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            val inOrder = inOrder(rechercheFormationRepository)
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("12")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("réchèrche")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("peu")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("Toùt")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("peTit")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("lôngue")
-            verifyNoMoreInteractions(rechercheFormationRepository)
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository pour les mots de moins de 2 caractères`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "1")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "a")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "b")
-            then(rechercheFormationRepository).should(never()).rechercherUneFormation(motRecherche = "c")
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository pour les mots vides`() {
-            // Given
-            val rechercheAvecMotsVide =
-                "ma recherche avec ma liste de mots vides le la les aux un une des du des en sur sous dans chez par pour sans contre entre parmi vers derrière devant après avant autour et ou mais donc ni car que quand comme puisque quoique mon mes ton ta tes son sa ses notre nos votre vos leur leurs ce cet cette ces qui que quoi dont lequel laquelle lesquels lesquelles"
-
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheAvecMotsVide,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            val inOrder = inOrder(rechercheFormationRepository)
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("recherche")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("liste")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("mots")
-            inOrder.verify(rechercheFormationRepository).rechercherUneFormation("vides")
-            verifyNoMoreInteractions(rechercheFormationRepository)
-        }
-
-        @Test
-        fun `ne doit pas appeler le repository plusieurs fois pour le même mot`() {
-            // When
-            rechercherFormationsService.rechercheLesFormationsAvecLeurScoreCorrespondantes(
-                recherche = rechercheLongue,
-                tailleMinimumRecherche = 2,
-            )
-
-            // Then
-            then(rechercheFormationRepository).should(times(1)).rechercherUneFormation(motRecherche = "peu")
-        }
-    }
-
-    @Nested
     inner class CalculerScores {
         @Test
         fun `doit retourner la liste des formations sans doublons avec les scores additionnés`() {
             // Given
+            val motsRecherches = listOf("12", "réchèrche", "peu", "Toùt", "peTit", "lôngue")
+            given(filtrerRechercheBuilder.filtrerMotsRecherches(rechercheLongue, 2)).willReturn(motsRecherches)
             val formationsPour12 =
                 listOf(
                     ResultatRechercheFormationCourte(
