@@ -26,5 +26,9 @@ COPY --from=build /usr/src/mps-etl.jar .
 # Exposed port
 EXPOSE 3000
 
+RUN apt-get update && apt-get install -y \
+  git \
+  && rm -rf /var/lib/apt/lists/*
+
 # Set the command to run the application
 CMD ["java", "-jar", "mps-etl.jar"]
