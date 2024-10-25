@@ -70,6 +70,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Les tables des formations est correctement remplie`() {
             assertDoesNotThrow { updateFormationDbs.updateFormationsDb() }
             assertDoesNotThrow { updateFormationDbs.updateVoeuxDb() }
@@ -81,6 +82,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
 
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Une formation ou un voeu qui disparait est marqué obsolete`() {
             //When
             val formation =  FormationEntity().apply {
@@ -141,6 +143,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Les table bacs et specialites doivent être non vide`() {
             val bacs = baccalaureatDb.findAll()
             val specialites = specialiteDb.findAll()
@@ -159,6 +162,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateMetierDbs: UpdateMetierDbs
 
         @Test
+        @Tag("resource-intensive-test")
         fun `Doit réussir à mettre à jour le référentiel des métiers`() {
             assertDoesNotThrow { updateMetierDbs.update() }
         }
@@ -214,6 +218,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
         }
 
         @Test
+        @Tag("resource-intensive-test")
         fun `La table des villes doit inclure Soulac-sur-Mer`() {
             updateSuggestionsDbs.updateVillesDb()
             val ville1 = villesDb.findById(TestData.VILLE_SOULAC_SUR_MER_INSEE_CODE)
