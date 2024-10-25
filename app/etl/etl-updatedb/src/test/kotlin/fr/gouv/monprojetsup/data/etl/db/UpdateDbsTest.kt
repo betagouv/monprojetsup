@@ -159,12 +159,13 @@ class UpdateDbsTest : BDDRepositoryTest() {
         lateinit var updateMetierDbs: UpdateMetierDbs
 
         @Test
-        fun `Doit réussir à mettre à jour les referentiels et vider les tables`() {
+        fun `Doit réussir à mettre à jour le référentiel des métiers`() {
             assertDoesNotThrow { updateMetierDbs.update() }
         }
 
     }
 
+    @Tag("resource-intensive-test")
     @Nested
     inner class UpdateFormationsMetiersTest {
 
@@ -182,6 +183,8 @@ class UpdateDbsTest : BDDRepositoryTest() {
             updateMetierDbs.update()
             updateFormationsMetiersDbs.update()
         }
+
+        @Tag("resource-intensive-test")
         @Test
         fun `Doit réussir à mettre à jour les liens formations métiers`() {
             assertDoesNotThrow { update() }
