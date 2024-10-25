@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.infrastructure.entity.FormationDetailleeEntity
-import org.slf4j.Logger
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrElse
@@ -15,7 +15,7 @@ import kotlin.jvm.optionals.getOrElse
 class FormationBDDRepository(
     val formationJPARepository: FormationJPARepository,
     val formationDetailleeJPARepository: FormationDetailleeJPARepository,
-    val logger: Logger,
+    val logger: MonProjetSupLogger,
 ) : FormationRepository {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
@@ -61,6 +61,10 @@ class FormationBDDRepository(
     }
 
     private fun logguerFormationInconnue(idFormation: String) {
-        logger.error("La formation $idFormation n'est pas présente en base")
+        logger.error(
+            type = "FORMATION_ABSENTE_BDD",
+            message = "La formation $idFormation n'est pas présente en base",
+            parametres = mapOf("idFormationAbsente" to idFormation),
+        )
     }
 }

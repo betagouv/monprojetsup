@@ -13,8 +13,8 @@ import fr.gouv.monprojetsup.formation.infrastructure.dto.AffiniteProfilRequeteDT
 import fr.gouv.monprojetsup.formation.infrastructure.dto.AffinitesProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilReponseDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.ExplicationFormationPourUnProfilRequeteDTO
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import okhttp3.OkHttpClient
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -24,7 +24,7 @@ class SuggestionApiHttpClient(
     override val baseUrl: String,
     override val objectMapper: ObjectMapper,
     override val httpClient: OkHttpClient,
-    override val logger: Logger,
+    override val logger: MonProjetSupLogger,
 ) : ApiHttpClient(baseUrl, objectMapper, httpClient, logger), SuggestionHttpClient {
     @Throws(MonProjetSupInternalErrorException::class)
     override fun recupererLesSuggestions(profilEleve: ProfilEleve.AvecProfilExistant): SuggestionsPourUnProfil {
@@ -56,9 +56,13 @@ class SuggestionApiHttpClient(
             }
         val formationsSansExplications = explications.filter { it.value == null }
         if (formationsSansExplications.isNotEmpty()) {
+            val idsFormationsSansExplications = formationsSansExplications.map { it.key }
             logger.error(
-                "Les formations ${formationsSansExplications.map { it.key }} n'ont pas d'explications renvoyées par l'API suggestion " +
-                    "pour le profil élève avec l'id ${profilEleve.id}",
+                type = "FORMATIONS_SANS_EXPLICATIONS",
+                message =
+                    "Les formations $idsFormationsSansExplications n'ont pas d'explications renvoyées par " +
+                        "l'API suggestion pour le profil élève avec l'id ${profilEleve.id}",
+                parametres = mapOf("formationsSansExplications" to idsFormationsSansExplications, "idEleve" to profilEleve.id),
             )
         }
         return explications

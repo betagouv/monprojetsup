@@ -4,7 +4,7 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.eleve.infrastructure.entity.ProfilEleveEntity
-import org.slf4j.Logger
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
@@ -12,7 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 @Repository
 class EleveBDDRepository(
     private val eleveJPARepository: EleveJPARepository,
-    private val logger: Logger,
+    private val logger: MonProjetSupLogger,
 ) : EleveRepository {
     @Transactional(readOnly = true)
     override fun recupererUnEleve(id: String): ProfilEleve {
@@ -23,7 +23,7 @@ class EleveBDDRepository(
     @Transactional(readOnly = false)
     override fun creerUnEleve(id: String): ProfilEleve.AvecProfilExistant {
         if (eleveJPARepository.existsById(id)) {
-            logger.warn("L'élève $id a voulu être crée alors qu'il existe déjà en base")
+            logger.warn(type = "ID_ELEVE_EXISTE_DEJA", message = "L'élève $id a voulu être crée alors qu'il existe déjà en base")
             return eleveJPARepository.findById(id).get().toProfilEleve()
         } else {
             val entity = ProfilEleveEntity()

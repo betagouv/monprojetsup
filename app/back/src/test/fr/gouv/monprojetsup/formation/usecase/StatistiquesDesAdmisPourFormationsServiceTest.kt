@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.commun.Constantes.ANNEE_DONNEES_PARCOURSUP
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.port.FrequencesCumuleesDesMoyenneDesAdmisRepository
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 
 class StatistiquesDesAdmisPourFormationsServiceTest {
     @Mock
@@ -25,7 +25,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
     lateinit var statistiquesDesAdmisBuilder: StatistiquesDesAdmisBuilder
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var moyenneGeneraleDesAdmisService: StatistiquesDesAdmisPourFormationsService
@@ -263,7 +263,11 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     "fl0004" to null,
                 ),
             )
-            then(logger).should().warn("Les formations suivantes n'ont pas de statistiques : [fl0004]")
+            then(logger).should().warn(
+                type = "FORMATION_SANS_STATISTIQUE",
+                message = "Les formations suivantes n'ont pas de statistiques : [fl0004]",
+                mapOf("formationsSansStatistiques" to listOf("fl0004")),
+            )
         }
     }
 }

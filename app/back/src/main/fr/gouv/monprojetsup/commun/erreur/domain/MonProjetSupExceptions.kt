@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.commun.erreur.domain
 
 abstract class MonProjetSupExceptions(
     open val code: String,
-    message: String,
+    override val message: String,
     cause: Throwable? = null,
 ) : Exception(message, cause)
 

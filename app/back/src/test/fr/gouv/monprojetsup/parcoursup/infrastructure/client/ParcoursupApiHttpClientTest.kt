@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.parcoursup.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.helper.MockitoHelper
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
@@ -19,7 +20,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 import org.springframework.http.HttpStatus
 
 class ParcoursupApiHttpClientTest {
@@ -27,7 +27,7 @@ class ParcoursupApiHttpClientTest {
     private lateinit var httpClient: OkHttpClient
 
     @Mock
-    private lateinit var logger: Logger
+    private lateinit var logger: MonProjetSupLogger
 
     private val objectMapper = ObjectMapper()
 

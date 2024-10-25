@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -12,11 +13,15 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class ApplicationControllerAdvice {
+class ApplicationControllerAdvice(
+    val logguer: MonProjetSupLogger,
+) {
     @ExceptionHandler(MonProjetSupInternalErrorException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleInternalError(domainError: MonProjetSupInternalErrorException): ProblemDetail {
-        val reponse = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        val status = HttpStatus.INTERNAL_SERVER_ERROR
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse
@@ -25,7 +30,9 @@ class ApplicationControllerAdvice {
     @ExceptionHandler(MonProjetIllegalStateErrorException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleIllegalState(domainError: MonProjetIllegalStateErrorException): ProblemDetail {
-        val reponse = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        val status = HttpStatus.INTERNAL_SERVER_ERROR
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse
@@ -34,7 +41,9 @@ class ApplicationControllerAdvice {
     @ExceptionHandler(MonProjetSupBadRequestException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleBadRequest(domainError: MonProjetSupBadRequestException): ProblemDetail {
-        val reponse = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST)
+        val status = HttpStatus.BAD_REQUEST
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse
@@ -43,7 +52,9 @@ class ApplicationControllerAdvice {
     @ExceptionHandler(MonProjetSupNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleNotFound(domainError: MonProjetSupNotFoundException): ProblemDetail {
-        val reponse = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+        val status = HttpStatus.NOT_FOUND
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse
@@ -52,7 +63,9 @@ class ApplicationControllerAdvice {
     @ExceptionHandler(MonProjetSupForbiddenException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handleForbidden(domainError: MonProjetSupForbiddenException): ProblemDetail {
-        val reponse = ProblemDetail.forStatus(HttpStatus.FORBIDDEN)
+        val status = HttpStatus.FORBIDDEN
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code
         reponse.detail = domainError.msg
         return reponse

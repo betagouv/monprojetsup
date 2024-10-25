@@ -4,12 +4,12 @@ import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
@@ -18,7 +18,7 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
     private lateinit var communesAvecVoeuxAuxAlentoursJPARepository: CommunesAvecVoeuxAuxAlentoursJPARepository
 
     @Mock
-    private lateinit var logger: Logger
+    private lateinit var logger: MonProjetSupLogger
 
     private lateinit var communesAvecVoeuxAuxAlentoursBDDRepository: CommunesAvecVoeuxAuxAlentoursBDDRepository
 
@@ -64,6 +64,10 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
                 CommuneAvecIdsVoeuxAuxAlentours(Communes.PARIS5EME, distances = emptyList()),
             )
         assertThat(result).isEqualTo(attendu)
-        then(logger).should().warn("La commune Paris (75105) n'est pas présente dans la table ref_join_ville_voeu")
+        then(logger).should().warn(
+            type = "COMMUNE_NON_PRESENTE_EN_BDD",
+            message = "La commune Paris (75105) n'est pas présente dans la table ref_join_ville_voeu",
+            parametres = mapOf("nomCommune" to "Paris", "codeInsee" to "75105"),
+        )
     }
 }

@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.metier.infrastructure.repository
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
 import jakarta.persistence.EntityManager
@@ -13,13 +14,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.Mockito.only
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
 class MetierBDDRepositoryTest : BDDRepositoryTest() {
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @Autowired
     lateinit var metierJPARepository: MetierJPARepository
@@ -208,7 +208,11 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(logger).should(only()).error("Le métier MET004 n'est pas présent en base")
+            then(logger).should(only()).error(
+                type = "METIER_ABSENT_BDD",
+                message = "Le métier MET004 n'est pas présent en base",
+                parametres = mapOf("metierAbsent" to "MET004"),
+            )
         }
 
         @Test
@@ -291,7 +295,11 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                     ),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(logger).should(only()).error("Le métier MET004 n'est pas présent en base")
+            then(logger).should(only()).error(
+                type = "METIER_ABSENT_BDD",
+                message = "Le métier MET004 n'est pas présent en base",
+                parametres = mapOf("metierAbsent" to "MET004"),
+            )
         }
 
         @Test

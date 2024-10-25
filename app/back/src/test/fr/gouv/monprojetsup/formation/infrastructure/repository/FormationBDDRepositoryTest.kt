@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -13,13 +14,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
 class FormationBDDRepositoryTest : BDDRepositoryTest() {
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @Autowired
     lateinit var formationJPARepository: FormationJPARepository
@@ -154,9 +154,27 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             assertThat(result).isEqualTo(emptyList<Formation>())
-            then(logger).should().error("La formation fl0007 n'est pas présente en base")
-            then(logger).should().error("La formation fl0008 n'est pas présente en base")
-            then(logger).should().error("La formation fl0009 n'est pas présente en base")
+            then(
+                logger,
+            ).should().error(
+                type = "FORMATION_ABSENTE_BDD",
+                message = "La formation fl0007 n'est pas présente en base",
+                parametres = mapOf("idFormationAbsente" to "fl0007"),
+            )
+            then(
+                logger,
+            ).should().error(
+                type = "FORMATION_ABSENTE_BDD",
+                message = "La formation fl0008 n'est pas présente en base",
+                parametres = mapOf("idFormationAbsente" to "fl0008"),
+            )
+            then(
+                logger,
+            ).should().error(
+                type = "FORMATION_ABSENTE_BDD",
+                message = "La formation fl0009 n'est pas présente en base",
+                parametres = mapOf("idFormationAbsente" to "fl0009"),
+            )
             then(logger).shouldHaveNoMoreInteractions()
         }
     }
@@ -319,8 +337,20 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
                     FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
                 )
             assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
-            then(logger).should().error("La formation idInconnu n'est pas présente en base")
-            then(logger).should().error("La formation  n'est pas présente en base")
+            then(
+                logger,
+            ).should().error(
+                type = "FORMATION_ABSENTE_BDD",
+                message = "La formation idInconnu n'est pas présente en base",
+                parametres = mapOf("idFormationAbsente" to "idInconnu"),
+            )
+            then(
+                logger,
+            ).should().error(
+                type = "FORMATION_ABSENTE_BDD",
+                message = "La formation  n'est pas présente en base",
+                parametres = mapOf("idFormationAbsente" to ""),
+            )
             then(logger).shouldHaveNoMoreInteractions()
         }
     }

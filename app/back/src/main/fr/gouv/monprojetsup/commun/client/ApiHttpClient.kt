@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionRequeteDTO
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import okhttp3.Credentials
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
@@ -11,13 +12,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import org.slf4j.Logger
 
 abstract class ApiHttpClient(
     open val baseUrl: String,
     protected open val objectMapper: ObjectMapper,
     protected open val httpClient: OkHttpClient,
-    protected open val logger: Logger,
+    protected open val logger: MonProjetSupLogger,
 ) {
     @Throws(MonProjetSupInternalErrorException::class)
     protected inline fun <reified T> get(

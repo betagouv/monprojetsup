@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExem
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -39,7 +40,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 import java.net.ConnectException
 
 class SuggestionApiHttpClientTest {
@@ -47,7 +47,7 @@ class SuggestionApiHttpClientTest {
     lateinit var httpClient: OkHttpClient
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @Captor
     lateinit var requeteCaptor: ArgumentCaptor<Request>
@@ -1179,8 +1179,11 @@ class SuggestionApiHttpClientTest {
             then(
                 logger,
             ).should().error(
-                "Les formations [fl1] n'ont pas d'explications renvoyées par l'API suggestion pour le profil " +
-                    "élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c",
+                type = "FORMATIONS_SANS_EXPLICATIONS",
+                message =
+                    "Les formations [fl1] n'ont pas d'explications renvoyées par l'API suggestion pour le profil " +
+                        "élève avec l'id adcf627c-36dd-4df5-897b-159443a6d49c",
+                parametres = mapOf("formationsSansExplications" to listOf("fl1"), "idEleve" to "adcf627c-36dd-4df5-897b-159443a6d49c"),
             )
         }
 

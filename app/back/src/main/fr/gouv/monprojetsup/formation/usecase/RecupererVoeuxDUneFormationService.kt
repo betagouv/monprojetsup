@@ -4,13 +4,13 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
-import org.slf4j.Logger
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.stereotype.Service
 
 @Service
 class RecupererVoeuxDUneFormationService(
     private val voeuRepository: VoeuRepository,
-    private val logger: Logger,
+    private val logger: MonProjetSupLogger,
 ) {
     fun recupererVoeuxTriesParAffinites(
         idsFormations: List<String>,
@@ -28,7 +28,7 @@ class RecupererVoeuxDUneFormationService(
                     )
             }
         messagesDeWarning.distinct().forEach {
-            logger.warn(it)
+            logger.warn(type = "ERREUR_TRI_VOEUX", message = it)
         }
         return voeuxTriesParAffinitesParFormation
     }
@@ -42,7 +42,7 @@ class RecupererVoeuxDUneFormationService(
         val voeuxTriesParAffinites =
             triesParAffinitesVoeux(voeux, profilEleve, messagesDeWarning)
         messagesDeWarning.forEach {
-            logger.warn(it)
+            logger.warn(type = "ERREUR_TRI_VOEUX", message = it)
         }
         return voeuxTriesParAffinites
     }

@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.metier.infrastructure.repository
 
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierEntity
 import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationEntity
 import jakarta.persistence.EntityManager
-import org.slf4j.Logger
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 class MetierBDDRepository(
     private val metierJPARepository: MetierJPARepository,
     private val entityManager: EntityManager,
-    private val logger: Logger,
+    private val logger: MonProjetSupLogger,
 ) : MetierRepository {
     @Transactional(readOnly = true)
     override fun recupererMetiersDeFormations(idsFormations: List<String>): Map<String, List<Metier>> {
@@ -48,7 +48,7 @@ class MetierBDDRepository(
         return ids.mapNotNull { idMetier ->
             val metier = metiers.firstOrNull { it.id == idMetier }
             if (metier == null) {
-                logger.error("Le métier $idMetier n'est pas présent en base")
+                logguerMetierAbsent(idMetierAbsent = idMetier)
             }
             metier?.let {
                 MetierAvecSesFormations(
@@ -68,7 +68,7 @@ class MetierBDDRepository(
         return ids.mapNotNull { idMetier ->
             val metier = metiers.firstOrNull { it.id == idMetier }
             if (metier == null) {
-                logger.error("Le métier $idMetier n'est pas présent en base")
+                logguerMetierAbsent(idMetierAbsent = idMetier)
             }
             metier?.toMetier()
         }
@@ -78,5 +78,13 @@ class MetierBDDRepository(
     override fun recupererIdsMetiersInexistants(ids: List<String>): List<String> {
         val existingIds = metierJPARepository.findExistingIds(ids)
         return ids.filterNot { existingIds.contains(it) }
+    }
+
+    private fun logguerMetierAbsent(idMetierAbsent: String) {
+        logger.error(
+            type = "METIER_ABSENT_BDD",
+            message = "Le métier $idMetierAbsent n'est pas présent en base",
+            parametres = mapOf("metierAbsent" to idMetierAbsent),
+        )
     }
 }

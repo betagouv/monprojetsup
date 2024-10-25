@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
 import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -21,6 +22,9 @@ import org.springframework.test.context.ContextConfiguration
 abstract class ControllerTest {
     @MockBean
     lateinit var recupererEleveService: RecupererEleveService
+
+    @MockBean
+    lateinit var logger: MonProjetSupLogger
 
     @BeforeEach
     fun setup() {

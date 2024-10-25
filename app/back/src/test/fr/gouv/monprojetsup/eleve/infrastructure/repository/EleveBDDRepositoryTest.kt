@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
@@ -25,7 +25,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var eleveJPARepository: EleveJPARepository
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     lateinit var eleveBDDRepository: EleveBDDRepository
 
@@ -123,7 +123,10 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             assertThat(result).isEqualTo(profil0f88)
             then(logger).should()
-                .warn("L'élève 0f88ddd1-62ef-436e-ad3f-cf56d5d14c15 a voulu être crée alors qu'il existe déjà en base")
+                .warn(
+                    type = "ID_ELEVE_EXISTE_DEJA",
+                    message = "L'élève 0f88ddd1-62ef-436e-ad3f-cf56d5d14c15 a voulu être crée alors qu'il existe déjà en base",
+                )
         }
     }
 

@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.RENNES
 import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
 import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -25,14 +26,13 @@ import org.mockito.BDDMockito.times
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 
 class RecupererVoeuxDUneFormationServiceTest {
     @Mock
     lateinit var voeuRepository: VoeuRepository
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
@@ -194,8 +194,10 @@ class RecupererVoeuxDUneFormationServiceTest {
             // Then
             then(logger).should(times(1))
                 .warn(
-                    "La commune Paris présente dans le profil de l'élève f859056f-1f3b-49d4-96c8-2a93b925fbaa " +
-                        "a un code commune non standard : Paris",
+                    type = "ERREUR_TRI_VOEUX",
+                    message =
+                        "La commune Paris présente dans le profil de l'élève f859056f-1f3b-49d4-96c8-2a93b925fbaa " +
+                            "a un code commune non standard : Paris",
                 )
         }
 
@@ -219,7 +221,8 @@ class RecupererVoeuxDUneFormationServiceTest {
             recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve)
 
             // Then
-            then(logger).should(times(1)).warn("La commune du voeu ta1 a un code commune non standard : 1")
+            then(logger).should(times(1))
+                .warn(type = "ERREUR_TRI_VOEUX", message = "La commune du voeu ta1 a un code commune non standard : 1")
         }
     }
 

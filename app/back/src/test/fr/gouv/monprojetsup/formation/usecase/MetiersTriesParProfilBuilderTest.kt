@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.formation.usecase
 
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -10,11 +11,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import org.slf4j.Logger
 
 class MetiersTriesParProfilBuilderTest {
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var builder: MetiersTriesParProfilBuilder
@@ -124,8 +124,16 @@ class MetiersTriesParProfilBuilderTest {
                 metierDetaille7,
             )
         assertThat(resultat).isEqualTo(attendu)
-        then(logger).should().error("Le metier MET_4 n'est pas retourné dans la liste des métiers triés par affinité par l'API")
-        then(logger).should().error("Le metier MET_7 n'est pas retourné dans la liste des métiers triés par affinité par l'API")
+        then(logger).should().error(
+            type = "METIER_NON_REMONTE_PAR_API_SUGGESTION",
+            message = "Le metier MET_4 n'est pas retourné dans la liste des métiers triés par affinité par l'API",
+            parametres = mapOf("metierAbsent" to "MET_4"),
+        )
+        then(logger).should().error(
+            type = "METIER_NON_REMONTE_PAR_API_SUGGESTION",
+            message = "Le metier MET_7 n'est pas retourné dans la liste des métiers triés par affinité par l'API",
+            parametres = mapOf("metierAbsent" to "MET_7"),
+        )
         then(logger).shouldHaveNoMoreInteractions()
     }
 }

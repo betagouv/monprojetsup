@@ -3,11 +3,11 @@ package fr.gouv.monprojetsup.parcoursup.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.commun.client.ApiHttpClient
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupHttpClient
 import fr.gouv.monprojetsup.parcoursup.infrastructure.dto.ParcoursupFavorisReponseDTO
 import okhttp3.OkHttpClient
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -23,7 +23,7 @@ class ParcoursupApiHttpClient(
     override val baseUrl: String,
     override val objectMapper: ObjectMapper,
     override val httpClient: OkHttpClient,
-    override val logger: Logger,
+    override val logger: MonProjetSupLogger,
 ) : ApiHttpClient(
         baseUrl,
         objectMapper,
