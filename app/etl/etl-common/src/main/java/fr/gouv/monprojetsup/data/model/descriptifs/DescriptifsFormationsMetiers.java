@@ -81,7 +81,7 @@ public record DescriptifsFormationsMetiers(
     public String getDescriptifGeneralFront(@NotNull String flCod) {
         val desc = keyToDescriptifs.get(flCod);
         if(desc == null) return null;
-        return Helpers.removeHtml(desc.getDescriptifGeneralFront());
+        return Helpers.removeHtml(desc.getDescriptifGeneralFront()).trim();
     }
 
     @Nullable

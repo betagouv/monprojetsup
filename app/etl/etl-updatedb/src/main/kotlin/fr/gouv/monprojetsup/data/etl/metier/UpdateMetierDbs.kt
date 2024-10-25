@@ -41,14 +41,12 @@ class UpdateMetierDbs(
                     if (label != null) {
                         entity.id = metierId
                         entity.label = label
-                        val descriptifSansMetiersAssocies = descriptifs.getDescriptifGeneralFront(metierId)
-                        val autresMetiers = metiersAssocies[metierId].orEmpty()
-                        if (autresMetiers.isNotEmpty()) {
-                            entity.descriptifGeneral =
-                                descriptifSansMetiersAssocies + "\n\nMétiers associés :" + autresMetiers.joinToString(", ")
-                        } else {
-                            entity.descriptifGeneral = descriptifSansMetiersAssocies
-                        }
+                        entity.descriptifGeneral = descriptifs.getDescriptifGeneralFront(metierId)
+
+                        val motsCles = arrayListOf(label)
+                        motsCles.addAll(metiersAssocies[metierId].orEmpty())
+                        entity.motsCles = motsCles
+
                         val liensMetier = liens[metierId]
                         if (liensMetier != null) {
                             entity.liens.addAll(liensMetier.map { LienEntity(it.label, it.uri) })
