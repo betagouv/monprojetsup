@@ -1,31 +1,32 @@
 # Use an official Maven image as the base image
-FROM maven:3-eclipse-temurin-17-alpine AS build
+FROM maven:3-eclipse-temurin-21-alpine AS build
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the pom.xml and the project files to the container
-COPY pom.xml .
-COPY src ./src
+COPY ./suggestions ./suggestions
+COPY ./etl ./etl
 
 # Build the application using Maven
-RUN mvn clean package -DskipTests
+RUN cd ./etl && mvn clean compile install -DskipTests=true
+RUN cd ./suggestions && mvn clean package -DskipTests
 
 # Rename jar file 
 RUN mkdir -p /usr/src
-RUN cp target/*.jar /usr/src/mps-backend.jar
+RUN cp ./suggestions/suggestions-server/target/*.jar /usr/src/mps-suggestions.jar
 
 # Use an official OpenJDK image as the base image
-FROM eclipse-temurin:17-jre-noble
+FROM eclipse-temurin:21-jre-noble
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the built JAR file from the previous stage to the container
-COPY --from=build /usr/src/mps-backend.jar .
+COPY --from=build /usr/src/mps-suggestions.jar .
 
 # Exposed port
 EXPOSE 3000
 
 # Set the command to run the application
-CMD ["java", "-jar", "mps-backend.jar"]
+CMD ["java", "-jar", "mps-suggestions.jar"]
