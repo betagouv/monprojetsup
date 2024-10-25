@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
@@ -76,6 +77,44 @@ class MiseAJourFavorisParcoursupServiceTest {
     }
 
     @Test
+    fun `quand l'api parcoursup fail, doit renvoyer le profil et ne pas appeler le repo de voeux`() {
+        // Given
+        val profil =
+            creerProfilAvecProfilExistant(
+                formationsFavorites =
+                    listOf(
+                        VoeuFormation(
+                            idFormation = "fl0010",
+                            niveauAmbition = 1,
+                            voeuxChoisis = emptyList(),
+                            priseDeNote = null,
+                        ),
+                        VoeuFormation(
+                            idFormation = "fl0012",
+                            niveauAmbition = 3,
+                            voeuxChoisis = listOf("ta1", "ta2"),
+                            priseDeNote = "Mon voeu préféré",
+                        ),
+                    ),
+            )
+        given(compteParcoursupRepository.recupererIdCompteParcoursup(ID_ELEVE)).willReturn(510)
+        val exception =
+            MonProjetSupInternalErrorException(
+                "ERREUR_APPEL_API",
+                "Erreur lors de la connexion à l'API à l'url https://monauthentification.fr/Authentification/oauth2/token, " +
+                    "un code 500 a été retourné avec le body null",
+            )
+        given(parcoursupApiHttpClient.recupererLesVoeuxSelectionnesSurParcoursup(510)).willThrow(exception)
+
+        // When
+        val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+
+        // Then
+        then(voeuRepository).shouldHaveNoInteractions()
+        assertThat(resultat).isEqualTo(profil)
+    }
+
+    @Test
     fun `quand pas de formations favorites sur parcoursup, doit renvoyer le profil et ne pas appeler le repo de voeux`() {
         // Given
         val profil =
@@ -103,6 +142,7 @@ class MiseAJourFavorisParcoursupServiceTest {
         val resultat = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
 
         // Then
+        then(voeuRepository).shouldHaveNoInteractions()
         assertThat(resultat).isEqualTo(profil)
     }
 

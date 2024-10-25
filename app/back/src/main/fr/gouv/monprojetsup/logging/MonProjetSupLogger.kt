@@ -58,7 +58,7 @@ class MonProjetSupLogger(
     fun error(
         type: String,
         message: String,
-        exception: Exception? = null,
+        exception: Throwable? = null,
         parametres: Map<String, Any> = emptyMap(),
     ) {
         logger.error(message, kv(TYPE, type), kv(EXCEPTION, exception), kv(PARAMETRES, exception))

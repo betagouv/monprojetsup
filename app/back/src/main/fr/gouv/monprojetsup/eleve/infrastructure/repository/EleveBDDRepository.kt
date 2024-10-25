@@ -5,8 +5,8 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
 import fr.gouv.monprojetsup.eleve.infrastructure.entity.ProfilEleveAvecCompteParcoursupEntity
 import fr.gouv.monprojetsup.eleve.infrastructure.entity.ProfilEleveEntity
-import jakarta.persistence.EntityManager
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,9 +1,11 @@
 package fr.gouv.monprojetsup.eleve.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.domain.port.ParcoursupApiFavorisClient
 import org.springframework.stereotype.Service
@@ -13,6 +15,7 @@ class MiseAJourFavorisParcoursupService(
     private val compteParcoursupRepository: CompteParcoursupRepository,
     private val parcoursupApiFavorisClient: ParcoursupApiFavorisClient,
     private val voeuRepository: VoeuRepository,
+    private val logger: MonProjetSupLogger,
 ) {
     fun mettreAJourFavorisParcoursup(profil: ProfilEleve.AvecProfilExistant): ProfilEleve.AvecProfilExistant {
         val formationsFavorites = profil.formationsFavorites ?: emptyList()
@@ -77,7 +80,12 @@ class MiseAJourFavorisParcoursupService(
 
     private fun recupererFavorisParcoursup(idEleve: String): List<FavorisParcoursup> {
         return compteParcoursupRepository.recupererIdCompteParcoursup(idEleve)?.let { compteParcoursup ->
-            parcoursupApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
+            try {
+                parcoursupApiFavorisClient.recupererLesVoeuxSelectionnesSurParcoursup(compteParcoursup)
+            } catch (exception: MonProjetSupInternalErrorException) {
+                logger.error(exception.code, exception.message, exception.origine)
+                emptyList()
+            }
         } ?: emptyList()
     }
 }
