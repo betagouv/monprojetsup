@@ -118,7 +118,7 @@ class RecupererFormationsServiceTest {
                         apprentissage = false,
                     ),
                 )
-            given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
+            given(formationRepository.recupererLesFormations(idsFormations, true)).willReturn(formations)
             val critereAnalyseCandidatureFL0001 = mock(CritereAnalyseCandidature::class.java)
             val critere2AnalyseCandidatureFL0001 = mock(CritereAnalyseCandidature::class.java)
             val critereAnalyseCandidatureFL0003 = mock(CritereAnalyseCandidature::class.java)
@@ -180,6 +180,7 @@ class RecupererFormationsServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormations = listOf("fl0001", "fl0003"),
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 ),
             ).willReturn(voeuxDesFormations)
 
@@ -244,7 +245,7 @@ class RecupererFormationsServiceTest {
 
             // When
             val resultat =
-                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations)
+                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =
@@ -334,7 +335,7 @@ class RecupererFormationsServiceTest {
                         apprentissage = false,
                     ),
                 )
-            given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
+            given(formationRepository.recupererLesFormations(idsFormations, true)).willReturn(formations)
             val critereAnalyseCandidatureFL0001 = mock(CritereAnalyseCandidature::class.java)
             val critere2AnalyseCandidatureFL0001 = mock(CritereAnalyseCandidature::class.java)
             val criteres =
@@ -376,6 +377,7 @@ class RecupererFormationsServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormations = listOf("fl0001", "fl0003"),
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 ),
             ).willReturn(voeuxDesFormations)
             val voeuxParCommunesFavoritesFL0001 =
@@ -430,7 +432,7 @@ class RecupererFormationsServiceTest {
 
             // When
             val resultat =
-                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations)
+                recupererFormationsService.recupererFichesFormationPourProfil(profilEleve, affinitesFormationEtMetier, idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =
@@ -510,12 +512,12 @@ class RecupererFormationsServiceTest {
                         apprentissage = false,
                     ),
                 )
-            given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
+            given(formationRepository.recupererLesFormations(idsFormations, true)).willReturn(formations)
 
             val metier234 = mock(Metier::class.java)
             val metier123 = mock(Metier::class.java)
             val metier534 = mock(Metier::class.java)
-            given(metierRepository.recupererMetiersDeFormations(idsFormations)).willReturn(
+            given(metierRepository.recupererMetiersDeFormations(idsFormations, true)).willReturn(
                 mapOf(
                     "fl0001" to listOf(metier123, metier534),
                     "fl0003" to listOf(metier234, metier534),
@@ -564,12 +566,12 @@ class RecupererFormationsServiceTest {
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"))).willReturn(
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"), true)).willReturn(
                 voeuxDesFormations,
             )
 
             // When
-            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations)
+            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =
@@ -640,11 +642,11 @@ class RecupererFormationsServiceTest {
                         apprentissage = false,
                     ),
                 )
-            given(formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)).willReturn(formations)
+            given(formationRepository.recupererLesFormations(idsFormations, true)).willReturn(formations)
 
             val metier123 = mock(Metier::class.java)
             val metier534 = mock(Metier::class.java)
-            given(metierRepository.recupererMetiersDeFormations(idsFormations)).willReturn(
+            given(metierRepository.recupererMetiersDeFormations(idsFormations, true)).willReturn(
                 mapOf(
                     "fl0001" to listOf(metier123, metier534),
                 ),
@@ -679,12 +681,12 @@ class RecupererFormationsServiceTest {
                     Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001)
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"))).willReturn(
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"), true)).willReturn(
                 voeuxDesFormations,
             )
 
             // When
-            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations)
+            val resultat = recupererFormationsService.recupererFichesFormation(idsFormations, true)
 
             // Then
             val ficheFormationFl0001 =

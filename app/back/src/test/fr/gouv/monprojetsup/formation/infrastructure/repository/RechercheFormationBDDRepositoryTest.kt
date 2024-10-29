@@ -159,4 +159,22 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val formationsCourteResultat = resultat.map { it.formation }
         assertThat(formationsCourteResultat).isEqualTo(attendu)
     }
+
+    @Test
+    @Sql("classpath:recherche_formation.sql")
+    fun `Si géographie, doit retourner seulement ceux non obsolètes`() {
+        // Given
+        val recherche = "géographie"
+
+        // When
+        val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
+            )
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(formationsCourteResultat).isEqualTo(attendu)
+    }
 }

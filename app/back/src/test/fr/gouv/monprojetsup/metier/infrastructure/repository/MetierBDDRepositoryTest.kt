@@ -38,7 +38,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererMetiersDeFormations {
         @Test
         @Sql("classpath:metier.sql")
-        fun `Doit retourner les métiers associés aux formations`() {
+        fun `Doit retourner les métiers associés aux formations sans filtrer les métiers obsolètes`() {
             // Given
             val idsFormations =
                 listOf(
@@ -49,7 +49,7 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations)
+            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations, true)
 
             // Then
             val attendu =
@@ -120,12 +120,76 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:metier.sql")
+        fun `Doit retourner les métiers associés aux formations en filtrant les métiers obsolètes`() {
+            // Given
+            val idsFormations =
+                listOf(
+                    "fl1",
+                    "fl10419",
+                    "fl250",
+                    "fl660008",
+                )
+
+            // When
+            val result = metierBDDRepository.recupererMetiersDeFormations(idsFormations, false)
+
+            // Then
+            val attendu =
+                mapOf(
+                    "fl1" to listOf(),
+                    "fl10419" to
+                        listOf(
+                            Metier(
+                                id = "MET003",
+                                nom = "Architecte",
+                                descriptif =
+                                    "L architecte est un professionnel du bâtiment qui conçoit des projets de construction ou de " +
+                                        "rénovation de bâtiments. Il peut travailler sur des projets de construction de maisons " +
+                                        "individuelles, d immeubles, de bureaux, d écoles, de musées, de centres commerciaux, de " +
+                                        "stades, etc. L architecte peut travailler en agence d architecture, en bureau d études, " +
+                                        "en entreprise de construction ou en collectivité territoriale.",
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/architecte",
+                                        ),
+                                    ),
+                            ),
+                        ),
+                    "fl250" to
+                        listOf(
+                            Metier(
+                                id = "MET003",
+                                nom = "Architecte",
+                                descriptif =
+                                    "L architecte est un professionnel du bâtiment qui conçoit des projets de construction ou de " +
+                                        "rénovation de bâtiments. Il peut travailler sur des projets de construction de maisons " +
+                                        "individuelles, d immeubles, de bureaux, d écoles, de musées, de centres commerciaux, de " +
+                                        "stades, etc. L architecte peut travailler en agence d architecture, en bureau d études, " +
+                                        "en entreprise de construction ou en collectivité territoriale.",
+                                liens =
+                                    listOf(
+                                        Lien(
+                                            nom = "Voir la fiche Onisep",
+                                            url = "https://www.onisep.fr/ressources/univers-metier/metiers/architecte",
+                                        ),
+                                    ),
+                            ),
+                        ),
+                    "fl660008" to listOf(),
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
+        }
+
+        @Test
+        @Sql("classpath:metier.sql")
         fun `Si la liste est vide, doit retourner une liste vide`() {
             // Given
             val ids = emptyList<String>()
 
             // When
-            val result = metierBDDRepository.recupererMetiersDeFormations(ids)
+            val result = metierBDDRepository.recupererMetiersDeFormations(ids, true)
 
             // Then
             val attendu = emptyMap<String, Metier>()

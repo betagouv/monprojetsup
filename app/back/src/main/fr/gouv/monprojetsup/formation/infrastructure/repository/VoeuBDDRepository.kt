@@ -16,9 +16,21 @@ class VoeuBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesVoeuxDeFormations(idsFormations: List<String>): Map<String, List<Voeu>> {
+    override fun recupererLesVoeuxDeFormations(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): Map<String, List<Voeu>> {
         val voeux =
-            voeuJPARepository.findAllByIdFormationIn(idsFormations).groupBy { it.idFormation }
+            (
+                if (obsoletesInclus) {
+                    voeuJPARepository.findAllByIdFormationIn(idsFormations)
+                } else {
+                    voeuJPARepository.findAllByIdFormationInAndObsolete(
+                        idsFormations,
+                        false,
+                    )
+                }
+            ).groupBy { it.idFormation }
         return idsFormations.associateWith { idFormation ->
             voeux[idFormation]?.map { it.toVoeu() } ?: emptyList()
         }

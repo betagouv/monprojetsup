@@ -153,3 +153,27 @@ VALUES ('fl0013',
         null,
         ARRAY [100, 0, 0, 0, 0],
         null);
+
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, obsolete)
+VALUES ('fl0015',
+        'Licence - Géographie et aménagement)',
+        null,
+        '{}',
+        null,
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null, true);
+
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, obsolete)
+VALUES ('fl0016',
+        'Bachelors des écoles d''ingénieurs (Bac+3))',
+        null,
+        '{}',
+        '{géographie}',
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null, true);

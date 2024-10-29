@@ -142,7 +142,7 @@ class MiseAJourEleveService(
         voeuxDeFormations?.mapNotNull {
             if (it.voeuxChoisis.isNotEmpty()) it.idFormation else null
         }?.takeUnless { it.isEmpty() }?.let { idsFormations ->
-            val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus = true)
             voeuxDeFormations.forEach { voeu ->
                 if (voeu.voeuxChoisis.isNotEmpty()) {
                     val voeuDuVoeu = voeux[voeu.idFormation]?.map { it.id }

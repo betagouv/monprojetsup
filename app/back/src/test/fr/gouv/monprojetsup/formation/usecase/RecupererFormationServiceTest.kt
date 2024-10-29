@@ -109,7 +109,7 @@ class RecupererFormationServiceTest {
             given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
+            given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxPossiblesPourLaFormationFL0001 =
                 listOf(
                     Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
@@ -119,7 +119,7 @@ class RecupererFormationServiceTest {
                     Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001")).willReturn(
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001", true)).willReturn(
                 voeuxPossiblesPourLaFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
@@ -173,7 +173,7 @@ class RecupererFormationServiceTest {
             given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
+            given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxFormationFL0001 =
                 listOf(
                     Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
@@ -183,7 +183,7 @@ class RecupererFormationServiceTest {
                     Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001")).willReturn(
+            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001", obsoletesInclus = true)).willReturn(
                 voeuxFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
@@ -256,7 +256,7 @@ class RecupererFormationServiceTest {
             given(critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)).willReturn(
                 criteresAnalyseCandidature,
             )
-            given(formationRepository.recupererUneFormationAvecSesMetiers("fl0001")).willReturn(formation)
+            given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxFormationFL0001 =
                 listOf(
                     Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
@@ -270,6 +270,7 @@ class RecupererFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl0001",
                     profilEleve = profil,
+                    obsoletesInclus = true,
                 ),
             ).willReturn(voeuxFormationFL0001)
             given(

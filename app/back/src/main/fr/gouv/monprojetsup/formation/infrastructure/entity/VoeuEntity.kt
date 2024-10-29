@@ -31,6 +31,9 @@ class VoeuEntity {
     @Column(name = "id_formation", nullable = false)
     lateinit var idFormation: String
 
+    @Column(name = "obsolete", nullable = false)
+    var obsolete: Boolean = false
+
     fun toVoeu() =
         Voeu(
             id = id,

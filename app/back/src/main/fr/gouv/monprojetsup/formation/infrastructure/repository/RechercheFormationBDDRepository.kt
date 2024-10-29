@@ -26,7 +26,7 @@ class RechercheFormationBDDRepository(
                                                   mots_clefs,
                                                   t.i as mot_clef
                                            FROM ref_formation
-                                                    LEFT JOIN LATERAL unnest(mots_clefs) AS t(i) ON true),
+                                                    LEFT JOIN LATERAL unnest(mots_clefs) AS t(i) ON true WHERE obsolete = false),
                      scores_keywords AS (SELECT id,
                                                 label,
                                                 mot_clef,
@@ -46,7 +46,7 @@ class RechercheFormationBDDRepository(
                      expanded_label as (SELECT id,
                                                label,
                                                regexp_split_to_table(label, :regex_non_alpha_numeric_avec_accent) as label_decoupe
-                                        FROM ref_formation),
+                                        FROM ref_formation WHERE obsolete = false),
                      scores_label AS (SELECT id,
                                              label,
                                              label_decoupe,

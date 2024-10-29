@@ -428,7 +428,12 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    false,
+                ),
             ).willReturn(
                 listOf(
                     ficheFormation,
@@ -825,7 +830,12 @@ class FormationControllerTest(
             )
             val idsFormations = listOf("fl2016", "fl2118", "fl680003")
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    false,
+                ),
             ).willReturn(listOf(ficheFormation.copy(id = "fl2016")))
 
             // When & Then
@@ -1174,7 +1184,12 @@ class FormationControllerTest(
                     "fl2051",
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, affinitesFormationEtMetier, idsFormations),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    affinitesFormationEtMetier,
+                    idsFormations,
+                    false,
+                ),
             ).willReturn(
                 listOf(
                     ficheFormation,
@@ -2843,7 +2858,12 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl7")),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl7"),
+                    false,
+                ),
             ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -3310,7 +3330,12 @@ class FormationControllerTest(
                     ficheFormation.copy(id = "fl1"),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl7", "fl1")),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl7", "fl1"),
+                    false,
+                ),
             ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -3804,7 +3829,7 @@ class FormationControllerTest(
                         metiers = emptyList(),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"))).willReturn(fichesFormations)
+            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl7"), false)).willReturn(fichesFormations)
             given(ordonnerRechercheFormationsBuilder.trierParScore(rechercheL1)).willReturn(
                 listOf(
                     FormationCourte(id = "fl1", nom = "L1 - Psychologie"),
@@ -4084,7 +4109,12 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl2"),
+                    true,
+                ),
             ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -4480,7 +4510,12 @@ class FormationControllerTest(
                     ),
                 )
             given(
-                recupererFormationsService.recupererFichesFormationPourProfil(unProfilEleve, toutesLesSuggestions, listOf("fl1", "fl2")),
+                recupererFormationsService.recupererFichesFormationPourProfil(
+                    unProfilEleve,
+                    toutesLesSuggestions,
+                    listOf("fl1", "fl2"),
+                    true,
+                ),
             ).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
@@ -4870,7 +4905,7 @@ class FormationControllerTest(
                         voeux = emptyList(),
                     ),
                 )
-            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"))).willReturn(fichesFormations)
+            given(recupererFormationsService.recupererFichesFormation(listOf("fl1", "fl2"), true)).willReturn(fichesFormations)
             val hateoas =
                 Hateoas(
                     pageActuelle = 1,

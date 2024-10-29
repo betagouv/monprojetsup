@@ -1,4 +1,4 @@
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0001',
         'CAP Fleuriste',
         'Le CAP Fleuriste est un diplôme de niveau 3 qui permet d acquérir les compétences nécessaires pour exercer le métier de fleuriste. La formation dure 2 ans et est accessible après la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le CAP Fleuriste permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
@@ -18,9 +18,10 @@ VALUES ('fl0001',
             "url": "https://candidat.francetravail.fr/formations/detail/3139962/true"
           }
         ]'::jsonb,
+        false,
         false);
 
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0002',
         'Bac pro Fleuriste',
         'Le Bac pro Fleuriste est un diplôme de niveau 4 qui permet d acquérir les compétences nécessaires pour exercer le métier de fleuriste. La formation dure 3 ans et est accessible après la classe de 3ème. Elle comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le Bac pro Fleuriste permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de composition florale.',
@@ -31,9 +32,9 @@ VALUES ('fl0002',
         '{fl0012}',
         ARRAY [13, 50, 12, 5, 15],
         '[]'::jsonb,
-        true);
+        true, false);
 
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0003',
         'ENSA',
         'L ENSA (École Nationale Supérieure d Architecture) est un établissement d enseignement supérieur qui forme des architectes. La formation dure 5 ans et est accessible après le Bac. Elle comprend des enseignements théoriques (histoire de l architecture, théorie de l architecture, etc.) et des enseignements pratiques (dessin, maquette, etc.). L ENSA permet d exercer le métier d architecte en agence d architecture, en bureau d études, en entreprise de construction ou en collectivité territoriale.',
@@ -53,9 +54,9 @@ VALUES ('fl0003',
             "url": "https://www.culture.gouv.fr/Thematiques/Architecture/Formations-recherche-et-metiers/Les-formations-d-architecte-et-de-paysagiste/Les-cursus-et-les-diplomes/Les-ecoles-nationales-superieures-d-architecture"
           }
         ]'::jsonb,
-        false);
+        false, false);
 
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0005',
         'L1 - Géographie',
         'La licence de géographie est un cursus universitaire qui explore les interactions entre les environnements naturels et les sociétés humaines. Elle couvre des domaines variés comme la cartographie, la géopolitique, et l''aménagement du territoire. Les diplômés peuvent poursuivre des carrières dans l''urbanisme, l''environnement, la recherche, et l''enseignement.',
@@ -71,9 +72,9 @@ VALUES ('fl0005',
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
           }
         ]'::jsonb,
-        true);
+        true, true);
 
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0004',
         'L1 - Histoire',
         'La licence se décline en une quarantaine de mentions, allant du droit, à l''informatique, en passant par les arts. Organisée en parcours types, définis par chaque université, la licence permet d''acquérir une culture générale solide, des compétences disciplinaires, transversales et linguistiques.',
@@ -88,9 +89,9 @@ VALUES ('fl0004',
             "nom": "Voir la fiche Onisep",
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire"
           }
-        ]'::jsonb, false);
+        ]'::jsonb, false, true);
 
-INSERT INTO ref_formation
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, apprentissage, obsolete)
 VALUES ('fl0006',
         'L1 - Histoire de l''art',
         'La licence se décline en une quarantaine de mentions, allant du droit, à l''informatique, en passant par les arts. Organisée en parcours types, définis par chaque université, la licence permet d''acquérir une culture générale solide, des compétences disciplinaires, transversales et linguistiques.',
@@ -106,4 +107,4 @@ VALUES ('fl0006',
             "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire-de-l-art"
           }
         ]'::jsonb,
-        true);
+        true, false);

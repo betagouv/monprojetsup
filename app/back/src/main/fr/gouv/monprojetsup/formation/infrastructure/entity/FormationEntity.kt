@@ -66,6 +66,9 @@ class FormationDetailleeEntity {
     @Column(name = "apprentissage", nullable = false)
     var apprentissage: Boolean = false
 
+    @Column(name = "obsolete", nullable = false)
+    var obsolete: Boolean = false
+
     fun toFormation() =
         Formation(
             id = id,

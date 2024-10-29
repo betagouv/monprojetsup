@@ -68,6 +68,7 @@ class FormationController(
                 profilEleve = profilEleve,
                 suggestionsPourUnProfil = suggestions,
                 idsFormations = hateoas.listeCoupee.map { it.idFormation },
+                obsoletesInclus = false,
             )
         return creerFormationsAvecExplicationsDTO(
             formations = formationsSuggerees.filterNot { formation -> profilEleve.corbeilleFormations.any { it == formation.id } },
@@ -141,6 +142,7 @@ class FormationController(
                         profilEleve = utilisateur,
                         suggestionsPourUnProfil = suggestions,
                         idsFormations = hateoas.listeCoupee,
+                        obsoletesInclus = false,
                     )
                 creerFormationsAvecExplicationsDTO(formations, hateoas)
             }
@@ -153,7 +155,11 @@ class FormationController(
                         numeroDePageActuelle = numeroDePage,
                         tailleLot = TAILLE_LOT_RECHERCHE_DETAILLEE,
                     )
-                val formations = recupererFormationsService.recupererFichesFormation(idsFormations = hateoas.listeCoupee)
+                val formations =
+                    recupererFormationsService.recupererFichesFormation(
+                        idsFormations = hateoas.listeCoupee,
+                        obsoletesInclus = false,
+                    )
                 creerFormationsAvecExplicationsDTO(formations, hateoas)
             }
         }
@@ -202,9 +208,10 @@ class FormationController(
                         profilEleve = utilisateur,
                         suggestionsPourUnProfil = suggestionsFormationsService.recupererLesSuggestionsPourUnProfil(utilisateur),
                         idsFormations = hateoas.listeCoupee,
+                        obsoletesInclus = true,
                     )
 
-                else -> recupererFormationsService.recupererFichesFormation(idsFormations = hateoas.listeCoupee)
+                else -> recupererFormationsService.recupererFichesFormation(idsFormations = hateoas.listeCoupee, obsoletesInclus = true)
             }
         return creerFormationsAvecExplicationsDTO(formations, hateoas)
     }

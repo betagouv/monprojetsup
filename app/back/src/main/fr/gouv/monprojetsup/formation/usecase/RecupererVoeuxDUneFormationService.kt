@@ -15,8 +15,9 @@ class RecupererVoeuxDUneFormationService(
     fun recupererVoeuxTriesParAffinites(
         idsFormations: List<String>,
         profilEleve: ProfilEleve.AvecProfilExistant,
+        obsoletesInclus: Boolean,
     ): Map<String, List<Voeu>> {
-        val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
+        val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus)
         val messagesDeWarning = mutableListOf<String>()
         val voeuxTriesParAffinitesParFormation =
             voeux.entries.associate { entry ->
@@ -36,6 +37,7 @@ class RecupererVoeuxDUneFormationService(
     fun recupererVoeuxTriesParAffinites(
         idFormation: String,
         profilEleve: ProfilEleve.AvecProfilExistant,
+        obsoletesInclus: Boolean,
     ): List<Voeu> {
         val voeux = voeuRepository.recupererLesVoeuxDUneFormation(idFormation)
         val messagesDeWarning = mutableListOf<String>()
@@ -47,12 +49,18 @@ class RecupererVoeuxDUneFormationService(
         return voeuxTriesParAffinites
     }
 
-    fun recupererVoeux(idFormation: String): List<Voeu> {
+    fun recupererVoeux(
+        idFormation: String,
+        obsoletesInclus: Boolean,
+    ): List<Voeu> {
         return voeuRepository.recupererLesVoeuxDUneFormation(idFormation)
     }
 
-    fun recupererVoeux(idsFormations: List<String>): Map<String, List<Voeu>> {
-        return voeuRepository.recupererLesVoeuxDeFormations(idsFormations)
+    fun recupererVoeux(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): Map<String, List<Voeu>> {
+        return voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus)
     }
 
     private fun triesParAffinitesVoeux(

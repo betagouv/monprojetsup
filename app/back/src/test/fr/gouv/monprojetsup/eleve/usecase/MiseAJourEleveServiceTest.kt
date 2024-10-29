@@ -610,7 +610,7 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                 )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(emptyMap())
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(emptyMap())
 
             // When & Then
             assertThatThrownBy {
@@ -664,7 +664,7 @@ class MiseAJourEleveServiceTest {
                         ),
                     "fl3" to emptyList(),
                 )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -730,7 +730,7 @@ class MiseAJourEleveServiceTest {
                             ),
                         ),
                 )
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"))).willReturn(mapResultat)
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl1", "fl3"), true)).willReturn(mapResultat)
 
             // When & Then
             assertThatThrownBy {
@@ -878,7 +878,7 @@ class MiseAJourEleveServiceTest {
             given(
                 formationRepository.recupererIdsFormationsInexistantes(ids = listOf("fl0011", "fl0015", "fl0013")),
             ).willReturn(emptyList())
-            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl0011"))).willReturn(
+            given(voeuRepository.recupererLesVoeuxDeFormations(listOf("fl0011"), true)).willReturn(
                 mapOf(
                     "fl0011" to
                         listOf(

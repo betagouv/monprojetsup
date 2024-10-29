@@ -25,7 +25,7 @@ class RecupererFormationService(
         profilEleve: ProfilEleve.AvecProfilExistant?,
         idFormation: String,
     ): FicheFormation {
-        val formation = formationRepository.recupererUneFormationAvecSesMetiers(idFormation)
+        val formation = formationRepository.recupererUneFormation(idFormation)
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formation)
         val statistiquesDesAdmis =
             statistiquesDesAdmisPourFormationsService.recupererStatistiquesAdmisDUneFormation(
@@ -44,6 +44,7 @@ class RecupererFormationService(
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = formation.id,
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 )
             val voeuxParCommunesFavorites =
                 profilEleve.communesFavorites?.let {
@@ -76,7 +77,7 @@ class RecupererFormationService(
                 apprentissage = formation.apprentissage,
             )
         } else {
-            val voeux = recupererVoeuxDUneFormationService.recupererVoeux(formation.id)
+            val voeux = recupererVoeuxDUneFormationService.recupererVoeux(formation.id, obsoletesInclus = true)
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,
                 nom = formation.nom,

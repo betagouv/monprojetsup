@@ -225,4 +225,38 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
             )
         assertThat(attendu.containsAll(result.map { it.metier })).isTrue()
     }
+
+    @Test
+    @Sql("classpath:recherche_metier.sql")
+    fun `Si juriste, filtrer les obsolètes`() {
+        // Given
+        val recherche = "juriste"
+
+        // When
+        val result = rechercheMetierBDDRepository.rechercherMetiersCourts(recherche)
+
+        // Then
+        val attendu =
+            listOf(
+                MetierCourt(id = "MET_1024", nom = "juriste en propriété industrielle"),
+                MetierCourt(id = "MET_1189", nom = "juriste bancaire"),
+                MetierCourt(id = "MET_1190", nom = "juriste droit des contrats"),
+                MetierCourt(id = "MET_1191", nom = "juriste droit des sociétés"),
+                MetierCourt(id = "MET_1192", nom = "juriste droit fiscal"),
+                MetierCourt(id = "MET_1194", nom = "juriste propriété industrielle"),
+                MetierCourt(id = "MET_749", nom = "juriste en droit immobilier"),
+                MetierCourt(id = "MET_806", nom = "juriste droit de l'environnement"),
+                MetierCourt(id = "MET_82", nom = "juriste d'entreprise"),
+                MetierCourt(id = "MET_92", nom = "juriste en droit social"),
+            )
+        val metiers = result.map { it.metier }
+        assertThat(metiers.containsAll(attendu)).isTrue()
+        val nonAttendu =
+            listOf(
+                MetierCourt(id = "MET_333", nom = "juriste en propriété intellectuelle"),
+                MetierCourt(id = "MET_1025", nom = "juriste en propriété littéraire et artistique"),
+                MetierCourt(id = "MET_819", nom = "secrétaire juridique"),
+            )
+        assertThat(metiers.none { nonAttendu.contains(it) }).isTrue()
+    }
 }

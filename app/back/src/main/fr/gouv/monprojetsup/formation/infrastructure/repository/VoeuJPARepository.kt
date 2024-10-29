@@ -10,6 +10,11 @@ interface VoeuJPARepository : JpaRepository<VoeuEntity, String> {
 
     fun findAllByIdFormationIn(idsFormations: List<String>): List<VoeuEntity>
 
+    fun findAllByIdFormationInAndObsolete(
+        idsFormations: List<String>,
+        obsoletes: Boolean,
+    ): List<VoeuEntity>
+
     fun findAllByIdFormation(idFormation: String): List<VoeuEntity>
 
     @Query("SELECT voeu.id FROM VoeuEntity voeu WHERE voeu.id IN :ids")

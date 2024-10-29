@@ -17,18 +17,33 @@ class MetierBDDRepository(
     private val logger: MonProjetSupLogger,
 ) : MetierRepository {
     @Transactional(readOnly = true)
-    override fun recupererMetiersDeFormations(idsFormations: List<String>): Map<String, List<Metier>> {
-        val metiers =
-            entityManager.createQuery(
-                """
-                SELECT jointure 
-                FROM JoinFormationMetierEntity jointure 
-                JOIN MetierEntity metier ON metier.id = jointure.id.idMetier
-                WHERE jointure.id.idFormation IN :idsFormations
-                """.trimIndent(),
-                JoinFormationMetierEntity::class.java,
-            ).setParameter("idsFormations", idsFormations)
-                .resultList.groupBy { it.id.idFormation }
+    override fun recupererMetiersDeFormations(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): Map<String, List<Metier>> {
+        val query =
+            if (obsoletesInclus) {
+                entityManager.createQuery(
+                    """
+                    SELECT jointure 
+                    FROM JoinFormationMetierEntity jointure 
+                    JOIN MetierEntity metier ON metier.id = jointure.id.idMetier
+                    WHERE jointure.id.idFormation IN :idsFormations
+                    """.trimIndent(),
+                    JoinFormationMetierEntity::class.java,
+                )
+            } else {
+                entityManager.createQuery(
+                    """
+                    SELECT jointure 
+                    FROM JoinFormationMetierEntity jointure 
+                    JOIN MetierEntity metier ON metier.id = jointure.id.idMetier
+                    WHERE jointure.id.idFormation IN :idsFormations AND metier.obsolete = false
+                    """.trimIndent(),
+                    JoinFormationMetierEntity::class.java,
+                )
+            }
+        val metiers = query.setParameter("idsFormations", idsFormations).resultList.groupBy { it.id.idFormation }
         return idsFormations.associateWith { metiers[it]?.map { it.metier.toMetier() } ?: emptyList() }
     }
 

@@ -23,8 +23,9 @@ class RecupererFormationsService(
         profilEleve: ProfilEleve.AvecProfilExistant,
         suggestionsPourUnProfil: SuggestionsPourUnProfil,
         idsFormations: List<String>,
+        obsoletesInclus: Boolean,
     ): List<FicheFormation.FicheFormationPourProfil> {
-        val formations = formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
+        val formations = formationRepository.recupererLesFormations(idsFormations, obsoletesInclus)
         val idsDesFormationsRetournees = formations.map { it.id }
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formations)
         val statistiquesDesAdmis =
@@ -42,6 +43,7 @@ class RecupererFormationsService(
             recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                 idsDesFormationsRetournees,
                 profilEleve,
+                obsoletesInclus,
             )
         val voeuxAutoursDesCommunesFavorites =
             profilEleve.communesFavorites?.let {
@@ -78,9 +80,12 @@ class RecupererFormationsService(
         }
     }
 
-    fun recupererFichesFormation(idsFormations: List<String>): List<FicheFormation.FicheFormationSansProfil> {
-        val formations = formationRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
-        val metiers = metierRepository.recupererMetiersDeFormations(idsFormations)
+    fun recupererFichesFormation(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): List<FicheFormation.FicheFormationSansProfil> {
+        val formations = formationRepository.recupererLesFormations(idsFormations, obsoletesInclus)
+        val metiers = metierRepository.recupererMetiersDeFormations(idsFormations, obsoletesInclus)
         val idsDesFormationsRetournees = formations.map { it.id }
         val criteresAnalyseCandidature = critereAnalyseCandidatureService.recupererCriteresAnalyseCandidature(formations)
         val statistiquesDesAdmis =
@@ -89,7 +94,7 @@ class RecupererFormationsService(
                 idsFormations = idsDesFormationsRetournees,
                 classe = null,
             )
-        val voeux = recupererVoeuxDUneFormationService.recupererVoeux(idsDesFormationsRetournees)
+        val voeux = recupererVoeuxDUneFormationService.recupererVoeux(idsDesFormationsRetournees, obsoletesInclus)
         return formations.map { formation ->
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,

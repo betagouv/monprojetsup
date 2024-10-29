@@ -92,7 +92,7 @@ class RecupererVoeuxDUneFormationServiceTest {
 
         @BeforeEach
         fun setUp() {
-            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation)).willReturn(voeux)
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation, true)).willReturn(voeux)
             given(profilEleve.id).willReturn(id)
         }
 
@@ -106,6 +106,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
+                    true,
                 )
 
             // Then
@@ -160,6 +161,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
+                    true,
                 )
 
             // Then
@@ -176,6 +178,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idsFormation,
                     profilEleve,
+                    true,
                 )
 
             // Then
@@ -189,7 +192,7 @@ class RecupererVoeuxDUneFormationServiceTest {
             given(profilEleve.communesFavorites).willReturn(listOf(communeInconnue, RENNES))
 
             // When
-            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve)
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve, true)
 
             // Then
             then(logger).should(times(1))
@@ -205,7 +208,7 @@ class RecupererVoeuxDUneFormationServiceTest {
         fun `si une des communes d'un voeu a un code commune non valable, doit logguer un warning`() {
             // Given
             val communeInconnue = Commune(codeInsee = "1", nom = "Paris", latitude = 0.0, longitude = 0.0)
-            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation)).willReturn(
+            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormation, true)).willReturn(
                 mapOf(
                     "fl0001" to
                         listOf(
@@ -218,7 +221,7 @@ class RecupererVoeuxDUneFormationServiceTest {
             given(profilEleve.communesFavorites).willReturn(listOf(PARIS15EME, RENNES))
 
             // When
-            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve)
+            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(idsFormation, profilEleve, true)
 
             // Then
             then(logger).should(times(1))
@@ -251,6 +254,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 )
 
             // Then
@@ -279,6 +283,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 )
 
             // Then
@@ -298,6 +303,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                 recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
                     idFormation = "fl2016",
                     profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 )
 
             // Then
@@ -321,6 +327,7 @@ class RecupererVoeuxDUneFormationServiceTest {
             val result =
                 recupererVoeuxDUneFormationService.recupererVoeux(
                     idFormation = "fl2016",
+                    obsoletesInclus = true,
                 )
 
             // Then
@@ -342,10 +349,16 @@ class RecupererVoeuxDUneFormationServiceTest {
                     "fl2017" to emptyList(),
                     "fl2018" to listOf(ta1, ta2),
                 )
-            given(voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016", "fl2017", "fl2018"))).willReturn(voeux)
+            given(
+                voeuRepository.recupererLesVoeuxDeFormations(idsFormations = listOf("fl2016", "fl2017", "fl2018"), true),
+            ).willReturn(voeux)
 
             // When
-            val result = recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl2016", "fl2017", "fl2018"))
+            val result =
+                recupererVoeuxDUneFormationService.recupererVoeux(
+                    idsFormations = listOf("fl2016", "fl2017", "fl2018"),
+                    obsoletesInclus = true,
+                )
 
             // Then
             assertThat(result).isEqualTo(voeux)

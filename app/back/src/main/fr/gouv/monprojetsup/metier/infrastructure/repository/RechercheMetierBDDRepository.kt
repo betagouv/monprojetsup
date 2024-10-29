@@ -23,12 +23,12 @@ class RechercheMetierBDDRepository(
                                  descriptif_general,
                                  COALESCE(lower(unaccent(label)), '')              AS label_clean,
                                  COALESCE(lower(unaccent(descriptif_general)), '') AS descriptif_clean
-                          FROM ref_metier),
+                          FROM ref_metier WHERE obsolete = false),
                      metiers_decoupes AS
                          (SELECT id,
                                  label,
                                  to_tsvector('french', descriptif_clean) @@
-                                 plainto_tsquery('french', unaccent(lower(:mot_recherche)))          as mot_dans_le_descriptif,
+                                 plainto_tsquery('french', unaccent(lower(:mot_recherche)))               as mot_dans_le_descriptif,
                                  regexp_split_to_table(label_clean, :regex_non_alpha_numeric_avec_accent) as label_decoupe
                           FROM metiers_clean),
                      metiers_similaire AS (SELECT id,
@@ -54,7 +54,7 @@ class RechercheMetierBDDRepository(
                     OR label_contient_mot
                     OR infix_dans_label
                     OR similarite_label_decoupe > 0.4)
-                  AND numero_ligne_label = 1;                    
+                  AND numero_ligne_label = 1;                        
                 """.trimIndent(),
                 RechercheMetierEntity::class.java,
             )

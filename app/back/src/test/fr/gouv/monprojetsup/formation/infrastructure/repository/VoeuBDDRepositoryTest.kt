@@ -56,12 +56,12 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesVoeuxDeFormations {
         @Test
         @Sql("classpath:formation_voeu.sql")
-        fun `Doit retourner les voeux de formations`() {
+        fun `Si les obsoletes sont inclus, doit retourner tous les voeux de formations`() {
             // Given
             val idsFormations = listOf("fl0001", "fl0004", "fl0003")
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
@@ -86,12 +86,40 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation_voeu.sql")
+        fun `Si les obsoletes ne sont pas inclus, doit retourner les voeux non obsoletes des formations`() {
+            // Given
+            val idsFormations = listOf("fl0001", "fl0004", "fl0003")
+
+            // When
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, false)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(
+                mapOf(
+                    "fl0001" to
+                        listOf(
+                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                        ),
+                    "fl0004" to
+                        listOf(
+                            Voeu(id = "ta0005", nom = "Université Paris 1 Panthéon-Sorbonne", commune = PARIS5EME),
+                        ),
+                    "fl0003" to
+                        listOf(
+                            Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
+                        ),
+                ),
+            )
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
         fun `Si la formation n'a pas de voeux, alors sa liste doit être vide`() {
             // Given
             val idsFormations = listOf("fl0002")
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(mapOf("fl0002" to emptyList<Voeu>()))
@@ -104,7 +132,7 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             val idsFormations = emptyList<String>()
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations)
+            val result = voeuBDDRepository.recupererLesVoeuxDeFormations(idsFormations, true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(emptyMap<String, List<Voeu>>())

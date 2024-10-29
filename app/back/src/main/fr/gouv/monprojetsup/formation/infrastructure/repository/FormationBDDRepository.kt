@@ -19,7 +19,7 @@ class FormationBDDRepository(
 ) : FormationRepository {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
-    override fun recupererUneFormationAvecSesMetiers(idFormation: String): Formation {
+    override fun recupererUneFormation(idFormation: String): Formation {
         val formation: FormationDetailleeEntity =
             formationDetailleeJPARepository.findById(idFormation).getOrElse {
                 throw MonProjetSupNotFoundException(
@@ -31,8 +31,16 @@ class FormationBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<Formation> {
-        val formations = formationDetailleeJPARepository.findAllByIdIn(idsFormations)
+    override fun recupererLesFormations(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): List<Formation> {
+        val formations =
+            if (obsoletesInclus) {
+                formationDetailleeJPARepository.findAllByIdIn(ids = idsFormations)
+            } else {
+                formationDetailleeJPARepository.findAllByIdInAndObsolete(id = idsFormations, obsolete = false)
+            }
         return idsFormations.mapNotNull { idFormation ->
             val formation = formations.firstOrNull { formation -> formation.id == idFormation }
             if (formation == null) {

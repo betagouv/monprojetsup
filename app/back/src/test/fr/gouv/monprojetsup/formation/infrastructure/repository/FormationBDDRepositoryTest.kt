@@ -80,15 +80,15 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class RecupererLesFormationsAvecLeursMetiers {
+    inner class RecupererLesFormations {
         @Test
         @Sql("classpath:formation.sql")
-        fun `Doit retourner les formations avec leurs métiers associés dans l'ordre demandé`() {
+        fun `Doit retourner les formations`() {
             // Given
             val idsFormations = listOf("fl0002", "fl0001", "fl0004")
 
             // When
-            val result = formationBDDRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
+            val result = formationBDDRepository.recupererLesFormations(idsFormations, true)
 
             // Then
             val formationFL0002 =
@@ -145,12 +145,52 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation.sql")
+        fun `Doit retourner les formations sans inclure les obsolètes`() {
+            // Given
+            val idsFormations = listOf("fl0002", "fl0001", "fl0004")
+
+            // When
+            val result = formationBDDRepository.recupererLesFormations(idsFormations, false)
+
+            // Then
+            val formationFL0002 =
+                Formation(
+                    id = "fl0002",
+                    nom = "Bac pro Fleuriste",
+                    descriptifGeneral =
+                        "Le Bac pro Fleuriste est un diplôme de niveau 4 qui permet d acquérir les compétences nécessaires pour exercer " +
+                            "le métier de fleuriste. La formation dure 3 ans et est accessible après la classe de 3ème. Elle " +
+                            "comprend des enseignements généraux (français, mathématiques, histoire-géographie, etc.) et des " +
+                            "enseignements professionnels (botanique, art floral, techniques de vente, etc.). Le Bac pro Fleuriste " +
+                            "permet d exercer le métier de fleuriste en boutique, en grande surface, en jardinerie ou en atelier de " +
+                            "composition florale.",
+                    descriptifAttendus =
+                        "Il est attendu des candidats de démontrer une solide compréhension des techniques de base de la floristerie, y " +
+                            "compris la composition florale, la reconnaissance des plantes et des fleurs, ainsi que les soins et " +
+                            "l'entretien des végétaux.",
+                    descriptifDiplome =
+                        "Le Baccalauréat Professionnel, communément appelé Bac Pro, est un diplôme national de niveau 4 du système " +
+                            "éducatif français. Il est conçu pour préparer les élèves à une insertion rapide et réussie dans le " +
+                            "monde du travail tout en leur offrant la possibilité de poursuivre leurs études supérieures s'ils le " +
+                            "souhaitent. Le Bac Pro se prépare généralement en trois ans après la classe de troisième, ou en deux " +
+                            "ans après l'obtention d'un Certificat d'Aptitude Professionnelle (CAP).",
+                    descriptifConseils = null,
+                    formationsAssociees = listOf("fl0012"),
+                    liens = emptyList(),
+                    valeurCriteresAnalyseCandidature = listOf(13, 50, 12, 5, 15),
+                    apprentissage = true,
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(listOf(formationFL0002, formationFL0001))
+        }
+
+        @Test
+        @Sql("classpath:formation.sql")
         fun `Quand les formations n'existent pas, doit retourner la map vide et les logguer`() {
             // Given
             val idsFormations = listOf("fl0007", "fl0008", "fl0009")
 
             // When
-            val result = formationBDDRepository.recupererLesFormationsAvecLeursMetiers(idsFormations)
+            val result = formationBDDRepository.recupererLesFormations(idsFormations, true)
 
             // Then
             assertThat(result).isEqualTo(emptyList<Formation>())
@@ -180,7 +220,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class RecupererUneFormationAvecSesMetiers {
+    inner class RecupererUneFormation {
         @Test
         @Sql("classpath:formation.sql")
         fun `Doit retourner la formation détaillée`() {
@@ -188,7 +228,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             val idFormation = "fl0001"
 
             // When
-            val result = formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+            val result = formationBDDRepository.recupererUneFormation(idFormation)
 
             // Then
             assertThat(result).usingRecursiveComparison().isEqualTo(formationFL0001)
@@ -202,47 +242,11 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // When & Then
             assertThatThrownBy {
-                formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+                formationBDDRepository.recupererUneFormation(idFormation)
             }.isEqualTo(
                 MonProjetSupNotFoundException(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl0010 n'existe pas",
-                ),
-            )
-        }
-
-        @Test
-        @Sql("classpath:formation.sql")
-        fun `Quand la formation n'a pas de métiers associés, doit retourner sa liste vide`() {
-            // Given
-            val idFormation = "fl0004"
-
-            // When
-            val result = formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
-
-            // Then
-            assertThat(result).isEqualTo(
-                Formation(
-                    id = "fl0004",
-                    nom = "L1 - Histoire",
-                    descriptifGeneral =
-                        "La licence se décline en une quarantaine de mentions, allant du droit, à l'informatique, " +
-                            "en passant par les arts. Organisée en parcours types, définis par chaque université, la licence " +
-                            "permet d'acquérir une culture générale solide, des compétences disciplinaires, " +
-                            "transversales et linguistiques.",
-                    descriptifAttendus = null,
-                    descriptifDiplome = null,
-                    descriptifConseils = "",
-                    formationsAssociees = listOf("fl0005"),
-                    liens =
-                        listOf(
-                            Lien(
-                                nom = "Voir la fiche Onisep",
-                                url = "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/licence-mention-histoire",
-                            ),
-                        ),
-                    valeurCriteresAnalyseCandidature = listOf(100, 0, 0, 0, 0),
-                    apprentissage = false,
                 ),
             )
         }
@@ -255,7 +259,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // When & Then
             assertThatThrownBy {
-                formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+                formationBDDRepository.recupererUneFormation(idFormation)
             }.isEqualTo(
                 MonProjetSupNotFoundException(
                     code = "RECHERCHE_FORMATION",
@@ -272,7 +276,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
 
             // When & Then
             assertThatThrownBy {
-                formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+                formationBDDRepository.recupererUneFormation(idFormation)
             }.isEqualTo(
                 MonProjetSupNotFoundException(
                     code = "RECHERCHE_FORMATION",
@@ -288,7 +292,7 @@ class FormationBDDRepositoryTest : BDDRepositoryTest() {
             val idFormation = "fl0005"
 
             // When
-            val result = formationBDDRepository.recupererUneFormationAvecSesMetiers(idFormation)
+            val result = formationBDDRepository.recupererUneFormation(idFormation)
 
             // Then
             assertThat(result).usingRecursiveComparison().isEqualTo(

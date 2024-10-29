@@ -7,9 +7,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 
 interface FormationRepository {
     @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
-    fun recupererUneFormationAvecSesMetiers(idFormation: String): Formation
+    fun recupererUneFormation(idFormation: String): Formation
 
-    fun recupererLesFormationsAvecLeursMetiers(idsFormations: List<String>): List<Formation>
+    fun recupererLesFormations(
+        idsFormations: List<String>,
+        obsoletesInclus: Boolean,
+    ): List<Formation>
 
     fun recupererLesNomsDesFormations(idsFormations: List<String>): List<FormationCourte>
 
