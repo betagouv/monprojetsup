@@ -197,10 +197,11 @@ class RecupererVoeuxDUneFormationServiceTest {
             // Then
             then(logger).should(times(1))
                 .warn(
-                    type = "ERREUR_TRI_VOEUX",
+                    type = "CODE_INSEE_NON_RECONNU_DANS_PROFIL",
                     message =
                         "La commune Paris présente dans le profil de l'élève f859056f-1f3b-49d4-96c8-2a93b925fbaa " +
                             "a un code commune non standard : Paris",
+                    parametres = mapOf("nomCommune" to "Paris", "codeInsee" to "Paris"),
                 )
         }
 
@@ -225,7 +226,11 @@ class RecupererVoeuxDUneFormationServiceTest {
 
             // Then
             then(logger).should(times(1))
-                .warn(type = "ERREUR_TRI_VOEUX", message = "La commune du voeu ta1 a un code commune non standard : 1")
+                .warn(
+                    type = "CODE_INSEE_NON_RECONNU_SUR_VOEU",
+                    message = "La commune du voeu ta1 a un code commune non standard : 1",
+                    parametres = mapOf("idVoeu" to "ta1", "codeInsee" to "1"),
+                )
         }
     }
 

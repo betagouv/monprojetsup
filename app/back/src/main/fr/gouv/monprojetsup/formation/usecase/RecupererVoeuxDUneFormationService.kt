@@ -5,6 +5,7 @@ import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
+import fr.gouv.monprojetsup.logging.domain.WarningALogguer
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,7 +19,7 @@ class RecupererVoeuxDUneFormationService(
         obsoletesInclus: Boolean,
     ): Map<String, List<Voeu>> {
         val voeux = voeuRepository.recupererLesVoeuxDeFormations(idsFormations, obsoletesInclus)
-        val messagesDeWarning = mutableListOf<String>()
+        val messagesDeWarning = mutableListOf<WarningALogguer>()
         val voeuxTriesParAffinitesParFormation =
             voeux.entries.associate { entry ->
                 entry.key to
@@ -29,7 +30,7 @@ class RecupererVoeuxDUneFormationService(
                     )
             }
         messagesDeWarning.distinct().forEach {
-            logger.warn(type = "ERREUR_TRI_VOEUX", message = it)
+            logger.warn(type = it.type, message = it.messageException, parametres = it.parametres)
         }
         return voeuxTriesParAffinitesParFormation
     }
@@ -40,11 +41,11 @@ class RecupererVoeuxDUneFormationService(
         obsoletesInclus: Boolean,
     ): List<Voeu> {
         val voeux = voeuRepository.recupererLesVoeuxDUneFormation(idFormation)
-        val messagesDeWarning = mutableListOf<String>()
+        val messagesDeWarning = mutableListOf<WarningALogguer>()
         val voeuxTriesParAffinites =
             triesParAffinitesVoeux(voeux, profilEleve, messagesDeWarning)
         messagesDeWarning.forEach {
-            logger.warn(type = "ERREUR_TRI_VOEUX", message = it)
+            logger.warn(type = it.type, message = it.messageException, parametres = it.parametres)
         }
         return voeuxTriesParAffinites
     }
@@ -66,7 +67,7 @@ class RecupererVoeuxDUneFormationService(
     private fun triesParAffinitesVoeux(
         voeux: List<Voeu>,
         profilEleve: ProfilEleve.AvecProfilExistant,
-        messagesDeWarning: MutableList<String>,
+        messagesDeWarning: MutableList<WarningALogguer>,
     ): List<Voeu> {
         return profilEleve.communesFavorites?.takeUnless { it.isEmpty() }?.let { communesFavorites ->
             val voeuxDansUneVilleFavorite = mutableListOf<Voeu>()
@@ -89,24 +90,34 @@ class RecupererVoeuxDUneFormationService(
         idEleve: String,
         communes: List<Commune>,
         voeu: Voeu,
-        messagesDeWarning: MutableList<String>,
+        messagesDeWarning: MutableList<WarningALogguer>,
     ): Boolean {
         val departementDuVoeu =
             recupererDepartement(
                 commune = voeu.commune,
-                messageException =
-                    "La commune du voeu ${voeu.id} a un code commune " +
-                        "non standard : ${voeu.commune.codeInsee}",
-                messagesDeWarning,
+                messagesDeWarning = messagesDeWarning,
+                warning =
+                    WarningALogguer(
+                        messageException =
+                            "La commune du voeu ${voeu.id} a un code commune " +
+                                "non standard : ${voeu.commune.codeInsee}",
+                        parametres = mapOf("idVoeu" to voeu.id, "codeInsee" to voeu.commune.codeInsee),
+                        type = "CODE_INSEE_NON_RECONNU_SUR_VOEU",
+                    ),
             )
         return communes.any { commune: Commune ->
             val departementDeLaCommune =
                 recupererDepartement(
                     commune = commune,
-                    messageException =
-                        "La commune ${commune.nom} présente dans le profil de l'élève $idEleve a un code commune " +
-                            "non standard : ${commune.codeInsee}",
                     messagesDeWarning = messagesDeWarning,
+                    warning =
+                        WarningALogguer(
+                            messageException =
+                                "La commune ${commune.nom} présente dans le profil de l'élève $idEleve a un code commune " +
+                                    "non standard : ${commune.codeInsee}",
+                            parametres = mapOf("nomCommune" to commune.nom, "codeInsee" to commune.codeInsee),
+                            type = "CODE_INSEE_NON_RECONNU_DANS_PROFIL",
+                        ),
                 )
             departementDuVoeu == departementDeLaCommune
         }
@@ -114,12 +125,12 @@ class RecupererVoeuxDUneFormationService(
 
     private fun recupererDepartement(
         commune: Commune,
-        messageException: String,
-        messagesDeWarning: MutableList<String>,
+        warning: WarningALogguer,
+        messagesDeWarning: MutableList<WarningALogguer>,
     ) = try {
         commune.codeInsee.substring(0, 2).toInt()
     } catch (e: Exception) {
-        messagesDeWarning.add(messageException)
+        messagesDeWarning.add(warning)
         0
     }
 
