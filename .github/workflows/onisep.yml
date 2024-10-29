@@ -30,8 +30,8 @@ jobs:
     
     - name: Push changes to prod branch
       if: ${{ github.ref == 'refs/heads/prod' }}
-      run: git push --force onisep HEAD:prod
+      run: git push --force onisep HEAD:uat && git push --force onisep HEAD:prod 
     
     - name: Push changes to demo branch
       if: ${{ github.ref == 'refs/heads/demo' }}
-      run: git push --force onisep HEAD:integration && git push --force onisep HEAD:uat && git push --force onisep HEAD:preprod
+      run: git push --force onisep HEAD:integration && git push --force onisep HEAD:preprod

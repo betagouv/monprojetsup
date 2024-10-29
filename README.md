@@ -20,9 +20,9 @@ Ce repository est un mono-repo qui contient plusieurs applications nécessaires 
 - Démarrer Docker sur sa machine
 - À la racine du projet lancer la commande : `docker compose -f docker-compose.dev.yml up`
 - Alimenter les données de référence de la BDD en suivant les instructions de [app/etl/README.md](app/etl/README.md)
+- Lancer l'api Suggestion en suivant les instructions de [app/suggestions/README.md](app/suggestions/README.md)
 - Lancer le backend en suivant les instructions de [app/back/README.md](app/back/README.md)
 - Lancer le frontend en suivant les instructions de [app/front/README.md](app/front/README.md)
-- Lancer l'api Suggestion en suivant les instructions de [app/suggestions/README.md](app/suggestions/README.md)
 
 ## Les différentes URLs
 - Frontend: http://localhost:5001
@@ -56,6 +56,11 @@ Le keycloak de ce repo est déjà préconfiguré avec des comptes d'accès.
 
 ## Déploiement de l'application
 - Lors du push sur la branch `demo` ou `prod` et une fois les CI validées le code va être push sur un repo privé Gitlab appartenant à Avenir(s) sur les branches respectives correspondants aux différents environnements. 
-- Ce push va déclencher automatiquement le build et le deploy de l'application uniquement pour la branch `demo`.
-- Pour la branch `prod` il est nécessaire de le faire manuellement dans l'interface gitlab du repo Avenir(s).
+- Ce push va déclencher automatiquement le build et le deploy de l'application.
+
+## Fonction des environnements
+- `integration` utilisé pour recetter une nouvelle fonctionnalité (branch github `demo`)
+- `uat` utilisé pour des beta test (branch github `prod`)
+- `preprod` identique à integration mais avec un Cloudflare devant (branch github `demo`)
+- `prod` utilisé par les utilisateurs finaux (branch github `prod`)
 
