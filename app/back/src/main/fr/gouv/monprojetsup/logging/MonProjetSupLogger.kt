@@ -61,7 +61,7 @@ class MonProjetSupLogger(
         exception: Throwable? = null,
         parametres: Map<String, Any> = emptyMap(),
     ) {
-        logger.error(message, kv(TYPE, type), kv(EXCEPTION, exception), kv(PARAMETRES, exception))
+        logger.error(message, kv(TYPE, type), kv(EXCEPTION, exception), kv(PARAMETRES, parametres))
     }
 
     companion object {
