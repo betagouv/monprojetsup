@@ -601,8 +601,11 @@ class SuggestionApiHttpClientTest {
                           "tags": {
                             "ns": [
                               "T_ROME_731379930",
+                              "MET.612",
                               "T_IDEO2_4812",
-                              "T_ROME_803089798"
+                              "MET.483",
+                              "T_ROME_803089798",
+                              "MET.461"
                             ]
                           }
                         },
@@ -759,11 +762,14 @@ class SuggestionApiHttpClientTest {
                                         ),
                                     baccalaureatUtilise = "Général",
                                 ),
-                            interetsEtDomainesChoisis =
+                            interetsDomainesMetiersChoisis =
                                 listOf(
                                     "T_ROME_731379930",
+                                    "MET.612",
                                     "T_IDEO2_4812",
+                                    "MET.483",
                                     "T_ROME_803089798",
+                                    "MET.461",
                                 ),
                             exemplesDeMetiers =
                                 listOf(
@@ -886,7 +892,7 @@ class SuggestionApiHttpClientTest {
                                     ),
                                 ),
                             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
-                            interetsEtDomainesChoisis =
+                            interetsDomainesMetiersChoisis =
                                 listOf(
                                     "T_ROME_731379930",
                                     "T_IDEO2_4812",

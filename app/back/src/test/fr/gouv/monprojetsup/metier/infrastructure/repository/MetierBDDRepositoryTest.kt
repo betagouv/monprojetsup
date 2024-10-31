@@ -6,6 +6,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -25,13 +26,16 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var metierJPARepository: MetierJPARepository
 
     @Autowired
+    lateinit var metierCourtJPARepository: MetierCourtJPARepository
+
+    @Autowired
     lateinit var entityManager: EntityManager
 
     lateinit var metierBDDRepository: MetierBDDRepository
 
     @BeforeEach
     fun setup() {
-        metierBDDRepository = MetierBDDRepository(metierJPARepository, entityManager, logger)
+        metierBDDRepository = MetierBDDRepository(metierJPARepository, metierCourtJPARepository, entityManager, logger)
     }
 
     @Nested
@@ -377,6 +381,50 @@ class MetierBDDRepositoryTest : BDDRepositoryTest() {
 
             // Then
             val attendu = emptyList<MetierAvecSesFormations>()
+            assertThat(result).isEqualTo(attendu)
+        }
+    }
+
+    @Nested
+    inner class RecupererLesMetiersCourts {
+        @Test
+        @Sql("classpath:metier.sql")
+        fun `Doit retourner les métiers reconnus et ignorer ceux inconnus`() {
+            // Given
+            val ids =
+                listOf(
+                    "MET004",
+                    "MET003",
+                    "ci17",
+                    "MET002",
+                    "MET001",
+                    "dom3",
+                )
+
+            // When
+            val result = metierBDDRepository.recupererLesMetiersCourts(ids)
+
+            // Then
+            val attendu =
+                listOf(
+                    MetierCourt(id = "MET001", nom = "Fleuriste"),
+                    MetierCourt(id = "MET002", nom = "Fleuriste événementiel"),
+                    MetierCourt(id = "MET003", nom = "Architecte"),
+                )
+            assertThat(result).usingRecursiveComparison().isEqualTo(attendu)
+        }
+
+        @Test
+        @Sql("classpath:metier.sql")
+        fun `Si la liste est vide, doit retourner une liste vide`() {
+            // Given
+            val ids = emptyList<String>()
+
+            // When
+            val result = metierBDDRepository.recupererLesMetiersCourts(ids)
+
+            // Then
+            val attendu = emptyList<MetierCourt>()
             assertThat(result).isEqualTo(attendu)
         }
     }

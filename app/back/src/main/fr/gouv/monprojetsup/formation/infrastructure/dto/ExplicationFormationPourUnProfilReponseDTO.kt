@@ -67,9 +67,7 @@ data class ExplicationEtExemplesDTO(
                     explications.recupererUniqueValeur {
                         it.moyenneGenerale != null
                     }?.moyenneGenerale?.toAutoEvaluationMoyenne(),
-                interetsEtDomainesChoisis =
-                    explications.recupererUniqueValeur { it.tags != null }?.tags?.codesInteretsEtDomaines
-                        ?: emptyList(),
+                interetsDomainesMetiersChoisis = explications.flatMap { it.tags?.codesInteretsDomainesMetiers ?: emptyList() },
                 exemplesDeMetiers = exemplesDeMetiersTriesParAffinitesDecroissantes ?: emptyList(),
             )
         } ?: ExplicationsSuggestionEtExemplesMetiers()
@@ -189,7 +187,7 @@ data class APISuggestionExplicationDurationDTO(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class APISuggestionExplicationTagShortDTO(
     @JsonProperty(value = "ns")
-    val codesInteretsEtDomaines: List<String>?,
+    val codesInteretsDomainesMetiers: List<String>?,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

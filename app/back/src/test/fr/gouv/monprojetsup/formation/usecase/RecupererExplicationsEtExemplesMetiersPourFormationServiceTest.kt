@@ -14,6 +14,7 @@ import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -349,17 +350,19 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
         }
 
         @Test
-        fun `doit retourner les domaines et intérêts avec les interets filtrés`() {
+        fun `doit retourner les domaines, intérêts et métiers choisis`() {
             // Given
-            val interetsEtDomainesChoisis =
+            val interetsDomainesMetiersChoisis =
                 listOf(
                     "T_ROME_731379930",
                     "T_ROME_1573349427",
+                    "MET.397",
                     "T_ITM_1169",
                     "T_ROME_1959553899",
+                    "MET.103",
                 )
             val explications =
-                mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(interetsEtDomainesChoisis = interetsEtDomainesChoisis))
+                mapOf("fl0001" to ExplicationsSuggestionEtExemplesMetiers(interetsDomainesMetiersChoisis = interetsDomainesMetiersChoisis))
             given(
                 suggestionHttpClient.recupererLesExplications(
                     profilEleve = profil,
@@ -388,8 +391,14 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                             emoji = "\uD83E\uDE9B",
                         ),
                 )
-            given(domaineRepository.recupererLesDomaines(interetsEtDomainesChoisis)).willReturn(domaines)
-            given(interetRepository.recupererLesSousCategoriesDInterets(interetsEtDomainesChoisis)).willReturn(interets)
+            val metiers =
+                listOf(
+                    MetierCourt("MET.397", "analyste financier/ère"),
+                    MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales"),
+                )
+            given(domaineRepository.recupererLesDomaines(interetsDomainesMetiersChoisis)).willReturn(domaines)
+            given(interetRepository.recupererLesSousCategoriesDInterets(interetsDomainesMetiersChoisis)).willReturn(interets)
+            given(metierRepository.recupererLesMetiersCourts(interetsDomainesMetiersChoisis)).willReturn(metiers)
 
             // When
             val resultat =
@@ -399,7 +408,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                 )
 
             // Then
-            assertThat(resultat.first.interets).usingRecursiveComparison().isEqualTo(
+            assertThat(resultat.first.interetsChoisis).usingRecursiveComparison().isEqualTo(
                 listOf(
                     InteretSousCategorie(
                         id = "travail_manuel_creer",
@@ -409,7 +418,8 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2"),
                 ),
             )
-            assertThat(resultat.first.domaines).usingRecursiveComparison().isEqualTo(domaines)
+            assertThat(resultat.first.domainesChoisis).usingRecursiveComparison().isEqualTo(domaines)
+            assertThat(resultat.first.metiersChoisis).usingRecursiveComparison().isEqualTo(metiers)
         }
 
         @Test
@@ -701,18 +711,20 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                         ),
                     "fl0004" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsEtDomainesChoisis =
+                            interetsDomainesMetiersChoisis =
                                 listOf(
                                     "T_ROME_731379930",
+                                    "MET.397",
                                     "T_ITM_1169",
                                     "T_ROME_1959553899",
                                     "T_IDEO2_4812",
+                                    "MET.103",
                                 ),
                             formationsSimilaires = listOf("fl12", "fl79"),
                         ),
                     "fl0005" to
                         ExplicationsSuggestionEtExemplesMetiers(
-                            interetsEtDomainesChoisis = listOf("T_ITM_723", "T_ROME_1959553899"),
+                            interetsDomainesMetiersChoisis = listOf("T_ITM_723", "T_ROME_1959553899"),
                             formationsSimilaires = listOf("fl1", "fl7", "fl12"),
                         ),
                     "fl0006" to
@@ -736,15 +748,24 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             ).willReturn(
                 listOf(bacGeneral, bacPro, bacSTMG),
             )
-            val domainesEtInteretsDistincts =
-                listOf("T_ROME_731379930", "T_ITM_1169", "T_ROME_1959553899", "T_IDEO2_4812", "T_ITM_723")
-            given(domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)).willReturn(
+            val domainesInteretsMetiersDistincts =
+                listOf(
+                    "T_ROME_731379930",
+                    "MET.397",
+                    "T_ITM_1169",
+                    "T_ROME_1959553899",
+                    "T_IDEO2_4812",
+                    "MET.103",
+                    "T_ITM_723",
+                )
+
+            given(domaineRepository.recupererLesDomaines(domainesInteretsMetiersDistincts)).willReturn(
                 listOf(
                     Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"),
                     Domaine(id = "T_ITM_723", nom = "arts du spectacle", emoji = "\uD83C\uDFAD"),
                 ),
             )
-            given(interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)).willReturn(
+            given(interetRepository.recupererLesSousCategoriesDInterets(domainesInteretsMetiersDistincts)).willReturn(
                 mapOf(
                     "T_ROME_731379930" to
                         InteretSousCategorie(
@@ -783,7 +804,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
             val metier96 = mock(Metier::class.java)
             given(metier96.id).willReturn("MET_96")
             val exemplesDeMetiers = listOf(metier12, metier534, metier96)
-            given(metierRepository.recupererLesMetiers(listOf("MET_12", "MET_534", "MET_96"))).willReturn(
+            given(
+                metierRepository.recupererLesMetiers(listOf("MET_12", "MET_534", "MET_96") + domainesInteretsMetiersDistincts),
+            ).willReturn(
                 exemplesDeMetiers,
             )
             given(
@@ -912,7 +935,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     "fl0004" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
-                                interets =
+                                interetsChoisis =
                                     listOf(
                                         InteretSousCategorie(
                                             id = "aider_autres",
@@ -925,7 +948,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                             emoji = "\uD83D\uDE4C",
                                         ),
                                     ),
-                                domaines =
+                                domainesChoisis =
                                     listOf(
                                         Domaine(id = "T_ITM_1169", nom = "défense nationale", emoji = "\uD83D\uDEA8"),
                                     ),
@@ -940,7 +963,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     "fl0005" to
                         Pair(
                             ExplicationsSuggestionDetaillees(
-                                interets =
+                                interetsChoisis =
                                     listOf(
                                         InteretSousCategorie(
                                             id = "travail_manuel_bricoler",
@@ -948,7 +971,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                             emoji = "\uD83D\uDE4C",
                                         ),
                                     ),
-                                domaines =
+                                domainesChoisis =
                                     listOf(
                                         Domaine(id = "T_ITM_723", nom = "arts du spectacle", emoji = "\uD83C\uDFAD"),
                                     ),

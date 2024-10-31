@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.metier.infrastructure.repository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierEntity
 import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationEntity
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class MetierBDDRepository(
     private val metierJPARepository: MetierJPARepository,
+    private val metierCourtJPARepository: MetierCourtJPARepository,
     private val entityManager: EntityManager,
     private val logger: MonProjetSupLogger,
 ) : MetierRepository {
@@ -87,6 +89,11 @@ class MetierBDDRepository(
             }
             metier?.toMetier()
         }
+    }
+
+    @Transactional(readOnly = true)
+    override fun recupererLesMetiersCourts(ids: List<String>): List<MetierCourt> {
+        return metierCourtJPARepository.findAllByIdIn(ids).map { it.toMetierCourt() }
     }
 
     @Transactional(readOnly = true)

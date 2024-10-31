@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
@@ -15,7 +16,7 @@ data class ExplicationsSuggestionEtExemplesMetiers(
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
     val typeBaccalaureat: TypeBaccalaureat? = null,
     val autoEvaluationMoyenne: AutoEvaluationMoyenne? = null,
-    val interetsEtDomainesChoisis: List<String> = emptyList(),
+    val interetsDomainesMetiersChoisis: List<String> = emptyList(),
     val exemplesDeMetiers: List<String> = emptyList(),
     val detailsCalculScore: List<String> = emptyList(),
 ) {
@@ -50,8 +51,9 @@ data class ExplicationsSuggestionDetaillees(
     val alternance: ChoixAlternance? = null,
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
     val formationsSimilaires: List<FormationCourte> = emptyList(),
-    val interets: List<InteretSousCategorie> = emptyList(),
-    val domaines: List<Domaine> = emptyList(),
+    val interetsChoisis: List<InteretSousCategorie> = emptyList(),
+    val domainesChoisis: List<Domaine> = emptyList(),
+    val metiersChoisis: List<MetierCourt> = emptyList(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
     val detailsCalculScore: List<String> = emptyList(),

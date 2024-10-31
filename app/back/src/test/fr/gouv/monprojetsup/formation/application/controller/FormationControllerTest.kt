@@ -103,11 +103,11 @@ class FormationControllerTest(
                     AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
                     AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
                 ),
-            domaines =
+            domainesChoisis =
                 listOf(
                     Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
                 ),
-            interets = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
+            interetsChoisis = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
             explicationAutoEvaluationMoyenne =
                 ExplicationAutoEvaluationMoyenne(
                     baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
@@ -684,7 +684,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -1065,7 +1065,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -1440,7 +1440,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -1905,7 +1905,7 @@ class FormationControllerTest(
                             ],
                             "dureeEtudesPrevue": "longue",
                             "alternance": "tres_interesse",
-                            "interetsEtDomainesChoisis": {
+                            "choixEleve": {
                               "interets": [
                                 {
                                   "id": "aider_autres",
@@ -2191,7 +2191,7 @@ class FormationControllerTest(
                             ],
                             "dureeEtudesPrevue": "longue",
                             "alternance": "tres_interesse",
-                            "interetsEtDomainesChoisis": {
+                            "choixEleve": {
                               "interets": [
                                 {
                                   "id": "aider_autres",
@@ -3104,7 +3104,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -3681,7 +3681,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -4355,7 +4355,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",
@@ -4756,7 +4756,7 @@ class FormationControllerTest(
                                 ],
                                 "dureeEtudesPrevue": "longue",
                                 "alternance": "tres_interesse",
-                                "interetsEtDomainesChoisis": {
+                                "choixEleve": {
                                   "interets": [
                                     {
                                       "id": "aider_autres",

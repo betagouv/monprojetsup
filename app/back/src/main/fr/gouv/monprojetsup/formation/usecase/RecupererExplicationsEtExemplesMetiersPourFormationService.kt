@@ -11,10 +11,9 @@ import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormatio
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
-import fr.gouv.monprojetsup.referentiel.domain.entity.Domaine
-import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.domain.port.BaccalaureatRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.DomaineRepository
 import fr.gouv.monprojetsup.referentiel.domain.port.InteretRepository
@@ -36,10 +35,15 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         idsFormations: List<String>,
     ): Map<String, Pair<ExplicationsSuggestionDetaillees, List<Metier>>> {
         val explicationsParFormation = suggestionHttpClient.recupererLesExplications(profilEleve, idsFormations)
-        val (domaines: List<Domaine>?, interets: Map<String, InteretSousCategorie>?) =
-            recupererDomainesEtInterets(
-                explicationsParFormation,
-            )
+        val domainesInteretsMetiersDistincts =
+            explicationsParFormation.flatMap { it.value?.interetsDomainesMetiersChoisis ?: emptyList() }.takeUnless {
+                it.isEmpty()
+            }?.distinct()
+
+        val domainesChoisis = domainesInteretsMetiersDistincts?.let { domaineRepository.recupererLesDomaines(it) } ?: emptyList()
+        val interetsChoisis =
+            domainesInteretsMetiersDistincts?.let { interetRepository.recupererLesSousCategoriesDInterets(it) } ?: emptyMap()
+
         val formationsSimilaires = recupererFormationsSimilaires(explicationsParFormation)
         val baccalaureats = recupererBaccalaureats(explicationsParFormation)
         val metiers = recupererMetiers(explicationsParFormation)
@@ -70,13 +74,19 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                     explications?.formationsSimilaires?.mapNotNull {
                         formationsSimilaires.firstOrNull { formation -> formation.id == it }
                     } ?: emptyList(),
-                interets =
-                    explications?.interetsEtDomainesChoisis?.mapNotNull { interetOuDomaineId ->
-                        interets[interetOuDomaineId]
+                interetsChoisis =
+                    explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
+                        interetsChoisis[interetOuDomaineOuMetierId]
                     }?.distinct() ?: emptyList(),
-                domaines =
-                    explications?.interetsEtDomainesChoisis?.mapNotNull { interetOuDomaineId ->
-                        domaines.firstOrNull { domaine -> domaine.id == interetOuDomaineId }
+                domainesChoisis =
+                    explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
+                        domainesChoisis.firstOrNull { domaine -> domaine.id == interetOuDomaineOuMetierId }
+                    } ?: emptyList(),
+                metiersChoisis =
+                    explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
+                        metiers.firstOrNull { metier -> metier.id == interetOuDomaineOuMetierId }?.let { metier ->
+                            MetierCourt(metier.id, metier.nom)
+                        }
                     } ?: emptyList(),
                 explicationAutoEvaluationMoyenne =
                     explications?.autoEvaluationMoyenne?.let { autoEvaluationMoyenne ->
@@ -112,15 +122,16 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
     ): Pair<ExplicationsSuggestionDetaillees, List<Metier>> {
         val explications =
             suggestionHttpClient.recupererLesExplications(profilEleve, listOf(idFormation))[idFormation]!!
-        val (domaines: List<Domaine>?, interets: List<InteretSousCategorie>?) =
-            explications.interetsEtDomainesChoisis.takeUnless {
+        val interetDomainesMetiersChoisis =
+            explications.interetsDomainesMetiersChoisis.takeUnless {
                 it.isEmpty()
-            }?.let {
-                val domaines = domaineRepository.recupererLesDomaines(it)
-                val interets =
-                    interetRepository.recupererLesSousCategoriesDInterets(it).map { entry -> entry.value }.distinct()
-                Pair(domaines, interets)
-            } ?: Pair(emptyList(), emptyList())
+            }
+        val domaines = interetDomainesMetiersChoisis?.let { domaineRepository.recupererLesDomaines(it) } ?: emptyList()
+        val interets =
+            interetDomainesMetiersChoisis?.let {
+                interetRepository.recupererLesSousCategoriesDInterets(it).map { entry -> entry.value }.distinct()
+            } ?: emptyList()
+        val metiersChoisis = interetDomainesMetiersChoisis?.let { metierRepository.recupererLesMetiersCourts(it) } ?: emptyList()
         val formationsSimilaires =
             if (explications.formationsSimilaires.isNotEmpty()) {
                 formationRepository.recupererLesNomsDesFormations(explications.formationsSimilaires)
@@ -150,8 +161,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                     }
                 },
             formationsSimilaires = formationsSimilaires,
-            interets = interets,
-            domaines = domaines,
+            interetsChoisis = interets,
+            domainesChoisis = domaines,
+            metiersChoisis = metiersChoisis,
             explicationAutoEvaluationMoyenne = recupererExplicationAutoEvaluationMoyenne(explications),
             explicationTypeBaccalaureat = recupererExplicationTypeBaccalaureat(explications.typeBaccalaureat),
             detailsCalculScore = autres,
@@ -161,19 +173,11 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
             }
     }
 
-    private fun recupererDomainesEtInterets(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>) =
-        explicationsParFormation.flatMap { it.value?.interetsEtDomainesChoisis ?: emptyList() }.takeUnless {
-            it.isEmpty()
-        }?.let {
-            val domainesEtInteretsDistincts = it.distinct()
-            val domaines = domaineRepository.recupererLesDomaines(domainesEtInteretsDistincts)
-            val interets = interetRepository.recupererLesSousCategoriesDInterets(domainesEtInteretsDistincts)
-            Pair(domaines, interets)
-        } ?: Pair(emptyList(), emptyMap())
-
     private fun recupererMetiers(explicationsParFormation: Map<String, ExplicationsSuggestionEtExemplesMetiers?>): List<Metier> {
-        val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }.distinct()
-        val metiers = metierRepository.recupererLesMetiers(idsDesMetiers)
+        val idsDesMetiers = explicationsParFormation.flatMap { it.value?.exemplesDeMetiers ?: emptyList() }
+        val idsDesMetiersDomainesInterets = explicationsParFormation.flatMap { it.value?.interetsDomainesMetiersChoisis ?: emptyList() }
+        val totalIds = (idsDesMetiers + idsDesMetiersDomainesInterets).distinct()
+        val metiers = metierRepository.recupererLesMetiers(totalIds)
         return metiers
     }
 

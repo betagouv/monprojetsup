@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
-import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.InteretsEtDomainesDTO.InteretDTO
+import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.ChoixElevesDTO.InteretDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -16,6 +16,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Moyenne
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.RepartitionAdmis.TotalAdmisPourUnBaccalaureat
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
+import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
@@ -166,7 +167,7 @@ data class FormationAvecExplicationsDTO(
         val formationsSimilaires: List<FormationSimilaireDTO>,
         val dureeEtudesPrevue: ChoixDureeEtudesPrevue?,
         val alternance: ChoixAlternance?,
-        val interetsEtDomainesChoisis: InteretsEtDomainesDTO?,
+        val choixEleve: ChoixElevesDTO?,
         val specialitesChoisies: List<AffiniteSpecialiteDTO>,
         val typeBaccalaureat: TypeBaccalaureatDTO?,
         val autoEvaluationMoyenne: AutoEvaluationMoyenneDTO?,
@@ -177,10 +178,11 @@ data class FormationAvecExplicationsDTO(
             formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
-            interetsEtDomainesChoisis =
-                InteretsEtDomainesDTO(
-                    interets = explications.interets.map { InteretDTO(it) },
-                    domaines = explications.domaines.map { DomaineDTO(it) },
+            choixEleve =
+                ChoixElevesDTO(
+                    interets = explications.interetsChoisis.map { InteretDTO(it) },
+                    domaines = explications.domainesChoisis.map { DomaineDTO(it) },
+                    metiers = explications.metiersChoisis.map { MetierCourtDTO(it) },
                 ),
             specialitesChoisies =
                 explications.specialitesChoisies.map {
@@ -203,9 +205,10 @@ data class FormationAvecExplicationsDTO(
         )
     }
 
-    data class InteretsEtDomainesDTO(
+    data class ChoixElevesDTO(
         val interets: List<InteretDTO>,
         val domaines: List<DomaineDTO>,
+        val metiers: List<MetierCourtDTO>,
     ) {
         data class InteretDTO(
             val id: String,
