@@ -1,12 +1,12 @@
 package fr.gouv.monprojetsup.formation.domain.port
 
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 
 interface FormationRepository {
-    @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
+    @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererUneFormation(idFormation: String): Formation
 
     fun recupererLesFormations(

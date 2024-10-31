@@ -7,6 +7,8 @@ import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
+import fr.gouv.monprojetsup.parametre.domain.entity.Parametre
+import fr.gouv.monprojetsup.parametre.domain.port.ParametreRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -24,12 +26,16 @@ abstract class ControllerTest {
     lateinit var recupererEleveService: RecupererEleveService
 
     @MockBean
+    lateinit var parametreRepository: ParametreRepository
+
+    @MockBean
     lateinit var logger: MonProjetSupLogger
 
     @BeforeEach
     fun setup() {
         given(recupererEleveService.recupererEleve(id = ID_ELEVE)).willReturn(unProfilEleve)
         given(recupererEleveService.recupererEleve(id = ID_ENSEIGNANT)).willReturn(unProfilEnseignant)
+        given(parametreRepository.estActif(Parametre.ETL_EN_COURS)).willReturn(false)
     }
 
     companion object {

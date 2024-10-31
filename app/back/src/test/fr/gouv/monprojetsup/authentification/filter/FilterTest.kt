@@ -5,6 +5,8 @@ import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupServiceUnavailableException
+import fr.gouv.monprojetsup.parametre.domain.entity.Parametre
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
@@ -17,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.bind.annotation.GetMapping
@@ -46,7 +49,7 @@ data class IdentificationMockDTO(
 )
 
 @WebMvcTest(controllers = [IdentificationMockController::class])
-class IdentificationFilterTest(
+class FilterTest(
     @Autowired val mvc: MockMvc,
 ) : ControllerTest() {
     @ConnecteAvecUnEleve("adcf627c-36dd-4df5-897b-159443a6d49c")
@@ -204,5 +207,34 @@ class IdentificationFilterTest(
         // When & Then
         mvc.perform(get("/test")).andExpect(status().isUnauthorized)
         then(recupererEleveService).shouldHaveNoInteractions()
+    }
+
+    @ConnecteAvecUnEleve("adcf627c-36dd-4df5-897b-159443a6d49c")
+    @Test
+    fun `si connecté avec un élève reconnu mais que ETL en cours, doit retourner 503`() {
+        // Given
+        given(parametreRepository.estActif(Parametre.ETL_EN_COURS)).willReturn(true)
+
+        // When & Then
+        mvc.perform(get("/test")).andDo(MockMvcResultHandlers.print()).andExpect(status().isServiceUnavailable)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(
+                content().json(
+                    """
+                    {
+                      "type": "about:blank",
+                      "title": "ETL_EN_COURS",
+                      "status": 503,
+                      "detail": "Le service est indisponible pour cause de mise a jour de la BDD"
+                    }
+                    """.trimIndent(),
+                ),
+            )
+        val exception =
+            MonProjetSupServiceUnavailableException(
+                code = "ETL_EN_COURS",
+                msg = "Le service est indisponible pour cause de mise a jour de la BDD",
+            )
+        then(this.logger).should().logException(exception, 503)
     }
 }

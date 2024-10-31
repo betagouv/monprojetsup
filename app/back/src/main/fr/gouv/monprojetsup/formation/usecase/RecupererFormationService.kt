@@ -1,7 +1,7 @@
 package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
@@ -20,7 +20,7 @@ class RecupererFormationService(
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
 ) {
-    @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
+    @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     fun recupererFormation(
         profilEleve: ProfilEleve.AvecProfilExistant?,
         idFormation: String,

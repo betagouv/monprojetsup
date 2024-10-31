@@ -1,10 +1,11 @@
 package fr.gouv.monprojetsup.commun.erreur
 
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupServiceUnavailableException
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
@@ -27,10 +28,21 @@ class ApplicationControllerAdvice(
         return reponse
     }
 
-    @ExceptionHandler(MonProjetIllegalStateErrorException::class)
+    @ExceptionHandler(MonProjetSupIllegalStateErrorException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleIllegalState(domainError: MonProjetIllegalStateErrorException): ProblemDetail {
+    fun handleIllegalState(domainError: MonProjetSupIllegalStateErrorException): ProblemDetail {
         val status = HttpStatus.INTERNAL_SERVER_ERROR
+        logguer.logException(domainError, status.value())
+        val reponse = ProblemDetail.forStatus(status)
+        reponse.title = domainError.code
+        reponse.detail = domainError.msg
+        return reponse
+    }
+
+    @ExceptionHandler(MonProjetSupServiceUnavailableException::class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    fun handleServiceUnavailable(domainError: MonProjetSupServiceUnavailableException): ProblemDetail {
+        val status = HttpStatus.SERVICE_UNAVAILABLE
         logguer.logException(domainError, status.value())
         val reponse = ProblemDetail.forStatus(status)
         reponse.title = domainError.code

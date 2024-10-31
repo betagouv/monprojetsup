@@ -43,7 +43,13 @@ data class MonProjetSupInternalErrorException(
     val origine: Throwable? = null,
 ) : MonProjetSup5xxExceptions(code, msg, origine)
 
-data class MonProjetIllegalStateErrorException(
+data class MonProjetSupIllegalStateErrorException(
+    override val code: String,
+    val msg: String,
+    val origine: Throwable? = null,
+) : MonProjetSup5xxExceptions(code, msg, origine)
+
+data class MonProjetSupServiceUnavailableException(
     override val code: String,
     val msg: String,
     val origine: Throwable? = null,

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
@@ -17,7 +17,7 @@ class FormationBDDRepository(
     val formationDetailleeJPARepository: FormationDetailleeJPARepository,
     val logger: MonProjetSupLogger,
 ) : FormationRepository {
-    @Throws(MonProjetIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
+    @Throws(MonProjetSupIllegalStateErrorException::class, MonProjetSupNotFoundException::class)
     @Transactional(readOnly = true)
     override fun recupererUneFormation(idFormation: String): Formation {
         val formation: FormationDetailleeEntity =

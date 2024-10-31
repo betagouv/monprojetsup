@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.client.ApiHttpClient
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionEtExemplesMetiers
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
@@ -36,7 +36,7 @@ class SuggestionApiHttpClient(
         return reponseDTO.toAffinitesPourProfil()
     }
 
-    @Throws(MonProjetSupInternalErrorException::class, MonProjetIllegalStateErrorException::class)
+    @Throws(MonProjetSupInternalErrorException::class, MonProjetSupIllegalStateErrorException::class)
     override fun recupererLesExplications(
         profilEleve: ProfilEleve.AvecProfilExistant,
         idsFormations: List<String>,

@@ -4,8 +4,8 @@ import fr.gouv.monprojetsup.commun.ConnecteAvecUnEleve
 import fr.gouv.monprojetsup.commun.ConnecteAvecUnEnseignant
 import fr.gouv.monprojetsup.commun.ConnecteSansId
 import fr.gouv.monprojetsup.commun.application.controller.ControllerTest
-import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
+import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupIllegalStateErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
@@ -2395,7 +2395,7 @@ class FormationControllerTest(
         fun `si le service échoue avec une erreur interne, alors doit retourner 500`() {
             // Given
             val uneException =
-                MonProjetIllegalStateErrorException(
+                MonProjetSupIllegalStateErrorException(
                     code = "RECHERCHE_FORMATION",
                     msg = "La formation fl00010 existe plusieurs fois entre id et dans les formations équivalentes",
                 )
