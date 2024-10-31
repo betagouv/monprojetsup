@@ -410,6 +410,9 @@ export const localeFR = {
       BOUTON_NE_PLUS_MASQUER: "Ne plus masquer",
       MESSAGE_AUCUNE: "Aucune formation masquée pour le moment !",
     },
+    MÉTIERS: {
+      TITRE_ONGLET: "Métiers",
+    },
   },
   COMMUN: {
     FERMER: "Fermer",

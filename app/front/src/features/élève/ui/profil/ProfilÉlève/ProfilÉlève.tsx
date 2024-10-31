@@ -5,7 +5,6 @@ import FilAriane from "@/components/FilAriane/FilAriane";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 import useUtilisateur from "@/features/utilisateur/ui/hooks/useUtilisateur/useUtilisateur";
-import FormationsMasquées from "@/features/élève/ui/profil/FormationsMasquées/FormationsMasquées";
 import ModifierProfilÉlèveForm from "@/features/élève/ui/profil/ModifierProfilÉlèveForm/ModifierProfilÉlèveForm";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { useRouterState } from "@tanstack/react-router";
@@ -97,9 +96,14 @@ const ProfilÉlève = () => {
                   isDefault: router.location.hash === "etude",
                 },
                 {
-                  label: i18n.PAGE_PROFIL.FORMATIONS_MASQUÉES.TITRE,
-                  content: <FormationsMasquées />,
-                  isDefault: router.location.hash === "formation-masquees",
+                  label: i18n.PAGE_PROFIL.MÉTIERS.TITRE_ONGLET,
+                  content: (
+                    <ModifierProfilÉlèveForm
+                      formulaireId="métiers"
+                      titre={i18n.ÉLÈVE.MÉTIERS.PARCOURS_INSCRIPTION.TITRE_ÉTAPE}
+                    />
+                  ),
+                  isDefault: router.location.hash === "metiers",
                 },
               ]}
             />

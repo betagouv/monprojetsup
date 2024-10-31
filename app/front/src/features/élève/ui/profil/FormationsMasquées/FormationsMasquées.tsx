@@ -20,10 +20,10 @@ const FormationsMasquées = () => {
       </div>
       {formationsMasquées?.length > 0 ? (
         <ul className="m-0 grid list-none gap-8 p-0">
-          {formationsMasquées.map((formation) => (
+          {formationsMasquées.map((formation, index) => (
             <li key={formation.id}>
-              <hr className="p-4" />
               <FormationMasquée formation={formation} />
+              {formationsMasquées.length !== index + 1 && <hr className="mt-8 pb-[1px]" />}
             </li>
           ))}
         </ul>

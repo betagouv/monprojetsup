@@ -6,8 +6,10 @@ import { actionsToastStore } from "@/components/Toast/useToast/useToast";
 import { i18n } from "@/configuration/i18n/i18n";
 import DomainesForm from "@/features/élève/ui/formulaires/DomainesForm/DomainesForm";
 import IntérêtsForm from "@/features/élève/ui/formulaires/IntérêtsForm/IntérêtsForm";
+import MétiersForm from "@/features/élève/ui/formulaires/MétiersForm/MétiersForm";
 import ScolaritéForm from "@/features/élève/ui/formulaires/ScolaritéForm/ScolaritéForm";
 import ÉtudeForm from "@/features/élève/ui/formulaires/ÉtudeForm/ÉtudeForm";
+import FormationsMasquées from "@/features/élève/ui/profil/FormationsMasquées/FormationsMasquées";
 import { Suspense } from "react";
 
 const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèveFormProps) => {
@@ -48,7 +50,18 @@ const ModifierProfilÉlèveForm = ({ formulaireId, titre }: ModifierProfilÉlèv
         );
       case "étude":
         return (
-          <ÉtudeForm
+          <>
+            <ÉtudeForm
+              formId={formulaireId}
+              {...propsFormulaire}
+            />
+            <hr className="mb-10 mt-14 pb-[1px]" />
+            <FormationsMasquées />
+          </>
+        );
+      case "métiers":
+        return (
+          <MétiersForm
             formId={formulaireId}
             {...propsFormulaire}
           />
