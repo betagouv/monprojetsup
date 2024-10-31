@@ -98,4 +98,36 @@ object Communes {
             latitude = 48.6571,
             longitude = -1.96914,
         )
+
+    val AJACCIO =
+        Commune(
+            codeInsee = "2A004",
+            nom = "Ajaccio",
+            latitude = 41.9267,
+            longitude = 8.73458,
+        )
+
+    val BASTIA =
+        Commune(
+            codeInsee = "2B033",
+            nom = "Bastia",
+            latitude = 42.6985,
+            longitude = 9.45098,
+        )
+
+    val SAINT_PIERRE =
+        Commune(
+            codeInsee = "97416",
+            nom = "Saint-Pierre",
+            latitude = -21.29634,
+            longitude = 55.46069,
+        )
+
+    val FORT_DE_FRANCE =
+        Commune(
+            codeInsee = "97209",
+            nom = "Fort-de-France",
+            latitude = 14.61852,
+            longitude = -61.04897,
+        )
 }

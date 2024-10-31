@@ -4,6 +4,9 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
+import fr.gouv.monprojetsup.formation.entity.Communes.AJACCIO
+import fr.gouv.monprojetsup.formation.entity.Communes.BASTIA
+import fr.gouv.monprojetsup.formation.entity.Communes.FORT_DE_FRANCE
 import fr.gouv.monprojetsup.formation.entity.Communes.GRENOBLE
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
@@ -13,6 +16,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes.PARIS19EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.RENNES
 import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
+import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_PIERRE
 import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
@@ -75,17 +79,21 @@ class RecupererVoeuxDUneFormationServiceTest {
                     listOf(
                         Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
                         Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                        Voeu(id = "ta3", nom = "Nom du ta30", commune = AJACCIO),
                         Voeu(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
                         Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
                     ),
                 "fl2016" to
                     listOf(
                         Voeu(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
+                        Voeu(id = "ta4", nom = "Nom du ta14", commune = FORT_DE_FRANCE),
+                        Voeu(id = "ta4", nom = "Nom du ta15", commune = SAINT_PIERRE),
                     ),
                 "fl252" to
                     listOf(
                         Voeu(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
                         Voeu(id = "ta5", nom = "Nom du ta5", commune = RENNES),
+                        Voeu(id = "ta5", nom = "Nom du ta50", commune = BASTIA),
                         Voeu(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
                     ),
             )
@@ -99,7 +107,7 @@ class RecupererVoeuxDUneFormationServiceTest {
         @Test
         fun `les communes doivent être ordonnées par affinités en mettant en premiers les villes exactes, puis les départements`() {
             // Given
-            given(profilEleve.communesFavorites).willReturn(listOf(PARIS15EME, RENNES))
+            given(profilEleve.communesFavorites).willReturn(listOf(PARIS15EME, RENNES, FORT_DE_FRANCE, AJACCIO))
 
             // When
             val result =
@@ -124,6 +132,7 @@ class RecupererVoeuxDUneFormationServiceTest {
                         ),
                     "fl2009" to
                         listOf(
+                            Voeu(id = "ta3", nom = "Nom du ta30", commune = AJACCIO),
                             Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
                             Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
                             Voeu(id = "ta7", nom = "Nom du ta7", commune = STRASBOURG),
@@ -131,12 +140,15 @@ class RecupererVoeuxDUneFormationServiceTest {
                         ),
                     "fl2016" to
                         listOf(
+                            Voeu(id = "ta4", nom = "Nom du ta14", commune = FORT_DE_FRANCE),
                             Voeu(id = "ta4", nom = "Nom du ta4", commune = MARSEILLE),
+                            Voeu(id = "ta4", nom = "Nom du ta15", commune = SAINT_PIERRE),
                         ),
                     "fl252" to
                         listOf(
                             Voeu(id = "ta5", nom = "Nom du ta5", commune = RENNES),
                             Voeu(id = "ta8", nom = "Nom du ta8", commune = PARIS19EME),
+                            Voeu(id = "ta5", nom = "Nom du ta50", commune = BASTIA),
                             Voeu(id = "ta9", nom = "Nom du ta9", commune = MONTREUIL),
                         ),
                 ),

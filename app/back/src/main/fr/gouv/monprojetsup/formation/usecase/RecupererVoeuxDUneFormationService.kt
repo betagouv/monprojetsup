@@ -128,7 +128,16 @@ class RecupererVoeuxDUneFormationService(
         warning: WarningALogguer,
         messagesDeWarning: MutableList<WarningALogguer>,
     ) = try {
-        commune.codeInsee.substring(0, 2).toInt()
+        val codeCommune = commune.codeInsee.substring(0, 2)
+        when {
+            codeCommune == "2A" || codeCommune == "2B" -> 20
+            codeCommune.toInt() <= 96 -> commune.codeInsee.substring(0, 2).toInt()
+            codeCommune.toInt() > 96 -> commune.codeInsee.substring(0, 3).toInt()
+            else -> {
+                messagesDeWarning.add(warning)
+                0
+            }
+        }
     } catch (e: Exception) {
         messagesDeWarning.add(warning)
         0
