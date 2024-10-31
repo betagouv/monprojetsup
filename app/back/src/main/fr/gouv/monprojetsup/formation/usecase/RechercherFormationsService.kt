@@ -45,7 +45,7 @@ class RechercherFormationsService(
                 when {
                     it.motExact -> 150
                     it.motExactPresentDebutPhrase || it.motExactPresentFin || it.motExactMilieu -> 130
-                    it.sequencePresenteMot -> 110
+                    it.motEnPrefix -> 110
                     else -> it.pourcentageMot
                 }
             } ?: resultat.scoreMotClef?.let {
@@ -53,7 +53,7 @@ class RechercherFormationsService(
                     when {
                         it.motExact -> 0.85
                         it.motExactPresentDebutPhrase || it.motExactPresentFin || it.motExactMilieu -> 0.84
-                        it.sequencePresenteMot -> 0.83
+                        it.motEnPrefix -> 0.83
                         else -> 0.8
                     }
                 (coefficient * it.pourcentageMot).toInt()

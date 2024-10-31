@@ -80,7 +80,7 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_metier.sql")
-    fun `Si sport, renvoyer les métiers associés en plaçant en premier ceux contenant le mot en infix`() {
+    fun `Si sport, renvoyer les métiers associés en plaçant en premier ceux contenant le mot en prefix`() {
         // Given
         val recherche = "sport"
 
@@ -130,7 +130,7 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
         val indexMET43 = result.find { it.metier.id == "MET_43" }
         val indexMET723 = result.find { it.metier.id == "MET_723" }
         val indexMET808 = result.find { it.metier.id == "MET_808" }
-        val indexMetiersContenantEnInfixLeMotSport =
+        val indexMetiersContenantEnprefixLeMotSport =
             listOf(
                 indexMET385,
                 indexMET481,
@@ -139,7 +139,7 @@ class RechercheMetierBDDRepositoryTest : BDDRepositoryTest() {
                 indexMET723,
                 indexMET808,
             )
-        assertThat(indexMetiersContenantEnInfixLeMotSport.all { it?.score?.infixDansLabel == true }).isTrue()
+        assertThat(indexMetiersContenantEnprefixLeMotSport.all { it?.score?.prefixDansLabel == true }).isTrue()
     }
 
     @Test

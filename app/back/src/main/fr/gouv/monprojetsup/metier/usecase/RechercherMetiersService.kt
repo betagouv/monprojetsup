@@ -49,7 +49,7 @@ class RechercherMetiersService(
     private fun calculerScore(score: ResultatRechercheMetierCourt.ScoreMot) =
         when {
             score.labelContientMot -> 110
-            score.infixDansLabel -> 100
+            score.prefixDansLabel -> 100
             else -> score.similariteLabelDecoupe + (if (score.motDansLeDescriptif) 20 else 0)
         }
 }

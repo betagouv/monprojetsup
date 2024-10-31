@@ -39,7 +39,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 45,
                         ),
                 ),
@@ -49,7 +49,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 45,
                         ),
                 ),
@@ -59,7 +59,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 45,
                         ),
                 ),
@@ -99,7 +99,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 40,
                         ),
                 ),
@@ -109,7 +109,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 44,
                         ),
                 ),
@@ -119,7 +119,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 7,
                         ),
                 ),
@@ -129,7 +129,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 40,
                         ),
                 ),
@@ -139,7 +139,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = false,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 40,
                         ),
                 ),
@@ -149,7 +149,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -163,7 +163,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -173,7 +173,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = true,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 100,
                         ),
                 ),
@@ -183,7 +183,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -193,7 +193,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -203,7 +203,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -213,7 +213,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 8,
                         ),
                 ),
@@ -223,7 +223,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -233,7 +233,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -243,7 +243,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = true,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 100,
                         ),
                 ),
@@ -253,7 +253,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -263,7 +263,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -273,7 +273,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -283,7 +283,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 11,
                         ),
                 ),
@@ -293,7 +293,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 11,
                         ),
                 ),
@@ -317,7 +317,7 @@ class RechercherMetiersServiceTest {
     }
 
     @Test
-    fun `doit renvoyer les résultats en mettant en premier infix et enfin par similarité label avec bonus dans descriptif`() {
+    fun `doit renvoyer les résultats en mettant en premier prefix et enfin par similarité label avec bonus dans descriptif`() {
         // Given
         val metiersPourClimat =
             listOf(
@@ -327,7 +327,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 50,
                         ),
                 ),
@@ -337,7 +337,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -347,7 +347,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -357,7 +357,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -367,7 +367,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 43,
                         ),
                 ),
@@ -377,7 +377,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -387,7 +387,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -397,7 +397,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 50,
                         ),
                 ),
@@ -407,7 +407,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 7,
                         ),
                 ),
@@ -417,7 +417,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -427,7 +427,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = true,
+                            prefixDansLabel = true,
                             similariteLabelDecoupe = 50,
                         ),
                 ),
@@ -437,7 +437,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),
@@ -447,7 +447,7 @@ class RechercherMetiersServiceTest {
                         ScoreMot(
                             motDansLeDescriptif = true,
                             labelContientMot = false,
-                            infixDansLabel = false,
+                            prefixDansLabel = false,
                             similariteLabelDecoupe = 0,
                         ),
                 ),

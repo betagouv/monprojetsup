@@ -7,7 +7,7 @@ data class ResultatRechercheMetierCourt(
     data class ScoreMot(
         val motDansLeDescriptif: Boolean,
         val labelContientMot: Boolean,
-        val infixDansLabel: Boolean,
+        val prefixDansLabel: Boolean,
         val similariteLabelDecoupe: Int,
     )
 }

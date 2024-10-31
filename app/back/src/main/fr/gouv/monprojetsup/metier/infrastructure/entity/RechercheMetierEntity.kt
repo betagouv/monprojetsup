@@ -13,8 +13,8 @@ data class RechercheMetierEntity(
     val motDansLeDescriptif: Boolean,
     @Column(name = "label_contient_mot", nullable = false)
     val labelContientMot: Boolean,
-    @Column(name = "infix_dans_label", nullable = false)
-    val infixDansLabel: Boolean,
+    @Column(name = "prefix_dans_label", nullable = false)
+    val prefixDansLabel: Boolean,
     @Column(name = "similarite_label_decoupe", nullable = false)
     val similariteLabelDecoupe: Double,
 ) {
@@ -25,7 +25,7 @@ data class RechercheMetierEntity(
                 ResultatRechercheMetierCourt.ScoreMot(
                     motDansLeDescriptif = motDansLeDescriptif,
                     labelContientMot = labelContientMot,
-                    infixDansLabel = infixDansLabel,
+                    prefixDansLabel = prefixDansLabel,
                     similariteLabelDecoupe = (similariteLabelDecoupe * 100).toInt(),
                 ),
         )

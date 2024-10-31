@@ -121,7 +121,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si ist, doit renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
+    fun `Si ist, ne doit pas renvoyer les formations correspondant avec histoire, fleuriste et distribution`() {
         // Given
         val recherche = "ist"
 
@@ -129,7 +129,7 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val resultat = rechercheFormationBDDRepository.rechercherUneFormation(recherche)
 
         // Then
-        val attendu =
+        val nonAttendu =
             listOf(
                 FormationCourte(id = "fl0001", nom = "CAP Fleuriste"),
                 FormationCourte(id = "fl0002", nom = "Bac pro Fleuriste"),
@@ -138,12 +138,13 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
                 FormationCourte(id = "fl0007", nom = "DEUST - Technicien en qualité et distribution des produits alimentaires"),
                 FormationCourte(id = "fl0005", nom = "L1 - Géographie"),
             )
-        assertThat(resultat.map { it.formation }.toSet()).isEqualTo(attendu.toSet())
+        val formationsCourteResultat = resultat.map { it.formation }
+        assertThat(nonAttendu.none { formationsCourteResultat.contains(it) }).isTrue()
     }
 
     @Test
     @Sql("classpath:recherche_formation.sql")
-    fun `Si LAS, doit retourner en premier ceux entre parenthèses`() {
+    fun `Si LAS, doit retourner les prefix et ne pas retourner les formations avec classe`() {
         // Given
         val recherche = "las"
 
@@ -154,10 +155,15 @@ class RechercheFormationBDDRepositoryTest : BDDRepositoryTest() {
         val attendu =
             listOf(
                 FormationCourte(id = "fl0013", nom = "L1 - Sciences sanitaires et sociales -  Accès Santé (LAS)"),
-                FormationCourte(id = "fl0012", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
+                FormationCourte(id = "fl0017", nom = "BTS - Laser : technologies et sciences de la lumière"),
             )
         val formationsCourteResultat = resultat.map { it.formation }
         assertThat(formationsCourteResultat).isEqualTo(attendu)
+        val nonAttendu =
+            listOf(
+                FormationCourte(id = "fl0012", nom = "Classe préparatoire aux études supérieures - Cinéma audiovisuel"),
+            )
+        assertThat(nonAttendu.none { formationsCourteResultat.contains(it) }).isTrue()
     }
 
     @Test

@@ -36,7 +36,7 @@ class RechercheMetierBDDRepository(
                                                   label_decoupe,
                                                   mot_dans_le_descriptif,
                                                   unaccent(lower(label_decoupe)) LIKE unaccent(lower(:mot_recherche))                           AS label_contient_mot,
-                                                  unaccent(lower(label_decoupe)) LIKE unaccent(lower(:mot_recherche_infix))                     AS infix_dans_label,
+                                                  unaccent(lower(label_decoupe)) LIKE unaccent(lower(:mot_recherche_prefix))                     AS prefix_dans_label,
                                                   similarity(COALESCE(unaccent(lower(label_decoupe)), ''),
                                                              unaccent(lower(:mot_recherche)))                                                   AS similarite_label_decoupe,
                                                   ROW_NUMBER() OVER (PARTITION BY id ORDER BY 100 *
@@ -47,19 +47,19 @@ class RechercheMetierBDDRepository(
                        label,
                        mot_dans_le_descriptif,
                        label_contient_mot,
-                       infix_dans_label,
+                       prefix_dans_label,
                        similarite_label_decoupe
                 FROM metiers_similaire
                 WHERE (mot_dans_le_descriptif
                     OR label_contient_mot
-                    OR infix_dans_label
+                    OR prefix_dans_label
                     OR similarite_label_decoupe > 0.4)
                   AND numero_ligne_label = 1;                        
                 """.trimIndent(),
                 RechercheMetierEntity::class.java,
             )
                 .setParameter("mot_recherche", motRecherche)
-                .setParameter("mot_recherche_infix", "$motRecherche%")
+                .setParameter("mot_recherche_prefix", "$motRecherche%")
                 .setParameter("regex_non_alpha_numeric_avec_accent", REGEX_NON_ALPHA_NUMERIC_AVEC_ACCENT)
                 .resultList
         return resulat.map { (it as RechercheMetierEntity).toResultatRechercheMetierCourt() }

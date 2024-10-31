@@ -177,3 +177,15 @@ VALUES ('fl0016',
         null,
         ARRAY [100, 0, 0, 0, 0],
         null, true);
+
+INSERT INTO ref_formation(id, label, descriptif_general, descriptif_attendu, mots_clefs, descriptif_conseils, descriptif_diplome, formations_psup, criteres_analyse, liens, obsolete)
+VALUES ('fl0017',
+        'BTS - Laser : technologies et sciences de la lumière',
+        null,
+        '{}',
+        '{photonique}',
+        null,
+        null,
+        null,
+        ARRAY [100, 0, 0, 0, 0],
+        null, false);
