@@ -149,16 +149,21 @@ export class formationHttpRepository implements FormationRepository {
         })) ?? [],
       duréeÉtudesPrévue: explications.dureeEtudesPrevue ?? null,
       alternance: explications.alternance ?? null,
-      intérêtsEtDomainesChoisis: {
+      choixÉlève: {
         intérêts:
-          explications.interetsEtDomainesChoisis?.interets.map((intérêt) => ({
+          explications.choixEleve?.interets.map((intérêt) => ({
             id: intérêt.id,
             nom: intérêt.nom,
           })) ?? [],
         domaines:
-          explications.interetsEtDomainesChoisis?.domaines.map((domaine) => ({
+          explications.choixEleve?.domaines.map((domaine) => ({
             id: domaine.id,
             nom: domaine.nom,
+          })) ?? [],
+        métiers:
+          explications.choixEleve?.metiers.map((métier) => ({
+            id: métier.id,
+            nom: métier.nom,
           })) ?? [],
       },
       spécialitésChoisies: explications.specialitesChoisies.map((spécialité) => ({
@@ -197,9 +202,10 @@ export class formationHttpRepository implements FormationRepository {
       explications.formationsSimilaires.length > 0,
       explications.dureeEtudesPrevue,
       explications.alternance,
-      explications.interetsEtDomainesChoisis &&
-        (explications.interetsEtDomainesChoisis.domaines.length > 0 ||
-          explications.interetsEtDomainesChoisis.interets.length > 0),
+      explications.choixEleve &&
+        (explications.choixEleve.domaines.length > 0 ||
+          explications.choixEleve.interets.length > 0 ||
+          explications.choixEleve.metiers.length > 0),
       explications.specialitesChoisies.length > 0,
       explications.typeBaccalaureat,
       explications.autoEvaluationMoyenne,

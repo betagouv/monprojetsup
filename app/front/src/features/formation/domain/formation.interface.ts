@@ -75,12 +75,16 @@ export type Formation = {
     }>;
     duréeÉtudesPrévue: DuréeÉtudesPrévueÉlève | null;
     alternance: AlternanceÉlève | null;
-    intérêtsEtDomainesChoisis: {
+    choixÉlève: {
       intérêts: Array<{
         id: string;
         nom: string;
       }>;
       domaines: Array<{
+        id: string;
+        nom: string;
+      }>;
+      métiers: Array<{
         id: string;
         nom: string;
       }>;

@@ -13,8 +13,9 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
     explications.communes.length === 0 &&
     explications.formationsSimilaires.length === 0 &&
     explications.spécialitésChoisies.length === 0 &&
-    explications.intérêtsEtDomainesChoisis.domaines.length === 0 &&
-    explications.intérêtsEtDomainesChoisis.intérêts.length === 0 &&
+    explications.choixÉlève.domaines.length === 0 &&
+    explications.choixÉlève.intérêts.length === 0 &&
+    explications.choixÉlève.métiers.length === 0 &&
     !explications.duréeÉtudesPrévue &&
     !explications.alternance &&
     !explications.duréeÉtudesPrévue &&
@@ -22,6 +23,13 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
     !explications.autoEvaluationMoyenne
   )
     return null;
+
+  const nomsFormationsSimilairesSéléctionnées = explications.formationsSimilaires.map((formation) => formation.nom);
+  const nomsMétiersSéléctionnées = explications.choixÉlève.métiers.map((formation) => formation.nom);
+  const formationsSimilairesEtMétiersSélectionnés = [
+    ...nomsFormationsSimilairesSéléctionnées,
+    ...nomsMétiersSéléctionnées,
+  ];
 
   return (
     <div className="border border-l-4 border-solid border-[--border-default-grey] border-l-[--border-plain-blue-france] px-8 py-6">
@@ -32,13 +40,12 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
         {i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.TITRE}
       </Titre>
       <ul className="m-0 grid list-none justify-start gap-6 p-0">
-        {(explications.intérêtsEtDomainesChoisis.intérêts.length > 0 ||
-          explications.intérêtsEtDomainesChoisis.domaines.length > 0) && (
+        {(explications.choixÉlève.intérêts.length > 0 || explications.choixÉlève.domaines.length > 0) && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
             texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.INTÉRÊTS_ET_DOMAINES}
             éléments={[
-              ...explications.intérêtsEtDomainesChoisis.intérêts.map((intérêt) => intérêt.nom),
-              ...explications.intérêtsEtDomainesChoisis.domaines.map((domaine) => domaine.nom),
+              ...explications.choixÉlève.intérêts.map((intérêt) => intérêt.nom),
+              ...explications.choixÉlève.domaines.map((domaine) => domaine.nom),
             ]}
           />
         )}
@@ -82,10 +89,10 @@ const ExplicationsCorrespondanceFicheFormation = ({ explications }: Explications
             )}
           />
         )}
-        {explications.formationsSimilaires.length > 0 && (
+        {formationsSimilairesEtMétiersSélectionnés.length > 0 && (
           <ExplicationCorrespondanceListeÉlementsFicheFormation
-            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.FORMATIONS_SIMILAIRES}
-            éléments={explications.formationsSimilaires.map((formation) => formation.nom)}
+            texteIntroductif={i18n.PAGE_FORMATION.EXPLICATIONS_CORRESPONDANCE_PROFIL.FORMATIONS_MÉTIERS_SIMILAIRES}
+            éléments={formationsSimilairesEtMétiersSélectionnés}
           />
         )}
         {explications.explicationsCalcul && explications.explicationsCalcul.length > 0 && utilisateur.estExpert && (

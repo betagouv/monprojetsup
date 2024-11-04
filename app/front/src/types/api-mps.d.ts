@@ -605,6 +605,11 @@ export interface components {
             /** Format: float */
             note: number;
         };
+        ChoixElevesDTO: {
+            interets: components["schemas"]["InteretDTO"][];
+            domaines: components["schemas"]["DomaineDTO"][];
+            metiers: components["schemas"]["MetierCourtDTO"][];
+        };
         CommuneAvecSesVoeuxDTO: {
             commune: components["schemas"]["CommuneDTO"];
             voeuxAvecDistance: components["schemas"]["VoeuAvecDistanceDTO"][];
@@ -633,7 +638,7 @@ export interface components {
             dureeEtudesPrevue?: "indifferent" | "courte" | "longue" | "aucune_idee";
             /** @enum {string} */
             alternance?: "pas_interesse" | "indifferent" | "interesse" | "tres_interesse";
-            interetsEtDomainesChoisis?: components["schemas"]["InteretsEtDomainesDTO"];
+            choixEleve?: components["schemas"]["ChoixElevesDTO"];
             specialitesChoisies: components["schemas"]["AffiniteSpecialiteDTO"][];
             typeBaccalaureat?: components["schemas"]["TypeBaccalaureatDTO"];
             autoEvaluationMoyenne?: components["schemas"]["AutoEvaluationMoyenneDTO"];
@@ -673,10 +678,6 @@ export interface components {
         InteretDTO: {
             id: string;
             nom: string;
-        };
-        InteretsEtDomainesDTO: {
-            interets: components["schemas"]["InteretDTO"][];
-            domaines: components["schemas"]["DomaineDTO"][];
         };
         MetierDTO: {
             id: string;
