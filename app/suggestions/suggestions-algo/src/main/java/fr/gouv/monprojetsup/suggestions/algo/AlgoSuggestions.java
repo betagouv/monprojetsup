@@ -111,31 +111,24 @@ public class AlgoSuggestions {
 
         getFormationIds().forEach(edgesKeys::addNode);
 
-        // intégration des relations étendues aux graphes
-        Map<String, Set<String>> metiersVersFormations = data.getMetiersVersFormations();
-        val metiersPass = data.getMetiersPass();
-        val lasCorr = data.getLASFormations();
-
-        metiersVersFormations.forEach((metier, strings) -> strings.forEach(fil -> {
-            if(lasCorr.contains(fil) && metiersPass.contains(metier)) {
-                edgesKeys.put(metier, fil, true, Config.LASS_TO_PASS_INHERITANCE_PENALTY);
-            } else {
-                edgesKeys.put(metier, fil, true, 1.0);
-            }
-        }));
-
         data.edgesFormationsPsupDomaines().forEach(edge -> {
             val formation = edge.src();
             val domaine = edge.dst();
             edgesKeys.put(formation, domaine, false, Config.EDGES_FORMATIONS_DOMAINES_WEIGHT);
             edgesKeys.put(domaine, formation, false, Config.EDGES_DOMAINES_FORMATIONS_WEIGHT);
         });
+
+        val metiersPass = data.getMetiersPass();
+        val lasCorr = data.getLASFormations();
         data.edgesMetiersFormationsPsup().forEach(edge -> {
             val metier = edge.src();
             val formation = edge.dst();
-            edgesKeys.put(metier, formation, false, Config.EDGES_METIERS_FORMATIONS_WEIGHT);
-            edgesKeys.put(formation, metier, false, Config.EDGES_FORMATIONS_METIERS_WEIGHT);
+            val isLasSante = lasCorr.contains(formation) && metiersPass.contains(metier);
+            val penalty = isLasSante ? Config.LASS_TO_PASS_INHERITANCE_PENALTY : 1.0;
+            edgesKeys.put(metier, formation, false, penalty * Config.EDGES_METIERS_FORMATIONS_WEIGHT);
+            edgesKeys.put(formation, metier, false, penalty * Config.EDGES_FORMATIONS_METIERS_WEIGHT);
         });
+
         edgesKeys.putAll(data.edgesDomainesMetiers(), true, Config.EDGES_DOMAINES_METIERS_WEIGHT);
         edgesKeys.putAll(data.edgesInteretsMetiers(), false, Config.EDGES_INTERETS_METIERS_WEIGHT); //faible poids
         edgesKeys.putAll(data.edgesMetiersAssocies(), true, Config.EDGES_METIERS_ASSOCIES_WEIGHT);
