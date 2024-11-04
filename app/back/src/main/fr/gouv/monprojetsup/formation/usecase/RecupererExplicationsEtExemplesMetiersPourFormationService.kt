@@ -69,11 +69,11 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                                 pourcentage = affiniteSpecialite.pourcentage,
                             )
                         }
-                    } ?: emptyList(),
+                    }?.distinct() ?: emptyList(),
                 formationsSimilaires =
                     explications?.formationsSimilaires?.mapNotNull {
                         formationsSimilaires.firstOrNull { formation -> formation.id == it }
-                    } ?: emptyList(),
+                    }?.distinct() ?: emptyList(),
                 interetsChoisis =
                     explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
                         interetsChoisis[interetOuDomaineOuMetierId]
@@ -81,13 +81,13 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                 domainesChoisis =
                     explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
                         domainesChoisis.firstOrNull { domaine -> domaine.id == interetOuDomaineOuMetierId }
-                    } ?: emptyList(),
+                    }?.distinct() ?: emptyList(),
                 metiersChoisis =
                     explications?.interetsDomainesMetiersChoisis?.mapNotNull { interetOuDomaineOuMetierId ->
                         metiers.firstOrNull { metier -> metier.id == interetOuDomaineOuMetierId }?.let { metier ->
                             MetierCourt(metier.id, metier.nom)
                         }
-                    } ?: emptyList(),
+                    }?.distinct() ?: emptyList(),
                 explicationAutoEvaluationMoyenne =
                     explications?.autoEvaluationMoyenne?.let { autoEvaluationMoyenne ->
                         explicationAutoEvaluationMoyenne(
@@ -111,7 +111,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
                     idsMetiers.mapNotNull { idMetier ->
                         metiers.firstOrNull { it.id == idMetier }
                     }
-                } ?: emptyList()
+                }?.distinct() ?: emptyList()
             )
         }
     }
