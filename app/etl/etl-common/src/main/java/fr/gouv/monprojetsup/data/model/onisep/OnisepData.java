@@ -22,15 +22,15 @@ public record OnisepData(
 
         Taxonomie interets,
 
-        List<Pair<String,String>> edgesFormationsDomaines,
+        List<@NotNull Pair<@NotNull String,@NotNull String>> edgesFormationsDomaines,
 
-        List<Pair<String,String>> edgesMetiersFormations,
+        List<@NotNull Pair<@NotNull String,@NotNull String>> edgesMetiersFormations,
 
-        List<FilieresPsupVersIdeoData> filieresToFormationsOnisep,
+        List<@NotNull FilieresPsupVersIdeoData> filieresToFormationsOnisep,
 
-        List<MetierIdeoDuSup> metiersIdeo,
+        List<@NotNull MetierIdeoDuSup> metiersIdeo,
 
-        List<FormationIdeoDuSup> formationsIdeo
+        List<@NotNull FormationIdeoDuSup> formationsIdeo
         ) {
 
 

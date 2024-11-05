@@ -58,10 +58,12 @@ import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Compan
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_ASSOCIES
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_FORMATIONS_PSUP
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_SECTEURS_METIERS
+import fr.gouv.monprojetsup.data.tools.CsvTools.getWriter
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.logging.Logger
 
 
@@ -93,9 +95,112 @@ class MpsDataFromFiles(
         logger.info("Chargement des données Onisep et Rome")
         onisepData = OnisepDataLoader.fromFiles(dataSources)
 
-        OnisepDataLoader.exportDiagnosticsLiens(getLabels())
-
+        val logLiens = OnisepDataLoader.exportDiagnosticsLiens(getLabels())
+        exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
     }
+
+    fun exportLiensFormationsMetiersDiagnostics(
+        labels: Map<String, String>,
+        logLiens: HashMap<Pair<String, String>, MutableList<String>>
+    ) {
+
+        logLiens.keys.removeIf { it.left.startsWith("FOR.") }
+
+        val original = HashMap<Pair<String, String>, Map<String, String>>()
+
+        val checked: MutableSet<Pair<String, String>> = HashSet()
+        val error = HashSet<Pair<String, String>>()
+        val csv = CsvTools.readCSV(DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_checked.csv")
+        for (strMap in csv) {
+            if (strMap.values.stream().allMatch { it.isBlank() }) continue
+
+            val idMps = strMap["id formation MPS"] ?: throw java.lang.RuntimeException("id formation MPS manquant")
+
+            val idMetier = strMap["id metier IDEO"] ?: throw java.lang.RuntimeException("id formation MPS manquant")
+
+            val commentaire = strMap["commentaire"] ?: throw java.lang.RuntimeException("commentaire manquant")
+
+            val pair = Pair.of(idMps.trim(), idMetier.trim())
+
+            if (commentaire.lowercase(Locale.getDefault()).contains("ok")) {
+                checked.add(pair)
+            } else if (commentaire.lowercase(Locale.getDefault()).contains("supp")) {
+                error.add(pair)
+            }
+            original[pair] = strMap
+        }
+
+        val mpsToIdeo = getMpsIdToIdeoIds()
+        val capacites = getCapacitesAccueil()
+        val metiersformations = onisepData.edgesMetiersFormations
+        ///turn into map
+        val formationsEdgesSortedMap = metiersformations.groupBy { it.right }.toMap()
+        val formationsEdgesSorted = formationsEdgesSortedMap.entries.sortedBy { - capacites.getOrDefault(it.key,0) }
+
+        getWriter(DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_audit.csv").use { tools ->
+            tools.appendHeaders(
+                listOf(
+                    "Documentaliste",
+                    "id formation MPS",
+                    "nom formation MPS",
+                    "id metier IDEO",
+                    "nom metier IDEO",
+                    "ids formations IDEO",
+                    "noms formations IDEO",
+                    "capacite accueil",
+                    "commentaire",
+                    "sources"
+                )
+            )
+
+            for (keyLabelEdgesFormation in formationsEdgesSorted) {
+                val idFormationMps = keyLabelEdgesFormation.key
+                val nomFormationMps = labels[idFormationMps]
+
+                val idsFormationsIdeo = mpsToIdeo[idFormationMps].orEmpty()
+                var nomsFormationsIdeo: String =
+                    java.lang.String.join(
+                        "\n", idsFormationsIdeo.stream()
+                            .distinct()
+                            .map { s -> labels.getOrDefault(s,s) }
+                            .sorted()
+                            .toList()
+                    )
+                if(nomsFormationsIdeo.length > 500) {
+                    nomsFormationsIdeo = nomsFormationsIdeo.substring(0,500) + "\n..."
+                }
+
+                val listeMetiers = keyLabelEdgesFormation.value.map { it.left }.filter { it.startsWith("MET.") }.distinct().sorted()
+
+                val capacite = capacites.getOrDefault(idFormationMps, 0)
+                for (idMetier in listeMetiers) {
+                    val p = Pair.of(idFormationMps, idMetier)
+                    val data = original.getOrDefault(p, mapOf())
+                    val sources = if(error.contains(p)) {
+                        val liste = logLiens.getOrDefault(p, mutableListOf()).filter { it.isNotBlank() }
+                        liste.joinToString("\n")
+                    } else {
+                        ""
+                    }
+                    tools.append(
+                        listOf(
+                            data.getOrDefault("Documentaliste", ""),
+                            idFormationMps,
+                            nomFormationMps,
+                            idMetier,
+                            labels[idMetier],
+                            java.lang.String.join(" ; ", idsFormationsIdeo),
+                            nomsFormationsIdeo,
+                            capacite.toString(),
+                            data.getOrDefault("commentaire", ""),
+                            sources
+                        )
+                    )
+                }
+            }
+        }
+    }
+
 
     override fun getLabels(): Map<String, String> {
         return Labels.getLabels(
@@ -379,11 +484,10 @@ class MpsDataFromFiles(
                     l.add(libelle)
                 }
             }
-            var texte: String
-            if (formuleVersLibelles.size <= 1) {
-                texte = formuleVersLibelles.keys.firstOrNull().orEmpty()
+            val texte: String = if (formuleVersLibelles.size <= 1) {
+                formuleVersLibelles.keys.firstOrNull().orEmpty()
             } else {
-                texte = formuleVersLibelles.entries.joinToString("\n\n") { (formule, libelles) ->
+                formuleVersLibelles.entries.joinToString("\n\n") { (formule, libelles) ->
                     val libellesTexte = libelles.joinToString(" - ")
                     "$libellesTexte: $formule"
                 }
@@ -524,17 +628,6 @@ class MpsDataFromFiles(
 
         val formationsVersMetiers = getFormationsVersMetiersEtMetiersAssocies()
 
-        val formationsMetiersFromDescriptifs = getFormationsVersMetiersFromDescriptifs()
-        val debugLabels = getDebugLabels()
-        CsvTools.getWriter(DIAGNOSTICS_OUTPUT_DIR +  "formations_metiers_extraits_des_descriptifs.csv").use { csv ->
-            csv.appendHeaders(listOf("formation", "metier"))
-            formationsMetiersFromDescriptifs.forEach { (formation, metiers) ->
-                metiers.forEach { metier ->
-                    csv.append(listOf(debugLabels.getOrDefault(formation, formation), debugLabels.getOrDefault(metier,metier)))
-                }
-            }
-        }
-
         val mpsToIdeo = getMpsIdToIdeoIds()
 
         val formationsIdeo = onisepData.formationsIdeo.associateBy { it.ideo }
@@ -632,18 +725,6 @@ class MpsDataFromFiles(
         }
         return result
 
-    }
-
-    private fun getFormationsVersMetiersFromDescriptifs(): Map<String, Set<String>> {
-        val descriptifs = DescriptifsLoader.loadDescriptifs(
-            onisepData,
-            psupData.lasToGeneric,
-            dataSources
-        )
-        return OnisepData.getFormationsVersMetiersFromDescriptifs(
-            descriptifs,
-            onisepData.metiersIdeo
-        )
     }
 
     override fun getFormationsVersMetiersEtMetiersAssocies(): Map<String, Set<String>> {
@@ -844,8 +925,8 @@ class MpsDataFromFiles(
         getFormationsMpsIds().forEach { id ->
             statistiques.getStatsMoyGenParBac(id).forEach { (bac, stat) ->
                 if(bacs.contains(bac)) {
-                    val id = MoyenneGeneraleAdmisId(annee, id, bac)
-                    result[id] = stat.frequencesCumulees.toList()
+                    val moyGenId = MoyenneGeneraleAdmisId(annee, id, bac)
+                    result[moyGenId] = stat.frequencesCumulees.toList()
                 }
             }
         }

@@ -76,7 +76,7 @@ public class OnisepDataLoader {
 
     private static final Map<Pair<String,String>, List<String>> logLiens = new TreeMap<>();
 
-    public static void exportDiagnosticsLiens(Map<String,String> labels) throws IOException {
+    public static HashMap<Pair<String, String>, List<String>> exportDiagnosticsLiens(Map<String,String> labels) throws IOException {
 
         try(val csv = CsvTools.getWriter(Constants.DIAGNOSTICS_OUTPUT_DIR + "sourcesLiensFormationsMetiers.csv")) {
             csv.append(List.of("clé formation","label formation", "clé metier","label métoier", "source(s)"));
@@ -92,6 +92,7 @@ public class OnisepDataLoader {
                 );
             });
         }
+        return new HashMap<>(logLiens);
 
     }
 
