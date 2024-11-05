@@ -30,7 +30,7 @@ public class DataSources {
     /* Onisep data */
     public static final String IDEO_HERITAGES_LICENCES_CPGE_PATH = "onisep_ideo_hotline/MPS_LiensLicencesCPGE_valideOnisep.csv";
     public static final String IDEO_HERITAGES_LICENCES_MASTERS_PATH = "onisep_ideo_hotline/MPS_LiensLicencesMasters_valideOnisep.csv";
-    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees_V4.csv";
+    public static final String IDEO_OLD_TO_NEW_PATH = "onisep_ideo_hotline/formations_archivees.csv";
 
     public static final String OLD_TO_NEW_IDEO_OLD_IDEO_HEADER = "OLD_ID_IDEO";
     public static final String OLD_TO_NEW_IDEO_NEW_IDEO_HEADER = "NEW_ID_IDEO";
