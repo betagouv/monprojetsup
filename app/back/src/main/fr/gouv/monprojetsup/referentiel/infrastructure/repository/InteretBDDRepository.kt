@@ -14,8 +14,8 @@ class InteretBDDRepository(
     val interetCategorieJPARepository: InteretCategorieJPARepository,
 ) : InteretRepository {
     @Transactional(readOnly = true)
-    override fun recupererLesSousCategoriesDInterets(idsInterets: List<String>): Map<String, InteretSousCategorie> {
-        return interetJPARepository.findAllByIdIn(idsInterets).associate { it.id to it.sousCategorie.toInteretSousCategorie() }
+    override fun recupererLesSousCategories(idsSousCategoriesInterets: List<String>): List<InteretSousCategorie> {
+        return interetSousCategorieJPARepository.findAllById(idsSousCategoriesInterets).map { it.toInteretSousCategorie() }
     }
 
     @Transactional(readOnly = true)

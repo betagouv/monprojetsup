@@ -40,6 +40,7 @@ import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationsService
 import fr.gouv.monprojetsup.formation.usecase.SuggestionsFormationsService
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
+import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -103,11 +104,19 @@ class FormationControllerTest(
                     AffiniteSpecialite(idSpecialite = "mat002", nomSpecialite = "specialiteB", pourcentage = 1),
                     AffiniteSpecialite(idSpecialite = "mat003", nomSpecialite = "specialiteC", pourcentage = 89),
                 ),
-            domainesChoisis =
-                listOf(
-                    Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
+            choixEleve =
+                ExplicationsSuggestionDetaillees.ChoixEleve(
+                    domainesChoisis =
+                        listOf(
+                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
+                        ),
+                    interetsChoisis = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
+                    metiersChoisis =
+                        listOf(
+                            MetierCourt("MET.397", "analyste financier/ère"),
+                            MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales"),
+                        ),
                 ),
-            interetsChoisis = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
             explicationAutoEvaluationMoyenne =
                 ExplicationAutoEvaluationMoyenne(
                     baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
@@ -697,6 +706,16 @@ class FormationControllerTest(
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
                                     }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    }
                                   ]
                                 },
                                 "specialitesChoisies": [
@@ -1078,6 +1097,16 @@ class FormationControllerTest(
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
                                     }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    }
                                   ]
                                 },
                                 "specialitesChoisies": [
@@ -1452,6 +1481,16 @@ class FormationControllerTest(
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
                                     }
                                   ]
                                 },
@@ -1918,6 +1957,16 @@ class FormationControllerTest(
                                   "nom": "soin aux animaux",
                                   "emoji": "\uD83D\uDC2E"
                                 }
+                              ],
+                              "metiers": [
+                                {
+                                  "id": "MET.397",
+                                  "nom": "analyste financier/ère"
+                                },
+                                {
+                                  "id": "MET.103",
+                                  "nom": "ingénieur/e en expérimentation et production végétales"
+                                }
                               ]
                             },
                             "specialitesChoisies": [
@@ -2203,6 +2252,16 @@ class FormationControllerTest(
                                   "id": "T_ITM_1356",
                                   "nom": "soin aux animaux",
                                   "emoji": "\uD83D\uDC2E"
+                                }
+                              ],
+                              "metiers": [
+                                {
+                                  "id": "MET.397",
+                                  "nom": "analyste financier/ère"
+                                },
+                                {
+                                  "id": "MET.103",
+                                  "nom": "ingénieur/e en expérimentation et production végétales"
                                 }
                               ]
                             },
@@ -3117,6 +3176,16 @@ class FormationControllerTest(
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
                                     }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    }
                                   ]
                                 },
                                 "specialitesChoisies": [
@@ -3693,6 +3762,16 @@ class FormationControllerTest(
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
                                     }
                                   ]
                                 },
@@ -4368,6 +4447,16 @@ class FormationControllerTest(
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
                                     }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
+                                    }
                                   ]
                                 },
                                 "specialitesChoisies": [
@@ -4768,6 +4857,16 @@ class FormationControllerTest(
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
                                       "emoji": "\uD83D\uDC2E"
+                                    }
+                                  ],
+                                  "metiers": [
+                                    {
+                                      "id": "MET.397",
+                                      "nom": "analyste financier/ère"
+                                    },
+                                    {
+                                      "id": "MET.103",
+                                      "nom": "ingénieur/e en expérimentation et production végétales"
                                     }
                                   ]
                                 },

@@ -51,9 +51,7 @@ data class ExplicationsSuggestionDetaillees(
     val alternance: ChoixAlternance? = null,
     val specialitesChoisies: List<AffiniteSpecialite> = emptyList(),
     val formationsSimilaires: List<FormationCourte> = emptyList(),
-    val interetsChoisis: List<InteretSousCategorie> = emptyList(),
-    val domainesChoisis: List<Domaine> = emptyList(),
-    val metiersChoisis: List<MetierCourt> = emptyList(),
+    val choixEleve: ChoixEleve = ChoixEleve(),
     val explicationAutoEvaluationMoyenne: ExplicationAutoEvaluationMoyenne? = null,
     val explicationTypeBaccalaureat: ExplicationTypeBaccalaureat? = null,
     val detailsCalculScore: List<String> = emptyList(),
@@ -62,6 +60,12 @@ data class ExplicationsSuggestionDetaillees(
         val idSpecialite: String,
         val nomSpecialite: String,
         val pourcentage: Int,
+    )
+
+    data class ChoixEleve(
+        val interetsChoisis: List<InteretSousCategorie> = emptyList(),
+        val domainesChoisis: List<Domaine> = emptyList(),
+        val metiersChoisis: List<MetierCourt> = emptyList(),
     )
 }
 

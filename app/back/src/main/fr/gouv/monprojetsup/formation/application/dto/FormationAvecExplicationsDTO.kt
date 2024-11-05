@@ -2,7 +2,6 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
-import fr.gouv.monprojetsup.formation.application.dto.FormationAvecExplicationsDTO.ChoixElevesDTO.InteretDTO
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -178,12 +177,7 @@ data class FormationAvecExplicationsDTO(
             formationsSimilaires = explications.formationsSimilaires.map { FormationSimilaireDTO(it) },
             dureeEtudesPrevue = explications.dureeEtudesPrevue,
             alternance = explications.alternance,
-            choixEleve =
-                ChoixElevesDTO(
-                    interets = explications.interetsChoisis.map { InteretDTO(it) },
-                    domaines = explications.domainesChoisis.map { DomaineDTO(it) },
-                    metiers = explications.metiersChoisis.map { MetierCourtDTO(it) },
-                ),
+            choixEleve = ChoixElevesDTO(explications.choixEleve),
             specialitesChoisies =
                 explications.specialitesChoisies.map {
                     AffiniteSpecialiteDTO(
@@ -210,6 +204,12 @@ data class FormationAvecExplicationsDTO(
         val domaines: List<DomaineDTO>,
         val metiers: List<MetierCourtDTO>,
     ) {
+        constructor(choixEleve: ExplicationsSuggestionDetaillees.ChoixEleve) : this(
+            interets = choixEleve.interetsChoisis.map { InteretDTO(it) },
+            domaines = choixEleve.domainesChoisis.map { DomaineDTO(it) },
+            metiers = choixEleve.metiersChoisis.map { MetierCourtDTO(it) },
+        )
+
         data class InteretDTO(
             val id: String,
             val nom: String,

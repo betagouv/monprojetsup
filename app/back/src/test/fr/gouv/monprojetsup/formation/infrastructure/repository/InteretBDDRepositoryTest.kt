@@ -33,7 +33,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
     }
 
     @Nested
-    inner class RecupererLesSousCategoriesDInterets {
+    inner class RecupererLesSousCategories {
         @Test
         @Sql("classpath:interet.sql")
         fun `Doit retourner les sous catégories des intérêts reconnus et ignorer ceux inconnus`() {
@@ -50,19 +50,13 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
                 )
 
             // When
-            val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
+            val result = interetBDDRepository.recupererLesSousCategories(ids)
 
             // Then
             val attendu =
-                mapOf(
-                    "T_ROME_326548351" to InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
-                    "T_ROME_934089965" to InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
-                    "T_ROME_1825212206" to
-                        InteretSousCategorie(
-                            id = "linguistique",
-                            nom = "Apprendre de nouvelles langues",
-                            emoji = "\uD83C\uDDEC\uD83C\uDDE7",
-                        ),
+                listOf(
+                    InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
+                    InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues", emoji = "\uD83C\uDDEC\uD83C\uDDE7"),
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -74,10 +68,10 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
             val ids = emptyList<String>()
 
             // When
-            val result = interetBDDRepository.recupererLesSousCategoriesDInterets(ids)
+            val result = interetBDDRepository.recupererLesSousCategories(ids)
 
             // Then
-            val attendu = emptyMap<String, InteretSousCategorie>()
+            val attendu = emptyList<InteretSousCategorie>()
             assertThat(result).isEqualTo(attendu)
         }
     }
