@@ -21,10 +21,9 @@ class BaccalaureatSpecialiteEntity {
 }
 
 @Embeddable
-class BaccalaureatSpecialiteId : Serializable {
+data class BaccalaureatSpecialiteId(
     @Column(name = "id_baccalaureat")
-    lateinit var idBaccalaureat: String
-
+    val idBaccalaureat: String = "",
     @Column(name = "id_specialite")
-    lateinit var idSpecialite: String
-}
+    val idSpecialite: String = "",
+) : Serializable

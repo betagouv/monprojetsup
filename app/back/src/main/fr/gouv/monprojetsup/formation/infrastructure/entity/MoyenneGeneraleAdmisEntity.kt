@@ -35,13 +35,11 @@ class MoyenneGeneraleAdmisEntity {
 }
 
 @Embeddable
-class MoyenneGeneraleAdmisId : Serializable {
+data class MoyenneGeneraleAdmisId(
     @Column(name = "annee")
-    lateinit var annee: String
-
+    val annee: String = "",
     @Column(name = "id_formation")
-    lateinit var idFormation: String
-
+    val idFormation: String = "",
     @Column(name = "id_bac")
-    lateinit var idBaccalaureat: String
-}
+    val idBaccalaureat: String = "",
+) : Serializable

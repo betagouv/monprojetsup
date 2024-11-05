@@ -34,10 +34,9 @@ class JoinFormationMetierEntity {
 }
 
 @Embeddable
-class JoinFormationMetierId : Serializable {
+data class JoinFormationMetierId(
     @Column(name = "id_formation", nullable = false)
-    lateinit var idFormation: String
-
+    val idFormation: String = "",
     @Column(name = "id_metier", nullable = false)
-    lateinit var idMetier: String
-}
+    val idMetier: String = "",
+) : Serializable
