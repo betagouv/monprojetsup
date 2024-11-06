@@ -25,7 +25,6 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.Candidat;
 import fr.gouv.monprojetsup.data.model.Specialite;
 import fr.gouv.monprojetsup.data.model.bacs.Bac;
-import fr.gouv.monprojetsup.data.model.formations.Filiere;
 import fr.gouv.monprojetsup.data.model.formations.Formation;
 import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu;
@@ -36,14 +35,25 @@ import fr.gouv.monprojetsup.data.psup.exceptions.AccesDonneesException;
 import fr.gouv.monprojetsup.data.psup.tags.MergeDuplicateTags;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
 import java.sql.Date;
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT;
 import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
-import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.*;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.MATIERE_ADMIS_CODE;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_BACS_CODE_MPS;
+import static fr.gouv.monprojetsup.data.model.stats.PsupStatistiques.TOUS_GROUPES_CODE;
 
 public class ConnecteurBackendSQL {
 
@@ -413,14 +423,7 @@ public class ConnecteurBackendSQL {
                     }
                     f.groupes.add(cGpCod);
 
-                    if (formations.hasFiliere(gFlCod)) {
-                        Filiere filiere = formations.getFiliere(gFlCod);
-                        String actuel = filiere.libellesGroupes.getOrDefault(cGpCod, "");
-                        filiere.libellesGroupes.put(cGpCod,
-                                (actuel.isEmpty() ? "" : (actuel + " | "))
-                                        + f.libelle + " (gTaCod=" + f.gTaCod + ")"
-                        );
-                    } else {
+                    if (!formations.hasFiliere(gFlCod)) {
                         filieresManquantes++;
                     }
                 }
