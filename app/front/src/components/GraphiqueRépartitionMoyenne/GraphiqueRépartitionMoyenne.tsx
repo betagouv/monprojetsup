@@ -61,7 +61,10 @@ const GraphiqueRépartitionMoyenne = ({ notes }: GraphiqueRépartitionMoyennePro
               {i18n.PAGE_FORMATION.RÉPARTITION_MOYENNE.TROISIÈME_DÉCILE} {notes[1]} et {notes[2]}
             </li>
             <li>
-              {i18n.PAGE_FORMATION.RÉPARTITION_MOYENNE.QUATRIÈME_DÉCILE} {notes[3]}
+              {i18n.PAGE_FORMATION.RÉPARTITION_MOYENNE.QUATRIÈME_DÉCILE} {notes[2]} et {notes[3]}
+            </li>
+            <li>
+              {i18n.PAGE_FORMATION.RÉPARTITION_MOYENNE.CINQUIÈME_DÉCILE} {notes[3]}
             </li>
           </ul>
         </details>

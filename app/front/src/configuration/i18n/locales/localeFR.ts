@@ -84,7 +84,8 @@ export const localeFR = {
       PREMIER_DÉCILE: "5% des lycéens admis avaient une moyenne générale inférieure à",
       SECOND_DÉCILE: "20% des lycéens admis avaient une moyenne générale comprise entre",
       TROISIÈME_DÉCILE: "50% des lycéens admis avaient une moyenne générale comprise entre",
-      QUATRIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
+      QUATRIÈME_DÉCILE: "20% des lycéens admis avaient une moyenne générale comprise entre",
+      CINQUIÈME_DÉCILE: "5% des lycéens admis avaient une moyenne générale supérieure à",
     },
     EXEMPLES_MÉTIERS_ACCESSIBLES: "Exemples de métiers accessibles via cette formation",
     ALTERNANCE: {
