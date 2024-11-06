@@ -1,4 +1,4 @@
-import logoMPS from "@/assets/logo/logo-mps.svg";
+import logoMPS from "@/assets/logo/logo-mps-beta.svg";
 import { i18n } from "@/configuration/i18n/i18n";
 import { HeaderProps } from "@codegouvfr/react-dsfr/Header";
 
