@@ -103,6 +103,12 @@ class MpsDataFromFiles(
         labels: Map<String, String>,
         logLiens: HashMap<Pair<String, String>, MutableList<String>>
     ) {
+        val filename = DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_checked.csv"
+
+        if(!java.io.File(filename).exists()) {
+            logger.info("En l'absence du fichier $filename, pas de vérification des liens")
+            return
+        }
 
         logLiens.keys.removeIf { it.left.startsWith("FOR.") }
 
@@ -110,7 +116,7 @@ class MpsDataFromFiles(
 
         val checked: MutableSet<Pair<String, String>> = HashSet()
         val error = HashSet<Pair<String, String>>()
-        val csv = CsvTools.readCSV(DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_checked.csv")
+        val csv = CsvTools.readCSV(filename)
         for (strMap in csv) {
             if (strMap.values.stream().allMatch { it.isBlank() }) continue
 
