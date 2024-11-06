@@ -61,7 +61,7 @@ public class Formations  implements Serializable {
 
     public Collection<Filiere> getFilieres() {
         List<Filiere> result = new ArrayList<>(filieres.values());
-        result.sort(Comparator.comparingInt((Filiere f) -> f.gFlCod));
+        result.sort(Comparator.comparingInt(Filiere::gFlCod));
         return result;
     }
 
@@ -72,11 +72,7 @@ public class Formations  implements Serializable {
         o.formations.forEach((key, value) -> {
                 this.formations.putIfAbsent(key, value);
         });
-        o.filieres.forEach((gFlCod, f) -> {
-            f.libellesGroupes.clear();
-            this.filieres.putIfAbsent(gFlCod, f);
-        });
-
+        o.filieres.forEach(this.filieres::putIfAbsent);
         o.typesMacros.forEach(this.typesMacros::putIfAbsent);
         _groupesToFilieres.clear();
 
@@ -91,7 +87,7 @@ public class Formations  implements Serializable {
         Set<Integer> filieresActives = formations.values().stream().map(f -> f.gFlCod).collect(Collectors.toSet());
         filieres.keySet().retainAll(filieresActives);
 
-        Set<Integer> typesMacrosActifs = filieres.values().stream().map(fil -> fil.gFrCod).collect(Collectors.toSet());
+        Set<Integer> typesMacrosActifs = filieres.values().stream().map(Filiere::gFrCod).collect(Collectors.toSet());
         typesMacros.keySet().retainAll(typesMacrosActifs);
 
     }

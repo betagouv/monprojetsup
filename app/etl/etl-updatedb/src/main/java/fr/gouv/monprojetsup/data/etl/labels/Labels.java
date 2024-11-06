@@ -40,8 +40,8 @@ public class Labels {
         psupData.formations().filieres.forEach((gFlCod, filiere) -> {
             String key = Constants.gFlCodToMpsId(gFlCod);
             if (!result.containsKey(key)) {
-                String frLib = psupData.formations().typesMacros.get(filiere.gFrCod);
-                String libelle = filiere.libelle;
+                String frLib = psupData.formations().typesMacros.get(filiere.gFrCod());
+                String libelle = filiere.libelle();
                 if (frLib != null && frLib.startsWith("Licence ")) {
                     libelle = libelle.replace(frLib, "Licence ");
                 }
@@ -50,15 +50,15 @@ public class Labels {
                 result.put(key, libelle);
             }
             //fallback pour les formations qui n'apparaissent qu'en apprentisssage dans psupData.formations().filieres
-            if(filiere.gFlCodeFi > 0) {
-                String keyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi);
+            if(filiere.gFlCodeFi() > 0) {
+                String keyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi());
                 if(!result.containsKey(keyFi)) {
                     String libelle;
-                    var formationSansApprentissage = psupData.formations().formations.get(filiere.gFlCodeFi);
+                    var formationSansApprentissage = psupData.formations().formations.get(filiere.gFlCodeFi());
                     if (formationSansApprentissage != null) {
                         libelle = formationSansApprentissage.libelle;
                     } else {
-                        libelle = filiere.libelle.replace((" en apprentissage"), "");
+                        libelle = filiere.libelle().replace((" en apprentissage"), "");
                     }
                     libelle = getLibelleFront(keyFi, libelle);
                     if (includeKeys) libelle = includeKey(keyFi, libelle);

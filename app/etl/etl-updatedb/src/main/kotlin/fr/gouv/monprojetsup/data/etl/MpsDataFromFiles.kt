@@ -701,6 +701,10 @@ class MpsDataFromFiles(
     }
 
     override fun getApprentissage() : Collection<String> {
+        return psupData.getApprentissage().entries.filter { it.value > 0 }.map { it.key }
+    }
+
+    override fun getApprentissagePct() : Map<String,Int> {
         return psupData.getApprentissage()
     }
 

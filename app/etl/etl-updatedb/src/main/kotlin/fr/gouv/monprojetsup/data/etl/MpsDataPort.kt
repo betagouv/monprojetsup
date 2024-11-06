@@ -24,6 +24,7 @@ interface MpsDataPort {
     fun getGrilles(): Map<String, GrilleAnalyse>
     fun getMotsClesFormations(): Map<String, List<String>>
     fun getApprentissage(): Collection<String>
+    fun getApprentissagePct(): Map<String,Int>
     fun getLasToGenericIdMapping(): Map<String, String>
     fun getVoeux(): Map<String,Collection<Voeu>>
     fun getDebugLabels(): Map<String, String>

@@ -254,17 +254,17 @@ public record PsupData(
 
         /* regroupement explicite et systématique des filières en apprentissage */
         formations.filieres.values().stream()
-                .filter(f -> f.apprentissage
-                        && f.gFlCodeFi != f.gFlCod
-                        && f.gFlCodeFi > 0//equivalent of null
-                        && (filActives.contains(f.gFlCod) || filActives.contains(f.gFlCodeFi))
+                .filter(f -> f.apprentissage()
+                        && f.gFlCodeFi() != f.gFlCod()
+                        && f.gFlCodeFi() > 0//equivalent of null
+                        && (filActives.contains(f.gFlCod()) || filActives.contains(f.gFlCodeFi()))
                 )
-                .forEach(f -> flToFl.put(f.gFlCod, f.gFlCodeFi));
+                .forEach(f -> flToFl.put(f.gFlCod(), f.gFlCodeFi()));
 
         Map<Integer, Integer> typeFormationToCapa
                 = formations().formations.values().stream()
                 .collect(Collectors.groupingBy(
-                                f -> formations().filieres.get(f.gFlCod).gFrCod
+                                f -> formations().filieres.get(f.gFlCod).gFrCod()
                         )
                 )
                 .entrySet().stream()
@@ -277,7 +277,7 @@ public record PsupData(
         Map<Integer, Long> typeFormationToNb
                 = formations().formations.values().stream()
                 .collect(Collectors.groupingBy(
-                                f -> formations().filieres.get(f.gFlCod).gFrCod
+                                f -> formations().filieres.get(f.gFlCod).gFrCod()
                         )
                 )
                 .entrySet().stream()
@@ -318,8 +318,8 @@ public record PsupData(
             ) {
                 String grp = gFrCodToMpsId(fr);
                 formations.filieres.values().stream()
-                        .filter(fil -> fil.gFrCod == fr)
-                        .forEach(fil -> flToGrp.put(Constants.gFlCodToMpsId(fil.gFlCod), grp));
+                        .filter(fil -> fil.gFrCod() == fr)
+                        .forEach(fil -> flToGrp.put(Constants.gFlCodToMpsId(fil.gFlCod()), grp));
             }
         });
 
@@ -462,8 +462,8 @@ public record PsupData(
                 formations.filieres.values().stream()
                         .collect(
                                 Collectors.toMap(
-                                        f -> f.libelle,
-                                        f -> f.gFlCod
+                                        fr.gouv.monprojetsup.data.model.formations.Filiere::libelle,
+                                        fr.gouv.monprojetsup.data.model.formations.Filiere::gFlCod
                                 )
                         );
         //on constitue l a liste des libellés qui ne sont pas encore en correespondance
@@ -582,23 +582,33 @@ public record PsupData(
     }
 
     @NotNull
-    public Set<@NotNull String> getApprentissage() {
-        val result = new HashSet<String>();
+    public Map<String, @NotNull Integer> getApprentissage() {
+        val avecApprentissage = new HashMap<String, @NotNull Integer>();
+        val total = new HashMap<String, @NotNull Integer>();
         val psupKeyToMpsKey = getPsupKeyToMpsKey();
         //apprentissage
-        formations().filieres.values().forEach(filiere -> {
-            if (filiere.apprentissage) {
-                val key1 = Constants.gFlCodToMpsId(filiere.gFlCod);
-                val key2 = Constants.gFlCodToMpsId(filiere.gFlCodeFi);
-                result.addAll(List.of(
-                        key1,
-                        key2,
-                        psupKeyToMpsKey.getOrDefault(key1,key1),
-                        psupKeyToMpsKey.getOrDefault(key2,key2)
-                ));
+        formations().formations.values().forEach(formation -> {
+            val filiere = formations().filieres.get(formation.gFlCod);
+            if(filiere != null) {
+                val psupKey = Constants.gFlCodToMpsId(filiere.gFlCod());
+                val psupKeyFi = Constants.gFlCodToMpsId(filiere.gFlCodeFi());
+                var mpsKey = psupKeyToMpsKey.get(psupKey);
+                if (mpsKey == null) mpsKey = psupKeyToMpsKey.getOrDefault(psupKeyFi, psupKeyFi);
+                total.put(mpsKey, total.getOrDefault(mpsKey, 0) + 1);
+                val IsAapprentissage = filiere.apprentissage();
+                if (IsAapprentissage) {
+                    avecApprentissage.put(mpsKey, avecApprentissage.getOrDefault(mpsKey, 0) + 1);
+                }
             }
         });
-        return result;
+        val pctApprentissage = new HashMap<String, @NotNull Integer>();
+        total.forEach((id, totalNb) -> {
+            val avecApp = avecApprentissage.getOrDefault(id, 0);
+            val pct = 100 * avecApp / totalNb;
+            pctApprentissage.put(id, pct);
+        });
+
+        return pctApprentissage;
     }
 
     @NotNull
@@ -664,7 +674,7 @@ public record PsupData(
     public void initDurees() {
         formations.filieres.values().forEach(f -> {
             if (f.isL1() || f.isCUPGE() || f.isLouvre()) {
-                duree.durees().put(gFlCodToMpsId(f.gFlCod), 5);
+                duree.durees().put(gFlCodToMpsId(f.gFlCod()), 5);
             }
         });
     }

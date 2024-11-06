@@ -132,6 +132,7 @@ class UpdateFormationDbs(
          val tagsSources = mpsDataPort.getMotsClesFormations()
          val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
          val apprentissage = mpsDataPort.getApprentissage()
+         val apprentissagePct = mpsDataPort.getApprentissagePct()
          val lasToGeneric = mpsDataPort.getLasToGenericIdMapping()
          val formationToTypeformation = mpsDataPort.getFormationToTypeformation()
          val debugLabels = mpsDataPort.getDebugLabels()
@@ -190,6 +191,7 @@ class UpdateFormationDbs(
              entity.labelDetails = debugLabels.getOrDefault(id, id)
              entity.capacite = capacitesAccueil.getOrDefault(id, 0)
              entity.apprentissage = apprentissage.contains(id)
+             entity.apprentissagePct = apprentissagePct.getOrDefault(id,0)
              entity.las = lasToGeneric[id]
 
 

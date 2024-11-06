@@ -79,6 +79,9 @@ class FormationEntity {
     @Column(name = "apprentissage", nullable = true)
     var apprentissage: Boolean? = false
 
+    @Column(name = "apprentissage_pct", nullable = true)
+    var apprentissagePct: Int? = 0
+
     @Nullable
     @Column(name = "duree", nullable = true)
     var duree: Int? = null
