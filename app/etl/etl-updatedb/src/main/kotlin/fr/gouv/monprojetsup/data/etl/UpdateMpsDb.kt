@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.etl
 import fr.gouv.monprojetsup.data.etl.formation.UpdateFormationDbs
 import fr.gouv.monprojetsup.data.etl.formationmetier.UpdateFormationMetierDbs
 import fr.gouv.monprojetsup.data.etl.metier.UpdateMetierDbs
+import fr.gouv.monprojetsup.data.etl.parametre.UpdateParametreDb
 import fr.gouv.monprojetsup.data.etl.referentiel.UpdateReferentielDbs
 import fr.gouv.monprojetsup.data.etl.suggestions.UpdateSuggestionsDbs
 import org.springframework.boot.CommandLineRunner
@@ -35,6 +36,7 @@ open class Runner(
 	private val updateMetierDbs: UpdateMetierDbs,
 	private val updateSuggestionsDbs: UpdateSuggestionsDbs,
 	private val updateFormationsMetiersDbs: UpdateFormationMetierDbs,
+	private val updateParametreDb: UpdateParametreDb,
 	private val mpsDataPort: MpsDataPort
 
 
@@ -44,26 +46,35 @@ open class Runner(
 
 	override fun run(vararg args: String?) {
 
-		logger.info("Création des fichiers de diagnostic")
-		mpsDataPort.exportDiagnostics()
+		try {
+			logger.info("Début de la mise à jour")
+			updateParametreDb.setEtlEnCours(true)
 
-		logger.info("Mise à jour des référentiel")
-		updateReferentielDbs.updateReferentielDbs()
+			logger.info("Création des fichiers de diagnostic")
+			mpsDataPort.exportDiagnostics()
 
-		logger.info("Mise à jour des formations")
-		updateFormationDbs.update()
+			logger.info("Mise à jour des référentiel")
+			updateReferentielDbs.updateReferentielDbs()
 
-		logger.info("Mise à jour des métiers")
-		updateMetierDbs.update()
+			logger.info("Mise à jour des formations")
+			updateFormationDbs.update()
 
-		logger.info("Mise à jour des liens formations metiers")
-		updateFormationsMetiersDbs.update()//after formations ert metiers
+			logger.info("Mise à jour des métiers")
+			updateMetierDbs.update()
 
-		val voeuxOntChange = updateFormationDbs.checkVoeuxOuFormationsOntChange()
-		logger.info("Mise à jour des suggestions")
-		updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
+			logger.info("Mise à jour des liens formations metiers")
+			updateFormationsMetiersDbs.update()//after formations ert metiers
+
+			val voeuxOntChange = updateFormationDbs.checkVoeuxOuFormationsOntChange()
+			logger.info("Mise à jour des suggestions")
+			updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
+		} finally {
+			updateParametreDb.setEtlEnCours(false)
+			logger.info("Fin de la mise à jour")
+		}
 
 	}
+
 }
 
 @Component
