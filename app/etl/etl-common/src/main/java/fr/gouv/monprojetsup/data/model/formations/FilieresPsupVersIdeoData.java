@@ -12,27 +12,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
-import static java.util.stream.Collectors.toCollection;
 
 public record FilieresPsupVersIdeoData(
         int gFlCod,
         int gFrCod,
         String gFrLib,
         String gFlLib,
-        @NotNull List<@NotNull String> ideoFormationsIds,
-        @NotNull List<@NotNull String> ideoMetiersIds,
-        @NotNull List<@NotNull String> libellesOuClesSousdomainesWeb
+        @NotNull ArrayList<@NotNull String> ideoFormationsIds,
+        @NotNull ArrayList<@NotNull String> ideoMetiersIds,
+        @NotNull ArrayList<@NotNull String> libellesOuClesSousdomainesWeb
 
 ) {
 
     public static List<FilieresPsupVersIdeoData> compute(
             PsupToIdeoCorrespondance lines,
-            Map<String, FormationIdeoDuSup> formationsIdeo
-    ) {
+            Map<String, FormationIdeoDuSup> formationsIdeo,
+            Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
 
         try {
             lines.generateDiagnostic(formationsIdeo.values().stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()));
@@ -125,6 +125,20 @@ public record FilieresPsupVersIdeoData(
                     if(line.isEcoleconservationRestauration()) ideoFormationsIds1.addAll(ideoKeysConservationRestauration);
                     if(line.isDMA()) ideoFormationsIds1.addAll(ideoKeysDMA);
 
+                    //on augmente avec les nouveaux codes ideo
+                    ideoFormationsIds1.addAll(
+                            ideoFormationsIds1.stream()
+                                    .flatMap(fl -> oldIdeoToNewIdeo.getOrDefault(fl, Set.of()).stream())
+                                    .collect(Collectors.toSet())
+                    );
+                    //on augmente avec les vieux codes ideo
+                    ArrayList<String> finalIdeoFormationsIds = ideoFormationsIds1;
+                    Set<String> toAdd = oldIdeoToNewIdeo.entrySet()
+                                            .stream().filter(e  -> finalIdeoFormationsIds.stream().anyMatch(f -> e.getValue().contains(f)))
+                                            .map(Map.Entry::getKey)
+                                                            .collect(Collectors.toSet());
+                    ideoFormationsIds1.addAll(toAdd);
+
                     val libellesOuClesSousdomainesWeb1 = majorityItems(ideoFormationsIds1.stream()
                             .map(formationsIdeo::get)
                             .filter(Objects::nonNull)
@@ -142,12 +156,15 @@ public record FilieresPsupVersIdeoData(
                             .sorted()
                             .toList();
 
+                    ideoFormationsIds1 = new ArrayList<>(ideoFormationsIds1.stream().distinct().sorted().toList());
+                    ideoFormationsIds1.removeAll(oldIdeoToNewIdeo.keySet());
+
                     return new FilieresPsupVersIdeoData(
                             line.G_FL_COD(),
                             line.G_FR_COD(),
                             line.G_FR_LIB(),
                             line.G_FL_LIB(),
-                            ideoFormationsIds1.stream().sorted().collect(toCollection(ArrayList::new)),
+                            ideoFormationsIds1,
                             new ArrayList<>(ideoMetiersIds1),
                             new ArrayList<>(libellesOuClesSousdomainesWeb1)
                     );
@@ -193,23 +210,6 @@ public record FilieresPsupVersIdeoData(
         );
     }
 
-    public static void injectLiensFormationsIdeoMetiers(
-            List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
-            Map<String, List<String>> formationsIdeoToMetiersIdeo) {
-        filieresPsupToFormationsMetiersIdeo.forEach(
-                fil -> {
-                    fil.ideoFormationsIds.forEach(
-                            ideoId -> {
-                                val metiers = formationsIdeoToMetiersIdeo.get(ideoId);
-                                if (metiers != null) {
-                                    fil.ideoMetiersIds.addAll(metiers);
-                                }
-                            }
-                    );
-                }
-        );
-    }
-
 
     public void inheritMetiersAndDomainesFrom(FilieresPsupVersIdeoData rich) {
         this.ideoMetiersIds().addAll(rich.ideoMetiersIds());
@@ -218,5 +218,13 @@ public record FilieresPsupVersIdeoData(
 
     public String mpsId() {
         return gFlCodToMpsId(gFlCod());
+    }
+
+    public void updateOldToNewIdeo(Map<String, Set<String>> oldIdeoToNewIdeo) {
+        Set<String> toAdd = ideoFormationsIds.stream().flatMap(fl -> oldIdeoToNewIdeo.getOrDefault(fl, Set.of()).stream()).collect(Collectors.toSet());
+        if(!toAdd.isEmpty()) {
+            ideoFormationsIds.addAll(toAdd);
+            ideoFormationsIds.removeAll(oldIdeoToNewIdeo.keySet());
+        }
     }
 }

@@ -478,11 +478,16 @@ public class OnisepDataLoader {
             DataSources sources,
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup
     ) {
+        val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
+
         LOGGER.info("Chargement de " + PSUP_TO_IDEO_CORRESPONDANCE_PATH);
         val csv = CsvTools.readCSV(sources.getSourceDataFilePath(PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
-        val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup);
+        val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup, oldIdeoToNewIdeo);
         updateCreationLien(filieresPsupToFormationsMetiersIdeo, PSUP_TO_IDEO_CORRESPONDANCE_PATH);
+
+        filieresPsupToFormationsMetiersIdeo.forEach( f -> f.updateOldToNewIdeo(oldIdeoToNewIdeo));
+        updateCreationLien(filieresPsupToFormationsMetiersIdeo, IDEO_OLD_TO_NEW_PATH);
 
         val psupToMetiersIdeo = loadLiensFormationsPsupMetiers(sources);
         FilieresPsupVersIdeoData.replaceLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
@@ -501,7 +506,6 @@ public class OnisepDataLoader {
 
         return filieresPsupToFormationsMetiersIdeo;
     }
-
 
 
     protected static @NotNull Map<String,@NotNull List<@NotNull String>> loadLiensFormationsPsupMetiers(DataSources sources) {
