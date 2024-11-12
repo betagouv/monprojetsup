@@ -74,7 +74,9 @@ class UpdateFormationDbs(
     }
 
     public fun checkVoeuxOuFormationsOntChange(): Boolean {
-        val anciensVoeux = voeuxDb.findAll().map { Pair(it.idFormation, it.id) }.toSet()
+        val anciensVoeux = voeuxDb.findAll()
+            .filter { it.url.isNotEmpty() }//force la mise à jour lors de la migration V1_35
+            .map { Pair(it.idFormation, it.id) }.toSet()
         val formationsMps = mpsDataPort.getFormationsMpsIds()
         val nouveauxVoeux = mpsDataPort.getVoeux()
             .filter { e -> formationsMps.contains(e.key)}

@@ -4,6 +4,9 @@ import fr.gouv.monprojetsup.data.model.psup.DescriptifVoeu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static fr.gouv.monprojetsup.data.Constants.FORMATION_PREFIX;
+import static fr.gouv.monprojetsup.data.Constants.PSUP_FORMATION_FICHE;
+
 public record Voeu(
         @NotNull String id,
         @NotNull String formation,
@@ -21,6 +24,13 @@ public record Voeu(
             return null;
         }
         return new LatLng(lat, lng);
+    }
+
+    public @NotNull String getUrl() {
+        if(!id.startsWith(FORMATION_PREFIX)) {
+            throw new IllegalArgumentException("Invalid id: " + id);
+        }
+        return PSUP_FORMATION_FICHE + id.substring(2);
     }
 
 }

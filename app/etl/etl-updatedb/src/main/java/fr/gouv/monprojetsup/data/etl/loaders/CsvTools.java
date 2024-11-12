@@ -76,7 +76,7 @@ public class CsvTools implements Closeable {
         csvWriter.close();
     }
 
-    public void appendHeaders(List<String> headers) throws IOException {
+    public void appendHeaders(List<String> headers) {
         append(headers);
     }
     public void append(List<String> items) {

@@ -2,8 +2,6 @@ package fr.gouv.monprojetsup.data;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 public class Constants {
 
     public static final int PASS_FL_COD = 2047;
@@ -32,16 +30,10 @@ public class Constants {
     public static final int CODE_NSF_CONSERVATION_RESTAURATION = 342;
     public static final int ECOLE_CONSERVATION_RESTAURATION_PSUP_FL_COD = 253;
     public static final int DMA_PSUP_FR_COD = 81;
-    public static final Set<String> FORMATION_PSUP_EXCLUES = Set.of(
-            "fr63",//année préparatoire
-            "fl85001",//Formation valant grade de licence
-            "fr75000",//Diplôme d'Etablissement
-            "fl231",//Formation Bac + 4
-            "fr70",//Diplôme d'établissement,
-            "fr95000",//Sous-officier,
-            "fr75"//Diplôme d'Université
-    );
+
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
+    public static String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
+
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
     /* constant added to the las gFlCod indexes */
     public static final Integer LAS_CONSTANT = 1000000;
@@ -49,7 +41,7 @@ public class Constants {
 
     private static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
     private static final String FILIERE_PREFIX = "fl";//like g_fl_cod
-    private static final String FORMATION_PREFIX = "ta";//like g_ta_cod
+    public static final String FORMATION_PREFIX = "ta";//like g_ta_cod
 
     public static final int MAX_DISTANCE_VILLE_VOEU_KM = 100;
 

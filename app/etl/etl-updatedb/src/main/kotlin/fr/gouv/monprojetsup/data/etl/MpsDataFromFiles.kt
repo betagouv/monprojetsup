@@ -4,13 +4,11 @@ import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.Constants.CARTE_PARCOURSUP_PREFIX_URI
 import fr.gouv.monprojetsup.data.Constants.DIAGNOSTICS_OUTPUT_DIR
 import fr.gouv.monprojetsup.data.Constants.EXPLORER_AVENIRS_URL
-import fr.gouv.monprojetsup.data.Constants.FORMATION_PSUP_EXCLUES
 import fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.LAS_CONSTANT
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL1
 import fr.gouv.monprojetsup.data.Constants.ONISEP_URL2
 import fr.gouv.monprojetsup.data.Constants.PASS_FL_COD
-import fr.gouv.monprojetsup.data.Constants.PASS_MOT_CLE
 import fr.gouv.monprojetsup.data.Constants.URL_ARTICLE_PAS_LAS
 import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId
@@ -47,6 +45,7 @@ import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.AdmissionStats
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
+import fr.gouv.monprojetsup.data.model.tags.TagsFormations
 import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_ATOME_ELEMENT
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_DOMAINES_METIERS
@@ -622,13 +621,14 @@ class MpsDataFromFiles(
     override fun getMotsClesFormations(): Map<String, List<String>> {
 
         //log.info("Chargement des sources des mots-clés, et extension via la correspondance");
-        val motsCles = psupData.motsCles
+        val motsClesPsup = psupData.motsCles
 
-        motsCles.sources.computeIfAbsent(
-            PASS_MOT_CLE
-        ) { HashSet() }.add(gFlCodToMpsId(PASS_FL_COD))
+        val motsCleMps = Serialisation.fromJsonFile(dataSources.getSourceDataFilePath(DataSources.MOTS_CLES_MPS_PATH), TagsFormations::class.java)
+        motsCleMps.tags.forEach { (key, value) ->
+            motsClesPsup.add(value, key)
+        }
 
-        motsCles.extendToGroups(psupData.psupKeyToMpsKey)
+        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
 
         val labels = getLabels()
 
@@ -643,35 +643,35 @@ class MpsDataFromFiles(
         //le référentiel des formations front
         mpsIds.forEach { formation ->
             val label = labels.getOrDefault(formation, formation)
-            motsCles.add(label, formation)
+            motsClesPsup.add(label, formation)
             //recherche par clé
-            motsCles.add(formation + "x", formation)
+            motsClesPsup.add(formation + "x", formation)
             if (label.contains("L1")) {
-                motsCles.add("licence", formation)
+                motsClesPsup.add("licence", formation)
             }
             if (label.lowercase().contains("infirmier")) {
-                motsCles.add("IFSI", formation)
+                motsClesPsup.add("IFSI", formation)
             }
             if(mpsToIdeo.containsKey(formation)) {
                 val ideoKeys = mpsToIdeo[formation].orEmpty()
                 ideoKeys.forEach { ideoKey ->
                     val formationIdeo = formationsIdeo[ideoKey]
                     if (formationIdeo != null) {
-                        motsCles.add(formationIdeo.motsCles, formation)
+                        motsClesPsup.add(formationIdeo.motsCles, formation)
                     }
                 }
             }
             formationsVersMetiers[formation]?.forEach { idMetierOuMetierAssocie ->
                 val labelMetier = labels[idMetierOuMetierAssocie]
                 if(labelMetier != null) {
-                    motsCles.add(labelMetier, formation)
+                    motsClesPsup.add(labelMetier, formation)
                 }
             }
         }
-        motsCles.extendToGroups(psupData.psupKeyToMpsKey)
-        motsCles.normalize()
+        motsClesPsup.extendToGroups(psupData.psupKeyToMpsKey)
+        motsClesPsup.normalize()
 
-        return motsCles.getKeyToTags()
+        return motsClesPsup.getKeyToTags()
     }
 
     override fun getMetiersMpsIds(): List<String> {
@@ -698,7 +698,12 @@ class MpsDataFromFiles(
             val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
             result.retainAll(groupesWithAtLeastOneFormation)
 
-            result.removeAll(FORMATION_PSUP_EXCLUES)
+            val toRemove = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.MPS_FORMATIONS_EXCLUES_PATH), ',')
+                .filter { it.isNotEmpty() }
+                .map { it[DataSources.MPS_FORMATIONS_EXCLUES_HEADER].toString() }
+                .toSet()
+
+            result.removeAll(toRemove)
 
             val sorted = result.toList().sorted()
             formationsMpsIds =  sorted

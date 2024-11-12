@@ -25,6 +25,7 @@ class VoeuEntity {
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
         this.obsolete = false
+        this.url = voeu.url
     }
 
     @Id
@@ -57,6 +58,9 @@ class VoeuEntity {
 
     @Column(nullable = false)
     var obsolete: Boolean = false
+
+    @Column(nullable = false)
+    var url: String = ""
 
     fun toVoeu() : Voeu {
         return Voeu(

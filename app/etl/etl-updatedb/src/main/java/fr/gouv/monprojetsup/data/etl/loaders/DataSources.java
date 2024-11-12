@@ -71,7 +71,9 @@ public class DataSources {
     public static final String PSUP_HERITAGES_HERITIER_HEADER = "mps_heritier";
     public static final String PSUP_HERITAGES_LEGATAIRES_HEADER = "mps_legataire";
 
-
+    public static final String MOTS_CLES_MPS_PATH = "mps/motsCles.json";
+    public static final String MPS_FORMATIONS_EXCLUES_PATH = "mps/formationsExclues.csv";
+    public static final String MPS_FORMATIONS_EXCLUES_HEADER = "cle";
     /* ROME data */
     public static final String ROME_CENTRES_INTERETS_PATH = "ROME/unix_arborescence_centre_interet_v451.json";
     public static final String ROME_THEMES_PATH = "ROME/unix_arborescence_thematique_v451.json";//unused
