@@ -86,6 +86,7 @@ class UpdateReferentielDbs(
                     id = baccalaureat.key
                     nom = baccalaureat.label
                     idExterne = baccalaureat.key
+                    idCarteParcoursup = baccalaureat.idCarteParcoursup()
                 }
             })
     }

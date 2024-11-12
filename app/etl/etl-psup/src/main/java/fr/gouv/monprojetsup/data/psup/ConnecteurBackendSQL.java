@@ -311,7 +311,12 @@ public class ConnecteurBackendSQL {
             List<Bac> bacs = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
-                    bacs.add(new Bac(rs.getString(1), rs.getString(2)));
+                    bacs.add(
+                            new Bac(
+                                    rs.getString(1),
+                                    rs.getString(2)
+                            )
+                    );
                 }
             data.setBacs(bacs);            }
         }
