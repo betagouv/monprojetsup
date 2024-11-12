@@ -69,13 +69,25 @@ class ReferentielServiceTest {
 
         val toutesLesCategoriesEtSousCategoriesDInteret =
             mapOf(
-                InteretCategorie(id = "decouvrir_monde", nom = "Découvrir le monde", emoji = "🌎") to
+                InteretCategorie(
+                    id = "decouvrir_monde",
+                    nom = "Découvrir le monde",
+                    emoji = "🌎",
+                ) to
                     listOf(
-                        InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "🚅"),
+                        InteretSousCategorie(
+                            id = "voyage",
+                            nom = "Voyager",
+                            emoji = "🚅",
+                            description =
+                                "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                    "organiser des voyages et des séjours.",
+                        ),
                         InteretSousCategorie(
                             id = "linguistique",
                             nom = "Apprendre de nouvelles langues",
                             emoji = "🇬🇧",
+                            description = null,
                         ),
                     ),
                 InteretCategorie(
@@ -96,8 +108,15 @@ class ReferentielServiceTest {
                     emoji = "🥕",
                 ) to
                     listOf(
-                        Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                        Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                        Domaine(
+                            id = "animaux",
+                            nom = "Soins aux animaux",
+                            emoji = "\uD83D\uDC2E",
+                            description =
+                                "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner " +
+                                    "les animaux, les nourrir et assurer leur bien-être.",
+                        ),
+                        Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                     ),
                 CategorieDomaine(
                     id = "commerce",

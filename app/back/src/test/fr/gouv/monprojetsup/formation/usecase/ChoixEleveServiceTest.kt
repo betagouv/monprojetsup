@@ -47,10 +47,10 @@ class ChoixEleveServiceTest {
             // Given
             val metier397 = MetierCourt("MET.397", "analyste financier/ère")
             val metier103 = MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales")
-            val centreInteret8 = InteretSousCategorie("ci8", "Créer quelque chose de mes mains", "\uD83E\uDE9B")
-            val centreInteret14 = InteretSousCategorie("ci14", "Aider les autres", "\uD83E\uDEC2")
-            val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", "\uD83D\uDD25")
-            val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", "\uD83C\uDF04")
+            val centreInteret8 = InteretSousCategorie("ci8", "Créer quelque chose de mes mains", null, "\uD83E\uDE9B")
+            val centreInteret14 = InteretSousCategorie("ci14", "Aider les autres", null, "\uD83E\uDEC2")
+            val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", null, "\uD83D\uDD25")
+            val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", null, "\uD83C\uDF04")
             val explications =
                 mapOf(
                     "fl0001" to
@@ -116,9 +116,9 @@ class ChoixEleveServiceTest {
             // Given
             val metier397 = MetierCourt("MET.397", "analyste financier/ère")
             val metier103 = MetierCourt("MET.103", "ingénieur/e en expérimentation et production végétales")
-            val centreInteret8 = InteretSousCategorie("ci8", "Créer quelque chose de mes mains", "\uD83E\uDE9B")
-            val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", "\uD83D\uDD25")
-            val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", "\uD83C\uDF04")
+            val centreInteret8 = InteretSousCategorie("ci8", "Créer quelque chose de mes mains", null, "\uD83E\uDE9B")
+            val centreInteret17 = InteretSousCategorie("ci17", "Des sensations fortes", null, "\uD83D\uDD25")
+            val domaine8 = Domaine("dom8", "Aménagement du territoire - urbanisme", null, "\uD83C\uDF04")
             val interetsDomainesMetiersChoisis = listOf("dom8", "ci17", "idInconnu", "MET.397", "ci8", "MET.103")
             val explications = ExplicationsSuggestionEtExemplesMetiers(interetsDomainesMetiersChoisis = interetsDomainesMetiersChoisis)
             given(domaineRepository.recupererLesDomaines(interetsDomainesMetiersChoisis)).willReturn(listOf(domaine8))

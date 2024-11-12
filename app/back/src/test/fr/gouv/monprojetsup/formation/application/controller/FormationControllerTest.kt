@@ -108,9 +108,17 @@ class FormationControllerTest(
                 ExplicationsSuggestionDetaillees.ChoixEleve(
                     domainesChoisis =
                         listOf(
-                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E"),
+                            Domaine(id = "T_ITM_1356", nom = "soin aux animaux", emoji = "\uD83D\uDC2E", description = null),
                         ),
-                    interetsChoisis = listOf(InteretSousCategorie(id = "aider_autres", nom = "Aider les autres", emoji = "\uD83E\uDEC2")),
+                    interetsChoisis =
+                        listOf(
+                            InteretSousCategorie(
+                                id = "aider_autres",
+                                nom = "Aider les autres",
+                                emoji = "\uD83E\uDEC2",
+                                description = null,
+                            ),
+                        ),
                     metiersChoisis =
                         listOf(
                             MetierCourt("MET.397", "analyste financier/ère"),

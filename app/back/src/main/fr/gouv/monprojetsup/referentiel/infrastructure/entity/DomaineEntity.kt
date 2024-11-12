@@ -16,6 +16,9 @@ class DomaineEntity {
     @Column(name = "nom", nullable = false)
     lateinit var nom: String
 
+    @Column(name = "description", nullable = true)
+    var description: String? = null
+
     @Column(name = "emoji", nullable = false)
     lateinit var emoji: String
 
@@ -26,6 +29,7 @@ class DomaineEntity {
         Domaine(
             id = id,
             nom = nom,
+            description = description,
             emoji = emoji,
         )
 }

@@ -55,8 +55,20 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 listOf(
-                    InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "\uD83D\uDE85"),
-                    InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues", emoji = "\uD83C\uDDEC\uD83C\uDDE7"),
+                    InteretSousCategorie(
+                        id = "voyage",
+                        nom = "Voyager",
+                        emoji = "\uD83D\uDE85",
+                        description =
+                            "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                "organiser des voyages et des séjours.",
+                    ),
+                    InteretSousCategorie(
+                        id = "linguistique",
+                        nom = "Apprendre de nouvelles langues",
+                        emoji = "\uD83C\uDDEC\uD83C\uDDE7",
+                        description = null,
+                    ),
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -132,12 +144,32 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 mapOf(
-                    InteretCategorie(id = "decouvrir_monde", nom = "Découvrir le monde", emoji = "🌎") to
+                    InteretCategorie(
+                        id = "decouvrir_monde",
+                        nom = "Découvrir le monde",
+                        emoji = "🌎",
+                    ) to
                         listOf(
-                            InteretSousCategorie(id = "voyage", nom = "Voyager", emoji = "🚅"),
-                            InteretSousCategorie(id = "linguistique", nom = "Apprendre de nouvelles langues", emoji = "🇬🇧"),
+                            InteretSousCategorie(
+                                id = "voyage",
+                                nom = "Voyager",
+                                emoji = "🚅",
+                                description =
+                                    "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour " +
+                                        "organiser des voyages et des séjours.",
+                            ),
+                            InteretSousCategorie(
+                                id = "linguistique",
+                                nom = "Apprendre de nouvelles langues",
+                                emoji = "🇬🇧",
+                                description = null,
+                            ),
                         ),
-                    InteretCategorie(id = "rechercher", nom = "Découvrir, enquêter et rechercher", emoji = "\uD83E\uDDD0") to emptyList(),
+                    InteretCategorie(
+                        id = "rechercher",
+                        nom = "Découvrir, enquêter et rechercher",
+                        emoji = "\uD83E\uDDD0",
+                    ) to emptyList(),
                 )
             assertThat(result).isEqualTo(attendu)
         }

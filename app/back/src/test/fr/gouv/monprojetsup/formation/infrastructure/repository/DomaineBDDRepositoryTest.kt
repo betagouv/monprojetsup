@@ -41,8 +41,15 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             val attendu =
                 listOf(
-                    Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                    Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                    Domaine(
+                        id = "animaux",
+                        nom = "Soins aux animaux",
+                        emoji = "\uD83D\uDC2E",
+                        description =
+                            "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les animaux, " +
+                                "les nourrir et assurer leur bien-être.",
+                    ),
+                    Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                 )
             assertThat(result).isEqualTo(attendu)
         }
@@ -79,8 +86,15 @@ class DomaineBDDRepositoryTest : BDDRepositoryTest() {
                         emoji = "🥕",
                     ) to
                         listOf(
-                            Domaine(id = "animaux", nom = "Soins aux animaux", emoji = "\uD83D\uDC2E"),
-                            Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C"),
+                            Domaine(
+                                id = "animaux",
+                                nom = "Soins aux animaux",
+                                emoji = "\uD83D\uDC2E",
+                                description =
+                                    "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner " +
+                                        "les animaux, les nourrir et assurer leur bien-être.",
+                            ),
+                            Domaine(id = "agroequipement", nom = "Agroéquipement", emoji = "\uD83D\uDE9C", description = null),
                         ),
                     CategorieDomaine(
                         id = "commerce",
