@@ -52,7 +52,12 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         sousCatégoriesCentreIntérêt: trierTableauDObjetsParOrdreAlphabétique(
           centreIntérêt.sousCategoriesInterets,
           "nom",
-        ),
+        ).map((intérêt) => ({
+          id: intérêt.id,
+          nom: intérêt.nom,
+          description: intérêt.description ?? null,
+          emoji: intérêt.emoji,
+        })),
       })),
       domainesProfessionnels: référentielDonnéesHttp.categoriesDomaineAvecLeursDomaines.map((domaineProfessionnel) => ({
         id: domaineProfessionnel.categorieDomaine.id,
@@ -61,7 +66,12 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         sousCatégoriesdomainesProfessionnels: trierTableauDObjetsParOrdreAlphabétique(
           domaineProfessionnel.domaines,
           "nom",
-        ),
+        ).map((domaine) => ({
+          id: domaine.id,
+          nom: domaine.nom,
+          description: domaine.description ?? null,
+          emoji: domaine.emoji,
+        })),
       })),
     };
 

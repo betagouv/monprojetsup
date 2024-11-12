@@ -22,6 +22,9 @@ export default function useDomainesForm({ àLaSoumissionDuFormulaireAvecSuccès 
     référentielDonnées?.domainesProfessionnels.map((catégorie) => ({
       nom: catégorie.nom,
       emoji: catégorie.emoji,
+      afficherDétail: catégorie.sousCatégoriesdomainesProfessionnels.some(
+        (sousCatégorie) => sousCatégorie.description !== null,
+      ),
       filtres: catégorie.sousCatégoriesdomainesProfessionnels,
     })) ?? [];
 

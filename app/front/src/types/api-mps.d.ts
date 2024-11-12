@@ -428,6 +428,7 @@ export interface components {
         DomaineDTO: {
             id: string;
             nom: string;
+            description?: string;
             emoji: string;
         };
         InteretCategorieDTO: {
@@ -438,6 +439,7 @@ export interface components {
         InteretSousCategorieDTO: {
             id: string;
             nom: string;
+            description?: string;
             emoji: string;
         };
         PourcentagesMoyenneDTO: {

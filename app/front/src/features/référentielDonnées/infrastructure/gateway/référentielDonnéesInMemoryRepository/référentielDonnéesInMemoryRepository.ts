@@ -2395,16 +2395,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci18",
             nom: "Conduire",
             emoji: "🏎",
+            description: null,
           },
           {
             id: "ci17",
             nom: "Des sensations fortes",
             emoji: "🔥",
+            description: null,
           },
           {
             id: "ci16",
             nom: "Pratiquer une activité sportive",
             emoji: "⛹",
+            description: null,
           },
         ],
       },
@@ -2417,6 +2420,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci6",
             nom: "Communiquer et informer",
             emoji: "🗣",
+            description: null,
           },
         ],
       },
@@ -2429,16 +2433,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci11",
             nom: "Apprendre de nouvelles langues",
             emoji: "🇬🇧",
+            description: null,
           },
           {
             id: "ci12",
             nom: "Travailler dans un milieu multiculturel",
             emoji: "🛤",
+            description: null,
           },
           {
             id: "ci10",
             nom: "Voyager",
             emoji: "🚅",
+            description: null,
           },
         ],
       },
@@ -2451,11 +2458,13 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci19",
             nom: "Faire des expériences",
             emoji: "🧪",
+            description: null,
           },
           {
             id: "ci20",
             nom: "Prêter attention au détail",
             emoji: "🔎",
+            description: null,
           },
         ],
       },
@@ -2468,6 +2477,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci27",
             nom: "Développer les nouvelles technologies",
             emoji: "💻",
+            description: null,
           },
         ],
       },
@@ -2480,6 +2490,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci21",
             nom: "Faire respecter la loi",
             emoji: "🧑‍⚖",
+            description: null,
           },
         ],
       },
@@ -2492,6 +2503,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci29",
             nom: "Jongler avec les chiffres",
             emoji: "💯",
+            description: null,
           },
         ],
       },
@@ -2504,11 +2516,13 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci25",
             nom: "Diriger une équipe",
             emoji: "👍",
+            description: null,
           },
           {
             id: "ci26",
             nom: "Organiser les choses",
             emoji: "📑",
+            description: null,
           },
         ],
       },
@@ -2521,16 +2535,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci14",
             nom: "Aider les autres",
             emoji: "🫂",
+            description: null,
           },
           {
             id: "ci15",
             nom: "Aller vers les gens",
             emoji: "😄",
+            description: null,
           },
           {
             id: "ci13",
             nom: "Soigner",
             emoji: "🏥",
+            description: null,
           },
         ],
       },
@@ -2543,16 +2560,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci4",
             nom: "Défendre l'écologie",
             emoji: "♻",
+            description: null,
           },
           {
             id: "ci3",
             nom: "Travailler au contact de la nature",
             emoji: "🌳",
+            description: null,
           },
           {
             id: "ci5",
             nom: "Travailler avec les animaux",
             emoji: "😺",
+            description: null,
           },
         ],
       },
@@ -2565,11 +2585,13 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci2",
             nom: "Enseigner",
             emoji: "👶",
+            description: null,
           },
           {
             id: "ci1",
             nom: "Travailler avec des enfants",
             emoji: "🙋",
+            description: null,
           },
         ],
       },
@@ -2582,16 +2604,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci23",
             nom: "Découvrir l'envers du décor",
             emoji: "🎭",
+            description: null,
           },
           {
             id: "ci24",
             nom: "Écrire ou lire",
             emoji: "✍",
+            description: null,
           },
           {
             id: "ci22",
             nom: "Être artiste",
             emoji: "🎨",
+            description: null,
           },
         ],
       },
@@ -2604,16 +2629,19 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci7",
             nom: "Bricoler",
             emoji: "🙌",
+            description: null,
           },
           {
             id: "ci8",
             nom: "Créer quelque chose de mes mains",
             emoji: "🪛",
+            description: null,
           },
           {
             id: "ci9",
             nom: "Cuisiner",
             emoji: "🧑‍🍳",
+            description: null,
           },
         ],
       },
@@ -2626,6 +2654,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "ci28",
             nom: "Vendre, développer un commerce",
             emoji: "🤝",
+            description: null,
           },
         ],
       },
@@ -2640,11 +2669,13 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom1",
             nom: "Agriculture - forêt",
             emoji: "🚜",
+            description: null,
           },
           {
             id: "dom2",
             nom: "Élevage - soins aux animaux",
             emoji: "🐮",
+            description: null,
           },
         ],
       },
@@ -2657,16 +2688,22 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom8",
             nom: "Aménagement du territoire - urbanisme",
             emoji: "🌄",
+            description:
+              "Tu souhaites participer à l'organisation du territoire en infrastructures et en services publics et veux contribuer au bon développement de la ville.",
           },
           {
             id: "dom9",
             nom: "Architecture",
             emoji: "🏚️",
+            description:
+              "Dessiner et créer des nouveaux bâtiment et des maisons individuelles, encadrer une construction, rénover d'anciens immeubles, les possibilités sont vastes.",
           },
           {
             id: "dom10",
             nom: "Bâtiment - construction",
             emoji: "🏗️",
+            description:
+              "Pour travailler dans le BTP quel que soit le métier qui t'attire (menuisierie, maçonnerie, génie civil, finition, ameublement etc.), c'est par ici !",
           },
         ],
       },
@@ -2679,26 +2716,32 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom5",
             nom: "Art",
             emoji: "🎨",
+            description: "Tu veux peindre, sculpter, dessiner, concevoir des objets de design, ou du graphisme...?",
           },
           {
             id: "dom3",
             nom: "Artisanat - création",
             emoji: "💎",
+            description: "Poterie, dorure, bijouterie... si tu veux créer, c'est par ici !",
           },
           {
             id: "dom4",
             nom: "Arts du spectacle",
             emoji: "🎭",
+            description: "Pour travailler dans la musique, le théâtre, la danse, la production de spectacles, etc.",
           },
           {
             id: "dom6",
             nom: "Audiovisuel",
             emoji: "🎥",
+            description:
+              "C'est la voie pour toi si tu veux travailler à la télévision, au cinéma, à la radio, et bien d'autres secteurs encore.",
           },
           {
             id: "dom7",
             nom: "Culture et patrimoine",
             emoji: "🏰",
+            description: "Passionné de châteaux, d'histoire et d'histoire de l'art, c'est ton chemin !",
           },
         ],
       },
@@ -2711,21 +2754,29 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom11",
             nom: "Banque - assurances",
             emoji: "💵",
+            description:
+              "Si tu veux travailler dans le secteur de la finance, directement au sein d'une banque ou d'une compagnie d'assurance.",
           },
           {
             id: "dom12",
             nom: "Commerce - vente",
             emoji: "🛒",
+            description:
+              "Tu as envie de faire une école de commerce, de travailler dans l'achat et l'approvisionnement ou encore de faire du marketing ?",
           },
           {
             id: "dom13",
             nom: "Gestion des entreprises - comptabilité",
             emoji: "📈",
+            description:
+              "Pour te former aux métiers qui permettent à une entreprise d'être bien gérer (RH, secrétariat, comptabilité etc).",
           },
           {
             id: "dom14",
             nom: "Immobilier",
             emoji: "🏤",
+            description:
+              "Tout ce qui tourne autour de la vente ou de la location d'appartements, de maisons ou de bureaux, et de la gestion d'immeubles pour les particuliers ou les professionnels.",
           },
         ],
       },
@@ -2738,11 +2789,15 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom16",
             nom: "Droit",
             emoji: "👩🏽‍⚖️",
+            description:
+              "Tu veux faire des études de droit et connaître les règles qui régissent les rapports individuels et sociaux de la société ? C'est par ici !",
           },
           {
             id: "dom15",
             nom: "Métiers de la justice",
             emoji: "⚖️",
+            description:
+              "Si tu veux travailler dans le secteur de la justice (tribunal, administration, police judiciaire et autres).",
           },
         ],
       },
@@ -2755,6 +2810,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom17",
             nom: "Enseignement - formation",
             emoji: "🎓",
+            description: "Si tu souhaites devenir professeur, quel que soit le profil des élèves.",
           },
         ],
       },
@@ -2767,11 +2823,15 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom38",
             nom: "Environnement - développement durable",
             emoji: "♻️",
+            description:
+              "Si tu as envie de répondre aux enjeux environnementaux et de développer de nouvelles manières de consommer plus respecteuses de la planète.",
           },
           {
             id: "dom37",
             nom: "Énergies",
             emoji: "⚡",
+            description:
+              "Pour développer les réseaux d'énergie et penser aux solutions pour notre consommation énergétique de demain.",
           },
         ],
       },
@@ -2784,16 +2844,21 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom18",
             nom: "Industries",
             emoji: "🏭",
+            description: null,
           },
           {
             id: "dom19",
             nom: "Logistique - transport",
             emoji: "🚚",
+            description:
+              "Pour apprendre à gérer les déplacements complexes qui permettent d'acheminer les produits à leurs destinataires.",
           },
           {
             id: "dom20",
             nom: "Télécommunications",
             emoji: "📱",
+            description:
+              "Pour devenir un ou une pro de la communication à distance (via l'optique, les ondes magnétiques, la radioélectricité, etc).",
           },
         ],
       },
@@ -2806,11 +2871,15 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom22",
             nom: "Information communication - multimédia",
             emoji: "🎥",
+            description:
+              "Pour travailler dans la publicité ou le multimédia, mais aussi en bibliothèque, dans l'édition, le journalisme...",
           },
           {
             id: "dom23",
             nom: "Lettres - langues",
             emoji: "📚",
+            description:
+              "Si tu veux étudier la littérature sous toutes ses formes et apprendre de nouvelles langues et les cultures associées, c'est par ici !",
           },
         ],
       },
@@ -2823,16 +2892,22 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom24",
             nom: "Hôtellerie - restauration",
             emoji: "🍴",
+            description:
+              "Pour travailler dans tout types de restaurants, brasseries, cafés, en cuisine ou en salle ou dans l'hébergement touristique.",
           },
           {
             id: "dom25",
             nom: "Sport",
             emoji: "⚽️",
+            description:
+              "Si tu veux transmettre ta passion du sport ou travailler dans les nombreux métiers du secteur, tu es au bon endroit.",
           },
           {
             id: "dom26",
             nom: "Tourisme",
             emoji: "🏖",
+            description:
+              "Pour devenir un ou une expert(e) du secteur du tourisme, apprendre à gérer ta structure ou animer des activités.",
           },
         ],
       },
@@ -2845,16 +2920,21 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom28",
             nom: "Esthétique",
             emoji: "🤩",
+            description:
+              "Pour travailler dans un institut de soins esthétiques, à ton compte, ou bien dans les structures médicales et paramédicales.",
           },
           {
             id: "dom27",
             nom: "Santé",
             emoji: "🩺",
+            description:
+              "Si tu veux travailler dans le secteur médical, que ce soit pour soigner des patients ou pour exercer dans les nombreux métiers support du secteur.",
           },
           {
             id: "dom29",
             nom: "Travail social",
             emoji: "🛟",
+            description: "Pour accompagner les personnes en situation de détresse et prendre soin des plus fragiles.",
           },
         ],
       },
@@ -2867,36 +2947,47 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom30",
             nom: "Biologie",
             emoji: "🔬",
+            description: "Pour découvrir tous les secrets du vivant jusqu'au plus petit atome !",
           },
           {
             id: "dom32",
             nom: "Informatique",
             emoji: "💻",
+            description:
+              "Tu as envie de devenir développeuse ou développeur, de découvrir les langages informatiques et de devenir un(e) pro de l'ordi ?",
           },
           {
             id: "dom33",
             nom: "Mathématiques",
             emoji: "➕",
+            description:
+              "Si tu aimes l'abstraction et que tu souhaites te plonger dans les mathématiques et leur application pratique, c'est par ici !",
           },
           {
             id: "dom34",
             nom: "Mécanique",
             emoji: "🔧",
+            description:
+              "Tu as envie de travailler dans l'aéronautique, le secteur naval, l'automobile, ou un secteur similaire ?",
           },
           {
             id: "dom35",
             nom: "Physique - chimie",
             emoji: "🧪",
+            description:
+              "Si tu as envie de comprendre les propriétés de la matière, les lois de la nature et de l'univers !",
           },
           {
             id: "dom36",
             nom: "Sciences de la Terre et de l'univers",
             emoji: "🔭",
+            description: "Pour comprendre comment s'est formée la Terre et ce que l'on sait du reste de l'univers !",
           },
           {
             id: "dom31",
             nom: "Électronique",
             emoji: "🔌",
+            description: "Si tu veux apprendre à concevoir, réaliser et réparer des circuits, tu es au bon endroit.",
           },
         ],
       },
@@ -2909,26 +3000,36 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom39",
             nom: "Histoire - géographie",
             emoji: "🗺️",
+            description:
+              "Pour devenir un ou une experte de l'Histoire du monde, comprendre la manière dont il s'est construit à travers les temps, savoir où et comment et l'humanité y habite.",
           },
           {
             id: "dom40",
             nom: "Philosophie",
             emoji: "ɸ",
+            description:
+              "Si tu veux découvrir tous les courants de pensée et la manière dont on peut répondre aux grandes questions de l'Homme.",
           },
           {
             id: "dom41",
             nom: "Psychologie",
             emoji: "🧠",
+            description:
+              "Pour apprendre la manière dont notre cerveau fonctionne et les mécanismes qui expliquent nos actions et réactions.",
           },
           {
             id: "dom42",
             nom: "Sciences économiques",
             emoji: "📈",
+            description:
+              "Tu as envie de comprendre comment s'organisent les sociétés pour produire et échanger les biens et les services ? C'est par ici !",
           },
           {
             id: "dom43",
             nom: "Sociologie",
             emoji: "👓",
+            description:
+              "Si tu veux découvrir comment les sociétés fonctionnent et se transforment, tu es au bon endroit.",
           },
         ],
       },
@@ -2941,11 +3042,15 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
             id: "dom44",
             nom: "Armée - défense publique",
             emoji: "🎖️",
+            description:
+              "Si tu veux t'engager pour la défense des citoyens et citoyennes (armée, police, administration publique etc).",
           },
           {
             id: "dom45",
             nom: "Sécurité - prévention",
             emoji: "🦺",
+            description:
+              "Si tu veux travailler dans les entreprises en lien avec la sécurité, mais aussi tous les métiers de prévention, comme le secourisme.",
           },
         ],
       },

@@ -22,6 +22,7 @@ export default function useIntérêtsForm({ àLaSoumissionDuFormulaireAvecSuccè
     référentielDonnées?.centresIntérêts.map((catégorie) => ({
       nom: catégorie.nom,
       emoji: catégorie.emoji,
+      afficherDétail: catégorie.sousCatégoriesCentreIntérêt.some((sousCatégorie) => sousCatégorie.description !== null),
       filtres: catégorie.sousCatégoriesCentreIntérêt,
     })) ?? [];
 

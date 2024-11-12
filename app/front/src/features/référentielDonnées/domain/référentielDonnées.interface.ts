@@ -26,6 +26,7 @@ export type Bac = {
 export type SousCatégorieCentreIntérêt = {
   id: string;
   nom: string;
+  description: string | null;
   emoji: string;
 };
 
@@ -39,6 +40,7 @@ export type CatégorieCentreIntérêt = {
 export type SousCatégorieDomaineProfessionnel = {
   id: string;
   nom: string;
+  description: string | null;
   emoji: string;
 };
 

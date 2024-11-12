@@ -127,7 +127,7 @@ export const localeFR = {
         },
       },
       ÉTABLISSEMENTS: {
-        LÉGENDE: "Etablissements pour lesquels je souhaite candidater",
+        LÉGENDE: "Établissements pour lesquels je souhaite candidater",
         LIENS: {
           PARCOURSUP: "Carte Parcoursup",
           PRÉFÉRENCES: "Préférences de villes",
@@ -386,7 +386,7 @@ export const localeFR = {
           DESCRIPTION: "Tes comptes MPS & ParcourSup sont désormais associés.",
         },
         ERREUR: {
-          TITRE: "Echec de la synchronisation",
+          TITRE: "Échec de la synchronisation",
           DESCRIPTION: "Une erreur est survenue, réessaye dans quelques instants.",
         },
       },
@@ -427,6 +427,8 @@ export const localeFR = {
     MÉTIER: "Métier",
     SÉLECTIONNER_OPTION: "Sélectionner une option",
     PRÉCISER_CATÉGORIES: "Sélectionne la ou les catégories qui t’intéressent",
+    DÉTAILS_CATÉGORIES: "Détails des catégories",
+    DÉTAILS: "Détails",
     MODIFICATIONS_ENREGISTRÉES: "Modifications enregistrées avec succès.",
     ERREURS_FORMULAIRES: {
       TITRE_GÉNÉRIQUE: "Une erreur est survenue",
@@ -471,7 +473,7 @@ export const localeFR = {
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
     RETIRER: "Retirer",
-    VOIR_FIL_ARIANE: "Voir le fil d’ariane",
+    VOIR_FIL_ARIANE: "Voir le fil d’Ariane",
     VOUS_ÊTES_ICI: "Vous êtes ici :",
     MENU_PRINCIPAL: "Menu principal",
     ONGLETS_FORMATION: "Détails sur la formation",
