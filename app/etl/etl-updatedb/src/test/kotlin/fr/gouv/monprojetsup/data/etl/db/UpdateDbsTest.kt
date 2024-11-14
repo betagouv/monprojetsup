@@ -1,5 +1,6 @@
 package fr.gouv.monprojetsup.data.etl.db
 
+import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.TestData
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.formation.FormationDb
@@ -67,6 +68,7 @@ class UpdateDbsTest : BDDRepositoryTest() {
             assertDoesNotThrow { updateFormationDbs.updateVillesVoeuxDb() }
             val villesVoeux = villesVoeuxDb.findAll()
             assertThat(villesVoeux).isNotEmpty
+            assertThat(villesVoeux.filter { it.idVille == Constants.CODE_COMMUNE_INSEE_PARIS_VINGTIEME }).isNotEmpty()
         }
 
         @Test

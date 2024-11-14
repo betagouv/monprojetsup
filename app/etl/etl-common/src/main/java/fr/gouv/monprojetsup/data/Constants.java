@@ -45,6 +45,8 @@ public class Constants {
 
     public static final int MAX_DISTANCE_VILLE_VOEU_KM = 100;
 
+    public static final String CODE_COMMUNE_INSEE_PARIS_VINGTIEME = "75120";
+
     public static String gFlCodToMpsId(int cle) {
         return FILIERE_PREFIX + cle;
     }
