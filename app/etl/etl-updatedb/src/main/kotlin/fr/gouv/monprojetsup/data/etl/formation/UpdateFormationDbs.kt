@@ -73,7 +73,7 @@ class UpdateFormationDbs(
         updateMoyennesGeneralesAdmisDb()
     }
 
-    public fun checkVoeuxOuFormationsOntChange(): Boolean {
+    fun checkVoeuxOuFormationsOntChange(): Boolean {
         val anciensVoeux = voeuxDb.findAll()
             .filter { it.url.isNotEmpty() }//force la mise à jour lors de la migration V1_35
             .map { Pair(it.idFormation, it.id) }.toSet()

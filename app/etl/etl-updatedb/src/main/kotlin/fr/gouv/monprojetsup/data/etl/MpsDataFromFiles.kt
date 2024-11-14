@@ -98,7 +98,7 @@ class MpsDataFromFiles(
         exportLiensFormationsMetiersDiagnostics(getLabels(), logLiens)
     }
 
-    fun exportLiensFormationsMetiersDiagnostics(
+    private fun exportLiensFormationsMetiersDiagnostics(
         labels: Map<String, String>,
         logLiens: HashMap<Pair<String, String>, MutableList<String>>
     ) {
@@ -533,7 +533,7 @@ class MpsDataFromFiles(
                     )
                 )
             }
-        val cities: MutableList<Ville> = ArrayList()
+        val cities: HashMap<String, Ville> = HashMap()
         mByDpt.values.forEach { value: Pair<String, MutableList<Coords>> ->
             //dans un même département on regroupe toutes les coordonnées à nom fixé.
             //Par exemple Lyon regroupe différents code insee pour ses différents arrondissements.
@@ -551,19 +551,27 @@ class MpsDataFromFiles(
                 if (gpsCoords.isNotEmpty()) {
                     coords.forEach { c: Coords ->
                         if(c.insee_code != null) {
-                            cities.add(
-                                Ville(
-                                    c.insee_code(),
-                                    nom,
-                                    gpsCoords
-                                )
+                            cities[c.insee_code] = Ville(
+                                c.insee_code,
+                                nom,
+                                gpsCoords
                             )
                         }
                     }
                 }
             }
         }
-        return cities
+        val voeuxSansCommune = getVoeux().flatMap { it.value }.filter { !cities.containsKey(it.codeCommune) }
+        voeuxSansCommune.forEach { v ->
+            if(v.lat != null && v.lng != null) {
+                cities[v.codeCommune] = Ville(
+                    v.codeCommune,
+                    v.commune,
+                    listOf(LatLng(v.lat!!, v.lng!!))
+                )
+            }
+        }
+        return cities.values.toList()
     }
 
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {

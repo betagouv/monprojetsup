@@ -78,7 +78,7 @@ class UpdateSuggestionsDbs(
 
     internal fun updateVillesDb() {
         val entities = mpsDataPort.getCities()
-            .flatMap {  SuggestionsVilleEntity.getEntities(it) }
+            .map {  SuggestionsVilleEntity.toEntity(it) }
             .associateBy { it.id }
             .values
         batchUpdate.upsertEntities(entities)
