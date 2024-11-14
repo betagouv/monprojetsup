@@ -9,7 +9,6 @@ import static fr.gouv.monprojetsup.data.Constants.PSUP_FORMATION_FICHE;
 
 public record Voeu(
         @NotNull String id,
-        @NotNull String formation,
         @Nullable Double lat,
         @Nullable Double lng,
         @NotNull String libelle,

@@ -10,6 +10,7 @@ import fr.gouv.monprojetsup.data.model.formations.Formations;
 import fr.gouv.monprojetsup.data.model.stats.StatistiquesAdmisParGroupe;
 import fr.gouv.monprojetsup.data.model.tags.TagsSources;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,6 +99,27 @@ public record PsupData(
         );
     }
 
+    public List<String> getFormationsMpsIds() {
+        val resultInt = new HashSet<>(filActives);//environ 750 (incluant apprentissage)
+        resultInt.addAll(getLasFlCodes());
+
+        val result = new HashSet<>(
+                resultInt.stream().map(Constants::gFlCodToMpsId).toList()
+        );
+
+        //on supprime du résultat les formations regroupées et on ajoute les groupes
+        val flGroups = getPsupKeyToMpsKey();//environ 589 obtenus en groupant et en ajoutant les las
+        result.removeAll(flGroups.keySet());
+        result.addAll(flGroups.values());
+
+        //on veut au moins un voeu psup par formations indexées dans mps
+        val groupesWithAtLeastOneFormation = getFormationToVoeux().keySet();
+        result.retainAll(groupesWithAtLeastOneFormation);
+
+        result.addAll(Constants.MPS_SPECIFIC_FORMATION_IDS);
+
+        return result.stream().sorted().toList();
+    }
 
     public @NotNull List<@NotNull Bac> getBacs() {
         return bacs;
@@ -114,7 +136,11 @@ public record PsupData(
 
         val bacsKeys = new HashSet<>(getBacs().stream().map(Bac::key).toList());
         bacsKeys.add(TOUS_BACS_CODE_MPS);
-        val groups = getGtaToMpsIdMapping();
+
+        val groups = new HashMap<String, Collection<String>>();
+        getVoeuxGroupedByFormation(getFormationsMpsIds()).forEach((key, value) -> {
+                groups.put(key, value.stream().map(Voeu::id).distinct().sorted().toList());
+        });
 
         StatistiquesAdmisParGroupe statsAdmisParGroupe
                 = stats.createGroupAdmisStatistique(groups, bacsKeys);
@@ -128,19 +154,7 @@ public record PsupData(
     }
 
 
-    public Map<String, String> getGtaToMpsIdMapping() {
-        val gtaToFl = formations.formations.values().stream()
-                .collect(Collectors.toMap(
-                        f -> gTaCodToMpsId(f.gTaCod),
-                        f -> las.contains(f.gTaCod) ?  Constants.gFlCodToMpsLasId(f.gFlCod) :  Constants.gFlCodToMpsId(f.gFlCod)
-                ));
-        val psupKeyToMpsKey = getPsupKeyToMpsKey();
-        return gtaToFl.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> psupKeyToMpsKey.getOrDefault(e.getValue(), e.getValue())
-                ));
-    }
+
 
     public void ajouterLienFiliereOnisep(Integer gFlCod, String lien) {
         liensOnisep.put(gFlCodToMpsId(gFlCod), lien);
@@ -188,6 +202,8 @@ public record PsupData(
             @NotNull Set<String> las) {
         val psupKeys = mpsKeyToPsupKeys.getOrDefault(mpsKey, Set.of(mpsKey));
         if(las.contains(mpsKey)) return Constants.DUREE_LAS;
+        if(mpsKey.equals(Constants.LAS_MPS_ID)) return Constants.DUREE_LAS;
+        if(mpsKey.equals(Constants.PPPE_MPS_ID)) return Constants.DUREE_PPPE;
         val result = psupKeys.stream()
                 .map(k -> duree.durees().get(k)).filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
@@ -611,40 +627,51 @@ public record PsupData(
         return pctApprentissage;
     }
 
+
     @NotNull
-    public  List<Voeu> getVoeux(List<String> formationsMps) {
+    public Map<String, List<Voeu>> getVoeuxGroupedByFormation(@NotNull List<String> formationsMps) {
         val indexedDescriptifs = descriptifsFormations.indexed();
         val psupIndextoMpsIndex = getPsupKeyToMpsKey();
-        return  formations.formations.values().stream()
-                .map(v -> toVoeu(v, indexedDescriptifs, psupIndextoMpsIndex, formationsMps))
-                .filter(Objects::nonNull)
-                .toList();
+        val paires =  formations.formations.values().stream()
+                .flatMap(f -> {
+                    val mpsids = new ArrayList<String>();
+                    val candidateMpsKey = f.isLAS()
+                            ? Constants.gFlCodToMpsLasId(f.gFlCod)
+                            : Constants.gFlCodToMpsId(f.gFlCod)
+                            ;
+                    var mpsKey = psupIndextoMpsIndex.get(candidateMpsKey);
+                    if(mpsKey == null && formationsMps.contains(candidateMpsKey)) {
+                            mpsKey = candidateMpsKey;
+                        }
+
+                    if(mpsKey != null) {
+                        mpsids.add(mpsKey);
+                    }
+                    if(f.isLAS()) {
+                        mpsids.add( Constants.LAS_MPS_ID);
+                    }
+                    if(f.isPPPE()) {
+                        mpsids.add( Constants.PPPE_MPS_ID);
+                    }
+                    val voeu = toVoeu(f, indexedDescriptifs);
+                    return mpsids.stream().map(id -> Pair.of(id, voeu));
+                });
+        return  paires
+                .filter(p -> p.getLeft() != null)
+                .collect(Collectors.groupingBy(
+                        Pair::getLeft,
+                        Collectors.mapping(Pair::getRight, Collectors.toList())
+                ));
     }
 
     private @Nullable Voeu toVoeu(
             Formation f,
-            Map<Integer, DescriptifVoeu> indexedDescriptifs,
-            Map<String, String> psupIndextoMpsIndex,
-            List<String> formationsMps) {
-        val candidateMpsKey = f.isLAS()
-                ? Constants.gFlCodToMpsLasId(f.gFlCod)
-                : Constants.gFlCodToMpsId(f.gFlCod)
-                ;
-        var mpsKey = psupIndextoMpsIndex.get(candidateMpsKey);
-        if(mpsKey == null) {
-            if(formationsMps.contains(candidateMpsKey)) {
-                mpsKey = candidateMpsKey;
-            } else {
-                return null;
-                //throw new RuntimeException("No mps key for psup key " + candidateMpsKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
-            }
-        }
+            Map<Integer, DescriptifVoeu> indexedDescriptifs) {
         if(f.libelle == null) {
-            throw new RuntimeException("No libelle for psup key " + candidateMpsKey + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
+            throw new RuntimeException("No libelle for psup key " + f.gFlCod + " gFlCod " + f.gFlCod + " gTaCod " + f.gTaCod);
         }
         return new Voeu(
                     gTaCodToMpsId(f.gTaCod),
-                    mpsKey,
                     f.lat,
                     f.lng,
                     f.libelle,

@@ -9,6 +9,18 @@ class BatchUpdate(
     private val sessionFactory: org.hibernate.SessionFactory
 ) {
 
+    fun clearEntities(entityName: String) {
+        val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
+        val transaction: Transaction = statelessSession.beginTransaction()
+
+        val hql = "DELETE FROM $entityName"
+        val query = statelessSession.createMutationQuery(hql)
+        query.executeUpdate()
+
+        transaction.commit()
+        statelessSession.close()
+    }
+
     fun <T> setEntities(entityName: String, entities: Collection<T> ) {
         val statelessSession: StatelessSession = sessionFactory.openStatelessSession()
         val transaction: Transaction = statelessSession.beginTransaction()

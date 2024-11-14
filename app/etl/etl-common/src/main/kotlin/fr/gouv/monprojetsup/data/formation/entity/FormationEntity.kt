@@ -11,7 +11,8 @@ import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToMany
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -66,8 +67,12 @@ class FormationEntity {
 
     /** begin ajouts suggestions **/
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "id_formation")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = "ref_join_formation_voeu",
+        joinColumns = [JoinColumn(name = "id_formation")] ,
+        inverseJoinColumns = [JoinColumn(name = "id_voeu")]
+    )
     lateinit var voeux: List<VoeuEntity>
 
     @Column(name = "label_details", nullable = true, length = SuggestionsLabelEntity.MAX_LABEL_LENGTH)

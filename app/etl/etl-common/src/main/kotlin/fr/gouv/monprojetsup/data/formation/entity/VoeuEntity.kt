@@ -21,7 +21,6 @@ class VoeuEntity {
         this.codeCommune = voeu.codeCommune
         this.lat = voeu.lat
         this.lng = voeu.lng
-        this.idFormation = voeu.formation
         this.descriptif = voeu.descriptif
         this.capacite = voeu.capacite
         this.obsolete = false
@@ -46,9 +45,6 @@ class VoeuEntity {
     @Column(name = "longitude", nullable = true)
     var lng : Double? = null
 
-    @Column(name = "id_formation", nullable = false)
-    var idFormation: String = ""
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "descriptif", nullable = false)
     var descriptif : DescriptifVoeu? = null
@@ -65,7 +61,6 @@ class VoeuEntity {
     fun toVoeu() : Voeu {
         return Voeu(
             id,
-            idFormation,
             lat,
             lng,
             nom,
