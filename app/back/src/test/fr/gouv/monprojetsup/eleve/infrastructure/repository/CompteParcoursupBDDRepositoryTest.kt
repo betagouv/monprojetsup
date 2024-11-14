@@ -2,7 +2,10 @@ package fr.gouv.monprojetsup.eleve.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.clock.MonProjetSupClock
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
+import fr.gouv.monprojetsup.commun.helper.MockitoHelper.any
+import fr.gouv.monprojetsup.commun.helper.MockitoHelper.eq
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -11,7 +14,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
-import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 import java.time.LocalDate
@@ -25,7 +27,7 @@ class CompteParcoursupBDDRepositoryTest : BDDRepositoryTest() {
     lateinit var clock: MonProjetSupClock
 
     @Mock
-    lateinit var logger: Logger
+    lateinit var logger: MonProjetSupLogger
 
     lateinit var compteParcoursupBDDRepository: CompteParcoursupBDDRepository
 
@@ -89,12 +91,7 @@ class CompteParcoursupBDDRepositoryTest : BDDRepositoryTest() {
                 compteParcoursupBDDRepository.enregistrerIdCompteParcoursup(idEleve, idParcoursup)
             }.isInstanceOf(MonProjetSupNotFoundException::class.java).hasMessage(message)
 
-            val exception =
-                MonProjetSupNotFoundException(
-                    code = "ELEVE_NOT_FOUND",
-                    msg = message,
-                )
-            then(logger).should().error(message, exception)
+            then(logger).should().error(type = eq("ELEVE_NOT_FOUND"), message = eq(message), exception = any(), parametres = eq(emptyMap()))
         }
     }
 

@@ -31,6 +31,7 @@ class EleveBDDRepository(
             val entity = ProfilEleveEntity()
             entity.id = id
             val entitySauvegarde = eleveJPARepository.save(entity)
+            logger.info(type = "ELEVE_CREE", message = "Un élève a été crée en base")
             return entitySauvegarde.toProfilEleve()
         }
     }
