@@ -4,7 +4,7 @@ import { i18n } from "@/configuration/i18n/i18n";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
-const CarteMétier = ({ id, titre, formations, sélectionnée = false, auClic }: CarteMétierProps) => {
+const CarteMétier = ({ id, titre, formations, sélectionnée = false }: CarteMétierProps) => {
   const { data: élève } = useQuery(élèveQueryOptions);
 
   const estUnMétierFavori = () => {
@@ -13,9 +13,9 @@ const CarteMétier = ({ id, titre, formations, sélectionnée = false, auClic }:
 
   return (
     <Carte
-      auClic={auClic}
       estFavori={estUnMétierFavori()}
       estMasqué={false}
+      id={id}
       sélectionnée={sélectionnée}
       titre={titre}
     >

@@ -1,12 +1,7 @@
 import { type ListeEtAperçuLayoutProps } from "./ListeEtAperçuLayout.interface";
-import {
-  actionsListeEtAperçuStore,
-  afficherBarreLatéraleEnMobileListeEtAperçuStore,
-} from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
-import { useEffect } from "react";
+import { afficherBarreLatéraleEnMobileListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 
 const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps) => {
-  const { réinitialiserStore } = actionsListeEtAperçuStore();
   const afficherBarreLatéraleEnMobile = afficherBarreLatéraleEnMobileListeEtAperçuStore();
 
   const classBackgroundEnFonctionDeAfficherLaBarreLatérale = () => {
@@ -23,10 +18,6 @@ const ListeEtAperçuLayout = ({ variante, children }: ListeEtAperçuLayoutProps)
 
     return "bg-white lg:bg-gradient-to-r lg:from-[--background-open-blue-france] lg:from-50% lg:to-white lg:to-50%";
   };
-
-  useEffect(() => {
-    réinitialiserStore();
-  }, [réinitialiserStore]);
 
   return (
     <div className={`h-full ${classBackgroundEnFonctionDeAfficherLaBarreLatérale()}`}>

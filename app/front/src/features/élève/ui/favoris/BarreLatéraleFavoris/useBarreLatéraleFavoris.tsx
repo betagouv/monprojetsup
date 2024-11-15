@@ -1,20 +1,23 @@
+import { UseBarreLatéraleFavorisArgs } from "./BarreLatéraleFavoris.interface";
 import {
   actionsListeEtAperçuStore,
-  catégorieAffichéeListeEtAperçuStore,
+  élémentAffichéListeEtAperçuStore,
 } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
-import { type ListeEtAperçuStoreState } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu.interface";
 
-export default function useBarreLatéraleFavoris() {
-  const catégorieAffichée = catégorieAffichéeListeEtAperçuStore();
-  const { réinitialiserÉlémentAffiché, changerCatégorieAffichée } = actionsListeEtAperçuStore();
+export default function useBarreLatéraleFavoris({ métiers, formations }: UseBarreLatéraleFavorisArgs) {
+  const élémentAffiché = élémentAffichéListeEtAperçuStore();
+  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
 
-  const auChangementDeCatégorie = (catégorieSélectionnée: ListeEtAperçuStoreState["catégorieAffichée"]) => {
-    réinitialiserÉlémentAffiché();
-    changerCatégorieAffichée(catégorieSélectionnée);
+  const auChangementDeCatégorie = (catégorieSélectionnée: "formations" | "métiers") => {
+    if (catégorieSélectionnée === "formations") {
+      changerÉlémentAffiché({ id: formations?.[0]?.id ?? null, type: "formation" });
+    } else {
+      changerÉlémentAffiché({ id: métiers?.[0]?.id ?? null, type: "métier" });
+    }
   };
 
   return {
-    catégorieAffichée,
+    élémentAffiché,
     auChangementDeCatégorie,
   };
 }

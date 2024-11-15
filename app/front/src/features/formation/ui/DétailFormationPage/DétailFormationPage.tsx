@@ -3,6 +3,7 @@ import ListeEtAperçuContenu from "@/components/_layout/ListeEtAperçuLayout/Lis
 import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuLayout";
 import {
   actionsListeEtAperçuStore,
+  rechercheListeEtAperçuStore,
   élémentAffichéListeEtAperçuStore,
 } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
@@ -13,52 +14,60 @@ import {
   suggérerFormationsQueryOptions,
 } from "@/features/formation/ui/formationQueries";
 import { useQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const DétailFormationPage = () => {
-  const route = getRouteApi("/_auth/formations/");
-  const { recherche, formation } = route.useSearch();
-
+  const recherche = rechercheListeEtAperçuStore();
+  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const élémentAffiché = élémentAffichéListeEtAperçuStore();
-  const { changerÉlémentAffiché, changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
+  const { hash } = useLocation();
 
-  const { data: suggestions } = useQuery({
+  const { data: suggestions, isFetching: chargementSuggestionsEnCours } = useQuery({
     ...suggérerFormationsQueryOptions,
     enabled: recherche === undefined,
   });
 
-  const { data: résultatsDeRecherche } = useQuery({
+  const { data: résultatsDeRecherche, isFetching: chargementRechercheEnCours } = useQuery({
     ...rechercherFormationsQueryOptions(recherche),
     enabled: recherche !== undefined,
   });
 
   useEffect(() => {
-    if (formation && élémentAffiché === undefined) {
+    if (recherche) {
       changerÉlémentAffiché({
+        id: résultatsDeRecherche?.[0]?.id ?? null,
         type: "formation",
-        id: formation,
       });
-      changerAfficherBarreLatéraleEnMobile(false);
+    } else {
+      changerÉlémentAffiché({
+        id: suggestions?.[0]?.id ?? null,
+        type: "formation",
+      });
     }
-  }, [changerAfficherBarreLatéraleEnMobile, changerÉlémentAffiché, formation, élémentAffiché]);
+  }, [changerÉlémentAffiché, recherche, résultatsDeRecherche, suggestions]);
 
   if (!résultatsDeRecherche && !suggestions) {
     return <AnimationChargement />;
+  }
+
+  if (hash !== "" && hash !== élémentAffiché.id) {
+    changerÉlémentAffiché({
+      id: hash,
+      type: "formation",
+    });
   }
 
   return (
     <ListeEtAperçuLayout variante="formations">
       <ListeEtAperçuBarreLatérale>
         <BarreLatéraleFicheFormation
-          recherche={recherche}
+          chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
           résultatsDeRecherche={résultatsDeRecherche}
           suggestions={suggestions}
         />
       </ListeEtAperçuBarreLatérale>
-      <ListeEtAperçuContenu>
-        <FicheFormation id={élémentAffiché?.id ?? résultatsDeRecherche?.[0]?.id ?? suggestions?.[0]?.id ?? ""} />
-      </ListeEtAperçuContenu>
+      <ListeEtAperçuContenu>{élémentAffiché.id && <FicheFormation id={élémentAffiché.id} />}</ListeEtAperçuContenu>
     </ListeEtAperçuLayout>
   );
 };

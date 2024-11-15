@@ -1,37 +1,35 @@
-import {
-  type ListeEtAperçuStore,
-  type ListeEtAperçuStoreState,
-  type ÉlémentAffichéListeEtAperçuStore,
-} from "./useListeEtAperçu.interface";
+import { type ListeEtAperçuStore, type ListeEtAperçuStoreState } from "./useListeEtAperçu.interface";
 import { create } from "zustand";
 
 const étatInitial: ListeEtAperçuStoreState = {
-  élémentAffiché: undefined,
+  élémentAffiché: {
+    id: null,
+    type: "formation",
+  },
   afficherBarreLatéraleEnMobile: true,
-  catégorieAffichée: "première",
+  recherche: undefined,
 };
 
-const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
+export const useListeEtAperçuStore = create<ListeEtAperçuStore>((set) => ({
   ...étatInitial,
   actions: {
-    changerÉlémentAffiché: (élément: ÉlémentAffichéListeEtAperçuStore) => {
+    rechercher: (recherche: string) => {
       set({
-        élémentAffiché: élément,
+        recherche,
       });
     },
-    réinitialiserÉlémentAffiché: () => {
+    réinitialiserRecherche: () => {
+      set({ recherche: undefined });
+    },
+    changerÉlémentAffiché: (élémentAffiché: NonNullable<ListeEtAperçuStoreState["élémentAffiché"]>) => {
       set({
-        élémentAffiché: undefined,
+        élémentAffiché,
       });
+      window.location.hash = élémentAffiché.id ?? "";
     },
     changerAfficherBarreLatéraleEnMobile: (afficher: boolean) => {
       set({
         afficherBarreLatéraleEnMobile: afficher,
-      });
-    },
-    changerCatégorieAffichée: (catégorie: ListeEtAperçuStoreState["catégorieAffichée"]) => {
-      set({
-        catégorieAffichée: catégorie,
       });
     },
     réinitialiserStore: () => {
@@ -44,5 +42,4 @@ export const actionsListeEtAperçuStore = () => useListeEtAperçuStore((étatAct
 export const élémentAffichéListeEtAperçuStore = () => useListeEtAperçuStore((étatActuel) => étatActuel.élémentAffiché);
 export const afficherBarreLatéraleEnMobileListeEtAperçuStore = () =>
   useListeEtAperçuStore((étatActuel) => étatActuel.afficherBarreLatéraleEnMobile);
-export const catégorieAffichéeListeEtAperçuStore = () =>
-  useListeEtAperçuStore((étatActuel) => étatActuel.catégorieAffichée);
+export const rechercheListeEtAperçuStore = () => useListeEtAperçuStore((étatActuel) => étatActuel.recherche);

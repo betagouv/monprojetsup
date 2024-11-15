@@ -1,9 +1,10 @@
-import { type FicheMétierProps } from "./FicheMétier.interface";
+import { FicheMétierProps } from "./FicheMétier.interface";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import Bouton from "@/components/Bouton/Bouton";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import ListeLiensExternesSousFormeBouton from "@/components/ListeLiensExternesSousFormeBouton/ListeLiensExternesSousFormeBouton";
 import Titre from "@/components/Titre/Titre";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import BoutonsActionsFicheMétier from "@/features/métier/ui/BoutonsActionsMétier/BoutonsActionsFicheMétier";
 import { récupérerMétierQueryOptions } from "@/features/métier/ui/métierQueries";
@@ -12,11 +13,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 const FicheMétier = ({ id }: FicheMétierProps) => {
-  const NOMBRE_FORMATIONS_À_AFFICHER = 5;
   const { data: métier, isFetching: chargementEnCours } = useQuery(récupérerMétierQueryOptions(id));
   const [afficherToutesLesFormations, setAfficherToutesLesFormations] = useState(false);
 
   if (métier === null) return null;
+
+  scrollTo({ top: 0 });
 
   if (!métier || chargementEnCours) return <AnimationChargement />;
 
@@ -57,13 +59,18 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
             className="grid list-none justify-start gap-4 p-0"
           >
             {métier.formations
-              .slice(0, afficherToutesLesFormations ? métier.formations.length : NOMBRE_FORMATIONS_À_AFFICHER)
+              .slice(
+                0,
+                afficherToutesLesFormations
+                  ? métier.formations.length
+                  : constantes.FICHE_MÉTIER.NB_FORMATIONS_À_AFFICHER,
+              )
               .map((formation) => (
                 <li key={formation.id}>
                   <LienInterne
                     ariaLabel={formation.nom}
+                    hash={formation.id}
                     href="/formations"
-                    paramètresSearch={{ formation: formation.id }}
                     variante="simple"
                   >
                     {formation.nom}{" "}
@@ -74,20 +81,21 @@ const FicheMétier = ({ id }: FicheMétierProps) => {
                   </LienInterne>
                 </li>
               ))}
-            {métier.formations.length > NOMBRE_FORMATIONS_À_AFFICHER && !afficherToutesLesFormations && (
-              <li
-                className="*:p-0"
-                key="bouton-voir-plus"
-              >
-                <Bouton
-                  auClic={() => setAfficherToutesLesFormations(true)}
-                  label={i18n.PAGE_FAVORIS.AFFICHER_FORMATIONS_SUPPLÉMENTAIRES}
-                  taille="petit"
-                  type="button"
-                  variante="secondaire"
-                />
-              </li>
-            )}
+            {métier.formations.length > constantes.FICHE_MÉTIER.NB_FORMATIONS_À_AFFICHER &&
+              !afficherToutesLesFormations && (
+                <li
+                  className="*:p-0"
+                  key="bouton-voir-plus"
+                >
+                  <Bouton
+                    auClic={() => setAfficherToutesLesFormations(true)}
+                    label={i18n.PAGE_FAVORIS.AFFICHER_FORMATIONS_SUPPLÉMENTAIRES}
+                    taille="petit"
+                    type="button"
+                    variante="secondaire"
+                  />
+                </li>
+              )}
           </ul>
         </div>
       )}

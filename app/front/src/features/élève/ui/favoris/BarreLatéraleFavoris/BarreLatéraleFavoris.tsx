@@ -6,7 +6,7 @@ import ListeMétiers from "@/features/métier/ui/ListeMétiers/ListeMétiers";
 import { SegmentedControl } from "@codegouvfr/react-dsfr/SegmentedControl";
 
 const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisProps) => {
-  const { auChangementDeCatégorie, catégorieAffichée } = useBarreLatéraleFavoris();
+  const { élémentAffiché, auChangementDeCatégorie } = useBarreLatéraleFavoris({ métiers, formations });
 
   return (
     <>
@@ -18,27 +18,27 @@ const BarreLatéraleFavoris = ({ métiers, formations }: BarreLatéraleFavorisPr
             {
               label: i18n.COMMUN.FORMATION,
               nativeInputProps: {
-                defaultChecked: catégorieAffichée === "première",
-                onClick: () => auChangementDeCatégorie("première"),
+                defaultChecked: élémentAffiché?.type === "formation",
+                onClick: () => auChangementDeCatégorie("formations"),
               },
             },
             {
               label: i18n.COMMUN.MÉTIER,
               nativeInputProps: {
-                defaultChecked: catégorieAffichée === "seconde",
-                onClick: () => auChangementDeCatégorie("seconde"),
+                defaultChecked: élémentAffiché?.type === "métier",
+                onClick: () => auChangementDeCatégorie("métiers"),
               },
             },
           ]}
         />
       </div>
-      {catégorieAffichée === "première" ? (
+      {élémentAffiché?.type === "métier" ? (
+        <ListeMétiers métiers={métiers ?? []} />
+      ) : (
         <ListeFormations
           affichéSurLaPage="favoris"
           formations={formations ?? []}
         />
-      ) : (
-        <ListeMétiers métiers={métiers ?? []} />
       )}
     </>
   );

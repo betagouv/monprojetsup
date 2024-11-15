@@ -2,6 +2,7 @@ import Head from "@/components/_layout/Head/Head";
 import ListeEtAperçuBarreLatérale from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuBarreLatérale/ListeEtAperçuBarreLatérale";
 import ListeEtAperçuContenu from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuContenu/ListeEtAperçuContenu";
 import ListeEtAperçuLayout from "@/components/_layout/ListeEtAperçuLayout/ListeEtAperçuLayout";
+import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import AnimationChargement from "@/components/AnimationChargement/AnimationChargement";
 import { i18n } from "@/configuration/i18n/i18n";
 import { récupérerFormationsQueryOptions } from "@/features/formation/ui/formationQueries";
@@ -10,9 +11,13 @@ import BarreLatéraleFavoris from "@/features/élève/ui/favoris/BarreLatéraleF
 import ContenuFavoris from "@/features/élève/ui/favoris/ContenuFavoris/ContenuFavoris";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 const FavorisPage = () => {
   const { data: élève } = useQuery(élèveQueryOptions);
+  const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
+  const { hash } = useLocation();
 
   const { data: formations } = useQuery(
     récupérerFormationsQueryOptions(élève?.formationsFavorites?.map((formationFavorite) => formationFavorite.id) ?? []),
@@ -20,8 +25,30 @@ const FavorisPage = () => {
 
   const { data: métiers } = useQuery(récupérerMétiersQueryOptions(élève?.métiersFavoris ?? []));
 
+  useEffect(() => {
+    if (hash === "" && formations && formations?.length > 0) {
+      changerÉlémentAffiché({
+        id: formations[0]?.id ?? null,
+        type: "formation",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changerÉlémentAffiché, formations]);
+
   if (!formations || !métiers) {
     return <AnimationChargement />;
+  }
+
+  if (hash.startsWith("MET")) {
+    changerÉlémentAffiché({
+      id: métiers.some((métier) => métier.id === hash) ? hash : (métiers[0]?.id ?? null),
+      type: "métier",
+    });
+  } else if (hash.startsWith("fl") || hash.startsWith("fr")) {
+    changerÉlémentAffiché({
+      id: formations.some((formation) => formation.id === hash) ? hash : (formations[0]?.id ?? null),
+      type: "formation",
+    });
   }
 
   return (

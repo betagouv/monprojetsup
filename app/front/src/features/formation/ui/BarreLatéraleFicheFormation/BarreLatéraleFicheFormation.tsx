@@ -5,19 +5,22 @@ import ListeFormations from "@/features/formation/ui/ListeFormations/ListeFormat
 import RechercheFormations from "@/features/formation/ui/RechercheFormations/RechercheFormations";
 
 const BarreLatéraleFicheFormation = ({
-  recherche,
   suggestions,
   résultatsDeRecherche,
+  chargementEnCours,
 }: BarreLatéraleFicheFormationProps) => {
+  if (!suggestions && !résultatsDeRecherche) return null;
+
   return (
     <>
       <div className="grid gap-6 px-2 lg:px-7">
         <div className="[&_.fr-input]:bg-white">
-          <RechercheFormations valeurParDéfaut={recherche} />
+          <RechercheFormations />
         </div>
         {résultatsDeRecherche?.[0]?.id && <BoutonRetourAuxSuggestions />}
       </div>
-      {!suggestions && !résultatsDeRecherche ? (
+
+      {chargementEnCours ? (
         <AnimationChargement />
       ) : (
         <ListeFormations

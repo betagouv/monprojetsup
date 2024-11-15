@@ -5,5 +5,4 @@ export type CarteMétierProps = {
   titre: Métier["nom"];
   formations: Métier["formations"];
   sélectionnée?: boolean;
-  auClic: () => void;
 };

@@ -3,7 +3,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 
 export type ChampDeRechercheFormulaireProps = {
   entête: ChampDeSaisieSqueletteProps["entête"];
-  àLaSoumission: (recherche: string) => Promise<void>;
+  àLaSoumission: (recherche: string) => void;
   auChangement?: ChampDeSaisieSqueletteProps["auChangement"];
   status?: ChampDeSaisieSqueletteProps["status"];
   placeholder?: ChampDeSaisieSqueletteProps["placeholder"];

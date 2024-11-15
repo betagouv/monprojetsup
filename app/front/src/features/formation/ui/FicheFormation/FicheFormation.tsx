@@ -1,7 +1,7 @@
 import BlocAlternanceFicheFormation from "./BlocAlternanceFicheFormation/BlocAlternanceFicheFormation";
 import BoutonsActionsFicheFormation from "./BoutonsActionsFicheFormation/BoutonsActionsFicheFormation";
 import ExplicationsCorrespondanceFicheFormation from "./ExplicationsCorrespondanceFicheFormation/ExplicationsCorrespondanceFicheFormation";
-import { type FicheFormationProps } from "./FicheFormation.interface";
+import { FicheFormationProps } from "./FicheFormation.interface";
 import MétiersAccessiblesFicheFormation from "./MétiersAccessiblesFicheFormation/MétiersAccessiblesFicheFormation";
 import OngletsFicheFormation from "./OngletsFicheFormation/OngletsFicheFormation";
 import Head from "@/components/_layout/Head/Head";
@@ -14,9 +14,11 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 
 const FicheFormation = ({ id }: FicheFormationProps) => {
-  const { data: formation, isFetching: chargementEnCours } = useQuery(récupérerFormationQueryOptions(id));
+  const { data: formation, isLoading: chargementEnCours } = useQuery(récupérerFormationQueryOptions(id));
 
   if (formation === null) return null;
+
+  scrollTo({ top: 0 });
 
   if (!formation || chargementEnCours) return <AnimationChargement />;
 

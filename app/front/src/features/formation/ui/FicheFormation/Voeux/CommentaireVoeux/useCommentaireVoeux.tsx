@@ -1,11 +1,11 @@
 import { type CommentaireVoeuxFormElement, type UseCommentaireVoeuxArgs } from "./CommentaireVoeux.interface";
 import { type ChampZoneDeTexteProps } from "@/components/ChampZoneDeTexte/ChampZoneDeTexte.interface";
+import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useMemo, useState } from "react";
 
 export default function useCommentaireVoeux({ formationId }: UseCommentaireVoeuxArgs) {
-  const NB_CARACTÈRES_MAX = 4_000;
   const [status, setStatus] = useState<ChampZoneDeTexteProps["status"]>();
   const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
 
@@ -22,10 +22,13 @@ export default function useCommentaireVoeux({ formationId }: UseCommentaireVoeux
 
     if (!élève) return;
 
-    if (event.currentTarget.elements.commentairevoeux.value.length >= NB_CARACTÈRES_MAX) {
+    if (
+      event.currentTarget.elements.commentairevoeux.value.length >=
+      constantes.FICHE_FORMATION.NB_CARACTÈRES_MAX_COMMENTAIRE
+    ) {
       setStatus({
         type: "erreur",
-        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.MOINS_DE_X_CARACTÈRES} ${NB_CARACTÈRES_MAX} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
+        message: `${i18n.COMMUN.ERREURS_FORMULAIRES.MOINS_DE_X_CARACTÈRES} ${constantes.FICHE_FORMATION.NB_CARACTÈRES_MAX_COMMENTAIRE} ${i18n.COMMUN.ERREURS_FORMULAIRES.CARACTÈRES}`,
       });
       return;
     }

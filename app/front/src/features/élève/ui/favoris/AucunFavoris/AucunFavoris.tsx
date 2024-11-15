@@ -1,12 +1,10 @@
-import { catégorieAffichéeListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
+import { AucunFavorisProps } from "./AucunFavoris.interface";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const AucunFavoris = () => {
-  const catégorieAffichée = catégorieAffichéeListeEtAperçuStore();
-
+const AucunFavoris = ({ catégorie }: AucunFavorisProps) => {
   return (
     <div className="my-40 grid place-items-center gap-2 text-center">
       <div
@@ -21,7 +19,7 @@ const AucunFavoris = () => {
           niveauDeTitre="h1"
           styleDeTitre="h3"
         >
-          {catégorieAffichée === "première"
+          {catégorie === "formation"
             ? i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_FORMATIONS
             : i18n.PAGE_FAVORIS.AUCUN_FAVORI.TEXTE_MÉTIERS}
         </Titre>

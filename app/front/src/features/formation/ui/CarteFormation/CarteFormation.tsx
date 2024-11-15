@@ -14,7 +14,6 @@ const CarteFormation = ({
   affinité,
   communes,
   sélectionnée = false,
-  auClic,
 }: CarteFormationProps) => {
   const { data: élève } = useQuery(élèveQueryOptions);
 
@@ -30,9 +29,9 @@ const CarteFormation = ({
 
   return (
     <Carte
-      auClic={auClic}
       estFavori={estUneFormationFavorite()}
       estMasqué={estUneFormationMasquée()}
+      id={id}
       sélectionnée={sélectionnée}
       titre={titre}
     >

@@ -1,28 +1,18 @@
-import { type Formation } from "@/features/formation/domain/formation.interface";
-import { type Métier } from "@/features/métier/domain/métier.interface";
-
-export type ÉlémentAffichéListeEtAperçuStore =
-  | {
-      type: "métier";
-      id: Métier["id"];
-    }
-  | {
-      type: "formation";
-      id: Formation["id"];
-    };
+import { Formation } from "@/features/formation/domain/formation.interface";
+import { Métier } from "@/features/métier/domain/métier.interface";
 
 export type ListeEtAperçuStoreState = {
-  élémentAffiché?: ÉlémentAffichéListeEtAperçuStore;
+  élémentAffiché: { id: Formation["id"] | null; type: "formation" } | { id: Métier["id"] | null; type: "métier" };
   afficherBarreLatéraleEnMobile: boolean;
-  catégorieAffichée: "première" | "seconde";
+  recherche?: string;
 };
 
 export type ListeEtAperçuStoreActions = {
   actions: {
-    réinitialiserÉlémentAffiché: () => void;
-    changerÉlémentAffiché: (élément: ÉlémentAffichéListeEtAperçuStore) => void;
+    rechercher: (recherche: string) => void;
+    réinitialiserRecherche: () => void;
+    changerÉlémentAffiché: (élémentAffiché: NonNullable<ListeEtAperçuStoreState["élémentAffiché"]>) => void;
     changerAfficherBarreLatéraleEnMobile: (afficher: boolean) => void;
-    changerCatégorieAffichée: (catégorie: ListeEtAperçuStoreState["catégorieAffichée"]) => void;
     réinitialiserStore: () => void;
   };
 };

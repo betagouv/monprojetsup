@@ -7,5 +7,4 @@ export type CarteFormationProps = {
   communes: Formation["communesProposantLaFormation"];
   affinité?: Formation["affinité"];
   sélectionnée?: boolean;
-  auClic: () => void;
 };
