@@ -70,17 +70,23 @@ VALUES ('fl0004',
         ]'::jsonb,
         false);
 
-INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, id_formation, obsolete)
-VALUES ('ta0001', 'Lycée professionnel horticole de Montreuil', 'Montreuil', '93048', 48.861, 2.443, 'fl0001', false);
+INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, obsolete)
+VALUES ('ta0001', 'Lycée professionnel horticole de Montreuil', 'Montreuil', '93048', 48.861, 2.443, false);
 
-INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, id_formation, obsolete)
-VALUES ('ta0002', 'ENSAPLV', 'Paris', '75119', 48.889, 2.393, 'fl0003', true);
+INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, obsolete)
+VALUES ('ta0002', 'ENSAPLV', 'Paris', '75119', 48.889, 2.393, true);
 
-INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, id_formation, obsolete)
-VALUES ('ta0003', 'ENSA Nancy', 'Nancy', '54395', 48.692, 6.184, 'fl0003', false);
+INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, obsolete)
+VALUES ('ta0003', 'ENSA Nancy', 'Nancy', '54395', 48.692, 6.184, false);
 
-INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, id_formation, obsolete)
-VALUES ('ta0004', 'ENSAB', 'Rennes', '35238', 48.117, 1.677, 'fl0003', true);
+INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, obsolete)
+VALUES ('ta0004', 'ENSAB', 'Rennes', '35238', 48.117, 1.677, true);
 
-INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, id_formation, obsolete)
-VALUES ('ta0005', 'Université Paris 1 Panthéon-Sorbonne', 'Paris', '75105', 48.846, 2.344, 'fl0004', false);
+INSERT INTO ref_voeu (id, nom, commune, code_commune, latitude, longitude, obsolete)
+VALUES ('ta0005', 'Université Paris 1 Panthéon-Sorbonne', 'Paris', '75105', 48.846, 2.344, false);
+
+INSERT INTO ref_join_formation_voeu(id_voeu, id_formation) VALUES ('ta0001', 'fl0001');
+INSERT INTO ref_join_formation_voeu(id_voeu, id_formation) VALUES ('ta0002', 'fl0003');
+INSERT INTO ref_join_formation_voeu(id_voeu, id_formation) VALUES ('ta0003', 'fl0003');
+INSERT INTO ref_join_formation_voeu(id_voeu, id_formation) VALUES ('ta0004', 'fl0003');
+INSERT INTO ref_join_formation_voeu(id_voeu, id_formation) VALUES ('ta0005', 'fl0004');

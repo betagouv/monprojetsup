@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes.NANCY
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS19EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.RENNES
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -18,11 +19,14 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     lateinit var voeuJPARepository: VoeuJPARepository
 
+    @Autowired
+    lateinit var entityManager: EntityManager
+
     lateinit var voeuBDDRepository: VoeuBDDRepository
 
     @BeforeEach
     fun setup() {
-        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository)
+        voeuBDDRepository = VoeuBDDRepository(voeuJPARepository, entityManager)
     }
 
     @Nested

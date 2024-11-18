@@ -28,9 +28,6 @@ class VoeuEntity {
     @Column(name = "longitude", nullable = false)
     var longitude: Double = 0.0
 
-    @Column(name = "id_formation", nullable = false)
-    lateinit var idFormation: String
-
     @Column(name = "obsolete", nullable = false)
     var obsolete: Boolean = false
 
