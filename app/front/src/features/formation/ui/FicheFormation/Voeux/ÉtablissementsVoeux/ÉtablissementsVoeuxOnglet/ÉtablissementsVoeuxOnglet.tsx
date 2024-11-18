@@ -58,7 +58,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
                   >
                     <span>
                       {établissement.nom.split(" - ").map((it, index) => (
-                        <Fragment key={it}>
+                        <Fragment key={`${établissement.id}-${it}`}>
                           {index === 0 ? <strong>{it}</strong> : it}
                           {it !== établissement.nom.split(" - ").at(-1) && " - "}
                         </Fragment>

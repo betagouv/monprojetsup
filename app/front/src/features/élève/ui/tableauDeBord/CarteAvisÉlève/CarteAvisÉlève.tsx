@@ -1,11 +1,13 @@
 import avisSVG from "@/assets/avis.svg";
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
-import { constantes } from "@/configuration/constantes";
+import { environnement } from "@/configuration/environnement";
 import { i18n } from "@/configuration/i18n/i18n";
 import CarteSecondaireTableauDeBordÉlève from "@/features/élève/ui/tableauDeBord/CarteSecondaireTableauDeBordÉlève/CarteSecondaireTableauDeBordÉlève";
 
 const CarteAvisÉlève = () => {
+  if (!environnement.VITE_LAISSER_AVIS_URL) return null;
+
   return (
     <CarteSecondaireTableauDeBordÉlève
       illustration={avisSVG}
@@ -14,7 +16,7 @@ const CarteAvisÉlève = () => {
     >
       <LienExterne
         ariaLabel={i18n.ÉLÈVE.TABLEAU_DE_BORD.CARTES.AVIS.BOUTON}
-        href={constantes.LIENS.DONNER_SON_AVIS}
+        href={environnement.VITE_LAISSER_AVIS_URL}
         variante="neutre"
       >
         <BoutonSquelette

@@ -24,6 +24,7 @@ export const environnement = createEnv({
     VITE_SENTRY_DSN: z.string().url().optional(),
     VITE_SENTRY_ORG: z.string().optional(),
     VITE_SENTRY_PROJET: z.string().optional(),
+    VITE_LAISSER_AVIS_URL: z.string().url().optional(),
   },
   clientPrefix: "VITE_",
   runtimeEnv: import.meta.env,
