@@ -43,8 +43,8 @@ export const localeFR = {
   },
   CARTE_FORMATION: {
     POINTS_AFFINITÉ: "raison(s) de t’intéresser à cette formation",
-    VILLES_PROPOSANT_FORMATION: "Formation disponible dans",
-    VILLES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
+    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
     MÉTIERS_ACCESSIBLES: "Parmi les métiers accessibles via cette formation",
   },
   PAGE_FAVORIS: {
@@ -72,9 +72,9 @@ export const localeFR = {
     ONGLET_CRITÈRES: "Critères d’admission",
     ONGLET_CONSEILS: "Nos conseils",
     ÉLÈVES_ADMIS_ANNÉE_PRÉCÉDENTE: "lycéens ont intégré cette formation l’année dernière",
-    VILLES_PROPOSANT_FORMATION: "Formation disponible dans",
-    VILLES_PROPOSANT_FORMATION_SUITE: "ville(s)",
-    VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
+    COMMUNES_PROPOSANT_FORMATION: "Formation disponible dans",
+    COMMUNES_PROPOSANT_FORMATION_SUITE: "ville(s)",
+    COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE: "dont",
     VOIR_SUR_PARCOURSUP: "Voir sur la carte Parcoursup",
     RÉPARTITION_PAR_BAC: "Répartition par série de bacs",
     CRITÈRES_ANALYSE: "Les principaux points examinés dans les candidatures",

@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/rules-of-hooks */
-import { type UseÉtablissementsVoeuxOngletToutesLesVillesArgs } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
+import { UseÉtablissementsVoeuxOngletToutesLesCommunesArgs } from "./ÉtablissemenentsVoeuxOngletToutesLesCommunes.interface";
 import { type SélecteurMultipleOption } from "@/components/SélecteurMultiple/SélecteurMultiple.interface";
 import { constantes } from "@/configuration/constantes";
 import { type Formation } from "@/features/formation/domain/formation.interface";
@@ -7,9 +7,9 @@ import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeu
 import Fuse from "fuse.js";
 import { useCallback, useMemo, useState } from "react";
 
-export default function useÉtablissementsVoeuxOngletToutesLesVilles({
+export default function useÉtablissementsVoeuxOngletToutesLesCommunes({
   formation,
-}: UseÉtablissementsVoeuxOngletToutesLesVillesArgs) {
+}: UseÉtablissementsVoeuxOngletToutesLesCommunesArgs) {
   const { mettreÀJourLesVoeux, voeuxSélectionnés } = useÉtablissementsVoeux({ formation });
 
   const [rechercheÉtablissement, setRechercheÉtablissement] = useState<string>("");

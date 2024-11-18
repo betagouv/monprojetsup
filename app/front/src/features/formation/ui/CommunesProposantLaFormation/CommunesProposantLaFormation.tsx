@@ -21,18 +21,18 @@ const CommunesProposantLaFormation = ({
       />
       <div>
         <p className="mb-0 text-sm">
-          {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION}
+          {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION}
           {explications?.communes && explications?.communes.length > 0 ? (
             <>
               {" "}
-              {communes.length} {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}{" "}
-              {i18n.PAGE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
+              {communes.length} {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE}{" "}
+              {i18n.PAGE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE_SI_CORRESPONDANCE}{" "}
               <strong>{explications.communes.map((commune) => commune.nom).join(" • ")}</strong>
             </>
           ) : (
             <strong>
               {" "}
-              {communes.length} {i18n.CARTE_FORMATION.VILLES_PROPOSANT_FORMATION_SUITE}
+              {communes.length} {i18n.CARTE_FORMATION.COMMUNES_PROPOSANT_FORMATION_SUITE}
             </strong>
           )}
         </p>

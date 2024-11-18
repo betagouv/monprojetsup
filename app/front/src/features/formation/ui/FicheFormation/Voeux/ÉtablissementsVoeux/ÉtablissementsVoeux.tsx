@@ -1,5 +1,5 @@
 import useÉtablissementsVoeux from "./useÉtablissementsVoeux";
-import ÉtablissemenentsVoeuxOngletToutesLesVilles from "./ÉtablissemenentsVoeuxOngletToutesLesVilles/ÉtablissemenentsVoeuxOngletToutesLesVilles";
+import ÉtablissemenentsVoeuxOngletToutesLesCommunes from "./ÉtablissemenentsVoeuxOngletToutesLesCommunes/ÉtablissemenentsVoeuxOngletToutesLesCommunes";
 import { type ÉtablissementsVoeuxProps } from "./ÉtablissementsVoeux.interface";
 import ÉtablissementsVoeuxOnglet from "./ÉtablissementsVoeuxOnglet/ÉtablissementsVoeuxOnglet";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
@@ -25,7 +25,7 @@ const ÉtablissementsVoeux = ({ formation }: ÉtablissementsVoeuxProps) => {
 
   const ongletToutesLesCommunes = {
     label: i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.TOUTES_LES_COMMUNES.TITRE_ONGLET,
-    content: <ÉtablissemenentsVoeuxOngletToutesLesVilles formation={formation} />,
+    content: <ÉtablissemenentsVoeuxOngletToutesLesCommunes formation={formation} />,
   };
 
   return (

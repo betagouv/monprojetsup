@@ -1,18 +1,20 @@
-import useÉtablissementsVoeuxOngletToutesLesVilles from "./useÉtablissementsVoeuxOngletToutesLesVilles";
-import { type ÉtablissemenentsVoeuxOngletToutesLesVillesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesVilles.interface";
+import useÉtablissementsVoeuxOngletToutesLesCommunes from "./useÉtablissementsVoeuxOngletToutesLesCommunes";
+import { ÉtablissemenentsVoeuxOngletToutesLesCommunesProps } from "./ÉtablissemenentsVoeuxOngletToutesLesCommunes.interface";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import SélecteurMultiple from "@/components/SélecteurMultiple/SélecteurMultiple";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: ÉtablissemenentsVoeuxOngletToutesLesVillesProps) => {
+const ÉtablissemenentsVoeuxOngletToutesLesCommunes = ({
+  formation,
+}: ÉtablissemenentsVoeuxOngletToutesLesCommunesProps) => {
   const {
     auChangementDesÉtablissementsSélectionnés,
     établissementsSuggérés,
     établissementsSélectionnésParDéfaut,
     àLaRechercheDUnÉtablissement,
-  } = useÉtablissementsVoeuxOngletToutesLesVilles({ formation });
+  } = useÉtablissementsVoeuxOngletToutesLesCommunes({ formation });
 
   return (
     <div className="grid gap-6">
@@ -70,4 +72,4 @@ const ÉtablissemenentsVoeuxOngletToutesLesVilles = ({ formation }: Établisseme
   );
 };
 
-export default ÉtablissemenentsVoeuxOngletToutesLesVilles;
+export default ÉtablissemenentsVoeuxOngletToutesLesCommunes;
