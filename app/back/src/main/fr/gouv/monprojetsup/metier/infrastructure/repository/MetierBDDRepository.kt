@@ -5,8 +5,8 @@ import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.entity.MetierAvecSesFormations
 import fr.gouv.monprojetsup.metier.domain.entity.MetierCourt
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
-import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierEntity
-import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationEntity
+import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierQuery
+import fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationQuery
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -27,54 +27,57 @@ class MetierBDDRepository(
             if (obsoletesInclus) {
                 entityManager.createQuery(
                     """
-                    SELECT jointure 
+                    SELECT new fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierQuery(jointure.id.idFormation, metier) 
                     FROM JoinFormationMetierEntity jointure 
                     JOIN MetierEntity metier ON metier.id = jointure.id.idMetier
                     WHERE jointure.id.idFormation IN :idsFormations
                     """.trimIndent(),
-                    JoinFormationMetierEntity::class.java,
+                    JoinFormationMetierQuery::class.java,
                 )
             } else {
                 entityManager.createQuery(
                     """
-                    SELECT jointure 
+                    SELECT new fr.gouv.monprojetsup.metier.infrastructure.entity.JoinFormationMetierQuery(jointure.id.idFormation, metier) 
                     FROM JoinFormationMetierEntity jointure 
                     JOIN MetierEntity metier ON metier.id = jointure.id.idMetier
                     WHERE jointure.id.idFormation IN :idsFormations AND metier.obsolete = false
                     """.trimIndent(),
-                    JoinFormationMetierEntity::class.java,
+                    JoinFormationMetierQuery::class.java,
                 )
             }
-        val metiers = query.setParameter("idsFormations", idsFormations).resultList.groupBy { it.id.idFormation }
-        return idsFormations.associateWith { metiers[it]?.map { it.metier.toMetier() } ?: emptyList() }
+        val metiers = query.setParameter("idsFormations", idsFormations).resultList.groupBy { it.idFormation }
+        return idsFormations.associateWith { idFormation -> metiers[idFormation]?.map { it.toMetier() } ?: emptyList() }
     }
 
     @Transactional(readOnly = true)
     override fun recupererLesMetiersAvecSesFormations(ids: List<String>): List<MetierAvecSesFormations> {
-        val metiers = metierJPARepository.findAllByIdIn(ids)
-        val formation =
+        val formationsParIdMetier =
             entityManager.createQuery(
                 """
-                SELECT jointure 
-                FROM JoinMetierFormationEntity jointure 
-                JOIN FormationCourteEntity formation ON formation.id = jointure.id.idFormation
+                SELECT new fr.gouv.monprojetsup.metier.infrastructure.entity.JoinMetierFormationQuery(metier, formation) 
+                FROM MetierEntity metier 
+                LEFT JOIN JoinFormationMetierEntity jointure ON metier.id = jointure.id.idMetier
+                LEFT JOIN FormationCourteEntity formation ON formation.id = jointure.id.idFormation
+                WHERE metier.id IN :ids
                 """.trimIndent(),
-                JoinMetierFormationEntity::class.java,
-            ).resultList.groupBy { it.id.idMetier }
+                JoinMetierFormationQuery::class.java,
+            ).setParameter("ids", ids).resultList.groupBy { it.metier.id }
 
         return ids.mapNotNull { idMetier ->
-            val metier = metiers.firstOrNull { it.id == idMetier }
-            if (metier == null) {
-                logguerMetierAbsent(idMetierAbsent = idMetier)
-            }
-            metier?.let {
+            val jointuresEtFormations = formationsParIdMetier.getOrDefault(idMetier, null)?.takeUnless { it.isEmpty() }
+            if (jointuresEtFormations != null) {
+                val metier = jointuresEtFormations.first().metier
+                val formations = jointuresEtFormations.mapNotNull { it.formation?.toFormationCourte() }
                 MetierAvecSesFormations(
                     id = metier.id,
                     nom = metier.label,
                     descriptif = metier.descriptifGeneral,
                     liens = metier.liens.map { it.toLien() },
-                    formations = formation[metier.id]?.map { it.formation.toFormationCourte() } ?: emptyList(),
+                    formations = formations,
                 )
+            } else {
+                logguerMetierAbsent(idMetierAbsent = idMetier)
+                null
             }
         }
     }

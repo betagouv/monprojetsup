@@ -6,8 +6,8 @@ import fr.gouv.monprojetsup.referentiel.domain.entity.InteretCategorie
 import fr.gouv.monprojetsup.referentiel.domain.entity.InteretSousCategorie
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretBDDRepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretCategorieJPARepository
-import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretJPARepository
 import fr.gouv.monprojetsup.referentiel.infrastructure.repository.InteretSousCategorieJPARepository
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql
 
 class InteretBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
-    lateinit var interetJPARepository: InteretJPARepository
+    lateinit var entityManager: EntityManager
 
     @Autowired
     lateinit var interetSousCategorieJPARepository: InteretSousCategorieJPARepository
@@ -29,7 +29,7 @@ class InteretBDDRepositoryTest : BDDRepositoryTest() {
 
     @BeforeEach
     fun setup() {
-        interetBDDRepository = InteretBDDRepository(interetJPARepository, interetSousCategorieJPARepository, interetCategorieJPARepository)
+        interetBDDRepository = InteretBDDRepository(entityManager, interetSousCategorieJPARepository, interetCategorieJPARepository)
     }
 
     @Nested

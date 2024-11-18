@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -11,14 +12,14 @@ import org.springframework.test.context.jdbc.Sql
 
 class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
-    lateinit var moyenneGeneraleAdmisJPARepository: MoyenneGeneraleAdmisJPARepository
+    lateinit var entityManager: EntityManager
 
     lateinit var moyenneGeneraleAdmisBDDRepository: FrequencesCumuleesDesMoyenneDesAdmisBDDRepository
 
     @BeforeEach
     fun setup() {
         moyenneGeneraleAdmisBDDRepository =
-            FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(moyenneGeneraleAdmisJPARepository)
+            FrequencesCumuleesDesMoyenneDesAdmisBDDRepository(entityManager)
     }
 
     @Nested
