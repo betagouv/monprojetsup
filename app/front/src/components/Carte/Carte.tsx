@@ -1,9 +1,12 @@
 import { type CarteProps } from "./Carte.interface";
+import { actionsListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
 
 const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée }: CarteProps) => {
+  const { changerAfficherBarreLatéraleEnMobile } = actionsListeEtAperçuStore();
+
   const classEnFonctionDeLaSélection = () => {
     if (sélectionnée) return "border-[--border-active-blue-france]";
     return "border-transparent";
@@ -16,6 +19,7 @@ const Carte = ({ titre, id, estFavori, estMasqué, children, sélectionnée }: C
       <div className="grid grid-flow-col items-baseline justify-between gap-1">
         <LienInterne
           ariaLabel={titre}
+          auClic={() => changerAfficherBarreLatéraleEnMobile(false)}
           hash={id}
           href=""
           variante="neutre"

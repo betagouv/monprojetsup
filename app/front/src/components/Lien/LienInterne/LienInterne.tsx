@@ -14,6 +14,7 @@ const LienInterne = <H extends Paths>({
   hash,
   paramètresPath,
   paramètresSearch,
+  auClic,
 }: LienInterneProps<H>) => {
   const { ariaLabelFormaté, classesCSS, target } = useLien({ ariaLabel, href, taille, variante, icône, estUnTag });
 
@@ -22,6 +23,7 @@ const LienInterne = <H extends Paths>({
       aria-label={ariaLabelFormaté}
       className={classesCSS}
       hash={hash}
+      onClick={auClic}
       params={paramètresPath}
       search={paramètresSearch}
       target={target}

@@ -40,11 +40,19 @@ const DétailFormationPage = () => {
         type: "formation",
       });
     } else {
+      if (hash !== "") {
+        changerÉlémentAffiché({
+          id: hash,
+          type: "formation",
+        });
+      }
+
       changerÉlémentAffiché({
         id: suggestions?.[0]?.id ?? null,
         type: "formation",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changerÉlémentAffiché, recherche, résultatsDeRecherche, suggestions]);
 
   if (!résultatsDeRecherche && !suggestions) {
@@ -60,7 +68,7 @@ const DétailFormationPage = () => {
 
   return (
     <ListeEtAperçuLayout variante="formations">
-      <ListeEtAperçuBarreLatérale>
+      <ListeEtAperçuBarreLatérale nombreRésultats={résultatsDeRecherche?.length ?? suggestions?.length ?? 0}>
         <BarreLatéraleFicheFormation
           chargementEnCours={chargementRechercheEnCours || chargementSuggestionsEnCours}
           résultatsDeRecherche={résultatsDeRecherche}

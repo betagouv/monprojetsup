@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 
 const BlocAlternanceFicheFormation = () => {
   return (
-    <div className="h-full border border-l-4 border-solid border-[--border-default-grey] border-l-[#BAA48A] bg-white md:px-10 md:py-6">
+    <div className="h-full border border-l-4 border-solid border-[--border-default-grey] border-l-[#BAA48A] bg-white px-10 py-6">
       <p className="mb-2">
         <Trans
           i18nKey="ALTERNANCE.TITRE"

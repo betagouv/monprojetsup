@@ -55,7 +55,7 @@ const FavorisPage = () => {
     <>
       <Head titre={i18n.PAGE_FAVORIS.TITRE_PAGE} />
       <ListeEtAperçuLayout variante="favoris">
-        <ListeEtAperçuBarreLatérale>
+        <ListeEtAperçuBarreLatérale nombreRésultats={0}>
           <BarreLatéraleFavoris
             formations={formations}
             métiers={métiers}

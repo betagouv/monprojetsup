@@ -20,4 +20,5 @@ export type LienInterneProps<H extends Paths> = {
     classe: string;
   };
   estUnTag?: boolean;
+  auClic?: () => void;
 };
