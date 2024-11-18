@@ -100,7 +100,6 @@ class UpdateDbsTest : BDDRepositoryTest() {
                 nom = "label"
                 commune = ""
                 codeCommune = ""
-                idFormation = "obsolete"
                 lat = 0.0
                 lng = 0.0
                 obsolete = false

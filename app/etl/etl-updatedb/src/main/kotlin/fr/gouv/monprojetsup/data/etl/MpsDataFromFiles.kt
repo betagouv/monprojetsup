@@ -58,6 +58,7 @@ import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Compan
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_METIERS_FORMATIONS_PSUP
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_SECTEURS_METIERS
 import fr.gouv.monprojetsup.data.tools.CsvTools.getWriter
+import fr.gouv.monprojetsup.data.tools.CsvTools.readCSV
 import fr.gouv.monprojetsup.data.tools.Serialisation
 import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.tuple.Pair
@@ -689,32 +690,13 @@ class MpsDataFromFiles(
 
     override fun getFormationsMpsIds(): List<String> {
         if(formationsMpsIds == null) {
-            val resultInt = HashSet(psupData.filActives)//environ 750 (incluant apprentissage)
-            resultInt.addAll(psupData.lasFlCodes)
-
-            val result = HashSet(resultInt.stream()
-                .map { cle -> gFlCodToMpsId(cle) }
-                .toList()
-            )
-
-            //on supprime du résultat les formations regroupées et on ajoute les groupes
-            val flGroups = psupData.psupKeyToMpsKey//environ 589 obtenus en groupant et en ajoutant les las
-            result.removeAll(flGroups.keys)
-            result.addAll(flGroups.values)
-
-            //on veut au moins un voeu psup par formations indexées dans mps
-            val groupesWithAtLeastOneFormation = psupData.formationToVoeux.keys
-            result.retainAll(groupesWithAtLeastOneFormation)
-
-            val toRemove = CsvTools.readCSV(dataSources.getSourceDataFilePath(DataSources.MPS_FORMATIONS_EXCLUES_PATH), ',')
+            val result = HashSet(psupData.formationsMpsIds)
+            val toRemove = readCSV(dataSources.getSourceDataFilePath(DataSources.MPS_FORMATIONS_EXCLUES_PATH),',')
                 .filter { it.isNotEmpty() }
                 .map { it[DataSources.MPS_FORMATIONS_EXCLUES_HEADER].toString() }
                 .toSet()
-
             result.removeAll(toRemove)
-
-            val sorted = result.toList().sorted()
-            formationsMpsIds =  sorted
+            formationsMpsIds = ArrayList(result)
         }
         return formationsMpsIds!!
     }
@@ -733,7 +715,7 @@ class MpsDataFromFiles(
 
     override fun getVoeux(): Map<String, Collection<Voeu>> {
         val formationsMps = getFormationsMpsIds()
-        return psupData.getVoeux(formationsMps).groupBy { it.formation }
+        return psupData.getVoeuxGroupedByFormation(formationsMps)
     }
 
 

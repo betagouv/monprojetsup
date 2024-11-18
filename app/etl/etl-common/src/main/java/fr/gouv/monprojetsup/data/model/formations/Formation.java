@@ -130,4 +130,7 @@ public class Formation implements Serializable {
     }
 
 
+    public boolean isPPPE() {
+        return libelle.contains("PPPE");
+    }
 }

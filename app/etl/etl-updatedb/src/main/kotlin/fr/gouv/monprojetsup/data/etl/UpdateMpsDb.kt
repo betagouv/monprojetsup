@@ -69,6 +69,7 @@ open class Runner(
 			logger.info("Mise à jour des suggestions")
 			updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
 		} finally {
+			updateParametreDb.setFormationUpdateForcedFlag(false)
 			updateParametreDb.setEtlEnCours(false)
 			logger.info("Fin de la mise à jour")
 		}

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -79,7 +80,7 @@ public class PsupStatistiques implements Serializable {
         statsAdmis.parGroupe().values().removeIf(s -> s.parBac().isEmpty());
     }
 
-    public StatistiquesAdmisParGroupe createGroupAdmisStatistique(Map<String, String> groups, Set<String> bacsKeys) {
+    public StatistiquesAdmisParGroupe createGroupAdmisStatistique(Map<String, Collection<String>> groups, Set<String> bacsKeys) {
         StatistiquesAdmisParGroupe result = statsAdmis.createGroupAdmisStatistique(groups, bacsKeys);
         result.rebuilMiddle50();
         result.removeEmptyGroups();

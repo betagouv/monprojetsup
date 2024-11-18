@@ -21,7 +21,13 @@ public class Labels {
 
         val result = new HashMap<String, String>();
         /* les noms affichés sur la carte */
-        val nomsFilieres = psupData.nomsFilieres();
+        val nomsFilieres = new HashMap<>(psupData.nomsFilieres());
+
+        Constants.MPS_SPECIFIC_FORMATION_IDS.forEach(id -> {
+            if (!nomsFilieres.containsKey(id)) {
+                nomsFilieres.put(id, "Formation " + id);
+            }
+        });
         val mpsKeyToPsupKeys = psupData.getMpsKeyToPsupKeys();
 
         nomsFilieres.forEach((key, libelle) -> {
@@ -192,6 +198,12 @@ public class Labels {
         }
         if(key.equals("fl271")) {
             newLibelle = "Formations des écoles supérieures d'art (Bac +3)";
+        }
+        if(key.equals(LAS_MPS_ID)) {
+            newLibelle = "Licence option Accès Santé (LAS)";
+        }
+        if(key.equals(PPPE_MPS_ID)) {
+            newLibelle = "Parcours Préparatoire au Professorat des Ecoles (PPPE)";
         }
         return newLibelle;
     }

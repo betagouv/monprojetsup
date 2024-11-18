@@ -4,8 +4,10 @@ import fr.gouv.monprojetsup.data.Constants
 import fr.gouv.monprojetsup.data.commun.entity.LienEntity
 import fr.gouv.monprojetsup.data.etl.BatchUpdate
 import fr.gouv.monprojetsup.data.etl.MpsDataPort
+import fr.gouv.monprojetsup.data.etl.parametre.UpdateParametreDb
 import fr.gouv.monprojetsup.data.formation.entity.CritereAnalyseCandidatureEntity
 import fr.gouv.monprojetsup.data.formation.entity.FormationEntity
+import fr.gouv.monprojetsup.data.formation.entity.FormationVoeuEntity
 import fr.gouv.monprojetsup.data.formation.entity.MoyenneGeneraleAdmisEntity
 import fr.gouv.monprojetsup.data.formation.entity.VilleVoeuxEntity
 import fr.gouv.monprojetsup.data.formation.entity.VoeuEntity
@@ -49,7 +51,8 @@ class UpdateFormationDbs(
     private val batchUpdate: BatchUpdate,
     private val villesVoeuxDb: VillesVoeuxDb,
     private val voeuxDb: VoeuxDb,
-    private val formationDb: FormationDb
+    private val formationDb: FormationDb,
+    private val parametreDb: UpdateParametreDb
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
@@ -59,7 +62,7 @@ class UpdateFormationDbs(
         if(voeuxOntChange) {
             logger.info("Mise à jour de la table des formations")
             updateFormationsDb()
-            logger.info("Mise à jour de la table des voeux")
+            logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
             updateVoeuxDb()
             logger.info("Mise à jour de la table de correspondance ville voeux")
             updateVillesVoeuxDb()
@@ -74,13 +77,13 @@ class UpdateFormationDbs(
     }
 
     fun checkVoeuxOuFormationsOntChange(): Boolean {
-        val anciensVoeux = voeuxDb.findAll()
-            .filter { it.url.isNotEmpty() }//force la mise à jour lors de la migration V1_35
-            .map { Pair(it.idFormation, it.id) }.toSet()
-        val formationsMps = mpsDataPort.getFormationsMpsIds()
-        val nouveauxVoeux = mpsDataPort.getVoeux()
-            .filter { e -> formationsMps.contains(e.key)}
-            .flatMap { e -> e.value.map { Pair(it.formation, it.id) } }
+        if(parametreDb.getFormationUpdateForcedFlag()) {
+            logger.warning("Forçage de la mise à jour des voeux et formations")
+            return true
+        }
+        val anciensVoeux = formationDb.findAll().flatMap { it.voeux.map { itt -> Pair(it.id, itt.id) } }.toSet()
+        val nouveauxVoeux = mpsDataPort.getVoeux().entries
+            .flatMap { e -> e.value.map { Pair(e.key, it.id) } }
             .toSet()
         return anciensVoeux != nouveauxVoeux
     }
@@ -102,13 +105,19 @@ class UpdateFormationDbs(
     fun updateVoeuxDb() {
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val voeux = mpsDataPort.getVoeux()
-        val voeuxEntities = ArrayList<VoeuEntity>()
+        val voeuxEntities = HashMap<String,VoeuEntity>()
+        val formationsVoeuxEntities = ArrayList<FormationVoeuEntity>()
         formationsMpsIds.forEach { id ->
             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
-            voeuxEntities.addAll(voeuxFormation.map { VoeuEntity(it) })
+            voeuxFormation.forEach { voeuxEntities.put(it.id, VoeuEntity(it)) }
+            formationsVoeuxEntities.addAll(
+                voeuxFormation.map {
+                    FormationVoeuEntity(id, it.id)
+                }
+            )
         }
 
-        val voeuxIds = voeuxEntities.map { it.id }.toSet()
+        val voeuxIds = voeuxEntities.keys
 
         val voeuxObsoletes = HashSet(voeuxDb.findAll())
         voeuxObsoletes.removeIf { voeuxIds.contains(it.id) }
@@ -118,8 +127,13 @@ class UpdateFormationDbs(
             batchUpdate.upsertEntities(voeuxObsoletes)
         }
 
+        batchUpdate.clearEntities(FormationVoeuEntity::class.simpleName!!)
+
         logger.warning("Insertion et mise à jour de ${voeuxEntities.count()} voeux")
-        batchUpdate.upsertEntities(voeuxEntities)
+        batchUpdate.upsertEntities(voeuxEntities.values)
+
+        logger.warning("Insertion et mise à jour de ${formationsVoeuxEntities.count()} paires formations voeux")
+        batchUpdate.setEntities(FormationVoeuEntity::class.simpleName!!, formationsVoeuxEntities)
 
     }
 
@@ -218,6 +232,7 @@ class UpdateFormationDbs(
          logger.warning("Insertion et mise à jour de ${formationEntities.count()} formations")
          batchUpdate.upsertEntities(formationEntities)
      }
+
 
     fun updateVillesVoeuxDb() {
         val cities = mpsDataPort.getCities()

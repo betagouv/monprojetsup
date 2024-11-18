@@ -2,6 +2,8 @@ package fr.gouv.monprojetsup.data;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class Constants {
 
     public static final int PASS_FL_COD = 2047;
@@ -16,6 +18,8 @@ public class Constants {
     public static final String CARTE_PARCOURSUP_PREFIX_URI = "https://dossier.parcoursup.fr/Candidat/carte?search=";
     public static final String PASS_MOT_CLE = "PASS";
     public static final int DUREE_LAS = 5;
+    public static final int DUREE_PPPE = 5;
+
     public static final int MIN_NB_ADMIS_FOR_BAC_ACTIF = 200;
     public static final int IEP_PSUP_FR_COD = 90;
     public static final int BPJEPS_PSUP_FR_COD = 640;
@@ -37,6 +41,7 @@ public class Constants {
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";
     /* constant added to the las gFlCod indexes */
     public static final Integer LAS_CONSTANT = 1000000;
+    public static final Integer PPPE_CONSTANT = 999999;
     public static final String CENTRE_INTERETS_ROME = "T-ROME.";
 
     private static final String TYPE_FORMATION_PREFIX = "fr";//like g_fr_cod
@@ -51,7 +56,7 @@ public class Constants {
         return FILIERE_PREFIX + cle;
     }
     public static String gFlCodToMpsLasId(int cle) {
-        return   FILIERE_PREFIX + (cle < LAS_CONSTANT ? LAS_CONSTANT + cle : cle);
+        return   gFlCodToMpsId((cle % LAS_CONSTANT) + LAS_CONSTANT);
     }
     public static String gFrCodToMpsId(int cle) {
         return TYPE_FORMATION_PREFIX + cle;
@@ -60,6 +65,11 @@ public class Constants {
     public static String gTaCodToMpsId(int cle) {
         return FORMATION_PREFIX + cle;
     }
+
+    public static final String LAS_MPS_ID = gFlCodToMpsId(LAS_CONSTANT);
+    public static final String PPPE_MPS_ID = gFlCodToMpsId(PPPE_CONSTANT);
+
+    public static final List<String> MPS_SPECIFIC_FORMATION_IDS = List.of(LAS_MPS_ID, PPPE_MPS_ID);
 
 
     /**
