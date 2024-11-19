@@ -38,6 +38,9 @@ interface VoeuxDb :
 interface FormationDb : JpaRepository<FormationEntity, String>
 
 @Repository
+interface FormationVoeuDb : JpaRepository<FormationVoeuEntity, String>
+
+@Repository
 interface JoinFormationMetierDb : JpaRepository<FormationMetierEntity, String>
 
 @Repository
@@ -52,40 +55,30 @@ class UpdateFormationDbs(
     private val villesVoeuxDb: VillesVoeuxDb,
     private val voeuxDb: VoeuxDb,
     private val formationDb: FormationDb,
+    private val formationVoeuxDb: FormationVoeuDb,
     private val parametreDb: UpdateParametreDb
 ) {
 
     private val logger: Logger = Logger.getLogger(UpdateFormationDbs::class.java.simpleName)
 
     internal fun update() {
-        val voeuxOntChange = checkVoeuxOuFormationsOntChange()
-        if(voeuxOntChange) {
-            logger.info("Mise à jour de la table des formations")
-            updateFormationsDb()
-            logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
-            updateVoeuxDb()
+        logger.info("Mise à jour de la table des formations")
+        updateFormationsDb()
+        logger.info("Mise à jour de la table des voeux et des correspondances villes voeux")
+        val nbPairesVoeuxFormationsAChange = updateVoeuxDb()
+        if(nbPairesVoeuxFormationsAChange || checkForcedUpdate()) {
             logger.info("Mise à jour de la table de correspondance ville voeux")
             updateVillesVoeuxDb()
-        } else {
-            logger.info("Mise à jour de la table des formations")
-            updateFormationsDb()
         }
+
         logger.info("Mise à jour de la table des critères d'admission")
         updateCriteresDb()
         logger.info("Mise à jour de la table des moyennes générales des admis")
         updateMoyennesGeneralesAdmisDb()
     }
 
-    fun checkVoeuxOuFormationsOntChange(): Boolean {
-        if(parametreDb.getFormationUpdateForcedFlag()) {
-            logger.warning("Forçage de la mise à jour des voeux et formations")
-            return true
-        }
-        val anciensVoeux = formationDb.findAll().flatMap { it.voeux.map { itt -> Pair(it.id, itt.id) } }.toSet()
-        val nouveauxVoeux = mpsDataPort.getVoeux().entries
-            .flatMap { e -> e.value.map { Pair(e.key, it.id) } }
-            .toSet()
-        return anciensVoeux != nouveauxVoeux
+    fun checkForcedUpdate(): Boolean {
+        return parametreDb.getFormationUpdateForcedFlag()
     }
 
 
@@ -102,10 +95,10 @@ class UpdateFormationDbs(
         moyennesGeneralesAdmisDb.saveAll(entities)
     }
 
-    fun updateVoeuxDb() {
+    fun updateVoeuxDb(): Boolean {
         val formationsMpsIds = mpsDataPort.getFormationsMpsIds()
         val voeux = mpsDataPort.getVoeux()
-        val voeuxEntities = HashMap<String,VoeuEntity>()
+        val voeuxEntities = HashMap<String, VoeuEntity>()
         val formationsVoeuxEntities = ArrayList<FormationVoeuEntity>()
         formationsMpsIds.forEach { id ->
             val voeuxFormation = voeux.getOrDefault(id, listOf()).sortedBy { it.libelle }
@@ -119,9 +112,13 @@ class UpdateFormationDbs(
 
         val voeuxIds = voeuxEntities.keys
 
+        val nbFormationsVoeuxBefore = formationVoeuxDb.findAll().count()
+        val nbFormationsVoeuxAfter = formationsVoeuxEntities.count()
+        val changementNbVoeux = nbFormationsVoeuxBefore != nbFormationsVoeuxAfter
+
         val voeuxObsoletes = HashSet(voeuxDb.findAll())
         voeuxObsoletes.removeIf { voeuxIds.contains(it.id) }
-        if(voeuxObsoletes.isNotEmpty()) {
+        if (voeuxObsoletes.isNotEmpty()) {
             logger.warning("Marquage de ${voeuxObsoletes.count()} voeux obsoletes")
             voeuxObsoletes.forEach { it.obsolete = true }
             batchUpdate.upsertEntities(voeuxObsoletes)
@@ -134,6 +131,8 @@ class UpdateFormationDbs(
 
         logger.warning("Insertion et mise à jour de ${formationsVoeuxEntities.count()} paires formations voeux")
         batchUpdate.setEntities(FormationVoeuEntity::class.simpleName!!, formationsVoeuxEntities)
+
+        return changementNbVoeux
 
     }
 
