@@ -111,36 +111,13 @@ public class Labels {
                 ));
     }
 
-    @NotNull
-    public static Map<String, String> getMetiersLabels(@NotNull OnisepData oniData, boolean includeKeys) {
-        val result = new HashMap<String, String>();
-        oniData.metiersIdeo().forEach(metier -> {
-                    String libelle = metier.lib();
-                    if (includeKeys) libelle = includeKey(metier.ideo(), libelle);
-                    result.put(
-                            metier.ideo(),
-                            libelle);
-                    metier.metiersAssocies().forEach(metierAssocie
-                            -> {
-                        String libelleMetierAssocie = metierAssocie.libelle();
-                        if (includeKeys) libelleMetierAssocie = includeKey(metierAssocie.id(), libelleMetierAssocie);
-                        result.put(
-                                cleanup(metierAssocie.id()),
-                                libelleMetierAssocie
-                        );
-                    });
-                }
-        );
-        return result;
-    }
-
     public static Map<String,@NotNull String> getLabels(
             PsupData psupData,
             OnisepData oniData) {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, false));
         result.putAll(getFormationsLabels(oniData, false));
-        result.putAll(getMetiersLabels(oniData, false));
+        result.putAll(oniData.getMetiersLabels(false));
         result.putAll(oniData.interets().getLabels(false));
         result.putAll(oniData.getDomainesLabels(false));
         return result;
@@ -151,7 +128,7 @@ public class Labels {
         val result = new HashMap<String,@NotNull String>();
         result.putAll(getFormationsLabels(psupData, true));
         result.putAll(getFormationsLabels(oniData, true));
-        result.putAll(getMetiersLabels(oniData, true));
+        result.putAll(oniData.getMetiersLabels(true));
         result.putAll(oniData.interets().getLabels(true));
         result.putAll(oniData.getDomainesLabels(true));
         return result;

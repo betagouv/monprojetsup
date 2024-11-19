@@ -3,7 +3,7 @@ package fr.gouv.monprojetsup.data.etl.loaders;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifFormation;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.tools.Serialisation;
@@ -55,7 +55,7 @@ public class DescriptifsLoader {
         return descriptifs;
     }
 
-    private static void injectFichesMetiers(List<MetierIdeoDuSup> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
+    private static void injectFichesMetiers(List<MetierIdeo> fichesMetiers, DescriptifsFormationsMetiers descriptifs) {
         fichesMetiers.forEach(fiche -> {
             String key = fiche.ideo();
             String descriptif = fiche.descriptif();

@@ -12,7 +12,7 @@ import java.util.*;
 
 import static fr.gouv.monprojetsup.data.Helpers.removeHtml;
 
-public record MetierIdeoDuSup(
+public record MetierIdeo(
         @NotNull String ideo,
         @NotNull String lib,
         @NotNull List<FicheMetierIdeo.SourceNumerique> urls,
@@ -27,7 +27,7 @@ public record MetierIdeoDuSup(
         @NotNull HashSet<FicheMetierIdeo.MetierAssocie> metiersAssocies
         ) {
 
-    public void inheritFrom(MetierIdeoDuSup rich) {
+    public void inheritFrom(MetierIdeo rich) {
         secteursActivite.addAll(rich.secteursActivite);
         interets.addAll(rich.interets);
         motsCles.addAll(rich.motsCles);
@@ -35,7 +35,7 @@ public record MetierIdeoDuSup(
         domainesWeb.addAll(rich.domainesWeb);
     }
 
-    public MetierIdeoDuSup(MetiersScrapped.MetierScrap m) {
+    public MetierIdeo(MetiersScrapped.MetierScrap m) {
         this(m.key(),
                 removeHtml(m.nom()),
                 List.of(new FicheMetierIdeo.SourceNumerique(m.url(), removeHtml(m.nom()))),
@@ -51,7 +51,7 @@ public record MetierIdeoDuSup(
         );
     }
 
-    public static @NotNull MetierIdeoDuSup merge(MetierIdeoSimple m, Map<String, SousDomaineWeb> sousdomainesWeb, MetierIdeoDuSup o) {
+    public static @NotNull MetierIdeo merge(MetierIdeoSimple m, Map<String, SousDomaineWeb> sousdomainesWeb, MetierIdeo o) {
 
         HashSet<String> motsCles = new HashSet<>();
         HashSet<String> domainesWeb = new HashSet<>();
@@ -63,7 +63,7 @@ public record MetierIdeoDuSup(
         motsCles.addAll(m.getMotsCles());
         domainesWeb.addAll(m.getDomaines(sousdomainesWeb).stream().map(SousDomaineWeb::ideo).toList());
 
-        return new MetierIdeoDuSup(
+        return new MetierIdeo(
                 m.idIdeo(),
                 m.libelle_metier(),
                 m.lien_site_onisepfr() != null
@@ -81,7 +81,7 @@ public record MetierIdeoDuSup(
         );
     }
 
-    public static MetierIdeoDuSup merge(@NotNull FicheMetierIdeo m, @Nullable MetierIdeoDuSup o) {
+    public static MetierIdeo merge(@NotNull FicheMetierIdeo m, @Nullable MetierIdeo o) {
 
         HashSet<String> interets = new HashSet<>();
         HashSet<String> motsCles = new HashSet<>();
@@ -114,7 +114,7 @@ public record MetierIdeoDuSup(
 
         String descriptif = m.getDescriptif();
 
-        return new MetierIdeoDuSup(
+        return new MetierIdeo(
                 m.identifiant(),
                 m.nom_metier(),
                 Objects.requireNonNullElse(m.sourcesNumeriques(), List.of()),

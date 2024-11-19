@@ -101,7 +101,7 @@ class MpsDataFromFiles(
 
     private fun exportLiensFormationsMetiersDiagnostics(
         labels: Map<String, String>,
-        logLiens: HashMap<Pair<String, String>, MutableList<String>>
+        logLiens: MutableMap<Pair<String, String>, MutableList<String>>
     ) {
         val filename = DIAGNOSTICS_OUTPUT_DIR + "formations_metiers_checked.csv"
 
@@ -231,8 +231,7 @@ class MpsDataFromFiles(
     }
 
     override fun getMetiersLabels(): Map<String, String> {
-        return Labels.getMetiersLabels(
-            onisepData,
+        return onisepData.getMetiersLabels(
             false
         )
     }

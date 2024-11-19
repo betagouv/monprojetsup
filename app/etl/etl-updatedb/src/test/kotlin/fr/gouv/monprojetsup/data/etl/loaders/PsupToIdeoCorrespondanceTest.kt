@@ -1,14 +1,14 @@
 package fr.gouv.monprojetsup.data.etl.loaders
 
+import fr.gouv.monprojetsup.data.Constants.ECOLE_COMMERCE_PSUP_FR_COD
+import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.TestData.Companion.COMMERCE_INTERNATIONAL_DOMAINE_IDEO_CODE
 import fr.gouv.monprojetsup.data.TestData.Companion.CPGE_LETTRES_PSUP_FL_COD
 import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_GESTION_PSUP_FR_COD
 import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD
-import fr.gouv.monprojetsup.data.Constants.ECOLE_COMMERCE_PSUP_FR_COD
-import fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId
 import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo
 import fr.gouv.monprojetsup.data.model.onisep.SousDomaineWeb
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +21,7 @@ class PsupToIdeoCorrespondanceTest {
 
     private lateinit var formationsIdeoDuSup: Map<String, FormationIdeoDuSup>
 
-    private lateinit var metiersIdeoDuSup: Map<String, MetierIdeoDuSup>
+    private lateinit var metiersIdeoDuSup: Map<String, MetierIdeo>
 
     private lateinit var filieresPsupToFormationsMetiersIdeo: Map<String, FilieresPsupVersIdeoData>
 
@@ -38,7 +38,8 @@ class PsupToIdeoCorrespondanceTest {
             ).associateBy { gFlCodToMpsId(it.gFlCod) }
 
         val sousDomainesWeb: List<SousDomaineWeb> = ArrayList(OnisepDataLoader.loadDomainesSousDomaines(sources))
-        metiersIdeoDuSup = OnisepDataLoader.loadMetiers(formationsIdeoDuSup.values, sousDomainesWeb, sources)
+        val metiers = OnisepDataLoader.loadMetiers(formationsIdeoDuSup.values, sousDomainesWeb, sources)
+        metiersIdeoDuSup = metiers.left.filter { e -> metiers.right.contains(e.key) }.values.filterNotNull().associateBy { it.ideo }
     }
 
     @Test

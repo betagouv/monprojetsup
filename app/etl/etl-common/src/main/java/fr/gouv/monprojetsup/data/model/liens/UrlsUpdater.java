@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.data.model.liens;
 
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,7 +91,7 @@ public class UrlsUpdater {
     }
 
     public static @NotNull Map<String, @NotNull List<DescriptifsFormationsMetiers.Link>> updateUrls(
-            @NotNull List<MetierIdeoDuSup> metiers,
+            @NotNull List<MetierIdeo> metiers,
             @NotNull Map<String, @NotNull String> liensIdeoHotline,
             @NotNull Map<String, @NotNull String> lasToGeneric,
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,

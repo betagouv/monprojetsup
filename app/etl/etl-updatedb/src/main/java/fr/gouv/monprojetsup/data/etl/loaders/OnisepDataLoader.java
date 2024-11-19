@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
-import fr.gouv.monprojetsup.data.model.metiers.MetierIdeoDuSup;
+import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
 import fr.gouv.monprojetsup.data.model.onisep.OnisepData;
 import fr.gouv.monprojetsup.data.model.onisep.SousDomaineWeb;
@@ -76,21 +76,19 @@ public class OnisepDataLoader {
 
     private static final Map<Pair<String,String>, List<String>> logLiens = new TreeMap<>();
 
-    public static HashMap<Pair<String, String>, List<String>> exportDiagnosticsLiens(Map<String,String> labels) throws IOException {
+    public static Map<Pair<String, String>, List<String>> exportDiagnosticsLiens(Map<String,String> labels) throws IOException {
 
         try(val csv = CsvTools.getWriter(Constants.DIAGNOSTICS_OUTPUT_DIR + "sourcesLiensFormationsMetiers.csv")) {
-            csv.append(List.of("clé formation","label formation", "clé metier","label métoier", "source(s)"));
+            csv.append(List.of("clé formation","label formation", "clé metier","label métier", "source(s)"));
             logLiens.keySet().removeIf(k -> k.getLeft().startsWith("FOR."));
-            logLiens.forEach((p, sourcess) -> {
-                csv.append(List.of(
-                        p.getLeft(),
-                        labels.getOrDefault(p.getLeft(), ""),
-                        p.getRight(),
-                                labels.getOrDefault(p.getRight(), ""),
-                        String.join("\n", sourcess)
-                )
-                );
-            });
+            logLiens.forEach((p, sourcess) -> csv.append(List.of(
+                    p.getLeft(),
+                    labels.getOrDefault(p.getLeft(), ""),
+                    p.getRight(),
+                            labels.getOrDefault(p.getRight(), ""),
+                    String.join("\n", sourcess)
+            )
+            ));
         }
         return new HashMap<>(logLiens);
 
@@ -111,6 +109,7 @@ public class OnisepDataLoader {
             }
         }));
     }
+
     private static void updateCreationLien(List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo, String source) {
         int i = source.indexOf("/");
         if(i > 0) {
@@ -154,11 +153,14 @@ public class OnisepDataLoader {
         var formationsIdeoDuSup = loadFormationsIdeoDuSup(sources);
 
         LOGGER.info("Chargement des metiers ideo");
-        var metiersIdeoDuSup = loadMetiers(formationsIdeoDuSup.values(), sousDomainesWeb, sources);
+        val result = loadMetiers(formationsIdeoDuSup.values(), sousDomainesWeb, sources);
+        val metiersIdeo = result.getLeft();
+        val metiersIdeoDuSupKeys = result.getRight();
+        val metiersIdeoDuSup = metiersIdeo.entrySet().stream().filter( m -> metiersIdeoDuSupKeys.contains(m.getKey())).map(Map.Entry::getValue).toList();
 
         LOGGER.info("Insertion des données ROME dans les données Onisep");
         val romeData = RomeDataLoader.load(sources);
-        insertRomeInteretsDansMetiers(romeData.centresInterest(), metiersIdeoDuSup.values()); //before updateLabels
+        insertRomeInteretsDansMetiers(romeData.centresInterest(), metiersIdeoDuSup); //before updateLabels
 
         val filieresPsupToFormationsMetiersIdeo = loadPsupToIdeoCorrespondance(
                 sources,
@@ -174,10 +176,10 @@ public class OnisepDataLoader {
         val edgesMetiersFormations = edgesFormations.getRight();
 
 
-        LOGGER.info("Restriction des secteursActivite et intérêts aux valeurs utilisées");
+        LOGGER.info("Restriction des secteurs activités et intérêts aux valeurs utilisées");
         Set<String> domainesUsed = new HashSet<>();
 
-        domainesUsed.addAll(metiersIdeoDuSup.values().stream().flatMap(m -> m.domainesWeb().stream()).distinct().toList());
+        domainesUsed.addAll(metiersIdeoDuSup.stream().flatMap(m -> m.domainesWeb().stream()).distinct().toList());
         domainesUsed.addAll(edgesFormationsDomaines.stream().map(Pair::getRight).toList());
 
         try(val csv = CsvTools.getWriter(Constants.DIAGNOSTICS_OUTPUT_DIR + "domainesInutilises.csv")) {
@@ -194,7 +196,7 @@ public class OnisepDataLoader {
         int after = sousDomainesWeb.size();
         LOGGER.info("Domaines: " + before + " -> " + after);
 
-        HashSet<String> interetsUsed = metiersIdeoDuSup.values().stream().flatMap(m -> m.interets().stream()).collect(Collectors.toCollection(HashSet::new));
+        HashSet<String> interetsUsed = metiersIdeoDuSup.stream().flatMap(m -> m.interets().stream()).collect(Collectors.toCollection(HashSet::new));
         before = interets.size();
         interets.retainAll(interetsUsed);
         after = interets.size();
@@ -206,8 +208,9 @@ public class OnisepDataLoader {
                 edgesFormationsDomaines,
                 edgesMetiersFormations,
                 filieresPsupToFormationsMetiersIdeo,
-                metiersIdeoDuSup.values().stream().sorted(Comparator.comparing(MetierIdeoDuSup::ideo)).toList(),
-                formationsIdeoDuSup.values().stream().toList()
+                metiersIdeo.values().stream().sorted(Comparator.comparing(MetierIdeo::ideo)).toList(),
+                formationsIdeoDuSup.values().stream().toList(),
+                new HashSet<>(metiersIdeoDuSupKeys)
         );
 
     }
@@ -215,11 +218,11 @@ public class OnisepDataLoader {
 
     @SuppressWarnings("unused")
     private static void injectInMetiers(
-            List<MetierIdeoDuSup> metiersIdeoDuSup,
+            List<MetierIdeo> metiersIdeoDuSup,
             Map<String, Set<String>> richIdeoToPoorIdeo
     ) {
-        Map<String, MetierIdeoDuSup> metiersIdeoDuSupByKey = metiersIdeoDuSup.stream()
-                .collect(Collectors.toMap(MetierIdeoDuSup::ideo, m -> m));
+        Map<String, MetierIdeo> metiersIdeoDuSupByKey = metiersIdeoDuSup.stream()
+                .collect(Collectors.toMap(MetierIdeo::ideo, m -> m));
             richIdeoToPoorIdeo.forEach((richId, poorsId) -> {
                 val rich = metiersIdeoDuSupByKey.get(richId);
                 if(rich == null) throw new RuntimeException(METIER_INCONNU + richId);
@@ -413,14 +416,14 @@ public class OnisepDataLoader {
 
     private static void insertRomeInteretsDansMetiers(
             InteretsRome romeInterets,
-            Collection<MetierIdeoDuSup> metiersIdeo
+            Collection<MetierIdeo> metiersIdeo
     ) {
-        Map<String,List<MetierIdeoDuSup>> codeRomeVersMetiers = metiersIdeo.stream()
+        Map<String,List<MetierIdeo>> codeRomeVersMetiers = metiersIdeo.stream()
                 .filter(m -> m.codeRome() != null)
-                .collect(Collectors.groupingBy(MetierIdeoDuSup::codeRome));
+                .collect(Collectors.groupingBy(MetierIdeo::codeRome));
 
         romeInterets.arbo_centre_interet().forEach(item -> {
-            List<MetierIdeoDuSup> metiers = item.liste_metier().stream()
+            List<MetierIdeo> metiers = item.liste_metier().stream()
                     .map(InteretsRome.Metier::code_rome)
                     .flatMap(codeRome -> codeRomeVersMetiers.getOrDefault(codeRome, List.of()).stream())
                     .toList();
@@ -445,7 +448,15 @@ public class OnisepDataLoader {
     }
 
 
-    public static Map<String, MetierIdeoDuSup> loadMetiers(
+    /**
+     *
+     * @param formationsIdeoSuSup les formations ideo du sup
+     * @param sousDomainesWeb les sous domaines web
+     * @param sources les sources
+     * @return a pair metiersIdeo, metiersIdeoDuSupKeys
+     * @throws Exception en cas de problème
+     */
+    public static Pair<Map<String, MetierIdeo>,Set<String>> loadMetiers(
             Collection<FormationIdeoDuSup> formationsIdeoSuSup,
             List<SousDomaineWeb> sousDomainesWeb,
             DataSources sources
@@ -454,13 +465,14 @@ public class OnisepDataLoader {
         List<MetiersScrapped.MetierScrap> metiersScrapped = loadMetiersScrapped(sources);
         List<FicheMetierIdeo> fichesMetiers = loadFichesMetiersIdeo(sources);
 
-        return extractMetiersIdeoDuSup(
+        return  extractMetiersIdeo(
                 metiersOnisep,
                 metiersScrapped,
                 fichesMetiers,
                 formationsIdeoSuSup.stream().map(FormationIdeoDuSup::ideo).collect(Collectors.toSet()),
                 sousDomainesWeb
-        ).stream().collect(Collectors.toMap(MetierIdeoDuSup::ideo, z -> z));
+        );
+
 
     }
 
@@ -606,7 +618,7 @@ public class OnisepDataLoader {
     }
 
 
-    private static List<MetierIdeoDuSup> extractMetiersIdeoDuSup(
+    private static Pair<Map<String, MetierIdeo>,Set<String>> extractMetiersIdeo(
             List<MetierIdeoSimple> metiersIdeoSimples,
             List<MetiersScrapped.MetierScrap> metiersScrapped,
             List<FicheMetierIdeo> fichesMetiers,
@@ -614,11 +626,11 @@ public class OnisepDataLoader {
             List<SousDomaineWeb> sousDomainesWeb
     ) {
 
-        Map<String,MetierIdeoDuSup> metiers = new HashMap<>();
+        Map<String, MetierIdeo> metiers = new HashMap<>();
 
         metiersScrapped.forEach(m -> {
             if(m.nom()!= null && !m.nom().isEmpty()) {
-                val met = new MetierIdeoDuSup(m);
+                val met = new MetierIdeo(m);
                 metiers.put(met.ideo(), met);
             }
         });
@@ -626,13 +638,13 @@ public class OnisepDataLoader {
         val sousDomainesWebByIdeoKey = sousDomainesWeb.stream().collect(Collectors.toMap(SousDomaineWeb::ideo, d -> d));
         for (MetierIdeoSimple m : metiersIdeoSimples) {
             var met = metiers.get(m.idIdeo());
-            met = MetierIdeoDuSup.merge(m, sousDomainesWebByIdeoKey, met);
+            met = MetierIdeo.merge(m, sousDomainesWebByIdeoKey, met);
             metiers.put(met.ideo(), met);
         }
 
         for(FicheMetierIdeo m : fichesMetiers) {
             var met = metiers.get(m.identifiant());
-            met = MetierIdeoDuSup.merge(m, met);
+            met = MetierIdeo.merge(m, met);
             metiers.put(met.ideo(), met);
         }
 
@@ -642,9 +654,10 @@ public class OnisepDataLoader {
                 .map(FicheMetierIdeo::identifiant)
                 .collect(Collectors.toSet());
 
-        metiers.keySet().removeAll(metiersToRemove);
+        val metiersDuSupKeys = new HashSet<>(metiers.keySet());
+        metiersDuSupKeys.removeAll(metiersToRemove);
 
-        return metiers.values().stream().toList();
+        return Pair.of(metiers, metiersDuSupKeys);
     }
 
     static List<SousDomaineWeb> loadDomainesSousDomaines(DataSources sources) throws Exception {
