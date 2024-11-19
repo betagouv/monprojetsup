@@ -7,6 +7,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
@@ -19,6 +20,7 @@ import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
@@ -40,10 +43,7 @@ class RecupererFormationsServiceTest {
     lateinit var metierRepository: MetierRepository
 
     @Mock
-    lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
-
-    @Mock
-    lateinit var recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService
+    lateinit var recupererInformationsSurLesVoeuxEtLeursCommunesService: RecupererInformationsSurLesVoeuxEtLeursCommunesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -59,6 +59,9 @@ class RecupererFormationsServiceTest {
 
     @Mock
     lateinit var calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder
+
+    @Mock
+    lateinit var logger: MonProjetSupLogger
 
     @InjectMocks
     lateinit var recupererFormationsService: RecupererFormationsService
@@ -160,30 +163,6 @@ class RecupererFormationsServiceTest {
                     listOf("fl0001", "fl0003"),
                 ),
             ).willReturn(explications)
-            val voeuxPossiblesPourLaFormationFL0001 =
-                listOf(
-                    Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                    Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
-                )
-            val voeuxPossiblesPourLaFormationFL0003 =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = CAEN),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                )
-            val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
-            given(
-                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
-                    idsFormations = listOf("fl0001", "fl0003"),
-                    profilEleve = profilEleve,
-                    obsoletesInclus = true,
-                ),
-            ).willReturn(voeuxDesFormations)
-
             val voeuxParCommunesFavoritesFL0001 =
                 listOf(
                     CommuneAvecVoeuxAuxAlentours(
@@ -205,19 +184,46 @@ class RecupererFormationsServiceTest {
                             ),
                     ),
                 )
-            val voeuxParCommunesFavorites =
-                mapOf(
-                    "fl0001" to voeuxParCommunesFavoritesFL0001,
-                    "fl0003" to voeuxParCommunesFavoritesFL0003,
+            val voeuxPossiblesPourLaFormationFL0001 =
+                listOf(
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                    Voeu(id = "ta1", nom = "Nom du ta1", commune = PARIS15EME),
+                    Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
                 )
+            val voeuxPossiblesPourLaFormationFL0003 =
+                listOf(
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
+                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                    Voeu(id = "ta32", nom = "Nom du ta32", commune = CAEN),
+                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                )
+            val informationsSurLesVoeuxEtLeursCommunesFL0001 =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux = voeuxPossiblesPourLaFormationFL0001,
+                    communesTriees = listOf(SAINT_MALO, PARIS15EME, MARSEILLE),
+                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
+                )
+            val informationsSurLesVoeuxEtLeursCommunesFL0003 =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux = voeuxPossiblesPourLaFormationFL0003,
+                    communesTriees = listOf(SAINT_MALO, LYON, PARIS5EME, CAEN, MARSEILLE),
+                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0003,
+                )
+            val voeuxDesFormations =
+                mapOf(
+                    "fl0001" to informationsSurLesVoeuxEtLeursCommunesFL0001,
+                    "fl0003" to informationsSurLesVoeuxEtLeursCommunesFL0003,
+                )
+
             given(
-                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
-                    listOf(SAINT_MALO),
-                    voeuxDesFormations,
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
+                    idsFormations = listOf("fl0001", "fl0003"),
+                    profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 ),
-            ).willReturn(
-                voeuxParCommunesFavorites,
-            )
+            ).willReturn(voeuxDesFormations)
             given(
                 calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                     formationAvecLeurAffinite = formationsAvecAffinites,
@@ -262,8 +268,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     tauxAffinite = 17,
                     metiersTriesParAffinites = listOf(metier123, metier534),
-                    voeux = voeuxPossiblesPourLaFormationFL0001,
-                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
+                    informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunesFL0001,
                     explications = explicationsFL0001,
                     apprentissage = true,
                 )
@@ -281,8 +286,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0003,
                     tauxAffinite = 87,
                     metiersTriesParAffinites = listOf(metier234, metier534),
-                    voeux = voeuxPossiblesPourLaFormationFL0003,
-                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0003,
+                    informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunesFL0003,
                     explications = explicationsFL0003,
                     apprentissage = false,
                 )
@@ -372,14 +376,6 @@ class RecupererFormationsServiceTest {
                     Voeu(id = "ta17", nom = "Nom du ta17", commune = SAINT_MALO),
                     Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
                 )
-            val voeuxDesFormations = mapOf("fl0001" to voeuxFL0001)
-            given(
-                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
-                    idsFormations = listOf("fl0001", "fl0003"),
-                    profilEleve = profilEleve,
-                    obsoletesInclus = true,
-                ),
-            ).willReturn(voeuxDesFormations)
             val voeuxParCommunesFavoritesFL0001 =
                 listOf(
                     CommuneAvecVoeuxAuxAlentours(
@@ -397,14 +393,20 @@ class RecupererFormationsServiceTest {
                             ),
                     ),
                 )
+            val informationsSurLesVoeuxEtLeursCommunesFL001 =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux = voeuxFL0001,
+                    communesTriees = listOf(PARIS15EME, SAINT_MALO, MARSEILLE),
+                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
+                )
             given(
-                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
-                    listOf(CAEN),
-                    voeuxDesFormations,
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
+                    idsFormations = listOf("fl0001", "fl0003"),
+                    profilEleve = profilEleve,
+                    obsoletesInclus = true,
                 ),
-            ).willReturn(
-                mapOf("fl0001" to voeuxParCommunesFavoritesFL0001),
-            )
+            ).willReturn(mapOf("fl0001" to informationsSurLesVoeuxEtLeursCommunesFL001))
+
             given(
                 calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                     formationAvecLeurAffinite = formationsAvecAffinites,
@@ -449,8 +451,7 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = statistiqueDesAdmisFL0001,
                     tauxAffinite = 17,
                     metiersTriesParAffinites = listOf(metier534),
-                    voeux = voeuxFL0001,
-                    voeuxParCommunesFavorites = voeuxParCommunesFavoritesFL0001,
+                    informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunesFL001,
                     explications = explicationsFL0001,
                     apprentissage = true,
                 )
@@ -468,12 +469,22 @@ class RecupererFormationsServiceTest {
                     statistiquesDesAdmis = null,
                     tauxAffinite = 0,
                     metiersTriesParAffinites = emptyList(),
-                    voeux = emptyList(),
-                    voeuxParCommunesFavorites = emptyList(),
+                    informationsSurLesVoeuxEtLeursCommunes =
+                        InformationsSurLesVoeuxEtLeursCommunes(
+                            voeux = emptyList(),
+                            communesTriees = emptyList(),
+                            voeuxParCommunesFavorites = emptyList(),
+                        ),
                     explications = null,
                     apprentissage = false,
                 )
             assertThat(resultat).usingRecursiveComparison().isEqualTo(listOf(ficheFormationFl0001, ficheFormationFl0003))
+            then(logger).should().error(
+                type = "FORMATION_SANS_VOEUX",
+                message = "La formation fl0003 n'est pas présente dans la map des formations",
+                exception = null,
+                parametres = mapOf("idFormation" to "fl0003"),
+            )
         }
     }
 
@@ -566,7 +577,12 @@ class RecupererFormationsServiceTest {
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001, "fl0003" to voeuxPossiblesPourLaFormationFL0003)
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"), true)).willReturn(
+            given(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                    idsFormations = listOf("fl0001", "fl0003"),
+                    true,
+                ),
+            ).willReturn(
                 voeuxDesFormations,
             )
 
@@ -681,7 +697,12 @@ class RecupererFormationsServiceTest {
                     Voeu(id = "ta6", nom = "Nom du ta6", commune = MARSEILLE),
                 )
             val voeuxDesFormations = mapOf("fl0001" to voeuxPossiblesPourLaFormationFL0001)
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idsFormations = listOf("fl0001", "fl0003"), true)).willReturn(
+            given(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                    idsFormations = listOf("fl0001", "fl0003"),
+                    true,
+                ),
+            ).willReturn(
                 voeuxDesFormations,
             )
 

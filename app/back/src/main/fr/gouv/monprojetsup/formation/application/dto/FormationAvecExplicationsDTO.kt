@@ -2,6 +2,7 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
+import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
@@ -48,6 +49,7 @@ data class FormationAvecExplicationsDTO(
         val criteresAnalyseCandidature: List<CriteresAnalyseCandidatureDTO>,
         val repartitionAdmisAnneePrecedente: RepartitionAdmisAnneePrecedenteDTO?,
         val liens: List<LienDTO>,
+        val communes: List<CommuneCourteDTO>,
         val voeux: List<VoeuAvecCommuneDTO>,
         val communesFavoritesAvecLeursVoeux: List<CommuneAvecSesVoeuxDTO>,
         val metiers: List<MetierDTO>,
@@ -76,10 +78,18 @@ data class FormationAvecExplicationsDTO(
             communesFavoritesAvecLeursVoeux =
                 when (ficheFormation) {
                     is FicheFormation.FicheFormationPourProfil ->
-                        ficheFormation.voeuxParCommunesFavorites.map {
+                        ficheFormation.informationsSurLesVoeuxEtLeursCommunes.voeuxParCommunesFavorites.map {
                             CommuneAvecSesVoeuxDTO(it)
                         }
 
+                    is FicheFormation.FicheFormationSansProfil -> emptyList()
+                },
+            communes =
+                when (ficheFormation) {
+                    is FicheFormation.FicheFormationPourProfil ->
+                        ficheFormation.informationsSurLesVoeuxEtLeursCommunes.communesTriees.map {
+                            CommuneCourteDTO(it)
+                        }
                     is FicheFormation.FicheFormationSansProfil -> emptyList()
                 },
             metiers =
@@ -299,11 +309,7 @@ data class FormationAvecExplicationsDTO(
         constructor(voeu: Voeu) : this(
             id = voeu.id,
             nom = voeu.nom,
-            commune =
-                CommuneCourteDTO(
-                    nom = voeu.commune.nom,
-                    codeInsee = voeu.commune.codeInsee,
-                ),
+            commune = CommuneCourteDTO(voeu.commune),
         )
     }
 
@@ -314,5 +320,10 @@ data class FormationAvecExplicationsDTO(
     data class CommuneCourteDTO(
         val nom: String,
         val codeInsee: String,
-    )
+    ) {
+        constructor(commune: Commune) : this(
+            nom = commune.nom,
+            codeInsee = commune.codeInsee,
+        )
+    }
 }

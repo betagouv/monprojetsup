@@ -147,12 +147,12 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
     inner class RecupererLesVoeuxDUneFormation {
         @Test
         @Sql("classpath:formation_voeu.sql")
-        fun `Doit retourner les voeux d'une formation`() {
+        fun `Doit retourner les voeux d'une formation en incluant les obsolètes`() {
             // Given
             val idFormation = "fl0003"
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation)
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
@@ -166,12 +166,29 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
 
         @Test
         @Sql("classpath:formation_voeu.sql")
+        fun `Doit retourner les voeux d'une formation en retirant les obsolètes`() {
+            // Given
+            val idFormation = "fl0003"
+
+            // When
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = false)
+
+            // Then
+            assertThat(result).usingRecursiveAssertion().isEqualTo(
+                listOf(
+                    Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
+                ),
+            )
+        }
+
+        @Test
+        @Sql("classpath:formation_voeu.sql")
         fun `Si la formation n'a pas de voeux, alors doit retourner vide`() {
             // Given
             val idFormation = "fl0002"
 
             // When
-            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation)
+            val result = voeuBDDRepository.recupererLesVoeuxDUneFormation(idFormation, obsoletesInclus = true)
 
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(emptyList<Voeu>())

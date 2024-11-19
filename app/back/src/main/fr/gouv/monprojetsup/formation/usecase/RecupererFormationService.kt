@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service
 class RecupererFormationService(
     val suggestionHttpClient: SuggestionHttpClient,
     val formationRepository: FormationRepository,
-    val recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService,
+    val recupererInformationsSurLesVoeuxEtLeursCommunesService: RecupererInformationsSurLesVoeuxEtLeursCommunesService,
     val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
-    val recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService,
     val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
@@ -41,15 +40,11 @@ class RecupererFormationService(
                     formation.id,
                 )
             val voeuxDeLaFormation =
-                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idFormation = formation.id,
                     profilEleve = profilEleve,
                     obsoletesInclus = true,
                 )
-            val voeuxParCommunesFavorites =
-                profilEleve.communesFavorites?.let {
-                    recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, voeuxDeLaFormation)
-                } ?: emptyList()
             FicheFormation.FicheFormationPourProfil(
                 id = formation.id,
                 nom = formation.nom,
@@ -69,15 +64,18 @@ class RecupererFormationService(
                         metiers = exemplesDeMetiers,
                         idsMetierTriesParAffinite = affinitesFormationEtMetier.metiersTriesParAffinites,
                     ),
-                voeux = voeuxDeLaFormation,
-                voeuxParCommunesFavorites = voeuxParCommunesFavorites,
+                informationsSurLesVoeuxEtLeursCommunes = voeuxDeLaFormation,
                 criteresAnalyseCandidature = criteresAnalyseCandidature,
                 explications = explications,
                 statistiquesDesAdmis = statistiquesDesAdmis,
                 apprentissage = formation.apprentissage,
             )
         } else {
-            val voeux = recupererVoeuxDUneFormationService.recupererVoeux(formation.id, obsoletesInclus = true)
+            val voeux =
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                    formation.id,
+                    obsoletesInclus = true,
+                )
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,
                 nom = formation.nom,

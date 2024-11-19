@@ -10,7 +10,10 @@ interface VoeuRepository {
         obsoletesInclus: Boolean,
     ): Map<String, List<Voeu>>
 
-    fun recupererLesVoeuxDUneFormation(idFormation: String): List<Voeu>
+    fun recupererLesVoeuxDUneFormation(
+        idFormation: String,
+        obsoletesInclus: Boolean,
+    ): List<Voeu>
 
     fun recupererIdsVoeuxInexistants(idsVoeux: List<String>): List<String>
 }
