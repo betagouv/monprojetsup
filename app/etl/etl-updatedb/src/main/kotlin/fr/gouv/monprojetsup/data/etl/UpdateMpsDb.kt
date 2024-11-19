@@ -65,7 +65,7 @@ open class Runner(
 			logger.info("Mise à jour des liens formations metiers")
 			updateFormationsMetiersDbs.update()//after formations ert metiers
 
-			val voeuxOntChange = updateFormationDbs.checkVoeuxOuFormationsOntChange()
+			val voeuxOntChange = updateFormationDbs.checkForcedUpdate()
 			logger.info("Mise à jour des suggestions")
 			updateSuggestionsDbs.updateSuggestionDbs(voeuxOntChange)
 		} finally {

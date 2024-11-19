@@ -25,6 +25,17 @@ public record Specialites(
     public static final String SPEC_AMC_MPS_KEY = idPsupMatToIdMps(20001076);
     public static final String SPEC_AMC_MPS_LABEL = "Anglais Monde Contemporain (AMC)";
 
+    public static final int SPEC_2I2D_CODE_PSUP = 1096;
+    //SIN, AC, ITEC, EE
+    public static final String SPEC_2I2D_SIN_MPS_KEY = "sp340";
+    public static final String SPEC_2I2D_SIN_MPS_LABEL = "2I2D - SIN - Systèmes d'information et numérique - en terminale";
+    public static final String SPEC_2I2D_AC_MPS_KEY = "sp337";
+    public static final String SPEC_2I2D_AC_MPS_LABEL = "2I2D - AC - Architecture et construction - en terminale";
+    public static final String SPEC_2I2D_ITEC_MPS_KEY = "sp339";
+    public static final String SPEC_2I2D_ITEC_MPS_LABEL = "2I2D - ITEC - Innovation, Technologique et Eco-Conception - en terminale";
+    public static final String SPEC_2I2D_EE_MPS_KEY = "sp338";
+    public static final String SPEC_2I2D_EE_MPS_LABEL = "2I2D - EE - Energie et environnement- en terminale";
+
     public Specialites() {
         this("", new HashMap<>(), new HashMap<>(), new HashMap<>(),new HashMap<>());
     }
@@ -71,6 +82,11 @@ public record Specialites(
                     if (specPsupIdStr.equals(idPsupMatToIdMps(SPEC_ANGLAIS_CODE_PSUP))) {
                         set.add(SPEC_LLCER_MPS_KEY);
                         set.add(SPEC_AMC_MPS_KEY);
+                    } else if (specPsupIdStr.equals(idPsupMatToIdMps(SPEC_2I2D_CODE_PSUP))) {
+                        set.add(SPEC_2I2D_AC_MPS_KEY);
+                        set.add(SPEC_2I2D_SIN_MPS_KEY);
+                        set.add(SPEC_2I2D_ITEC_MPS_KEY);
+                        set.add(SPEC_2I2D_EE_MPS_KEY);
                     } else {
                         set.add(specPsupIdStr);
                     }
@@ -87,20 +103,27 @@ public record Specialites(
     public List<Specialite> toSpecialites() {
         val result = new ArrayList<Specialite>();
 
-        eds().forEach((key, value) -> {
-            if(key != SPEC_ANGLAIS_CODE_PSUP) {
-                val keyMps = idPsupMatToIdMps(key);
-                result.add(new Specialite(keyMps, key, value, true, getBacs(keyMps)));
-            } else {
-                result.add(new Specialite(SPEC_LLCER_MPS_KEY, key, SPEC_LLCER_MPS_LABEL, true, getBacs(SPEC_LLCER_MPS_KEY)));
-                result.add(new Specialite(SPEC_AMC_MPS_KEY, key, SPEC_AMC_MPS_LABEL, true, getBacs(SPEC_AMC_MPS_KEY)));
-            }
-        });
-
+        //speBacs en premier, car écrasées par certaines eds
         spesBacs().forEach((key, label) -> {
             String mpsKey = idSpeBacPsupToIdMps(key);
             result.add(new Specialite(mpsKey, key, label, true, getBacs(mpsKey)));
         });
+
+        eds().forEach((key, value) -> {
+            if(key == SPEC_ANGLAIS_CODE_PSUP) {
+                result.add(new Specialite(SPEC_LLCER_MPS_KEY, key, SPEC_LLCER_MPS_LABEL, true, getBacs(SPEC_LLCER_MPS_KEY)));
+                result.add(new Specialite(SPEC_AMC_MPS_KEY, key, SPEC_AMC_MPS_LABEL, true, getBacs(SPEC_AMC_MPS_KEY)));
+            } else if(key == SPEC_2I2D_CODE_PSUP) {
+                result.add(new Specialite(SPEC_2I2D_AC_MPS_KEY, key, SPEC_2I2D_AC_MPS_LABEL, true, getBacs(SPEC_2I2D_AC_MPS_KEY)));
+                result.add(new Specialite(SPEC_2I2D_SIN_MPS_KEY, key, SPEC_2I2D_SIN_MPS_LABEL, true, getBacs(SPEC_2I2D_SIN_MPS_KEY)));
+                result.add(new Specialite(SPEC_2I2D_ITEC_MPS_KEY, key, SPEC_2I2D_ITEC_MPS_LABEL, true, getBacs(SPEC_2I2D_ITEC_MPS_KEY)));
+                result.add(new Specialite(SPEC_2I2D_EE_MPS_KEY, key, SPEC_2I2D_EE_MPS_LABEL, true, getBacs(SPEC_2I2D_EE_MPS_KEY)));
+            } else {
+                val keyMps = idPsupMatToIdMps(key);
+                result.add(new Specialite(keyMps, key, value, true, getBacs(keyMps)));
+            }
+        });
+
 
         return result;
     }

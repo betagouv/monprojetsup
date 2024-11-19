@@ -10,6 +10,12 @@ import jakarta.persistence.Table
 @Table(name = "ref_join_formation_voeu")
 class FormationVoeuEntity {
 
+    constructor() {
+        this.idFormation = ""
+        this.idVoeu = ""
+        this.id = FormationVoeuEntityId("", "")
+    }
+
     constructor(idFormation: String, idVoeu: String) {
         this.idFormation = idFormation
         this.idVoeu = idVoeu
