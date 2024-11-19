@@ -1,6 +1,7 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 
@@ -60,9 +61,8 @@ sealed class FicheFormation(
         override val liens: List<Lien>,
         override val criteresAnalyseCandidature: List<CritereAnalyseCandidature>,
         override val statistiquesDesAdmis: StatistiquesDesAdmis?,
-        override val voeux: List<Voeu>,
         override val apprentissage: Boolean,
-        val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
+        val informationsSurLesVoeuxEtLeursCommunes: InformationsSurLesVoeuxEtLeursCommunes,
         val tauxAffinite: Int,
         val metiersTriesParAffinites: List<Metier>,
         val explications: ExplicationsSuggestionDetaillees?,
@@ -76,7 +76,7 @@ sealed class FicheFormation(
             formationsAssociees = formationsAssociees,
             liens = liens,
             metiers = metiersTriesParAffinites,
-            voeux = voeux,
+            voeux = informationsSurLesVoeuxEtLeursCommunes.voeux,
             criteresAnalyseCandidature = criteresAnalyseCandidature,
             statistiquesDesAdmis = statistiquesDesAdmis,
             apprentissage = apprentissage,
@@ -91,6 +91,12 @@ sealed class FicheFormation(
         data class ExplicationTypeBaccalaureat(
             val baccalaureat: Baccalaureat,
             val pourcentage: Int,
+        )
+
+        data class InformationsSurLesVoeuxEtLeursCommunes(
+            val voeux: List<Voeu>,
+            val communesTriees: List<Commune>,
+            val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         )
     }
 }

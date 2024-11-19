@@ -15,7 +15,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.Form
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
@@ -47,10 +46,8 @@ class RecupererFormationServiceTest {
     lateinit var formationRepository: FormationRepository
 
     @Mock
-    lateinit var recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService
-
-    @Mock
-    lateinit var recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService
+    lateinit var recupererInformationsSurLesVoeuxEtLeursCommunesService:
+        RecupererInformationsSurLesVoeuxEtLeursCommunesService
 
     @Mock
     lateinit var critereAnalyseCandidatureService: CritereAnalyseCandidatureService
@@ -119,7 +116,9 @@ class RecupererFormationServiceTest {
                     Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001", true)).willReturn(
+            given(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(idFormation = "fl0001", true),
+            ).willReturn(
                 voeuxPossiblesPourLaFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
@@ -183,7 +182,12 @@ class RecupererFormationServiceTest {
                     Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
                 )
-            given(recupererVoeuxDUneFormationService.recupererVoeux(idFormation = "fl0001", obsoletesInclus = true)).willReturn(
+            given(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
+                    idFormation = "fl0001",
+                    obsoletesInclus = true,
+                ),
+            ).willReturn(
                 voeuxFormationFL0001,
             )
             val statistiquesDesAdmis = mock(StatistiquesDesAdmis::class.java)
@@ -213,7 +217,7 @@ class RecupererFormationServiceTest {
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.CAEN),
+                communesFavorites = listOf(CAEN),
                 specialites = listOf("1001", "1049"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,
@@ -257,22 +261,46 @@ class RecupererFormationServiceTest {
                 criteresAnalyseCandidature,
             )
             given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
-            val voeuxFormationFL0001 =
+            val voeuxTries =
                 listOf(
+                    Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
                     Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
                     Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
                     Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
                     Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
                     Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
                 )
+            val communesTriees = listOf(CAEN, LYON, PARIS5EME, PARIS15EME, SAINT_MALO)
+            val voeuxParCommunesFavorites =
+                listOf(
+                    CommuneAvecVoeuxAuxAlentours(
+                        commune = CAEN,
+                        distances =
+                            listOf(
+                                VoeuAvecDistance(
+                                    voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                    km = 0,
+                                ),
+                                VoeuAvecDistance(
+                                    voeu = Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                    km = 120,
+                                ),
+                            ),
+                    ),
+                )
+            val informationsSurLesVoeuxEtLeursCommunes =
+                FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux = voeuxTries,
+                    communesTriees = communesTriees,
+                    voeuxParCommunesFavorites = voeuxParCommunesFavorites,
+                )
             given(
-                recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
+                recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                     idFormation = "fl0001",
                     profilEleve = profil,
                     obsoletesInclus = true,
                 ),
-            ).willReturn(voeuxFormationFL0001)
+            ).willReturn(informationsSurLesVoeuxEtLeursCommunes)
             given(
                 calculDuTauxDAffiniteBuilder.calculDuTauxDAffinite(
                     formationAvecLeurAffinite =
@@ -349,29 +377,6 @@ class RecupererFormationServiceTest {
                     ),
                 ),
             )
-            val voeuxParCommunesFavorites =
-                listOf(
-                    CommuneAvecVoeuxAuxAlentours(
-                        commune = CAEN,
-                        distances =
-                            listOf(
-                                VoeuAvecDistance(
-                                    voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
-                                    km = 0,
-                                ),
-                                VoeuAvecDistance(
-                                    voeu = Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
-                                    km = 120,
-                                ),
-                            ),
-                    ),
-                )
-            given(
-                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(
-                    communes = listOf(Communes.CAEN),
-                    voeuxDeLaFormation = voeuxFormationFL0001,
-                ),
-            ).willReturn(voeuxParCommunesFavorites)
 
             // When
             val resultat = recupererFormationService.recupererFormation(profilEleve = profil, idFormation = "fl0001")
@@ -415,8 +420,7 @@ class RecupererFormationServiceTest {
                                 liens = emptyList(),
                             ),
                         ),
-                    voeux = voeuxFormationFL0001,
-                    voeuxParCommunesFavorites = voeuxParCommunesFavorites,
+                    informationsSurLesVoeuxEtLeursCommunes = informationsSurLesVoeuxEtLeursCommunes,
                     tauxAffinite = 70,
                     explications = explicationsEtExemplesMetiers.first,
                     criteresAnalyseCandidature =

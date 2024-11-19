@@ -2,8 +2,11 @@ package fr.gouv.monprojetsup.formation.usecase
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
+import fr.gouv.monprojetsup.formation.domain.entity.Formation
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
+import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import org.springframework.stereotype.Service
 
@@ -11,13 +14,13 @@ import org.springframework.stereotype.Service
 class RecupererFormationsService(
     private val formationRepository: FormationRepository,
     private val metierRepository: MetierRepository,
-    private val recupererVoeuxDUneFormationService: RecupererVoeuxDUneFormationService,
-    private val recupererVoeuxDesCommunesFavoritesService: RecupererVoeuxDesCommunesFavoritesService,
+    private val recupererInformationsSurLesVoeuxEtLeursCommunesService: RecupererInformationsSurLesVoeuxEtLeursCommunesService,
     private val critereAnalyseCandidatureService: CritereAnalyseCandidatureService,
     private val recupererExplicationsEtExemplesMetiersPourFormationService: RecupererExplicationsEtExemplesMetiersPourFormationService,
     private val statistiquesDesAdmisPourFormationsService: StatistiquesDesAdmisPourFormationsService,
     private val metiersTriesParProfilBuilder: MetiersTriesParProfilBuilder,
     private val calculDuTauxDAffiniteBuilder: CalculDuTauxDAffiniteBuilder,
+    private val logger: MonProjetSupLogger,
 ) {
     fun recupererFichesFormationPourProfil(
         profilEleve: ProfilEleve.AvecProfilExistant,
@@ -40,15 +43,12 @@ class RecupererFormationsService(
                 idsDesFormationsRetournees,
             )
         val voeux =
-            recupererVoeuxDUneFormationService.recupererVoeuxTriesParAffinites(
+            recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererInformationsSurLesVoeuxEtLeursCommunes(
                 idsDesFormationsRetournees,
                 profilEleve,
                 obsoletesInclus,
             )
-        val voeuxAutoursDesCommunesFavorites =
-            profilEleve.communesFavorites?.let {
-                recupererVoeuxDesCommunesFavoritesService.recupererVoeuxAutoursDeCommmunes(it, voeux)
-            } ?: emptyMap()
+
         return formations.map { formation ->
             val (explicationsDeLaFormation, exemplesDeMetiersDeLaFormation) = explications[formation.id] ?: Pair(null, emptyList())
             FicheFormation.FicheFormationPourProfil(
@@ -70,12 +70,33 @@ class RecupererFormationsService(
                         metiers = exemplesDeMetiersDeLaFormation,
                         idsMetierTriesParAffinite = suggestionsPourUnProfil.metiersTriesParAffinites,
                     ),
-                voeux = voeux[formation.id] ?: emptyList(),
-                voeuxParCommunesFavorites = voeuxAutoursDesCommunesFavorites[formation.id] ?: emptyList(),
+                informationsSurLesVoeuxEtLeursCommunes = recupererInformationsSurLesVoeuxEtLeursCommunes(voeux, formation),
                 criteresAnalyseCandidature = criteresAnalyseCandidature[formation.id] ?: emptyList(),
                 explications = explicationsDeLaFormation,
                 statistiquesDesAdmis = statistiquesDesAdmis[formation.id],
                 apprentissage = formation.apprentissage,
+            )
+        }
+    }
+
+    private fun recupererInformationsSurLesVoeuxEtLeursCommunes(
+        voeux: Map<String, InformationsSurLesVoeuxEtLeursCommunes>,
+        formation: Formation,
+    ): InformationsSurLesVoeuxEtLeursCommunes {
+        val voeuxDeLaFormation = voeux[formation.id]
+        return if (voeuxDeLaFormation != null) {
+            return voeuxDeLaFormation
+        } else {
+            logger.error(
+                type = "FORMATION_SANS_VOEUX",
+                message = "La formation ${formation.id} n'est pas présente dans la map des formations",
+                exception = null,
+                parametres = mapOf("idFormation" to formation.id),
+            )
+            InformationsSurLesVoeuxEtLeursCommunes(
+                voeux = emptyList(),
+                communesTriees = emptyList(),
+                voeuxParCommunesFavorites = emptyList(),
             )
         }
     }
@@ -94,7 +115,8 @@ class RecupererFormationsService(
                 idsFormations = idsDesFormationsRetournees,
                 classe = null,
             )
-        val voeux = recupererVoeuxDUneFormationService.recupererVoeux(idsDesFormationsRetournees, obsoletesInclus)
+        val voeux =
+            recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(idsDesFormationsRetournees, obsoletesInclus)
         return formations.map { formation ->
             FicheFormation.FicheFormationSansProfil(
                 id = formation.id,

@@ -20,6 +20,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetail
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationAutoEvaluationMoyenne
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.ExplicationTypeBaccalaureat
+import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.formation.domain.entity.FormationCourte
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis
 import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.MoyenneGeneraleDesAdmis
@@ -31,6 +32,7 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.Form
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.entity.Communes.LYON
 import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.Communes.MONTREUIL
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
 import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
 import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
@@ -175,31 +177,35 @@ class FormationControllerTest(
                                 "cycle-pluridisciplinaire-d-etudes-superieures",
                     ),
                 ),
-            voeux =
-                listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
-                ),
-            voeuxParCommunesFavorites =
-                listOf(
-                    CommuneAvecVoeuxAuxAlentours(
-                        commune = PARIS15EME,
-                        distances =
-                            listOf(
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                                    km = 3,
-                                ),
-                                VoeuAvecDistance(
-                                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                                    km = 1,
-                                ),
+            informationsSurLesVoeuxEtLeursCommunes =
+                InformationsSurLesVoeuxEtLeursCommunes(
+                    voeux =
+                        listOf(
+                            Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
+                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                            Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
+                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                            Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
+                            Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                        ),
+                    communesTriees = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
+                    voeuxParCommunesFavorites =
+                        listOf(
+                            CommuneAvecVoeuxAuxAlentours(
+                                commune = PARIS15EME,
+                                distances =
+                                    listOf(
+                                        VoeuAvecDistance(
+                                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                                            km = 3,
+                                        ),
+                                        VoeuAvecDistance(
+                                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                                            km = 1,
+                                        ),
+                                    ),
                             ),
-                    ),
+                        ),
                 ),
             metiersTriesParAffinites =
                 listOf(
@@ -467,7 +473,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communesTriees = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -570,6 +581,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -712,6 +749,7 @@ class FormationControllerTest(
                                     {
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
+                                      "description": null,
                                       "emoji": "\uD83D\uDC2E"
                                     }
                                   ],
@@ -776,41 +814,9 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
@@ -1243,7 +1249,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communesTriees = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -1346,6 +1357,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -1488,6 +1525,7 @@ class FormationControllerTest(
                                     {
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
+                                      "description": null,
                                       "emoji": "\uD83D\uDC2E"
                                     }
                                   ],
@@ -1552,41 +1590,9 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
@@ -4190,7 +4196,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communesTriees = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -4311,6 +4322,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -4453,6 +4490,7 @@ class FormationControllerTest(
                                     {
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
+                                      "description": null,
                                       "emoji": "\uD83D\uDC2E"
                                     }
                                   ],
@@ -4517,41 +4555,9 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false
@@ -4601,7 +4607,12 @@ class FormationControllerTest(
                         statistiquesDesAdmis = null,
                         tauxAffinite = 17,
                         metiersTriesParAffinites = emptyList(),
-                        voeux = emptyList(),
+                        informationsSurLesVoeuxEtLeursCommunes =
+                            InformationsSurLesVoeuxEtLeursCommunes(
+                                voeux = emptyList(),
+                                communesTriees = emptyList(),
+                                voeuxParCommunesFavorites = emptyList(),
+                            ),
                         apprentissage = false,
                         explications = null,
                     ),
@@ -4722,6 +4733,32 @@ class FormationControllerTest(
                                   {
                                     "nom": "Voir sur l'ONISEP",
                                     "url": "https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cycle-pluridisciplinaire-d-etudes-superieures"
+                                  }
+                                ],
+                                "communes": [
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75115"
+                                  },
+                                  {
+                                    "nom": "Paris",
+                                    "codeInsee": "75105"
+                                  },
+                                  {
+                                    "nom": "Montreuil",
+                                    "codeInsee": "93048"
+                                  },
+                                  {
+                                    "nom": "Lyon",
+                                    "codeInsee": "69123"
+                                  },
+                                  {
+                                    "nom": "Strasbourg",
+                                    "codeInsee": "67482"
+                                  },
+                                  {
+                                    "nom": "Marseille",
+                                    "codeInsee": "13055"
                                   }
                                 ],
                                 "voeux": [
@@ -4864,6 +4901,7 @@ class FormationControllerTest(
                                     {
                                       "id": "T_ITM_1356",
                                       "nom": "soin aux animaux",
+                                      "description": null,
                                       "emoji": "\uD83D\uDC2E"
                                     }
                                   ],
@@ -4928,41 +4966,9 @@ class FormationControllerTest(
                                 "criteresAnalyseCandidature": [],
                                 "repartitionAdmisAnneePrecedente": null,
                                 "liens": [],
+                                "communes": [],
                                 "voeux": [],
-                                "communesFavoritesAvecLeursVoeux": [
-                                  {
-                                    "commune": {
-                                      "codeInsee": "75115",
-                                      "nom": "Paris",
-                                      "latitude": 48.851227,
-                                      "longitude": 2.2885659
-                                    },
-                                    "voeuxAvecDistance": [
-                                      {
-                                        "voeu": {
-                                          "id": "ta3",
-                                          "nom": "Nom du ta3",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75105"
-                                          }
-                                        },
-                                        "distanceKm": 3
-                                      },
-                                      {
-                                        "voeu": {
-                                          "id": "ta32",
-                                          "nom": "Nom du ta32",
-                                          "commune": {
-                                            "nom": "Paris",
-                                            "codeInsee": "75115"
-                                          }
-                                        },
-                                        "distanceKm": 1
-                                      }
-                                    ]
-                                  }
-                                ],
+                                "communesFavoritesAvecLeursVoeux": [],
                                 "metiers": [],
                                 "tauxAffinite": 17,
                                 "apprentissage": false

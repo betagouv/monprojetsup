@@ -36,8 +36,18 @@ class VoeuBDDRepository(
     }
 
     @Transactional(readOnly = true)
-    override fun recupererLesVoeuxDUneFormation(idFormation: String): List<Voeu> {
-        return findAllByIdFormationIn(listOf(idFormation)).map { it.toVoeu() }
+    override fun recupererLesVoeuxDUneFormation(
+        idFormation: String,
+        obsoletesInclus: Boolean,
+    ): List<Voeu> {
+        val formations = listOf(idFormation)
+        return (
+            if (obsoletesInclus) {
+                findAllByIdFormationIn(formations)
+            } else {
+                findAllByIdFormationInNotObsolete(formations)
+            }
+        ).map { it.toVoeu() }
     }
 
     @Transactional(readOnly = true)
