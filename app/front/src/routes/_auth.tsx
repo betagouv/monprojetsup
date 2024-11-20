@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_auth")({
   loader: async ({ context: { queryClient, auth } }) => {
     const user = await auth.getUser();
 
-    if (user) {
+    if (user?.expires_in && user.expires_in >= 5) {
       await chargerDonnées(queryClient);
     } else {
       auth.events.addUserLoaded(async () => await chargerDonnées(queryClient));

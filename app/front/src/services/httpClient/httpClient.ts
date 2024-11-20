@@ -1,61 +1,74 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { type HttpClientOptions, type IHttpClient } from "./httpClient.interface";
 import {
   CodeRéponseInattenduErreurHttp,
   ErreurInconnueErreurHttp,
   ErreurInterneServeurErreurHttp,
+  ErreurRéseauErreurHttp,
   NonAutoriséErreurHttp,
   NonIdentifiéErreurHttp,
+  RequêteAnnuléeErreurHttp,
   RequêteInvalideErreurHttp,
   RessourceNonTrouvéeErreurHttp,
   ServeurTemporairementIndisponibleErreurHttp,
 } from "@/services/erreurs/erreursHttp";
+import axios, { AxiosError } from "axios";
 
 export class HttpClient implements IHttpClient {
   public récupérer = async <O extends object>(options: HttpClientOptions): Promise<O | Error> => {
     const { endpoint, méthode, body, contentType, headers } = options;
 
     try {
-      const response = await fetch(endpoint, {
+      const réponse = await axios({
+        url: endpoint,
         method: méthode,
-        body: JSON.stringify(body),
-        headers: {
-          "content-type": contentType ?? "application/json",
-          ...headers,
-        },
+        data: body,
+        headers: { "Content-Type": contentType ?? "application/json", ...headers },
       });
 
-      if (!response?.ok) {
-        if (response.status === 400) {
-          return new RequêteInvalideErreurHttp(options);
-        }
+      if (réponse.status === 204) return {} as O;
 
-        if (response.status === 401) {
-          return new NonIdentifiéErreurHttp(options);
-        }
+      return réponse.data as O;
+    } catch (error) {
+      if (error instanceof Object && error.constructor.name === "AxiosError") {
+        const erreur = error as AxiosError;
 
-        if (response.status === 403) {
-          return new NonAutoriséErreurHttp(options);
-        }
+        if (erreur.response) {
+          const statusErreur = erreur.response?.status ?? 0;
 
-        if (response.status === 404) {
-          return new RessourceNonTrouvéeErreurHttp(options);
-        }
+          if (statusErreur === 400) {
+            return new RequêteInvalideErreurHttp(options);
+          }
 
-        if (response.status === 503) {
-          return new ServeurTemporairementIndisponibleErreurHttp(options);
-        }
+          if (statusErreur === 401) {
+            return new NonIdentifiéErreurHttp(options);
+          }
 
-        if (response.status === 500) {
-          return new ErreurInterneServeurErreurHttp(options);
-        }
+          if (statusErreur === 403) {
+            return new NonAutoriséErreurHttp(options);
+          }
 
-        return new CodeRéponseInattenduErreurHttp(options, response.status);
+          if (statusErreur === 404) {
+            return new RessourceNonTrouvéeErreurHttp(options);
+          }
+
+          if (statusErreur === 503) {
+            return new ServeurTemporairementIndisponibleErreurHttp(options);
+          }
+
+          if (statusErreur === 500) {
+            return new ErreurInterneServeurErreurHttp({ ...options, erreur: error });
+          }
+
+          return new CodeRéponseInattenduErreurHttp({ ...options, erreur: error }, statusErreur);
+        } else if (erreur.code === "ECONNABORTED") {
+          return new RequêteAnnuléeErreurHttp({ ...options, erreur: error });
+        } else if (erreur.cause?.message === "Network Error") {
+          return new ErreurRéseauErreurHttp({ ...options, erreur: error });
+        }
       }
 
-      if (response.status === 204) return {} as O;
-      return (await response.json()) as O;
-    } catch (error) {
-      return new ErreurInconnueErreurHttp({ ...options, error });
+      return new ErreurInconnueErreurHttp({ ...options, erreur: error });
     }
   };
 }

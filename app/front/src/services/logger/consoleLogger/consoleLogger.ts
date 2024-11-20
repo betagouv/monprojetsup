@@ -7,7 +7,9 @@ export class ConsoleLogger implements Logger {
     erreur: Error,
     contexte?: unknown,
   ) {
-    console.log(niveau, contexte);
+    console.group("Erreur de type", niveau);
+    console.log("contexte", contexte);
     console.error(erreur);
+    console.groupEnd();
   }
 }

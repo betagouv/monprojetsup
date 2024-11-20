@@ -5,7 +5,6 @@ import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import { Fragment } from "react/jsx-runtime";
 
 const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsVoeuxOngletProps) => {
   const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useÉtablissementsVoeux({ formation });
@@ -56,14 +55,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
                     nativeButtonProps={{ onClick: () => mettreÀJourUnVoeu(établissement.id) }}
                     pressed={voeuxSélectionnés?.includes(établissement.id)}
                   >
-                    <span>
-                      {établissement.nom.split(" - ").map((it, index) => (
-                        <Fragment key={`${établissement.id}-${it}`}>
-                          {index === 0 ? <strong>{it}</strong> : it}
-                          {it !== établissement.nom.split(" - ").at(-1) && " - "}
-                        </Fragment>
-                      ))}
-                    </span>
+                    <span>{établissement.nom}</span>
                   </Tag>
                 </li>
               ))}

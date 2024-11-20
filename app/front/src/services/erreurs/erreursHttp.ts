@@ -87,6 +87,30 @@ export class CodeRéponseInattenduErreurHttp extends Error {
   }
 }
 
+export class RequêteAnnuléeErreurHttp extends Error {
+  estConsignéeManuellement = false;
+
+  constructor(protected contexte: unknown) {
+    super();
+    Object.setPrototypeOf(this, RequêteAnnuléeErreurHttp.prototype);
+    this.name = `HTTP - requête interrompue`;
+    dépendances.logger.consigner("debug", this, contexte);
+    this.estConsignéeManuellement = true;
+  }
+}
+
+export class ErreurRéseauErreurHttp extends Error {
+  estConsignéeManuellement = false;
+
+  constructor(protected contexte: unknown) {
+    super();
+    Object.setPrototypeOf(this, ErreurRéseauErreurHttp.prototype);
+    this.name = `HTTP - erreur réseau`;
+    dépendances.logger.consigner("debug", this, contexte);
+    this.estConsignéeManuellement = true;
+  }
+}
+
 export class ErreurInconnueErreurHttp extends Error {
   estConsignéeManuellement = false;
 
