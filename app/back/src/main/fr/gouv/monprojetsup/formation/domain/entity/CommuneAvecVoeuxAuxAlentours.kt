@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
 
 data class CommuneAvecVoeuxAuxAlentours(
-    val commune: Commune,
+    val communeFavorite: CommuneFavorite,
     val distances: List<VoeuAvecDistance>,
 ) {
     data class VoeuAvecDistance(
@@ -13,7 +13,7 @@ data class CommuneAvecVoeuxAuxAlentours(
 }
 
 data class CommuneAvecIdsVoeuxAuxAlentours(
-    val commune: Commune,
+    val communeFavorite: CommuneFavorite,
     val distances: List<VoeuAvecDistance>,
 ) {
     data class VoeuAvecDistance(

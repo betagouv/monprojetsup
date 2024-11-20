@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.formation.infrastructure.client
 
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.infrastructure.dto.APISuggestionProfilDTO
 import fr.gouv.monprojetsup.formation.infrastructure.dto.SuggestionDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -38,7 +38,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 14f,
@@ -102,7 +102,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = listOf("chiffres_jongler", "aider_autres"),
                 moyenneGenerale = 10.5f,
@@ -165,7 +165,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "STHR",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                 alternance = ChoixAlternance.INDIFFERENT,
-                communesFavorites = listOf(Communes.LYON, Communes.CAEN),
+                communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.CAEN),
                 specialites = listOf("1053", "1055"),
                 centresInterets = emptyList(),
                 moyenneGenerale = 19.5f,
@@ -251,7 +251,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "PA",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.AUCUNE_IDEE,
                 alternance = ChoixAlternance.TRES_INTERESSE,
-                communesFavorites = listOf(Communes.LYON, Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.LYON, CommunesFavorites.PARIS15EME),
                 specialites = listOf("1045"),
                 centresInterets = emptyList(),
                 moyenneGenerale = -1.0f,
@@ -282,7 +282,7 @@ class APISuggestionProfilDTOTest {
                 baccalaureat = "NC",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                 specialites = listOf("mat1001", "mat1049"),
                 centresInterets = null,
                 moyenneGenerale = 4.9f,

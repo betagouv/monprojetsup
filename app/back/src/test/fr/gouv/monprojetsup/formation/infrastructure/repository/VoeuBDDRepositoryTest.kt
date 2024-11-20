@@ -2,11 +2,11 @@ package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
-import fr.gouv.monprojetsup.formation.entity.Communes.MONTREUIL
-import fr.gouv.monprojetsup.formation.entity.Communes.NANCY
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS19EME
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
-import fr.gouv.monprojetsup.formation.entity.Communes.RENNES
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MONTREUIL
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.NANCY
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS19EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.RENNES
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -45,11 +45,23 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
                 mapOf(
                     "fl0001" to
                         listOf(
-                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
                         ),
                     "fl0003" to
                         listOf(
-                            Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
+                            Voeu(
+                                id = "ta0002",
+                                nom = "ENSAPLV",
+                                commune = PARIS19EME,
+                                longitude = 2.393,
+                                latitude = 48.889,
+                            ),
                         ),
                 ),
             )
@@ -72,17 +84,47 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
                 mapOf(
                     "fl0001" to
                         listOf(
-                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
                         ),
                     "fl0004" to
                         listOf(
-                            Voeu(id = "ta0005", nom = "Université Paris 1 Panthéon-Sorbonne", commune = PARIS5EME),
+                            Voeu(
+                                id = "ta0005",
+                                nom = "Université Paris 1 Panthéon-Sorbonne",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
                         ),
                     "fl0003" to
                         listOf(
-                            Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
-                            Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
-                            Voeu(id = "ta0004", nom = "ENSAB", commune = RENNES),
+                            Voeu(
+                                id = "ta0002",
+                                nom = "ENSAPLV",
+                                commune = PARIS19EME,
+                                longitude = 2.393,
+                                latitude = 48.889,
+                            ),
+                            Voeu(
+                                id = "ta0003",
+                                nom = "ENSA Nancy",
+                                commune = NANCY,
+                                latitude = 48.692,
+                                longitude = 6.184,
+                            ),
+                            Voeu(
+                                id = "ta0004",
+                                nom = "ENSAB",
+                                commune = RENNES,
+                                latitude = 48.117,
+                                longitude = 1.677,
+                            ),
                         ),
                 ),
             )
@@ -102,15 +144,33 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
                 mapOf(
                     "fl0001" to
                         listOf(
-                            Voeu(id = "ta0001", nom = "Lycée professionnel horticole de Montreuil", commune = MONTREUIL),
+                            Voeu(
+                                id = "ta0001",
+                                nom = "Lycée professionnel horticole de Montreuil",
+                                commune = MONTREUIL,
+                                latitude = 48.861,
+                                longitude = 2.443,
+                            ),
                         ),
                     "fl0004" to
                         listOf(
-                            Voeu(id = "ta0005", nom = "Université Paris 1 Panthéon-Sorbonne", commune = PARIS5EME),
+                            Voeu(
+                                id = "ta0005",
+                                nom = "Université Paris 1 Panthéon-Sorbonne",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
                         ),
                     "fl0003" to
                         listOf(
-                            Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
+                            Voeu(
+                                id = "ta0003",
+                                nom = "ENSA Nancy",
+                                commune = NANCY,
+                                latitude = 48.692,
+                                longitude = 6.184,
+                            ),
                         ),
                 ),
             )
@@ -157,9 +217,27 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
                 listOf(
-                    Voeu(id = "ta0002", nom = "ENSAPLV", commune = PARIS19EME),
-                    Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
-                    Voeu(id = "ta0004", nom = "ENSAB", commune = RENNES),
+                    Voeu(
+                        id = "ta0002",
+                        nom = "ENSAPLV",
+                        commune = PARIS19EME,
+                        longitude = 2.393,
+                        latitude = 48.889,
+                    ),
+                    Voeu(
+                        id = "ta0003",
+                        nom = "ENSA Nancy",
+                        commune = NANCY,
+                        latitude = 48.692,
+                        longitude = 6.184,
+                    ),
+                    Voeu(
+                        id = "ta0004",
+                        nom = "ENSAB",
+                        commune = RENNES,
+                        latitude = 48.117,
+                        longitude = 1.677,
+                    ),
                 ),
             )
         }
@@ -176,7 +254,13 @@ class VoeuBDDRepositoryTest : BDDRepositoryTest() {
             // Then
             assertThat(result).usingRecursiveAssertion().isEqualTo(
                 listOf(
-                    Voeu(id = "ta0003", nom = "ENSA Nancy", commune = NANCY),
+                    Voeu(
+                        id = "ta0003",
+                        nom = "ENSA Nancy",
+                        commune = NANCY,
+                        latitude = 48.692,
+                        longitude = 6.184,
+                    ),
                 ),
             )
         }

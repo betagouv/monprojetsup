@@ -1,7 +1,6 @@
 package fr.gouv.monprojetsup.formation.domain.entity
 
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 
@@ -95,7 +94,7 @@ sealed class FicheFormation(
 
         data class InformationsSurLesVoeuxEtLeursCommunes(
             val voeux: List<Voeu>,
-            val communesTriees: List<Commune>,
+            val communesTriees: List<CommuneCourte>,
             val voeuxParCommunesFavorites: List<CommuneAvecVoeuxAuxAlentours>,
         )
     }

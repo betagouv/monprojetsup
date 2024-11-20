@@ -5,10 +5,11 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupBadRequestException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -74,7 +75,7 @@ class MiseAJourEleveServiceTest {
             metiersFavoris = listOf("MET001"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
                     VoeuFormation(
@@ -654,12 +655,16 @@ class MiseAJourEleveServiceTest {
                             Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
-                                commune = Communes.CAEN,
+                                commune = CommunesCourtes.CAEN,
+                                latitude = 49.183334,
+                                longitude = -0.350000,
                             ),
                             Voeu(
                                 id = "ta129",
                                 nom = "Nom ta129",
-                                commune = Communes.GRENOBLE,
+                                commune = CommunesCourtes.GRENOBLE,
+                                longitude = 5.71667,
+                                latitude = 45.16667,
                             ),
                         ),
                     "fl3" to emptyList(),
@@ -708,12 +713,16 @@ class MiseAJourEleveServiceTest {
                             Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
-                                commune = Communes.CAEN,
+                                commune = CommunesCourtes.CAEN,
+                                latitude = 49.183334,
+                                longitude = -0.350000,
                             ),
                             Voeu(
                                 id = "ta2",
                                 nom = "Nom ta2",
-                                commune = Communes.PARIS15EME,
+                                commune = CommunesCourtes.PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
                             ),
                         ),
                     "fl3" to
@@ -721,12 +730,16 @@ class MiseAJourEleveServiceTest {
                             Voeu(
                                 id = "ta1",
                                 nom = "Nom ta1",
-                                commune = Communes.CAEN,
+                                commune = CommunesCourtes.CAEN,
+                                latitude = 49.183334,
+                                longitude = -0.350000,
                             ),
                             Voeu(
                                 id = "ta129",
                                 nom = "Nom ta129",
-                                commune = Communes.GRENOBLE,
+                                commune = CommunesCourtes.GRENOBLE,
+                                longitude = 5.71667,
+                                latitude = 45.16667,
                             ),
                         ),
                 )
@@ -853,7 +866,7 @@ class MiseAJourEleveServiceTest {
                     metiersFavoris = listOf("MET004"),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                     alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(Communes.PARIS15EME),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                     formationsFavorites =
                         listOf(
                             VoeuFormation(
@@ -885,17 +898,23 @@ class MiseAJourEleveServiceTest {
                             Voeu(
                                 id = "ta12",
                                 nom = "Nom ta12",
-                                commune = Communes.MARSEILLE,
+                                commune = CommunesCourtes.MARSEILLE,
+                                latitude = 43.300000,
+                                longitude = 5.400000,
                             ),
                             Voeu(
                                 id = "ta13",
                                 nom = "Nom ta13",
-                                commune = Communes.PARIS15EME,
+                                commune = CommunesCourtes.PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
                             ),
                             Voeu(
                                 id = "ta20",
                                 nom = "Nom ta20",
-                                commune = Communes.CAEN,
+                                commune = CommunesCourtes.CAEN,
+                                latitude = 49.183334,
+                                longitude = -0.350000,
                             ),
                         ),
                 ),
@@ -919,7 +938,7 @@ class MiseAJourEleveServiceTest {
                     metiersFavoris = listOf("MET004"),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                     alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(Communes.PARIS15EME),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                     formationsFavorites =
                         listOf(
                             VoeuFormation(
@@ -964,7 +983,7 @@ class MiseAJourEleveServiceTest {
                     metiersFavoris = listOf("MET001"),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                     alternance = ChoixAlternance.INDIFFERENT,
-                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     formationsFavorites =
                         listOf(
                             VoeuFormation(

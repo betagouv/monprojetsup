@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
@@ -143,7 +143,7 @@ data class ModificationProfilDTO(
             dureeEtudesPrevue = dureeEtudesPrevue,
             alternance = alternance,
             formationsFavorites = formationsFavorites?.map { it.toVoeuFormation() },
-            communesFavorites = communesFavorites?.map { it.toCommune() },
+            communesFavorites = communesFavorites?.map { it.toCommuneFavoris() },
             specialites = specialites,
             moyenneGenerale = moyenneGenerale,
             centresInterets = centresInterets,
@@ -166,15 +166,15 @@ data class ModificationProfilDTO(
         @JsonProperty("longitude")
         val longitude: Double,
     ) {
-        constructor(commune: Commune) : this(
-            codeInsee = commune.codeInsee,
-            nom = commune.nom,
-            latitude = commune.latitude,
-            longitude = commune.longitude,
+        constructor(communeFavorite: CommuneFavorite) : this(
+            codeInsee = communeFavorite.codeInsee,
+            nom = communeFavorite.nom,
+            latitude = communeFavorite.latitude,
+            longitude = communeFavorite.longitude,
         )
 
-        fun toCommune() =
-            Commune(
+        fun toCommuneFavoris() =
+            CommuneFavorite(
                 codeInsee = codeInsee,
                 nom = nom,
                 latitude = latitude,

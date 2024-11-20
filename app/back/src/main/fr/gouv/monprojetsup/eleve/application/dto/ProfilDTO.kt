@@ -2,7 +2,7 @@ package fr.gouv.monprojetsup.eleve.application.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -133,11 +133,11 @@ data class ProfilDTO(
         @JsonProperty("longitude")
         val longitude: Double,
     ) {
-        constructor(commune: Commune) : this(
-            codeInsee = commune.codeInsee,
-            nom = commune.nom,
-            latitude = commune.latitude,
-            longitude = commune.longitude,
+        constructor(communeFavorite: CommuneFavorite) : this(
+            codeInsee = communeFavorite.codeInsee,
+            nom = communeFavorite.nom,
+            latitude = communeFavorite.latitude,
+            longitude = communeFavorite.longitude,
         )
     }
 

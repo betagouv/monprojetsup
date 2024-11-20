@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
@@ -15,13 +16,13 @@ import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.Form
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.SuggestionHttpClient
-import fr.gouv.monprojetsup.formation.entity.Communes.CAEN
-import fr.gouv.monprojetsup.formation.entity.Communes.LYON
-import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
-import fr.gouv.monprojetsup.formation.entity.Communes.SAINT_MALO
-import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.CAEN
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.LYON
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.SAINT_MALO
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.STRASBOURG
 import fr.gouv.monprojetsup.metier.domain.entity.Metier
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -109,12 +110,48 @@ class RecupererFormationServiceTest {
             given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxPossiblesPourLaFormationFL0001 =
                 listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(
+                        id = "ta10",
+                        nom = "Nom du ta10",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta3",
+                        nom = "Nom du ta3",
+                        commune = PARIS5EME,
+                        longitude = 2.344,
+                        latitude = 48.846,
+                    ),
+                    Voeu(
+                        id = "ta11",
+                        nom = "Nom du ta11",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta32",
+                        nom = "Nom du ta32",
+                        commune = PARIS15EME,
+                        longitude = 2.2885659,
+                        latitude = 48.851227,
+                    ),
+                    Voeu(
+                        id = "ta17",
+                        nom = "Nom du ta17",
+                        commune = STRASBOURG,
+                        longitude = 1.666667,
+                        latitude = 50.266666,
+                    ),
+                    Voeu(
+                        id = "ta7",
+                        nom = "Nom du ta7",
+                        commune = MARSEILLE,
+                        latitude = 43.300000,
+                        longitude = 5.400000,
+                    ),
                 )
             given(
                 recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(idFormation = "fl0001", true),
@@ -175,12 +212,48 @@ class RecupererFormationServiceTest {
             given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxFormationFL0001 =
                 listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(
+                        id = "ta10",
+                        nom = "Nom du ta10",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta3",
+                        nom = "Nom du ta3",
+                        commune = PARIS5EME,
+                        longitude = 2.344,
+                        latitude = 48.846,
+                    ),
+                    Voeu(
+                        id = "ta11",
+                        nom = "Nom du ta11",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta32",
+                        nom = "Nom du ta32",
+                        commune = PARIS15EME,
+                        longitude = 2.2885659,
+                        latitude = 48.851227,
+                    ),
+                    Voeu(
+                        id = "ta17",
+                        nom = "Nom du ta17",
+                        commune = STRASBOURG,
+                        longitude = 1.666667,
+                        latitude = 50.266666,
+                    ),
+                    Voeu(
+                        id = "ta7",
+                        nom = "Nom du ta7",
+                        commune = MARSEILLE,
+                        latitude = 43.300000,
+                        longitude = 5.400000,
+                    ),
                 )
             given(
                 recupererInformationsSurLesVoeuxEtLeursCommunesService.recupererVoeux(
@@ -217,7 +290,7 @@ class RecupererFormationServiceTest {
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(CAEN),
+                communesFavorites = listOf(CommunesFavorites.CAEN),
                 specialites = listOf("1001", "1049"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,
@@ -263,26 +336,76 @@ class RecupererFormationServiceTest {
             given(formationRepository.recupererUneFormation("fl0001")).willReturn(formation)
             val voeuxTries =
                 listOf(
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                    Voeu(
+                        id = "ta17",
+                        nom = "Nom du ta17",
+                        commune = CAEN,
+                        latitude = 49.183334,
+                        longitude = -0.350000,
+                    ),
+                    Voeu(
+                        id = "ta10",
+                        nom = "Nom du ta10",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta3",
+                        nom = "Nom du ta3",
+                        commune = PARIS5EME,
+                        longitude = 2.344,
+                        latitude = 48.846,
+                    ),
+                    Voeu(
+                        id = "ta11",
+                        nom = "Nom du ta11",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta32",
+                        nom = "Nom du ta32",
+                        commune = PARIS15EME,
+                        longitude = 2.2885659,
+                        latitude = 48.851227,
+                    ),
+                    Voeu(
+                        id = "ta7",
+                        nom = "Nom du ta7",
+                        commune = SAINT_MALO,
+                        latitude = 48.6571,
+                        longitude = -1.96914,
+                    ),
                 )
             val communesTriees = listOf(CAEN, LYON, PARIS5EME, PARIS15EME, SAINT_MALO)
             val voeuxParCommunesFavorites =
                 listOf(
                     CommuneAvecVoeuxAuxAlentours(
-                        commune = CAEN,
+                        communeFavorite = CommunesFavorites.CAEN,
                         distances =
                             listOf(
                                 VoeuAvecDistance(
-                                    voeu = Voeu(id = "ta17", nom = "Nom du ta17", commune = CAEN),
+                                    voeu =
+                                        Voeu(
+                                            id = "ta17",
+                                            nom = "Nom du ta17",
+                                            commune = CAEN,
+                                            latitude = 49.183334,
+                                            longitude = -0.350000,
+                                        ),
                                     km = 0,
                                 ),
                                 VoeuAvecDistance(
-                                    voeu = Voeu(id = "ta7", nom = "Nom du ta7", commune = SAINT_MALO),
+                                    voeu =
+                                        Voeu(
+                                            id = "ta7",
+                                            nom = "Nom du ta7",
+                                            commune = SAINT_MALO,
+                                            latitude = 48.6571,
+                                            longitude = -1.96914,
+                                        ),
                                     km = 120,
                                 ),
                             ),

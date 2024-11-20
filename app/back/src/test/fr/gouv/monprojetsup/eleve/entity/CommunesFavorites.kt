@@ -1,10 +1,10 @@
-package fr.gouv.monprojetsup.formation.entity
+package fr.gouv.monprojetsup.eleve.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
 
-object Communes {
+object CommunesFavorites {
     val GRENOBLE =
-        Commune(
+        CommuneFavorite(
             codeInsee = "38185",
             nom = "Grenoble",
             longitude = 5.71667,
@@ -12,7 +12,7 @@ object Communes {
         )
 
     val STRASBOURG =
-        Commune(
+        CommuneFavorite(
             codeInsee = "67482",
             nom = "Strasbourg",
             longitude = 1.666667,
@@ -20,7 +20,7 @@ object Communes {
         )
 
     val PARIS15EME =
-        Commune(
+        CommuneFavorite(
             codeInsee = "75115",
             nom = "Paris",
             longitude = 2.2885659,
@@ -28,7 +28,7 @@ object Communes {
         )
 
     val PARIS19EME =
-        Commune(
+        CommuneFavorite(
             codeInsee = "75119",
             nom = "Paris",
             longitude = 2.393,
@@ -36,7 +36,7 @@ object Communes {
         )
 
     val PARIS5EME =
-        Commune(
+        CommuneFavorite(
             codeInsee = "75105",
             nom = "Paris",
             longitude = 2.344,
@@ -44,7 +44,7 @@ object Communes {
         )
 
     val MARSEILLE =
-        Commune(
+        CommuneFavorite(
             codeInsee = "13055",
             nom = "Marseille",
             latitude = 43.300000,
@@ -52,7 +52,7 @@ object Communes {
         )
 
     val LYON =
-        Commune(
+        CommuneFavorite(
             codeInsee = "69123",
             nom = "Lyon",
             latitude = 45.75,
@@ -60,7 +60,7 @@ object Communes {
         )
 
     val CAEN =
-        Commune(
+        CommuneFavorite(
             codeInsee = "14118",
             nom = "Caen",
             latitude = 49.183334,
@@ -68,7 +68,7 @@ object Communes {
         )
 
     val MONTREUIL =
-        Commune(
+        CommuneFavorite(
             codeInsee = "93048",
             nom = "Montreuil",
             latitude = 48.861,
@@ -76,7 +76,7 @@ object Communes {
         )
 
     val NANCY =
-        Commune(
+        CommuneFavorite(
             codeInsee = "54395",
             nom = "Nancy",
             latitude = 48.692,
@@ -84,7 +84,7 @@ object Communes {
         )
 
     val RENNES =
-        Commune(
+        CommuneFavorite(
             codeInsee = "35238",
             nom = "Rennes",
             latitude = 48.117,
@@ -92,7 +92,7 @@ object Communes {
         )
 
     val SAINT_MALO =
-        Commune(
+        CommuneFavorite(
             codeInsee = "35288",
             nom = "Saint-Malo",
             latitude = 48.6571,
@@ -100,7 +100,7 @@ object Communes {
         )
 
     val AJACCIO =
-        Commune(
+        CommuneFavorite(
             codeInsee = "2A004",
             nom = "Ajaccio",
             latitude = 41.9267,
@@ -108,7 +108,7 @@ object Communes {
         )
 
     val BASTIA =
-        Commune(
+        CommuneFavorite(
             codeInsee = "2B033",
             nom = "Bastia",
             latitude = 42.6985,
@@ -116,7 +116,7 @@ object Communes {
         )
 
     val SAINT_PIERRE =
-        Commune(
+        CommuneFavorite(
             codeInsee = "97416",
             nom = "Saint-Pierre",
             latitude = -21.29634,
@@ -124,7 +124,7 @@ object Communes {
         )
 
     val FORT_DE_FRANCE =
-        Commune(
+        CommuneFavorite(
             codeInsee = "97209",
             nom = "Fort-de-France",
             latitude = 14.61852,
