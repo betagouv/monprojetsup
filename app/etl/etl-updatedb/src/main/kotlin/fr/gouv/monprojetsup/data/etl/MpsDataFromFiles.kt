@@ -584,7 +584,7 @@ class MpsDataFromFiles(
     override fun getLiens(): Map<String, List<DescriptifsFormationsMetiers.Link>> {
         val urls = UrlsUpdater.updateUrls(
             onisepData.metiersIdeo,
-            psupData.liensOnisep,
+            getMpsIdToIdeoIds(),
             psupData.lasToGeneric,
             psupData.psupKeyToMpsKey,
             getFormationsMpsIds(),

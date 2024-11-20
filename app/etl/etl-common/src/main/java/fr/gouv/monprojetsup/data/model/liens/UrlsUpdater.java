@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.AVENIRS_FORMATION_SLUG_PREFIX;
 import static fr.gouv.monprojetsup.data.Constants.LABEL_ARTICLE_PAS_LAS;
 
 public class UrlsUpdater {
@@ -52,8 +53,9 @@ public class UrlsUpdater {
             }
 
             label = capitalizeFirstLetter(label).replace(".", " ")
-                    //.replace(" - en apprentissage", "")
             .trim();
+            val labelSansApprentissage = label.replace(" - en apprentissage", "");
+
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label, source);
 
             if(firstWithSameUri.isEmpty()) {
@@ -93,7 +95,7 @@ public class UrlsUpdater {
 
     public static @NotNull Map<String, @NotNull List<DescriptifsFormationsMetiers.Link>> updateUrls(
             @NotNull List<MetierIdeo> metiers,
-            @NotNull Map<String, @NotNull String> liensIdeoHotline,
+            @NotNull Map<String, @NotNull List<String>> mpsKeyToIdeo,
             @NotNull Map<String, @NotNull String> lasToGeneric,
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,
             @NotNull List<String> mpsIds,
@@ -118,16 +120,14 @@ public class UrlsUpdater {
             metier.urls().forEach(url -> addUrl(metier.ideo(), url.valeur(), url.commentaire(), METIERS_IDEO_DU_SUP, urls));
         });
 
-        val aIgnorer = liensAIgnorer.entrySet().stream()
-                .filter(e -> e.getValue().stream().anyMatch(s -> !s.isBlank()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-
-        for (val entry : liensIdeoHotline.entrySet()) {
-            if(!aIgnorer.contains(entry.getKey())) {
-                addUrl(entry.getKey(), entry.getValue(), labels.getOrDefault(entry.getKey(), entry.getValue()), IDEO_HOTLINE, urls);
-            }
-        }
+        mpsKeyToIdeo.forEach((mpsKey, ideos) ->
+                ideos.forEach(ideo -> {
+                    if(labels.containsKey(ideo)) {
+                        val label = labels.get(ideo);
+                        addUrl(mpsKey, AVENIRS_FORMATION_SLUG_PREFIX + ideo, label, "mpsKeyToIdeo", urls);
+                    }
+                }
+        ));
 
         extraUrls.forEach((key, extraLinks) -> {
             val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
@@ -153,7 +153,7 @@ public class UrlsUpdater {
                     if(labelsOriginauxPsup.containsKey(mpsKey)) {
                         val label = labelsOriginauxPsup.get(mpsKey);
                         val l = new ArrayList<>(List.of(label));
-                        if(psupKeytoMpsKey.containsKey(mpsKey)) {
+                        if(listpsupKey.size() == 1 && psupKeytoMpsKey.containsKey(mpsKey)) {
                             l.add(mpsKey + "x");
                         }
                         addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(l),
@@ -170,7 +170,7 @@ public class UrlsUpdater {
                                 val label = labels.get(psupKey);
                                 val ll = psupKeytoMpsKey.containsKey(psupKey) ? List.of(label, psupKey + "x") : List.of(label);
                                 addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(ll),
-                                        "L'offre de formation - " + label,
+                                        "Les lieux de formation " + label,
                                         CARTE_PSUP, urls
 
                                 );
