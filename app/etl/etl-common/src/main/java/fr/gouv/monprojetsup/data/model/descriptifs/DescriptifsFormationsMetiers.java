@@ -8,8 +8,15 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 public record DescriptifsFormationsMetiers(
 
@@ -32,10 +39,27 @@ public record DescriptifsFormationsMetiers(
         return new Link(label, uri, source);
     }
 
+    private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+
     public static String toParcoursupCarteUrl(@NotNull Collection<String> psupIds) {
+        String normalized = psupIds.stream().distinct()
+                //.map(fl -> fl + "x")
+                //remove special cgaracters
+                .collect(Collectors.joining(" "))
+                .toLowerCase()
+                .replaceAll("[-/]", " ")
+                .trim();
+
+        //remove accents
+        normalized = Normalizer.normalize(normalized, Normalizer.Form.NFD);
+        normalized = normalized.replaceAll("[^\\p{ASCII}\\s]", "");
+
+        //remove non chars
+        normalized = normalized.replaceAll("[^a-zA-Z0-9]", " ");
+
         return Constants.CARTE_PARCOURSUP_PREFIX_URI
-                + psupIds.stream().distinct()
-                .map(fl -> fl + "x").collect(Collectors.joining("%20"));
+                + URLEncoder.encode(normalized,
+                StandardCharsets.UTF_8);
     }
 
 

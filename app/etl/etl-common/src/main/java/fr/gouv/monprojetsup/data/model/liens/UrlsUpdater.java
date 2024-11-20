@@ -41,7 +41,6 @@ public class UrlsUpdater {
             String finalUri = uri;
             val firstWithSameUri = liste.stream().filter(s -> s.uri().equals(finalUri)).findFirst();
 
-            label = capitalizeFirstLetter(label).replace(".", " ").trim();
             if(firstWithSameUri.isEmpty()) {
                 if (uri.contains("francetravail") && !label.startsWith("France Travail")) {
                     label = PREFIX_FT + label;
@@ -52,7 +51,9 @@ public class UrlsUpdater {
                 }
             }
 
-            label = label.replace(" - en apprentissage", "");
+            label = capitalizeFirstLetter(label).replace(".", " ")
+                    //.replace(" - en apprentissage", "")
+            .trim();
             val url = DescriptifsFormationsMetiers.toAvenirs(uri, label, source);
 
             if(firstWithSameUri.isEmpty()) {
@@ -135,12 +136,50 @@ public class UrlsUpdater {
             }
         });
 
-        psupKeytoMpsKey.forEach(
-                (psupKey, mpsKey) -> {
-                    val l = new ArrayList<>(urls.getOrDefault(psupKey, List.of()));
-                    l.forEach(s -> addUrl(mpsKey, s.uri(), s.label(), s.source(), urls));
+        val mpsIdToPsupIds = new HashMap<>(psupKeytoMpsKey.entrySet().stream().collect(
+                Collectors.groupingBy(Map.Entry::getValue,
+                        Collectors.mapping(Map.Entry::getKey,
+                                Collectors.toList()))
+        ));
+        mpsIds.forEach(mpsId -> {
+            val l = new ArrayList<>(mpsIdToPsupIds.computeIfAbsent(mpsId, z -> new ArrayList<>()));
+            l.add(mpsId);
+            mpsIdToPsupIds.put(mpsId, l);
+        });
+
+        mpsIdToPsupIds.forEach(
+                (mpsKey, listpsupKey) -> {
+                    if(labels.containsKey(mpsKey)) {
+                        val label = labels.get(mpsKey);
+                        val l = new ArrayList<>(List.of(label));
+                        if(psupKeytoMpsKey.containsKey(mpsKey)) {
+                            l.add(mpsKey + "x");
+                        }
+                        addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(l),
+                                "L'offre de formation - " + label,
+                                CARTE_PSUP, urls
+                        );
+                    }
+                    if(listpsupKey.size() <= 5) {
+                        listpsupKey.forEach(psupKey -> {
+                            if(!psupKey.equals(mpsKey)) {
+                            val l = new ArrayList<>(urls.getOrDefault(psupKey, List.of()));
+                            l.forEach(s -> addUrl(mpsKey, s.uri(), s.label(), s.source(), urls));
+                            if (labels.containsKey(psupKey)) {
+                                val label = labels.get(psupKey);
+                                val ll = psupKeytoMpsKey.containsKey(psupKey) ? List.of(label, psupKey + "x") : List.of(label);
+                                addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(ll),
+                                        "L'offre de formation - " + label,
+                                        CARTE_PSUP, urls
+
+                                );
+                            }
+                            }
+                        });
+                    }
                 }
                 );
+
 
         /* traitement spécifique études de santé */
         addUrl(
@@ -167,16 +206,6 @@ public class UrlsUpdater {
                             s.source() + LAS_TO_GENERIC, urls
                     )
             );
-        });
-
-        val mpsIdToPsupIds = psupKeytoMpsKey.entrySet().stream().collect(
-                Collectors.groupingBy(Map.Entry::getValue,
-                        Collectors.mapping(Map.Entry::getKey,
-                                Collectors.toList()))
-        );
-        mpsIds.forEach(mpsId -> {
-            val psupIds = mpsIdToPsupIds.getOrDefault(mpsId, List.of(mpsId));
-            addUrl(mpsId, DescriptifsFormationsMetiers.toParcoursupCarteUrl(psupIds), "L'offre de formation", CARTE_PSUP, urls);
         });
 
         return urls;
