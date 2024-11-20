@@ -12,6 +12,7 @@ public class Constants {
     public static final String LABEL_ARTICLE_PAS_LAS = "Les études de santé";
     public static final String PAS_LAS_TEXT = "<p>Pour accéder aux études de santé (maïeutique, médecine, odontologie et pharmacie), les lycéens doivent suivre le PASS (parcours d'accès spécifique santé) ou une L.AS (licence avec option accès santé) à l'université et réussir aux sélections organisées à l'issue.</p>";
     public static final String NEW_ONISEP_METIERS_SLUG_PREFIX = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/";
+    public static final String AVENIRS_FORMATION_SLUG_PREFIX = "https://explorer-avenirs.onisep.fr/http/redirection/formation/slug/";
     public static final String EXPLORER_AVENIRS_URL = "https://explorer-avenirs.onisep.fr";
     public static final String ONISEP_URL1 = "http://www.onisep.fr";
     public static final String ONISEP_URL2 = "https://www.onisep.fr";

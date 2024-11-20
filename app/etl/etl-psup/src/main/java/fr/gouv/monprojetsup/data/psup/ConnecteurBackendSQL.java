@@ -139,7 +139,6 @@ public class ConnecteurBackendSQL {
 
         recupererNomsfilieres(data, filActives);
         recupererNomsFilieresManquantsEtMostCles(data, filActives);
-        recupererLiensOnisep(data, filActives);
         recupererFilieresSimilaires(data);
         recupererDureesEtudes(data);
         recupererFormations(data);
@@ -559,33 +558,6 @@ public class ConnecteurBackendSQL {
         sources.forEach(sources2::add);
 
         return sources2;
-    }
-
-    /**
-     * Recupère les liens onisep pour chaque filière
-     *
-     * @param data les données
-     * @param filActives les filières intéressantes
-     */
-    private void recupererLiensOnisep(PsupData data, Set<Integer> filActives) throws SQLException {
-        try (Statement stmt = conn.createStatement()) {
-            /* récupère la liste des candidats ayant des voeux confirmés à l'année n-1 */
-            ConnecteurBackendSQL.LOGGER.info("Récupération des liens Onisep ");
-            stmt.setFetchSize(1_000_000);
-            String sql = "select g_fl_cod, g_fl_lie_inf from mps_liens_onisep";
-            ConnecteurBackendSQL.LOGGER.info(sql);
-            try (ResultSet result = stmt.executeQuery(sql)) {
-                while (result.next()) {
-                    int gFlCod = result.getInt(1);
-                    if(filActives.contains(gFlCod)) {
-                        String lien = result.getString(2);
-                        data.ajouterLienFiliereOnisep(gFlCod, lien);
-                    }
-                }
-            }
-
-        }
-
     }
 
 
