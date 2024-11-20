@@ -2,8 +2,8 @@ package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.commun.lien.application.dto.LienDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneCourte
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationGeographique
 import fr.gouv.monprojetsup.formation.domain.entity.ExplicationsSuggestionDetaillees
@@ -286,7 +286,7 @@ data class FormationAvecExplicationsDTO(
         constructor(
             communeAvecVoeuxAuxAlentours: CommuneAvecVoeuxAuxAlentours,
         ) : this(
-            commune = ModificationProfilDTO.CommuneDTO(communeAvecVoeuxAuxAlentours.commune),
+            commune = ModificationProfilDTO.CommuneDTO(communeAvecVoeuxAuxAlentours.communeFavorite),
             voeuxAvecDistance = communeAvecVoeuxAuxAlentours.distances.map { VoeuAvecDistanceDTO(it) },
         )
 
@@ -321,7 +321,7 @@ data class FormationAvecExplicationsDTO(
         val nom: String,
         val codeInsee: String,
     ) {
-        constructor(commune: Commune) : this(
+        constructor(commune: CommuneCourte) : this(
             nom = commune.nom,
             codeInsee = commune.codeInsee,
         )

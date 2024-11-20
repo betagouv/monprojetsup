@@ -4,7 +4,7 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -50,7 +50,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             metiersFavoris = listOf("MET001"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
                     VoeuFormation(
@@ -83,7 +83,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
             metiersFavoris = listOf("MET002"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
             alternance = ChoixAlternance.TRES_INTERESSE,
-            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
                     VoeuFormation(
@@ -214,7 +214,7 @@ class EleveBDDRepositoryTest : BDDRepositoryTest() {
                     metiersFavoris = listOf("MET001"),
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
                     alternance = ChoixAlternance.INDIFFERENT,
-                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     formationsFavorites =
                         listOf(
                             VoeuFormation(

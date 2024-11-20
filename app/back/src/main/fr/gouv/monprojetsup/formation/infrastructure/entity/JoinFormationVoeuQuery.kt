@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneCourte
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 
 data class JoinFormationVoeuQuery(
@@ -29,11 +29,11 @@ data class JoinFormationVoeuQuery(
             id = idVoeu,
             nom = nomVoeu,
             commune =
-                Commune(
+                CommuneCourte(
                     nom = nomCommune,
                     codeInsee = codeCommune,
-                    latitude = latitude,
-                    longitude = longitude,
                 ),
+            latitude = latitude,
+            longitude = longitude,
         )
 }

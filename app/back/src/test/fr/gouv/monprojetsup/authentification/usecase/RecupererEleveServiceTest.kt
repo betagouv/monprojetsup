@@ -3,9 +3,9 @@ package fr.gouv.monprojetsup.authentification.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.EleveRepository
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.port.FormationRepository
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
-import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.metier.domain.port.MetierRepository
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
@@ -76,7 +76,7 @@ class RecupererEleveServiceTest {
             metiersFavoris = listOf("MET.116", "MET.188"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites =
                 listOf(
                     VoeuFormation(

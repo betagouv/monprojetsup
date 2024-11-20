@@ -10,10 +10,10 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.eleve.domain.entity.ModificationProfilEleve
 import fr.gouv.monprojetsup.eleve.domain.entity.ParametresPourRecupererToken
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourEleveService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourFavorisParcoursupService
 import fr.gouv.monprojetsup.eleve.usecase.MiseAJourIdParcoursupService
-import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -55,7 +55,7 @@ class ProfilEleveControllerTest(
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.LONGUE,
                 alternance = ChoixAlternance.INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1054"),
                 centresInterets = listOf("T_IDEO2_4812"),
                 moyenneGenerale = 14f,
@@ -206,7 +206,7 @@ class ProfilEleveControllerTest(
                     baccalaureat = "NC",
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                     alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
                     moyenneGenerale = 4.9f,
@@ -526,7 +526,7 @@ class ProfilEleveControllerTest(
                     baccalaureat = "NC",
                     dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                     alternance = ChoixAlternance.PAS_INTERESSE,
-                    communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+                    communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
                     specialites = listOf("mat1001", "mat1049"),
                     centresInterets = null,
                     moyenneGenerale = 4.9f,

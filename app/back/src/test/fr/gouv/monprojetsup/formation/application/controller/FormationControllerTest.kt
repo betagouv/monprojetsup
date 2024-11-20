@@ -11,6 +11,7 @@ import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupNotFoundException
 import fr.gouv.monprojetsup.commun.hateoas.domain.entity.Hateoas
 import fr.gouv.monprojetsup.commun.hateoas.usecase.HateoasBuilder
 import fr.gouv.monprojetsup.commun.lien.domain.entity.Lien
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours.VoeuAvecDistance
 import fr.gouv.monprojetsup.formation.domain.entity.CritereAnalyseCandidature
@@ -30,12 +31,12 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil
 import fr.gouv.monprojetsup.formation.domain.entity.SuggestionsPourUnProfil.FormationAvecSonAffinite
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
-import fr.gouv.monprojetsup.formation.entity.Communes.LYON
-import fr.gouv.monprojetsup.formation.entity.Communes.MARSEILLE
-import fr.gouv.monprojetsup.formation.entity.Communes.MONTREUIL
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS15EME
-import fr.gouv.monprojetsup.formation.entity.Communes.PARIS5EME
-import fr.gouv.monprojetsup.formation.entity.Communes.STRASBOURG
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.LYON
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MARSEILLE
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.MONTREUIL
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS15EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.PARIS5EME
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes.STRASBOURG
 import fr.gouv.monprojetsup.formation.usecase.OrdonnerRechercheFormationsBuilder
 import fr.gouv.monprojetsup.formation.usecase.RechercherFormationsService
 import fr.gouv.monprojetsup.formation.usecase.RecupererFormationService
@@ -181,26 +182,74 @@ class FormationControllerTest(
                 InformationsSurLesVoeuxEtLeursCommunes(
                     voeux =
                         listOf(
-                            Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                            Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                            Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                            Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                            Voeu(
+                                id = "ta10",
+                                nom = "Nom du ta10",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta3",
+                                nom = "Nom du ta3",
+                                commune = PARIS5EME,
+                                longitude = 2.344,
+                                latitude = 48.846,
+                            ),
+                            Voeu(
+                                id = "ta11",
+                                nom = "Nom du ta11",
+                                commune = LYON,
+                                latitude = 45.75,
+                                longitude = 4.85,
+                            ),
+                            Voeu(
+                                id = "ta32",
+                                nom = "Nom du ta32",
+                                commune = PARIS15EME,
+                                longitude = 2.2885659,
+                                latitude = 48.851227,
+                            ),
+                            Voeu(
+                                id = "ta17",
+                                nom = "Nom du ta17",
+                                commune = STRASBOURG,
+                                longitude = 1.666667,
+                                latitude = 50.266666,
+                            ),
+                            Voeu(
+                                id = "ta7",
+                                nom = "Nom du ta7",
+                                commune = MARSEILLE,
+                                latitude = 43.300000,
+                                longitude = 5.400000,
+                            ),
                         ),
                     communesTriees = listOf(PARIS15EME, PARIS5EME, MONTREUIL, LYON, STRASBOURG, MARSEILLE),
                     voeuxParCommunesFavorites =
                         listOf(
                             CommuneAvecVoeuxAuxAlentours(
-                                commune = PARIS15EME,
+                                communeFavorite = CommunesFavorites.PARIS15EME,
                                 distances =
                                     listOf(
                                         VoeuAvecDistance(
-                                            Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
+                                            Voeu(
+                                                id = "ta3",
+                                                nom = "Nom du ta3",
+                                                commune = PARIS5EME,
+                                                longitude = 2.344,
+                                                latitude = 48.846,
+                                            ),
                                             km = 3,
                                         ),
                                         VoeuAvecDistance(
-                                            Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
+                                            Voeu(
+                                                id = "ta32",
+                                                nom = "Nom du ta32",
+                                                commune = PARIS15EME,
+                                                longitude = 2.2885659,
+                                                latitude = 48.851227,
+                                            ),
                                             km = 1,
                                         ),
                                     ),
@@ -335,12 +384,48 @@ class FormationControllerTest(
                 ),
             voeux =
                 listOf(
-                    Voeu(id = "ta10", nom = "Nom du ta10", commune = LYON),
-                    Voeu(id = "ta3", nom = "Nom du ta3", commune = PARIS5EME),
-                    Voeu(id = "ta11", nom = "Nom du ta11", commune = LYON),
-                    Voeu(id = "ta32", nom = "Nom du ta32", commune = PARIS15EME),
-                    Voeu(id = "ta17", nom = "Nom du ta17", commune = STRASBOURG),
-                    Voeu(id = "ta7", nom = "Nom du ta7", commune = MARSEILLE),
+                    Voeu(
+                        id = "ta10",
+                        nom = "Nom du ta10",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta3",
+                        nom = "Nom du ta3",
+                        commune = PARIS5EME,
+                        longitude = 2.344,
+                        latitude = 48.846,
+                    ),
+                    Voeu(
+                        id = "ta11",
+                        nom = "Nom du ta11",
+                        commune = LYON,
+                        latitude = 45.75,
+                        longitude = 4.85,
+                    ),
+                    Voeu(
+                        id = "ta32",
+                        nom = "Nom du ta32",
+                        commune = PARIS15EME,
+                        longitude = 2.2885659,
+                        latitude = 48.851227,
+                    ),
+                    Voeu(
+                        id = "ta17",
+                        nom = "Nom du ta17",
+                        commune = STRASBOURG,
+                        longitude = 1.666667,
+                        latitude = 50.266666,
+                    ),
+                    Voeu(
+                        id = "ta7",
+                        nom = "Nom du ta7",
+                        commune = MARSEILLE,
+                        latitude = 43.300000,
+                        longitude = 5.400000,
+                    ),
                 ),
             criteresAnalyseCandidature =
                 listOf(

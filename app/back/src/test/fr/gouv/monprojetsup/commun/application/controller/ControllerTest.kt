@@ -5,7 +5,7 @@ import fr.gouv.monprojetsup.authentification.usecase.RecupererEleveService
 import fr.gouv.monprojetsup.commun.MonProjetSupTestConfiguration
 import fr.gouv.monprojetsup.configuration.SecuriteConfiguration
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parametre.domain.entity.Parametre
 import fr.gouv.monprojetsup.parametre.domain.port.ParametreRepository
@@ -50,7 +50,7 @@ abstract class ControllerTest {
                 baccalaureat = "Générale",
                 dureeEtudesPrevue = ChoixDureeEtudesPrevue.INDIFFERENT,
                 alternance = ChoixAlternance.PAS_INTERESSE,
-                communesFavorites = listOf(Communes.PARIS15EME),
+                communesFavorites = listOf(CommunesFavorites.PARIS15EME),
                 specialites = listOf("1056", "1054"),
                 centresInterets = listOf("T_ROME_2092381917", "T_IDEO2_4812"),
                 moyenneGenerale = 14f,

@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
+import fr.gouv.monprojetsup.eleve.domain.entity.CommuneFavorite
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.port.CommunesAvecVoeuxAuxAlentoursRepository
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
@@ -13,9 +13,9 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepository(
     private val logger: MonProjetSupLogger,
 ) : CommunesAvecVoeuxAuxAlentoursRepository {
     @Transactional(readOnly = true)
-    override fun recupererVoeuxAutoursDeCommmune(communes: List<Commune>): List<CommuneAvecIdsVoeuxAuxAlentours> {
-        val entites = communesAvecVoeuxAuxAlentoursJPARepository.findAllByCodeInseeIn(communes.map { it.codeInsee })
-        return communes.map { commune ->
+    override fun recupererVoeuxAutoursDeCommmune(communeFavorites: List<CommuneFavorite>): List<CommuneAvecIdsVoeuxAuxAlentours> {
+        val entites = communesAvecVoeuxAuxAlentoursJPARepository.findAllByCodeInseeIn(communeFavorites.map { it.codeInsee })
+        return communeFavorites.map { commune ->
             val distances =
                 entites.firstOrNull { communeAvecVoeuxAuxAlentours ->
                     commune.codeInsee == communeAvecVoeuxAuxAlentours.codeInsee
@@ -28,7 +28,7 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepository(
                 )
             }
             CommuneAvecIdsVoeuxAuxAlentours(
-                commune = commune,
+                communeFavorite = commune,
                 distances =
                     distances?.map { distance ->
                         CommuneAvecIdsVoeuxAuxAlentours.VoeuAvecDistance(

@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.formation.usecase
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecVoeuxAuxAlentours
+import fr.gouv.monprojetsup.formation.domain.entity.CommuneCourte
 import fr.gouv.monprojetsup.formation.domain.entity.FicheFormation.FicheFormationPourProfil.InformationsSurLesVoeuxEtLeursCommunes
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.CommunesAvecVoeuxAuxAlentoursRepository
@@ -79,7 +80,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     private fun informationsSurLesVoeuxEtLeursCommunesSansProfil(voeux: List<Voeu>) =
         InformationsSurLesVoeuxEtLeursCommunes(
             voeux = voeux,
-            communesTriees = voeux.map { it.commune }.distinct(),
+            communesTriees = extraireCommunes(voeux),
             voeuxParCommunesFavorites = emptyList(),
         )
 
@@ -91,13 +92,17 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
         val voeuxTries = trierLesVoeux(voeux, idsVoeuxTriesParDistance)
         return InformationsSurLesVoeuxEtLeursCommunes(
             voeux = voeuxTries,
-            communesTriees = voeuxTries.map { it.commune }.distinct(),
+            communesTriees = extraireCommunes(voeuxTries),
             voeuxParCommunesFavorites =
                 creerVoeuxParCommunes(
                     voeuxAuxAlentoursDeCommunes = voeuxAutoursDesCommunesFavorites,
-                    voeuxDeLaFormation = voeux,
+                    voeuxDeLaFormation = voeuxTries,
                 ),
         )
+    }
+
+    private fun extraireCommunes(voeux: List<Voeu>): List<CommuneCourte> {
+        return voeux.map { it.commune }.distinctBy { it.codeInsee }
     }
 
     private fun trierLesVoeux(
@@ -129,7 +134,7 @@ class RecupererInformationsSurLesVoeuxEtLeursCommunesService(
     ): List<CommuneAvecVoeuxAuxAlentours> =
         voeuxAuxAlentoursDeCommunes.map { voeuxAuxAlentoursDUneCommune ->
             CommuneAvecVoeuxAuxAlentours(
-                commune = voeuxAuxAlentoursDUneCommune.commune,
+                communeFavorite = voeuxAuxAlentoursDUneCommune.communeFavorite,
                 distances =
                     voeuxAuxAlentoursDUneCommune.distances.mapNotNull { distance ->
                         voeuxDeLaFormation.firstOrNull { it.id == distance.idVoeu }?.let { voeu ->

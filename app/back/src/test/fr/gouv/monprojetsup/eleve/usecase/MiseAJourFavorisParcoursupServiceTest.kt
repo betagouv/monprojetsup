@@ -4,9 +4,10 @@ import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupInternalErrorException
 import fr.gouv.monprojetsup.eleve.domain.entity.VoeuFormation
 import fr.gouv.monprojetsup.eleve.domain.port.CompteParcoursupRepository
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.formation.domain.port.VoeuRepository
-import fr.gouv.monprojetsup.formation.entity.Communes
+import fr.gouv.monprojetsup.formation.entity.CommunesCourtes
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import fr.gouv.monprojetsup.parcoursup.domain.entity.FavorisParcoursup
 import fr.gouv.monprojetsup.parcoursup.infrastructure.client.ParcoursupFavorisApiFavorisClient
@@ -177,7 +178,9 @@ class MiseAJourFavorisParcoursupServiceTest {
                         Voeu(
                             id = "ta2",
                             nom = "Mon voeu 2",
-                            commune = Communes.PARIS15EME,
+                            commune = CommunesCourtes.PARIS15EME,
+                            longitude = 2.2885659,
+                            latitude = 48.851227,
                         ),
                     ),
             ),
@@ -227,12 +230,16 @@ class MiseAJourFavorisParcoursupServiceTest {
                         Voeu(
                             id = "ta1",
                             nom = "Mon voeu 1",
-                            commune = Communes.MARSEILLE,
+                            commune = CommunesCourtes.MARSEILLE,
+                            latitude = 43.300000,
+                            longitude = 5.400000,
                         ),
                         Voeu(
                             id = "ta18",
                             nom = "Mon voeu 18",
-                            commune = Communes.SAINT_MALO,
+                            commune = CommunesCourtes.SAINT_MALO,
+                            latitude = 48.6571,
+                            longitude = -1.96914,
                         ),
                     ),
                 "fl0010" to
@@ -240,7 +247,9 @@ class MiseAJourFavorisParcoursupServiceTest {
                         Voeu(
                             id = "ta7",
                             nom = "Mon voeu 7",
-                            commune = Communes.PARIS15EME,
+                            commune = CommunesCourtes.PARIS15EME,
+                            longitude = 2.2885659,
+                            latitude = 48.851227,
                         ),
                     ),
                 "fl0753" to
@@ -248,7 +257,9 @@ class MiseAJourFavorisParcoursupServiceTest {
                         Voeu(
                             id = "ta19",
                             nom = "Mon voeu 19",
-                            commune = Communes.PARIS5EME,
+                            commune = CommunesCourtes.PARIS5EME,
+                            longitude = 2.344,
+                            latitude = 48.846,
                         ),
                     ),
             ),
@@ -297,7 +308,7 @@ class MiseAJourFavorisParcoursupServiceTest {
             metiersFavoris = listOf("MET001"),
             dureeEtudesPrevue = ChoixDureeEtudesPrevue.COURTE,
             alternance = ChoixAlternance.INDIFFERENT,
-            communesFavorites = listOf(Communes.PARIS15EME, Communes.MARSEILLE),
+            communesFavorites = listOf(CommunesFavorites.PARIS15EME, CommunesFavorites.MARSEILLE),
             formationsFavorites = formationsFavorites,
             moyenneGenerale = -1.0f,
             corbeilleFormations = listOf("fl1234", "fl5678"),

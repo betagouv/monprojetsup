@@ -1,9 +1,9 @@
 package fr.gouv.monprojetsup.formation.infrastructure.repository
 
 import fr.gouv.monprojetsup.commun.infrastructure.repository.BDDRepositoryTest
+import fr.gouv.monprojetsup.eleve.entity.CommunesFavorites
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours
 import fr.gouv.monprojetsup.formation.domain.entity.CommuneAvecIdsVoeuxAuxAlentours.VoeuAvecDistance
-import fr.gouv.monprojetsup.formation.entity.Communes
 import fr.gouv.monprojetsup.logging.MonProjetSupLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
-class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
+class CommunesFavoritesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
     @Autowired
     private lateinit var communesAvecVoeuxAuxAlentoursJPARepository: CommunesAvecVoeuxAuxAlentoursJPARepository
 
@@ -35,7 +35,8 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
     @Sql("classpath:join_ville_voeu.sql")
     fun `doit retourner à vide pour les communes inconnues et logguer un warning`() {
         // Given
-        val communes = listOf(Communes.SAINT_MALO, Communes.MONTREUIL, Communes.CAEN, Communes.PARIS5EME)
+        val communes =
+            listOf(CommunesFavorites.SAINT_MALO, CommunesFavorites.MONTREUIL, CommunesFavorites.CAEN, CommunesFavorites.PARIS5EME)
 
         // When
         val result = communesAvecVoeuxAuxAlentoursBDDRepository.recupererVoeuxAutoursDeCommmune(communes)
@@ -44,7 +45,7 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
         val attendu =
             listOf(
                 CommuneAvecIdsVoeuxAuxAlentours(
-                    Communes.SAINT_MALO,
+                    CommunesFavorites.SAINT_MALO,
                     distances =
                         listOf(
                             VoeuAvecDistance("ta60", 66),
@@ -52,16 +53,16 @@ class CommunesAvecVoeuxAuxAlentoursBDDRepositoryTest : BDDRepositoryTest() {
                             VoeuAvecDistance("ta480", 66),
                         ),
                 ),
-                CommuneAvecIdsVoeuxAuxAlentours(Communes.MONTREUIL, distances = emptyList()),
+                CommuneAvecIdsVoeuxAuxAlentours(CommunesFavorites.MONTREUIL, distances = emptyList()),
                 CommuneAvecIdsVoeuxAuxAlentours(
-                    Communes.CAEN,
+                    CommunesFavorites.CAEN,
                     distances =
                         listOf(
                             VoeuAvecDistance("ta33", 52),
                             VoeuAvecDistance("ta256", 52),
                         ),
                 ),
-                CommuneAvecIdsVoeuxAuxAlentours(Communes.PARIS5EME, distances = emptyList()),
+                CommuneAvecIdsVoeuxAuxAlentours(CommunesFavorites.PARIS5EME, distances = emptyList()),
             )
         assertThat(result).isEqualTo(attendu)
         then(logger).should().warn(

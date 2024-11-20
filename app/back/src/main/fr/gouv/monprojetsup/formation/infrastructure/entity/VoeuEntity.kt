@@ -1,7 +1,5 @@
 package fr.gouv.monprojetsup.formation.infrastructure.entity
 
-import fr.gouv.monprojetsup.eleve.domain.entity.Commune
-import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -30,17 +28,4 @@ class VoeuEntity {
 
     @Column(name = "obsolete", nullable = false)
     var obsolete: Boolean = false
-
-    fun toVoeu() =
-        Voeu(
-            id = id,
-            nom = nom,
-            commune =
-                Commune(
-                    codeInsee = codeCommune,
-                    nom = commune,
-                    latitude = latitude,
-                    longitude = longitude,
-                ),
-        )
 }
