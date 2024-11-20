@@ -173,7 +173,7 @@ public class Labels {
             newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +3)";
         }
         if(newLibelle.contains("EA-BAC5")) {
-            newLibelle = libelle.replace("EA-BAC3", "Ecole ") + " (Bac +5)";
+            newLibelle = libelle.replace("EA-BAC5", "Ecole ") + " (Bac +5)";
         }
         if(key.equals("fr90")) {
             newLibelle = "Sciences Po / Instituts d'études politiques (IEP)";
