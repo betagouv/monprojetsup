@@ -4,236 +4,195 @@ import {
   CodeRéponseInattenduErreurHttp,
   ErreurInconnueErreurHttp,
   ErreurInterneServeurErreurHttp,
+  ErreurRéseauErreurHttp,
   NonAutoriséErreurHttp,
   NonIdentifiéErreurHttp,
+  RequêteAnnuléeErreurHttp,
   RequêteInvalideErreurHttp,
   RessourceNonTrouvéeErreurHttp,
   ServeurTemporairementIndisponibleErreurHttp,
 } from "@/services/erreurs/erreursHttp";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
 
-vi.mock("@/configuration/dépendances/dépendances", () => ({
+vitest.mock("@/configuration/dépendances/dépendances", () => ({
   dépendances: {
     logger: {
-      consigner: vi.fn(),
+      consigner: vitest.fn(),
     },
   },
 }));
 
+const mockAxios = new AxiosMockAdapter(axios);
+
 describe("HttpClient", () => {
   let httpClient: IHttpClient;
   const ENDPOINT = "http://example.com/api";
+  const options: HttpClientOptions = {
+    endpoint: ENDPOINT,
+    méthode: "GET",
+  };
+  const argumentsAppelGetAxios = {
+    url: options.endpoint,
+    method: options.méthode.toLocaleLowerCase(),
+    data: undefined,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
   beforeEach(() => {
     httpClient = new HttpClient();
   });
 
   describe("récupérer", () => {
+    beforeEach(() => {
+      mockAxios.reset();
+    });
+
     test("doit renvoyer les données si tout s'est bien déroulé", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const responseData = { id: 1, name: "John Doe" };
-      const response = new Response(JSON.stringify(responseData), { status: 200 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      const donnéesRéponse = { id: 1, name: "John Doe" };
+      mockAxios.onGet(ENDPOINT).replyOnce(200, donnéesRéponse);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toEqual(responseData);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toEqual(donnéesRéponse);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur RequêteInvalideErreurHttp et logger l'erreur si la requête a échouée avec un status 400", async () => {
+    test("doit renvoyer une erreur RequêteInvalideErreurHttp si la requête a échouée avec un status 400", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 400 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(400);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(RequêteInvalideErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(RequêteInvalideErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur NonIdentifiéErreurHttp et logger l'erreur si la requête a échouée avec un status 401", async () => {
+    test("doit renvoyer une erreur NonIdentifiéErreurHttp si la requête a échouée avec un status 401", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 401 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(401);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(NonIdentifiéErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(NonIdentifiéErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur NonAutoriséErreurHttp et logger l'erreur si la requête a échouée avec un status 403", async () => {
+    test("doit renvoyer une erreur NonAutoriséErreurHttp si la requête a échouée avec un status 403", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 403 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(403);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(NonAutoriséErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(NonAutoriséErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur RessourceNonTrouvéeErreurHttp et logger l'erreur si la requête a échouée avec un status 404", async () => {
+    test("doit renvoyer une erreur RessourceNonTrouvéeErreurHttp si la requête a échouée avec un status 404", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 404 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(404);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(RessourceNonTrouvéeErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(RessourceNonTrouvéeErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur ServeurTemporairementIndisponibleErreurHttp et logger l'erreur si la requête a échouée avec un status 503", async () => {
+    test("doit renvoyer une erreur ServeurTemporairementIndisponibleErreurHttp si la requête a échouée avec un status 503", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 503 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(503);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(ServeurTemporairementIndisponibleErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(ServeurTemporairementIndisponibleErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur ErreurInterneServeurErreurHttp et logger l'erreur si la requête a échouée avec un status 500", async () => {
+    test("doit renvoyer une erreur ErreurInterneServeurErreurHttp si la requête a échouée avec un status 500", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 500 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(500);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(ErreurInterneServeurErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(ErreurInterneServeurErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur CodeRéponseInattenduErreurHttp et logger l'erreur si la requête a échouée avec n'importe quel autre status !== ok", async () => {
+    test("doit renvoyer une erreur CodeRéponseInattenduErreurHttp si la requête a échouée avec n'importe quel autre status !== ok non géré", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const response = new Response(null, { status: 410 });
-      vitest.spyOn(global, "fetch").mockResolvedValueOnce(response);
+      mockAxios.onGet(ENDPOINT).replyOnce(410);
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(CodeRéponseInattenduErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      expect(réponse).toBeInstanceOf(CodeRéponseInattenduErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
 
-    test("doit renvoyer une erreur générique et logger l'erreur si une erreur survient", async () => {
+    test("doit renvoyer une erreur RequêteAnnuléeErreurHttp si la requête a été interrompue", async () => {
       // GIVEN
-      const options: HttpClientOptions = {
-        endpoint: ENDPOINT,
-        méthode: "GET",
-      };
-      const error = new Error("Network error");
-      vitest.spyOn(global, "fetch").mockRejectedValueOnce(error);
+      mockAxios.onGet(ENDPOINT).abortRequestOnce();
 
       // WHEN
-      const result = await httpClient.récupérer(options);
+      const réponse = await httpClient.récupérer(options);
 
       // THEN
-      expect(result).toBeInstanceOf(ErreurInconnueErreurHttp);
-      expect(global.fetch).toHaveBeenCalledWith(options.endpoint, {
-        method: options.méthode,
-        body: undefined,
-        headers: {
-          "content-type": "application/json",
-        },
+      expect(réponse).toBeInstanceOf(RequêteAnnuléeErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
+    });
+
+    test("doit renvoyer une erreur ErreurRéseauErreurHttp si la requête a rencontré un problème réseau", async () => {
+      // GIVEN
+      mockAxios.onGet(ENDPOINT).networkErrorOnce();
+
+      // WHEN
+      const réponse = await httpClient.récupérer(options);
+
+      // THEN
+      expect(réponse).toBeInstanceOf(ErreurRéseauErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
+    });
+
+    test("doit renvoyer une erreur générique si une erreur survient", async () => {
+      // GIVEN
+      mockAxios.onGet(ENDPOINT).replyOnce(() => {
+        return Promise.reject(new Error("Erreur inconnue"));
       });
+
+      // WHEN
+      const réponse = await httpClient.récupérer(options);
+      // THEN
+      expect(réponse).toBeInstanceOf(ErreurInconnueErreurHttp);
+      expect(mockAxios.history.get.length).toBe(1);
+      expect(mockAxios.history.get[0]).toMatchObject(argumentsAppelGetAxios);
     });
   });
 });
