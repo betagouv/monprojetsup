@@ -12,7 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.gouv.monprojetsup.data.Constants.*;
+import static fr.gouv.monprojetsup.data.Constants.LAS_MPS_ID;
+import static fr.gouv.monprojetsup.data.Constants.PPPE_MPS_ID;
+import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.gTaCodToMpsId;
+import static fr.gouv.monprojetsup.data.Constants.includeKey;
 
 public class Labels {
 
@@ -98,6 +102,24 @@ public class Labels {
         return result;
     }
 
+    @NotNull
+    public static Map<String, String> getLabelsOriginauxPsup(@NotNull PsupData psupData) {
+        val result = new HashMap<String, String>();
+
+        psupData.formations().formations.forEach((key, formation) -> {
+            result.put(gTaCodToMpsId(key), formation.libelle);
+        });
+        psupData.filieres().forEach((key, filiere) -> {
+            result.put(Constants.gFlCodToMpsId(key), filiere.libelle);
+        });
+        psupData.formations().typesMacros.forEach((key, libelle) -> {
+            result.put(gFrCodToMpsId(key), libelle);
+        });
+
+        return result;
+
+    }
+
 
     private static @NotNull Map<String, @NotNull String> getFormationsLabels(OnisepData oniData, boolean includeKeys) {
         return oniData.formationsIdeo().stream()
@@ -122,6 +144,7 @@ public class Labels {
         result.putAll(oniData.getDomainesLabels(false));
         return result;
     }
+
 
     @NotNull
     public static Map<String, String> getDebugLabels(@NotNull PsupData psupData, @NotNull OnisepData oniData) {
