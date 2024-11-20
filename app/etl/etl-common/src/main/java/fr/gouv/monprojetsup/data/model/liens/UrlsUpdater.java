@@ -98,6 +98,7 @@ public class UrlsUpdater {
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,
             @NotNull List<String> mpsIds,
             @NotNull Map<String, @NotNull String> labels,
+            @NotNull Map<String, @NotNull String> labelsOriginauxPsup,
             @NotNull Map<String, @NotNull Collection<String>> liensAIgnorer,
             @NotNull Map<String, @NotNull Collection<String>> extraUrls
     ) {
@@ -149,14 +150,14 @@ public class UrlsUpdater {
 
         mpsIdToPsupIds.forEach(
                 (mpsKey, listpsupKey) -> {
-                    if(labels.containsKey(mpsKey)) {
-                        val label = labels.get(mpsKey);
+                    if(labelsOriginauxPsup.containsKey(mpsKey)) {
+                        val label = labelsOriginauxPsup.get(mpsKey);
                         val l = new ArrayList<>(List.of(label));
                         if(psupKeytoMpsKey.containsKey(mpsKey)) {
                             l.add(mpsKey + "x");
                         }
                         addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(l),
-                                "L'offre de formation - " + label,
+                                "Voir sur la carte Parcoursup - " + label,
                                 CARTE_PSUP, urls
                         );
                     }

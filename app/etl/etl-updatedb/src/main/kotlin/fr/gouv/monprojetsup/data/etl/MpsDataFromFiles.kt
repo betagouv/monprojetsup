@@ -215,6 +215,13 @@ class MpsDataFromFiles(
         )
     }
 
+    private fun getLabelsOriginauxPsup(): MutableMap<String, String> {
+        return Labels.getLabelsOriginauxPsup(
+            psupData
+        )
+    }
+
+
     override fun getDebugLabels(): Map<String, String> {
         return Labels.getDebugLabels(
             psupData,
@@ -582,11 +589,13 @@ class MpsDataFromFiles(
             psupData.psupKeyToMpsKey,
             getFormationsMpsIds(),
             getLabels(),
+            getLabelsOriginauxPsup(),
             getLiensMpsIgnorer(),
             getLiensMpsExtras(),
         )
         return urls
     }
+
 
     private fun getLiensMpsIgnorer(): Map<String, Collection<String>> {
         val lines = CsvTools.readCSV(
