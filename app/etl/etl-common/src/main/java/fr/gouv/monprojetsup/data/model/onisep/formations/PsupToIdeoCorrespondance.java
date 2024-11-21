@@ -61,7 +61,9 @@ public record PsupToIdeoCorrespondance(
             //"IDS_IDEO2": "FOR.6162 ; FOR.6163 ; FOR.6164",
             String IDS_IDEO2,
             //"METIER_IDEO2": "formulateur / formulatrice ; esthéticien-cosméticien / esthéticienne-cosméticienne"
-            String METIER_IDEO2
+            String METIER_IDEO2,
+
+            String LIENONISEP
     ) {
 
         public boolean isIEP() {
@@ -106,7 +108,8 @@ public record PsupToIdeoCorrespondance(
                     Integer.parseInt(line.get("G_FL_COD").trim()),
                     line.get("G_FL_LIB"),
                     line.get("IDS_IDEO2"),
-                    line.get("METIER_IDEO2")
+                    line.get("METIER_IDEO2"),
+                    line.get("LIENONISEP")
             )).toList();
         return new PsupToIdeoCorrespondance(result);
     }

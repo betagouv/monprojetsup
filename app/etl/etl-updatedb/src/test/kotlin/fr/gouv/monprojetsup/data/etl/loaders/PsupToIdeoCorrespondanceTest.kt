@@ -6,7 +6,7 @@ import fr.gouv.monprojetsup.data.TestData.Companion.COMMERCE_INTERNATIONAL_DOMAI
 import fr.gouv.monprojetsup.data.TestData.Companion.CPGE_LETTRES_PSUP_FL_COD
 import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_GESTION_PSUP_FR_COD
 import fr.gouv.monprojetsup.data.TestData.Companion.CUPGE_ECO_SCIENCES_TECHNO_SANTE_PSUP_FR_COD
-import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData
+import fr.gouv.monprojetsup.data.model.formations.FilierePsupVersIdeoData
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo
 import fr.gouv.monprojetsup.data.model.onisep.SousDomaineWeb
@@ -23,7 +23,7 @@ class PsupToIdeoCorrespondanceTest {
 
     private lateinit var metiersIdeoDuSup: Map<String, MetierIdeo>
 
-    private lateinit var filieresPsupToFormationsMetiersIdeo: Map<String, FilieresPsupVersIdeoData>
+    private lateinit var filieresPsupToFormationsMetiersIdeo: Map<String, FilierePsupVersIdeoData>
 
     @Autowired
     lateinit var sources: DataSources
