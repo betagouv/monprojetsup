@@ -25,6 +25,19 @@
   <!--<link rel="preload" href="./node_modules/@codegouvfr/react-dsfr/dsfr/fonts/Spectral-Regular.woff2" as="font" crossorigin="anonymous" />-->
   <!--<link rel="preload" href="./node_modules/@codegouvfr/react-dsfr/dsfr/fonts/Spectral-ExtraBold.woff2" as="font" crossorigin="anonymous" />-->
   <meta name="theme-color" content="#000091">
+  <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data:;
+      connect-src 'self' %VITE_API_URL% %VITE_KEYCLOAK_URL% https://api-adresse.data.gouv.fr;
+      frame-src 'self' %VITE_KEYCLOAK_URL%;
+      font-src 'self';
+      object-src 'self';
+  ">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 
 <body class="h-full">

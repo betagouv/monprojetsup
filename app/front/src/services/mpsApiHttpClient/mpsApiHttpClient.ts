@@ -37,7 +37,7 @@ export class MpsApiHttpClient implements IMpsApiHttpClient {
 
   private _récupérerJWT = (): string => {
     const sessionStorageOIDC = sessionStorage.getItem(
-      `oidc.user:${environnement.VITE_KEYCLOAK_ROYAUME_URL}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
+      `oidc.user:${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}:${environnement.VITE_KEYCLOAK_CLIENT_ID}`,
     );
 
     if (!sessionStorageOIDC) return "";

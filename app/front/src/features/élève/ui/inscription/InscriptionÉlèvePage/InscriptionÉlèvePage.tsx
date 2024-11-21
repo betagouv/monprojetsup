@@ -99,7 +99,7 @@ const InscriptionÉlèvePage = () => {
       <div className="fr-p-2w fr-py-md-3w fr-px-md-10w shadow-md">
         <Stepper
           currentStep={indexÉtapeActuelle + 1}
-          nextTitle={étapes[indexÉtapeActuelle + 1].titreÉtape}
+          nextTitle={étapes[indexÉtapeActuelle + 1]?.titreÉtape ?? ""}
           stepCount={étapes.length}
           title={étapes[indexÉtapeActuelle].titreÉtape}
         />

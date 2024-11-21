@@ -2,7 +2,7 @@ import { environnement } from "@/configuration/environnement";
 import { UserManager, WebStorageStateStore } from "oidc-client-ts";
 
 export const userManagerOIDCClient = new UserManager({
-  authority: environnement.VITE_KEYCLOAK_ROYAUME_URL,
+  authority: `${environnement.VITE_KEYCLOAK_URL}/realms/${environnement.VITE_KEYCLOAK_ROYAUME}`,
   client_id: environnement.VITE_KEYCLOAK_CLIENT_ID,
   // Oui je sais c'est bizarre de mettre un secret côté front mais c'est la configuration Avenir(s) :)
   client_secret: environnement.VITE_KEYCLOAK_CLIENT_SECRET,
