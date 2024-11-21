@@ -50,7 +50,6 @@ const FicheFormation = ({ id }: FicheFormationProps) => {
         )}
         <CommunesProposantLaFormation
           communes={formation.communesProposantLaFormation}
-          explications={formation.explications}
           lienParcoursSup={formation.lienParcoursSup}
         />
       </div>

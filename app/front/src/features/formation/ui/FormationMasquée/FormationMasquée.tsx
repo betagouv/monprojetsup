@@ -16,10 +16,7 @@ const FormationMasquée = ({ formation }: FormationMasquéeProps) => {
           <Titre niveauDeTitre="h5">{formation.nom}</Titre>
         </div>
         <NombreAffinité affinité={formation.affinité} />
-        <CommunesProposantLaFormation
-          communes={formation.communesProposantLaFormation}
-          explications={formation.explications}
-        />
+        <CommunesProposantLaFormation communes={formation.communesProposantLaFormation} />
       </div>
       <Bouton
         auClic={démasquerUneFormation}

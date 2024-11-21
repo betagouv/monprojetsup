@@ -133,7 +133,7 @@ export class formationHttpRepository implements FormationRepository {
           distanceEnKm: établissement.distanceKm,
         })),
       })),
-      communesProposantLaFormation: this._extraireCommunesDesÉtablissements(formationHttp.formation.voeux),
+      communesProposantLaFormation: formationHttp.formation.communes.map((commune) => commune.nom),
       métiersAccessibles: formationHttp.formation.metiers.map((métier) => ({
         id: métier.id,
         nom: `${métier.nom[0].toUpperCase()}${métier.nom.slice(1)}`,
@@ -237,11 +237,4 @@ export class formationHttpRepository implements FormationRepository {
 
     return points;
   };
-
-  private _extraireCommunesDesÉtablissements(
-    établissements: RécupérerFormationsRéponseHTTP["formations"][number]["formation"]["voeux"],
-  ): string[] {
-    const nomsCommunes = établissements.map((établissement) => établissement.commune.nom);
-    return [...new Set(nomsCommunes)];
-  }
 }
