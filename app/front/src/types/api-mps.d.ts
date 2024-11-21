@@ -658,6 +658,7 @@ export interface components {
             criteresAnalyseCandidature: components["schemas"]["CriteresAnalyseCandidatureDTO"][];
             repartitionAdmisAnneePrecedente?: components["schemas"]["RepartitionAdmisAnneePrecedenteDTO"];
             liens: components["schemas"]["LienDTO"][];
+            communes: components["schemas"]["CommuneCourteDTO"][];
             voeux: components["schemas"]["VoeuAvecCommuneDTO"][];
             communesFavoritesAvecLeursVoeux: components["schemas"]["CommuneAvecSesVoeuxDTO"][];
             metiers: components["schemas"]["MetierDTO"][];
