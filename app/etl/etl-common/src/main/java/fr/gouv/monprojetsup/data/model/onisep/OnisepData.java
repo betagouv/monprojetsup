@@ -1,6 +1,6 @@
 package fr.gouv.monprojetsup.data.model.onisep;
 
-import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData;
+import fr.gouv.monprojetsup.data.model.formations.FilierePsupVersIdeoData;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import fr.gouv.monprojetsup.data.model.onisep.metiers.FicheMetierIdeo;
@@ -10,9 +10,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fr.gouv.monprojetsup.data.Constants.cleanup;
+import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.includeKey;
 
 public record OnisepData(
@@ -24,7 +26,7 @@ public record OnisepData(
 
         List<@NotNull Pair<@NotNull String,@NotNull String>> edgesMetiersFormations,
 
-        List<@NotNull FilieresPsupVersIdeoData> filieresToFormationsOnisep,
+        List<@NotNull FilierePsupVersIdeoData> filieresToFormationsOnisep,
 
         List<@NotNull MetierIdeo> metiersIdeo,
 
@@ -106,6 +108,16 @@ public record OnisepData(
                     );
         });
         return result;
+    }
+
+    public @NotNull Map<String,@NotNull String> getLiensCarteParcoursup() {
+        return filieresToFormationsOnisep.stream()
+                .map(f -> Pair.of(gFlCodToMpsId(f.gFlCod()), f.liensVersSiteAvenir()))
+                .filter( p -> p.getRight() != null)
+                .collect(Collectors.toMap(
+                        Pair::getLeft,
+                        Pair::getRight)
+                );
     }
 
 

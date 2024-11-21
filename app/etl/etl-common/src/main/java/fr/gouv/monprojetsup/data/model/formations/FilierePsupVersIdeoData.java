@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.data.model.formations;
 import fr.gouv.monprojetsup.data.model.onisep.formations.PsupToIdeoCorrespondance;
 import jakarta.validation.constraints.NotNull;
 import lombok.val;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,21 +16,25 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static fr.gouv.monprojetsup.data.Constants.AVENIRS_URL;
+import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL1;
+import static fr.gouv.monprojetsup.data.Constants.ONISEP_URL2;
 import static fr.gouv.monprojetsup.data.Constants.gFlCodToMpsId;
 import static fr.gouv.monprojetsup.data.Constants.gFrCodToMpsId;
 
-public record FilieresPsupVersIdeoData(
+public record FilierePsupVersIdeoData(
         int gFlCod,
         int gFrCod,
         String gFrLib,
         String gFlLib,
         @NotNull ArrayList<@NotNull String> ideoFormationsIds,
         @NotNull ArrayList<@NotNull String> ideoMetiersIds,
-        @NotNull ArrayList<@NotNull String> libellesOuClesSousdomainesWeb
+        @NotNull ArrayList<@NotNull String> libellesOuClesSousdomainesWeb,
+        @Nullable String liensVersSiteAvenir
 
-) {
+        ) {
 
-    public static List<FilieresPsupVersIdeoData> compute(
+    public static List<FilierePsupVersIdeoData> compute(
             PsupToIdeoCorrespondance lines,
             Map<String, FormationIdeoDuSup> formationsIdeo,
             Map<String, @NotNull Set<String>> oldIdeoToNewIdeo) {
@@ -159,14 +164,23 @@ public record FilieresPsupVersIdeoData(
                     ideoFormationsIds1 = new ArrayList<>(ideoFormationsIds1.stream().distinct().sorted().toList());
                     ideoFormationsIds1.removeAll(oldIdeoToNewIdeo.keySet());
 
-                    return new FilieresPsupVersIdeoData(
+                    var lien = line.LIENONISEP()
+                            .replace(ONISEP_URL1, AVENIRS_URL)
+                            .replace(ONISEP_URL2, AVENIRS_URL)
+                            ;
+                    if(lien.isBlank() || lien.contains("slug") || lien.contains("recherche")) {
+                        lien = null;
+                    }
+
+                    return new FilierePsupVersIdeoData(
                             line.G_FL_COD(),
                             line.G_FR_COD(),
                             line.G_FR_LIB(),
                             line.G_FL_LIB(),
                             ideoFormationsIds1,
                             new ArrayList<>(ideoMetiersIds1),
-                            new ArrayList<>(libellesOuClesSousdomainesWeb1)
+                            new ArrayList<>(libellesOuClesSousdomainesWeb1),
+                            lien
                     );
                 }
         ).toList());
@@ -188,7 +202,7 @@ public record FilieresPsupVersIdeoData(
     }
 
     public static void replaceLiensFormationsPsupMetiers(
-            List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
+            List<FilierePsupVersIdeoData> filieresPsupToFormationsMetiersIdeo,
             Map<String,List<String>> psupToMetiersIdeo
     ) {
         filieresPsupToFormationsMetiersIdeo.forEach(
@@ -211,7 +225,7 @@ public record FilieresPsupVersIdeoData(
     }
 
 
-    public void inheritMetiersAndDomainesFrom(FilieresPsupVersIdeoData rich) {
+    public void inheritMetiersAndDomainesFrom(FilierePsupVersIdeoData rich) {
         this.ideoMetiersIds().addAll(rich.ideoMetiersIds());
         this.libellesOuClesSousdomainesWeb().addAll(rich.libellesOuClesSousdomainesWeb());
     }

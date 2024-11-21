@@ -14,6 +14,7 @@ public class Constants {
     public static final String NEW_ONISEP_METIERS_SLUG_PREFIX = "https://explorer-avenirs.onisep.fr/http/redirection/metier/slug/";
     public static final String AVENIRS_FORMATION_SLUG_PREFIX = "https://explorer-avenirs.onisep.fr/http/redirection/formation/slug/";
     public static final String EXPLORER_AVENIRS_URL = "https://explorer-avenirs.onisep.fr";
+    public static final String AVENIRS_URL = "https://avenirs.onisep.fr";
     public static final String ONISEP_URL1 = "http://www.onisep.fr";
     public static final String ONISEP_URL2 = "https://www.onisep.fr";
     public static final String CARTE_PARCOURSUP_PREFIX_URI = "https://dossier.parcoursup.fr/Candidat/carte?search=";
@@ -37,6 +38,8 @@ public class Constants {
     public static final int DMA_PSUP_FR_COD = 81;
 
     public static final String FRANCE_TRAVAIL_FICHE_METIER_PREFIX = "https://candidat.francetravail.fr/metierscope/fiche-metier/";
+    public static final int MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION = 3;
+    public static final int MAX_NB_LIENS_PSUP_SUR_FICHE_FORMATION = 3;
     public static String PSUP_FORMATION_FICHE = "https://dossier.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=";
 
     public static final String DIAGNOSTICS_OUTPUT_DIR = "diagnostics/";

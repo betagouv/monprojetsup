@@ -4,6 +4,7 @@ import fr.gouv.monprojetsup.data.Constants;
 import fr.gouv.monprojetsup.data.model.descriptifs.DescriptifsFormationsMetiers;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static fr.gouv.monprojetsup.data.Constants.AVENIRS_FORMATION_SLUG_PREFIX;
@@ -98,10 +100,10 @@ public class UrlsUpdater {
             @NotNull Map<String, @NotNull List<String>> mpsKeyToIdeo,
             @NotNull Map<String, @NotNull String> lasToGeneric,
             @NotNull Map<String,@NotNull String> psupKeytoMpsKey,
+            @NotNull Map<String, @NotNull String> liensCarte,
             @NotNull List<String> mpsIds,
             @NotNull Map<String, @NotNull String> labels,
             @NotNull Map<String, @NotNull String> labelsOriginauxPsup,
-            @NotNull Map<String, @NotNull Collection<String>> liensAIgnorer,
             @NotNull Map<String, @NotNull Collection<String>> extraUrls
     ) {
         //metiers
@@ -120,14 +122,17 @@ public class UrlsUpdater {
             metier.urls().forEach(url -> addUrl(metier.ideo(), url.valeur(), url.commentaire(), METIERS_IDEO_DU_SUP, urls));
         });
 
-        mpsKeyToIdeo.forEach((mpsKey, ideos) ->
-                ideos.forEach(ideo -> {
-                    if(labels.containsKey(ideo)) {
-                        val label = labels.get(ideo);
-                        addUrl(mpsKey, AVENIRS_FORMATION_SLUG_PREFIX + ideo, label, "mpsKeyToIdeo", urls);
+        mpsKeyToIdeo.forEach((mpsKey, ideos) -> {
+                    if (ideos.size() < Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
+                        ideos.forEach(ideo -> {
+                            if (labels.containsKey(ideo)) {
+                                val label = labels.get(ideo);
+                                addUrl(mpsKey, AVENIRS_FORMATION_SLUG_PREFIX + ideo, label, "mpsKeyToIdeo", urls);
+                            }
+                        });
                     }
                 }
-        ));
+        );
 
         extraUrls.forEach((key, extraLinks) -> {
             val cleanupExtraLinks = extraLinks.stream().map(String::trim).filter(s -> !s.isBlank()).toList();
@@ -150,10 +155,10 @@ public class UrlsUpdater {
 
         mpsIdToPsupIds.forEach(
                 (mpsKey, listpsupKey) -> {
-                    if(labelsOriginauxPsup.containsKey(mpsKey)) {
+                    if (labelsOriginauxPsup.containsKey(mpsKey)) {
                         val label = labelsOriginauxPsup.get(mpsKey);
                         val l = new ArrayList<>(List.of(label));
-                        if(listpsupKey.size() == 1 && psupKeytoMpsKey.containsKey(mpsKey)) {
+                        if (listpsupKey.size() == 1 && psupKeytoMpsKey.containsKey(mpsKey)) {
                             l.add(mpsKey + "x");
                         }
                         addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(l),
@@ -161,22 +166,29 @@ public class UrlsUpdater {
                                 CARTE_PSUP, urls
                         );
                     }
-                    if(listpsupKey.size() <= 5) {
-                        listpsupKey.forEach(psupKey -> {
-                            if(!psupKey.equals(mpsKey)) {
-                            val l = new ArrayList<>(urls.getOrDefault(psupKey, List.of()));
-                            l.forEach(s -> addUrl(mpsKey, s.uri(), s.label(), s.source(), urls));
-                            if (labels.containsKey(psupKey)) {
-                                val label = labels.get(psupKey);
-                                val ll = psupKeytoMpsKey.containsKey(psupKey) ? List.of(label, psupKey + "x") : List.of(label);
-                                addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(ll),
-                                        "Les lieux de formation " + label,
-                                        CARTE_PSUP, urls
 
-                                );
-                            }
-                            }
+                    val psupKeySpecifiques = listpsupKey.stream()
+                            .filter(psupKey -> !psupKey.equals(mpsKey))
+                            .map(psupKey -> Pair.of(psupKey, labels.get(psupKey)))
+                            .filter(p -> p.getRight() != null)
+                            .toList();
+
+                    if (psupKeySpecifiques.size() <= Constants.MAX_NB_LIENS_PSUP_SUR_FICHE_FORMATION) {
+                        psupKeySpecifiques.forEach(p -> {
+                            val psupKey = p.getLeft();
+                            val label = p.getRight();
+                            val searchWords = psupKeytoMpsKey.containsKey(psupKey) ? List.of(label, psupKey + "x") : List.of(label);
+                            addUrl(mpsKey, DescriptifsFormationsMetiers.toParcoursupCarteUrl(searchWords),
+                                    "Où suivre la formation:  " + label,
+                                    CARTE_PSUP, urls
+
+                            );
                         });
+                    }
+
+                    val urlsCarte = listpsupKey.stream().map(liensCarte::get).filter(Objects::nonNull).distinct().sorted().toList();
+                    if(urlsCarte.size() <= Constants.MAX_NB_LIENS_IDEO_SUR_FICHE_FORMATION) {
+                        urlsCarte.forEach(uri -> addUrl(mpsKey, uri, "Infos Onisep", "liensCarte", urls));
                     }
                 }
                 );

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.reflect.TypeToken;
 import fr.gouv.monprojetsup.data.Constants;
-import fr.gouv.monprojetsup.data.model.formations.FilieresPsupVersIdeoData;
+import fr.gouv.monprojetsup.data.model.formations.FilierePsupVersIdeoData;
 import fr.gouv.monprojetsup.data.model.formations.FormationIdeoDuSup;
 import fr.gouv.monprojetsup.data.model.metiers.MetierIdeo;
 import fr.gouv.monprojetsup.data.model.metiers.MetiersScrapped;
@@ -110,7 +110,7 @@ public class OnisepDataLoader {
         }));
     }
 
-    private static void updateCreationLien(List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo, String source) {
+    private static void updateCreationLien(List<FilierePsupVersIdeoData> filieresPsupToFormationsMetiersIdeo, String source) {
         int i = source.indexOf("/");
         if(i > 0) {
             source = source.substring(i);
@@ -269,7 +269,7 @@ public class OnisepDataLoader {
     }
 
     private static void injectInFormationsPsup(
-            List<FilieresPsupVersIdeoData> formations,
+            List<FilierePsupVersIdeoData> formations,
             Map<String, Set<String>> richPsupToPoorPsup
     ) {
         val formationsParCod = formations.stream()
@@ -398,7 +398,7 @@ public class OnisepDataLoader {
 
     protected static Pair<List<Pair<String, String>>, List<Pair<String, String>>> getEdgesFormations(
             List<SousDomaineWeb> sousDomainesWeb,
-            List<FilieresPsupVersIdeoData> filieresPsupToFormationsMetiersIdeo) {
+            List<FilierePsupVersIdeoData> filieresPsupToFormationsMetiersIdeo) {
 
         val edgesMetiersFormations = filieresPsupToFormationsMetiersIdeo.stream().flatMap(
                 fil -> fil.ideoMetiersIds().stream().map(metier -> Pair.of(metier, fil.mpsId()))
@@ -486,23 +486,28 @@ public class OnisepDataLoader {
     }
 
 
-    protected static List<FilieresPsupVersIdeoData> loadPsupToIdeoCorrespondance(
+    protected static List<FilierePsupVersIdeoData> loadPsupToIdeoCorrespondance(
             DataSources sources,
             Map<String, FormationIdeoDuSup> formationsIdeoDuSup
     ) {
         val oldIdeoToNewIdeo = OnisepDataLoader.loadOldToNewIdeo(sources);
 
-        LOGGER.info("Chargement de " + PSUP_TO_IDEO_CORRESPONDANCE_PATH);
-        val csv = CsvTools.readCSV(sources.getSourceDataFilePath(PSUP_TO_IDEO_CORRESPONDANCE_PATH), ',');
+        val psupToIdeoFilename = PSUP_TO_IDEO_CORRESPONDANCE_PATH;
+        LOGGER.info("Chargement de " + psupToIdeoFilename);
+        val csv = CsvTools.readCSV(sources.getSourceDataFilePath(psupToIdeoFilename), ',');
         val lines = PsupToIdeoCorrespondance.fromCsv(csv);
-        val filieresPsupToFormationsMetiersIdeo = FilieresPsupVersIdeoData.compute(lines, formationsIdeoDuSup, oldIdeoToNewIdeo);
-        updateCreationLien(filieresPsupToFormationsMetiersIdeo, PSUP_TO_IDEO_CORRESPONDANCE_PATH);
+        val filieresPsupToFormationsMetiersIdeo = FilierePsupVersIdeoData.compute(
+                lines,
+                formationsIdeoDuSup,
+                oldIdeoToNewIdeo
+        );
+        updateCreationLien(filieresPsupToFormationsMetiersIdeo, psupToIdeoFilename);
 
         filieresPsupToFormationsMetiersIdeo.forEach( f -> f.updateOldToNewIdeo(oldIdeoToNewIdeo));
         updateCreationLien(filieresPsupToFormationsMetiersIdeo, IDEO_OLD_TO_NEW_PATH);
 
         val psupToMetiersIdeo = loadLiensFormationsPsupMetiers(sources);
-        FilieresPsupVersIdeoData.replaceLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
+        FilierePsupVersIdeoData.replaceLiensFormationsPsupMetiers(filieresPsupToFormationsMetiersIdeo, psupToMetiersIdeo);
         updateCreationLien(filieresPsupToFormationsMetiersIdeo, PSUP_TO_METIERS_CORRESPONDANCE_PATH);
 
         LOGGER.info("Application des héritages psup --> psup");

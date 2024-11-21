@@ -587,10 +587,10 @@ class MpsDataFromFiles(
             getMpsIdToIdeoIds(),
             psupData.lasToGeneric,
             psupData.psupKeyToMpsKey,
+            onisepData.liensCarteParcoursup,
             getFormationsMpsIds(),
             getLabels(),
             getLabelsOriginauxPsup(),
-            getLiensMpsIgnorer(),
             getLiensMpsExtras(),
         )
         return urls
