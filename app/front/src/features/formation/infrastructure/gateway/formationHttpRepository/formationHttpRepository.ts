@@ -75,7 +75,26 @@ export class formationHttpRepository implements FormationRepository {
   }
 
   private _mapperVersLeDomaine(formationHttp: RécupérerFormationsRéponseHTTP["formations"][number]): Formation {
-    const regexLienParcoursSup = /Parcoursup/u;
+    const voeuxLesPlusProchesPourChaqueCommunesFavorites = formationHttp.formation.communesFavoritesAvecLeursVoeux.map(
+      (commune) => {
+        let idVoeu = null;
+        let distanceVoeu = null;
+        for (const voeu of commune.voeuxAvecDistance) {
+          if (idVoeu === null || distanceVoeu === null || voeu.distanceKm < distanceVoeu) {
+            idVoeu = voeu.voeu.id;
+            distanceVoeu = voeu.distanceKm;
+          }
+        }
+
+        return idVoeu;
+      },
+    );
+    const lienParcoursSup =
+      "https://dossier.parcoursup.fr/Candidat/carte?search=" +
+      formationHttp.formation.idsFormationsAssociees.map((idFormation) => `${idFormation}x`).join("%20") +
+      "&center_on_interests=" +
+      voeuxLesPlusProchesPourChaqueCommunesFavorites.join(",");
+
     return {
       id: formationHttp.formation.id,
       nom: formationHttp.formation.nom,
@@ -86,7 +105,7 @@ export class formationHttpRepository implements FormationRepository {
         conseils: formationHttp.formation.descriptifConseils ?? null,
       },
       estEnAlternance: formationHttp.formation.apprentissage,
-      lienParcoursSup: formationHttp.formation.liens.find((lien) => regexLienParcoursSup.exec(lien.nom))?.url ?? null,
+      lienParcoursSup,
       liens: formationHttp.formation.liens.map((lien) => ({ intitulé: lien.nom, url: lien.url })),
       admis: {
         moyenneGénérale: {
