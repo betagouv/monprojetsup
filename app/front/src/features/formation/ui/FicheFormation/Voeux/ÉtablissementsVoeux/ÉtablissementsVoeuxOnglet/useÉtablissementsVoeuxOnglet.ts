@@ -1,11 +1,15 @@
 /* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxOngletArgs } from "./ÉtablissementsVoeuxOnglet.interface";
 import { constantes } from "@/configuration/constantes";
+import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/useLienParcoursupVoeu.ts";
 import { useEffect, useMemo, useState } from "react";
 
 const rayons = constantes.FICHE_FORMATION.RAYONS_RECHERCHE_ÉTABLISSEMENTS;
 export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }: UseÉtablissementsVoeuxOngletArgs) {
   const [rayonSélectionné, setRayonSélectionné] = useState<(typeof rayons)[number]>(rayons[0]);
+  const [nombreÉtablissementÀAfficher, setNombreÉtablissementÀAfficher] = useState<number>(
+    constantes.ÉTABLISSEMENTS.PAGINATION_ÉTABLISSEMENTS,
+  );
 
   const établissements = useMemo(() => {
     return (
@@ -28,18 +32,34 @@ export default function useÉtablissementsVoeuxOnglet({ formation, codeCommune }
     setRayonSélectionné(rayonParDéfaut);
   }, [établissementsParRayon]);
 
+  const { creerUrlParcoursup } = useLienParcoursupVoeu();
   const établissementsÀAfficher = useMemo(
     () =>
       [...établissements]
         .filter(({ distanceEnKm }) => distanceEnKm <= rayonSélectionné)
-        .sort((a, b) => a.distanceEnKm - b.distanceEnKm),
+        .sort((a, b) => a.distanceEnKm - b.distanceEnKm)
+        .map((établissement) => ({
+          id: établissement.id,
+          nom: établissement.nom,
+          urlParcoursup: creerUrlParcoursup(établissement.id),
+        })),
     [rayonSélectionné, établissements],
   );
 
+  const afficherPlusDeRésultats = () => {
+    setNombreÉtablissementÀAfficher(
+      Math.min(
+        nombreÉtablissementÀAfficher + constantes.ÉTABLISSEMENTS.PAGINATION_ÉTABLISSEMENTS,
+        établissementsÀAfficher.length,
+      ),
+    );
+  };
+
   return {
-    nombreÉtablissementÀAfficher: constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS,
+    nombreÉtablissementÀAfficher,
     nombreÉtablissementsDansLeRayon: établissementsÀAfficher.length,
-    établissementsÀAfficher: établissementsÀAfficher.slice(0, constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS),
+    établissementsÀAfficher: établissementsÀAfficher.slice(0, nombreÉtablissementÀAfficher),
+    afficherPlusDeRésultats,
     rayons,
     rayonSélectionné,
     changerRayonSélectionné: setRayonSélectionné,

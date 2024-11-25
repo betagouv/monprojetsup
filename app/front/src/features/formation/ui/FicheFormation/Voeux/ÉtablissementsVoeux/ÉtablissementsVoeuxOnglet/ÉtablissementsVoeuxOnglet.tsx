@@ -1,10 +1,9 @@
 import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
 import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOnglet.interface";
 import Bouton from "@/components/Bouton/Bouton";
-import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import ÉtablissementLienExterne from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/ÉtablissementLienExterne/ÉtablissementLienExterne.tsx";
 
 const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsVoeuxOngletProps) => {
   const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useÉtablissementsVoeux({ formation });
@@ -12,6 +11,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
     nombreÉtablissementÀAfficher,
     nombreÉtablissementsDansLeRayon,
     établissementsÀAfficher,
+    afficherPlusDeRésultats,
     rayonSélectionné,
     changerRayonSélectionné,
     rayons,
@@ -42,38 +42,53 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
           ))}
         </ul>
       </div>
+      <div className="mb-2">
+        <strong className="fr-text--md mb-0">Établissements disponibles</strong>
+      </div>
       <div aria-live="polite">
         {établissementsÀAfficher.length > 0 ? (
           <div className="grid gap-6">
-            <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
+            <ul className="m-0 grid grid-flow-row justify-start gap-4 p-0">
               {établissementsÀAfficher.map((établissement) => (
                 <li
-                  className="*:text-left *:leading-6"
+                  className="flex w-full items-center justify-between gap-4"
                   key={établissement.id}
                 >
-                  <Tag
-                    nativeButtonProps={{ onClick: () => mettreÀJourUnVoeu(établissement.id) }}
-                    pressed={voeuxSélectionnés?.includes(établissement.id)}
-                  >
-                    <span>{établissement.nom}</span>
-                  </Tag>
+                  <ÉtablissementLienExterne
+                    estFavoris={voeuxSélectionnés?.some(({ id }) => id === établissement.id)}
+                    mettreÀJourUnVoeu={mettreÀJourUnVoeu}
+                    établissement={établissement}
+                  />
                 </li>
               ))}
             </ul>
             {nombreÉtablissementsDansLeRayon > nombreÉtablissementÀAfficher && (
-              <p className="fr-text--sm mb-0">
-                {nombreÉtablissementsDansLeRayon} {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.VOIR_PLUS}{" "}
-                {formation.lienParcoursSup && (
-                  <LienExterne
-                    ariaLabel={i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PARCOURSUP}
-                    href={formation.lienParcoursSup}
-                    taille="petit"
-                    variante="simple"
-                  >
-                    {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.LIENS.PARCOURSUP}
-                  </LienExterne>
-                )}
-              </p>
+              <Bouton
+                auClic={() => afficherPlusDeRésultats()}
+                label="Plus de résultats"
+                taille="petit"
+                type="button"
+                variante="quinaire"
+              />
+            )}
+            {voeuxSélectionnés.length > 0 && (
+              <div className="">
+                <strong className="fr-text--md">Ma sélection</strong>
+                <ul className="mt-2 flex list-none flex-wrap justify-start gap-4 p-0">
+                  {voeuxSélectionnés.map((voeu) => (
+                    <li
+                      className="flex items-center gap-2"
+                      key={voeu.id}
+                    >
+                      <ÉtablissementLienExterne
+                        estFavoris={voeuxSélectionnés?.some(({ id }) => id === voeu.id)}
+                        mettreÀJourUnVoeu={mettreÀJourUnVoeu}
+                        établissement={voeu}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         ) : (

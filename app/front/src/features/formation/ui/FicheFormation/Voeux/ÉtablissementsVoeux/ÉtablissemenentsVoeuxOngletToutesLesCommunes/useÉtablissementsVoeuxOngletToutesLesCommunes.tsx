@@ -28,7 +28,7 @@ export default function useÉtablissementsVoeuxOngletToutesLesCommunes({
 
   const établissementsSélectionnésParDéfaut = useMemo(() => {
     return voeuxSélectionnés
-      .map((voeuxSélectionné) => formation.établissements.find((élément) => élément.id === voeuxSélectionné))
+      .map((voeuxSélectionné) => formation.établissements.find((élément) => élément.id === voeuxSélectionné.id))
       .filter((élément): élément is Formation["établissements"][number] => élément !== undefined)
       .map((établissement) => établissementVersOptionÉtablissement(établissement));
   }, [formation.établissements, voeuxSélectionnés, établissementVersOptionÉtablissement]);

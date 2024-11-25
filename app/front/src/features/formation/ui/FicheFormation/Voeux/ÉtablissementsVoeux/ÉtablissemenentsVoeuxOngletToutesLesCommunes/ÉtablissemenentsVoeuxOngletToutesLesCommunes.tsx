@@ -60,7 +60,7 @@ const ÉtablissemenentsVoeuxOngletToutesLesCommunes = ({
             </>
           }
           nombreDeCaractèreMinimumRecherche={constantes.ÉTABLISSEMENTS.NB_CARACTÈRES_MIN_RECHERCHE}
-          nombreDeSuggestionsMax={constantes.ÉTABLISSEMENTS.NB_MAX_ÉTABLISSEMENTS}
+          nombreDeSuggestionsMax={constantes.ÉTABLISSEMENTS.PAGINATION_ÉTABLISSEMENTS}
           optionsSuggérées={établissementsSuggérés}
           optionsSélectionnéesParDéfaut={établissementsSélectionnésParDéfaut}
           rechercheSuggestionsEnCours={false}
