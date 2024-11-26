@@ -67,8 +67,9 @@ class ReferentielControllerTest(
           "baccalaureatsAvecLeurSpecialites": [
             {
               "baccalaureat": {
-                "id": "Professionnel",
-                "nom": "Série Pro"
+                "id": "P",
+                "nom": "Bac Professionnel",
+                "idCarteParcoursup": "3"
               },
               "specialites": [
                 {
@@ -83,8 +84,9 @@ class ReferentielControllerTest(
             },
             {
               "baccalaureat": {
-                "id": "Général",
-                "nom": "Série Générale"
+                "id": "Générale",
+                "nom": "Bac Général",
+                "idCarteParcoursup": "1"
               },
               "specialites": [
                 {
@@ -109,14 +111,14 @@ class ReferentielControllerTest(
                 {
                   "id": "voyage",
                   "nom": "Voyager",
-                  "emoji": "\uD83D\uDE85",
-                  "description": "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour organiser des voyages et des séjours."
+                  "description": "Pour travailler dans le tourisme, l’hôtellerie, les transports, ou encore pour organiser des voyages et des séjours.",
+                  "emoji": "\uD83D\uDE85"
                 },
                 {
                   "id": "linguistique",
                   "nom": "Apprendre de nouvelles langues",
-                  "emoji": "\uD83C\uDDEC\uD83C\uDDE7",
-                  "description": null
+                  "description": null,
+                  "emoji": "\uD83C\uDDEC\uD83C\uDDE7"
                 }
               ]
             },
@@ -140,14 +142,14 @@ class ReferentielControllerTest(
                 {
                   "id": "animaux",
                   "nom": "Soins aux animaux",
-                  "emoji": "\uD83D\uDC2E",
-                  "description": "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les animaux, les nourrir et assurer leur bien-être."
+                  "description": "Pour travailler dans les élevages ou la pêche, mais aussi apprendre à soigner les animaux, les nourrir et assurer leur bien-être.",
+                  "emoji": "\uD83D\uDC2E"
                 },
                 {
                   "id": "agroequipement",
                   "nom": "Agroéquipement",
-                  "emoji": "\uD83D\uDE9C",
-                  "description": null
+                  "description": null,
+                  "emoji": "\uD83D\uDE9C"
                 }
               ]
             },
@@ -166,7 +168,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "Générale",
-                  "nom": "Bac Général"
+                  "nom": "Bac Général",
+                  "idCarteParcoursup": "1"
                 },
                 "pourcentages": [
                   {
@@ -334,7 +337,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "NC",
-                  "nom": "Non-communiqué"
+                  "nom": "Non-communiqué",
+                  "idCarteParcoursup": "0"
                 },
                 "pourcentages": [
                   {
@@ -502,7 +506,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "P",
-                  "nom": "Bac Professionnel"
+                  "nom": "Bac Professionnel",
+                  "idCarteParcoursup": "3"
                 },
                 "pourcentages": [
                   {
@@ -670,7 +675,8 @@ class ReferentielControllerTest(
               {
                 "baccalaureat": {
                   "id": "STL",
-                  "nom": "Bac STL"
+                  "nom": "Bac STL",
+                  "idCarteParcoursup": "2"
                 },
                 "pourcentages": [
                   {
@@ -845,20 +851,12 @@ class ReferentielControllerTest(
         // Given
         val baccalaureatsAvecSpecialites =
             mapOf(
-                Baccalaureat(
-                    id = "Professionnel",
-                    nom = "Série Pro",
-                    idExterne = "P",
-                ) to
+                baccalaureatPro to
                     listOf(
                         Specialite(id = "4", label = "Sciences de l'ingénieur"),
                         Specialite(id = "1006", label = "Economie et gestion hôtelière"),
                     ),
-                Baccalaureat(
-                    id = "Général",
-                    nom = "Série Générale",
-                    idExterne = "Générale",
-                ) to
+                baccalaureatGeneral to
                     listOf(
                         Specialite(id = "4", label = "Sciences de l'ingénieur"),
                         Specialite(id = "1040", label = "Physique-Chimie et Mathématiques"),
@@ -1176,9 +1174,10 @@ class ReferentielControllerTest(
     }
 
     companion object {
-        private val baccalaureatGeneral = Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale")
-        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC")
-        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P")
-        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL")
+        private val baccalaureatGeneral =
+            Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale", idCarteParcoursup = "1")
+        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC", idCarteParcoursup = "0")
+        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P", idCarteParcoursup = "3")
+        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL", idCarteParcoursup = "2")
     }
 }

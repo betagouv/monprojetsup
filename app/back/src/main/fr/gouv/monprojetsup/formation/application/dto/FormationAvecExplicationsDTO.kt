@@ -18,7 +18,6 @@ import fr.gouv.monprojetsup.formation.domain.entity.StatistiquesDesAdmis.Reparti
 import fr.gouv.monprojetsup.formation.domain.entity.Voeu
 import fr.gouv.monprojetsup.metier.application.dto.MetierCourtDTO
 import fr.gouv.monprojetsup.metier.application.dto.MetierDTO
-import fr.gouv.monprojetsup.referentiel.application.dto.BaccalaureatDTO
 import fr.gouv.monprojetsup.referentiel.application.dto.DomaineDTO
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue

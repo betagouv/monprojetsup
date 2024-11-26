@@ -3,6 +3,7 @@ package fr.gouv.monprojetsup.referentiel.application.dto
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.AdmissionsParcoursup.PourcentagesPourChaqueMoyenneParBaccalaureat.PourcentagesMoyenne
+import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixAlternance
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixDureeEtudesPrevue
 import fr.gouv.monprojetsup.referentiel.domain.entity.ChoixNiveau
@@ -47,6 +48,18 @@ data class ReferentielDTO(
             },
         admissionsParcoursup = AdmissionsParcoursupDTO(referentiel.admissionsParcoursup),
     )
+
+    data class BaccalaureatDTO(
+        val id: String,
+        val nom: String,
+        val idCarteParcoursup: String,
+    ) {
+        constructor(baccalaureat: Baccalaureat) : this(
+            id = baccalaureat.id,
+            nom = baccalaureat.nom,
+            idCarteParcoursup = baccalaureat.idCarteParcoursup,
+        )
+    }
 
     data class BaccalaureatAvecSesSpecialitesDTO(
         val baccalaureat: BaccalaureatDTO,

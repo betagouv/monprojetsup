@@ -180,12 +180,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
         baccalaureat: Baccalaureat?,
         autoEvaluationMoyenne: ExplicationsSuggestionEtExemplesMetiers.AutoEvaluationMoyenne,
     ) = ExplicationAutoEvaluationMoyenne(
-        baccalaureatUtilise =
-            baccalaureat ?: Baccalaureat(
-                id = autoEvaluationMoyenne.baccalaureatUtilise,
-                idExterne = autoEvaluationMoyenne.baccalaureatUtilise,
-                nom = autoEvaluationMoyenne.baccalaureatUtilise,
-            ),
+        baccalaureatUtilise = baccalaureat ?: creerBaccalaureatParDefaut(autoEvaluationMoyenne.baccalaureatUtilise),
         moyenneAutoEvalue = autoEvaluationMoyenne.echellonDeLaMoyenneAutoEvalue * TAILLE_ECHELLON_NOTES,
         basIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch25 * TAILLE_ECHELLON_NOTES,
         hautIntervalleNotes = autoEvaluationMoyenne.rangs.rangEch75 * TAILLE_ECHELLON_NOTES,
@@ -200,14 +195,17 @@ class RecupererExplicationsEtExemplesMetiersPourFormationService(
 
     private fun explicationTypeBaccalaureat(
         baccalaureat: Baccalaureat?,
-        it: TypeBaccalaureat,
+        typeBaccalaureat: TypeBaccalaureat,
     ) = ExplicationTypeBaccalaureat(
-        baccalaureat =
-            baccalaureat ?: Baccalaureat(
-                id = it.nomBaccalaureat,
-                idExterne = it.nomBaccalaureat,
-                nom = it.nomBaccalaureat,
-            ),
-        pourcentage = it.pourcentage,
+        baccalaureat = baccalaureat ?: creerBaccalaureatParDefaut(typeBaccalaureat.nomBaccalaureat),
+        pourcentage = typeBaccalaureat.pourcentage,
     )
+
+    private fun creerBaccalaureatParDefaut(nomBaccalaureat: String) =
+        Baccalaureat(
+            id = nomBaccalaureat,
+            idExterne = nomBaccalaureat,
+            nom = nomBaccalaureat,
+            idCarteParcoursup = "0",
+        )
 }

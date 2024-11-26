@@ -22,10 +22,14 @@ class BaccalaureatEntity {
     @Column(name = "id_externe", nullable = false)
     lateinit var idExterne: String
 
+    @Column(name = "id_carte_parcoursup", nullable = false)
+    lateinit var idCarteParcoursup: String
+
     fun toBaccalaureat() =
         Baccalaureat(
             id = id,
             idExterne = idExterne,
             nom = nom,
+            idCarteParcoursup = idCarteParcoursup,
         )
 }

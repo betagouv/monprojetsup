@@ -32,7 +32,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
 
     private val frequencesCumulees =
         mapOf(
-            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale") to
+            Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -75,7 +75,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     6670, // 19 - 19,5
                     6677, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG") to
+            Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1
@@ -118,7 +118,7 @@ class StatistiquesDesAdmisPourFormationsServiceTest {
                     15, // 19 - 19,5
                     15, // 19,5 - 20
                 ),
-            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D") to
+            Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D", idCarteParcoursup = "2") to
                 listOf(
                     0, // 0 - 0,5
                     0, // 0,5 - 1

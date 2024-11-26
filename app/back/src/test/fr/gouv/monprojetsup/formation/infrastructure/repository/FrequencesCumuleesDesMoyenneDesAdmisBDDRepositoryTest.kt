@@ -348,14 +348,15 @@ class FrequencesCumuleesDesMoyenneDesAdmisBDDRepositoryTest : BDDRepositoryTest(
     }
 
     companion object {
-        private val baccalaureatGeneral = Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale")
-        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC")
-        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P")
-        private val baccalaureatST2S = Baccalaureat(id = "ST2S", nom = "Bac ST2S", idExterne = "ST2S")
-        private val baccalaureatSTAV = Baccalaureat(id = "STAV", nom = "Bac STAV", idExterne = "STAV")
-        private val baccalaureatSTI2D = Baccalaureat(id = "STI2D", nom = "Bac STI2D", idExterne = "STI2D")
-        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL")
-        private val baccalaureatSTMG = Baccalaureat(id = "STMG", nom = "Bac STMG", idExterne = "STMG")
+        private val baccalaureatGeneral =
+            Baccalaureat(id = "Générale", nom = "Bac Général", idExterne = "Générale", idCarteParcoursup = "1")
+        private val baccalaureatNC = Baccalaureat(id = "NC", nom = "Non-communiqué", idExterne = "NC", idCarteParcoursup = "0")
+        private val baccalaureatPro = Baccalaureat(id = "P", nom = "Bac Professionnel", idExterne = "P", idCarteParcoursup = "3")
+        private val baccalaureatST2S = Baccalaureat(id = "ST2S", nom = "Bac ST2S", idExterne = "ST2S", idCarteParcoursup = "2")
+        private val baccalaureatSTAV = Baccalaureat(id = "STAV", nom = "Bac STAV", idExterne = "STAV", idCarteParcoursup = "2")
+        private val baccalaureatSTI2D = Baccalaureat(id = "STI2D", nom = "Bac STI2D", idExterne = "STI2D", idCarteParcoursup = "2")
+        private val baccalaureatSTL = Baccalaureat(id = "STL", nom = "Bac STL", idExterne = "STL", idCarteParcoursup = "2")
+        private val baccalaureatSTMG = Baccalaureat(id = "STMG", nom = "Bac STMG", idExterne = "STMG", idCarteParcoursup = "2")
 
         private val fl0002NC2023 =
             listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4, 5, 6, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9)

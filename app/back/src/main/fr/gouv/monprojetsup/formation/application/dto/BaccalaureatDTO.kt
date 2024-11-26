@@ -1,4 +1,4 @@
-package fr.gouv.monprojetsup.referentiel.application.dto
+package fr.gouv.monprojetsup.formation.application.dto
 
 import fr.gouv.monprojetsup.referentiel.domain.entity.Baccalaureat
 

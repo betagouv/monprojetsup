@@ -63,9 +63,9 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
         MockitoAnnotations.openMocks(this)
     }
 
-    private val bacGeneral = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale")
-    private val bacPro = Baccalaureat(id = "Professionel", idExterne = "P", nom = "Série Professionnelle")
-    private val bacSTMG = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG")
+    private val bacGeneral = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1")
+    private val bacPro = Baccalaureat(id = "Professionel", idExterne = "P", nom = "Série Professionnelle", idCarteParcoursup = "3")
+    private val bacSTMG = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG", idCarteParcoursup = "2")
 
     private val profil =
         ProfilEleve.AvecProfilExistant(
@@ -332,12 +332,12 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                     moyenneAutoEvalue = 14.5f,
                     hautIntervalleNotes = 8f,
                     basIntervalleNotes = 6f,
-                    baccalaureatUtilise = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
+                    baccalaureatUtilise = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général", idCarteParcoursup = "0"),
                 ),
             )
             assertThat(resultat.first.explicationTypeBaccalaureat).usingRecursiveComparison().isEqualTo(
                 ExplicationTypeBaccalaureat(
-                    baccalaureat = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général"),
+                    baccalaureat = Baccalaureat(id = "Général", idExterne = "Général", nom = "Général", idCarteParcoursup = "0"),
                     pourcentage = 18,
                 ),
             )
@@ -844,6 +844,7 @@ class RecupererExplicationsEtExemplesMetiersPourFormationServiceTest {
                                                 id = "STMG",
                                                 idExterne = "STMG",
                                                 nom = "Série STMG",
+                                                idCarteParcoursup = "2",
                                             ),
                                     ),
                                 explicationTypeBaccalaureat =

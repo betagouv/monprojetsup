@@ -130,7 +130,13 @@ class FormationControllerTest(
                 ),
             explicationAutoEvaluationMoyenne =
                 ExplicationAutoEvaluationMoyenne(
-                    baccalaureatUtilise = Baccalaureat(id = "Générale", idExterne = "Générale", nom = "Série Générale"),
+                    baccalaureatUtilise =
+                        Baccalaureat(
+                            id = "Générale",
+                            idExterne = "Générale",
+                            nom = "Série Générale",
+                            idCarteParcoursup = "1",
+                        ),
                     moyenneAutoEvalue = 15f,
                     basIntervalleNotes = 14f,
                     hautIntervalleNotes = 16f,
@@ -142,7 +148,7 @@ class FormationControllerTest(
                 ),
             explicationTypeBaccalaureat =
                 ExplicationTypeBaccalaureat(
-                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                    baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale", idCarteParcoursup = "1"),
                     pourcentage = 18,
                 ),
             detailsCalculScore = emptyList(),
@@ -296,7 +302,13 @@ class FormationControllerTest(
                 StatistiquesDesAdmis(
                     moyenneGeneraleDesAdmis =
                         MoyenneGeneraleDesAdmis(
-                            baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                            baccalaureat =
+                                Baccalaureat(
+                                    id = "Générale",
+                                    idExterne = "Général",
+                                    nom = "Série Générale",
+                                    idCarteParcoursup = "1",
+                                ),
                             centiles =
                                 listOf(
                                     Centile(centile = 5, note = 13f),
@@ -311,15 +323,33 @@ class FormationControllerTest(
                             parBaccalaureat =
                                 listOf(
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "Générale", idExterne = "Général", nom = "Série Générale"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "Générale",
+                                                idExterne = "Général",
+                                                nom = "Série Générale",
+                                                idCarteParcoursup = "1",
+                                            ),
                                         nombreAdmis = 6677,
                                     ),
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STMG", idExterne = "STMG", nom = "Série STMG"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "STMG",
+                                                idExterne = "STMG",
+                                                nom = "Série STMG",
+                                                idCarteParcoursup = "2",
+                                            ),
                                         nombreAdmis = 15,
                                     ),
                                     TotalAdmisPourUnBaccalaureat(
-                                        baccalaureat = Baccalaureat(id = "STI2D", idExterne = "STI2D", nom = "Série STI2D"),
+                                        baccalaureat =
+                                            Baccalaureat(
+                                                id = "STI2D",
+                                                idExterne = "STI2D",
+                                                nom = "Série STI2D",
+                                                idCarteParcoursup = "2",
+                                            ),
                                         nombreAdmis = 223,
                                     ),
                                 ),
