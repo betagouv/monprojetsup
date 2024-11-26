@@ -1,5 +1,5 @@
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
-import { ÉtablissementLienExterneProps } from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/ÉtablissementLienExterne/ÉtablissementLienExterne.interface";
+import { ÉtablissementLienExterneProps } from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementLienExterne/ÉtablissementLienExterne.interface";
 import { Toggle } from "@radix-ui/react-toggle";
 
 const ÉtablissementLienExterne = ({ établissement, mettreÀJourUnVoeu, estFavoris }: ÉtablissementLienExterneProps) => {

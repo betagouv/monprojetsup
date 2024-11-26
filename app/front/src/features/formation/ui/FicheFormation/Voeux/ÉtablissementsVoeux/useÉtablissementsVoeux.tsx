@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
-import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/useLienParcoursupVoeu.ts";
+import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useLienParcoursupVoeu.ts";
 import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useMemo } from "react";
@@ -8,14 +8,14 @@ import { useMemo } from "react";
 export default function useÉtablissementsVoeux({ formation }: UseÉtablissementsVoeuxArgs) {
   const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
 
+  const { creerUrlParcoursup } = useLienParcoursupVoeu();
+
   const voeuxSélectionnés = useMemo(() => {
     if (!élève) return [];
 
     const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formation.id);
 
     const idsVoeuxSelectionnés = new Set(formationFavorite?.voeux);
-
-    const { creerUrlParcoursup } = useLienParcoursupVoeu();
 
     const voeuxFavoris = formation.établissements
       .filter((etablissement) => idsVoeuxSelectionnés.has(etablissement.id))
@@ -25,7 +25,7 @@ export default function useÉtablissementsVoeux({ formation }: UseÉtablissement
         urlParcoursup: creerUrlParcoursup(etablissement.id),
       }));
     return voeuxFavoris ?? [];
-  }, [formation.id, formation.établissements, élève]);
+  }, [creerUrlParcoursup, formation.id, formation.établissements, élève]);
 
   const mettreÀJourLesVoeux = (voeux: FormationFavorite["voeux"]) => {
     void mettreÀJourUneFormationFavorite(formation.id, {

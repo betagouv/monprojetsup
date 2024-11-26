@@ -14,6 +14,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "Générale",
         nom: "Bac Général",
+        idCarteParcoursup: "1",
         spécialités: [
           {
             id: "mat709",
@@ -272,6 +273,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STAV",
         nom: "Bac STAV",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat321",
@@ -466,6 +468,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STHR",
         nom: "Bac STHR",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat1008",
@@ -652,6 +655,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "ST2S",
         nom: "Bac ST2S",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat320",
@@ -838,6 +842,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STMG",
         nom: "Bac STMG",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat1038",
@@ -1036,6 +1041,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STD2A",
         nom: "Bac STD2A",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat2",
@@ -1226,6 +1232,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STI2D",
         nom: "Bac STI2D",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat1056",
@@ -1412,6 +1419,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "STL",
         nom: "Bac STL",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat740",
@@ -1602,6 +1610,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "S2TMD",
         nom: "Bac S2TMD",
+        idCarteParcoursup: "2",
         spécialités: [
           {
             id: "mat1049",
@@ -1800,6 +1809,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "P",
         nom: "Bac Professionnel",
+        idCarteParcoursup: "3",
         spécialités: [],
         statistiquesAdmission: {
           parMoyenneGénérale: [
@@ -1969,6 +1979,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "PA",
         nom: "Bac Professionnel Agricole",
+        idCarteParcoursup: "3",
         spécialités: [],
         statistiquesAdmission: {
           parMoyenneGénérale: [
@@ -2138,6 +2149,7 @@ export class RéférentielDonnéesInMemoryRepository implements RéférentielDon
       {
         id: "NC",
         nom: "Non-communiqué",
+        idCarteParcoursup: "0",
         spécialités: [
           {
             id: "mat1067",

@@ -14,6 +14,7 @@ export type SpécialitéBac = {
 export type Bac = {
   id: BacÉlève;
   nom: string;
+  idCarteParcoursup: string;
   spécialités: SpécialitéBac[];
   statistiquesAdmission: {
     parMoyenneGénérale: Array<{

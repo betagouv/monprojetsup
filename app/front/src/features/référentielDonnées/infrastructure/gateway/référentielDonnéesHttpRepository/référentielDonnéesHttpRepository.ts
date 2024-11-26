@@ -35,6 +35,7 @@ export class RéférentielDonnéesHttpRepository implements RéférentielDonnée
         return {
           id: bac.baccalaureat.id as BacÉlève,
           nom: bac.baccalaureat.nom,
+          idCarteParcoursup: bac.baccalaureat.idCarteParcoursup,
           spécialités: bac.specialites,
           statistiquesAdmission: {
             parMoyenneGénérale:

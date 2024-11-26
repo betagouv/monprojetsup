@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/rules-of-hooks */
 import { type UseÉtablissementsVoeuxOngletArgs } from "./ÉtablissementsVoeuxOnglet.interface";
 import { constantes } from "@/configuration/constantes";
-import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/useLienParcoursupVoeu.ts";
+import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useLienParcoursupVoeu.ts";
 import { useEffect, useMemo, useState } from "react";
 
 const rayons = constantes.FICHE_FORMATION.RAYONS_RECHERCHE_ÉTABLISSEMENTS;

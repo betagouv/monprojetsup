@@ -3,7 +3,7 @@ import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOngl
 import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
 import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
-import ÉtablissementLienExterne from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementsVoeuxOnglet/ÉtablissementLienExterne/ÉtablissementLienExterne.tsx";
+import ÉtablissementLienExterne from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementLienExterne/ÉtablissementLienExterne";
 
 const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsVoeuxOngletProps) => {
   const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useÉtablissementsVoeux({ formation });

@@ -411,6 +411,7 @@ export interface components {
         BaccalaureatDTO: {
             id: string;
             nom: string;
+            idCarteParcoursup: string;
         };
         CategorieDomaineAvecDomainesDTO: {
             categorieDomaine: components["schemas"]["CategorieDomaineDTO"];
