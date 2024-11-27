@@ -144,10 +144,16 @@ class FormationsMpsTests : DataPortTest() {
     @Nested
     inner class AdmissionStatsTests {
 
+
+        @Test
+        fun `le bac NC apparait dans la liste des bacs`() {
+            val keys = HashSet(mpsDataPort.getBacs().map { b -> b.key })
+            assertThat(keys).contains(PsupStatistiques.TOUS_BACS_CODE_MPS)
+        }
+
         @Test
         fun `tous les bacs de toutes les stats sont connus`() {
             val keys = HashSet(mpsDataPort.getBacs().map { b -> b.key })
-            keys.add(PsupStatistiques.TOUS_BACS_CODE_MPS)
             val statsKeys = mpsDataPort.getStatsFormation().flatMap { it.value.nbAdmisParBac.keys }
             assertThat(keys).containsAll(statsKeys)
         }

@@ -45,6 +45,7 @@ import fr.gouv.monprojetsup.data.model.onisep.OnisepData
 import fr.gouv.monprojetsup.data.model.psup.AdmissionStats
 import fr.gouv.monprojetsup.data.model.psup.PsupData
 import fr.gouv.monprojetsup.data.model.specialites.Specialites
+import fr.gouv.monprojetsup.data.model.stats.PsupStatistiques
 import fr.gouv.monprojetsup.data.model.tags.TagsFormations
 import fr.gouv.monprojetsup.data.model.taxonomie.Taxonomie
 import fr.gouv.monprojetsup.data.suggestions.entity.SuggestionsEdgeEntity.Companion.TYPE_EDGE_ATOME_ELEMENT
@@ -948,7 +949,11 @@ class MpsDataFromFiles(
     }
 
     override fun getBacs(): List<Bac> {
-        return psupData.bacs
+        val result = ArrayList(psupData.bacs)
+        if(!result.any { it.key == PsupStatistiques.TOUS_BACS_CODE_MPS }) {
+            result.add(Bac(PsupStatistiques.TOUS_BACS_CODE_MPS, "Non communiqué"))
+        }
+        return result
     }
 
     override fun getDomaines(): Taxonomie {
