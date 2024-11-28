@@ -1,11 +1,10 @@
-import { type CommentaireProps } from "./Commentaire.interface.tsx";
 import useCommentaire from "./useCommentaire.tsx";
 import Bouton from "@/components/Bouton/Bouton";
 import ChampZoneDeTexte from "@/components/ChampZoneDeTexte/ChampZoneDeTexte";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const Commentaire = ({ formationId }: CommentaireProps) => {
-  const { enregistrerLeCommentaire, commentaireParDéfaut, status } = useCommentaire({ formationId });
+const Commentaire = () => {
+  const { enregistrerLeCommentaire, commentaireParDéfaut, status } = useCommentaire();
 
   return (
     <form

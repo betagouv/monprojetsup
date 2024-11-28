@@ -1,4 +1,5 @@
 import { type BoutonSqueletteProps } from "@/components/BoutonSquelette/BoutonSquelette.interface";
+import { AriaRole } from "react";
 
 export type BoutonProps = {
   label: BoutonSqueletteProps["label"];
@@ -11,4 +12,5 @@ export type BoutonProps = {
   formId?: string;
   ariaControls?: string;
   dataFrOpened?: string;
+  rôle?: AriaRole;
 };

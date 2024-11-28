@@ -3,6 +3,15 @@ import {
   type DuréeÉtudesPrévueÉlève,
 } from "@/features/référentielDonnées/domain/référentielDonnées.interface";
 
+export type Voeu = {
+  id: string;
+  nom: string;
+  commune: {
+    nom: string;
+    code: string;
+  };
+};
+
 export type Formation = {
   id: string;
   nom: string;
@@ -34,14 +43,7 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  voeux: Array<{
-    id: string;
-    nom: string;
-    commune: {
-      nom: string;
-      code: string;
-    };
-  }>;
+  voeux: Array<Voeu>;
   voeuxParCommuneFavorites: Array<{
     commune: {
       nom: string;

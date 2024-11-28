@@ -13,6 +13,7 @@ const Bouton = ({
   formId,
   ariaControls,
   dataFrOpened,
+  rôle = "button",
 }: BoutonProps) => {
   return (
     <button
@@ -21,6 +22,7 @@ const Bouton = ({
       disabled={désactivé}
       form={formId}
       onClick={auClic}
+      role={rôle}
       type={type}
     >
       <BoutonSquelette

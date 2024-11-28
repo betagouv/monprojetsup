@@ -1,14 +1,21 @@
-import { type AmbitionProps } from "./Ambition.interface.tsx";
 import useAmbition from "./useAmbition.tsx";
 import TagFiltreAvecEmoji from "@/components/TagFiltreAvecEmoji/TagFiltreAvecEmoji";
+import Titre from "@/components/Titre/Titre.tsx";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const Ambition = ({ ambitionActuelle, formationId }: AmbitionProps) => {
-  const { ambitions, mettreAJourAmbition, key } = useAmbition({ formationId });
+const Ambition = () => {
+  const { ambitions, mettreAJourAmbition, key, ambitionActuelle } = useAmbition();
 
   return (
     <div>
-      <p className="mb-4 font-medium text-[--text-label-grey]">{i18n.PAGE_FORMATION.CHOIX.AMBITIONS.LÉGENDE}</p>
+      <div className="*:mb-4">
+        <Titre
+          niveauDeTitre="h3"
+          styleDeTitre="text--lg"
+        >
+          {i18n.PAGE_FORMATION.CHOIX.AMBITIONS.TITRE}
+        </Titre>
+      </div>
       <ul className="m-0 flex list-none flex-wrap justify-start gap-4 p-0">
         {ambitions.map((ambition) => (
           <li key={ambition.niveau}>

@@ -84,7 +84,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
             className="fr-collapse"
             id="accordeon-voeux"
           >
-            <VoeuxFicheFormation formation={formation} />
+            <VoeuxFicheFormation />
           </div>
         </section>
       )}

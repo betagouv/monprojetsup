@@ -112,7 +112,7 @@ export const localeFR = {
     CHOIX: {
       TITRE: "Dis-nous en plus sur ce choix",
       AMBITIONS: {
-        LÉGENDE: "Je dirais que c’est un choix ...",
+        TITRE: "Je dirais que c’est un choix ...",
         PLAN_B: {
           LABEL: "Plan B",
           EMOJI: "🛟",
@@ -127,12 +127,13 @@ export const localeFR = {
         },
       },
       VOEUX: {
-        LÉGENDE: "Établissements pour lesquels je souhaite candidater",
+        TITRE: "Établissements pour lesquels je souhaite candidater",
         LIENS: {
           PARCOURSUP: "Carte Parcoursup",
           PRÉFÉRENCES: "Préférences de villes",
         },
         PAR_COMMUNE: {
+          TITRE: "Établissements",
           RAYON: "Dans un rayon de",
           VOIR_PLUS: "établissements dans ce rayon, retrouve toute l’offre de formation sur la",
           AUCUN_VOEU_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
@@ -144,10 +145,13 @@ export const localeFR = {
           RAPPEL: "Tu peux paramétrer les villes dans lesquelles tu souhaiterais étudier.",
           LIEN_PRÉFÉRENCES: "Préférences de villes ›",
           LABEL: "Établissements",
-          DESCRIPTION:
-            "Commence à taper puis sélectionne des établissements. Les résultats retournés sont limités à 5, retrouve toute l'offre de formation sur la carte Parcoursup.",
+          DESCRIPTION: "Commence à taper puis sélectionne des établissements",
           SÉLECTIONNÉS: "Établissement(s) sélectionné(s)",
           VOIR_PLUS: "établissement(s) conforme(s) à ta recherche, retrouve toute l’offre de formation sur la",
+        },
+        MA_SÉLECTION: {
+          TITRE: "Ma sélection",
+          AUCUN: "Aucun établissement sélectionné en favoris",
         },
       },
       COMMENTAIRE: {
@@ -469,6 +473,7 @@ export const localeFR = {
     CHARGEMENT: "Chargement",
     FAVORIS: "Favoris",
     MASQUÉ: "Masqué",
+    METTRE_EN_FAVORI: "Mettre en favori",
     LIEN_EXTERNE: "ouvre un lien externe",
     LIEN_EMAIL: "envoyer un email",
     LIEN_TÉLÉPHONE: "composer le numéro",
@@ -482,5 +487,6 @@ export const localeFR = {
     FERMER_MODALE: "Fermer la fenêtre modale",
     CONTENU: "Contenu",
     PIED_PAGE: "Pied de page",
+    NOUVEAUX_RÉSULATS: "nouveaux résultats",
   },
 } as const;

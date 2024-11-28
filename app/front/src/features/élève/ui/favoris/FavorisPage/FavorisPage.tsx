@@ -9,15 +9,15 @@ import { récupérerFormationsQueryOptions } from "@/features/formation/ui/forma
 import { récupérerMétiersQueryOptions } from "@/features/métier/ui/métierQueries";
 import BarreLatéraleFavoris from "@/features/élève/ui/favoris/BarreLatéraleFavoris/BarreLatéraleFavoris";
 import ContenuFavoris from "@/features/élève/ui/favoris/ContenuFavoris/ContenuFavoris";
-import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "@tanstack/react-router";
+import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const FavorisPage = () => {
-  const { data: élève } = useQuery(élèveQueryOptions);
   const { changerÉlémentAffiché } = actionsListeEtAperçuStore();
   const { hash } = useLocation();
+  const routeApi = getRouteApi("/_auth/favoris/");
+  const élève = routeApi.useLoaderData();
 
   const { data: formations } = useQuery(
     récupérerFormationsQueryOptions(élève?.formationsFavorites?.map((formationFavorite) => formationFavorite.id) ?? []),

@@ -1,10 +1,15 @@
-import { type useAmbitionArgs } from "./Ambition.interface.tsx";
+import { élémentAffichéListeEtAperçuStore } from "@/components/_layout/ListeEtAperçuLayout/store/useListeEtAperçu/useListeEtAperçu.ts";
 import { i18n } from "@/configuration/i18n/i18n";
 import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 
-export default function useAmbition({ formationId }: useAmbitionArgs) {
+export default function useAmbition() {
   const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
+  const formationAffichée = élémentAffichéListeEtAperçuStore();
+
+  const ambitionActuelle =
+    élève?.formationsFavorites?.find((formationFavorite) => formationAffichée.id === formationFavorite.id)
+      ?.niveauAmbition ?? null;
 
   const ambitions: Array<{ niveau: NonNullable<FormationFavorite["niveauAmbition"]>; emoji: string; libellé: string }> =
     [
@@ -26,18 +31,19 @@ export default function useAmbition({ formationId }: useAmbitionArgs) {
     ];
 
   const mettreAJourAmbition = (niveauAmbition: FormationFavorite["niveauAmbition"]) => {
-    if (!élève) return;
+    if (!élève || !formationAffichée.id) return;
 
-    const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formationId);
+    const formationFavorite = élève.formationsFavorites?.find(({ id }) => id === formationAffichée.id);
 
     if (formationFavorite && niveauAmbition === formationFavorite.niveauAmbition) {
-      void mettreÀJourUneFormationFavorite(formationId, { niveauAmbition: null });
+      void mettreÀJourUneFormationFavorite(formationAffichée.id, { niveauAmbition: null });
     } else {
-      void mettreÀJourUneFormationFavorite(formationId, { niveauAmbition });
+      void mettreÀJourUneFormationFavorite(formationAffichée.id, { niveauAmbition });
     }
   };
 
   return {
+    ambitionActuelle,
     ambitions,
     mettreAJourAmbition,
     key: JSON.stringify(élève?.formationsFavorites),

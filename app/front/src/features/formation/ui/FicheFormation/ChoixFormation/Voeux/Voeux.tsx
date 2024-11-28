@@ -1,37 +1,24 @@
 import useVoeux from "./useVoeux";
-import { type VoeuxProps } from "./Voeux.interface";
-import VoeuxOnglet from "./VoeuxOnglet/VoeuxOnglet";
-import VoeuxOngletToutesLesCommunes from "./VoeuxOngletToutesLesCommunes/VoeuxOngletToutesLesCommunes";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
 import LienInterne from "@/components/Lien/LienInterne/LienInterne";
+import Titre from "@/components/Titre/Titre.tsx";
 import { i18n } from "@/configuration/i18n/i18n";
-import { trierTableauDObjetsParOrdreAlphabétique } from "@/utils/array";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
-const Voeux = ({ formation }: VoeuxProps) => {
-  const { communesFavorites } = useVoeux({ formation });
-
-  const ongletsParCommuneFavorite = trierTableauDObjetsParOrdreAlphabétique(communesFavorites ?? [], "nom").map(
-    (communeFavorite) => ({
-      label: communeFavorite.nom,
-      content: (
-        <VoeuxOnglet
-          codeCommune={communeFavorite.codeInsee}
-          formation={formation}
-        />
-      ),
-    }),
-  );
-
-  const ongletToutesLesCommunes = {
-    label: i18n.PAGE_FORMATION.CHOIX.VOEUX.TOUTES_LES_COMMUNES.TITRE_ONGLET,
-    content: <VoeuxOngletToutesLesCommunes formation={formation} />,
-  };
+const Voeux = () => {
+  const { ongletToutesLesCommunes, ongletsParCommuneFavorite, lienParcoursup } = useVoeux();
 
   return (
     <>
       <div>
-        <p className="mb-0 font-medium text-[--text-label-grey]">{i18n.PAGE_FORMATION.CHOIX.VOEUX.LÉGENDE}</p>
+        <div className="*:mb-0">
+          <Titre
+            niveauDeTitre="h3"
+            styleDeTitre="text--lg"
+          >
+            {i18n.PAGE_FORMATION.CHOIX.VOEUX.TITRE}
+          </Titre>
+        </div>
         <div className="ml-1 grid grid-flow-col justify-start gap-6">
           <LienInterne
             ariaLabel={i18n.PAGE_FORMATION.CHOIX.VOEUX.LIENS.PRÉFÉRENCES}
@@ -43,10 +30,10 @@ const Voeux = ({ formation }: VoeuxProps) => {
           >
             {i18n.PAGE_FORMATION.CHOIX.VOEUX.LIENS.PRÉFÉRENCES}
           </LienInterne>
-          {formation.lienParcoursSup && (
+          {lienParcoursup && (
             <LienExterne
               ariaLabel={i18n.PAGE_FORMATION.CHOIX.VOEUX.LIENS.PARCOURSUP}
-              href={formation.lienParcoursSup}
+              href={lienParcoursup}
               taille="petit"
               variante="simple"
             >
