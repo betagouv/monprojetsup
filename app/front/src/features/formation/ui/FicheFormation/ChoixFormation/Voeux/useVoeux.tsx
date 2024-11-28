@@ -1,11 +1,10 @@
-/* eslint-disable sonarjs/rules-of-hooks */
-import { type UseÉtablissementsVoeuxArgs } from "./ÉtablissementsVoeux.interface";
-import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useLienParcoursupVoeu.ts";
+import { type UseVoeuxArgs } from "./Voeux.interface";
+import useLienParcoursupVoeu from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/useLienParcoursupVoeu.ts";
 import { type FormationFavorite } from "@/features/élève/domain/élève.interface";
 import useÉlève from "@/features/élève/ui/hooks/useÉlève/useÉlève";
 import { useMemo } from "react";
 
-export default function useÉtablissementsVoeux({ formation }: UseÉtablissementsVoeuxArgs) {
+export default function useVoeux({ formation }: UseVoeuxArgs) {
   const { mettreÀJourUneFormationFavorite, élève } = useÉlève({});
 
   const { creerUrlParcoursup } = useLienParcoursupVoeu();
@@ -17,15 +16,15 @@ export default function useÉtablissementsVoeux({ formation }: UseÉtablissement
 
     const idsVoeuxSelectionnés = new Set(formationFavorite?.voeux);
 
-    const voeuxFavoris = formation.établissements
-      .filter((etablissement) => idsVoeuxSelectionnés.has(etablissement.id))
-      .map((etablissement) => ({
-        id: etablissement.id,
-        nom: etablissement.nom,
-        urlParcoursup: creerUrlParcoursup(etablissement.id),
+    const voeuxFavoris = formation.voeux
+      .filter((voeu) => idsVoeuxSelectionnés.has(voeu.id))
+      .map((voeu) => ({
+        id: voeu.id,
+        nom: voeu.nom,
+        urlParcoursup: creerUrlParcoursup(voeu.id),
       }));
     return voeuxFavoris ?? [];
-  }, [creerUrlParcoursup, formation.id, formation.établissements, élève]);
+  }, [creerUrlParcoursup, formation.id, formation.voeux, élève]);
 
   const mettreÀJourLesVoeux = (voeux: FormationFavorite["voeux"]) => {
     void mettreÀJourUneFormationFavorite(formation.id, {

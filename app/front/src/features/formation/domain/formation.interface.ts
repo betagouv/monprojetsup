@@ -34,7 +34,7 @@ export type Formation = {
   };
   formationsAssociées: string[];
   critèresAnalyse: Array<{ nom: string; pourcentage: number }>;
-  établissements: Array<{
+  voeux: Array<{
     id: string;
     nom: string;
     commune: {
@@ -42,12 +42,12 @@ export type Formation = {
       code: string;
     };
   }>;
-  établissementsParCommuneFavorites: Array<{
+  voeuxParCommuneFavorites: Array<{
     commune: {
       nom: string;
       code: string;
     };
-    établissements: Array<{
+    voeux: Array<{
       id: string;
       nom: string;
       distanceEnKm: number;

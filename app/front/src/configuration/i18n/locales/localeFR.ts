@@ -109,7 +109,7 @@ export const localeFR = {
       MOYENNE_SUITE: ", la moitié avait une moyenne au bac dans l’intervalle",
       EXPLICATION_CALCUL: "Détails du calcul du score (mode expert)",
     },
-    VOEUX: {
+    CHOIX: {
       TITRE: "Dis-nous en plus sur ce choix",
       AMBITIONS: {
         LÉGENDE: "Je dirais que c’est un choix ...",
@@ -126,7 +126,7 @@ export const localeFR = {
           EMOJI: "🙏",
         },
       },
-      ÉTABLISSEMENTS: {
+      VOEUX: {
         LÉGENDE: "Établissements pour lesquels je souhaite candidater",
         LIENS: {
           PARCOURSUP: "Carte Parcoursup",
@@ -135,8 +135,8 @@ export const localeFR = {
         PAR_COMMUNE: {
           RAYON: "Dans un rayon de",
           VOIR_PLUS: "établissements dans ce rayon, retrouve toute l’offre de formation sur la",
-          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
-          AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE:
+          AUCUN_VOEU_À_PROXIMITÉ: "Il n’existe pas d’offres dans un rayon de",
+          AUCUN_VOEU_À_PROXIMITÉ_SUITE:
             'km autour de cette ville, consulte la carte des formations Parcoursup ou l’onglet "Toutes les villes"',
         },
         TOUTES_LES_COMMUNES: {
@@ -477,7 +477,7 @@ export const localeFR = {
     VOUS_ÊTES_ICI: "Vous êtes ici :",
     MENU_PRINCIPAL: "Menu principal",
     ONGLETS_FORMATION: "Détails sur la formation",
-    ONGLETS_VOEUX_ÉTABLISSEMENTS: "Établissements par ville",
+    ONGLETS_VOEUX: "Établissements par ville",
     VERSION_TEXTE_GRAPHIQUE: "Version texte du graphique",
     FERMER_MODALE: "Fermer la fenêtre modale",
     CONTENU: "Contenu",

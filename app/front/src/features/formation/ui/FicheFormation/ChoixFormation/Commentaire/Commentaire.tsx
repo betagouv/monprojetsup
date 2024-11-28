@@ -1,11 +1,11 @@
-import { type CommentaireVoeuxProps } from "./CommentaireVoeux.interface";
-import useCommentaireVoeux from "./useCommentaireVoeux";
+import { type CommentaireProps } from "./Commentaire.interface.tsx";
+import useCommentaire from "./useCommentaire.tsx";
 import Bouton from "@/components/Bouton/Bouton";
 import ChampZoneDeTexte from "@/components/ChampZoneDeTexte/ChampZoneDeTexte";
 import { i18n } from "@/configuration/i18n/i18n";
 
-const CommentaireVoeux = ({ formationId }: CommentaireVoeuxProps) => {
-  const { enregistrerLeCommentaire, commentaireParDéfaut, status } = useCommentaireVoeux({ formationId });
+const Commentaire = ({ formationId }: CommentaireProps) => {
+  const { enregistrerLeCommentaire, commentaireParDéfaut, status } = useCommentaire({ formationId });
 
   return (
     <form
@@ -14,15 +14,15 @@ const CommentaireVoeux = ({ formationId }: CommentaireVoeuxProps) => {
     >
       <ChampZoneDeTexte
         entête={{
-          label: i18n.PAGE_FORMATION.VOEUX.COMMENTAIRE.LABEL,
+          label: i18n.PAGE_FORMATION.CHOIX.COMMENTAIRE.LABEL,
         }}
-        id="commentairevoeux"
+        id="commentaire"
         status={status}
         valeurParDéfaut={commentaireParDéfaut}
       />
       <div className="sm:mt-7">
         <Bouton
-          label={i18n.PAGE_FORMATION.VOEUX.COMMENTAIRE.BOUTON}
+          label={i18n.PAGE_FORMATION.CHOIX.COMMENTAIRE.BOUTON}
           type="submit"
           variante="tertiaire"
         />
@@ -31,4 +31,4 @@ const CommentaireVoeux = ({ formationId }: CommentaireVoeuxProps) => {
   );
 };
 
-export default CommentaireVoeux;
+export default Commentaire;

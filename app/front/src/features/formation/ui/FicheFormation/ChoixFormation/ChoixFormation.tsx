@@ -1,13 +1,13 @@
-import AmbitionVoeux from "./AmbitionVoeux/AmbitionVoeux";
-import CommentaireVoeux from "./CommentaireVoeux/CommentaireVoeux";
-import { type VoeuxProps } from "./Voeux.interface";
-import ÉtablissementsVoeux from "./ÉtablissementsVoeux/ÉtablissementsVoeux";
+import { type ChoixFormationProps } from "./ChoixFormation.interface.tsx";
+import Voeux from "./Voeux/Voeux";
 import Titre from "@/components/Titre/Titre";
 import { i18n } from "@/configuration/i18n/i18n";
+import Ambition from "@/features/formation/ui/FicheFormation/ChoixFormation/Ambition/Ambition.tsx";
+import Commentaire from "@/features/formation/ui/FicheFormation/ChoixFormation/Commentaire/Commentaire.tsx";
 import { élèveQueryOptions } from "@/features/élève/ui/élèveQueries";
 import { useQuery } from "@tanstack/react-query";
 
-const Voeux = ({ formation }: VoeuxProps) => {
+const ChoixFormation = ({ formation }: ChoixFormationProps) => {
   const { data: élève } = useQuery(élèveQueryOptions);
 
   if (!élève) return null;
@@ -21,19 +21,19 @@ const Voeux = ({ formation }: VoeuxProps) => {
           niveauDeTitre="h2"
           styleDeTitre="h4"
         >
-          {i18n.PAGE_FORMATION.VOEUX.TITRE}
+          {i18n.PAGE_FORMATION.CHOIX.TITRE}
         </Titre>
       </div>
-      <AmbitionVoeux
+      <Ambition
         ambitionActuelle={détailFavori?.niveauAmbition}
         formationId={formation.id}
       />
       <hr className="pb-[1px]" />
-      <ÉtablissementsVoeux formation={formation} />
+      <Voeux formation={formation} />
       <hr className="pb-[1px]" />
-      <CommentaireVoeux formationId={formation.id} />
+      <Commentaire formationId={formation.id} />
     </div>
   );
 };
 
-export default Voeux;
+export default ChoixFormation;

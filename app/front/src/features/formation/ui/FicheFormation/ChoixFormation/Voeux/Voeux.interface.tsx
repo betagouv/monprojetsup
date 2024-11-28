@@ -1,9 +1,9 @@
 import { type Formation } from "@/features/formation/domain/formation.interface";
 
-export type ÉtablissementsVoeuxProps = {
+export type VoeuxProps = {
   formation: Formation;
 };
 
-export type UseÉtablissementsVoeuxArgs = {
+export type UseVoeuxArgs = {
   formation: Formation;
 };

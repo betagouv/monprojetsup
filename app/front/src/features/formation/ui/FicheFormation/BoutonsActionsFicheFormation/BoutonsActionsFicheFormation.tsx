@@ -3,7 +3,7 @@ import useBoutonsActionsFicheFormation from "./useBoutonsActionsFicheFormation";
 import Bouton from "@/components/Bouton/Bouton";
 import { constantes } from "@/configuration/constantes";
 import { i18n } from "@/configuration/i18n/i18n";
-import VoeuxFicheFormation from "@/features/formation/ui/FicheFormation/Voeux/Voeux";
+import VoeuxFicheFormation from "@/features/formation/ui/FicheFormation/ChoixFormation/ChoixFormation.tsx";
 
 const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormationProps) => {
   const {
@@ -77,7 +77,7 @@ const BoutonsActionsFicheFormation = ({ formation }: BoutonsActionsFicheFormatio
               className="fr-accordion__btn"
               type="button"
             >
-              {i18n.PAGE_FORMATION.VOEUX.TITRE}
+              {i18n.PAGE_FORMATION.CHOIX.TITRE}
             </button>
           </h2>
           <div

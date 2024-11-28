@@ -1,21 +1,21 @@
-import useÉtablissementsVoeuxOnglet from "./useÉtablissementsVoeuxOnglet";
-import { type ÉtablissementsVoeuxOngletProps } from "./ÉtablissementsVoeuxOnglet.interface";
+import useVoeuxOnglet from "./useVoeuxOnglet";
+import { type VoeuxOngletProps } from "./VoeuxOnglet.interface";
 import Bouton from "@/components/Bouton/Bouton";
 import { i18n } from "@/configuration/i18n/i18n";
-import useÉtablissementsVoeux from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/useÉtablissementsVoeux";
-import ÉtablissementLienExterne from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementLienExterne/ÉtablissementLienExterne";
+import useVoeux from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/useVoeux";
+import VoeuLienExterne from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/VoeuLienExterne/VoeuLienExterne.tsx";
 
-const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsVoeuxOngletProps) => {
-  const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useÉtablissementsVoeux({ formation });
+const VoeuxOnglet = ({ formation, codeCommune }: VoeuxOngletProps) => {
+  const { mettreÀJourUnVoeu, voeuxSélectionnés, key } = useVoeux({ formation });
   const {
-    nombreÉtablissementÀAfficher,
-    nombreÉtablissementsDansLeRayon,
-    établissementsÀAfficher,
+    nombreVoeuÀAfficher,
+    nombreVoeuxDansLeRayon,
+    voeuxÀAfficher,
     afficherPlusDeRésultats,
     rayonSélectionné,
     changerRayonSélectionné,
     rayons,
-  } = useÉtablissementsVoeuxOnglet({
+  } = useVoeuxOnglet({
     formation,
     codeCommune,
   });
@@ -23,7 +23,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
   return (
     <div key={key}>
       <div className="fr-text--xs mb-3 grid grid-flow-col items-baseline justify-start gap-1">
-        <p className="fr-text--xs mb-0">{i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.RAYON} </p>
+        <p className="fr-text--xs mb-0">{i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.RAYON} </p>
         <ul className="m-0 inline-flex list-none flex-wrap justify-start gap-1 p-0">
           {rayons.map((rayon) => (
             <li
@@ -43,26 +43,26 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
         </ul>
       </div>
       <div className="mb-2">
-        <strong className="fr-text--md mb-0">Établissements disponibles</strong>
+        <strong className="fr-text--md mb-0">Voeux disponibles</strong>
       </div>
       <div aria-live="polite">
-        {établissementsÀAfficher.length > 0 ? (
+        {voeuxÀAfficher.length > 0 ? (
           <div className="grid gap-6">
             <ul className="m-0 grid grid-flow-row justify-start gap-4 p-0">
-              {établissementsÀAfficher.map((établissement) => (
+              {voeuxÀAfficher.map((voeu) => (
                 <li
                   className="grid grid-flow-col justify-between gap-4"
-                  key={établissement.id}
+                  key={voeu.id}
                 >
-                  <ÉtablissementLienExterne
-                    estFavoris={voeuxSélectionnés?.some(({ id }) => id === établissement.id)}
+                  <VoeuLienExterne
+                    estFavoris={voeuxSélectionnés?.some(({ id }) => id === voeu.id)}
                     mettreÀJourUnVoeu={mettreÀJourUnVoeu}
-                    établissement={établissement}
+                    voeu={voeu}
                   />
                 </li>
               ))}
             </ul>
-            {nombreÉtablissementsDansLeRayon > nombreÉtablissementÀAfficher && (
+            {nombreVoeuxDansLeRayon > nombreVoeuÀAfficher && (
               <Bouton
                 auClic={() => afficherPlusDeRésultats()}
                 label="Plus de résultats"
@@ -80,10 +80,10 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
                       className="flex items-center gap-2"
                       key={voeu.id}
                     >
-                      <ÉtablissementLienExterne
+                      <VoeuLienExterne
                         estFavoris={voeuxSélectionnés?.some(({ id }) => id === voeu.id)}
                         mettreÀJourUnVoeu={mettreÀJourUnVoeu}
-                        établissement={voeu}
+                        voeu={voeu}
                       />
                     </li>
                   ))}
@@ -93,8 +93,8 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
           </div>
         ) : (
           <p className="fr-text--sm mb-0">
-            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ} {rayonSélectionné}{" "}
-            {i18n.PAGE_FORMATION.VOEUX.ÉTABLISSEMENTS.PAR_COMMUNE.AUCUN_ÉTABLISSEMENT_À_PROXIMITÉ_SUITE}
+            {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ} {rayonSélectionné}{" "}
+            {i18n.PAGE_FORMATION.CHOIX.VOEUX.PAR_COMMUNE.AUCUN_VOEU_À_PROXIMITÉ_SUITE}
           </p>
         )}
       </div>
@@ -102,4 +102,4 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
   );
 };
 
-export default ÉtablissementsVoeuxOnglet;
+export default VoeuxOnglet;

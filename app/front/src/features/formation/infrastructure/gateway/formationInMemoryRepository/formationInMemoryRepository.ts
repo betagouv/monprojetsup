@@ -13,8 +13,8 @@ export class formationInMemoryRepository implements FormationRepository {
       estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -38,8 +38,8 @@ export class formationInMemoryRepository implements FormationRepository {
       estEnAlternance: false,
       liens: [],
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -63,8 +63,8 @@ export class formationInMemoryRepository implements FormationRepository {
       estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -88,8 +88,8 @@ export class formationInMemoryRepository implements FormationRepository {
       estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -113,8 +113,8 @@ export class formationInMemoryRepository implements FormationRepository {
       estEnAlternance: true,
       liens: [],
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,
@@ -138,8 +138,8 @@ export class formationInMemoryRepository implements FormationRepository {
       liens: [],
       estEnAlternance: true,
       communesProposantLaFormation: [],
-      établissements: [],
-      établissementsParCommuneFavorites: [],
+      voeux: [],
+      voeuxParCommuneFavorites: [],
       admis: {
         moyenneGénérale: {
           idBac: null,

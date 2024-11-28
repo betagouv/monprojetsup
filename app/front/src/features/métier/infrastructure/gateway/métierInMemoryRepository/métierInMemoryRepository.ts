@@ -74,7 +74,7 @@ export class métierInMemoryRepository implements MétierRepository {
       id: "MET_867",
       nom: "gestionnaire de contrats d'assurance",
       descriptif:
-        "<p>Vol, incendie, accidents... Le gestionnaire de contrats d'assurances est l'interlocuteur privilégié des assurés, qu'il accompagne de l'établissement du contrat jusqu'à la réparation du dommage. Il intervient aussi pour indemniser en cas de sinistre.</p>",
+        "<p>Vol, incendie, accidents... Le gestionnaire de contrats d'assurances est l'interlocuteur privilégié des assurés, qu'il accompagne de l'voeu du contrat jusqu'à la réparation du dommage. Il intervient aussi pour indemniser en cas de sinistre.</p>",
       liens: [],
       formations: [],
     },

@@ -1,24 +1,24 @@
 import BoutonSquelette from "@/components/BoutonSquelette/BoutonSquelette.tsx";
 import LienExterne from "@/components/Lien/LienExterne/LienExterne";
-import { ÉtablissementLienExterneProps } from "@/features/formation/ui/FicheFormation/Voeux/ÉtablissementsVoeux/ÉtablissementLienExterne/ÉtablissementLienExterne.interface";
+import { VoeuLienExterneProps } from "@/features/formation/ui/FicheFormation/ChoixFormation/Voeux/VoeuLienExterne/VoeuLienExterneProps";
 import { Toggle } from "@radix-ui/react-toggle";
 
-const ÉtablissementLienExterne = ({ établissement, mettreÀJourUnVoeu, estFavoris }: ÉtablissementLienExterneProps) => {
+const VoeuLienExterne = ({ voeu, mettreÀJourUnVoeu, estFavoris }: VoeuLienExterneProps) => {
   return (
     <>
       <div>
         <LienExterne
-          ariaLabel={établissement.nom}
-          href={établissement.urlParcoursup}
+          ariaLabel={voeu.nom}
+          href={voeu.urlParcoursup}
           taille="petit"
           variante="simple"
         >
-          {établissement.nom}
+          {voeu.nom}
         </LienExterne>
       </div>
       <Toggle
         aria-label="Voeu favoris"
-        onPressedChange={() => mettreÀJourUnVoeu(établissement.id)}
+        onPressedChange={() => mettreÀJourUnVoeu(voeu.id)}
         pressed={estFavoris}
       >
         <BoutonSquelette
@@ -35,4 +35,4 @@ const ÉtablissementLienExterne = ({ établissement, mettreÀJourUnVoeu, estFavo
   );
 };
 
-export default ÉtablissementLienExterne;
+export default VoeuLienExterne;

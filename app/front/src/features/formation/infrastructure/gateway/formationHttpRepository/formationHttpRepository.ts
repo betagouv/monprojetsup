@@ -128,20 +128,20 @@ export class formationHttpRepository implements FormationRepository {
         nom: critère.nom,
         pourcentage: critère.pourcentage,
       })),
-      établissements: formationHttp.formation.voeux.map((établissement) => ({
-        id: établissement.id,
-        nom: établissement.nom,
-        commune: { nom: établissement.commune.nom, code: établissement.commune.codeInsee },
+      voeux: formationHttp.formation.voeux.map((voeu) => ({
+        id: voeu.id,
+        nom: voeu.nom,
+        commune: { nom: voeu.commune.nom, code: voeu.commune.codeInsee },
       })),
-      établissementsParCommuneFavorites: formationHttp.formation.communesFavoritesAvecLeursVoeux.map((commune) => ({
+      voeuxParCommuneFavorites: formationHttp.formation.communesFavoritesAvecLeursVoeux.map((commune) => ({
         commune: {
           code: commune.commune.codeInsee,
           nom: commune.commune.nom,
         },
-        établissements: commune.voeuxAvecDistance.map((établissement) => ({
-          id: établissement.voeu.id,
-          nom: établissement.voeu.nom,
-          distanceEnKm: établissement.distanceKm,
+        voeux: commune.voeuxAvecDistance.map((voeu) => ({
+          id: voeu.voeu.id,
+          nom: voeu.voeu.nom,
+          distanceEnKm: voeu.distanceKm,
         })),
       })),
       communesProposantLaFormation: formationHttp.formation.communes.map((commune) => commune.nom),
