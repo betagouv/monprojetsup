@@ -1,6 +1,8 @@
 package fr.gouv.monprojetsup.eleve.application.controller
 
 import fr.gouv.monprojetsup.authentification.application.controller.AuthentifieController
+import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
+import fr.gouv.monprojetsup.commun.erreur.domain.eleveSansCompteException
 import fr.gouv.monprojetsup.eleve.application.dto.AjoutCompteParcoursupDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ModificationProfilDTO
 import fr.gouv.monprojetsup.eleve.application.dto.ProfilDTO
@@ -47,9 +49,13 @@ class ProfilEleveController(
         description = "Récupère le profil de l'utilisateur connecté tout en récupérant ses favoris Parcoursup",
     )
     fun getProfilEleve(): ProfilDTO {
-        val profil = recupererEleveAvecProfilExistant()
-        val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
-        return ProfilDTO(profilMisAJour)
+        when (val profil = recupererEleve()) {
+            is ProfilEleve.AvecProfilExistant -> {
+                val profilMisAJour = miseAJourFavorisParcoursupService.mettreAJourFavorisParcoursup(profil)
+                return ProfilDTO(profilMisAJour)
+            }
+            is ProfilEleve.SansCompte -> throw eleveSansCompteException()
+        }
     }
 
     @PostMapping("/parcoursup")

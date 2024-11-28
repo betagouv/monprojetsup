@@ -3,8 +3,8 @@ package fr.gouv.monprojetsup.authentification.application.controller
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilEleve
 import fr.gouv.monprojetsup.authentification.domain.entity.ProfilUtilisateur
 import fr.gouv.monprojetsup.authentification.filter.IdentificationFilter.Companion.GRANTED_AUTHORITY_UTILISATEUR
-import fr.gouv.monprojetsup.commun.erreur.domain.EleveSansCompteException
 import fr.gouv.monprojetsup.commun.erreur.domain.MonProjetSupForbiddenException
+import fr.gouv.monprojetsup.commun.erreur.domain.eleveSansCompteException
 import org.springframework.security.core.context.SecurityContextHolder
 
 abstract class AuthentifieController {
@@ -22,7 +22,7 @@ abstract class AuthentifieController {
         val authentification = SecurityContextHolder.getContext().authentication
         return when (val utilisateur = authentification.principal) {
             is ProfilEleve.AvecProfilExistant -> utilisateur
-            is ProfilEleve.SansCompte -> throw EleveSansCompteException()
+            is ProfilEleve.SansCompte -> throw eleveSansCompteException()
             else -> throw MonProjetSupForbiddenException("UTILISATEUR_PAS_ELEVE", "L'utilisateur connecté n'est pas un élève identifié")
         }
     }

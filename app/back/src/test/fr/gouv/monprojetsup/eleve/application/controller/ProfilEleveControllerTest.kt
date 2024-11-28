@@ -489,7 +489,7 @@ class ProfilEleveControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "123f627c-36dd-4df5-897b-159443a6d49c")
         @Test
-        fun `si l'élève n'existe pas, doit renvoyer 403`() {
+        fun `si l'élève n'existe pas, doit renvoyer 404`() {
             // Given
             val idProfilInconnu = "123f627c-36dd-4df5-897b-159443a6d49c"
             val profilSansCompte = ProfilEleve.SansCompte(id = idProfilInconnu)
@@ -497,7 +497,7 @@ class ProfilEleveControllerTest(
 
             // When & Then
             mvc.perform(get("/api/v1/profil")).andDo(print())
-                .andExpect(status().isForbidden)
+                .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -505,7 +505,7 @@ class ProfilEleveControllerTest(
                         {
                           "type": "about:blank",
                           "title": "ELEVE_SANS_COMPTE",
-                          "status": 403,
+                          "status": 404,
                           "detail": "L'élève connecté n'a pas encore crée son compte",
                           "instance": "/api/v1/profil"
                         }
@@ -749,7 +749,7 @@ class ProfilEleveControllerTest(
 
         @ConnecteAvecUnEleve(idEleve = "d26da5c2-c38d-4c07-9ef3-9da2443846df")
         @Test
-        fun `si l'élève n'a pas encore crée de profil, doit retourner 403`() {
+        fun `si l'élève n'a pas encore crée de profil, doit retourner 404`() {
             // Given
             val id = "d26da5c2-c38d-4c07-9ef3-9da2443846df"
             given(recupererEleveService.recupererEleve(id)).willReturn(ProfilEleve.SansCompte(id))
@@ -764,7 +764,7 @@ class ProfilEleveControllerTest(
                 }
                 """.trimIndent()
             mvc.perform(post("/api/v1/profil/parcoursup").contentType(MediaType.APPLICATION_JSON).content(bodyEntree))
-                .andExpect(status().isForbidden)
+                .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(
                     content().json(
@@ -772,7 +772,7 @@ class ProfilEleveControllerTest(
                         {
                           "type": "about:blank",
                           "title": "ELEVE_SANS_COMPTE",
-                          "status": 403,
+                          "status": 404,
                           "detail": "L'élève connecté n'a pas encore crée son compte",
                           "instance": "/api/v1/profil/parcoursup"
                         }
