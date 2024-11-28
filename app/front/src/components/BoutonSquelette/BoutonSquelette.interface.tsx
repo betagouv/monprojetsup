@@ -3,7 +3,7 @@ export type BoutonSqueletteProps = {
   taille?: "petit" | "grand";
   variante?: "secondaire" | "tertiaire" | "quaternaire" | "quinaire";
   icône?: {
-    position: "droite" | "gauche";
+    position?: "droite" | "gauche";
     classe: string;
   };
 };

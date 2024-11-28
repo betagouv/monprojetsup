@@ -51,7 +51,7 @@ const ÉtablissementsVoeuxOnglet = ({ formation, codeCommune }: ÉtablissementsV
             <ul className="m-0 grid grid-flow-row justify-start gap-4 p-0">
               {établissementsÀAfficher.map((établissement) => (
                 <li
-                  className="flex w-full items-center justify-between gap-4"
+                  className="grid grid-flow-col justify-between gap-4"
                   key={établissement.id}
                 >
                   <ÉtablissementLienExterne

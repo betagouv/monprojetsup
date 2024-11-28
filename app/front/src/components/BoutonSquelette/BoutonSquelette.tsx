@@ -20,6 +20,7 @@ const BoutonSquelette = ({ label, taille, variante, icône }: BoutonSquelettePro
   const classEnFonctionDeLIcône = () => {
     if (icône?.position === "droite") return `fr-btn--icon-right ${icône.classe}`;
     if (icône?.position === "gauche") return `fr-btn--icon-left ${icône.classe}`;
+    if (icône?.classe) return icône.classe;
 
     return "";
   };
