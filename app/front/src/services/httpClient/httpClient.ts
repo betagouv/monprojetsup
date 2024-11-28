@@ -61,11 +61,13 @@ export class HttpClient implements IHttpClient {
           }
 
           return new CodeRéponseInattenduErreurHttp({ ...options, erreur: JSON.stringify(error) }, statusErreur);
-        } else if (erreur.code === "ECONNABORTED") {
-          return new RequêteAnnuléeErreurHttp({ ...options, erreur: JSON.stringify(error) });
-        } else if (erreur.cause?.message === "Network Error") {
-          return new ErreurRéseauErreurHttp({ ...options, erreur: JSON.stringify(error) });
         }
+
+        if (erreur.code === "ECONNABORTED")
+          return new RequêteAnnuléeErreurHttp({ ...options, erreur: JSON.stringify(error) });
+
+        if (erreur.code === "ERR_NETWORK" || erreur.cause?.message === "Network Error")
+          return new ErreurRéseauErreurHttp({ ...options, erreur: JSON.stringify(error) });
       }
 
       return new ErreurInconnueErreurHttp({ ...options, erreur: JSON.stringify(error) });

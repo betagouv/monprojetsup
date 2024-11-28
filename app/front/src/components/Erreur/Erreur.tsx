@@ -30,6 +30,8 @@ const Erreur = ({ erreur }: ErreurProps) => {
 
   scrollTo({ top: 0 });
 
+  if (erreur instanceof NonIdentifiéErreurHttp || erreur instanceof NonAutoriséErreurHttp) return null;
+
   return (
     <>
       <LienÉvitement />

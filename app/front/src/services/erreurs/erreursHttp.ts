@@ -43,7 +43,7 @@ export class RessourceNonTrouvéeErreurHttp extends Error {
     super();
     Object.setPrototypeOf(this, RessourceNonTrouvéeErreurHttp.prototype);
     this.name = "HTTP - Erreur 404 - Ressource non trouvée";
-    dépendances.logger.consigner("warning", this, contexte);
+    dépendances.logger.consigner("info", this, contexte);
     this.estConsignéeManuellement = true;
   }
 }

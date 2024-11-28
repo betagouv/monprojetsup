@@ -6,7 +6,7 @@ import {
 } from "./élèveHttpRepository.interface";
 import { type Élève } from "@/features/élève/domain/élève.interface";
 import { type ÉlèveRepository } from "@/features/élève/infrastructure/gateway/élèveRepository.interface";
-import { NonAutoriséErreurHttp } from "@/services/erreurs/erreursHttp";
+import { RessourceNonTrouvéeErreurHttp } from "@/services/erreurs/erreursHttp";
 import { type IMpsApiHttpClient } from "@/services/mpsApiHttpClient/mpsApiHttpClient.interface";
 
 export class ÉlèveHttpRepository implements ÉlèveRepository {
@@ -17,7 +17,7 @@ export class ÉlèveHttpRepository implements ÉlèveRepository {
   public async récupérerProfil(): Promise<Élève | Error> {
     const réponse = await this._mpsApiHttpClient.get<RécupérerProfilÉlèveRéponseHTTP>(this._ENDPOINT);
 
-    if (réponse instanceof NonAutoriséErreurHttp) {
+    if (réponse instanceof RessourceNonTrouvéeErreurHttp) {
       await this.mettreÀJourProfil({
         compteParcoursupAssocié: false,
         situation: null,
